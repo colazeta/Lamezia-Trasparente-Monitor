@@ -1,6 +1,6 @@
 # LTCEDS taxonomy materialisation
 
-Status: ICCS tranche of issue #1017  
+Status: issue #1017 — ICCS + national-classification layers materialised; offence catalogue/crosswalk endpoint discovery remains open  
 Parent standard: `docs/architecture/ltceds-v1.md`
 
 ## Principle
@@ -8,13 +8,16 @@ Parent standard: `docs/architecture/ltceds-v1.md`
 LTCEDS does not invent a local crime taxonomy. It keeps separate namespaces for:
 
 - `iccs`: behaviour-based international statistical classification;
+- `istat_synthetic`: Istat synthetic national classification;
+- `istat_analytical`: Istat analytical national classification;
+- `istat_crime_groups`: Istat cross-cutting groups/attributes;
 - `istat_offence`: Italian legal/statistical offence catalogue;
 - `istat_iccs_mapping`: official correspondence between the Italian catalogue and ICCS;
 - legal references asserted by individual sources.
 
-A crosswalk is a relationship between classifications. It is not a statement that the two codes are semantically identical in every legal or historical context.
+A crosswalk is a relationship between classifications. It is not a statement that two codes are semantically identical in every legal or historical context.
 
-## First materialised source: Istat ICCS hierarchy
+## Materialised source: Istat ICCS hierarchy
 
 Istat's public `Classificazione internazionale dei reati` page exposes the ICCS hierarchy as a server-rendered table with the fields:
 
@@ -29,7 +32,7 @@ The repository materialiser:
 pnpm --filter @workspace/scripts run fetch:ltceds-iccs
 ```
 
-fetches that official page and writes:
+writes:
 
 ```text
 data/legalita/ltceds/taxonomy/iccs-istat-current.json
@@ -38,9 +41,73 @@ data/legalita/ltceds/taxonomy/iccs-istat-manifest.json
 
 No mapping is inferred from labels and no source labels are editorially rewritten.
 
+## Materialised national Istat classification layers
+
+Three additional official Istat surfaces are independently materialised by:
+
+```bash
+pnpm --filter @workspace/scripts run fetch:ltceds-istat-taxonomies
+```
+
+### Synthetic classification
+
+Source: `Classificazione sintetica dei reati`.
+
+The rendered table exposes:
+
+- `ID`;
+- `DESCRIZIONE`;
+- `DESCRIZIONE EN`;
+- `INIZIO VALIDITÀ`;
+- `FINE VALIDITÀ`;
+- `ID PADRE`.
+
+LTCEDS preserves the source hierarchy and validity labels exactly. It writes:
+
+```text
+data/legalita/ltceds/taxonomy/istat-synthetic-current.json
+data/legalita/ltceds/taxonomy/istat-synthetic-manifest.json
+```
+
+### Analytical classification
+
+Source: `Classificazione analitica dei reati`.
+
+The rendered table exposes:
+
+- `ID`;
+- `DESCRIZIONE`;
+- `DESCRIZIONE EN`;
+- `INIZIO VALIDITÀ`;
+- `FINE VALIDITÀ`.
+
+The observed source table does **not** expose `ID PADRE`. LTCEDS therefore stores this namespace as a source-faithful flat set and does not infer a hierarchy from code prefixes. It writes:
+
+```text
+data/legalita/ltceds/taxonomy/istat-analytical-current.json
+data/legalita/ltceds/taxonomy/istat-analytical-manifest.json
+```
+
+### Cross-cutting crime groups
+
+Source: `Gruppi di reato`.
+
+Istat describes these as cross-cutting categories/attributes rather than an exclusive offence hierarchy. The public surface includes controlled group codes such as cybercrime, location, motive and situational-context families.
+
+LTCEDS stores the source code and source label without assigning a synthetic parent relationship. It writes:
+
+```text
+data/legalita/ltceds/taxonomy/istat-crime-groups-current.json
+data/legalita/ltceds/taxonomy/istat-crime-groups-manifest.json
+```
+
+Catalogue-to-group membership is **not** inferred by prefix. It remains part of the official navigator/correspondence problem.
+
 ## Fail-closed drift checks
 
-Before a live snapshot is written, the materialiser requires:
+### ICCS
+
+Before a live ICCS snapshot is written, the materialiser requires:
 
 1. the expected table headers;
 2. unique ICCS codes;
@@ -48,46 +115,82 @@ Before a live snapshot is written, the materialiser requires:
 4. all eleven expected ICCS roots (`01` through `11`);
 5. at least 300 nodes.
 
-The minimum node count is a coarse truncation detector, not a claim that ICCS must forever contain an exact number of categories. A future legitimate structural revision that violates the sanity check requires explicit review and parser/version update.
+### Istat synthetic
+
+The materialiser requires:
+
+- the exact expected table fields;
+- unique IDs;
+- at least a conservative minimum number of nodes;
+- at least one source-declared self-parent root;
+- closed parent references.
+
+### Istat analytical
+
+The materialiser requires:
+
+- the exact expected table fields;
+- unique IDs;
+- a conservative minimum row count.
+
+No parent closure is tested because the source does not expose a parent field.
+
+### Istat groups
+
+The materialiser isolates the crime-group selector from unrelated page controls and requires a conservative item count plus the source anchor families `Cy`, `Exp-Mig`, `Lo`, `Mot` and `SiC`. A changed page structure fails closed instead of silently publishing a partial vocabulary.
+
+Minimum counts are truncation/drift guards, not claims that the official classifications must forever contain an exact number of categories. Legitimate structural revisions require explicit review and parser/version changes.
 
 ## Snapshot provenance
 
-Each materialised snapshot records:
+Every materialised taxonomy snapshot records:
 
 - source provider and URL;
 - source page publication date;
 - retrieval time;
 - parser version;
 - SHA-256 of the exact source HTML;
-- node count and roots;
+- item count;
 - Istat attribution and CC BY 4.0 licence.
 
-The separate manifest also hashes the resulting snapshot. A changed source hash is therefore visible even if the classification remains structurally valid.
+Each separate manifest hashes the normalised resulting snapshot. A changed source hash is therefore visible even if the page remains structurally parseable.
 
-## Why the Italian catalogue is not yet materialised
+## Remaining blocker: offence catalogue and official correspondences
 
-Istat's `Catalogo dei reati` is an official interactive search interface and explicitly describes detailed normative references, including article/sub-article detail and correspondence to crime classifications for offences and contraventions.
+Istat's `Catalogo dei reati` is an official interactive search interface. It exposes detailed normative identities including source, law/year, article, version/sub-article detail, description and sanction information. Istat currently declares normative coverage through December 2024.
 
-However, this tranche does not yet commit a stable machine endpoint for that interactive catalogue. The source inventory therefore marks it as:
+Istat's `Navigatore delle classificazioni dei reati` is explicitly bidirectional:
+
+- from an offence-catalogue element to synthetic, analytical, ICCS and group classifications;
+- from a classification/group item back to the relevant catalogue elements.
+
+Istat's own documentation also shows that these relationships are not uniformly one-to-one: 1:N, N:1 and exceptional 1:1 cases exist.
+
+For that reason the source inventory continues to mark both resources as:
 
 `pending_endpoint_discovery`
 
-The same applies to the official classification navigator/correspondence surface.
+LTCEDS will not reconstruct those correspondences from:
 
-This is intentional. LTCEDS must not reverse-engineer an Italian-to-ICCS mapping by string similarity when Istat states that an official correspondence is maintained by the Sistan working group.
+- label similarity;
+- article-number equality;
+- common code prefixes;
+- NLP similarity;
+- manual convenience mappings.
+
+A stable official machine channel, or a reproducibly queryable official response surface whose result identity/cardinality can be preserved, is required before `istat_offence` and `istat_iccs_mapping` are materialised.
 
 ## Licensing
 
-Istat states that, unless otherwise indicated, content published on its website is released under Creative Commons Attribution 4.0. LTCEDS stores that attribution with the Istat taxonomy source.
+Istat states that, unless otherwise indicated, content published on its website is released under Creative Commons Attribution 4.0. LTCEDS stores attribution with every Istat taxonomy source.
 
-The 2025 UNODC ICCS Implementation Manual is registered as a methodological reference only. This repository does not assert a redistribution licence for reproducing its text.
+The 2025 UNODC ICCS Implementation Manual remains registered as a methodological reference only. The repository does not assert a redistribution licence for reproducing its text.
 
 ## Versioning rules
 
-When additional taxonomy sources are materialised:
-
 - do not silently replace earlier snapshots;
 - preserve source and retrieval versions/hashes;
+- preserve validity labels where Istat exposes them;
 - keep mappings many-to-many where the official source does so;
 - distinguish `unmapped` from `conflict` and `unknown`;
 - do not rewrite historical EVENT identity when legal classification changes;

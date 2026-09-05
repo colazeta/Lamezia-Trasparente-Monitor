@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "last_verified_at": "2026-09-05T21:00:00Z",
+  "last_verified_at": "2026-09-05T21:42:10Z",
   "sources": [
     {
       "source_id": "istat-iccs",
@@ -18,6 +18,73 @@
       "limitations": [
         "This source materialises the ICCS hierarchy and labels, not Italian legal offence mappings.",
         "Source drift is guarded by content hashes, expected roots and minimum node-count checks."
+      ]
+    },
+    {
+      "source_id": "istat-synthetic",
+      "namespace": "istat_synthetic",
+      "provider": "Istat",
+      "title": "Classificazione sintetica dei reati",
+      "url": "https://www.istat.it/classificazione/classificazione-sintetica-dei-reati/",
+      "source_role": "authoritative-national-synthetic-crime-classification",
+      "access_mode": "server_rendered_html_table",
+      "materialisation_status": "parser_ready",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "Istat — Classificazione sintetica dei reati",
+      "known_fields": [
+        "ID",
+        "DESCRIZIONE",
+        "DESCRIZIONE EN",
+        "INIZIO VALIDITÀ",
+        "FINE VALIDITÀ",
+        "ID PADRE"
+      ],
+      "limitations": [
+        "This is a national statistical hierarchy, not the legal offence catalogue.",
+        "Parent relationships and validity labels are preserved exactly as exposed by Istat."
+      ]
+    },
+    {
+      "source_id": "istat-analytical",
+      "namespace": "istat_analytical",
+      "provider": "Istat",
+      "title": "Classificazione analitica dei reati",
+      "url": "https://www.istat.it/classificazione/classificazione-analitica-dei-reati/",
+      "source_role": "authoritative-national-analytical-crime-classification",
+      "access_mode": "server_rendered_html_table",
+      "materialisation_status": "parser_ready",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "Istat — Classificazione analitica dei reati",
+      "known_fields": [
+        "ID",
+        "DESCRIZIONE",
+        "DESCRIZIONE EN",
+        "INIZIO VALIDITÀ",
+        "FINE VALIDITÀ"
+      ],
+      "limitations": [
+        "The rendered table does not expose an ID PADRE field; LTCEDS therefore does not infer a hierarchy from code prefixes.",
+        "This classification remains a separate namespace from ICCS and the legal offence catalogue."
+      ]
+    },
+    {
+      "source_id": "istat-crime-groups",
+      "namespace": "istat_crime_groups",
+      "provider": "Istat",
+      "title": "Gruppi di reato",
+      "url": "https://www.istat.it/classificazione/gruppi-di-reato/",
+      "source_role": "authoritative-national-cross-cutting-crime-groups",
+      "access_mode": "server_rendered_select_options",
+      "materialisation_status": "parser_ready",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "Istat — Gruppi di reato",
+      "known_fields": ["group code", "source label"],
+      "limitations": [
+        "Groups are cross-cutting attributes and are not treated as an exclusive offence hierarchy.",
+        "An offence may belong to multiple groups; catalogue-to-group membership remains part of the official navigator/correspondence surface and is not inferred here."
       ]
     },
     {
@@ -62,7 +129,8 @@
       "attribution": "Istat — Navigatore delle classificazioni dei reati",
       "known_fields": [],
       "limitations": [
-        "LTCEDS must not reconstruct correspondence from label similarity while the official correspondence surface is not yet materialised."
+        "Istat documents bidirectional catalogue/classification navigation and non-trivial 1:N, N:1 and exceptional cardinalities.",
+        "LTCEDS must not reconstruct correspondence from label, article or code similarity while the official correspondence surface is not yet materialised."
       ]
     },
     {
@@ -80,7 +148,7 @@
       "known_fields": [],
       "limitations": [
         "The manual is referenced for implementation guidance; this inventory does not assert a reuse licence for reproducing its text.",
-        "The Istat hierarchy snapshot remains a separate sourced artefact."
+        "The Istat hierarchy snapshots remain separate sourced artefacts."
       ]
     }
   ]

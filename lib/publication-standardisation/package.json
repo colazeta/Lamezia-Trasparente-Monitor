@@ -10,6 +10,7 @@
     "./public-act": "./src/public-act.ts",
     "./procurement": "./src/procurement.ts",
     "./albo-research-corpus": "./src/albo-research-corpus.ts",
-    "./ltceds": "./src/ltceds.ts"
+    "./ltceds": "./src/ltceds.ts",
+    "./ltceds-location": "./src/ltceds-location.ts"
   }
 }
