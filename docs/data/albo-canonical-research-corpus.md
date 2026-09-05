@@ -19,7 +19,7 @@ Ogni record canonico distingue:
 - `identifiers`: CIG e CUP estratti con metodo e provenance dichiarati nella tassonomia;
 - `research_status`: decisione tassonomica e dettaglio della boundary sorgente.
 
-La tassonomia procurement v1 (`municipal-procurement-lifecycle-it`, versione `2026-09-05.1`) separa tipo di documento, azioni amministrative, rilevanza procurement e fase del ciclo di vita. Il CIG e' un identificatore utile all'entity resolution, non il requisito per entrare nella tassonomia.
+La tassonomia procurement v1 (`municipal-procurement-lifecycle-it`, versione `2026-09-05.2`) separa tipo di documento, azioni amministrative, rilevanza procurement e fase del ciclo di vita. Il CIG e' un identificatore utile all'entity resolution, non il requisito per entrare nella tassonomia. Le regole semantiche usano i campi dell'atto e non trasformano etichette generiche dell'ufficio in evidenza procurement; usi ambigui come `gara` o `affidamento` restano in `review_required` se non sono accompagnati da un contesto procurement sufficiente.
 
 ## Coverage ledger
 

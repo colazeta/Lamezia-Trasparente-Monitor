@@ -2,7 +2,7 @@ export const PROCUREMENT_TAXONOMY_SCHEMA_VERSION =
   "procurement-taxonomy.v1" as const;
 export const PROCUREMENT_TAXONOMY_ID =
   "municipal-procurement-lifecycle-it" as const;
-export const PROCUREMENT_TAXONOMY_VERSION = "2026-09-05.1" as const;
+export const PROCUREMENT_TAXONOMY_VERSION = "2026-09-05.2" as const;
 
 export type ProcurementClassificationStatus =
   | "classified"
@@ -49,6 +49,12 @@ export type ProcurementAdministrativeAction =
 
 export type ProcurementIdentifierType = "cig" | "cup";
 
+type EvidenceField =
+  | "subject"
+  | "act_type"
+  | "office"
+  | "presentation.action_id";
+
 export interface ProcurementIdentifier {
   type: ProcurementIdentifierType;
   value: string;
@@ -59,7 +65,7 @@ export interface ProcurementIdentifier {
 
 export interface ProcurementTaxonomyEvidence {
   rule_id: string;
-  input_field: "subject" | "act_type" | "office" | "presentation.action_id";
+  input_field: EvidenceField;
   matched_text: string;
 }
 
@@ -93,8 +99,18 @@ type ActionRule = {
   action: ProcurementAdministrativeAction;
   phase: ProcurementPhase;
   strength: "strong" | "possible";
+  fields: readonly EvidenceField[];
   pattern: RegExp;
 };
+
+type ContextRule = {
+  id: string;
+  fields: readonly EvidenceField[];
+  pattern: RegExp;
+};
+
+const ACT_FIELDS = ["subject", "act_type", "presentation.action_id"] as const;
+const SUBJECT_ONLY = ["subject"] as const;
 
 const ACTION_RULES: readonly ActionRule[] = [
   {
@@ -102,6 +118,7 @@ const ACTION_RULES: readonly ActionRule[] = [
     action: "decision_to_contract",
     phase: "planning",
     strength: "strong",
+    fields: ACT_FIELDS,
     pattern: /\b(?:DECISIONE|DETERMINA(?:ZIONE)?)\s+A\s+CONTRARRE\b/iu,
   },
   {
@@ -109,6 +126,7 @@ const ACTION_RULES: readonly ActionRule[] = [
     action: "direct_award",
     phase: "award",
     strength: "strong",
+    fields: ACT_FIELDS,
     pattern: /\bAFFIDAMENTO\s+DIRETTO\b/iu,
   },
   {
@@ -116,21 +134,40 @@ const ACTION_RULES: readonly ActionRule[] = [
     action: "award",
     phase: "award",
     strength: "strong",
-    pattern: /\b(?:AGGIUDICAZION\w*|AFFIDAMENT\w*)\b/iu,
+    fields: ACT_FIELDS,
+    pattern: /\bAGGIUDICAZION\w*\b/iu,
   },
   {
-    id: "tender",
+    id: "tender-specific",
     action: "tender",
     phase: "tender",
     strength: "strong",
+    fields: ACT_FIELDS,
     pattern:
-      /\b(?:BANDO\s+DI\s+GARA|GARA|PROCEDURA\s+APERTA|PROCEDURA\s+NEGOZIATA|RDO|R\.D\.O\.|TRATTATIVA\s+DIRETTA|MANIFESTAZIONE\s+DI\s+INTERESSE)\b/iu,
+      /\b(?:BANDO\s+DI\s+GARA|PROCEDURA\s+APERTA|PROCEDURA\s+NEGOZIATA|RDO|R\.D\.O\.|TRATTATIVA\s+DIRETTA|MANIFESTAZIONE\s+DI\s+INTERESSE)\b/iu,
+  },
+  {
+    id: "award-generic",
+    action: "award",
+    phase: "award",
+    strength: "possible",
+    fields: ACT_FIELDS,
+    pattern: /\bAFFIDAMENT\w*\b/iu,
+  },
+  {
+    id: "tender-generic",
+    action: "tender",
+    phase: "tender",
+    strength: "possible",
+    fields: ACT_FIELDS,
+    pattern: /\bGARA\b/iu,
   },
   {
     id: "commitment",
     action: "commitment",
     phase: "award",
     strength: "possible",
+    fields: ACT_FIELDS,
     pattern: /\bIMPEGNO\s+DI\s+SPESA\b/iu,
   },
   {
@@ -138,6 +175,7 @@ const ACTION_RULES: readonly ActionRule[] = [
     action: "contract",
     phase: "execution",
     strength: "possible",
+    fields: ACT_FIELDS,
     pattern: /\b(?:CONTRATTO|STIPULA(?:ZIONE)?)\b/iu,
   },
   {
@@ -145,6 +183,7 @@ const ACTION_RULES: readonly ActionRule[] = [
     action: "sal",
     phase: "execution",
     strength: "possible",
+    fields: ACT_FIELDS,
     pattern: /\b(?:SAL|STATO\s+DI?\s*AVANZAMENTO(?:\s+LAVORI)?)\b/iu,
   },
   {
@@ -152,6 +191,7 @@ const ACTION_RULES: readonly ActionRule[] = [
     action: "variation",
     phase: "execution",
     strength: "possible",
+    fields: ACT_FIELDS,
     pattern: /\b(?:VARIANTE|PERIZIA\s+DI\s+VARIANTE)\b/iu,
   },
   {
@@ -159,6 +199,7 @@ const ACTION_RULES: readonly ActionRule[] = [
     action: "extension",
     phase: "execution",
     strength: "possible",
+    fields: ACT_FIELDS,
     pattern: /\b(?:PROROGA|RINNOVO)\b/iu,
   },
   {
@@ -166,6 +207,7 @@ const ACTION_RULES: readonly ActionRule[] = [
     action: "liquidation",
     phase: "payment",
     strength: "possible",
+    fields: ACT_FIELDS,
     pattern: /\bLIQUIDAZION\w*\b/iu,
   },
   {
@@ -173,6 +215,7 @@ const ACTION_RULES: readonly ActionRule[] = [
     action: "invoice",
     phase: "payment",
     strength: "possible",
+    fields: ACT_FIELDS,
     pattern: /\bFATTUR\w*\b/iu,
   },
   {
@@ -180,6 +223,7 @@ const ACTION_RULES: readonly ActionRule[] = [
     action: "payment",
     phase: "payment",
     strength: "possible",
+    fields: ACT_FIELDS,
     pattern: /\b(?:PAGAMENTO|SALDO|ACCONTO)\b/iu,
   },
   {
@@ -187,26 +231,31 @@ const ACTION_RULES: readonly ActionRule[] = [
     action: "testing",
     phase: "closure",
     strength: "possible",
+    fields: ACT_FIELDS,
     pattern:
       /\b(?:COLLAUD\w*|CERTIFICATO\s+DI\s+REGOLARE\s+ESECUZIONE|CRE)\b/iu,
   },
 ] as const;
 
-const PROCUREMENT_CONTEXT_RULES = [
+const PROCUREMENT_CONTEXT_RULES: readonly ContextRule[] = [
   {
     id: "public-contract",
+    fields: SUBJECT_ONLY,
     pattern: /\b(?:APPALTO|CONCESSIONE|ACCORDO\s+QUADRO)\b/iu,
   },
   {
     id: "economic-operator",
+    fields: SUBJECT_ONLY,
     pattern: /\b(?:OPERATORE\s+ECONOMICO|DITTA|IMPRESA|SOCIET[AÀ])\b/iu,
   },
   {
     id: "procured-object",
+    fields: SUBJECT_ONLY,
     pattern: /\b(?:FORNITUR\w*|SERVIZ(?:IO|I)\b|LAVORI\b)/iu,
   },
   {
     id: "e-procurement",
+    fields: SUBJECT_ONLY,
     pattern: /\b(?:MEPA|CONSIP|MERCATO\s+ELETTRONICO)\b/iu,
   },
 ] as const;
@@ -236,18 +285,31 @@ export function classifyProcurementRecord(
   const office = cleanText(input.office);
   const actionId = cleanText(input.presentation_action_id);
   const withheldSubject = isWithheldPublicSubject(subject);
+  const documentType = deriveDocumentType(actType, withheldSubject ? "" : subject);
+
+  if (withheldSubject) {
+    return assignment({
+      classification_status: "unknown",
+      relevance: "unknown",
+      confidence: null,
+      document_type: documentType,
+      administrative_actions: [],
+      phase: "unknown",
+      identifiers: [],
+      evidence: [],
+      review_reasons: ["input_withheld_for_privacy"],
+    });
+  }
+
   const evidenceFields = ([
-    { field: "subject", value: withheldSubject ? "" : subject },
+    { field: "subject", value: subject },
     { field: "act_type", value: actType },
     { field: "office", value: office },
     { field: "presentation.action_id", value: actionId },
-  ] satisfies Array<{
-    field: ProcurementTaxonomyEvidence["input_field"];
-    value: string;
-  }>).filter((entry) => Boolean(entry.value));
-  const classificationText = evidenceFields.map((entry) => entry.value).join(" ");
-  const documentType = deriveDocumentType(actType, withheldSubject ? "" : subject);
-  const identifiers = extractIdentifiers(withheldSubject ? "" : subject);
+  ] satisfies Array<{ field: EvidenceField; value: string }>).filter((entry) =>
+    Boolean(entry.value),
+  );
+  const identifiers = extractIdentifiers(subject);
   const evidence: ProcurementTaxonomyEvidence[] = [];
 
   for (const identifier of identifiers) {
@@ -258,27 +320,9 @@ export function classifyProcurementRecord(
     });
   }
 
-  if (!classificationText) {
-    return assignment({
-      classification_status: "unknown",
-      relevance: "unknown",
-      confidence: null,
-      document_type: documentType,
-      administrative_actions: [],
-      phase: "unknown",
-      identifiers,
-      evidence,
-      review_reasons: [
-        withheldSubject
-          ? "input_withheld_for_privacy"
-          : "insufficient_public_safe_input",
-      ],
-    });
-  }
-
   const matchedActions: Array<ActionRule & { matchedText: string }> = [];
   for (const rule of ACTION_RULES) {
-    const matched = firstFieldMatch(evidenceFields, rule.pattern);
+    const matched = firstFieldMatch(evidenceFields, rule.pattern, rule.fields);
     if (!matched) continue;
     matchedActions.push({ ...rule, matchedText: matched.matchedText });
     evidence.push({
@@ -290,7 +334,7 @@ export function classifyProcurementRecord(
 
   const contextMatches: Array<{ id: string; matchedText: string }> = [];
   for (const rule of PROCUREMENT_CONTEXT_RULES) {
-    const matched = firstFieldMatch(evidenceFields, rule.pattern);
+    const matched = firstFieldMatch(evidenceFields, rule.pattern, rule.fields);
     if (!matched) continue;
     contextMatches.push({ id: rule.id, matchedText: matched.matchedText });
     evidence.push({
@@ -308,6 +352,23 @@ export function classifyProcurementRecord(
     (match) => match.strength === "possible",
   );
   const hasProcurementContext = contextMatches.length > 0;
+  const hasSubject = Boolean(subject);
+  const hasSemanticSignal =
+    hasCig || hasCup || hasStrongAction || hasPossibleAction || hasProcurementContext;
+
+  if (!hasSemanticSignal && !hasSubject) {
+    return assignment({
+      classification_status: "unknown",
+      relevance: "unknown",
+      confidence: null,
+      document_type: documentType,
+      administrative_actions: actions,
+      phase: actions.length > 0 ? derivePhase(matchedActions) : "unknown",
+      identifiers,
+      evidence,
+      review_reasons: ["insufficient_public_safe_input"],
+    });
+  }
 
   let relevance: ProcurementRelevance;
   let classificationStatus: ProcurementClassificationStatus;
@@ -429,16 +490,12 @@ function derivePhase(
 }
 
 function firstFieldMatch(
-  fields: readonly {
-    field: ProcurementTaxonomyEvidence["input_field"];
-    value: string;
-  }[],
+  fields: readonly { field: EvidenceField; value: string }[],
   pattern: RegExp,
-): {
-  field: ProcurementTaxonomyEvidence["input_field"];
-  matchedText: string;
-} | null {
+  allowedFields: readonly EvidenceField[],
+): { field: EvidenceField; matchedText: string } | null {
   for (const entry of fields) {
+    if (!allowedFields.includes(entry.field)) continue;
     const match = entry.value.match(pattern)?.[0]?.trim();
     if (match) return { field: entry.field, matchedText: match };
   }
