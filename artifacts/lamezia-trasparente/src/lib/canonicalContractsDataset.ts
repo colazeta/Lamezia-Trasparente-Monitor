@@ -20,7 +20,7 @@ import { bdncpUrlForCig } from "./bdncp";
 import {
   parseExplicitAmount,
   type AlboPublicSnapshot,
-} from "./staticContractsDataset";
+} from "./contractsSource";
 
 export const CANONICAL_CONTRACTS_SCHEMA_VERSION =
   "lamezia-contracts-canonical.v2" as const;
@@ -111,7 +111,8 @@ export function buildCanonicalContractsDataset(
 ): CanonicalContractsDataset {
   const corpus = buildCanonicalAlboCorpus(snapshot);
   const generatedAt = corpus.generatedAt;
-  const sourceUrl = officialAlboUrl(snapshot.source_url) ??
+  const sourceUrl =
+    officialAlboUrl(snapshot.source_url) ??
     "https://albo.tinnvision.cloud/?ente=00301390795";
   const procurementRecords = corpus.records.filter(
     (record) => record.taxonomy.procurementRelevance !== "none",
@@ -131,7 +132,9 @@ export function buildCanonicalContractsDataset(
     storylines[String(contract.id)] = buildStoryline(contract, events);
   }
 
-  const contracts = Array.from(contractByCig.values()).sort(compareContractsNewestFirst);
+  const contracts = Array.from(contractByCig.values()).sort(
+    compareContractsNewestFirst,
+  );
   const unresolvedEvents = procurementEvents.filter(
     (event) => event.resolutionStatus === "unresolved_no_cig",
   );
@@ -173,7 +176,8 @@ export function buildCanonicalContractsDataset(
     generatedAt,
     source: {
       id: "canonical_albo_procurement_projection",
-      label: snapshot.source?.trim() || "Albo Pretorio Comune di Lamezia Terme",
+      label:
+        snapshot.source?.trim() || "Albo Pretorio Comune di Lamezia Terme",
       url: sourceUrl,
       scope: "current-public-window",
       publicClaim: "contratti canonici ed eventi procurement correnti",
@@ -191,14 +195,14 @@ export function buildCanonicalContractsDataset(
       ).length,
       eventsWithCig: linkedEvents.length,
       eventsWithoutCig: unresolvedEvents.length,
-      multiCigEvents: procurementEvents.filter(
-        (event) => event.cigs.length > 1,
-      ).length,
+      multiCigEvents: procurementEvents.filter((event) => event.cigs.length > 1)
+        .length,
       canonicalContracts: contracts.length,
       contractEventLinks,
       unresolvedEvents: unresolvedEvents.length,
       withCup: contracts.filter((contract) => Boolean(contract.cup)).length,
-      withExplicitAmount: contracts.filter((contract) => contract.amount > 0).length,
+      withExplicitAmount: contracts.filter((contract) => contract.amount > 0)
+        .length,
       withExplicitSupplier: contracts.filter(
         (contract) => !isUnknownSupplier(contract.supplier),
       ).length,
@@ -206,7 +210,10 @@ export function buildCanonicalContractsDataset(
         linkedEvents.length + unresolvedEvents.length === procurementEvents.length,
       resolutionInvariantSatisfied:
         contractEventLinks ===
-        Array.from(grouped.values()).reduce((sum, events) => sum + events.length, 0),
+        Array.from(grouped.values()).reduce(
+          (sum, events) => sum + events.length,
+          0,
+        ),
     },
     feedStatus,
     anacConnection,
@@ -225,15 +232,22 @@ export function contractIdForCig(cig: string): number {
   }
   const id = Number.parseInt(normalized, 36) + 1;
   if (!Number.isSafeInteger(id) || id <= 0) {
-    throw new Error(`Canonical contract id is outside the safe integer range: ${cig}`);
+    throw new Error(
+      `Canonical contract id is outside the safe integer range: ${cig}`,
+    );
   }
   return id;
 }
 
-function buildProcurementEvent(record: CanonicalAlboRecord): CanonicalProcurementEvent {
+function buildProcurementEvent(
+  record: CanonicalAlboRecord,
+): CanonicalProcurementEvent {
   const subject = cleanText(record.content.subject) || "Oggetto non disponibile";
   const title = cleanText(record.content.displayTitle) || subject;
-  const contractIdentityCigs = identityCigs(subject, record.taxonomy.identifiers.cigs);
+  const contractIdentityCigs = identityCigs(
+    subject,
+    record.taxonomy.identifiers.cigs,
+  );
   const relatedCigs = record.taxonomy.identifiers.cigs.filter(
     (cig) => !contractIdentityCigs.includes(cig),
   );
@@ -252,7 +266,9 @@ function buildProcurementEvent(record: CanonicalAlboRecord): CanonicalProcuremen
     title,
     description: subject,
     documentUrl: officialAlboUrl(record.source.documentUrl),
-    procurementRelevance: record.taxonomy.procurementRelevance as "possible" | "confirmed",
+    procurementRelevance: record.taxonomy.procurementRelevance as
+      | "possible"
+      | "confirmed",
     taxonomyStatus: record.taxonomy.taxonomyStatus,
     procurementPhase: record.taxonomy.procurementPhase,
     administrativeActions: record.taxonomy.administrativeActions,
@@ -296,14 +312,15 @@ function buildContractEntity(
 ): CanonicalContractEntity {
   const dates = events.map((event) => event.date).filter(isString);
   const cups = uniqueStrings(events.flatMap((event) => event.cups));
+  const sortedDates = [...dates].sort();
   return {
     canonicalId: `contract:cig:${cig}`,
     id: contractIdForCig(cig),
     cig,
     eventIds: uniqueStrings(events.map((event) => event.eventId)),
     cups,
-    firstEvidenceDate: dates.length > 0 ? dates.sort()[0] : null,
-    lastEvidenceDate: dates.length > 0 ? dates.sort().at(-1) ?? null : null,
+    firstEvidenceDate: sortedDates[0] ?? null,
+    lastEvidenceDate: sortedDates.at(-1) ?? null,
   };
 }
 
@@ -314,7 +331,9 @@ function buildContract(
   const ranked = [...events].sort(compareEventEvidence);
   const primary = ranked[0] ?? emptyEvent(entity.cig);
   const awardEvent = ranked.find(isAwardEvent) ?? oldestEvent(events) ?? primary;
-  const amountEvent = ranked.find((event) => parseExplicitAmount(event.description) > 0);
+  const amountEvent = ranked.find(
+    (event) => parseExplicitAmount(event.description) > 0,
+  );
   const supplierEvent = ranked.find(
     (event) => !isUnknownSupplier(extractSupplier(event.description)),
   );
@@ -399,10 +418,13 @@ function buildStoryline(
   const liquidations = timeline.filter((item) => item.phase === "liquidazione");
   const liquidatedAmounts = liquidations
     .map((item) => item.estimatedAmount)
-    .filter((amount): amount is number => typeof amount === "number" && amount > 0);
-  const liquidatedAmount = liquidatedAmounts.length > 0
-    ? liquidatedAmounts.reduce((sum, amount) => sum + amount, 0)
-    : null;
+    .filter(
+      (amount): amount is number => typeof amount === "number" && amount > 0,
+    );
+  const liquidatedAmount =
+    liquidatedAmounts.length > 0
+      ? liquidatedAmounts.reduce((sum, amount) => sum + amount, 0)
+      : null;
   const firstEvidenceDate = timeline[0]?.date ?? null;
   const lastEvidenceDate = timeline.at(-1)?.date ?? null;
   const firstLiquidationDate = liquidations[0]?.date ?? null;
@@ -413,7 +435,10 @@ function buildStoryline(
     phaseCounts,
     firstEvidenceDate,
     lastEvidenceDate,
-    daysToFirstLiquidazione: daysBetween(contract.awardDate, firstLiquidationDate),
+    daysToFirstLiquidazione: daysBetween(
+      contract.awardDate,
+      firstLiquidationDate,
+    ),
     daysToLastLiquidazione: daysBetween(contract.awardDate, lastLiquidationDate),
     awardedAmount: contract.amount,
     extraAmount: null,
@@ -441,7 +466,10 @@ function eventPhase(event: CanonicalProcurementEvent): ContractPhaseDetails {
     return { phase: "variante", label: "Atto di variante" };
   }
   if (actions.includes("liquidazione") || actions.includes("pagamento")) {
-    return { phase: "liquidazione", label: "Atto di liquidazione o pagamento" };
+    return {
+      phase: "liquidazione",
+      label: "Atto di liquidazione o pagamento",
+    };
   }
   if (
     actions.includes("affidamento") ||
@@ -465,9 +493,11 @@ function compareEventEvidence(
   a: CanonicalProcurementEvent,
   b: CanonicalProcurementEvent,
 ): number {
-  return eventPriority(b) - eventPriority(a) ||
+  return (
+    eventPriority(b) - eventPriority(a) ||
     compareNullableDates(a.date, b.date) ||
-    a.eventId.localeCompare(b.eventId);
+    a.eventId.localeCompare(b.eventId)
+  );
 }
 
 function eventPriority(event: CanonicalProcurementEvent): number {
@@ -518,7 +548,9 @@ function compareNullableDates(a: string | null, b: string | null): number {
 
 function canonicalDate(record: CanonicalAlboRecord): string | null {
   if (validDateOnly(record.temporal.actDate)) return record.temporal.actDate;
-  if (validDateOnly(record.temporal.publicationStart)) return record.temporal.publicationStart;
+  if (validDateOnly(record.temporal.publicationStart)) {
+    return record.temporal.publicationStart;
+  }
   return null;
 }
 
@@ -602,7 +634,9 @@ function deriveMacrotema(
   subject: string,
 ): NonNullable<Contract["macrotema"]> {
   if (/SCUOL|ASILO|MENSA|BIBLIOTEC|LIBR/iu.test(subject)) return "scuole";
-  if (/STRAD|VIABILIT|QUARTIERE|LAVORI|EDIFIC|DEMOLIZ|RICOSTRUZ/iu.test(subject)) {
+  if (
+    /STRAD|VIABILIT|QUARTIERE|LAVORI|EDIFIC|DEMOLIZ|RICOSTRUZ/iu.test(subject)
+  ) {
     return "strade";
   }
   if (/ENERG|RIFIUT|AMBIENT|VERDE/iu.test(subject)) return "ambiente";
@@ -642,7 +676,13 @@ function daysBetween(start: string | null, end: string | null): number | null {
   if (!start || !end) return null;
   const startMs = Date.parse(start);
   const endMs = Date.parse(end);
-  if (Number.isNaN(startMs) || Number.isNaN(endMs) || endMs < startMs) return null;
+  if (
+    Number.isNaN(startMs) ||
+    Number.isNaN(endMs) ||
+    endMs < startMs
+  ) {
+    return null;
+  }
   return Math.floor((endMs - startMs) / 86_400_000);
 }
 
@@ -681,7 +721,9 @@ function truncate(value: string, maxLength: number): string {
 }
 
 function uniqueStrings(values: string[]): string[] {
-  return Array.from(new Set(values.map((value) => cleanText(value)).filter(Boolean)));
+  return Array.from(
+    new Set(values.map((value) => cleanText(value)).filter(Boolean)),
+  );
 }
 
 function isUnknownSupplier(value: string): boolean {
