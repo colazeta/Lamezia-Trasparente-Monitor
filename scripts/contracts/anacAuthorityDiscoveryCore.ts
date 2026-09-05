@@ -112,11 +112,14 @@ export function mergeAuthorityDiscoveryAttempt(input: {
   }
 
   const hasFreshArchive = successfulByPeriod.size > 0;
+  const hasPartialFailure = input.failedResources > 0 || input.failureCategory !== null;
   const lastSuccessAt = hasFreshArchive
     ? input.attemptedAt
     : input.previous.lastSuccessAt;
   const status = hasFreshArchive
-    ? "current"
+    ? hasPartialFailure
+      ? "degraded"
+      : "current"
     : lastSuccessAt
       ? "stale"
       : "degraded";
@@ -131,7 +134,7 @@ export function mergeAuthorityDiscoveryAttempt(input: {
     status,
     lastAttemptAt: input.attemptedAt,
     lastSuccessAt,
-    failureCategory: hasFreshArchive ? null : input.failureCategory,
+    failureCategory: hasPartialFailure ? input.failureCategory : null,
     targetAuthority: {
       taxId: input.targetTaxId,
       label: input.targetLabel,
