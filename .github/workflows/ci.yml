@@ -47,6 +47,9 @@ jobs:
       - name: Validate RDF, JSON-LD, SKOS and SHACL contract
         run: python scripts/semantic/validate.py
 
+      - name: Validate LTCEDS machine contract
+        run: pnpm --filter @workspace/scripts run check:ltceds
+
       - name: Typecheck
         run: pnpm run typecheck
 
