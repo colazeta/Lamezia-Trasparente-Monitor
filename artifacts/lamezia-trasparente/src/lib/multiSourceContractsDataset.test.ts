@@ -41,6 +41,7 @@ describe("multi-source contracts census", () => {
       alboOnlyContracts: 0,
       anacOnlyContracts: 1,
       anacAuthorityDiscoveredContracts: 2,
+      anacAuthorityWithTenderAmount: 2,
       authorityHistoricalBackfillComplete: true,
       unionInvariantSatisfied: true,
     });
@@ -50,7 +51,7 @@ describe("multi-source contracts census", () => {
     );
     expect(anacOnly).toMatchObject({
       title: "Servizio ANAC non presente nell'Albo corrente",
-      amount: 25000,
+      amount: 0,
       supplier: "Non disponibile nel dataset CIG ANAC",
       status: "Individuato in ANAC/BDNCP; lifecycle locale da ricostruire",
     });
@@ -102,7 +103,9 @@ describe("multi-source contracts census", () => {
     expect(contractSourceResolution("A01D5289C5", dataset.reconciliation)).toBe(
       "anac_only",
     );
-    expect(contractSourceResolution("C000000001", dataset.reconciliation)).toBeNull();
+    expect(
+      contractSourceResolution("C000000001", dataset.reconciliation),
+    ).toBeNull();
   });
 });
 
