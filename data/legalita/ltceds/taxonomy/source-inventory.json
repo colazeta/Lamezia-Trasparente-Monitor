@@ -29,6 +29,7 @@
       "source_role": "authoritative-national-legal-statistical-catalogue",
       "access_mode": "interactive_search",
       "materialisation_status": "pending_endpoint_discovery",
+      "declared_normative_coverage_through": "2024-12",
       "licence": "CC BY 4.0",
       "licence_url": "https://creativecommons.org/licenses/by/4.0/",
       "attribution": "Istat — Catalogo dei reati",
@@ -42,6 +43,7 @@
         "penalty information where present"
       ],
       "limitations": [
+        "Istat currently declares the catalogue updated to legislation of interest through December 2024; this is coverage metadata, not the page publication date.",
         "The public page is an interactive search surface; no stable machine endpoint has yet been committed to LTCEDS.",
         "Istat itself notes that editorial normative collections may contain errors, inaccuracies or omissions."
       ]
