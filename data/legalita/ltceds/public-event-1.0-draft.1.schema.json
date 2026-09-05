@@ -1,0 +1,298 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lameziatrasparente.it/schema/ltceds/public-event/1.0-draft.1/schema.json",
+  "title": "LTCEDS public event",
+  "description": "Privacy-safe public representation of an individually resolved criminal event.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_id",
+    "schema_version",
+    "record_status",
+    "event_form",
+    "title",
+    "temporal",
+    "privacy_tier",
+    "offences",
+    "sources",
+    "updated_at"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Immutable UUIDv7 canonical event identifier."
+    },
+    "schema_version": { "const": "1.0-draft.1" },
+    "record_status": {
+      "enum": [
+        "verified_source",
+        "published",
+        "superseded",
+        "merged",
+        "split",
+        "withdrawn",
+        "suppressed"
+      ]
+    },
+    "event_form": {
+      "enum": ["discrete", "course_of_conduct", "continuous_episode"]
+    },
+    "title": { "type": "string", "minLength": 1, "maxLength": 180 },
+    "summary": { "type": "string", "maxLength": 2000 },
+    "temporal": { "$ref": "#/$defs/temporal" },
+    "privacy_tier": { "enum": ["open", "generalised", "suppressed"] },
+    "locations": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/location" },
+      "default": []
+    },
+    "offences": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/offence" }
+    },
+    "series_ids": {
+      "type": "array",
+      "items": { "type": "string", "format": "uuid" },
+      "uniqueItems": true,
+      "default": []
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/sourceRef" }
+    },
+    "procedural_summary": {
+      "type": ["string", "null"],
+      "maxLength": 120
+    },
+    "quality": { "$ref": "#/$defs/quality" },
+    "updated_at": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "temporal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["precision"],
+      "properties": {
+        "start": { "type": ["string", "null"] },
+        "end": { "type": ["string", "null"] },
+        "edtf": { "type": ["string", "null"] },
+        "precision": {
+          "enum": [
+            "exact_datetime",
+            "exact_date",
+            "bounded_interval",
+            "week_or_similar",
+            "month",
+            "year",
+            "approximate",
+            "unknown"
+          ]
+        }
+      }
+    },
+    "geometry": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "coordinates"],
+          "properties": {
+            "type": { "const": "Point" },
+            "coordinates": {
+              "type": "array",
+              "prefixItems": [
+                { "type": "number", "minimum": -180, "maximum": 180 },
+                { "type": "number", "minimum": -90, "maximum": 90 }
+              ],
+              "minItems": 2,
+              "maxItems": 2
+            }
+          }
+        }
+      ]
+    },
+    "location": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role",
+        "municipality",
+        "precision",
+        "sensitivity",
+        "privacy_transform",
+        "geometry"
+      ],
+      "properties": {
+        "role": {
+          "enum": [
+            "occurrence",
+            "target",
+            "discovery",
+            "recovery",
+            "arrest",
+            "search",
+            "procedural",
+            "other"
+          ]
+        },
+        "place_name": { "type": ["string", "null"], "maxLength": 200 },
+        "municipality": { "type": "string", "minLength": 1 },
+        "neighbourhood": { "type": ["string", "null"] },
+        "precision": {
+          "enum": [
+            "exact_public_site",
+            "exact_address",
+            "street_segment",
+            "neighbourhood",
+            "locality",
+            "municipality",
+            "unknown"
+          ]
+        },
+        "sensitivity": {
+          "enum": [
+            "public_place",
+            "non_sensitive",
+            "private_or_sensitive",
+            "unknown"
+          ],
+          "description": "Public-profile sensitivity class used by fail-closed geoprivacy rules."
+        },
+        "privacy_transform": {
+          "enum": [
+            "none",
+            "public_place_centroid",
+            "street_generalisation",
+            "neighbourhood_centroid",
+            "municipality_centroid",
+            "suppressed"
+          ]
+        },
+        "iccs_location_type": { "type": ["string", "null"] },
+        "geometry": { "$ref": "#/$defs/geometry" }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "privacy_transform": { "const": "suppressed" } },
+            "required": ["privacy_transform"]
+          },
+          "then": { "properties": { "geometry": { "type": "null" } } }
+        },
+        {
+          "if": {
+            "properties": {
+              "precision": { "enum": ["municipality", "unknown"] }
+            },
+            "required": ["precision"]
+          },
+          "then": { "properties": { "geometry": { "type": "null" } } }
+        },
+        {
+          "if": {
+            "properties": {
+              "sensitivity": { "const": "private_or_sensitive" },
+              "precision": { "const": "exact_address" }
+            },
+            "required": ["sensitivity", "precision"]
+          },
+          "then": { "properties": { "geometry": { "type": "null" } } }
+        }
+      ]
+    },
+    "offence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["offence_instance_id", "classification_basis"],
+      "properties": {
+        "offence_instance_id": { "type": "string", "format": "uuid" },
+        "iccs_code": { "type": ["string", "null"] },
+        "istat_catalogue_id": { "type": ["string", "null"] },
+        "istat_synthetic_code": { "type": ["string", "null"] },
+        "istat_analytical_code": { "type": ["string", "null"] },
+        "legal_reference": {
+          "type": ["string", "null"],
+          "maxLength": 300
+        },
+        "classification_basis": {
+          "enum": [
+            "source_stated_legal",
+            "istat_crosswalk",
+            "behavioural_manual",
+            "provisional"
+          ]
+        },
+        "attempt_status": {
+          "enum": ["attempted", "completed", "not_applicable", "unknown"]
+        },
+        "situational_context": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        },
+        "cyber_related": { "type": ["string", "null"] },
+        "affected_object_count": {
+          "type": ["integer", "null"],
+          "minimum": 0
+        }
+      }
+    },
+    "sourceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "source_type"],
+      "properties": {
+        "source_id": { "type": "string", "format": "uuid" },
+        "source_type": {
+          "enum": [
+            "judicial_primary",
+            "law_enforcement_primary",
+            "public_authority_primary",
+            "news_agency",
+            "press_secondary",
+            "academic",
+            "other"
+          ]
+        },
+        "url": { "type": ["string", "null"], "format": "uri" },
+        "published_at": { "type": ["string", "null"] }
+      }
+    },
+    "quality": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source_count": { "type": "integer", "minimum": 1 },
+        "has_source_conflict": { "type": "boolean" },
+        "classification_pending": { "type": "boolean" },
+        "privacy_review": {
+          "enum": ["passed", "required", "suppressed"]
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "privacy_tier": { "const": "suppressed" } },
+        "required": ["privacy_tier"]
+      },
+      "then": {
+        "properties": {
+          "locations": {
+            "items": {
+              "allOf": [
+                { "$ref": "#/$defs/location" },
+                { "properties": { "geometry": { "type": "null" } } }
+              ]
+            }
+          }
+        }
+      }
+    }
+  ]
+}
