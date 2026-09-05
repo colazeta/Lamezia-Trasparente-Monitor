@@ -192,14 +192,13 @@ async function main(): Promise<void> {
     await rm(tempDirectory, { recursive: true, force: true });
   }
 
-  const failureCategory: AnacAuthorityDiscoveryFailureCategory =
-    successfulArchives.length > 0
-      ? null
-      : unexpectedFormat
-        ? "unexpected-format"
-        : sourceUnavailable
-          ? "source-unavailable"
-          : "no-published-resource";
+  const failureCategory: AnacAuthorityDiscoveryFailureCategory = unexpectedFormat
+    ? "unexpected-format"
+    : sourceUnavailable
+      ? "source-unavailable"
+      : successfulArchives.length === 0
+        ? "no-published-resource"
+        : null;
   const next = mergeAuthorityDiscoveryAttempt({
     previous,
     attemptedAt,
@@ -217,7 +216,7 @@ async function main(): Promise<void> {
   await writeJsonAtomically(outputPath, next);
 
   console.log(
-    `ANAC authority census: ${next.records.length} CIG unici; ${next.completedYears.length}/${next.requestedYears.length} anni storici completati; ${next.completedPeriods.length} periodi acquisiti.`,
+    `ANAC authority census: ${next.records.length} CIG unici; ${next.completedYears.length}/${next.requestedYears.length} anni richiesti marcati completi; ${next.completedPeriods.length} periodi acquisiti; stato ${next.status}.`,
   );
 }
 
