@@ -355,24 +355,46 @@ def merge_candidates(existing_rows: list[dict[str, Any]], new_rows: list[dict[st
     return merged
 
 
+def candidate_access_ids(rows: list[dict[str, Any]]) -> set[str]:
+    return {
+        as_text(row.get("access_id"))
+        for row in rows
+        if as_text(row.get("access_id"))
+    }
+
+
 def write_report(
     *,
     planned_count: int,
+    selected_count: int,
     requested_count: int,
     cache_hits: int,
     new_candidate_rows: list[dict[str, Any]],
-    existing_candidate_count: int,
+    previous_candidate_count: int,
+    previous_access_id_count: int,
     skipped_existing_access_ids: int,
     candidate_rows: list[dict[str, Any]],
     dry_run: bool,
     limit: int,
     sleep_seconds: float,
     selection_filter: str,
-    merge_existing: bool,
+    include_existing: bool,
+    replace_existing: bool,
+    outputs_written: bool,
     failures: list[str],
 ) -> None:
     counts = Counter(as_text(row.get("candidate_status")) for row in candidate_rows)
-    confidence_counts = Counter(as_text(row.get("provider_confidence")) for row in candidate_rows if as_text(row.get("provider_confidence")))
+    confidence_counts = Counter(
+        as_text(row.get("provider_confidence"))
+        for row in candidate_rows
+        if as_text(row.get("provider_confidence"))
+    )
+    if replace_existing:
+        output_mode = "replace selected access_ids; preserve unrelated rows"
+    elif include_existing:
+        output_mode = "refresh selected access_ids and merge/deduplicate"
+    else:
+        output_mode = "incremental append; skip access_ids with existing evidence"
     lines = [
         "# ANNCSU Coordinate External Geocode Candidates 2025",
         "",
@@ -381,14 +403,17 @@ def write_report(
         "## Result",
         "",
         f"- Request plan rows: {planned_count}",
+        f"- Selected rows for this run: {selected_count}",
+        f"- Existing candidate access_ids before run: {previous_access_id_count}",
+        f"- Existing candidate rows before run: {previous_candidate_count}",
+        f"- Access_ids skipped because candidate evidence already exists: {skipped_existing_access_ids}",
         f"- Requests attempted in this run: {requested_count}",
         f"- Cached provider responses reused: {cache_hits}",
-        f"- Existing candidate rows preserved: {existing_candidate_count if merge_existing else 0}",
-        f"- Planned rows skipped because access_id already has geocoder evidence: {skipped_existing_access_ids}",
         f"- New candidate rows produced: {len(new_candidate_rows)}",
-        f"- Candidate rows written: {len(candidate_rows)}",
+        f"- Candidate rows after run: {len(candidate_rows)}",
         f"- Dry run: {'yes' if dry_run else 'no'}",
-        f"- Merge existing candidates: {'yes' if merge_existing else 'no'}",
+        f"- Candidate CSV/workbench JSON written: {'yes' if outputs_written else 'no'}",
+        f"- Output mode: {output_mode}",
         f"- Limit: {limit}",
         f"- Selection filter: {selection_filter or 'none'}",
         f"- Rate limit sleep seconds: {sleep_seconds}",
@@ -398,6 +423,8 @@ def write_report(
         f"- Cache directory: `{relpath(CACHE_DIR)}`",
         "",
         "This script creates coordinate candidates only. It does not overwrite ANNCSU raw coordinates, processed civic assignments, GPKG files, polygons, or public UI.",
+        "",
+        "A dry run writes the request plan and report only. It never truncates or rewrites the existing candidate CSV or workbench JSON.",
         "",
         "## Provider Guardrails",
         "",
@@ -413,13 +440,13 @@ def write_report(
         for key, value in sorted(counts.items()):
             lines.append(f"- `{key}`: {value}")
     else:
-        lines.append("- No candidate requests executed.")
+        lines.append("- No candidate evidence is currently present.")
     lines.extend(["", "## Provider Confidence Counts", ""])
     if confidence_counts:
         for key, value in sorted(confidence_counts.items()):
             lines.append(f"- `{key}`: {value}")
     else:
-        lines.append("- No provider confidence values produced.")
+        lines.append("- No provider confidence values are currently present.")
     if failures:
         lines.extend(["", "## Failures", ""])
         for failure in failures:
@@ -437,15 +464,25 @@ def write_report(
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Generate external geocoder candidates for ANNCSU coordinate suspects.")
-    parser.add_argument("--execute", action="store_true", help="Call the provider. Without this flag only the request plan is written.")
+    parser.add_argument("--execute", action="store_true", help="Call the provider. Without this flag only the request plan/report are written; candidate outputs are untouched.")
     parser.add_argument("--limit", type=int, default=25, help="Maximum planned rows to request or mark in a dry run.")
     parser.add_argument("--sleep-seconds", type=float, default=1.1, help="Delay between uncached provider requests.")
     parser.add_argument("--timeout-seconds", type=float, default=20.0, help="HTTP timeout per provider request.")
     parser.add_argument("--user-agent", default=DEFAULT_USER_AGENT, help="Identifiable User-Agent for Nominatim requests.")
     parser.add_argument("--only-priority", default="", help="Optional exact priority value from the request plan.")
     parser.add_argument("--street-prefix", default="", help="Optional street-name prefix filter, e.g. VIA.")
-    parser.add_argument("--merge-existing", action="store_true", help="Preserve existing geocoder candidate rows and append newly generated rows.")
-    parser.add_argument("--skip-existing", action="store_true", help="Skip planned rows whose access_id is already present in the candidate CSV.")
+    parser.add_argument(
+        "--include-existing",
+        action="store_true",
+        help="Also request access_ids that already have candidate evidence, preserving and merging prior rows.",
+    )
+    parser.add_argument(
+        "--replace-existing",
+        action="store_true",
+        help="Refresh selected access_ids and replace only their prior candidate rows; unrelated candidate rows are preserved.",
+    )
+    parser.add_argument("--merge-existing", action="store_true", help=argparse.SUPPRESS)
+    parser.add_argument("--skip-existing", action="store_true", help=argparse.SUPPRESS)
     return parser.parse_args()
 
 
@@ -454,32 +491,55 @@ def main() -> int:
     if args.limit < 0:
         print("--limit must be >= 0", file=sys.stderr)
         return 1
+    if args.include_existing and args.replace_existing:
+        print("choose either --include-existing or --replace-existing, not both", file=sys.stderr)
+        return 1
     if not SUSPECT_CSV.exists():
         print(f"missing_input={SUSPECT_CSV}", file=sys.stderr)
         return 1
+
+    if args.merge_existing or args.skip_existing:
+        print(
+            "deprecated flags --merge-existing/--skip-existing are now safe no-ops; incremental preserve+skip is the default",
+            file=sys.stderr,
+        )
+
+    previous_rows = read_csv(CANDIDATES_CSV)
+    previous_access_ids = candidate_access_ids(previous_rows)
+    include_existing = args.include_existing or args.replace_existing
 
     planned = merge_suspect_diagnostics()
     for row in planned:
         row["street"] = as_text(row.get("odonimo_raw"))
         row["civic"] = as_text(row.get("civico"))
-        row["request_status"] = "planned"
-        row["request_notes"] = "execute with --execute after confirming provider terms/rate limits"
+        access_id = as_text(row.get("access_id"))
+        if access_id in previous_access_ids and not include_existing:
+            row["request_status"] = "already_has_candidate"
+            row["request_notes"] = "skipped by default; use --include-existing to append refreshed evidence or --replace-existing to replace this access_id's prior rows"
+        elif access_id in previous_access_ids and args.replace_existing:
+            row["request_status"] = "planned_replace_existing"
+            row["request_notes"] = "explicit replacement requested for this access_id; unrelated candidate rows will be preserved"
+        elif access_id in previous_access_ids:
+            row["request_status"] = "planned_refresh_existing"
+            row["request_notes"] = "explicit refresh requested; prior candidate rows will be preserved and new evidence merged"
+        else:
+            row["request_status"] = "planned"
+            row["request_notes"] = "execute with --execute after confirming provider terms/rate limits"
     write_csv(REQUEST_PLAN_CSV, planned, REQUEST_FIELDS)
 
-    existing_rows = read_csv(CANDIDATES_CSV) if args.merge_existing or args.skip_existing else []
-    existing_access_ids = {as_text(row.get("access_id")) for row in existing_rows if as_text(row.get("access_id"))}
     street_prefix = as_text(args.street_prefix).upper()
-    selected = [
+    matching = [
         row
         for row in planned
         if (not args.only_priority or row.get("priority") == args.only_priority)
         and (not street_prefix or as_text(row.get("odonimo_raw")).upper().startswith(street_prefix))
     ]
-    skipped_existing_access_ids = 0
-    if args.skip_existing:
-        before_skip_count = len(selected)
-        selected = [row for row in selected if as_text(row.get("access_id")) not in existing_access_ids]
-        skipped_existing_access_ids = before_skip_count - len(selected)
+    selected = [
+        row
+        for row in matching
+        if include_existing or as_text(row.get("access_id")) not in previous_access_ids
+    ]
+    skipped_existing_access_ids = len(matching) - len(selected)
     if args.limit:
         selected = selected[: args.limit]
     else:
@@ -517,30 +577,54 @@ def main() -> int:
                     failures.append(f"{row['access_id']}: {'; '.join(row_failures)}")
                 else:
                     new_candidate_rows.extend(candidate_rows_for(row, [], as_text(row.get("address_query")), "all_variants"))
-    candidate_rows = merge_candidates(existing_rows, new_candidate_rows) if args.merge_existing else new_candidate_rows
-    write_csv(CANDIDATES_CSV, candidate_rows, CANDIDATE_FIELDS)
-    write_json(WORKBENCH_CANDIDATES_JSON, workbench_payload(candidate_rows))
+
+    if not args.execute:
+        candidate_rows = previous_rows
+        outputs_written = False
+    elif args.replace_existing:
+        selected_access_ids = {
+            as_text(row.get("access_id"))
+            for row in selected
+            if as_text(row.get("access_id"))
+        }
+        retained_rows = [
+            row
+            for row in previous_rows
+            if as_text(row.get("access_id")) not in selected_access_ids
+        ]
+        candidate_rows = merge_candidates(retained_rows, new_candidate_rows)
+        write_csv(CANDIDATES_CSV, candidate_rows, CANDIDATE_FIELDS)
+        write_json(WORKBENCH_CANDIDATES_JSON, workbench_payload(candidate_rows))
+        outputs_written = True
+    else:
+        candidate_rows = merge_candidates(previous_rows, new_candidate_rows)
+        write_csv(CANDIDATES_CSV, candidate_rows, CANDIDATE_FIELDS)
+        write_json(WORKBENCH_CANDIDATES_JSON, workbench_payload(candidate_rows))
+        outputs_written = True
+
+    selection_parts = [
+        f"priority={args.only_priority}" if args.only_priority else "",
+        f"street_prefix={args.street_prefix}" if args.street_prefix else "",
+        "include_existing=yes" if args.include_existing else "",
+        "replace_existing=yes" if args.replace_existing else "",
+    ]
     write_report(
         planned_count=len(planned),
+        selected_count=len(selected),
         requested_count=requested_count,
         cache_hits=cache_hits,
         new_candidate_rows=new_candidate_rows,
-        existing_candidate_count=len(existing_rows),
+        previous_candidate_count=len(previous_rows),
+        previous_access_id_count=len(previous_access_ids),
         skipped_existing_access_ids=skipped_existing_access_ids,
         candidate_rows=candidate_rows,
         dry_run=not args.execute,
         limit=args.limit,
         sleep_seconds=args.sleep_seconds,
-        merge_existing=args.merge_existing,
-        selection_filter="; ".join(
-            part
-            for part in [
-                f"priority={args.only_priority}" if args.only_priority else "",
-                f"street_prefix={args.street_prefix}" if args.street_prefix else "",
-                "skip_existing=yes" if args.skip_existing else "",
-            ]
-            if part
-        ),
+        selection_filter="; ".join(part for part in selection_parts if part),
+        include_existing=args.include_existing,
+        replace_existing=args.replace_existing,
+        outputs_written=outputs_written,
         failures=failures,
     )
 
@@ -549,10 +633,13 @@ def main() -> int:
     print(f"workbench_candidate_json={WORKBENCH_CANDIDATES_JSON}")
     print(f"candidate_report={REPORT_PATH}")
     print(f"planned_rows={len(planned)}")
-    print(f"provider_requests={requested_count}")
+    print(f"selected_rows={len(selected)}")
+    print(f"previous_candidate_access_ids={len(previous_access_ids)}")
     print(f"skipped_existing_access_ids={skipped_existing_access_ids}")
+    print(f"provider_requests={requested_count}")
     print(f"new_candidate_rows={len(new_candidate_rows)}")
     print(f"candidate_rows={len(candidate_rows)}")
+    print(f"candidate_outputs_written={'yes' if outputs_written else 'no'}")
     if failures:
         print(f"failures={len(failures)}", file=sys.stderr)
         return 1
