@@ -64,7 +64,7 @@ export const ANAC_AUTHORITY_DISCOVERY_LIMITATIONS = [
 
 export function createPendingAnacAuthorityDiscoverySnapshot(
   generatedAt = new Date(0).toISOString(),
-  taxId = LAMEZIA_CONTRACTING_AUTHORITY_TAX_ID,
+  taxId: string = LAMEZIA_CONTRACTING_AUTHORITY_TAX_ID,
 ): AnacAuthorityDiscoverySnapshot {
   return {
     schemaVersion: ANAC_AUTHORITY_DISCOVERY_SCHEMA_VERSION,
@@ -199,7 +199,9 @@ export function validateAnacAuthorityDiscoverySnapshot(
   return snapshot;
 }
 
-export function anacAuthorityHistoricalCoverage(snapshot: AnacAuthorityDiscoverySnapshot) {
+export function anacAuthorityHistoricalCoverage(
+  snapshot: AnacAuthorityDiscoverySnapshot,
+) {
   const requested = new Set(snapshot.requestedYears);
   const completed = new Set(snapshot.completedYears);
   const missingYears = snapshot.requestedYears.filter((year) => !completed.has(year));
