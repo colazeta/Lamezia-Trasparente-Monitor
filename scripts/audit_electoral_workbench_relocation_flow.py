@@ -42,6 +42,7 @@ def main() -> int:
         DATA_DIR / "civics_by_task.json",
         DATA_DIR / "coordinate_suspect_points.json",
         DATA_DIR / "coordinate_suspect_points.geojson",
+        DATA_DIR / "coordinate_review_batch_by_access.json",
         DATA_DIR / "deterministic_points_sample.geojson",
         DATA_DIR / "candidate_sections_v3.geojson",
     ]
@@ -61,6 +62,7 @@ def main() -> int:
     civics_by_task = read_json(DATA_DIR / "civics_by_task.json")
     suspect_records = read_json(DATA_DIR / "coordinate_suspect_points.json")
     suspect_geojson = read_json(DATA_DIR / "coordinate_suspect_points.geojson")
+    coordinate_batch_by_access = read_json(DATA_DIR / "coordinate_review_batch_by_access.json")
     deterministic_geojson = read_json(DATA_DIR / "deterministic_points_sample.geojson")
     sections_v3 = read_json(DATA_DIR / "candidate_sections_v3.geojson")
 
@@ -81,11 +83,17 @@ def main() -> int:
         "drag_handler": "marker_drag" in app_js,
         "manual_override_validation": "manual_coordinate_override requires" in app_js,
         "street_context_filter": "street_context_mismatch" in app_js,
+        "coordinate_batch_filter": "coordinateBatchFilter" in index_html,
+        "coordinate_batch_payload": "coordinateReviewBatchByAccess" in app_js,
+        "coordinate_batch_panel": "Coordinate review batch" in app_js,
+        "coordinate_batch_snapshot": "coordinate_review_batch" in app_js,
         "heading_source_ui": "Heading source" in app_js,
         "fallback_render": "fallback-relocation-proposed" in app_js,
         "relocation_styles": "fallback-relocation-proposed" in styles_css,
         "readme_docs": "Civic Relocation Support" in readme,
+        "readme_batch_docs": "coordinate_review_batch_by_access.json" in readme,
         "methodology_docs": "relocation_support_snapshot" in methodology,
+        "methodology_batch_docs": "coordinate_review_batch_by_access.json" in methodology,
     }
     for key, ok in app_contract.items():
         if not ok:
@@ -96,6 +104,8 @@ def main() -> int:
     civic_access_ids = {str(row.get("access_id", "")) for row in civic_rows if row.get("access_id")}
     suspect_access_ids = {str(row.get("access_id", "")) for row in suspect_records if row.get("access_id")}
     suspect_features = suspect_geojson.get("features", [])
+    batch_access_ids = {str(access_id) for access_id, rows in coordinate_batch_by_access.items() if rows}
+    batch_rows = [row for rows in coordinate_batch_by_access.values() for row in rows]
     deterministic_features = deterministic_geojson.get("features", [])
     section_features = sections_v3.get("features", [])
     suspect_task_count = sum(1 for task in tasks if task.get("has_coordinate_suspect") or int(task.get("coordinate_suspect_count") or 0) > 0)
@@ -134,6 +144,10 @@ def main() -> int:
     if missing_suspect_civics:
         preview = ", ".join(missing_suspect_civics[:10])
         findings.append(("P0", "suspect-access-id-not-in-civics-by-task", preview))
+    missing_batch_civics = sorted(batch_access_ids - civic_access_ids)
+    if missing_batch_civics:
+        preview = ", ".join(missing_batch_civics[:10])
+        findings.append(("P0", "coordinate-batch-access-id-not-in-civics-by-task", preview))
 
     bad_suspect_features = []
     for feature in suspect_features:
@@ -146,6 +160,8 @@ def main() -> int:
 
     if not suspect_records:
         findings.append(("P1", "no-coordinate-suspect-records", "coordinate suspect review cannot be exercised"))
+    if not batch_rows:
+        findings.append(("P1", "no-coordinate-review-batch-records", "coordinate batch filter cannot be exercised"))
     if not deterministic_features:
         findings.append(("P1", "no-deterministic-support-sample", "nearest civic relocation support cannot be computed"))
     if not section_features:
@@ -158,6 +174,8 @@ def main() -> int:
         "civic_rows": len(civic_rows),
         "coordinate_suspect_records": len(suspect_records),
         "coordinate_suspect_features": len(suspect_features),
+        "coordinate_review_batch_access_ids": len(batch_access_ids),
+        "coordinate_review_batch_rows": len(batch_rows),
         "coordinate_suspect_tasks": suspect_task_count,
         "street_context_mismatch_records": len(street_context_mismatch_records),
         "heading_source_counts": heading_source_counts,
