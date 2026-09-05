@@ -2,7 +2,7 @@ name: Trusted PR auto-merge
 
 on:
   pull_request_target:
-    types: [opened, reopened, synchronize, ready_for_review, labeled, unlabeled]
+    types: [opened, reopened, synchronize, ready_for_review, labeled, unlabeled, closed]
     branches: [main]
   push:
     branches: [main]
@@ -16,6 +16,7 @@ jobs:
   arm-auto-merge:
     if: >-
       github.event_name == 'pull_request_target' &&
+      github.event.action != 'closed' &&
       github.event.pull_request.head.repo.full_name == github.repository &&
       github.event.pull_request.draft == false
     runs-on: ubuntu-latest
@@ -89,7 +90,12 @@ jobs:
           fi
 
   refresh-open-trusted-prs:
-    if: github.event_name == 'push'
+    if: >-
+      github.event_name == 'push' ||
+      (github.event_name == 'pull_request_target' &&
+       github.event.action == 'closed' &&
+       github.event.pull_request.merged == true &&
+       github.event.pull_request.merged_by.login == 'github-actions[bot]')
     runs-on: ubuntu-latest
     concurrency:
       group: trusted-auto-merge-main-refresh

@@ -44,6 +44,7 @@ BOUNDARY_UNCERTAINTY_CSV = QA_DIR / "electoral_sections_boundary_uncertainty_poi
 COORDINATE_SUSPECT_CSV = QA_DIR / "anncsu_coordinate_suspect_points_2025.csv"
 COORDINATE_GEOCODE_CANDIDATES_CSV = QA_DIR / "anncsu_coordinate_geocode_candidates_2025.csv"
 COORDINATE_LOCAL_ANCHOR_CANDIDATES_CSV = QA_DIR / "anncsu_coordinate_local_anchor_candidates_2025.csv"
+COORDINATE_REVIEW_PRIORITY_QUEUE_CSV = QA_DIR / "anncsu_coordinate_review_priority_queue_2025.csv"
 RAW_STREET_REGISTER_PDF = ROOT / "data" / "raw" / "geo" / "Stradario_elettorale.pdf"
 
 MAX_DETERMINISTIC_SAMPLE = 3000
@@ -1731,6 +1732,25 @@ def main() -> int:
                 "nearest_anchor_distance_m": as_text(row.get("nearest_anchor_distance_m")),
             }
         )
+    coordinate_review_batch_by_access: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in read_csv_rows(COORDINATE_REVIEW_PRIORITY_QUEUE_CSV):
+        access_id = as_text(row.get("access_id"))
+        if not access_id:
+            continue
+        coordinate_review_batch_by_access[access_id].append(
+            {
+                "review_rank": as_text(row.get("review_rank")),
+                "review_batch_id": as_text(row.get("review_batch_id")),
+                "review_priority_band": as_text(row.get("review_priority_band")),
+                "candidate_review_status": as_text(row.get("candidate_review_status")),
+                "candidate_method": as_text(row.get("candidate_method")),
+                "candidate_confidence": as_text(row.get("candidate_confidence")),
+                "candidate_lon": as_text(row.get("candidate_lon")),
+                "candidate_lat": as_text(row.get("candidate_lat")),
+                "distance_from_source_m": as_text(row.get("distance_from_source_m")),
+                "recommended_review_action": as_text(row.get("recommended_review_action")),
+            }
+        )
 
     public_pdf_path = ""
     if RAW_STREET_REGISTER_PDF.exists() and RAW_STREET_REGISTER_PDF.stat().st_size <= 2_000_000:
@@ -1751,6 +1771,7 @@ def main() -> int:
     write_json(OUT_DIR / "coordinate_suspect_points.json", coordinate_suspect_records)
     write_json(OUT_DIR / "coordinate_geocode_candidates_by_access.json", coordinate_geocode_candidates_by_access)
     write_json(OUT_DIR / "coordinate_local_anchor_candidates_by_access.json", coordinate_local_anchor_candidates_by_access)
+    write_json(OUT_DIR / "coordinate_review_batch_by_access.json", coordinate_review_batch_by_access)
     write_json(
         OUT_DIR / "review_summary.json",
         {
@@ -1783,6 +1804,14 @@ def main() -> int:
                     for row in rows
                     if as_text(row.get("candidate_status"))
                 )
+            ),
+            "coordinate_review_batch_access_ids": len(coordinate_review_batch_by_access),
+            "coordinate_review_batch_rows": sum(len(rows) for rows in coordinate_review_batch_by_access.values()),
+            "coordinate_review_batch_1_rows": sum(
+                1
+                for rows in coordinate_review_batch_by_access.values()
+                for row in rows
+                if as_text(row.get("review_batch_id")) == "anncsu_coordinate_review_batch_1_2025"
             ),
             "coordinate_quality_report": relpath(QA_DIR / "anncsu_coordinate_quality_report_2025.md"),
             "coordinate_suspect_csv": relpath(COORDINATE_SUSPECT_CSV),
@@ -2060,6 +2089,7 @@ def main() -> int:
     print(f"coordinate_suspect_points={len(coordinate_suspect_records)}")
     print(f"coordinate_geocode_candidate_rows={sum(len(rows) for rows in coordinate_geocode_candidates_by_access.values())}")
     print(f"coordinate_local_anchor_candidate_rows={sum(len(rows) for rows in coordinate_local_anchor_candidates_by_access.values())}")
+    print(f"coordinate_review_batch_rows={sum(len(rows) for rows in coordinate_review_batch_by_access.values())}")
     print(f"deterministic_sample={len(deterministic)}")
     print(f"street_rules={len(rules)}")
     print(f"street_register_pdf={public_pdf_path or 'not copied'}")
