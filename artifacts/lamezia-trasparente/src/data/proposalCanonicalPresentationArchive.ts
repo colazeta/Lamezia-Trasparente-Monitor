@@ -48,6 +48,38 @@ const SCOUTED_CANONICAL_PROPOSAL_PRESENTATIONS: Record<
     expectedOutcome:
       "Rendere strade e spazi pubblici più curati in vista dei festeggiamenti patronali.",
   },
+  "palasparti-riapertura-manutenzione-mtl-2026": {
+    proposalId: "palasparti-riapertura-manutenzione-mtl-2026",
+    version: "1.0",
+    title: "Riapertura e manutenzione del Palasparti",
+    request:
+      "Definire tempi e condizioni per la riapertura del Palasparti e intervenire sull’area esterna durante il periodo di chiusura.",
+    actionTypes: ["manutenzione", "trasparenza", "organizzazione"],
+    measures: [
+      "Comunicare la data prevista per la riapertura del Palasparti.",
+      "Indicare eventuali adempimenti, autorizzazioni o collaudi ancora necessari e i relativi tempi.",
+      "Rimuovere la vegetazione incolta e ripristinare la pulizia dell’area esterna.",
+      "Effettuare la derattizzazione del perimetro dell’impianto.",
+      "Definire una programmazione con tempi verificabili per la restituzione dell’impianto all’uso sportivo.",
+    ],
+    expectedOutcome:
+      "Rendere verificabili i tempi di riapertura e migliorare le condizioni dell’area esterna nel periodo di chiusura.",
+  },
+  "fna-disabilita-gravissima-bando-futuro-nazionale-2026": {
+    proposalId: "fna-disabilita-gravissima-bando-futuro-nazionale-2026",
+    version: "1.0",
+    title: "Accesso ai fondi FNA per la disabilità gravissima",
+    request:
+      "Pubblicare l’avviso per l’accesso ai fondi FNA destinati alla disabilità gravissima e rendere verificabili tempi e stato della procedura.",
+    actionTypes: ["organizzazione", "trasparenza"],
+    measures: [
+      "Pubblicare l’avviso per l’accesso ai fondi FNA destinati alla disabilità gravissima.",
+      "Indicare tempi certi per le istruttorie e le successive erogazioni.",
+      "Rendere pubblico lo stato delle risorse ricevute e le tempistiche procedurali previste.",
+    ],
+    expectedOutcome:
+      "Rendere accessibile la procedura e verificabili tempi e risorse per i potenziali beneficiari.",
+  },
 };
 
 export function getCanonicalProposalPresentation(

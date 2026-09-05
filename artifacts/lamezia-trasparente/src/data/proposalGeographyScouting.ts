@@ -72,6 +72,26 @@ const QUARTIERE_BELLA: ProposalGeography = {
     "Il punto è un riferimento verificabile lungo via Lazio, indicata dalla fonte della proposta come principale arteria del quartiere; non delimita il quartiere Bella e non localizza ogni intervento richiesto. Il tag Nicastro è usato come classificazione territoriale del quartiere, distinta dalla precisione della coordinata.",
 };
 
+const PALASPARTI: ProposalGeography = {
+  label: "Palazzetto dello Sport Alfio Sparti, Sambiase",
+  scope: "point",
+  areas: ["sambiase"],
+  points: [
+    {
+      id: "palasparti-alfio-sparti",
+      label: "Palazzetto dello Sport Alfio Sparti",
+      latitude: 38.96492,
+      longitude: 16.2959,
+      area: "sambiase",
+      precision: "exact_landmark",
+      sourceLabel: "OpenStreetMap / Mapcarta — Palazzetto dello Sport Alfio Sparti",
+      sourceUrl: "https://mapcarta.com/W303144181",
+    },
+  ],
+  note:
+    "Il Comune identifica ufficialmente l'impianto all'indirizzo Via Giovanni De Sensi 21. Le coordinate WGS84 corrispondono al poligono OpenStreetMap del Palazzetto dello Sport Alfio Sparti (way 303144181); il tag Sambiase è coerente con la localizzazione territoriale dell'impianto.",
+};
+
 export const SCOUTED_PROPOSAL_GEOGRAPHY: Record<string, ProposalGeography> = {
   "emodinamica-h24-vescio-2026": GIOVANNI_PAOLO_II,
   "emodinamica-h24-nucifero-2026": GIOVANNI_PAOLO_II,
@@ -83,4 +103,6 @@ export const SCOUTED_PROPOSAL_GEOGRAPHY: Record<string, ProposalGeography> = {
   "aeroporto-intermodalita-rilancio-taverna-2026": AEROPORTO_LAMEZIA,
   "quartiere-bella-manutenzione-masi-2026": QUARTIERE_BELLA,
   "quartiere-bella-pulizia-mtl-2026": QUARTIERE_BELLA,
+  "palasparti-riapertura-manutenzione-mtl-2026": PALASPARTI,
+  "fna-disabilita-gravissima-bando-futuro-nazionale-2026": LAMEZIA_CITYWIDE,
 };
