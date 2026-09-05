@@ -1,6 +1,10 @@
 import {
   EVENT_FORMS,
+  GEO_PRECISIONS,
+  LOCATION_ROLES,
+  LOCATION_SENSITIVITIES,
   LTCEDS_SCHEMA_VERSION,
+  PRIVACY_TRANSFORMS,
   defaultPublicMapLocations,
   isUuidV7,
   validatePublicEventSemantics,
@@ -15,6 +19,34 @@ export const CRIME_EVENTS_DISCLAIMER =
 export const CRIME_EVENTS_PUBLIC_SCHEMA_VERSION = LTCEDS_SCHEMA_VERSION;
 export const CRIME_EVENTS_DEFAULT_PAGE_SIZE = 20;
 export const CRIME_EVENTS_MAX_PAGE_SIZE = 100;
+
+const TEMPORAL_PRECISIONS = [
+  "exact_datetime",
+  "exact_date",
+  "bounded_interval",
+  "week_or_similar",
+  "month",
+  "year",
+  "approximate",
+  "unknown",
+] as const;
+
+const CLASSIFICATION_BASES = [
+  "source_stated_legal",
+  "istat_crosswalk",
+  "behavioural_manual",
+  "provisional",
+] as const;
+
+const SOURCE_TYPES = [
+  "judicial_primary",
+  "law_enforcement_primary",
+  "public_authority_primary",
+  "news_agency",
+  "press_secondary",
+  "academic",
+  "other",
+] as const;
 
 export type CrimeEventFilters = {
   from?: string;
@@ -88,10 +120,19 @@ export type CrimeEventsCoverage = {
   };
 };
 
-type DateInterval = { start: number; end: number; startLabel: string; endLabel: string };
+type DateInterval = {
+  start: number;
+  end: number;
+  startLabel: string;
+  endLabel: string;
+};
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function isOptionalString(value: unknown): boolean {
+  return value === undefined || value === null || typeof value === "string";
 }
 
 function isFinitePoint(value: unknown): boolean {
@@ -112,14 +153,38 @@ function isFinitePoint(value: unknown): boolean {
   );
 }
 
+function hasTemporalShape(value: unknown): boolean {
+  return (
+    isRecord(value) &&
+    typeof value.precision === "string" &&
+    TEMPORAL_PRECISIONS.includes(
+      value.precision as (typeof TEMPORAL_PRECISIONS)[number],
+    ) &&
+    isOptionalString(value.start) &&
+    isOptionalString(value.end) &&
+    isOptionalString(value.edtf)
+  );
+}
+
 function hasPublicLocationShape(value: unknown): boolean {
   if (!isRecord(value)) return false;
   if (
     typeof value.role !== "string" ||
+    !LOCATION_ROLES.includes(value.role as (typeof LOCATION_ROLES)[number]) ||
     typeof value.municipality !== "string" ||
     typeof value.precision !== "string" ||
+    !GEO_PRECISIONS.includes(value.precision as (typeof GEO_PRECISIONS)[number]) ||
     typeof value.sensitivity !== "string" ||
-    typeof value.privacy_transform !== "string"
+    !LOCATION_SENSITIVITIES.includes(
+      value.sensitivity as (typeof LOCATION_SENSITIVITIES)[number],
+    ) ||
+    typeof value.privacy_transform !== "string" ||
+    !PRIVACY_TRANSFORMS.includes(
+      value.privacy_transform as (typeof PRIVACY_TRANSFORMS)[number],
+    ) ||
+    !isOptionalString(value.place_name) ||
+    !isOptionalString(value.neighbourhood) ||
+    !isOptionalString(value.iccs_location_type)
   ) {
     return false;
   }
@@ -127,18 +192,44 @@ function hasPublicLocationShape(value: unknown): boolean {
 }
 
 function hasOffenceShape(value: unknown): boolean {
-  return (
-    isRecord(value) &&
-    typeof value.offence_instance_id === "string" &&
-    typeof value.classification_basis === "string"
-  );
+  if (
+    !isRecord(value) ||
+    typeof value.offence_instance_id !== "string" ||
+    typeof value.classification_basis !== "string" ||
+    !CLASSIFICATION_BASES.includes(
+      value.classification_basis as (typeof CLASSIFICATION_BASES)[number],
+    )
+  ) {
+    return false;
+  }
+  if (
+    !isOptionalString(value.iccs_code) ||
+    !isOptionalString(value.istat_catalogue_id) ||
+    !isOptionalString(value.istat_synthetic_code) ||
+    !isOptionalString(value.istat_analytical_code) ||
+    !isOptionalString(value.legal_reference) ||
+    !isOptionalString(value.cyber_related)
+  ) {
+    return false;
+  }
+  if (
+    value.situational_context !== undefined &&
+    (!Array.isArray(value.situational_context) ||
+      !value.situational_context.every((item) => typeof item === "string"))
+  ) {
+    return false;
+  }
+  return true;
 }
 
 function hasSourceShape(value: unknown): boolean {
   return (
     isRecord(value) &&
     typeof value.source_id === "string" &&
-    typeof value.source_type === "string"
+    typeof value.source_type === "string" &&
+    SOURCE_TYPES.includes(value.source_type as (typeof SOURCE_TYPES)[number]) &&
+    isOptionalString(value.url) &&
+    isOptionalString(value.published_at)
   );
 }
 
@@ -161,10 +252,10 @@ export function parseReadablePublicCrimeEvent(
     !EVENT_FORMS.includes(value.event_form as EventForm) ||
     typeof value.title !== "string" ||
     !value.title.trim() ||
+    !["open", "generalised", "suppressed"].includes(String(value.privacy_tier)) ||
     typeof value.updated_at !== "string" ||
     !Number.isFinite(Date.parse(value.updated_at)) ||
-    !isRecord(value.temporal) ||
-    typeof value.temporal.precision !== "string" ||
+    !hasTemporalShape(value.temporal) ||
     !Array.isArray(value.offences) ||
     value.offences.length === 0 ||
     !value.offences.every(hasOffenceShape) ||
@@ -194,8 +285,9 @@ function monthEndUtc(year: number, month: number): number {
   return Date.UTC(year, month, 0, 23, 59, 59, 999);
 }
 
-function dateIntervalFromToken(raw: string | null | undefined): DateInterval | null {
-  const token = (raw ?? "").trim().replace(/[?~%]$/g, "");
+function dateIntervalFromToken(raw: unknown): DateInterval | null {
+  if (typeof raw !== "string") return null;
+  const token = raw.trim().replace(/[?~%]$/g, "");
   let match = /^(\d{4})$/.exec(token);
   if (match) {
     const year = Number(match[1]);
@@ -274,10 +366,13 @@ export function publicCrimeEventDateInterval(
 
 function filterDateBoundary(value: string | undefined, endOfDay: boolean): number | null {
   if (!value) return null;
-  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value.trim());
+  const token = value.trim();
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(token);
   if (!match) return null;
-  const base = Date.parse(`${value.trim()}T00:00:00.000Z`);
-  if (!Number.isFinite(base)) return null;
+  const base = Date.parse(`${token}T00:00:00.000Z`);
+  if (!Number.isFinite(base) || new Date(base).toISOString().slice(0, 10) !== token) {
+    return null;
+  }
   return endOfDay ? base + 86_400_000 - 1 : base;
 }
 
@@ -438,9 +533,13 @@ export function publicCrimeEventsToGeoJson(
 ): CrimeEventsGeoJson {
   const features: CrimeEventsGeoJson["features"] = [];
   for (const event of events) {
-    const iccsCodes = [...new Set(event.offences.flatMap((offence) =>
-      offence.iccs_code ? [offence.iccs_code] : [],
-    ))].sort();
+    const iccsCodes = [
+      ...new Set(
+        event.offences.flatMap((offence) =>
+          offence.iccs_code ? [offence.iccs_code] : [],
+        ),
+      ),
+    ].sort();
     const date = event.temporal.start ?? event.temporal.edtf ?? null;
     defaultPublicMapLocations(event).forEach((location, index) => {
       if (!location.geometry) return;
@@ -486,10 +585,11 @@ export function publicCrimeEventsCoverage(
   const latest = intervals.length
     ? [...intervals].sort((left, right) => right.end - left.end)[0]!
     : null;
-  const lastUpdated = events
-    .map((event) => event.updated_at)
-    .filter((value) => Number.isFinite(Date.parse(value)))
-    .sort((left, right) => Date.parse(right) - Date.parse(left))[0] ?? null;
+  const lastUpdated =
+    events
+      .map((event) => event.updated_at)
+      .filter((value) => Number.isFinite(Date.parse(value)))
+      .sort((left, right) => Date.parse(right) - Date.parse(left))[0] ?? null;
   const mappableEventCount = events.filter(
     (event) => defaultPublicMapLocations(event).length > 0,
   ).length;
