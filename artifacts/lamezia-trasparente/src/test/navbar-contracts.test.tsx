@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { Router as WouterRouter } from "wouter";
 
@@ -49,5 +49,32 @@ describe("Navbar public front door", () => {
     for (const oldLabel of ["Atti", "Comune", "Spesa", "Territorio", "Legalità", "Dati"]) {
       expect(screen.queryByRole("button", { name: oldLabel })).not.toBeInTheDocument();
     }
+  });
+
+  it("opens the current mobile domain and wires the accordion as an accessible region", () => {
+    renderNavbar("/sviluppatori");
+
+    const menuToggle = screen.getByRole("button", { name: "Apri menu" });
+    expect(menuToggle).toHaveAttribute("type", "button");
+    fireEvent.click(menuToggle);
+
+    const mobileDomain = screen
+      .getAllByRole("button", { name: "Dati e fonti" })
+      .find((button) => button.hasAttribute("aria-controls"));
+
+    expect(mobileDomain).toBeDefined();
+    expect(mobileDomain).toHaveAttribute("aria-expanded", "true");
+
+    const panelId = mobileDomain?.getAttribute("aria-controls");
+    expect(panelId).toBeTruthy();
+    const panel = document.getElementById(panelId!);
+
+    expect(panel).toHaveAttribute("role", "region");
+    expect(panel).toHaveAttribute("aria-labelledby", mobileDomain?.id);
+    expect(panel).not.toHaveAttribute("hidden");
+    expect(screen.getByRole("button", { name: "Cerca nel sito" })).toHaveAttribute(
+      "type",
+      "button",
+    );
   });
 });
