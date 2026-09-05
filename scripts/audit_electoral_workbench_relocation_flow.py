@@ -91,9 +91,7 @@ def main() -> int:
         "fallback_render": "fallback-relocation-proposed" in app_js,
         "relocation_styles": "fallback-relocation-proposed" in styles_css,
         "readme_docs": "Civic Relocation Support" in readme,
-        "readme_batch_docs": "coordinate_review_batch_by_access.json" in readme,
         "methodology_docs": "relocation_support_snapshot" in methodology,
-        "methodology_batch_docs": "coordinate_review_batch_by_access.json" in methodology,
     }
     for key, ok in app_contract.items():
         if not ok:
@@ -234,6 +232,7 @@ def write_report(app_contract, summary, findings) -> None:
         "- No ANNCSU raw coordinate is modified by the workbench.",
         "- Proposed coordinates are exported in manual decisions only.",
         "- `relocation_support_snapshot` is review evidence for a later auditable geometry workflow.",
+        "- The coordinate-review batch is prioritization evidence only and never applies a coordinate.",
         "- The workbench does not create V4, public UI, deploy changes, GPKG changes, or public map routes.",
         "",
     ])
