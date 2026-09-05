@@ -36,6 +36,7 @@ describe("static contracts compatibility facade", () => {
       alboOnlyContracts: 2,
       anacOnlyContracts: 0,
       anacAuthorityDiscoveredContracts: 0,
+      anacAuthorityWithTenderAmount: 0,
       authorityHistoricalBackfillComplete: false,
       withCup: 1,
       withExplicitAmount: 1,
@@ -184,6 +185,10 @@ describe("static contracts compatibility facade", () => {
       anacOnlyCigs: ["C000000001"],
       unionCigs: 3,
     });
+    expect(dataset.coverage).toMatchObject({
+      anacAuthorityDiscoveredContracts: 2,
+      anacAuthorityWithTenderAmount: 2,
+    });
     expect(
       dataset.contracts.find((contract) => contract.cig === "B123456789")
         ?.amount,
@@ -192,8 +197,15 @@ describe("static contracts compatibility facade", () => {
       dataset.contracts.find((contract) => contract.cig === "C000000001"),
     ).toMatchObject({
       title: "Procedura solo ANAC",
-      amount: 5000,
+      amount: 0,
       status: "Individuato in ANAC/BDNCP; lifecycle locale da ricostruire",
+    });
+    const anacOnly = dataset.contracts.find(
+      (contract) => contract.cig === "C000000001",
+    );
+    expect(dataset.storylines[String(anacOnly?.id)].timeline[0]).toMatchObject({
+      estimatedAmount: 5000,
+      tipologia: "Record strutturato ANAC/BDNCP",
     });
   });
 });
