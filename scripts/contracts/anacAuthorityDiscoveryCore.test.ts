@@ -66,6 +66,7 @@ describe("ANAC authority discovery core", () => {
     });
     assert.deepEqual(first.completedYears, []);
     assert.deepEqual(first.completedPeriods, ["2025-01"]);
+    assert.equal(first.status, "current");
 
     const second = mergeAuthorityDiscoveryAttempt({
       previous: first,
@@ -86,6 +87,33 @@ describe("ANAC authority discovery core", () => {
       second.records.map((item) => item.cig),
       ["A01D5289C5", "B123456789"],
     );
+  });
+
+  it("marks a partially successful acquisition degraded while retaining successful records", () => {
+    const partial = mergeAuthorityDiscoveryAttempt({
+      previous: createPendingAnacAuthorityDiscoverySnapshot(
+        "2026-09-01T00:00:00.000Z",
+        taxId,
+      ),
+      attemptedAt: "2026-09-06T00:00:00.000Z",
+      requestedYears: [2025, 2026],
+      targetTaxId: taxId,
+      targetLabel: "Comune di Lamezia Terme",
+      successfulArchives: [archive("2025-01", record("B123456789", "2025-01"))],
+      catalogPeriodsByYear: new Map([[2025, ["2025-01", "2025-02"]]]),
+      attemptedResources: 2,
+      failedResources: 1,
+      failureCategory: "source-unavailable",
+      currentYear: 2026,
+    });
+
+    assert.equal(partial.status, "degraded");
+    assert.equal(partial.lastSuccessAt, "2026-09-06T00:00:00.000Z");
+    assert.equal(partial.failureCategory, "source-unavailable");
+    assert.equal(partial.records.length, 1);
+    assert.deepEqual(partial.completedPeriods, ["2025-01"]);
+    assert.deepEqual(partial.completedYears, []);
+    assert.match(partial.limitations.at(-1) ?? "", /1\/2 risorse/u);
   });
 
   it("preserves last-known-good coverage when a later attempt fails", () => {
