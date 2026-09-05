@@ -215,6 +215,12 @@ const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
     primary: ps("4"),
     secondary: [ps("7")],
   },
+  "Sport e impianti pubblici": {
+    primary: ps("10"),
+    secondary: [ps("5")],
+    mappingNote:
+      "La materia ufficiale Cultura e tempo libero include espressamente l'accesso a luoghi dello sport e, come etichetta alternativa, gli impianti sportivi. Catasto e urbanistica resta una classificazione secondaria per il contesto dell'infrastruttura pubblica.",
+  },
   "Trasparenza e partecipazione democratica": {
     primary: eu("GOVE"),
     mappingNote:

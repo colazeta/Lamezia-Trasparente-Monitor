@@ -4,11 +4,20 @@ import { Search } from "lucide-react";
 import {
   type AtlanteFeature,
   type AtlanteIndicatorDefinition,
+  buildAtlanteDistribution,
   formatAtlanteValue,
   getSectionId,
   getSectionPublicLabel,
   readIndicatorValue,
 } from "@/data/atlanteTerritoriale";
+
+const integerFormatter = new Intl.NumberFormat("it-IT", {
+  maximumFractionDigits: 0,
+});
+const shareFormatter = new Intl.NumberFormat("it-IT", {
+  style: "percent",
+  maximumFractionDigits: 1,
+});
 
 export function CensusSectionsDataView({
   activeIndicator,
@@ -25,6 +34,13 @@ export function CensusSectionsDataView({
 }) {
   const [query, setQuery] = useState("");
   const normalizedQuery = query.trim().toLocaleLowerCase("it");
+  const summary = useMemo(
+    () =>
+      buildAtlanteDistribution(
+        features.map((feature) => readIndicatorValue(feature, activeIndicator)),
+      ),
+    [activeIndicator, features],
+  );
   const rows = useMemo(() => {
     const matchingFeatures = normalizedQuery
       ? features.filter((feature) =>
@@ -54,6 +70,62 @@ export function CensusSectionsDataView({
           disponibili anche in forma tabellare. Un valore mancante resta
           distinto dallo zero.
         </p>
+
+        <section aria-labelledby="atlante-city-summary" className="mt-4 rounded-lg border border-border/70 bg-muted/20 p-3">
+          <h3 className="text-sm font-semibold text-foreground" id="atlante-city-summary">
+            Sintesi città
+          </h3>
+          <p className="mt-1 text-xs leading-5 text-muted-foreground">
+            Riepilogo delle sezioni per {activeIndicator.label.toLocaleLowerCase("it")}.
+            I valori mancanti non vengono trattati come zero.
+          </p>
+
+          <dl className="mt-3 grid grid-cols-2 gap-2 md:grid-cols-5">
+            <CityMetric label="Sezioni totali" value={integerFormatter.format(summary.totalCount)} />
+            <CityMetric label="Con dato" value={integerFormatter.format(summary.availableCount)} />
+            <CityMetric label="Senza dato" value={integerFormatter.format(summary.missingCount)} />
+            <CityMetric label="Valore zero" value={integerFormatter.format(summary.zeroCount)} />
+            {activeIndicator.id === "popolazione-residente" ? (
+              <CityMetric
+                label="Totale popolazione nelle sezioni con dato"
+                value={formatAtlanteValue(summary.sum, activeIndicator.unitLabel)}
+                wide
+              />
+            ) : null}
+          </dl>
+
+          <details className="mt-3 rounded-md border border-border/70 bg-background">
+            <summary className="cursor-pointer px-3 py-2 text-xs font-semibold text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+              Distribuzione delle sezioni con dato
+            </summary>
+            <div className="border-t border-border px-3 py-2">
+              {summary.bins.length > 0 && summary.availableCount > 0 ? (
+                <dl className="space-y-1.5 text-xs">
+                  {summary.bins.map((bin) => (
+                    <div
+                      className="grid grid-cols-[1fr_auto] gap-3"
+                      key={`${bin.index}-${bin.label}`}
+                    >
+                      <dt className="text-muted-foreground">{bin.label}</dt>
+                      <dd className="font-semibold text-foreground">
+                        {formatSectionCount(bin.count)} · {shareFormatter.format(bin.count / summary.availableCount)}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              ) : (
+                <p className="text-xs text-muted-foreground">
+                  Nessuna sezione con dato disponibile per questo indicatore.
+                </p>
+              )}
+              <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                Le percentuali usano come denominatore soltanto le sezioni con
+                dato. Le sezioni senza dato sono escluse; lo zero resta un
+                valore osservato.
+              </p>
+            </div>
+          </details>
+        </section>
 
         <div className="mt-4 grid gap-3 md:grid-cols-2">
           <label className="block">
@@ -160,4 +232,25 @@ export function CensusSectionsDataView({
       </div>
     </details>
   );
+}
+
+function CityMetric({
+  label,
+  value,
+  wide = false,
+}: {
+  label: string;
+  value: string;
+  wide?: boolean;
+}) {
+  return (
+    <div className={`rounded-md bg-background px-3 py-2 ${wide ? "col-span-2 md:col-span-1" : ""}`}>
+      <dt className="text-[11px] font-medium text-muted-foreground">{label}</dt>
+      <dd className="mt-0.5 font-display text-base font-bold text-foreground">{value}</dd>
+    </div>
+  );
+}
+
+function formatSectionCount(count: number) {
+  return `${integerFormatter.format(count)} ${count === 1 ? "sezione" : "sezioni"}`;
 }

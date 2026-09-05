@@ -1,0 +1,174 @@
+name: Trusted PR auto-merge
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize, ready_for_review, labeled, unlabeled]
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  arm-auto-merge:
+    if: >-
+      github.event_name == 'pull_request_target' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Classify and arm trusted PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          trusted_branch() {
+            case "$1" in
+              scouting/*|evidence/*|atlas/*|ui/*|contracts/*|perf/*|albo/*|opendata/*|pnrr/*|organi/*|proposte/*|demografia/*|legalita/*|data/*|content/*)
+                return 0
+                ;;
+              codex/evidence-interventions-*|codex/proposte-*|codex/opendata-*|codex/atlante-*|codex/contracts-*|codex/organi-*|codex/albo-*|codex/pnrr-*|codex/performance-*|codex/beni-confiscati-*|codex/context-*|codex/sessione-*|codex/trame-*|codex/delibere-*|codex/civic-*|codex/home-*|codex/menu-*|codex/public-copy-*|codex/public-data-*|codex/page-*|codex/section-*|codex/climate-*|codex/istat-*|codex/anac-*|codex/bdncp-*)
+                return 0
+                ;;
+              codex/[0-9]*-opendata-*|codex/[0-9]*-atlante-*|codex/[0-9]*-contracts-*|codex/[0-9]*-pnrr-*|codex/[0-9]*-beni-confiscati-*|codex/[0-9]*-performance-*|codex/[0-9]*-proposte-*|codex/[0-9]*-albo-*|codex/[0-9]*-organi-*|codex/[0-9]*-air-traffic-*|codex/[0-9]*-delibere-*|codex/[0-9]*-civic-*|codex/[0-9]*-household-*|codex/[0-9]*-geolibre-*|codex/[0-9]*-anac-*|codex/[0-9]*-bdncp-*)
+                return 0
+                ;;
+              chatgpt/albo-*|chatgpt/demografia-*|chatgpt/opendata-*)
+                return 0
+                ;;
+              *)
+                return 1
+                ;;
+            esac
+          }
+
+          protected_path() {
+            case "$1" in
+              .github/*|.agents/*|docs/automation/*|package.json|pnpm-lock.yaml|package-lock.json|yarn.lock|.env*|*/.env*|wrangler.toml|wrangler.json|wrangler.jsonc|*/wrangler.toml|*/wrangler.json|*/wrangler.jsonc|vite.config.*|*/vite.config.*|migrations/*|*/migrations/*|drizzle/*|*/drizzle/*|*/ClerkApp.*|*/auth/*|*/auth.ts|*/auth.tsx|*/auth.js|*/auth.jsx|docs/architecture/*semantic*|lib/api-zod/src/semantic*)
+                return 0
+                ;;
+              *)
+                return 1
+                ;;
+            esac
+          }
+
+          labels="$(gh pr view "$PR_NUMBER" --repo "$REPO" --json labels --jq '.labels[].name')"
+
+          if grep -Eq '^(manual-review|automerge:off|needs-human-review)$' <<<"$labels"; then
+            echo "Auto-merge blocked by an explicit manual-review label."
+            gh pr merge "$PR_NUMBER" --repo "$REPO" --disable-auto >/dev/null 2>&1 || true
+            exit 0
+          fi
+
+          if ! trusted_branch "$HEAD_REF" && ! grep -qx 'automerge:allow' <<<"$labels"; then
+            echo "Branch '$HEAD_REF' is outside the trusted routine families; leaving merge manual."
+            exit 0
+          fi
+
+          while IFS= read -r path; do
+            if protected_path "$path"; then
+              echo "Protected path '$path' requires manual merge."
+              gh pr merge "$PR_NUMBER" --repo "$REPO" --disable-auto >/dev/null 2>&1 || true
+              exit 0
+            fi
+          done < <(gh api --paginate "repos/$REPO/pulls/$PR_NUMBER/files?per_page=100" --jq '.[].filename')
+
+          if gh pr merge "$PR_NUMBER" --repo "$REPO" --auto --squash; then
+            echo "Auto-merge armed for trusted PR #$PR_NUMBER ($HEAD_REF)."
+          else
+            echo "::warning::Could not arm auto-merge for PR #$PR_NUMBER; leaving the PR open."
+          fi
+
+  refresh-open-trusted-prs:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Refresh and arm open trusted PRs after main advances
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          trusted_branch() {
+            case "$1" in
+              scouting/*|evidence/*|atlas/*|ui/*|contracts/*|perf/*|albo/*|opendata/*|pnrr/*|organi/*|proposte/*|demografia/*|legalita/*|data/*|content/*)
+                return 0
+                ;;
+              codex/evidence-interventions-*|codex/proposte-*|codex/opendata-*|codex/atlante-*|codex/contracts-*|codex/organi-*|codex/albo-*|codex/pnrr-*|codex/performance-*|codex/beni-confiscati-*|codex/context-*|codex/sessione-*|codex/trame-*|codex/delibere-*|codex/civic-*|codex/home-*|codex/menu-*|codex/public-copy-*|codex/public-data-*|codex/page-*|codex/section-*|codex/climate-*|codex/istat-*|codex/anac-*|codex/bdncp-*)
+                return 0
+                ;;
+              codex/[0-9]*-opendata-*|codex/[0-9]*-atlante-*|codex/[0-9]*-contracts-*|codex/[0-9]*-pnrr-*|codex/[0-9]*-beni-confiscati-*|codex/[0-9]*-performance-*|codex/[0-9]*-proposte-*|codex/[0-9]*-albo-*|codex/[0-9]*-organi-*|codex/[0-9]*-air-traffic-*|codex/[0-9]*-delibere-*|codex/[0-9]*-civic-*|codex/[0-9]*-household-*|codex/[0-9]*-geolibre-*|codex/[0-9]*-anac-*|codex/[0-9]*-bdncp-*)
+                return 0
+                ;;
+              chatgpt/albo-*|chatgpt/demografia-*|chatgpt/opendata-*)
+                return 0
+                ;;
+              *)
+                return 1
+                ;;
+            esac
+          }
+
+          protected_path() {
+            case "$1" in
+              .github/*|.agents/*|docs/automation/*|package.json|pnpm-lock.yaml|package-lock.json|yarn.lock|.env*|*/.env*|wrangler.toml|wrangler.json|wrangler.jsonc|*/wrangler.toml|*/wrangler.json|*/wrangler.jsonc|vite.config.*|*/vite.config.*|migrations/*|*/migrations/*|drizzle/*|*/drizzle/*|*/ClerkApp.*|*/auth/*|*/auth.ts|*/auth.tsx|*/auth.js|*/auth.jsx|docs/architecture/*semantic*|lib/api-zod/src/semantic*)
+                return 0
+                ;;
+              *)
+                return 1
+                ;;
+            esac
+          }
+
+          gh api --paginate "repos/$REPO/pulls?state=open&base=main&per_page=100" \
+            --jq '.[] | select(.draft == false) | [.number, .head.ref, .head.repo.full_name] | @tsv' \
+          | while IFS=$'\t' read -r pr branch head_repo; do
+              [ -n "$pr" ] || continue
+              [ "$head_repo" = "$REPO" ] || continue
+
+              labels="$(gh pr view "$pr" --repo "$REPO" --json labels --jq '.labels[].name')"
+              if grep -Eq '^(manual-review|automerge:off|needs-human-review)$' <<<"$labels"; then
+                echo "PR #$pr: explicit manual-review label; skipping."
+                gh pr merge "$pr" --repo "$REPO" --disable-auto >/dev/null 2>&1 || true
+                continue
+              fi
+
+              if ! trusted_branch "$branch" && ! grep -qx 'automerge:allow' <<<"$labels"; then
+                continue
+              fi
+
+              blocked_path=""
+              while IFS= read -r path; do
+                if protected_path "$path"; then
+                  blocked_path="$path"
+                  break
+                fi
+              done < <(gh api --paginate "repos/$REPO/pulls/$pr/files?per_page=100" --jq '.[].filename')
+
+              if [ -n "$blocked_path" ]; then
+                echo "PR #$pr: protected path '$blocked_path'; leaving merge manual."
+                gh pr merge "$pr" --repo "$REPO" --disable-auto >/dev/null 2>&1 || true
+                continue
+              fi
+
+              if ! gh pr update-branch "$pr" --repo "$REPO"; then
+                echo "::warning::PR #$pr could not be updated from main; leaving it open for conflict resolution."
+                continue
+              fi
+
+              if gh pr merge "$pr" --repo "$REPO" --auto --squash; then
+                echo "PR #$pr ($branch): refreshed and auto-merge armed."
+              else
+                echo "::warning::PR #$pr ($branch): could not arm auto-merge after refresh."
+              fi
+            done

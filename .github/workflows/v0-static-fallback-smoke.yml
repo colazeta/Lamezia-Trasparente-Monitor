@@ -7,6 +7,7 @@ on:
       - '.github/workflows/cloudflare-pages-deploy.yml'
       - '.github/workflows/deploy-smoke.yml'
       - '.github/workflows/v0-static-fallback-smoke.yml'
+      - '.github/workflows/trusted-auto-merge.yml'
       - 'artifacts/api-server/src/routes/organi.ts'
       - 'artifacts/api-server/src/routes/organi.test.ts'
       - 'artifacts/lamezia-trasparente/**'
