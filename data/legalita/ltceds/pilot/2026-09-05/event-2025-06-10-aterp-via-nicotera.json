@@ -1,0 +1,41 @@
+{
+  "event_id": "0192a400-0000-7001-8000-000000000001",
+  "schema_version": "1.0-draft.1",
+  "record_status": "published",
+  "event_form": "course_of_conduct",
+  "title": "Occupazione abusiva di alloggio ATERP in via M. Nicotera",
+  "summary": "Evento documentato dai Carabinieri come occupazione sine titulo di un appartamento ATERP in via M. Nicotera. La fonte del 10 giugno 2025 documenta l'accertamento e il sequestro, ma non consente di fissare una data di inizio dell'occupazione; il record evita quindi una falsa precisione temporale.",
+  "temporal": {"end": "2025-06-10", "precision": "approximate"},
+  "privacy_tier": "generalised",
+  "locations": [
+    {
+      "role": "occurrence",
+      "place_name": "Via M. Nicotera",
+      "municipality": "Lamezia Terme",
+      "precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "privacy_transform": "street_generalisation",
+      "geometry": null
+    }
+  ],
+  "offences": [
+    {
+      "offence_instance_id": "0192a400-0000-7002-8000-000000000001",
+      "classification_basis": "provisional",
+      "attempt_status": "completed",
+      "situational_context": [],
+      "cyber_related": "no"
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "0192a400-0000-7003-8000-000000000001",
+      "source_type": "law_enforcement_primary",
+      "url": "https://www.carabinieri.it/in-vostro-aiuto/informazioni/comunicati-stampa/occupazioni-abusive-liberato-e-sequestrato-un-appartamento-aterp",
+      "published_at": "2025-06-10T09:07:00+02:00"
+    }
+  ],
+  "procedural_summary": "Sequestro preventivo eseguito su provvedimento dell'autorità giudiziaria; procedimento pendente.",
+  "quality": {"source_count": 1, "has_source_conflict": false, "classification_pending": true, "privacy_review": "passed"},
+  "updated_at": "2026-09-05T23:10:00Z"
+}
