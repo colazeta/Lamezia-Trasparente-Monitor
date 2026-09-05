@@ -28,7 +28,7 @@
     "check:organi:current": "tsx ./check-institutional-roster.ts --snapshot ../data/sources/organi-istituzionali-source-snapshot.json",
     "check:organi:profiles": "tsx ./check-institutional-profile-details.ts --snapshot ../data/sources/organi-istituzionali-current-profile-details-snapshot.json",
     "check:organi:council-profiles": "tsx ./check-institutional-council-profile-sections.ts --snapshot ../data/sources/organi-istituzionali-current-council-profile-sections-snapshot.json",
-    "check:organi:giunta-profiles": "tsx ./check-institutional-giunta-profile-sections.ts --snapshot ../data/sources/organi-istituzionali-current-profile-sections-snapshot.json",
+    "check:organi:giunta-profiles": "tsx ./check-institutional-giunta-profile-sections.ts --snapshot ../data/sources/organi-istituzionali-current-giunta-profile-sections-snapshot.json",
     "check:organi:electoral-context": "tsx ./check-institutional-electoral-context.ts --snapshot ../data/sources/organi-istituzionali-electoral-context-snapshot.json",
     "check:organi:history": "tsx ./check-institutional-history.ts --snapshot ../data/sources/organi-istituzionali-historical-source-snapshot.json",
     "check:organi:commissions": "tsx ./check-institutional-commissions.ts --snapshot ../data/sources/organi-istituzionali-commissioni-2025-source-snapshot.json",
