@@ -3,6 +3,7 @@ import process from "node:process";
 
 import {
   LTCEDS_SCHEMA_VERSION,
+  defaultPublicMapLocations,
   validatePublicEventSemantics,
   type LtcedsPublicEvent,
 } from "@workspace/publication-standardisation/ltceds";
@@ -94,9 +95,8 @@ async function selfTest(): Promise<boolean> {
       },
     ],
   };
-  const arrestIssues = validatePublicEventSemantics(arrestOnly);
-  if (arrestIssues.some((issue) => issue.code === "NON_OCCURRENCE_CANNOT_BE_DEFAULT_MAP_POINT")) {
-    throw new Error("semantic self-test assumption failed: non-occurrence is already excluded by map predicate");
+  if (defaultPublicMapLocations(arrestOnly).length !== 0) {
+    throw new Error("semantic self-test failed: arrest location leaked into default crime map");
   }
 
   process.stdout.write(`${JSON.stringify({ self_test: "passed" })}\n`);
