@@ -66,6 +66,10 @@ jobs:
         if: steps.rome_window.outputs.should_run == 'true'
         run: pnpm albo:fetch
 
+      - name: Materialize canonical research corpus
+        if: steps.rome_window.outputs.should_run == 'true'
+        run: pnpm --filter @workspace/scripts exec tsx ./albo-research-corpus.ts
+
       - name: Commit generated Albo outputs
         if: steps.rome_window.outputs.should_run == 'true'
         shell: bash
@@ -73,12 +77,12 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add data/public/albo
+          git add data/public/albo data/public/research/albo-canonical-current.json
 
           if git diff --cached --quiet; then
             echo "No Albo output changes to commit."
             exit 0
           fi
 
-          git commit -m "Update Albo Pretorio public outputs"
+          git commit -m "Update Albo Pretorio public and research outputs"
           git push
