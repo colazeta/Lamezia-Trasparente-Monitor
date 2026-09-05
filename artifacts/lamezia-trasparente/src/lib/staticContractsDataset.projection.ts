@@ -37,10 +37,13 @@ export function buildContractProjection(records: readonly CanonicalProcurementRe
   assertNoContractIdCollisions(contracts);
   const groupsByCig = new Map(groups.map((group) => [group.cig, group]));
   const storylines = Object.fromEntries(
-    contracts.map((contract) => [
-      String(contract.id),
-      buildStoryline(contract, groupsByCig.get(contract.cig)?.records ?? []),
-    ]),
+    contracts.map((contract) => {
+      const cig = requireContractCig(contract);
+      return [
+        String(contract.id),
+        buildStoryline(contract, groupsByCig.get(cig)?.records ?? []),
+      ];
+    }),
   );
   return {
     contracts,
@@ -260,12 +263,21 @@ function stableContractId(cig: string): number {
 function assertNoContractIdCollisions(contracts: readonly Contract[]): void {
   const byId = new Map<number, string>();
   for (const contract of contracts) {
+    const cig = requireContractCig(contract);
     const previous = byId.get(contract.id);
-    if (previous && previous !== contract.cig) {
-      throw new Error(`Stable contract id collision between CIG ${previous} and ${contract.cig}`);
+    if (previous && previous !== cig) {
+      throw new Error(`Stable contract id collision between CIG ${previous} and ${cig}`);
     }
-    byId.set(contract.id, contract.cig);
+    byId.set(contract.id, cig);
   }
+}
+
+function requireContractCig(contract: Contract): string {
+  const cig = contract.cig?.trim();
+  if (!cig) {
+    throw new Error(`Canonical contract ${contract.id} is missing its CIG`);
+  }
+  return cig;
 }
 
 function publicationId(record: CanonicalProcurementRecord): number | null {
