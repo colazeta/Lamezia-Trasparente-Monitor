@@ -6,7 +6,7 @@ Each authoritative event is stored in exactly one JSON file, normally under a da
 
 ## Persistence boundary
 
-Files in this directory are **internal ingestion artifacts**, not public map payloads. After validation, the importer may upsert only the canonical crime tables:
+Files in this directory are **internal ingestion artifacts**, not public map payloads. After validation, canonical persistence may upsert only:
 
 - `crime_events`
 - `crime_sources`
@@ -14,7 +14,9 @@ Files in this directory are **internal ingestion artifacts**, not public map pay
 - `crime_event_locations`
 - `crime_event_sources`
 
-The monitor importer never writes to `crime_public_events`. Publication is a separate editorial/privacy operation and must pass the dedicated publication gate.
+No monitor path may write to `crime_public_events`. Publication is a separate editorial/privacy operation and must pass the dedicated publication gate.
+
+The GitHub workflow `.github/workflows/crime-event-ingestion.yml` is deliberately validation-only and does not receive a production PostgreSQL credential. Automated monitor runs persist reviewed, merged events through the authenticated Neon integration against the canonical production database. This keeps database credentials out of GitHub Actions while retaining the repository artifact as the auditable input. The CLI execute path remains available for an operator or future backend worker that is supplied with `DATABASE_URL` by its own secret manager.
 
 ## Required editorial rules
 
@@ -43,6 +45,6 @@ For a manual canonical ingestion, execute only the event artifact that has been 
 DATABASE_URL=... pnpm --filter @workspace/db run import:crime-monitor --input data/legalita/ltceds/monitor/2026-09-07/<event-key>.json --execute
 ```
 
-On pushes to `main`, `.github/workflows/crime-event-ingestion.yml` determines which monitor JSON files were added or modified by that push and executes canonical ingestion only for those files. The normal operational path therefore does **not** replay the entire historical inbox on every update.
+The normal automated path validates the whole inbox in GitHub, merges the event artifact, and only then persists that event through the authenticated Neon integration. Before a write, it must check both `crime_events` and `crime_public_events`. Existing public projections are never silently mutated by the monitor.
 
-The execute path fails closed if the selected event ID is already present in `crime_public_events`; published records cannot be silently mutated through the monitoring inbox. Corrections to already published events must pass through the separate publication/editorial pipeline.
+For a correction to an existing non-public event, stable child IDs permit non-destructive upserts. If exact reconciliation would require deleting a previously persisted source, offence, location or relation, the automated monitor must stop and flag the event for manual reconciliation rather than issuing a destructive delete.
