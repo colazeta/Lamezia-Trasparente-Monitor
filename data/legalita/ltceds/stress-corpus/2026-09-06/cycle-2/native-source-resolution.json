@@ -1,0 +1,83 @@
+{
+  "schema_version": "1.0",
+  "cycle": 2,
+  "search_engine": "Parallel Search",
+  "objective": "Resolve source-native law-enforcement or prosecutorial records for candidate events before reviewed-bundle promotion.",
+  "cases": [
+    {
+      "case_key": "2025-05-17-JOKER-TWO-COMMERCIAL-FIRES",
+      "institutional_target": "Carabinieri / competent prosecutorial source",
+      "native_source_status": "not_resolved",
+      "targeted_queries": [
+        "site:carabinieri.it Lamezia Joker 17 maggio 2025",
+        "Carabinieri Lamezia Joker pasticceria barberia"
+      ],
+      "stronger_secondary_sources": [
+        {
+          "url": "https://www.rainews.it/tgr/calabria/video/2025/10/incendi-dolosi-lamezia-joker--152ab548-9af1-4831-a2e9-abf00e2481fb.html",
+          "source_type": "news_agency",
+          "role": "corroboration_of_two_distinct_fire_occurrences"
+        },
+        {
+          "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2025/10/23/lamezia-gli-incendi-in-due-esercizi-commerciali-nel-maggio-scorso-tre-arresti-56b141cb-59ad-489d-a9ef-7bc52b0d1101/",
+          "source_type": "press_secondary",
+          "role": "occurrence_level_location_granularity"
+        }
+      ],
+      "current_event_identity": "two_event_candidates_linked_series",
+      "reviewed_bundle_status": "blocked",
+      "blocker": "original institutional occurrence source unresolved"
+    },
+    {
+      "case_key": "2025-02-28-03-01-SHATTER-27-AUTONOMOUS-EVENTS",
+      "institutional_target": "Carabinieri / juvenile prosecutorial or judicial source",
+      "native_source_status": "not_resolved",
+      "targeted_queries": [
+        "site:carabinieri.it Lamezia Shatter 27 eventi",
+        "Carabinieri Shatter Lamezia 27 eventi autonomi"
+      ],
+      "stronger_secondary_sources": [
+        {
+          "url": "https://www.rainews.it/tgr/calabria/articoli/2025/10/lamezia-terme-mette-a-segno-27-furti-arrestato-diciassettenne-587114c6-9708-4d8b-837d-60eb85ce2008.html",
+          "source_type": "news_agency",
+          "role": "corroboration"
+        },
+        {
+          "url": "https://www.lameziainforma.it/cronaca/2025/06/16/operazione-shatter-su-furti-aggravati-su-auto-e-danneggiamenti-di-autovetture-in-sosta/62039/",
+          "source_type": "press_secondary",
+          "role": "exact_reported_cardinality_and_autonomous-event_wording"
+        }
+      ],
+      "current_event_identity": "event_cluster_exact_count_27_unresolved_members",
+      "reviewed_bundle_status": "not_applicable",
+      "blocker": "cluster members not separately resolvable and institutional original unresolved"
+    },
+    {
+      "case_key": "2026-01-11-VIA-DEL-PROGRESSO-ADJACENT-TARGETS",
+      "institutional_target": "Carabinieri",
+      "native_source_status": "not_resolved",
+      "targeted_queries": [
+        "site:carabinieri.it Lamezia Cantine Lento gennaio 2026",
+        "Carabinieri Lamezia via Progresso 11 gennaio"
+      ],
+      "stronger_secondary_sources": [
+        {
+          "url": "https://www.corrieredellacalabria.it/2026/01/15/furti-a-lamezia-i-carabinieri-sorprendono-i-ladri-arrestato-un-42enne-si-era-nascosto-in-un-cassonetto/",
+          "source_type": "press_secondary",
+          "role": "same-night_two-adjacent-targets_corroboration"
+        },
+        {
+          "url": "https://www.calabriainforma.it/cronaca/2026/01/15/lamezia-furti-notturni-42enne-arrestato-dai-carabinieri/56555/",
+          "source_type": "press_secondary",
+          "role": "date_and_street_corroboration"
+        }
+      ],
+      "current_event_identity": "continuous_episode_candidate",
+      "occurrence_time": "2026-01-11T03:50:00~",
+      "reviewed_bundle_status": "blocked",
+      "blocker": "original institutional occurrence source unresolved"
+    }
+  ],
+  "source_hierarchy_rule": "News-agency and direct communiqué reproductions improve corroboration but do not become law_enforcement_primary without the source-native institutional resource.",
+  "promotion_count": 0
+}
