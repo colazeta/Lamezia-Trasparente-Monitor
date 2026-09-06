@@ -21,6 +21,7 @@ import { EVIDENCE_INTERVENTIONS_2026_09_04 } from "./evidenceInterventions202609
 import { EVIDENCE_INTERVENTIONS_2026_09_05 } from "./evidenceInterventions20260905";
 import { EVIDENCE_INTERVENTIONS_2026_09_05_SPECIAL } from "./evidenceInterventions20260905Special";
 import { EVIDENCE_INTERVENTIONS_2026_09_06 } from "./evidenceInterventions20260906";
+import { EVIDENCE_INTERVENTION_CORRECTIONS_2026_09_06 } from "./evidenceInterventionCorrections20260906";
 
 export {
   EVIDENCE_AREA_LABELS,
@@ -39,7 +40,7 @@ export type {
   EvidenceThematicArea,
 };
 
-export const EVIDENCE_INTERVENTIONS: readonly EvidenceIntervention[] = [
+const RAW_EVIDENCE_INTERVENTIONS: readonly EvidenceIntervention[] = [
   ...BASE_EVIDENCE_INTERVENTIONS,
   ...EVIDENCE_INTERVENTIONS_DAILY,
   ...EVIDENCE_INTERVENTIONS_2026_08_31,
@@ -51,6 +52,27 @@ export const EVIDENCE_INTERVENTIONS: readonly EvidenceIntervention[] = [
   ...EVIDENCE_INTERVENTIONS_2026_09_05_SPECIAL,
   ...EVIDENCE_INTERVENTIONS_2026_09_06,
 ];
+
+type EvidenceCorrection = (typeof EVIDENCE_INTERVENTION_CORRECTIONS_2026_09_06)[number];
+
+const EVIDENCE_CORRECTIONS_BY_ID = new Map<string, EvidenceCorrection>(
+  EVIDENCE_INTERVENTION_CORRECTIONS_2026_09_06.map((correction) => [
+    correction.id,
+    correction,
+  ] as const),
+);
+
+export const EVIDENCE_INTERVENTIONS: readonly EvidenceIntervention[] =
+  RAW_EVIDENCE_INTERVENTIONS.map((item) => {
+    const correction = EVIDENCE_CORRECTIONS_BY_ID.get(item.id);
+    if (!correction) return item;
+
+    return {
+      ...item,
+      ...correction.patch,
+      revisionHistory: [...item.revisionHistory, correction.revision],
+    } as EvidenceIntervention;
+  });
 
 export function getEvidenceCountries() {
   return Array.from(new Set(EVIDENCE_INTERVENTIONS.map((item) => item.country))).sort((a, b) =>
