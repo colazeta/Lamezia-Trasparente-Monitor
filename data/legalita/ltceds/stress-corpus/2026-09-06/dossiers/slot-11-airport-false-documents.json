@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0",
+  "corpus_id": "ltceds-stress-corpus-2026-09-06",
+  "corpus_slot": 11,
+  "case_key": "2020-03-LAMEZIA-AIRPORT-FALSE-DOCUMENTS",
+  "status": "review_mode",
+  "candidate_kind": "EVENT_CANDIDATE",
+  "source_state": "primary_institutional_source_verified",
+  "retrieval_date": "2026-09-06",
+  "sources": [
+    {
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/12365e6faae574205159451539",
+      "source_type": "law_enforcement_primary",
+      "source_role": "occurrence_primary",
+      "published_at": "2020-03-16",
+      "supported_scope": "false documents detected by Border Police at Lamezia Terme airport during attempted boarding for a London Stansted flight"
+    }
+  ],
+  "supported_facts": [
+    "The occurrence is documented at Lamezia Terme airport during passenger boarding controls.",
+    "The official source describes two travellers found in possession of false identity/travel documents while attempting to board a flight to London Stansted.",
+    "The arrest is contemporaneous with the document-control occurrence rather than an unrelated later procedural location."
+  ],
+  "event_identity_analysis": {
+    "preferred_model": "one_EVENT_candidate",
+    "event_form": "discrete",
+    "rationale": "One continuous airport-control occurrence involving the same control point and same attempted journey is described. Multiple persons/documents do not require multiple EVENT IDs."
+  },
+  "temporal_analysis": {
+    "source_wording": "Friday previous to the 16 March 2020 release",
+    "calendar_derived_date": "2020-03-13",
+    "derivation_basis": "calendar_derivation_from_source_relative_date",
+    "publication_precision_before_review": "exact_date_derived_not_source_literal",
+    "caution": "Retain the derivation basis; do not present the derived calendar date as a verbatim source field."
+  },
+  "geography_analysis": {
+    "municipality": "Lamezia Terme",
+    "place": "Lamezia Terme airport",
+    "evidence_precision": "exact_public_site",
+    "publication_risk": "low_public_site",
+    "public_geometry_candidate": true
+  },
+  "offence_analysis": {
+    "reported_family": "possession/use of false identity or travel documents",
+    "classification_status": "source_stated_legal_detail_to_be_crosswalked",
+    "classification_basis": "source_stated_legal"
+  },
+  "privacy_and_publication": {
+    "person_identity_in_dossier": false,
+    "public_site": true,
+    "auto_publish": false
+  },
+  "recommended_resolution": "Individually resolvable discrete EVENT candidate at an exact public site. Eligible for reviewed-bundle preparation after human review of the calendar-derived occurrence date and offence crosswalk.",
+  "review_decision": "reviewed_bundle_candidate",
+  "publication_blockers": [
+    "Human review must confirm the calendar-derived occurrence date and public text before approved reviewed-bundle status."
+  ]
+}

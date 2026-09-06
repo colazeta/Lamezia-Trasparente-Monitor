@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0",
+  "corpus_id": "ltceds-stress-corpus-2026-09-06",
+  "corpus_slot": 22,
+  "case_key": "2022-LAMEZIA-REPEATED-DOMESTIC-MALTREATMENT",
+  "status": "review_mode",
+  "candidate_kind": "COURSE_OF_CONDUCT_CANDIDATE",
+  "source_state": "primary_institutional_source_verified",
+  "retrieval_date": "2026-09-06",
+  "sources": [
+    {
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/123662a3362ce1a08720548416",
+      "source_type": "law_enforcement_primary",
+      "source_role": "course_of_conduct_and_procedural_primary",
+      "published_at": "2022-06-10",
+      "supported_scope": "repeated abusive and coercive conduct in a family setting; later precautionary measures"
+    }
+  ],
+  "supported_facts": [
+    "The official source explicitly describes reiterated abusive and coercive conduct rather than one isolated incident.",
+    "The source reports verbal, physical and psychological abuse across time, including earlier conduct and a later threat in May 2022.",
+    "The June 2022 custodial/electronic-monitoring measures are procedural responses and not new criminal EVENT occurrences."
+  ],
+  "event_identity_analysis": {
+    "preferred_model": "one_course_of_conduct_EVENT_candidate",
+    "event_form": "course_of_conduct",
+    "rationale": "The source itself frames the alleged maltreatment as reiterated conduct over time. Splitting it into invented discrete incidents would overstate source granularity.",
+    "split_condition": "Only separately documented occurrences with independent date/place anchors should become distinct related EVENTs."
+  },
+  "temporal_analysis": {
+    "start": null,
+    "end_context": "May 2022 latest described conduct before procedural action",
+    "precision": "open_or_approximate_course_of_conduct",
+    "caution": "Do not infer an initial date from family history or from the date of the police measure."
+  },
+  "geography_analysis": {
+    "municipality": "Lamezia Terme",
+    "location_type": "private domestic setting",
+    "evidence_precision": "private_residence_context",
+    "public_geometry_ready": false,
+    "publication_rule": "suppress point geometry; municipality-level context at most unless a stricter privacy review permits less"
+  },
+  "offence_analysis": {
+    "reported_family": "maltreatment in family / repeated domestic abuse",
+    "classification_status": "source_stated_legal_pending_ICCS_crosswalk",
+    "classification_basis": "source_stated_legal"
+  },
+  "privacy_and_publication": {
+    "high_vulnerability_context": true,
+    "victim_linked_private_location": true,
+    "person_identity_in_dossier": false,
+    "public_point_geometry": "suppressed",
+    "auto_publish": false
+  },
+  "recommended_resolution": "Model as one course_of_conduct EVENT candidate with open/uncertain start and high-vulnerability geoprivacy. Any public projection should suppress point geometry and avoid identifying family detail.",
+  "review_decision": "reviewed_bundle_candidate",
+  "publication_blockers": [
+    "Human privacy/legal review required before any approved public bundle.",
+    "Exact private residence must not enter public geometry."
+  ]
+}

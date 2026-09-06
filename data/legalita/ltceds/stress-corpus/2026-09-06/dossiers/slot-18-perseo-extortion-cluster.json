@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0",
+  "corpus_id": "ltceds-stress-corpus-2026-09-06",
+  "corpus_slot": 18,
+  "case_key": "PERSEO-HUNDREDS-OF-EXTORTION-EPISODES",
+  "status": "review_mode",
+  "candidate_kind": "EVENT_CLUSTER",
+  "source_state": "primary_official_source_indexed_page_access_protected",
+  "retrieval_date": "2026-09-06",
+  "sources": [
+    {
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/5730debcf423e048972191",
+      "source_type": "law_enforcement_primary",
+      "source_role": "cluster_cardinality_and_context_primary",
+      "access_note": "The live page is access-protected, but the search index exposes the official-source excerpt.",
+      "supported_scope": "official wording reports several hundred extortion episodes against business and commercial activities; same sentence separately describes a mafia war in Lamezia Terme during 2005-2011"
+    },
+    {
+      "url": "https://ildispaccio.it/archivio/dossier/26102-la-fine-dei-giampa-con-perseo-in-manette-56-professionisti-anche-politici",
+      "source_type": "press_secondary",
+      "source_role": "official_wording_corroboration",
+      "published_at": "2013-07-26",
+      "supported_scope": "reproduces the several-hundred extortion wording and the separate 2005-2011 mafia-war context"
+    }
+  ],
+  "supported_facts": [
+    "The official Questura source reports 'several hundred' extortion episodes against business and commercial activities.",
+    "The same official excerpt refers to a violent mafia war in Lamezia Terme between 2005 and 2011.",
+    "The reviewed excerpt does not enumerate the extortion episodes individually.",
+    "The grammar of the available official excerpt does not safely establish that the 2005-2011 interval applies to every reported extortion episode."
+  ],
+  "event_identity_analysis": {
+    "preferred_model": "EVENT_CLUSTER",
+    "reported_event_count": null,
+    "count_precision": "approximate",
+    "reported_count_text": "diverse centinaia",
+    "resolution_status": "unresolved",
+    "synthetic_member_minting_allowed": false,
+    "rationale": "Approximate aggregate cardinality and non-enumerated members cannot generate individual canonical EVENT IDs."
+  },
+  "temporal_analysis": {
+    "mafia_war_context_interval": "2005/2011",
+    "extortion_cluster_interval": null,
+    "scope_rule": "The 2005-2011 interval is preserved as an assertion attached to the mafia-war context, not automatically copied to the extortion cluster.",
+    "caution": "A shared sentence or investigation period is not enough to manufacture a cluster-wide occurrence interval."
+  },
+  "geography_analysis": {
+    "mafia_war_context_geography": "Lamezia Terme",
+    "extortion_target_class": "business and commercial activities",
+    "extortion_member_geography": "not individually resolved from the reviewed excerpt",
+    "public_geometry_ready": false,
+    "map_cluster_as_event_point": false
+  },
+  "offence_analysis": {
+    "reported_family": "extortion",
+    "classification_status": "cluster_level_only",
+    "caution": "Do not duplicate one cluster-level classification assertion across synthetic member events."
+  },
+  "privacy_and_publication": {
+    "person_identity_in_dossier": false,
+    "commercial_target_class_only": true,
+    "auto_publish": false
+  },
+  "recommended_resolution": "Create an EVENT_CLUSTER with approximate cardinality text preserved verbatim/semantically. Store time/geography/count facts as separately scoped source assertions; do not assign the 2005-2011 context interval to all extortion members without additional evidence.",
+  "review_decision": "cluster",
+  "publication_blockers": [
+    "Individual extortion occurrences are not enumerated in the reviewed official excerpt.",
+    "Extortion-specific temporal and geographic scope is not sufficiently resolved for member EVENT creation or mapping."
+  ],
+  "standard_implication": "Confirms CLUSTER-SCOPE-001 independently of Shatter: cluster cardinality, contextual time, member time, contextual geography and member geography require assertion-level scope rather than one cluster-wide occurrence date/point."
+}

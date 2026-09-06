@@ -1,0 +1,84 @@
+{
+  "schema_version": "1.0",
+  "corpus_id": "ltceds-stress-corpus-2026-09-06",
+  "corpus_slot": 8,
+  "case_key": "2026-06-18-ARTEMIS-II",
+  "status": "review_mode",
+  "candidate_kind": "SOURCE_OPERATION_NOT_EVENT",
+  "source_state": "primary_institutional_source_verified",
+  "retrieval_date": "2026-09-06",
+  "sources": [
+    {
+      "url": "https://www.carabinieri.it/in-vostro-aiuto/informazioni/comunicati-stampa/operazione-artemis-ii-associazione-di-tipo-mafioso-usura-estorsione-corruzione-ed-altro.-9-arresti",
+      "source_type": "law_enforcement_primary",
+      "source_role": "primary_procedural_and_investigative_context",
+      "published_at": "2026-06-18T10:43:00+02:00",
+      "supported_scope": "precautionary operation, nine investigated persons, multiple alleged offence families and multi-province execution geography"
+    },
+    {
+      "url": "https://www.ilmetropolitano.it/2026/06/18/operazione-artemis-ii-associazione-di-tipo-mafioso-usura-estorsione-corruzione-ed-altro-9-arresti/",
+      "source_type": "press_secondary",
+      "source_role": "communicated_text_corroboration",
+      "supported_scope": "reproduction of Carabinieri communiqué"
+    },
+    {
+      "url": "https://www.iacchite.blog/ndrangheta-a-lamezia-appalti-pilotati-per-tagli-boschivi-e-mense-scolastiche-e-prestiti-usurai-colpito-il-clan-cracolici-il-comunicato-della-dda/",
+      "source_type": "press_secondary",
+      "source_role": "detailed_investigative_context",
+      "supported_scope": "reported schemes involving private-dispute control, procurement and usury"
+    }
+  ],
+  "supported_facts": [
+    "The 18 June 2026 action is a precautionary/judicial operation and is not itself a criminal EVENT.",
+    "The official communiqué attributes multiple alleged offence families, including mafia-type association, usury, extortion, corruption, falsehood, procurement interference, fraudulent transfer, disclosure/use of official secrets, unlawful competition with threat or violence, and peculation.",
+    "Execution geography includes the Lamezia Terme district and other provinces; this geography cannot be substituted for underlying occurrence locations.",
+    "Related reporting describes economic sectors including forestry/cutting activity and school catering/refection services, plus alleged usurious lending and procurement manipulation."
+  ],
+  "event_identity_analysis": {
+    "operation_is_event": false,
+    "preferred_model": "JUSTICE_CASE_OR_SOURCE_DOSSIER_PLUS_OCCURRENCE_DECOMPOSITION",
+    "underlying_event_count": null,
+    "resolution_status": "not_resolved_from_general_communique",
+    "rationale": "The source establishes an investigation/proceeding containing multiple alleged conduct classes and patterns, but does not supply a complete occurrence-by-occurrence list with dates and places suitable for canonical EVENT identity."
+  },
+  "temporal_analysis": {
+    "operation_date": "2026-06-18",
+    "investigation_context": "continuation of an earlier investigation; underlying conduct spans earlier periods",
+    "event_date_ready": false,
+    "caution": "Never use 18 June 2026 as the occurrence date of all underlying alleged conduct."
+  },
+  "geography_analysis": {
+    "operation_execution_geography": ["Lamezia Terme district", "Vibo Valentia province", "Terni province", "Como province"],
+    "occurrence_geography_resolved": false,
+    "public_geometry_ready": false,
+    "caution": "Operation/search/arrest/seizure places are procedural geography unless a source separately establishes an occurrence there."
+  },
+  "offence_analysis": {
+    "reported_families": [
+      "mafia-type association",
+      "usury",
+      "extortion",
+      "corruption",
+      "falsehood",
+      "bid/procurement interference",
+      "fraudulent transfer of assets",
+      "official-secret disclosure/use",
+      "unlawful competition with threat or violence",
+      "peculation"
+    ],
+    "classification_status": "source_stated_legal_at_case_level_not_event_level",
+    "caution": "Do not copy the complete case-level offence list onto every future occurrence."
+  },
+  "privacy_and_publication": {
+    "person_identity_in_dossier": false,
+    "allegation_status": "investigative_precautionary",
+    "presumption_of_innocence_required": true,
+    "auto_publish": false
+  },
+  "recommended_resolution": "Retain Artemis II as primary SOURCE/JUSTICE_CASE context. Extract occurrence-level candidates only from material that supplies distinguishing factual, temporal and geographic anchors; route unresolved repeated schemes to EVENT_CLUSTER rather than creating an Artemis II EVENT.",
+  "review_decision": "decomposition_required",
+  "publication_blockers": [
+    "General communiqué does not provide a complete occurrence-level decomposition.",
+    "Case-level offence and execution geography cannot be projected as event-level facts."
+  ]
+}

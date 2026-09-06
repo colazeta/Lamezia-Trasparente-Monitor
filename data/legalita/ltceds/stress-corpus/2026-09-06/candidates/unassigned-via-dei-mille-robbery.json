@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0",
+  "corpus_id": "ltceds-stress-corpus-2026-09-06",
+  "corpus_slot": null,
+  "case_key": "2018-02-28-VIA-DEI-MILLE-ROBBERY-INJURY",
+  "status": "review_mode_unassigned",
+  "candidate_kind": "EVENT_CANDIDATE",
+  "slot_fit_status": "does_not_yet_satisfy_slot_12_independent_source_target",
+  "source_state": "primary_plus_secondary_reproductions_or_corroboration",
+  "retrieval_date": "2026-09-06",
+  "sources": [
+    {
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/12365ab0d32eae8d8004290737",
+      "source_type": "law_enforcement_primary",
+      "source_role": "occurrence_primary",
+      "supported_scope": "28 February 2018, Via dei Mille, robbery and injuries against an elderly pedestrian"
+    },
+    {
+      "url": "https://www.lacnews24.it/cronaca/lamezia-scippa-la-borsa-e-ferisce-anziana-arrestato-minorenne-iqt1831x",
+      "source_type": "press_secondary",
+      "source_role": "corroboration_not_counted_as_independent_evidence",
+      "published_at": "2018-03-21",
+      "supported_scope": "same date/street and injury facts; wording appears substantially derived from the police account"
+    },
+    {
+      "url": "https://www.catanzaroinforma.it/cronaca/2018/03/21/arrestato-rapinatore-di-una-anziana-donna-video/110666/",
+      "source_type": "press_secondary",
+      "source_role": "corroboration_not_counted_as_independent_evidence",
+      "published_at": "2018-03-21",
+      "supported_scope": "same event/investigation; not treated as independent fact-gathering evidence"
+    }
+  ],
+  "supported_facts": [
+    "The official source establishes a robbery occurrence on 28 February 2018 in Via dei Mille, Lamezia Terme, with injury consequences.",
+    "The later arrest and publication on 21 March 2018 are procedural history.",
+    "Multiple media reproductions do not automatically satisfy a two-independent-source sampling target when they appear to derive from the same institutional account."
+  ],
+  "event_identity_analysis": {
+    "preferred_model": "one_discrete_EVENT_candidate",
+    "event_resolvable": true
+  },
+  "temporal_analysis": {
+    "occurrence_date": "2018-02-28",
+    "precision": "exact_date"
+  },
+  "geography_analysis": {
+    "municipality": "Lamezia Terme",
+    "street": "Via dei Mille",
+    "precision": "street_segment",
+    "exact_civic_supported": false
+  },
+  "privacy_and_publication": {
+    "vulnerable_victim_context": true,
+    "person_identity_in_dossier": false,
+    "auto_publish": false
+  },
+  "recommended_resolution": "Retain as an individually resolvable candidate, but do not consume slot 12 until a genuinely independent second evidentiary source is found or the sampling target is explicitly revised.",
+  "review_decision": "candidate_unassigned",
+  "publication_blockers": [
+    "Human privacy/public-text review required.",
+    "Sampling slot 12 remains unfilled because independent-source criterion is not yet met."
+  ]
+}
