@@ -128,10 +128,8 @@ test("attested reviewed plan is accepted only after every applicable gate passed
   const valid = plan();
   assert.doesNotThrow(() => assertAttestedReviewedPlan(valid));
 
-  const pending = plan() as AttestedReviewedPlan & {
-    gates: AttestedReviewedPlan["gates"] & { public_schema: string };
-  };
-  pending.gates.public_schema = "pending";
+  const pending = plan();
+  (pending.gates as { public_schema: string }).public_schema = "pending";
   assert.throws(
     () => assertAttestedReviewedPlan(pending),
     /public-schema gate is not passed/,
