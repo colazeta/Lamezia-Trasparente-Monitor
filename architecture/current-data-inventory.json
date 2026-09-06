@@ -26,7 +26,10 @@
       "0015_change_sentinel_queue.sql",
       "0016_ltceds_persistence_boundary.sql"
     ],
-    "schemaTablesNotCreatedInVersionedMigrations": [],
+    "schemaTablesNotCreatedInVersionedMigrations": [
+      "conversations",
+      "messages"
+    ],
     "migrationTablesNotInCurrentDrizzleSchema": []
   },
   "dataLake": {
