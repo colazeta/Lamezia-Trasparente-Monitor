@@ -80,6 +80,65 @@ const SCOUTED_CANONICAL_PROPOSAL_PRESENTATIONS: Record<
     expectedOutcome:
       "Rendere accessibile la procedura e verificabili tempi e risorse per i potenziali beneficiari.",
   },
+  "sanita-pubblica-petizione-presidio-malerba-2026": {
+    proposalId: "sanita-pubblica-petizione-presidio-malerba-2026",
+    version: "1.0",
+    title: "Rafforzamento della sanità pubblica e dei servizi territoriali",
+    request:
+      "Definire interventi pubblici, calendarizzati e verificabili per rafforzare ospedale e servizi territoriali, ridurre le criticità di accesso e rendere trasparenti risorse, responsabilità e avanzamento.",
+    actionTypes: [
+      "rafforzamento_servizio",
+      "organizzazione",
+      "trasparenza",
+      "coordinamento",
+    ],
+    measures: [
+      "Rendere trasparenti i fondi destinati alla sanità lametina e il loro utilizzo.",
+      "Pubblicare un piano operativo calendarizzato per il potenziamento dell’ospedale e dei servizi territoriali.",
+      "Definire priorità chiare e un sistema pubblico di monitoraggio degli interventi.",
+      "Ridurre le liste d’attesa con interventi dedicati.",
+      "Adeguare e valorizzare il Consultorio Familiare, garantendone funzioni, personale e servizi.",
+      "Attuare pienamente l’Assistenza Domiciliare Integrata con le funzioni previste.",
+      "Rafforzare gli organici, con priorità ai servizi di emergenza-urgenza.",
+      "Ripristinare e rendere pienamente operativi i reparti e i servizi carenti.",
+    ],
+    expectedOutcome:
+      "Rendere verificabili programmazione, risorse e avanzamento degli interventi richiesti e rafforzare l’accesso ai servizi sanitari sul territorio.",
+    editorialNote:
+      "La presentazione canonica seleziona otto misure principali per rispettare il contratto UI; il record di acquisizione conserva anche le richieste su comunicazioni periodiche, Consiglio comunale aperto e trasparenza delle interlocuzioni istituzionali.",
+  },
+  "la-mia-estate-avvio-attivita-oltre-autismo-2026": {
+    proposalId: "la-mia-estate-avvio-attivita-oltre-autismo-2026",
+    version: "1.0",
+    title: "Tempi e condizioni per l’avvio di La mia estate",
+    request:
+      "Definire con chiarezza i tempi e le condizioni amministrative necessari all’avvio delle attività del progetto La mia estate per i beneficiari dell’ATS di Lamezia Terme.",
+    actionTypes: ["organizzazione", "trasparenza", "attivazione_servizio"],
+    measures: [
+      "Comunicare quando potranno iniziare concretamente le attività del progetto.",
+      "Indicare con precisione eventuali documenti ancora necessari per la convenzione.",
+      "Indicare quando gli eventuali documenti mancanti siano stati richiesti e quale termine sia stato assegnato per produrli.",
+      "Chiarire quali spese possano essere rendicontate dagli enti erogatori per organizzare personale e attività.",
+    ],
+    expectedOutcome:
+      "Rendere verificabili gli adempimenti residui e i tempi necessari per l’avvio delle attività senza attribuire esiti non ancora documentati.",
+  },
+  "emodinamica-h24-commissione-sanita-pd-2026": {
+    proposalId: "emodinamica-h24-commissione-sanita-pd-2026",
+    version: "1.0",
+    title: "Emodinamica fissa H24 al Giovanni Paolo II",
+    request:
+      "Configurare al Giovanni Paolo II un servizio di emodinamica fisso H24, superando il modello intermittente e itinerante previsto per il presidio.",
+    actionTypes: ["rafforzamento_servizio", "organizzazione"],
+    measures: [
+      "Modificare la configurazione H6/H12 prevista per Lamezia in favore di un servizio H24.",
+      "Garantire gli adeguamenti di personale necessari alla copertura continuativa richiesta.",
+      "Organizzare il servizio come struttura fissa anziché come équipe itinerante.",
+      "Configurare un hub funzionale per la fascia tirrenica dal basso Cosentino al Vibonese.",
+    ],
+    expectedOutcome:
+      "Rendere continuativa la disponibilità del servizio secondo la configurazione H24 richiesta dal promotore.",
+  },
 };
 
 export function getCanonicalProposalPresentation(

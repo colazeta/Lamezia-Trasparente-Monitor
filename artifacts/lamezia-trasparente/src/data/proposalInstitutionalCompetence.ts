@@ -198,6 +198,26 @@ const CONFERENZA_SINDACI_ATS_LAMEZIA: ProposalCompetentAuthority = {
     "https://comune.lamezia-terme.cz.it/it/news/lats-investe-oltre-255-mila-euro-sui-progetti-di-vita?type=2",
 };
 
+const ATS_LAMEZIA_LA_MIA_ESTATE: ProposalCompetentAuthority = {
+  id: "ats-lamezia-terme",
+  label: "Ambito Territoriale Sociale di Lamezia Terme (Comune capofila)",
+  level: "intermunicipal",
+  sourceLabel:
+    "Comune di Lamezia Terme — Manifestazione d'interesse progetto La mia estate, 16/07/2026",
+  sourceUrl:
+    "https://www.comune.lamezia-terme.cz.it/it/news/manifestazione-d-interesse-progetto-la-mia-estate",
+};
+
+const REGION_CALABRIA_LA_MIA_ESTATE: ProposalCompetentAuthority = {
+  id: "regione-calabria",
+  label: "Regione Calabria",
+  level: "regional",
+  sourceLabel:
+    "Regione Calabria — La mia estate: risorse agli ATS quali soggetti attuatori",
+  sourceUrl:
+    "https://www.regione.calabria.it/la-calabria-accende-la-mia-estate-straface-18-milioni-di-euro-per-i-centri-estivi-e-linclusione-dei-ragazzi-con-disabilita-una-misura-di-civilta-per-dare-solliev/",
+};
+
 /**
  * Curated registry of substantive competence assessments.
  *
@@ -221,6 +241,13 @@ export const PROPOSAL_COMPETENCE_ASSESSMENTS: Readonly<
     involvedAuthorities: [ASP_CATANZARO_CARDIOLOGY],
     note:
       "Il modello H24/H6-H12 della rete di emodinamica è oggetto di indirizzo regionale, mentre organizzazione operativa e dotazioni del presidio afferiscono all'ASP di Catanzaro. Gli ulteriori investimenti richiesti su personale, infrastrutture e pronto soccorso coinvolgono più leve amministrative, quindi non si attribuisce una competenza esclusiva a un solo ente.",
+  },
+  "emodinamica-h24-commissione-sanita-pd-2026": {
+    status: "partially_verified",
+    primaryAuthority: REGION_CALABRIA_EMODINAMICA,
+    involvedAuthorities: [ASP_CATANZARO_CARDIOLOGY],
+    note:
+      "La Regione documenta di avere approvato l'atto di indirizzo sul modello organizzativo dell'emodinamica e di avere affidato a Dipartimento Salute e Azienda Zero l'aggiornamento della rete; l'ASP di Catanzaro gestisce il presidio e la Cardiologia-UTIC. La richiesta comprende anche adeguamenti di personale e la creazione di un hub funzionale sovra-territoriale, per cui la distribuzione completa delle competenze non viene attribuita a un solo ente e l'assessment resta parziale.",
   },
   "ospedale-organici-continuita-chirurgica-pd-2026": {
     status: "partially_verified",
@@ -277,6 +304,13 @@ export const PROPOSAL_COMPETENCE_ASSESSMENTS: Readonly<
     involvedAuthorities: [REGION_CALABRIA_FNA],
     note:
       "Il Decreto regionale n. 11315/2026 documenta il trasferimento delle risorse FNA agli Ambiti Territoriali Sociali per l'area disabili gravissimi, mentre le fonti istituzionali comunali identificano Lamezia Terme come Comune capofila dell'ATS. Questo sostiene l'ATS quale livello operativo della misura. L'assessment resta parziale perché lo scouting non ha verificato un atto locale specifico che documenti l'accredito indicato dalla fonte stampa, né una disciplina locale completa dei tempi di istruttoria, erogazione e pubblicità richiesti dalla proposta.",
+  },
+  "la-mia-estate-avvio-attivita-oltre-autismo-2026": {
+    status: "verified",
+    primaryAuthority: ATS_LAMEZIA_LA_MIA_ESTATE,
+    involvedAuthorities: [REGION_CALABRIA_LA_MIA_ESTATE],
+    note:
+      "La fonte ufficiale regionale qualifica i 32 Ambiti Territoriali Sociali come soggetti attuatori della misura La mia estate, mentre il Comune di Lamezia Terme ha pubblicato l'avviso per costituire l'elenco locale degli enti erogatori. Questo sostiene direttamente la competenza dell'ATS di Lamezia sul procedimento locale, incluse istruttoria e convenzionamento. La Regione resta coinvolta quale autorità che ha istituito e finanziato la misura. L'assessment non deriva dal destinatario indicato dall'associazione ma da fonti istituzionali autonome.",
   },
 };
 
