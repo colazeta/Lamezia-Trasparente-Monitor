@@ -24,12 +24,10 @@
       "0013_cleanup_confiscated_assets_demo_rows.sql",
       "0014_change_sentinel_events.sql",
       "0015_change_sentinel_queue.sql",
-      "0016_ltceds_persistence_boundary.sql"
+      "0016_ltceds_persistence_boundary.sql",
+      "0017_conversations_messages_convergence.sql"
     ],
-    "schemaTablesNotCreatedInVersionedMigrations": [
-      "conversations",
-      "messages"
-    ],
+    "schemaTablesNotCreatedInVersionedMigrations": [],
     "migrationTablesNotInCurrentDrizzleSchema": []
   },
   "dataLake": {
