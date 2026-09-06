@@ -16,7 +16,7 @@
     "fetch:ltceds-iccs": "tsx ./legalita/crime-events/ltceds-taxonomy-iccs.ts",
     "fetch:ltceds-istat-taxonomies": "tsx ./legalita/crime-events/ltceds-taxonomy-istat.ts",
     "materialize:ltceds-public-anchors": "tsx ./legalita/crime-events/ltceds-public-anchors.ts",
-    "check:ltceds": "python ./legalita/crime-events/ltceds-schema-check.py --self-test && tsx ./legalita/crime-events/ltceds-semantic-check.ts --self-test",
+    "check:ltceds": "python ./legalita/crime-events/ltceds-schema-check.py --self-test ../data/legalita/ltceds/pilot/2026-09-05/event-*.json && tsx ./legalita/crime-events/ltceds-semantic-check.ts --self-test ../data/legalita/ltceds/pilot/2026-09-05/event-*.json && node --import tsx --test ./legalita/crime-events/ltceds-pilot-population.test.ts",
     "sync:anac-bdncp": "tsx ./contracts/syncOfficialAnacBdncp.ts",
     "sync:anac-authority": "tsx ./contracts/syncOfficialAnacAuthority.ts",
     "sync:anac-awards": "tsx ./contracts/syncOfficialAnacAwards.ts",
