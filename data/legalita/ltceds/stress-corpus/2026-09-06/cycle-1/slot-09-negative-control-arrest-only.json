@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "slot": 9,
+  "case_key": "PILOT-EXCLUDED-2025-09-27-ARREST-ONLY-IN-LAMEZIA",
+  "review_mode": true,
+  "resolution": {
+    "candidate_kind": "NEGATIVE_CONTROL",
+    "event_identity_decision": "not_a_lamezia_occurrence_on_current_evidence",
+    "rationale": "The pilot review documents Lamezia as interception/arrest geography rather than the place where the underlying fraud/robbery occurred. Procedural geography must not be promoted to occurrence geography."
+  },
+  "evidence": {
+    "pilot_manifest": "data/legalita/ltceds/pilot/2026-09-05/manifest.json",
+    "pilot_exclusion_reason": "Lamezia is documented as interception/arrest area, not as occurrence location"
+  },
+  "publication_decision": "rejected",
+  "regression_rule": "No default map marker may be generated from arrest, interception, search, discovery or procedural location when occurrence geography is unresolved.",
+  "next_action": "Retain permanently as a regression control unless independent evidence later establishes a Lamezia occurrence."
+}

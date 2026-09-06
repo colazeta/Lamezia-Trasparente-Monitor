@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0",
+  "cycle": 1,
+  "corpus_id": "ltceds-stress-corpus-2026-09-06",
+  "scope": "source resolution and event-identity review for slots 5-10",
+  "publication_policy": "no_auto_publish",
+  "parallel_search_used": true,
+  "results": {
+    "slot_5": "two candidate EVENTs linked by series; primary source unresolved; no reviewed bundle",
+    "slot_6": "EVENT_CLUSTER with exact reported cardinality 27 for 2025-02-28/2025-03-01; no synthetic members; July 6 event separated",
+    "slot_7": "likely one continuous episode with two adjacent targets; primary source unresolved; no reviewed bundle",
+    "slot_8": "Artemis II rejected as single EVENT; official Carabinieri source retained as procedural/discovery source",
+    "slot_9": "negative control retained: arrest/interception geography is not occurrence geography",
+    "slot_10": "1989 homicide remains historical EVENT candidate; judicial/archival primary source unresolved"
+  },
+  "manifest_corrections": [
+    {
+      "slot": 6,
+      "old_temporal_association": "ambiguous one-night/July association",
+      "corrected_temporal_identity": "27 autonomous events occurred during the night between 2025-02-28 and 2025-03-01; the 2025-07-06 vehicle-fire episode is separate",
+      "reason": "later procedural reporting bundles several phases of the same investigation; occurrence dates must remain fact-specific"
+    },
+    {
+      "slot": 7,
+      "old_temporal_hint": "night of 2026-01-14/15",
+      "corrected_temporal_hint": "reporting states the occurrence was during the night of 2026-01-11 at approximately 03:50",
+      "reason": "publication date was confused with occurrence date"
+    }
+  ],
+  "compiler_outcome": {
+    "reviewed_bundles_created": 0,
+    "reason": "No new slot 5-10 case currently satisfies the threshold for a reviewed EVENT bundle: slots 5/7/10 lack resolved primary support, slot 6 is an unresolved cluster, slot 8 is an operation/non-event, slot 9 is a negative control.",
+    "dry_run_status": "not_applicable_for_cycle_1_new_cases"
+  },
+  "methodological_findings": [
+    "Procedural reports can bundle facts from different occurrence dates; event identity must be reconstructed before classification.",
+    "A source-reported exact count is not sufficient to mint individual event IDs.",
+    "Two events in the same night remain distinct when premises/locations are distinct, even when investigated in one operation.",
+    "Two adjacent targets during one uninterrupted sequence may be one continuous episode; target multiplicity alone does not force event splitting.",
+    "Operation date and operation geography are procedural attributes, not occurrence attributes.",
+    "Recent reporting on historical judgments is a useful locator but not a substitute for the primary judicial/archival source."
+  ],
+  "next_cycle_priorities": [
+    "Resolve original Carabinieri source for Joker.",
+    "Resolve original Carabinieri/juvenile-prosecution source for Shatter and determine whether any of the 27 members are publicly individually resolvable.",
+    "Resolve original Carabinieri source for the 11 January 2026 Via del Progresso episode.",
+    "Decompose Artemis II only into occurrence-level candidates with defensible time/place anchors.",
+    "Locate the 2026 appellate judgment or older judicial record for the 1989 homicide.",
+    "Begin filling one pre-1968 slot only from actual archival/documentary evidence."
+  ]
+}

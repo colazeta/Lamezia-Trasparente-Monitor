@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "slot": 8,
+  "case_key": "2026-06-18-ARTEMIS-II",
+  "review_mode": true,
+  "resolution": {
+    "candidate_kind": "SOURCE_OPERATION_NOT_EVENT",
+    "operation_date": "2026-06-18",
+    "operation_geography": ["circondario di Lamezia Terme", "provincia di Vibo Valentia", "provincia di Terni", "provincia di Como"],
+    "underlying_offence_families": ["mafia-type association", "external participation", "usury", "extortion", "corruption", "bid-rigging/procurement manipulation", "fraudulent transfer", "official-secret offences", "unlawful competition", "peculation"],
+    "rationale": "The official Carabinieri communication describes a precautionary operation and the continuation of a wider investigation. The execution date and operation geography are procedural, while the underlying alleged acts vary in date, place and legal character. Creating an ARTEMIS II EVENT would collapse multiple occurrences and procedural actions into a false incident."
+  },
+  "sources": [
+    {
+      "url": "https://www.carabinieri.it/in-vostro-aiuto/informazioni/comunicati-stampa/operazione-artemis-ii-associazione-di-tipo-mafioso-usura-estorsione-corruzione-ed-altro.-9-arresti",
+      "source_type": "law_enforcement_primary",
+      "role": "procedural_context_and_underlying_claim_discovery"
+    }
+  ],
+  "publication_decision": "rejected_as_single_event",
+  "allowed_downstream_use": [
+    "JUSTICE_CASE/procedural context",
+    "source for occurrence-level extraction",
+    "source for EVENT_CLUSTER where underlying acts remain unresolved"
+  ],
+  "prohibited_downstream_use": [
+    "single crime-map marker for Artemis II",
+    "using arrest/seizure geography as occurrence geography",
+    "using 2026-06-18 as occurrence date for underlying acts"
+  ],
+  "next_action": "Extract only occurrence-level claims that contain enough distinguishing time/place evidence; keep unresolved multiplicity clustered."
+}

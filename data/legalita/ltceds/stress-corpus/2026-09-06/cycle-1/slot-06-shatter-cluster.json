@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "slot": 6,
+  "case_key": "2025-02-28-03-01-SHATTER-27-AUTONOMOUS-EVENTS",
+  "review_mode": true,
+  "resolution": {
+    "candidate_kind": "EVENT_CLUSTER",
+    "reported_event_count": 27,
+    "count_precision": "exact",
+    "resolution_status": "unresolved",
+    "temporal": {"start": "2025-02-28", "end": "2025-03-01", "precision": "bounded_interval"},
+    "location_scope": ["centro storico di Lamezia Terme", "Sambiase"],
+    "offence_families": ["aggravated theft from vehicles", "vehicle/property damage"],
+    "rationale": "Sources explicitly describe 27 autonomous criminal events during the night between 28 February and 1 March 2025, but the accessible public material does not enumerate all 27 as independently addressable occurrence records. The count therefore must not generate 27 synthetic EVENT IDs."
+  },
+  "later_events_separation": {
+    "july_6_2025_vehicle_fires": "separate_later_occurrence",
+    "rule": "The July vehicle-fire episode is not part of the temporal identity of the 27-event cluster merely because it appears in the same later procedural reporting."
+  },
+  "sources": [
+    {
+      "url": "https://www.rainews.it/tgr/calabria/articoli/2025/10/lamezia-terme-mette-a-segno-27-furti-arrestato-diciassettenne-587114c6-9708-4d8b-837d-60eb85ce2008.html",
+      "source_type": "news_agency",
+      "role": "strong_corroboration_of_27-event_investigative_reconstruction"
+    },
+    {
+      "url": "https://www.lameziainforma.it/cronaca/2025/06/16/operazione-shatter-su-furti-aggravati-su-auto-e-danneggiamenti-di-autovetture-in-sosta/62039/",
+      "source_type": "press_secondary",
+      "role": "cardinality_and_autonomous-event_wording"
+    },
+    {
+      "url": "https://www.calabriamagnifica.it/cronaca-e-attualita/lamezia-terme-minorenne-arrestato-per-incendi-furti-e-danneggiamenti/",
+      "source_type": "press_secondary",
+      "role": "temporal_disambiguation_and_later-event-separation"
+    },
+    {
+      "url": "https://lanuovacalabria.it/a-lamezia-furti-e-danneggiamenti-minorenne-arrestato-27-i-reati-commessi-in-una-notte",
+      "source_type": "press_secondary",
+      "role": "corroboration"
+    }
+  ],
+  "primary_source_search": {
+    "status": "not_resolved",
+    "institutional_actor": "Carabinieri / Procura presso il Tribunale per i Minorenni di Catanzaro",
+    "rule": "RaiNews strengthens corroboration but does not become law_enforcement_primary. Keep cluster review-only until the original institutional source or equivalent judicial source is resolved."
+  },
+  "publication_decision": "canonical_cluster_candidate_only",
+  "next_action": "Search source-native judicial/law-enforcement material; resolve individual members only where occurrence-specific date/place evidence becomes independently available."
+}
