@@ -53,7 +53,9 @@ const RAW_EVIDENCE_INTERVENTIONS: readonly EvidenceIntervention[] = [
   ...EVIDENCE_INTERVENTIONS_2026_09_06,
 ];
 
-const EVIDENCE_CORRECTIONS_BY_ID = new Map(
+type EvidenceCorrection = (typeof EVIDENCE_INTERVENTION_CORRECTIONS_2026_09_06)[number];
+
+const EVIDENCE_CORRECTIONS_BY_ID = new Map<string, EvidenceCorrection>(
   EVIDENCE_INTERVENTION_CORRECTIONS_2026_09_06.map((correction) => [
     correction.id,
     correction,
