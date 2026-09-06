@@ -1,0 +1,390 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lameziatrasparente.it/schema/ltceds/reviewed-event-bundle/1.0/schema.json",
+  "title": "LTCEDS reviewed event bundle",
+  "description": "Human-reviewed canonical input for one individually resolved LTCEDS event. Person, victim and suspect identity are intentionally out of scope in v1.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "bundle_schema_version",
+    "event_id",
+    "record_status",
+    "event_form",
+    "title",
+    "temporal",
+    "offences",
+    "locations",
+    "sources",
+    "cluster_ids",
+    "review",
+    "publication_intent"
+  ],
+  "properties": {
+    "bundle_schema_version": { "const": "ltceds-reviewed-bundle/1.0" },
+    "event_id": { "type": "string", "format": "uuid" },
+    "record_status": {
+      "enum": [
+        "verified_source",
+        "published",
+        "superseded",
+        "merged",
+        "split",
+        "withdrawn",
+        "suppressed"
+      ]
+    },
+    "event_form": {
+      "enum": ["discrete", "continuous_episode", "course_of_conduct"]
+    },
+    "title": { "type": "string", "minLength": 1, "maxLength": 180 },
+    "public_summary": { "type": ["string", "null"], "maxLength": 2000 },
+    "procedural_summary": { "type": ["string", "null"], "maxLength": 120 },
+    "temporal": { "$ref": "#/$defs/temporal" },
+    "offences": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/offence" }
+    },
+    "locations": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/location" }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/source" }
+    },
+    "cluster_ids": {
+      "type": "array",
+      "items": { "type": "string", "format": "uuid" },
+      "uniqueItems": true
+    },
+    "review": { "$ref": "#/$defs/review" },
+    "publication_intent": {
+      "enum": ["publish", "canonical_only", "suppress"]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "publication_intent": { "const": "publish" } },
+        "required": ["publication_intent"]
+      },
+      "then": {
+        "properties": {
+          "record_status": { "const": "published" },
+          "review": {
+            "allOf": [
+              { "properties": { "decision": { "const": "approved" } } },
+              { "properties": { "public_text_checked": { "const": true } } }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "publication_intent": { "const": "canonical_only" } },
+        "required": ["publication_intent"]
+      },
+      "then": {
+        "properties": {
+          "record_status": { "const": "verified_source" },
+          "review": {
+            "properties": {
+              "decision": { "enum": ["approved", "canonical_only"] }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "publication_intent": { "const": "suppress" } },
+        "required": ["publication_intent"]
+      },
+      "then": {
+        "properties": {
+          "record_status": { "const": "suppressed" },
+          "review": {
+            "allOf": [
+              {
+                "properties": {
+                  "decision": { "enum": ["approved", "canonical_only"] }
+                }
+              },
+              { "properties": { "public_text_checked": { "const": true } } }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "temporal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["precision"],
+      "properties": {
+        "start": { "type": ["string", "null"] },
+        "end": { "type": ["string", "null"] },
+        "edtf": { "type": ["string", "null"] },
+        "precision": {
+          "enum": [
+            "exact_datetime",
+            "exact_date",
+            "bounded_interval",
+            "week_or_similar",
+            "month",
+            "year",
+            "approximate",
+            "unknown"
+          ]
+        }
+      }
+    },
+    "geometry": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "coordinates"],
+          "properties": {
+            "type": { "const": "Point" },
+            "coordinates": {
+              "type": "array",
+              "prefixItems": [
+                { "type": "number", "minimum": -180, "maximum": 180 },
+                { "type": "number", "minimum": -90, "maximum": 90 }
+              ],
+              "minItems": 2,
+              "maxItems": 2
+            }
+          }
+        }
+      ]
+    },
+    "offence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["offence_instance_id", "classification_basis"],
+      "properties": {
+        "offence_instance_id": { "type": "string", "format": "uuid" },
+        "classification_source_id": { "type": ["string", "null"], "format": "uuid" },
+        "iccs_code": { "type": ["string", "null"] },
+        "istat_catalogue_id": { "type": ["string", "null"] },
+        "istat_synthetic_code": { "type": ["string", "null"] },
+        "istat_analytical_code": { "type": ["string", "null"] },
+        "legal_reference": { "type": ["string", "null"], "maxLength": 300 },
+        "classification_basis": {
+          "enum": [
+            "source_stated_legal",
+            "istat_crosswalk",
+            "behavioural_manual",
+            "provisional"
+          ]
+        },
+        "attempt_status": {
+          "enum": ["attempted", "completed", "not_applicable", "unknown"]
+        },
+        "situational_context": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        },
+        "cyber_related": { "type": ["string", "null"] },
+        "affected_object_count": {
+          "type": ["integer", "null"],
+          "minimum": 0
+        }
+      }
+    },
+    "location": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "location_id",
+        "basis_source_id",
+        "role",
+        "municipality",
+        "evidence_basis",
+        "evidence_precision",
+        "resolved_precision",
+        "sensitivity",
+        "publication_risk",
+        "geometry"
+      ],
+      "properties": {
+        "location_id": { "type": "string", "format": "uuid" },
+        "basis_source_id": { "type": ["string", "null"], "format": "uuid" },
+        "role": {
+          "enum": [
+            "occurrence",
+            "target",
+            "discovery",
+            "recovery",
+            "arrest",
+            "search",
+            "procedural",
+            "other"
+          ]
+        },
+        "municipality": { "type": "string", "minLength": 1 },
+        "evidence_basis": {
+          "enum": [
+            "source_stated_exact",
+            "source_stated_named_site",
+            "source_stated_street",
+            "source_stated_neighbourhood",
+            "source_stated_locality",
+            "geocoder_candidate",
+            "editorial_inference",
+            "unknown"
+          ]
+        },
+        "evidence_precision": {
+          "enum": [
+            "exact_public_site",
+            "exact_address",
+            "street_segment",
+            "neighbourhood",
+            "locality",
+            "municipality",
+            "unknown"
+          ]
+        },
+        "resolved_precision": {
+          "enum": [
+            "exact_public_site",
+            "exact_address",
+            "street_segment",
+            "neighbourhood",
+            "locality",
+            "municipality",
+            "unknown"
+          ]
+        },
+        "sensitivity": {
+          "enum": [
+            "public_place",
+            "non_sensitive",
+            "private_or_sensitive",
+            "unknown"
+          ]
+        },
+        "publication_risk": {
+          "enum": [
+            "low_public_site",
+            "non_sensitive",
+            "residential",
+            "victim_linked",
+            "minor_or_vulnerable",
+            "sexual_offence_context",
+            "unknown"
+          ]
+        },
+        "geometry": { "$ref": "#/$defs/geometry" },
+        "place_name": { "type": ["string", "null"], "maxLength": 200 },
+        "neighbourhood": { "type": ["string", "null"], "maxLength": 160 },
+        "iccs_location_type": { "type": ["string", "null"], "maxLength": 160 },
+        "street_scope_key": { "type": ["string", "null"] },
+        "neighbourhood_scope_key": { "type": ["string", "null"] },
+        "locality_scope_key": { "type": ["string", "null"] }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "resolved_precision": { "enum": ["municipality", "unknown"] }
+            },
+            "required": ["resolved_precision"]
+          },
+          "then": { "properties": { "geometry": { "type": "null" } } }
+        }
+      ]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "source_type",
+        "provider",
+        "title",
+        "publication_support",
+        "candidate_policy",
+        "personal_data_risk",
+        "reputational_risk",
+        "requires_corroboration"
+      ],
+      "properties": {
+        "source_id": { "type": "string", "format": "uuid" },
+        "source_type": {
+          "enum": [
+            "judicial_primary",
+            "law_enforcement_primary",
+            "public_authority_primary",
+            "news_agency",
+            "press_secondary",
+            "academic",
+            "other"
+          ]
+        },
+        "provider": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "title": { "type": "string", "maxLength": 300 },
+        "url": { "type": ["string", "null"], "format": "uri" },
+        "published_at": { "type": ["string", "null"], "format": "date-time" },
+        "retrieved_at": { "type": ["string", "null"], "format": "date-time" },
+        "canonical_source_key": { "type": ["string", "null"], "maxLength": 500 },
+        "content_sha256": {
+          "type": ["string", "null"],
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "publication_support": {
+          "enum": [
+            "primary_possible",
+            "corroboration_only",
+            "discovery_only",
+            "context_only"
+          ]
+        },
+        "candidate_policy": {
+          "enum": ["automatic", "human_gate", "disabled"]
+        },
+        "personal_data_risk": { "enum": ["low", "medium", "high"] },
+        "reputational_risk": { "enum": ["low", "medium", "high"] },
+        "requires_corroboration": { "type": "boolean" }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reviewer_role",
+        "reviewer_id",
+        "reviewed_at",
+        "decision",
+        "rationale_codes",
+        "public_text_checked"
+      ],
+      "properties": {
+        "reviewer_role": { "enum": ["researcher", "editor", "senior_editor"] },
+        "reviewer_id": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 100,
+          "pattern": "^[a-z0-9][a-z0-9:_-]*$"
+        },
+        "reviewed_at": { "type": "string", "format": "date-time" },
+        "decision": { "enum": ["approved", "canonical_only", "rejected"] },
+        "rationale_codes": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^[A-Z0-9_:-]+$" },
+          "uniqueItems": true
+        },
+        "public_text_checked": { "type": "boolean" }
+      }
+    }
+  }
+}
