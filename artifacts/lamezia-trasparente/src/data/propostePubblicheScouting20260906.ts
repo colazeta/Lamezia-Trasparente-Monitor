@@ -17,7 +17,7 @@ export const SCOUTED_PUBLIC_PROPOSALS_20260906 = [
     threadLabel: "Sanità lametina: ospedale e servizi territoriali",
     territorialArea: "Intero territorio comunale di Lamezia Terme",
     institutionalRecipient:
-      "Regione Calabria — Commissario alla sanità; Azienda Sanitaria Provinciale; Comune di Lamezia Terme",
+      "Regione Calabria / Commissario alla sanità; Azienda Sanitaria Provinciale; Comune di Lamezia Terme",
     channel: "petizione",
     sourceLabel: "Change.org — Difendiamo e rilanciamo la sanità lametina",
     sourceUrl:
