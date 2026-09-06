@@ -1,0 +1,102 @@
+{
+  "schema_version": "1.0",
+  "cycle": 2,
+  "source_case_key": "2026-06-18-ARTEMIS-II",
+  "review_mode": true,
+  "operation_disposition": "SOURCE_OPERATION_NOT_EVENT",
+  "primary_source": {
+    "url": "https://www.carabinieri.it/in-vostro-aiuto/informazioni/comunicati-stampa/operazione-artemis-ii-associazione-di-tipo-mafioso-usura-estorsione-corruzione-ed-altro.-9-arresti",
+    "source_type": "law_enforcement_primary",
+    "published_at": "2026-06-18",
+    "procedural_role": "investigative_and_precautionary_context"
+  },
+  "investigation_window": {
+    "start": "2021-11",
+    "end": "2024-06",
+    "meaning": "investigation_period_only",
+    "rule": "Do not copy the investigation window onto underlying EVENT occurrence dates."
+  },
+  "territorial_scope": {
+    "primary_described_area": ["Maida", "Cortale", "Jacurso"],
+    "lamezia_terme_occurrence_resolved_count": 0,
+    "rule": "An investigation conducted by the Lamezia Terme Carabinieri, an arrest in Lamezia, or residence in Lamezia is not occurrence geography."
+  },
+  "underlying_occurrence_blocks": [
+    {
+      "block_key": "forestry-public-tenders",
+      "candidate_kind": "OUT_OF_SCOPE_EVENT_CLUSTER",
+      "reported_event_count": 3,
+      "count_precision": "exact",
+      "resolution_status": "partially_resolved",
+      "facts": [
+        "three public procedures for forest-lot allocation are described",
+        "the first two procedures allegedly failed after intimidation/dissuasion of potential bidders",
+        "the third procedure was allegedly awarded to a firm attributed by investigators to the criminal organisation through a nominee, with only a compliant competing company participating"
+      ],
+      "municipality_resolution": "unresolved_within_Maida_Cortale_Jacurso_area",
+      "time_resolution": "unresolved",
+      "lamezia_corpus_disposition": "out_of_scope_until_lamezia_occurrence_evidence_emerges"
+    },
+    {
+      "block_key": "school-catering-procurement",
+      "candidate_kind": "OUT_OF_SCOPE_COURSE_OF_CONDUCT_CANDIDATE",
+      "reported_event_count": 1,
+      "facts": [
+        "municipal staff were allegedly pressured in the preparation of procurement documents",
+        "representatives of competing firms were allegedly approached and discouraged from bidding",
+        "the school-catering service was allegedly awarded to a social cooperative described by investigators as financed and managed with criminal-group capital"
+      ],
+      "municipality_resolution": "unresolved_within_Maida_Cortale_Jacurso_area",
+      "time_resolution": "unresolved",
+      "lamezia_corpus_disposition": "out_of_scope_until_lamezia_occurrence_evidence_emerges"
+    },
+    {
+      "block_key": "vehicle-return-extortions",
+      "candidate_kind": "EVENT_CLUSTER",
+      "reported_event_count": 2,
+      "count_precision": "exact",
+      "resolution_status": "unresolved",
+      "facts": [
+        "two separate citizens are described as victims of vehicle-return extortion",
+        "the two stolen vehicles were allegedly recovered in exchange for money"
+      ],
+      "municipality_resolution": "not_established",
+      "time_resolution": "unresolved",
+      "lamezia_corpus_disposition": "not_eligible_without_independent_lamezia_occurrence_evidence",
+      "rule": "The count of two does not mint two EVENT IDs until the two occurrences are separately addressable."
+    },
+    {
+      "block_key": "usurious-loan-15000",
+      "candidate_kind": "COURSE_OF_CONDUCT_CANDIDATE",
+      "reported_event_count": 1,
+      "facts": [
+        "a 15000 EUR loan is alleged, with 20000 EUR to be repaid within three months",
+        "post-dated cheques were allegedly requested as security",
+        "judicial reporting identifies a meeting on 2024-06-04 at a cafe/gelateria in Maierato and a later monitored conversation on 2024-07-04"
+      ],
+      "secondary_judicial_reporting": {
+        "url": "https://www.corrieredellacalabria.it/2026/06/18/ndrangheta-usura-prestito-garantito-boss-assegni-carta/",
+        "source_type": "press_secondary",
+        "role": "judicial_order_locator_and_temporal_granularity"
+      },
+      "location_resolution": {
+        "documented_meeting_place": "Maierato",
+        "lamezia_terme": false,
+        "caution": "The meeting place is an occurrence-related location, not proof that every element of the alleged usury conduct occurred there."
+      },
+      "time_resolution": {
+        "documented_interaction_dates": ["2024-06-04", "2024-07-04"],
+        "exact_disbursement_date": null
+      },
+      "lamezia_corpus_disposition": "out_of_scope_on_current_evidence"
+    }
+  ],
+  "lamezia_terme_result": {
+    "resolved_city_events": 0,
+    "resolved_city_clusters": 0,
+    "decision": "procedural_context_only",
+    "reason": "Current public sources distinguish underlying acts but do not establish an occurrence inside the municipality of Lamezia Terme."
+  },
+  "publication_decision": "no_lamezia_event_from_artemis_ii",
+  "next_action": "Only revisit Artemis II for the city corpus if a judgment, ordinance or other source identifies an underlying occurrence inside Lamezia Terme."
+}

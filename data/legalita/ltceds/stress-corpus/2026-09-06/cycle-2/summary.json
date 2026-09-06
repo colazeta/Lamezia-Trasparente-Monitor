@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.0",
+  "cycle": 2,
+  "status": "completed_review_cycle",
+  "reviewed_bundles_created": 0,
+  "public_events_authorized": 0,
+  "results": {
+    "artemis_ii": {
+      "operation_event": false,
+      "underlying_blocks_distinguished": 4,
+      "lamezia_city_occurrences_resolved": 0,
+      "disposition": "procedural_context_only_for_lamezia_corpus"
+    },
+    "native_source_resolution": {
+      "joker_primary_resolved": false,
+      "shatter_primary_resolved": false,
+      "via_del_progresso_primary_resolved": false,
+      "source_hierarchy_downgrades_allowed": false
+    },
+    "historical_pre_1968": {
+      "qualified_candidate_slots": [26, 27, 28],
+      "candidates": [
+        {
+          "slot": 26,
+          "case_key": "1860-03-NICASTRO-B57-F493",
+          "candidate_kind": "HISTORICAL_EVENT_CANDIDATE",
+          "source_native_locator": "B. 57, fasc. 493",
+          "temporal_precision": "month",
+          "territorial_status": "historical_locality_resolved",
+          "reviewed_bundle_created": false
+        },
+        {
+          "slot": 27,
+          "case_key": "1866-01-05-SAMBIASE-B60-F531",
+          "candidate_kind": "HISTORICAL_COURSE_OF_CONDUCT_CANDIDATE",
+          "source_native_locator": "B. 60, fasc. 531",
+          "temporal_precision": "bounded_interval_months",
+          "territorial_status": "historical_locality_resolved",
+          "reviewed_bundle_created": false
+        },
+        {
+          "slot": 28,
+          "case_key": "1844-06-23-CAVA-S-EUFEMIA-B56-F484",
+          "candidate_kind": "HISTORICAL_DISCRETE_EVENT_CANDIDATE",
+          "source_native_locator": "B. 56, fasc. 484",
+          "temporal_precision": "exact_date",
+          "territorial_status": "historical_microtoponym_relation_to_current_lamezia_unresolved",
+          "reviewed_bundle_created": false
+        }
+      ],
+      "official_archive_targets_resolved": 4,
+      "series_level_penal_target_resolved": true,
+      "public_events_authorized": 0,
+      "disposition": "three_qualified_candidates_need_fascicoli_and_place_review"
+    }
+  },
+  "key_findings": [
+    "Investigation/procedural geography is not occurrence geography.",
+    "Artemis II currently yields no source-supported occurrence inside the municipality of Lamezia Terme.",
+    "An official archive/fondo locator alone is not sufficient to create a historical EVENT, but an individual source-native fascicolo locator can qualify a review-mode historical candidate.",
+    "Nicastro B.57 fasc.493 (March 1860), Sambiase B.60 fasc.531 (January-May 1866) and Cava di S. Eufemia B.56 fasc.484 (23 June 1844) are now qualified archival candidates; all remain non-mappable and uncompiled.",
+    "The Sant'Eufemia candidate exposes historical place-identity uncertainty: source-stated historical geography must remain separate from any present-day Lamezia relation.",
+    "News-agency corroboration does not replace an unresolved source-native law-enforcement record where the workflow requires primary support."
+  ],
+  "standard_findings": [
+    "TERRITORIAL-SCOPE-001",
+    "ARCHIVAL-LOCATOR-001",
+    "HISTORICAL-PLACE-IDENTITY-001"
+  ],
+  "schema_change": "historical_place_identity_gap_candidate_deferred",
+  "next_cycle": [
+    "retrieve/read B.57 fasc.493, B.60 fasc.531 and B.56 fasc.484 before reviewed-bundle compilation",
+    "resolve the historical microtoponym Cava di S. Eufemia with cadastral/gazetteer/archival territorial evidence",
+    "search judicial/ordinance material for Artemis II only if it can identify an occurrence inside Lamezia Terme",
+    "continue source-native resolution for Joker, Shatter and Via del Progresso without lowering source authority",
+    "test HISTORICAL-PLACE-IDENTITY-001 against an additional administrative/place-name transition before stable 1.0"
+  ],
+  "publication_policy": "no_auto_publish"
+}

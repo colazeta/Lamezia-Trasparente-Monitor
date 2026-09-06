@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0",
+  "cycle": 2,
+  "slot": 28,
+  "stratum": "G_historical_pre_1968",
+  "case_key": "1844-06-23-CAVA-S-EUFEMIA-B56-F484",
+  "review_mode": true,
+  "candidate_kind": "HISTORICAL_DISCRETE_EVENT_CANDIDATE",
+  "review_status": "qualified_archival_candidate_territorial_identity_blocked",
+  "event_identity": {
+    "source_native_locator": "B. 56, fasc. 484",
+    "source_stated_place": "Cava di S. Eufemia",
+    "temporal": {
+      "start": "1844-06-23",
+      "end": "1844-06-23",
+      "precision": "exact_date"
+    },
+    "event_form_hint": "discrete",
+    "offence_hints_source_faithful": [
+      "armed incursion through the countryside",
+      "qualified theft",
+      "violence"
+    ],
+    "identity_rationale": "The official archival inventory identifies one source-native fascicolo with an exact date and describes an armed countryside incursion, qualified theft and violence in the named contrada Cava di S. Eufemia. This is an individually addressable historical proceeding, but the historical-to-present territorial identity of the micro-toponym remains to be proven."
+  },
+  "source": {
+    "institution": "Archivio di Stato di Catanzaro",
+    "series": "Miscellanea di Processi Politici e Brigantaggio",
+    "inventory_url": "https://archiviodistatocatanzaro.cultura.gov.it/fileadmin/user_upload/Miscellanea_di_Processi_Politici_e_Brigantaggio.pdf",
+    "source_type": "official_archival_inventory",
+    "locator": "B. 56, fasc. 484; inventory page labelled 82",
+    "authority": "primary_archival_finding_aid",
+    "source_body_status": "fascicolo_not_retrieved"
+  },
+  "historical_place_identity": {
+    "source_label": "Cava di S. Eufemia",
+    "siusa_authority_resolved": {
+      "name": "Comune di Sant'Eufemia Lamezia",
+      "url": "https://siusa-archivi.cultura.gov.it/cgi-bin/siusa/pagina.pl?TipoPag=prodente&Chiave=33038"
+    },
+    "present_day_lamezia_relation": "not_yet_proven_for_this_microtoponym",
+    "territorial_eligibility": "blocked",
+    "rule": "Do not assume that every historical 'S. Eufemia' microtoponym is the former municipality incorporated into Lamezia Terme; require historical gazetteer, cadastral or archival territorial evidence."
+  },
+  "location": {
+    "role": "occurrence_scope_candidate",
+    "precision": "named_historical_contrada",
+    "geometry_internal": null,
+    "geometry_public": null,
+    "map_eligible": false
+  },
+  "classification": {
+    "iccs_status": "pending_fascicolo_review",
+    "istat_status": "pending_fascicolo_review",
+    "modern_legal_reference_status": "not_inferred",
+    "rule": "Preserve historical inventory wording until the proceeding clarifies conduct and legal context."
+  },
+  "privacy": {
+    "person_identity_stored": false,
+    "victim_identity_stored": false,
+    "public_geometry_allowed": false
+  },
+  "pdf_verification": {
+    "indexed_text_verified": true,
+    "screenshot_attempted": true,
+    "screenshot_result": "cache_miss_from_screenshot_service",
+    "consequence": "No claim of successful visual inspection."
+  },
+  "publication_decision": "needs_more_evidence",
+  "reviewed_bundle_status": "blocked",
+  "blockers": [
+    "retrieve/read B.56 fasc.484 or a more granular official description",
+    "resolve the historical territorial identity of Cava di S. Eufemia before Lamezia-corpus eligibility"
+  ],
+  "next_action": "Search historical cadastral/gazetteer/municipal sources for Cava di S. Eufemia and acquire the fascicolo; only then decide Lamezia eligibility and reviewed-bundle compilation."
+}
