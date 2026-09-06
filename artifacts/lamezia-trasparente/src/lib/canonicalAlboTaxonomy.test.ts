@@ -24,8 +24,12 @@ describe("canonical Albo taxonomy", () => {
       procurementRelevance: "confirmed",
       procurementPhase: "affidamento",
       identifiers: {
+        cigCandidates: ["B123456789"],
         cigs: ["B123456789"],
+        invalidCigs: [],
+        cupCandidates: ["C12D34567890123"],
         cups: ["C12D34567890123"],
+        invalidCups: [],
       },
     });
     expect(procurement.administrativeActions).toEqual(
@@ -52,7 +56,23 @@ describe("canonical Albo taxonomy", () => {
     expect(result.identifiers.cigs).toEqual([]);
   });
 
-  it("recognises common punctuated and numbered identifier forms", () => {
+  it("preserves CIG-shaped placeholders as evidence but never as contract identities", () => {
+    const result = classifyAlboItem({
+      subject: "Affidamento del servizio. CIG 0000000000",
+    });
+
+    expect(result).toMatchObject({
+      procurementRelevance: "confirmed",
+      taxonomyStatus: "review_required",
+      identifiers: {
+        cigCandidates: ["0000000000"],
+        cigs: [],
+        invalidCigs: ["0000000000"],
+      },
+    });
+  });
+
+  it("recognises common punctuated and numbered identifier forms before formal validation", () => {
     expect(extractCigs("C.I.G. n. B123456789; CIG: A01D5289C5")).toEqual([
       "B123456789",
       "A01D5289C5",
