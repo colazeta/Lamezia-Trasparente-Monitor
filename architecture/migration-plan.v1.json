@@ -34,11 +34,11 @@
     {
       "id": 2,
       "key": "canonical_identity",
-      "status": "planned",
+      "status": "complete",
       "objective": "Introduce a universal identity/addressability spine for canonical entities and events without replacing typed domain semantics or legacy local primary keys.",
       "prerequisites": [0, 1],
       "deliverables": ["core.canonical_subjects", "core.legacy_subject_map"],
-      "acceptance": ["UUIDv7 enforced for new canonical subject IDs", "subject_kind explicitly distinguishes entity from event", "Typed domain tables remain authoritative for entity/event semantics", "Identity spine is not used as an EAV or generic fact store", "Backfill is idempotent", "No two legacy identities collide into one subject without an explicit resolution decision", "Unresolved/not-applicable/no-canonical-target outcomes do not require a synthetic subject"]
+      "acceptance": ["UUIDv7 enforced for new canonical subject IDs", "subject_kind explicitly distinguishes entity from event", "Typed domain tables remain authoritative for entity/event semantics", "Identity spine is not used as an EAV or generic fact store", "Identity and active legacy mapping helpers are idempotent; domain backfills remain scoped to later domain migration phases", "No active legacy identity silently changes canonical target without an explicit supersession decision", "Unresolved/not-applicable/no-canonical-target outcomes do not require a synthetic subject"]
     },
     {
       "id": 3,
