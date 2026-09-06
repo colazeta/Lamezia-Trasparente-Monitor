@@ -41,3 +41,4 @@ export * from "./conversations";
 export * from "./messages";
 export * from "./redazione";
 export * from "./crimeEvents";
+export * from "./canonicalIdentity";
