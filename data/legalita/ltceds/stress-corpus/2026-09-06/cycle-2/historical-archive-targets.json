@@ -26,13 +26,19 @@
       "event_status": "no_event_selected_yet"
     },
     {
-      "target_key": "tribunale-nicastro",
+      "target_key": "tribunale-nicastro-penal-miscellanies-1862-1904",
       "institution": "Sistema Archivistico Nazionale / Archivio di Stato",
       "source_type": "official_archival_finding_aid",
       "url": "http://dati.san.beniculturali.it/SAN/complarc_GGASI_san.cat.complArch.39024",
       "producer": "Tribunale di Nicastro",
-      "relevance": "higher-level criminal/civil judicial archive locator for cases beyond pretura competence",
-      "event_status": "no_event_selected_yet"
+      "documentary_span": "1862-1904",
+      "source_description": "The SAN finding aid explicitly states that penal procedural records are found in the Miscellanea di processi politici e brigantaggio and the Miscellanea di processi penali.",
+      "series_targets": [
+        "Miscellanea di processi politici e brigantaggio",
+        "Miscellanea di processi penali"
+      ],
+      "relevance": "highest-yield currently resolved source-native route for individual 19th-century and early-20th-century criminal proceedings connected to historical Nicastro",
+      "event_status": "series_level_target_resolved_no_event_selected_yet"
     },
     {
       "target_key": "archivio-stato-lamezia-section",
@@ -45,15 +51,17 @@
   ],
   "research_protocol": [
     "Start from Pretura/Tribunale finding aids and inventories rather than free-text web anecdotes.",
+    "For the Tribunale di Nicastro, prioritise the two penal miscellany series now explicitly identified by SAN.",
     "Record series, busta/fascicolo/registro and chronological span before creating an EVENT candidate.",
     "Use event date/place from the archival record; do not substitute later historiography when the original record is available.",
     "Historic place identity must remain Nicastro/Sambiase/Sant'Eufemia as source-stated, with a separate relation to present-day Lamezia Terme.",
-    "No historical EVENT is mappable from an archive-level locator alone."
+    "No historical EVENT is mappable from an archive-level or series-level locator alone."
   ],
   "cycle_2_result": {
     "pre_1968_event_slots_filled": 0,
     "official_archival_targets_resolved": 4,
+    "series_level_penal_target_resolved": true,
     "decision": "source_acquisition_first",
-    "next_action": "Locate inventory/series-level descriptions or digitized records for a specific criminal proceeding before assigning the first pre-1968 stress-corpus EVENT."
+    "next_action": "Retrieve an inventory, busta/fascicolo/register locator or digitized individual proceeding from the Tribunale/Pretura series before assigning the first pre-1968 stress-corpus EVENT."
   }
 }
