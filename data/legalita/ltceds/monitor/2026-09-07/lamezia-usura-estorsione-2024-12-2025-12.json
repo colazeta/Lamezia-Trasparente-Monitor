@@ -1,0 +1,91 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-usura-estorsione-2024-12-2025-12",
+  "discovered_at": "2026-09-07T00:04:57+02:00",
+  "updated_at": "2026-09-07T00:04:57+02:00",
+  "record_status": "verified_source",
+  "event_form": "course_of_conduct",
+  "title": "Presunta usura ed estorsione legate a un prestito a Lamezia Terme",
+  "temporal": {
+    "start": "2024-12",
+    "end": "2025-12",
+    "edtf": "2024-12/2025-12",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "press:corriere-calabria:2026-09-05:usura-estorsione-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Usura ed estorsione a Lamezia, 8mila euro di prestito diventano 20mila: chiesto il rinvio a giudizio",
+      "url": "https://www.corrieredellacalabria.it/2026/09/05/lamezia-prestito-8mila-euro-20mila-restituiti-usura-estorsione/",
+      "published_at": "2026-09-05T08:40:00+02:00",
+      "retrieved_at": "2026-09-07T00:04:57+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:lameziainforma:2026-09-05:69146",
+      "source_type": "press_secondary",
+      "provider": "LameziaInforma",
+      "title": "Rinvio a giudizio chiesto per due soggetti lametini, di 46 e 36 anni, indagati per usura in concorso ed estorsione",
+      "url": "https://www.lameziainforma.it/cronaca/2026/09/05/rinvio-a-giudizio-per-due-soggetti-lametini-di-46-e-36-anni-indagati-per-usura-in-concorso-ed-estorsione/69146/",
+      "published_at": "2026-09-05T08:34:00+02:00",
+      "retrieved_at": "2026-09-07T00:04:57+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:usura",
+      "classification_source_key": "press:corriere-calabria:2026-09-05:usura-estorsione-lamezia",
+      "classification_basis": "source_stated_legal",
+      "legal_reference": null,
+      "attempt_status": "unknown",
+      "situational_context": [
+        "prestito privato a un imprenditore locale",
+        "interessi descritti dalle fonti come usurari"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:estorsione",
+      "classification_source_key": "press:corriere-calabria:2026-09-05:usura-estorsione-lamezia",
+      "classification_basis": "source_stated_legal",
+      "legal_reference": null,
+      "attempt_status": "unknown",
+      "situational_context": [
+        "pressioni e minacce per ottenere pagamenti secondo la ricostruzione accusatoria"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:municipality",
+      "basis_source_key": "press:corriere-calabria:2026-09-05:usura-estorsione-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
