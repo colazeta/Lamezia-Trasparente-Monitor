@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0",
+  "corpus_id": "ltceds-stress-corpus-2026-09-06",
+  "corpus_slot": 14,
+  "case_key": "2017-10-17-SS280-ROAD-HOMICIDE",
+  "status": "review_mode",
+  "candidate_kind": "EVENT_CANDIDATE",
+  "source_state": "primary_institutional_source_verified",
+  "retrieval_date": "2026-09-06",
+  "sources": [
+    {
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/15855a4f65b98d045795329352",
+      "source_type": "law_enforcement_primary",
+      "source_role": "occurrence_and_legal_primary",
+      "supported_scope": "17 October 2017 collision on SS280 in Lamezia Terme; road homicide and driving under the influence allegations; later precautionary measure"
+    },
+    {
+      "url": "https://www.lametino.it/cronaca/lamezia-non-ce-l-ha-fatta-il-46enne-rimasto-ferito-in-incidente-ad-ottobre-su-ss280.html",
+      "source_type": "press_secondary",
+      "source_role": "outcome_date_corroboration",
+      "published_at": "2017-11-05",
+      "supported_scope": "death following injuries from the 17 October collision"
+    }
+  ],
+  "supported_facts": [
+    "The collision occurred on 17 October 2017 on SS280 in the municipality of Lamezia Terme and involved multiple vehicles.",
+    "The official source describes alleged road homicide and driving under the influence arising from the same driving/collision transaction.",
+    "A seriously injured participant later died; contemporaneous local reporting records the death on 5 November 2017.",
+    "The later precautionary measure is procedural history, not a new EVENT."
+  ],
+  "event_identity_analysis": {
+    "preferred_model": "one_EVENT_candidate",
+    "event_form": "discrete",
+    "rationale": "The alleged driving conduct and collision form one continuous transaction. Multiple legal offences and a later death outcome do not create multiple criminal EVENT identities."
+  },
+  "temporal_analysis": {
+    "occurrence_date": "2017-10-17",
+    "outcome_date": "2017-11-05",
+    "precision": "exact_date",
+    "caution": "Store death as a later outcome/assertion; never replace the occurrence date with the death or arrest date."
+  },
+  "geography_analysis": {
+    "municipality": "Lamezia Terme",
+    "road": "SS280",
+    "more_specific_context": "Sant'Eufemia/SS280 access area reported by contemporaneous secondary coverage",
+    "evidence_precision_primary": "road_segment_or_locality",
+    "public_geometry_ready": false
+  },
+  "offence_analysis": {
+    "reported_families": ["road homicide", "driving under the influence of alcohol"],
+    "preferred_modelling": "multiple offence instances attached to one event",
+    "classification_basis": "source_stated_legal"
+  },
+  "privacy_and_publication": {
+    "person_identity_in_dossier": false,
+    "victim_outcome_present": true,
+    "auto_publish": false
+  },
+  "recommended_resolution": "One discrete EVENT with multiple offence instances and a separate later death/outcome assertion. Suitable for reviewed-bundle preparation after human review of geography and public wording.",
+  "review_decision": "reviewed_bundle_candidate",
+  "publication_blockers": [
+    "Human review required for road-segment precision and outcome wording before approved bundle status."
+  ]
+}
