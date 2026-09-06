@@ -1,4 +1,56 @@
 {
   "schemaVersion": "lt-current-data-inventory.v1",
-  "bootstrap": "Run node scripts/architecture/dataArchitectureInventory.mjs --write to materialize the deterministic repository inventory."
+  "architectureContract": "docs/architecture/data-architecture-contract-v1.md",
+  "registryVersion": "lt-data-domain-registry.v1",
+  "database": {
+    "dialect": "postgresql",
+    "orm": "drizzle",
+    "schemaModuleCount": 43,
+    "tableCount": 62,
+    "sqlMigrationFiles": [
+      "0000_clever_wolf_cub.sql",
+      "0001_italiadomani_projects.sql",
+      "0002_opendata_snapshots.sql",
+      "0003_opendata_snapshot_validators.sql",
+      "0004_publications_brief.sql",
+      "0005_publications_macrotema.sql",
+      "0006_accesso_civico_origine.sql",
+      "0007_redazione_tables.sql",
+      "0008_reports_public_registry.sql",
+      "0009_reports_published_at.sql",
+      "0010_organi_members_history.sql",
+      "0011_demographics_versioning.sql",
+      "0012_publications_public_safety_decision.sql",
+      "0013_cleanup_confiscated_assets_demo_rows.sql",
+      "0014_change_sentinel_events.sql",
+      "0015_change_sentinel_queue.sql",
+      "0016_ltceds_persistence_boundary.sql"
+    ],
+    "schemaTablesNotCreatedInVersionedMigrations": [],
+    "migrationTablesNotInCurrentDrizzleSchema": []
+  },
+  "dataLake": {
+    "observedLayers": [
+      "curated",
+      "geo",
+      "interim",
+      "legalita",
+      "processed",
+      "public",
+      "raw",
+      "sources"
+    ],
+    "registeredLayers": [
+      "curated",
+      "geo",
+      "interim",
+      "legalita",
+      "processed",
+      "public",
+      "raw",
+      "sources"
+    ]
+  },
+  "detailedOwnershipRegistry": "architecture/data-domain-registry.v1.json",
+  "operationalMetricsCommand": "node scripts/architecture/dataArchitectureInventory.mjs --metrics"
 }
