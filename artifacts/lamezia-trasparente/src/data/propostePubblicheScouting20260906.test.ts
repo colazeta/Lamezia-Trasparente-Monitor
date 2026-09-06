@@ -57,7 +57,8 @@ describe("scouted public proposals 6 September 2026", () => {
     expect(canonical.title).toBe(
       "Rafforzamento della sanità pubblica e dei servizi territoriali",
     );
-    expect(canonical.measures.length).toBeGreaterThanOrEqual(10);
+    expect(canonical.measures).toHaveLength(8);
+    expect(canonical.editorialNote).toContain("record di acquisizione");
 
     expect(getProposalPrimaryPaSubject(proposal).code).toBe("2");
     expect(getProposalSecondaryPaSubjects(proposal)).toHaveLength(0);
