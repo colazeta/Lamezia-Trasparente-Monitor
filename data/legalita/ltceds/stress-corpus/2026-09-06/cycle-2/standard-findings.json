@@ -20,6 +20,32 @@
       "problem": "An archive/fondo locator proves source availability, not a criminal EVENT.",
       "rule": "Do not mint an EVENT from archive-level metadata. Require an individual record or sufficiently specific series/fascicolo/registro locator supporting occurrence identity.",
       "implementation": "Historical acquisition targets remain source/provenance records until occurrence-level evidence is retrieved."
+    },
+    {
+      "finding_id": "HISTORICAL-PLACE-IDENTITY-001",
+      "status": "schema_gap_candidate",
+      "schema_change_required": "under_review",
+      "trigger_cases": [
+        "1860-03-NICASTRO-B57-F493",
+        "1866-01-05-SAMBIASE-B60-F531",
+        "1844-06-23-CAVA-S-EUFEMIA-B56-F484"
+      ],
+      "problem": "Historical sources state administrative/local place names valid at the time of the occurrence. Replacing them with present-day 'Lamezia Terme' loses provenance and can silently create anachronistic or even incorrect territorial identity, especially for microtoponyms such as Cava di S. Eufemia.",
+      "required_semantics": [
+        "preserve source-stated historical place label",
+        "represent administrative context at occurrence time",
+        "represent current-place relation separately and with its own evidential status",
+        "allow current territorial relation to remain unresolved",
+        "never derive map geometry solely from the current municipality relation"
+      ],
+      "candidate_model": {
+        "source_place_label": "string",
+        "administrative_place_at_event": "stable place/entity reference or controlled record",
+        "current_place_relation": "same_area|contained_by|partially_overlaps|successor|unknown",
+        "current_place_relation_basis": "source/crosswalk reference",
+        "relation_status": "verified|provisional|unresolved"
+      },
+      "decision": "Do not change 1.0-draft.1 inside this cycle. Carry the gap into the next schema review and test it against at least one additional historical-place transition before freezing stable 1.0."
     }
   ]
 }
