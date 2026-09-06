@@ -80,6 +80,34 @@ const SCOUTED_CANONICAL_PROPOSAL_PRESENTATIONS: Record<
     expectedOutcome:
       "Rendere accessibile la procedura e verificabili tempi e risorse per i potenziali beneficiari.",
   },
+  "sanita-pubblica-petizione-presidio-malerba-2026": {
+    proposalId: "sanita-pubblica-petizione-presidio-malerba-2026",
+    version: "1.0",
+    title: "Rafforzamento della sanità pubblica e dei servizi territoriali",
+    request:
+      "Definire interventi pubblici, calendarizzati e verificabili per rafforzare ospedale e servizi territoriali, ridurre le criticità di accesso e rendere trasparenti risorse, responsabilità e avanzamento.",
+    actionTypes: [
+      "rafforzamento_servizio",
+      "organizzazione",
+      "trasparenza",
+      "coordinamento",
+    ],
+    measures: [
+      "Rendere trasparenti i fondi destinati alla sanità lametina e il loro utilizzo.",
+      "Pubblicare un piano operativo calendarizzato per il potenziamento dell’ospedale e dei servizi territoriali.",
+      "Definire priorità chiare e un sistema pubblico di monitoraggio degli interventi.",
+      "Ridurre le liste d’attesa con interventi dedicati.",
+      "Adeguare e valorizzare il Consultorio Familiare, garantendone funzioni, personale e servizi.",
+      "Attuare pienamente l’Assistenza Domiciliare Integrata con le funzioni previste.",
+      "Rafforzare gli organici, con priorità ai servizi di emergenza-urgenza.",
+      "Ripristinare e rendere pienamente operativi i reparti e i servizi carenti.",
+      "Pubblicare comunicazioni periodiche sullo stato della sanità territoriale.",
+      "Convocare un Consiglio comunale aperto sulla sanità.",
+      "Rendere trasparenti tavoli tecnici, progetti e interlocuzioni del Comune con Regione e ASP.",
+    ],
+    expectedOutcome:
+      "Rendere verificabili programmazione, risorse e avanzamento degli interventi richiesti e rafforzare l’accesso ai servizi sanitari sul territorio.",
+  },
 };
 
 export function getCanonicalProposalPresentation(
