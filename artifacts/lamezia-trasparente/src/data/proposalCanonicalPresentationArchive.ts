@@ -101,12 +101,11 @@ const SCOUTED_CANONICAL_PROPOSAL_PRESENTATIONS: Record<
       "Attuare pienamente l’Assistenza Domiciliare Integrata con le funzioni previste.",
       "Rafforzare gli organici, con priorità ai servizi di emergenza-urgenza.",
       "Ripristinare e rendere pienamente operativi i reparti e i servizi carenti.",
-      "Pubblicare comunicazioni periodiche sullo stato della sanità territoriale.",
-      "Convocare un Consiglio comunale aperto sulla sanità.",
-      "Rendere trasparenti tavoli tecnici, progetti e interlocuzioni del Comune con Regione e ASP.",
     ],
     expectedOutcome:
       "Rendere verificabili programmazione, risorse e avanzamento degli interventi richiesti e rafforzare l’accesso ai servizi sanitari sul territorio.",
+    editorialNote:
+      "La presentazione canonica seleziona otto misure principali per rispettare il contratto UI; il record di acquisizione conserva anche le richieste su comunicazioni periodiche, Consiglio comunale aperto e trasparenza delle interlocuzioni istituzionali.",
   },
   "la-mia-estate-avvio-attivita-oltre-autismo-2026": {
     proposalId: "la-mia-estate-avvio-attivita-oltre-autismo-2026",
