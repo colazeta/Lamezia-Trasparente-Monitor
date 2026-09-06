@@ -31,8 +31,26 @@
     "migrationTablesNotInCurrentDrizzleSchema": []
   },
   "dataLake": {
-    "observedLayers": ["curated","geo","interim","legalita","processed","public","raw","sources"],
-    "registeredLayers": ["curated","geo","interim","legalita","processed","public","raw","sources"]
+    "observedLayers": [
+      "curated",
+      "geo",
+      "interim",
+      "legalita",
+      "processed",
+      "public",
+      "raw",
+      "sources"
+    ],
+    "registeredLayers": [
+      "curated",
+      "geo",
+      "interim",
+      "legalita",
+      "processed",
+      "public",
+      "raw",
+      "sources"
+    ]
   },
   "detailedOwnershipRegistry": "architecture/data-domain-registry.v1.json",
   "operationalMetricsCommand": "node scripts/architecture/dataArchitectureInventory.mjs --metrics"
