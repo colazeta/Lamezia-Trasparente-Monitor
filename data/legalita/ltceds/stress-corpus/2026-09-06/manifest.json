@@ -94,21 +94,13 @@
       "review_status": "needs_primary_source_resolution",
       "temporal_hint": "night of 2025-05-17",
       "location_hint": "two distinct commercial activities in Lamezia Terme; exact public-safe locations not yet reviewed",
-      "source_state": "secondary_reports_reproduce_carabinieri_investigative_account; original institutional release not yet resolved in current search",
+      "source_state": "secondary reports reproduce a Carabinieri investigative account; original institutional release not yet resolved in current search",
       "sources": [
-        {
-          "url": "https://www.calabriamagnifica.it/cronaca-e-attualita/operazione-joker-arresti-per-gli-incendi-a-due-attivita-commerciali/",
-          "source_type": "press_secondary",
-          "source_role": "discovery_and_corroboration"
-        },
-        {
-          "url": "https://www.corrieredilamezia.it/cronaca/2025_10_24/lamezia-operazione-joker-carabinieri-arrestano-3-persone-per-lincendio-di-due-esercizi-commerciali_56162/",
-          "source_type": "press_secondary",
-          "source_role": "corroboration"
-        }
+        {"url": "https://www.calabriamagnifica.it/cronaca-e-attualita/operazione-joker-arresti-per-gli-incendi-a-due-attivita-commerciali/", "source_type": "press_secondary", "source_role": "discovery_and_corroboration"},
+        {"url": "https://www.corrieredilamezia.it/cronaca/2025_10_24/lamezia-operazione-joker-carabinieri-arrestano-3-persone-per-lincendio-di-due-esercizi-commerciali_56162/", "source_type": "press_secondary", "source_role": "corroboration"}
       ],
       "edge_cases": ["same_night_two_occurrences", "event_series", "operation_not_event", "multiple_targets"],
-      "next_action": "resolve the original Carabinieri release and determine whether the two fires are separately locatable EVENTs linked by EVENT_SERIES"
+      "next_action": "resolve the original Carabinieri release and decide two EVENTs plus EVENT_SERIES membership"
     },
     {
       "slot": 6,
@@ -121,19 +113,11 @@
       "location_hint": "multiple locations in central Lamezia; viale Primo Maggio explicitly reported for several vehicle fires",
       "source_state": "multiple secondary reports attribute the investigation to Carabinieri; original institutional release not yet resolved in current search",
       "sources": [
-        {
-          "url": "https://www.quotidianodelsud.it/calabria/catanzaro/cronache/nera/2025/10/30/lamezia-terme-27-reati-in-una-sola-notte-arrestato-minorenne",
-          "source_type": "press_secondary",
-          "source_role": "discovery"
-        },
-        {
-          "url": "https://www.lacnews24.it/cronaca/auto-in-fiamme-furti-e-danneggiamenti-27-reati-in-una-sola-notte-a-lamezia-arrestato-17enne-lme4lnkn",
-          "source_type": "press_secondary",
-          "source_role": "corroboration"
-        }
+        {"url": "https://www.quotidianodelsud.it/calabria/catanzaro/cronache/nera/2025/10/30/lamezia-terme-27-reati-in-una-sola-notte-arrestato-minorenne", "source_type": "press_secondary", "source_role": "discovery"},
+        {"url": "https://www.lacnews24.it/cronaca/auto-in-fiamme-furti-e-danneggiamenti-27-reati-in-una-sola-notte-a-lamezia-arrestato-17enne-lme4lnkn", "source_type": "press_secondary", "source_role": "corroboration"}
       ],
       "edge_cases": ["reported_count_27", "multiple_offence_types", "multiple_locations", "minor_or_vulnerable_context", "no_synthetic_event_expansion"],
-      "next_action": "create one EVENT_CLUSTER candidate first; resolve individual EVENTs only where a source independently identifies occurrence, date and place"
+      "next_action": "create one EVENT_CLUSTER candidate first; resolve members only with independent occurrence-level evidence"
     },
     {
       "slot": 7,
@@ -146,16 +130,8 @@
       "location_hint": "Via del Progresso; two adjacent commercial targets reported",
       "source_state": "secondary reports describe immediate Carabinieri intervention; original institutional release not yet resolved in current search",
       "sources": [
-        {
-          "url": "https://www.corrieredilamezia.it/cronaca/2026_01_15/lamezia-furti-nella-notte-alle-cantine-lento-ladro-braccato-dai-carabinieri-si-nasconde-in-un-cassonetto-scoperto-e-arrestato_58116/",
-          "source_type": "press_secondary",
-          "source_role": "discovery"
-        },
-        {
-          "url": "https://lanuovacalabria.it/lamezia-furti-a-cantine-lento-e-splendidi-e-splendenti-uno-dei-2-ladri-beccato-in-un-cassonetto",
-          "source_type": "press_secondary",
-          "source_role": "corroboration"
-        }
+        {"url": "https://www.corrieredilamezia.it/cronaca/2026_01_15/lamezia-furti-nella-notte-alle-cantine-lento-ladro-braccato-dai-carabinieri-si-nasconde-in-un-cassonetto-scoperto-e-arrestato_58116/", "source_type": "press_secondary", "source_role": "discovery"},
+        {"url": "https://lanuovacalabria.it/lamezia-furti-a-cantine-lento-e-splendidi-e-splendenti-uno-dei-2-ladri-beccato-in-un-cassonetto", "source_type": "press_secondary", "source_role": "corroboration"}
       ],
       "edge_cases": ["two_adjacent_targets", "same_time_place_rule", "one_event_vs_two_events", "arrest_location_not_occurrence"],
       "next_action": "apply same-transaction identity rule before creating EVENT IDs"
@@ -171,11 +147,7 @@
       "location_hint": "circondario di Lamezia Terme plus other provinces; operation geography is not occurrence geography",
       "source_state": "primary institutional source available",
       "sources": [
-        {
-          "url": "https://www.carabinieri.it/in-vostro-aiuto/informazioni/comunicati-stampa/operazione-artemis-ii-associazione-di-tipo-mafioso-usura-estorsione-corruzione-ed-altro.-9-arresti",
-          "source_type": "law_enforcement_primary",
-          "source_role": "discovery_and_procedural_context"
-        }
+        {"url": "https://www.carabinieri.it/in-vostro-aiuto/informazioni/comunicati-stampa/operazione-artemis-ii-associazione-di-tipo-mafioso-usura-estorsione-corruzione-ed-altro.-9-arresti", "source_type": "law_enforcement_primary", "source_role": "discovery_and_procedural_context"}
       ],
       "edge_cases": ["operation_not_event", "multiple_offence_types", "multiple_occurrences", "organised_crime_context", "procedural_date_vs_event_date"],
       "next_action": "extract occurrence-level claims and route unresolved cardinality to EVENT_CLUSTER; do not create an Artemis II EVENT"
@@ -192,7 +164,7 @@
       "pilot_manifest": "data/legalita/ltceds/pilot/2026-09-05/manifest.json",
       "source_state": "already reviewed as pilot exclusion",
       "edge_cases": ["arrest_not_occurrence", "negative_control", "no_false_geography"],
-      "next_action": "retain as permanent regression case; never map as a Lamezia criminal occurrence unless independent occurrence evidence emerges"
+      "next_action": "retain as permanent regression case; never map without independent occurrence evidence"
     },
     {
       "slot": 10,
@@ -205,195 +177,31 @@
       "location_hint": "mercato coperto di Nicastro reported as occurrence place",
       "source_state": "recent judicial reporting supplies a historical locator but primary judgment/archival evidence is still required for the reviewed bundle",
       "sources": [
-        {
-          "url": "https://www.lametino.it/cronaca/lamezia-omicidio-cesare-de-sensi-imputato-prosciolto-in-appello-dopo-37-anni.html",
-          "source_type": "press_secondary",
-          "source_role": "historical_locator_and_procedural_update"
-        }
+        {"url": "https://www.lametino.it/cronaca/lamezia-omicidio-cesare-de-sensi-imputato-prosciolto-in-appello-dopo-37-anni.html", "source_type": "press_secondary", "source_role": "historical_locator_and_procedural_update"}
       ],
       "edge_cases": ["historical_occurrence", "later_procedural_update", "historical_place_identity", "event_vs_judgment"],
-      "next_action": "locate judgment or archival/judicial source; event date/place must remain separate from 2026 appellate development"
+      "next_action": "locate judicial or archival source; keep 1989 event separate from 2026 procedural development"
     },
-    {
-      "slot": 11,
-      "stratum": "A_contemporary_simple",
-      "case_key": null,
-      "slot_status": "reserved",
-      "candidate_kind": null,
-      "review_status": "unfilled",
-      "edge_case_target": "simple institutional-source occurrence not overlapping pilot"
-    },
-    {
-      "slot": 12,
-      "stratum": "A_contemporary_simple",
-      "case_key": null,
-      "slot_status": "reserved",
-      "candidate_kind": null,
-      "review_status": "unfilled",
-      "edge_case_target": "simple occurrence with two independent sources"
-    },
-    {
-      "slot": 13,
-      "stratum": "A_contemporary_simple",
-      "case_key": null,
-      "slot_status": "reserved",
-      "candidate_kind": null,
-      "review_status": "unfilled",
-      "edge_case_target": "simple exact-date occurrence with locality-only geography"
-    },
-    {
-      "slot": 14,
-      "stratum": "B_multi_offence_complex",
-      "case_key": null,
-      "slot_status": "reserved",
-      "candidate_kind": null,
-      "review_status": "unfilled",
-      "edge_case_target": "multiple offences in one continuous transaction"
-    },
-    {
-      "slot": 15,
-      "stratum": "B_multi_offence_complex",
-      "case_key": null,
-      "slot_status": "reserved",
-      "candidate_kind": null,
-      "review_status": "unfilled",
-      "edge_case_target": "judicial operation containing individually resolvable and unresolved occurrences"
-    },
-    {
-      "slot": 16,
-      "stratum": "B_multi_offence_complex",
-      "case_key": null,
-      "slot_status": "reserved",
-      "candidate_kind": null,
-      "review_status": "unfilled",
-      "edge_case_target": "conflicting offence qualification across sources"
-    },
-    {
-      "slot": 17,
-      "stratum": "C_series_unresolved_cardinality",
-      "case_key": null,
-      "slot_status": "reserved",
-      "candidate_kind": null,
-      "review_status": "unfilled",
-      "edge_case_target": "extortion or damage series with exact aggregate count but unresolved members"
-    },
-    {
-      "slot": 18,
-      "stratum": "C_series_unresolved_cardinality",
-      "case_key": null,
-      "slot_status": "reserved",
-      "candidate_kind": null,
-      "review_status": "unfilled",
-      "edge_case_target": "approximate aggregate cardinality"
-    },
-    {
-      "slot": 19,
-      "stratum": "D_uncertain_time_or_place",
-      "case_key": null,
-      "slot_status": "reserved",
-      "candidate_kind": null,
-      "review_status": "unfilled",
-      "edge_case_target": "month-only temporal evidence"
-    },
-    {
-      "slot": 20,
-      "stratum": "D_uncertain_time_or_place",
-      "case_key": null,
-      "slot_status": "reserved",
-      "candidate_kind": null,
-      "review_status": "unfilled",
-      "edge_case_target": "neighbourhood-only geography"
-    },
-    {
-      "slot": 21,
-      "stratum": "E_geoprivacy_sensitive",
-      "case_key": null,
-      "slot_status": "reserved",
-      "candidate_kind": null,
-      "review_status": "unfilled",
-      "edge_case_target": "residential occurrence with eligible street anchor"
-    },
-    {
-      "slot": 22,
-      "stratum": "E_geoprivacy_sensitive",
-      "case_key": null,
-      "slot_status": "reserved",
-      "candidate_kind": null,
-      "review_status": "unfilled",
-      "edge_case_target": "victim-linked or vulnerable-context location requiring suppression"
-    },
-    {
-      "slot": 23,
-      "stratum": "F_historical_1968_1999",
-      "case_key": null,
-      "slot_status": "reserved",
-      "candidate_kind": null,
-      "review_status": "unfilled",
-      "edge_case_target": "1970s occurrence with later court history"
-    },
-    {
-      "slot": 24,
-      "stratum": "F_historical_1968_1999",
-      "case_key": null,
-      "slot_status": "reserved",
-      "candidate_kind": null,
-      "review_status": "unfilled",
-      "edge_case_target": "1980s organised-crime occurrence supported by judicial/parliamentary source"
-    },
-    {
-      "slot": 25,
-      "stratum": "F_historical_1968_1999",
-      "case_key": null,
-      "slot_status": "reserved",
-      "candidate_kind": null,
-      "review_status": "unfilled",
-      "edge_case_target": "1990s occurrence with conflicting or corrected reporting"
-    },
-    {
-      "slot": 26,
-      "stratum": "G_historical_pre_1968",
-      "case_key": null,
-      "slot_status": "reserved",
-      "candidate_kind": null,
-      "review_status": "unfilled",
-      "edge_case_target": "Nicastro pre-unification occurrence with year-only or approximate date"
-    },
-    {
-      "slot": 27,
-      "stratum": "G_historical_pre_1968",
-      "case_key": null,
-      "slot_status": "reserved",
-      "candidate_kind": null,
-      "review_status": "unfilled",
-      "edge_case_target": "Sambiase pre-unification occurrence with archival locator"
-    },
-    {
-      "slot": 28,
-      "stratum": "G_historical_pre_1968",
-      "case_key": null,
-      "slot_status": "reserved",
-      "candidate_kind": null,
-      "review_status": "unfilled",
-      "edge_case_target": "Sant'Eufemia historical occurrence or cluster"
-    },
-    {
-      "slot": 29,
-      "stratum": "G_historical_pre_1968",
-      "case_key": null,
-      "slot_status": "reserved",
-      "candidate_kind": null,
-      "review_status": "unfilled",
-      "edge_case_target": "historical source conflict or place-name change"
-    },
-    {
-      "slot": 30,
-      "stratum": "D_uncertain_time_or_place",
-      "case_key": null,
-      "slot_status": "reserved",
-      "candidate_kind": null,
-      "review_status": "unfilled",
-      "edge_case_target": "deliberate rejection/canonical-only control after review"
-    }
+    {"slot": 11, "stratum": "A_contemporary_simple", "case_key": null, "slot_status": "reserved", "candidate_kind": null, "review_status": "unfilled", "edge_case_target": "simple institutional-source occurrence not overlapping pilot"},
+    {"slot": 12, "stratum": "A_contemporary_simple", "case_key": null, "slot_status": "reserved", "candidate_kind": null, "review_status": "unfilled", "edge_case_target": "simple occurrence with two independent sources"},
+    {"slot": 13, "stratum": "A_contemporary_simple", "case_key": null, "slot_status": "reserved", "candidate_kind": null, "review_status": "unfilled", "edge_case_target": "simple exact-date occurrence with locality-only geography"},
+    {"slot": 14, "stratum": "B_multi_offence_complex", "case_key": null, "slot_status": "reserved", "candidate_kind": null, "review_status": "unfilled", "edge_case_target": "multiple offences in one continuous transaction"},
+    {"slot": 15, "stratum": "B_multi_offence_complex", "case_key": null, "slot_status": "reserved", "candidate_kind": null, "review_status": "unfilled", "edge_case_target": "operation containing individually resolvable and unresolved occurrences"},
+    {"slot": 16, "stratum": "B_multi_offence_complex", "case_key": null, "slot_status": "reserved", "candidate_kind": null, "review_status": "unfilled", "edge_case_target": "conflicting offence qualification across sources"},
+    {"slot": 17, "stratum": "C_series_unresolved_cardinality", "case_key": null, "slot_status": "reserved", "candidate_kind": null, "review_status": "unfilled", "edge_case_target": "extortion or damage series with exact aggregate count but unresolved members"},
+    {"slot": 18, "stratum": "C_series_unresolved_cardinality", "case_key": null, "slot_status": "reserved", "candidate_kind": null, "review_status": "unfilled", "edge_case_target": "approximate aggregate cardinality"},
+    {"slot": 19, "stratum": "D_uncertain_time_or_place", "case_key": null, "slot_status": "reserved", "candidate_kind": null, "review_status": "unfilled", "edge_case_target": "month-only temporal evidence"},
+    {"slot": 20, "stratum": "D_uncertain_time_or_place", "case_key": null, "slot_status": "reserved", "candidate_kind": null, "review_status": "unfilled", "edge_case_target": "neighbourhood-only geography"},
+    {"slot": 21, "stratum": "E_geoprivacy_sensitive", "case_key": null, "slot_status": "reserved", "candidate_kind": null, "review_status": "unfilled", "edge_case_target": "residential occurrence with eligible street anchor"},
+    {"slot": 22, "stratum": "E_geoprivacy_sensitive", "case_key": null, "slot_status": "reserved", "candidate_kind": null, "review_status": "unfilled", "edge_case_target": "victim-linked or vulnerable-context location requiring suppression"},
+    {"slot": 23, "stratum": "F_historical_1968_1999", "case_key": null, "slot_status": "reserved", "candidate_kind": null, "review_status": "unfilled", "edge_case_target": "1970s occurrence with later court history"},
+    {"slot": 24, "stratum": "F_historical_1968_1999", "case_key": null, "slot_status": "reserved", "candidate_kind": null, "review_status": "unfilled", "edge_case_target": "1980s organised-crime occurrence supported by judicial/parliamentary source"},
+    {"slot": 25, "stratum": "F_historical_1968_1999", "case_key": null, "slot_status": "reserved", "candidate_kind": null, "review_status": "unfilled", "edge_case_target": "1990s occurrence with conflicting or corrected reporting"},
+    {"slot": 26, "stratum": "G_historical_pre_1968", "case_key": null, "slot_status": "reserved", "candidate_kind": null, "review_status": "unfilled", "edge_case_target": "Nicastro pre-unification occurrence with year-only or approximate date"},
+    {"slot": 27, "stratum": "G_historical_pre_1968", "case_key": null, "slot_status": "reserved", "candidate_kind": null, "review_status": "unfilled", "edge_case_target": "Sambiase pre-unification occurrence with archival locator"},
+    {"slot": 28, "stratum": "G_historical_pre_1968", "case_key": null, "slot_status": "reserved", "candidate_kind": null, "review_status": "unfilled", "edge_case_target": "Sant'Eufemia historical occurrence or cluster"},
+    {"slot": 29, "stratum": "G_historical_pre_1968", "case_key": null, "slot_status": "reserved", "candidate_kind": null, "review_status": "unfilled", "edge_case_target": "historical source conflict or place-name change"},
+    {"slot": 30, "stratum": "A_contemporary_simple", "case_key": null, "slot_status": "reserved", "candidate_kind": null, "review_status": "unfilled", "edge_case_target": "simple contemporary control expected to remain canonical_only or rejected if source capacity fails"}
   ],
   "coverage_targets": {
     "multi_source_minimum": 5,
@@ -416,7 +224,7 @@
     "historical_candidates": 1
   },
   "next_cycle": [
-    "Resolve primary source for Joker and decide two EVENTs vs EVENT_SERIES membership.",
+    "Resolve primary source for Joker and decide two EVENTs plus EVENT_SERIES membership.",
     "Resolve primary source and exact night for the 27-episode cluster; do not expand members synthetically.",
     "Resolve primary source for the adjacent January 2026 commercial burglaries and apply same-transaction rule.",
     "Decompose Artemis II into occurrence-level candidate claims without creating an operation EVENT.",
