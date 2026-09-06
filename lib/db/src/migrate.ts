@@ -2,6 +2,7 @@ import { migrate } from "drizzle-orm/node-postgres/migrator";
 import path from "path";
 import { db, pool } from "./client";
 import {
+  assertMigrationCreatedTablesPresent,
   baselineMigrations,
   ensureReportsPublishedAtColumn,
   getMigrationStatus,
@@ -11,92 +12,33 @@ import {
   type QueryClient,
 } from "./baselineLogic";
 import { removeLegacyConfiscatedAssetDemoRows } from "./confiscatedAssetsCleanup";
+import {
+  ensureLegacyConversationTables,
+  verifyLegacyConversationTables,
+} from "./legacySchemaCompatibility";
 
-// When bundled by esbuild the build copies lib/db/migrations/ next to the
-// bundle entrypoint as dist/migrations/, so __dirname resolves correctly in
-// both dev (tsx) and production (bundled dist/index.mjs) contexts.
 const migrationsFolder = path.join(__dirname, "migrations");
 
-/**
- * Applies all pending Drizzle migrations from the `migrations/` directory.
- *
- * This is the safe, non-interactive way to keep the database schema in sync:
- * - Never truncates tables or drops schema; the only row deletion is the
- *   signature-locked cleanup of five former fictional seed records
- * - Idempotent: already-applied migrations are skipped (tracked in
- *   `drizzle.__drizzle_migrations`)
- * - Works in CI and production without a TTY
- *
- * ### Adding a migration after a schema change
- * 1. Edit the table(s) in `lib/db/src/schema/`
- * 2. `pnpm --filter @workspace/db run generate`  — creates a new SQL file
- * 3. `pnpm --filter @workspace/db run migrate`   — applies it (non-interactive)
- * 4. `git add lib/db/migrations/`               — commit the generated file
- *
- * The API server calls `runMigrations()` automatically at startup so the
- * schema is always up to date before ingestion begins.
- *
- * ### First-time setup on a database bootstrapped via `push`
- * If the database was previously brought up with `drizzle-kit push` (the old
- * workflow), run the baseline command ONCE to mark all existing migrations as
- * already applied without re-executing their SQL:
- *
- *   pnpm --filter @workspace/db run baseline
- *
- * After that, `migrate` and the api-server auto-migrate will work normally.
- */
-/**
- * Optional dependency overrides for {@link runMigrations}. They default to the
- * shared singleton pool/db and the bundled migrations folder, so production
- * callers invoke `runMigrations()` with no arguments. Tests inject a throwaway
- * database (and the source-tree migrations folder) to exercise each startup
- * state in isolation without touching the real database.
- */
 export interface RunMigrationsDeps {
-  /** Low-level query client used for the baseline detection/recording step. */
   client?: QueryClient;
-  /** Drizzle instance the migrator applies pending migrations against. */
   database?: Parameters<typeof migrate>[0];
-  /** Folder containing the generated `*.sql` migrations and `meta/_journal.json`. */
   migrationsFolder?: string;
 }
 
-/**
- * The startup state {@link runMigrations} detected before doing any work:
- * - `empty`             — no schema and no tracking; a fresh database.
- * - `push-bootstrapped` — schema exists from `drizzle-kit push` but has never
- *                         been tracked; needs a one-time baseline first.
- * - `tracked`           — already on the migration workflow.
- */
 export type MigrationStartupState = "empty" | "push-bootstrapped" | "tracked";
 
 /**
- * Thrown when {@link runMigrations} aborts. Carries the state that was detected
- * before migrating and the set of migrations the run was attempting, so the
- * startup logs say exactly what went wrong instead of surfacing only an opaque
- * Postgres error.
- *
- * Note: drizzle applies every pending migration inside a single transaction, so
- * a failure rolls the whole batch back — none of `pendingMigrations` are
- * applied. The offending statement is identified by the underlying Postgres
- * error (`cause`); the batch is all-or-nothing, so we report the full set rather
- * than guessing a single culprit from the (unchanged) post-failure state.
+ * Represents a failure inside Drizzle's atomic migration transaction. Only the
+ * `migrate(...)` call is wrapped as this error: post-commit compatibility checks
+ * deliberately use a different error class so we never claim committed DDL was
+ * rolled back when a later verification failed.
  */
 export class MigrationError extends Error {
   constructor(
-    /** Which phase failed: recording the baseline or applying migrations. */
     readonly phase: "baseline" | "migrate",
-    /** The database state detected before migrating. */
     readonly detectedState: MigrationStartupState,
-    /**
-     * The migrations the run was attempting (pending before it started). Empty
-     * for the baseline phase. Because the migrate phase is atomic, all of these
-     * were rolled back when the failure occurred.
-     */
     readonly pendingMigrations: string[],
-    /** Best-effort status snapshot taken after the failure (may be null). */
     readonly status: MigrationStatus | null,
-    /** The underlying error thrown by drizzle / Postgres. */
     readonly cause: unknown,
   ) {
     const detail = cause instanceof Error ? cause.message : String(cause);
@@ -114,6 +56,26 @@ export class MigrationError extends Error {
   }
 }
 
+/**
+ * Startup is blocked because the physical schema could not be proven compatible.
+ * When `stage` is `post-migrate`, Drizzle may already have committed migrations;
+ * the message states that explicitly rather than misreporting an atomic rollback.
+ */
+export class SchemaCompatibilityError extends Error {
+  constructor(
+    readonly stage: "pre-baseline" | "post-migrate",
+    readonly detectedState: MigrationStartupState,
+    readonly cause: unknown,
+  ) {
+    const detail = cause instanceof Error ? cause.message : String(cause);
+    const commitNote = stage === "post-migrate"
+      ? " Pending migrations may already be committed; startup is blocked until physical schema compatibility is restored."
+      : " No migration baseline was recorded.";
+    super(`Database schema compatibility check failed during ${stage} (detected state: ${detectedState}): ${detail}.${commitNote}`);
+    this.name = "SchemaCompatibilityError";
+  }
+}
+
 async function safeStatus(
   client: QueryClient,
   folder: string,
@@ -125,12 +87,24 @@ async function safeStatus(
   }
 }
 
-/**
- * Applies pending migrations and returns the resulting {@link MigrationStatus}
- * (last applied tag, applied/journal counts) so a deploy can be verified at a
- * glance. Throws {@link MigrationError} — annotated with the detected state and
- * the failing migration — when it cannot complete.
- */
+async function preparePushBootstrapCompatibility(
+  client: QueryClient,
+  folder: string,
+): Promise<void> {
+  await ensureReportsPublishedAtColumn(client);
+  await ensureLegacyConversationTables(client);
+  await verifyLegacyConversationTables(client);
+  await assertMigrationCreatedTablesPresent(client, folder);
+}
+
+async function verifyPostMigrationCompatibility(
+  client: QueryClient,
+): Promise<void> {
+  await ensureReportsPublishedAtColumn(client);
+  await ensureLegacyConversationTables(client);
+  await verifyLegacyConversationTables(client);
+}
+
 export async function runMigrations(
   deps: RunMigrationsDeps = {},
 ): Promise<MigrationStatus> {
@@ -138,14 +112,6 @@ export async function runMigrations(
   const database = deps.database ?? db;
   const folder = deps.migrationsFolder ?? migrationsFolder;
 
-  // First-time transition guard: a database bootstrapped via `drizzle-kit push`
-  // already has the full schema but no migration-tracking record. Running the
-  // migrator against it would attempt to re-execute CREATE TABLE statements that
-  // already exist and fail. Detect that case, run the idempotent compatibility
-  // repair for the reports publication column, then baseline (record migrations
-  // as applied without running their SQL) before migrating. The repair is
-  // additive and non-destructive; the baseline itself only writes Drizzle
-  // tracking rows.
   const tracked = await isMigrationTrackingPresent(client);
   const detectedState: MigrationStartupState = tracked
     ? "tracked"
@@ -155,7 +121,16 @@ export async function runMigrations(
 
   if (detectedState === "push-bootstrapped") {
     try {
-      await ensureReportsPublishedAtColumn(client);
+      // A single sentinel table is not sufficient evidence that an old push
+      // schema matches today's journal. Apply only explicitly additive repairs,
+      // then prove every migration-created table is present before recording the
+      // baseline. Older/partial push schemas therefore fail closed.
+      await preparePushBootstrapCompatibility(client, folder);
+    } catch (err) {
+      throw new SchemaCompatibilityError("pre-baseline", detectedState, err);
+    }
+
+    try {
       await baselineMigrations(client, folder);
     } catch (err) {
       throw new MigrationError(
@@ -168,14 +143,12 @@ export async function runMigrations(
     }
   }
 
-  // Snapshot what this run is about to apply, before migrating. drizzle applies
-  // the whole batch atomically, so on failure these are the migrations that were
-  // rolled back together.
   const before = await safeStatus(client, folder);
 
+  // Drizzle owns the atomic migration transaction. Keep this catch scoped to
+  // migrate() itself so the rollback guarantee in MigrationError stays true.
   try {
     await migrate(database, { migrationsFolder: folder });
-    await ensureReportsPublishedAtColumn(client);
   } catch (err) {
     throw new MigrationError(
       "migrate",
@@ -186,23 +159,19 @@ export async function runMigrations(
     );
   }
 
-  // Push-bootstrapped databases baseline custom data migrations without
-  // executing them. Repeat the signature-locked, idempotent cleanup after
-  // every successful migration run so those deployments cannot retain the old
-  // demo rows. Keep this outside the migrator catch: Drizzle has already
-  // committed at this point, so a cleanup failure must not be described as an
-  // atomic migration rollback.
+  try {
+    await verifyPostMigrationCompatibility(client);
+  } catch (err) {
+    throw new SchemaCompatibilityError("post-migrate", detectedState, err);
+  }
+
+  // This signature-locked cleanup intentionally remains outside the atomic
+  // migration catch because migrations have already committed at this point.
   await removeLegacyConfiscatedAssetDemoRows(client);
 
   return getMigrationStatus(client, folder);
 }
 
-/**
- * Reports the current {@link MigrationStatus} of the production database without
- * modifying it, using the same default pool and bundled migrations folder as
- * {@link runMigrations}. Intended for a startup health log and/or a health
- * endpoint that verifies the deploy landed on the expected migration.
- */
 export async function reportMigrationStatus(
   deps: Pick<RunMigrationsDeps, "client" | "migrationsFolder"> = {},
 ): Promise<MigrationStatus> {

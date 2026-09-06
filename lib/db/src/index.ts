@@ -3,6 +3,8 @@ export * from "./schema";
 export * from "./baselineLogic";
 export * from "./migrate";
 export * from "./migrationSafety";
+export * from "./legacySchemaCompatibility";
+export * from "./canonicalIdentity";
 export * from "./confiscatedAssetsCleanup";
 export * from "./institutional-officials";
 export * from "./organi-sync";
