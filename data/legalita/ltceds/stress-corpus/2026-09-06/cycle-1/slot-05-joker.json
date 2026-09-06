@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "slot": 5,
+  "case_key": "2025-05-17-JOKER-TWO-COMMERCIAL-FIRES",
+  "review_mode": true,
+  "resolution": {
+    "candidate_kind": "TWO_EVENTS_LINKED_SERIES",
+    "confidence": "high_on_two_occurrences_medium_on_publication_support",
+    "event_count_resolved": 2,
+    "operation_is_event": false,
+    "rationale": "Independent reporting consistently describes two separate fires during the same night at two different commercial premises and two different squares. The operation/arrests are later procedural context, not occurrence identity."
+  },
+  "occurrence_candidates": [
+    {
+      "occurrence_key": "joker-piazza-fiorentino-pastry-lab",
+      "temporal": {"start": "2025-05-17", "precision": "exact_date"},
+      "location": {"municipality": "Lamezia Terme", "place": "Piazza Fiorentino", "precision": "street_or_square"},
+      "offence_hint": "damage followed by fire / arson-related property damage",
+      "status": "candidate_only"
+    },
+    {
+      "occurrence_key": "joker-piazza-5-dicembre-hairdresser",
+      "temporal": {"start": "2025-05-17", "precision": "exact_date"},
+      "location": {"municipality": "Lamezia Terme", "place": "Piazza 5 Dicembre", "precision": "street_or_square"},
+      "offence_hint": "damage followed by fire / arson-related property damage",
+      "status": "candidate_only"
+    }
+  ],
+  "sources": [
+    {
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2025/10/23/lamezia-gli-incendi-in-due-esercizi-commerciali-nel-maggio-scorso-tre-arresti-56b141cb-59ad-489d-a9ef-7bc52b0d1101/",
+      "source_type": "press_secondary",
+      "role": "occurrence_granularity_and_location_corroboration"
+    },
+    {
+      "url": "https://www.corrieredilamezia.it/cronaca/2025_10_24/lamezia-operazione-joker-carabinieri-arrestano-3-persone-per-lincendio-di-due-esercizi-commerciali_56162/",
+      "source_type": "press_secondary",
+      "role": "corroboration"
+    }
+  ],
+  "primary_source_search": {
+    "status": "not_resolved",
+    "queries_targeted": ["Carabinieri Lamezia Joker", "Jocker pasticceria barberia", "17 maggio 2025 incendi"],
+    "rule": "Do not upgrade reproduced Carabinieri wording to law_enforcement_primary without the original institutional resource."
+  },
+  "publication_decision": "needs_more_evidence",
+  "next_action": "Resolve the original Carabinieri/Prosecutor release, then mint two EVENT candidates with a shared EVENT_SERIES only if source identity and occurrence locations remain confirmed."
+}
