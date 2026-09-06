@@ -1,0 +1,99 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-incendio-auto-concessionaria-via-del-progresso-2026-08-31-09-01",
+  "discovered_at": "2026-09-07T00:31:16+02:00",
+  "updated_at": "2026-09-07T00:31:16+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Incendio doloso di un'autovettura nel piazzale di una concessionaria in via del Progresso",
+  "temporal": {
+    "start": "2026-08-31",
+    "end": "2026-09-01",
+    "edtf": "2026-08-31/2026-09-01",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "press:corriere-calabria:2026-09-01:incendio-concessionaria-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Auto incendiata nel parcheggio di una concessionaria a Lamezia, indaga la polizia",
+      "url": "https://www.corrieredellacalabria.it/2026/09/01/lamezia-auto-incendiata-concessionaria-polizia-indagini/",
+      "published_at": "2026-09-01T16:20:00+02:00",
+      "retrieved_at": "2026-09-07T00:31:16+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:quotidiano-sud:2026-09-01:incendio-concessionaria-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Il Quotidiano del Sud",
+      "title": "Lamezia, incendiata automobile in sosta nel cortile di una concessionaria",
+      "url": "https://www.quotidianodelsud.it/calabria/catanzaro/cronache/cronaca/2026/09/01/lamezia-incendiata-automobile-in-sosta-nel-cortile-di-una-concessionaria",
+      "published_at": "2026-09-01T11:09:00+02:00",
+      "retrieved_at": "2026-09-07T00:31:16+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:cityone:2026-09-01:incendio-concessionaria-via-progresso",
+      "source_type": "press_secondary",
+      "provider": "City One",
+      "title": "Lamezia, incendiata nella notte automobile in sosta nel cortile di una concessionaria in via del Progresso",
+      "url": "https://www.cityonelamezia.it/lamezia-incendiata-nella-notte-automobile-in-sosta-nel-cortile-di-una-concessionaria-in-via-del-progresso/",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T00:31:16+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:incendio-doloso",
+      "classification_source_key": "press:corriere-calabria:2026-09-01:incendio-concessionaria-lamezia",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "autovettura parcheggiata nel piazzale di una concessionaria",
+        "natura dolosa indicata come esito dei primi accertamenti",
+        "possibile matrice estorsiva riportata come ipotesi investigativa non accertata"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-del-progresso:mondo-auto-dr",
+      "basis_source_key": "press:corriere-calabria:2026-09-01:incendio-concessionaria-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Mondo Auto DR, via del Progresso",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
