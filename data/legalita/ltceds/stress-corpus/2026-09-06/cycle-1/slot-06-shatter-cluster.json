@@ -19,6 +19,11 @@
   },
   "sources": [
     {
+      "url": "https://www.rainews.it/tgr/calabria/articoli/2025/10/lamezia-terme-mette-a-segno-27-furti-arrestato-diciassettenne-587114c6-9708-4d8b-837d-60eb85ce2008.html",
+      "source_type": "news_agency",
+      "role": "strong_corroboration_of_27-event_investigative_reconstruction"
+    },
+    {
       "url": "https://www.lameziainforma.it/cronaca/2025/06/16/operazione-shatter-su-furti-aggravati-su-auto-e-danneggiamenti-di-autovetture-in-sosta/62039/",
       "source_type": "press_secondary",
       "role": "cardinality_and_autonomous-event_wording"
@@ -37,7 +42,7 @@
   "primary_source_search": {
     "status": "not_resolved",
     "institutional_actor": "Carabinieri / Procura presso il Tribunale per i Minorenni di Catanzaro",
-    "rule": "Keep cluster review-only until the original institutional source or equivalent judicial source is resolved."
+    "rule": "RaiNews strengthens corroboration but does not become law_enforcement_primary. Keep cluster review-only until the original institutional source or equivalent judicial source is resolved."
   },
   "publication_decision": "canonical_cluster_candidate_only",
   "next_action": "Search source-native judicial/law-enforcement material; resolve individual members only where occurrence-specific date/place evidence becomes independently available."
