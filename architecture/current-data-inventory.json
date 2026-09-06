@@ -1,0 +1,4 @@
+{
+  "schemaVersion": "lt-current-data-inventory.v1",
+  "bootstrap": "Run node scripts/architecture/dataArchitectureInventory.mjs --write to materialize the deterministic repository inventory."
+}
