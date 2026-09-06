@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "cycle": 2,
+  "status": "completed_review_cycle",
+  "reviewed_bundles_created": 0,
+  "public_events_authorized": 0,
+  "results": {
+    "artemis_ii": {
+      "operation_event": false,
+      "underlying_blocks_distinguished": 4,
+      "lamezia_city_occurrences_resolved": 0,
+      "disposition": "procedural_context_only_for_lamezia_corpus"
+    },
+    "native_source_resolution": {
+      "joker_primary_resolved": false,
+      "shatter_primary_resolved": false,
+      "via_del_progresso_primary_resolved": false,
+      "source_hierarchy_downgrades_allowed": false
+    },
+    "historical_pre_1968": {
+      "event_selected": false,
+      "official_archive_targets_resolved": 4,
+      "principal_targets": ["Pretura di Nicastro", "Pretura di Sambiase", "Tribunale di Nicastro"],
+      "disposition": "source_acquisition_first"
+    }
+  },
+  "key_findings": [
+    "Investigation/procedural geography is not occurrence geography.",
+    "Artemis II currently yields no source-supported occurrence inside the municipality of Lamezia Terme.",
+    "An official archive/fondo locator is not sufficient to create a historical EVENT.",
+    "News-agency corroboration does not replace an unresolved source-native law-enforcement record where the workflow requires primary support."
+  ],
+  "standard_findings": ["TERRITORIAL-SCOPE-001", "ARCHIVAL-LOCATOR-001"],
+  "schema_change": "none",
+  "next_cycle": [
+    "search judicial/ordinance material for Artemis II only if it can identify an occurrence inside Lamezia Terme",
+    "continue source-native resolution for Joker, Shatter and Via del Progresso without lowering source authority",
+    "resolve series/fascicolo/register-level archival descriptions for Pretura/Tribunale di Nicastro and Sambiase",
+    "fill the first pre-1968 stress slot only after occurrence-level archival evidence is actually retrieved"
+  ],
+  "publication_policy": "no_auto_publish"
+}
