@@ -33,13 +33,13 @@ The monitor importer never writes to `crime_public_events`. Publication is a sep
 Dry-run validation (no database access):
 
 ```sh
-pnpm --filter @workspace/db run import:crime-monitor -- --input data/legalita/ltceds/monitor
+pnpm --filter @workspace/db run import:crime-monitor --input data/legalita/ltceds/monitor
 ```
 
 Canonical database ingestion:
 
 ```sh
-DATABASE_URL=... pnpm --filter @workspace/db run import:crime-monitor -- --input data/legalita/ltceds/monitor --execute
+DATABASE_URL=... pnpm --filter @workspace/db run import:crime-monitor --input data/legalita/ltceds/monitor --execute
 ```
 
 The execute path fails closed if an event ID is already present in `crime_public_events`; published records cannot be silently mutated through the monitoring inbox.
