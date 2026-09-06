@@ -49,14 +49,14 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Validate monitored crime artifacts
-        run: pnpm --filter @workspace/db run import:crime-monitor -- --input data/legalita/ltceds/monitor
+        run: pnpm --filter @workspace/db run import:crime-monitor --input data/legalita/ltceds/monitor
 
       - name: Run crime persistence tests
         run: pnpm --filter @workspace/db test
 
       - name: Persist canonical crime events
         if: github.event_name != 'pull_request' && env.DATABASE_URL != ''
-        run: pnpm --filter @workspace/db run import:crime-monitor -- --input data/legalita/ltceds/monitor --execute
+        run: pnpm --filter @workspace/db run import:crime-monitor --input data/legalita/ltceds/monitor --execute
 
       - name: Report missing database secret
         if: github.event_name != 'pull_request' && env.DATABASE_URL == ''
