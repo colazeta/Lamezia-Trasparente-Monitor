@@ -19,6 +19,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 concurrency:
   group: anac-bdncp-sync
@@ -36,10 +37,14 @@ jobs:
       ANAC_AUTHORITY_HISTORICAL_YEARS_PER_RUN: "1"
       ANAC_AUTHORITY_MAX_RESOURCES_PER_RUN: "6"
       ANAC_AUTHORITY_REFRESH_CURRENT_MONTHS: "2"
+      CENSUS_BRANCH: "automation/anac-procurement-census"
+      GH_TOKEN: "${{ github.token }}"
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -71,8 +76,19 @@ jobs:
       - name: Discover ANAC contracts by contracting authority
         run: pnpm contracts:anac-authority-sync
 
-      - name: Commit public ANAC census and last-known-good caches
-        id: commit_snapshot
+      - name: Validate census snapshots
+        shell: bash
+        run: |
+          node --import tsx -e '
+            import fs from "node:fs";
+            import { validateAnacBdncpSyncSnapshot } from "./artifacts/lamezia-trasparente/src/lib/anacBdncpSync.ts";
+            import { validateAnacAuthorityDiscoverySnapshot } from "./artifacts/lamezia-trasparente/src/lib/anacAuthorityDiscovery.ts";
+            validateAnacBdncpSyncSnapshot(JSON.parse(fs.readFileSync("data/public/contracts/anac-bdncp/latest.json", "utf8")));
+            validateAnacAuthorityDiscoverySnapshot(JSON.parse(fs.readFileSync("data/public/contracts/anac-authority/latest.json", "utf8")));
+          '
+
+      - name: Publish census update through PR
+        id: census_pr
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
@@ -83,22 +99,47 @@ jobs:
             data/public/contracts/anac-authority/latest.json
 
           if git diff --cached --quiet; then
-            echo "No ANAC procurement census changes to commit."
-            echo "committed=false" >> "$GITHUB_OUTPUT"
+            echo "No ANAC procurement census changes to publish."
+            echo "created=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
+          git checkout -B "$CENSUS_BRANCH"
           git commit -m "Update ANAC procurement census"
-          git pull --rebase origin main
-          git push origin HEAD:main
-          echo "committed=true" >> "$GITHUB_OUTPUT"
-          echo "commit_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          git push --force origin "HEAD:$CENSUS_BRANCH"
 
-      - name: Verify the refreshed census is public
-        if: steps.commit_snapshot.outputs.committed == 'true'
-        run: >-
-          node scripts/check-public-contracts-page.mjs
-          --url https://lamezia-trasparente.pages.dev
-          --expected-commit "${{ steps.commit_snapshot.outputs.commit_sha }}"
-          --attempts 30
-          --delay-ms 10000
+          existing_pr="$(gh pr list --head "$CENSUS_BRANCH" --base main --state open --json number --jq '.[0].number // empty')"
+          if [ -z "$existing_pr" ]; then
+            pr_url="$(gh pr create \
+              --base main \
+              --head "$CENSUS_BRANCH" \
+              --title "Update ANAC procurement census" \
+              --body $'Automated refresh from official ANAC public sources.\n\n- refreshes tracked-CIG structured cache\n- advances independent contracting-authority discovery for CF `00301390795`\n- preserves explicit source-status and historical-coverage ledgers\n- contains data snapshots only; normal required checks and branch rules still apply')"
+            existing_pr="${pr_url##*/}"
+          fi
+
+          gh pr merge "$existing_pr" --auto --squash
+          echo "created=true" >> "$GITHUB_OUTPUT"
+          echo "pr_number=$existing_pr" >> "$GITHUB_OUTPUT"
+          echo "Published census update as PR #$existing_pr with automerge enabled."
+
+      - name: Summarise authority backfill
+        shell: bash
+        run: |
+          node --import tsx -e '
+            import fs from "node:fs";
+            import { validateAnacAuthorityDiscoverySnapshot, anacAuthorityHistoricalCoverage } from "./artifacts/lamezia-trasparente/src/lib/anacAuthorityDiscovery.ts";
+            const snapshot = validateAnacAuthorityDiscoverySnapshot(JSON.parse(fs.readFileSync("data/public/contracts/anac-authority/latest.json", "utf8")));
+            const coverage = anacAuthorityHistoricalCoverage(snapshot);
+            console.log(JSON.stringify({
+              status: snapshot.status,
+              uniqueCigs: snapshot.records.length,
+              recordsScanned: snapshot.recordsScanned,
+              completedPeriods: snapshot.completedPeriods.length,
+              requestedClosedYears: coverage.requestedYears,
+              completedClosedYears: coverage.completedYears,
+              missingYears: coverage.missingYears,
+              historicalBackfillComplete: coverage.historicalBackfillComplete,
+              pullRequest: process.env.CENSUS_BRANCH
+            }, null, 2));
+          '
