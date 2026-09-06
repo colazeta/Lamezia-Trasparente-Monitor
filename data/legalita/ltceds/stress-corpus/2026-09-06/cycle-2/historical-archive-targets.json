@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "cycle": 2,
+  "purpose": "Identify source-native archival holdings capable of supporting pre-1968 EVENT records before filling historical stress-corpus slots.",
+  "slot_policy": "Do not assign a pre-1968 EVENT slot merely because an archival institution exists; first identify an individual occurrence in the archival material or a source-specific finding aid.",
+  "targets": [
+    {
+      "target_key": "pretura-nicastro-1865-1968",
+      "institution": "Archivio di Stato / SIAS",
+      "source_type": "official_archival_finding_aid",
+      "url": "https://sias-archivi.cultura.gov.it/cgi-bin/pagina.pl?TipoPag=prodente&Chiave=103807",
+      "producer": "Pretura di Nicastro",
+      "existence_dates": "1865-1968",
+      "territorial_scope": "mandamento di Nicastro",
+      "relevance": "primary judicial archival route for pre-1968 criminal proceedings within historical Nicastro",
+      "event_status": "no_event_selected_yet"
+    },
+    {
+      "target_key": "pretura-sambiase",
+      "institution": "Archivio di Stato / SIAS",
+      "source_type": "official_archival_finding_aid",
+      "url": "https://sias-archivi.cultura.gov.it/cgi-bin/pagina.pl?TipoPag=prodente&Chiave=103804",
+      "producer": "Pretura di Sambiase",
+      "territorial_scope": "Sambiase and historical mandamento including Gizzeria and Platania",
+      "relevance": "judicial source route for historical Sambiase; territorial competence must be checked per record",
+      "event_status": "no_event_selected_yet"
+    },
+    {
+      "target_key": "tribunale-nicastro",
+      "institution": "Sistema Archivistico Nazionale / Archivio di Stato",
+      "source_type": "official_archival_finding_aid",
+      "url": "http://dati.san.beniculturali.it/SAN/complarc_GGASI_san.cat.complArch.39024",
+      "producer": "Tribunale di Nicastro",
+      "relevance": "higher-level criminal/civil judicial archive locator for cases beyond pretura competence",
+      "event_status": "no_event_selected_yet"
+    },
+    {
+      "target_key": "archivio-stato-lamezia-section",
+      "institution": "Archivio di Stato di Catanzaro - Sezione di Lamezia Terme",
+      "source_type": "official_archive_institution",
+      "url": "https://archiviodistatocatanzaro.cultura.gov.it/istituto/sez-archivio-di-stato-di-lamezia-terme",
+      "relevance": "local conservation institution and acquisition/contact route",
+      "event_status": "source_acquisition_route"
+    }
+  ],
+  "research_protocol": [
+    "Start from Pretura/Tribunale finding aids and inventories rather than free-text web anecdotes.",
+    "Record series, busta/fascicolo/registro and chronological span before creating an EVENT candidate.",
+    "Use event date/place from the archival record; do not substitute later historiography when the original record is available.",
+    "Historic place identity must remain Nicastro/Sambiase/Sant'Eufemia as source-stated, with a separate relation to present-day Lamezia Terme.",
+    "No historical EVENT is mappable from an archive-level locator alone."
+  ],
+  "cycle_2_result": {
+    "pre_1968_event_slots_filled": 0,
+    "official_archival_targets_resolved": 4,
+    "decision": "source_acquisition_first",
+    "next_action": "Locate inventory/series-level descriptions or digitized records for a specific criminal proceeding before assigning the first pre-1968 stress-corpus EVENT."
+  }
+}
