@@ -291,6 +291,7 @@ export const crimeMonitorEventSchema = z
   });
 
 export type CrimeMonitorEventInput = z.infer<typeof crimeMonitorEventSchema>;
+export type CrimeMonitorSourceSupportRole = z.infer<typeof sourceSupportRoleSchema>;
 
 export interface CrimeMonitorFile {
   fileName: string;
@@ -366,9 +367,7 @@ export interface CrimeMonitorEventPlan {
   eventSources: Array<{
     eventId: string;
     sourceId: string;
-    supportRole: CrimeMonitorEventInput["sources"][number]["support_roles"] extends Array<infer T>
-      ? T
-      : never;
+    supportRole: CrimeMonitorSourceSupportRole;
   }>;
 }
 
