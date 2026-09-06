@@ -1,4 +1,6 @@
-export const CANONICAL_TAXONOMY_VERSION = "lamezia-canonical-taxonomy.v1" as const;
+import { classifyProcurementIdentifier } from "./procurementIdentifiers";
+
+export const CANONICAL_TAXONOMY_VERSION = "lamezia-canonical-taxonomy.v2" as const;
 
 export type TaxonomyStatus =
   | "classified"
@@ -52,8 +54,18 @@ export type CanonicalAlboClassification = {
   procurementRelevance: ProcurementRelevance;
   procurementPhase: ProcurementPhase;
   identifiers: {
+    /** Syntactic 10-character tokens observed after an explicit CIG label. */
+    cigCandidates: string[];
+    /** Formally valid CIGs eligible to become contract identities. */
     cigs: string[];
+    /** CIG-length candidates preserved as source evidence but ineligible as identities. */
+    invalidCigs: string[];
+    /** Syntactic 15-character tokens observed after an explicit CUP label. */
+    cupCandidates: string[];
+    /** Formally valid CUPs eligible for project linkage. */
     cups: string[];
+    /** CUP-length candidates preserved as evidence but not project identifiers. */
+    invalidCups: string[];
   };
   evidence: {
     sourceFields: Array<"subject" | "display_title">;
@@ -106,8 +118,12 @@ export function classifyAlboItem(
   const displayTitle = clean(item.presentation?.display_title);
   const text = [subject, displayTitle].filter(Boolean).join(" — ");
   const upper = text.toUpperCase();
-  const cigs = extractCigs(upper);
-  const cups = extractCups(upper);
+  const cigCandidates = extractCigs(upper);
+  const cupCandidates = extractCups(upper);
+  const cigs = formallyValid(cigCandidates, "cig");
+  const invalidCigs = cigCandidates.filter((candidate) => !cigs.includes(candidate));
+  const cups = formallyValid(cupCandidates, "cup");
+  const invalidCups = cupCandidates.filter((candidate) => !cups.includes(candidate));
   const matchedSignals = PROCUREMENT_SIGNALS
     .filter(([, pattern]) => pattern.test(upper))
     .map(([signal]) => signal);
@@ -123,6 +139,7 @@ export function classifyAlboItem(
     text,
     procurementRelevance,
     cigs,
+    invalidCigs,
     matchedSignals,
   );
 
@@ -133,7 +150,14 @@ export function classifyAlboItem(
     administrativeActions: actions,
     procurementRelevance,
     procurementPhase,
-    identifiers: { cigs, cups },
+    identifiers: {
+      cigCandidates,
+      cigs,
+      invalidCigs,
+      cupCandidates,
+      cups,
+      invalidCups,
+    },
     evidence: {
       sourceFields: [
         ...(subject ? (["subject"] as const) : []),
@@ -144,6 +168,7 @@ export function classifyAlboItem(
   };
 }
 
+/** Extracts explicitly labelled CIG-shaped candidates; does not validate them. */
 export function extractCigs(value: string | null | undefined): string[] {
   const text = clean(value).toUpperCase();
   if (!text) return [];
@@ -159,6 +184,7 @@ export function extractCigs(value: string | null | undefined): string[] {
   return unique(matches);
 }
 
+/** Extracts explicitly labelled CUP-shaped candidates; does not validate them. */
 export function extractCups(value: string | null | undefined): string[] {
   const text = clean(value).toUpperCase();
   if (!text) return [];
@@ -172,6 +198,22 @@ export function extractCups(value: string | null | undefined): string[] {
     .filter((value): value is string => Boolean(value));
 
   return unique(matches);
+}
+
+function formallyValid(
+  candidates: string[],
+  expectedType: "cig" | "cup",
+): string[] {
+  return unique(
+    candidates.filter((candidate) => {
+      const classification = classifyProcurementIdentifier(candidate);
+      return (
+        classification.type === expectedType &&
+        classification.formallyValid &&
+        classification.normalized === candidate
+      );
+    }),
+  );
 }
 
 function deriveProcurementRelevance(
@@ -270,9 +312,11 @@ function deriveTaxonomyStatus(
   text: string,
   relevance: ProcurementRelevance,
   cigs: string[],
+  invalidCigs: string[],
   matchedSignals: string[],
 ): TaxonomyStatus {
   if (!text) return "insufficient_evidence";
+  if (invalidCigs.length > 0 && cigs.length === 0) return "review_required";
   if (relevance === "possible") return "review_required";
   if (relevance === "confirmed" && cigs.length === 0 && matchedSignals.length < 2) {
     return "review_required";
