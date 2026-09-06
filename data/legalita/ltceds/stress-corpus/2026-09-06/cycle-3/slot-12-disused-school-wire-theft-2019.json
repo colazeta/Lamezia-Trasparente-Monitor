@@ -1,0 +1,74 @@
+{
+  "schema_version": "1.0",
+  "cycle": 3,
+  "slot": 12,
+  "stratum": "A_contemporary_simple",
+  "case_key": "2019-09-13-LAMEZIA-DISUSED-SCHOOL-WIRE-THEFT",
+  "review_mode": true,
+  "candidate_kind": "CONTINUOUS_EPISODE_CANDIDATE",
+  "review_status": "primary_source_resolved_assertion_provenance_gap",
+  "event_identity": {
+    "event_form": "continuous_episode",
+    "temporal": {
+      "start": "2019-09-13",
+      "end": "2019-09-13",
+      "precision": "exact_date",
+      "assertion_basis": "derived_calendar",
+      "derivation": "Official/source-reproduced wording says the event occurred in the late afternoon of the previous Friday; multiple dated reproductions were published Tuesday 17 September 2019, making the previous Friday 13 September 2019.",
+      "source_faithful_literal": "late afternoon of the previous Friday"
+    },
+    "occurrence_summary": "A person entered a disused former school after climbing the fence and was caught removing electrical wiring; resistance occurred during the police intervention.",
+    "same_transaction_rationale": "The theft and resistance arise in one continuous intervention sequence and should be represented as one EVENT with multiple offence instances unless later evidence supports a split."
+  },
+  "offence_assertions": [
+    {
+      "classification_basis": "source_stated_legal",
+      "source_wording": "aggravated theft",
+      "attempt_status": "completed"
+    },
+    {
+      "classification_basis": "source_stated_legal",
+      "source_wording": "resistance to a public official",
+      "attempt_status": "completed"
+    }
+  ],
+  "location": {
+    "role": "occurrence",
+    "municipality": "Lamezia Terme",
+    "place_name": "unnamed disused former school",
+    "evidence_basis": "source_stated_locality",
+    "evidence_precision": "municipality",
+    "resolved_precision": "municipality",
+    "sensitivity": "non_sensitive",
+    "publication_risk": "non_sensitive",
+    "geometry_internal": null,
+    "geometry_public": null,
+    "map_readiness": "not_mappable_at_municipality_precision"
+  },
+  "sources": [
+    {
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/12365d80ac9de4998365686236",
+      "source_type": "law_enforcement_primary",
+      "provider": "Questura di Catanzaro / Polizia di Stato",
+      "role": "occurrence_and_legal_classification",
+      "publication_support": "primary_possible"
+    },
+    {
+      "url": "https://www.zoom24.it/news/170816081414/sorpreso-a-rubare-i-fili-elettrici-di-una-scuola-in-disuso-arrestato",
+      "source_type": "press_secondary",
+      "published_at": "2019-09-17",
+      "role": "calendar_derivation_anchor_and_corroboration"
+    }
+  ],
+  "privacy": {
+    "person_identity_stored": false,
+    "public_text_risk": "low_after_identity_removal"
+  },
+  "compiler_readiness": {
+    "status": "blocked_by_assertion_provenance_model",
+    "reason": "The current reviewed-bundle schema can store the exact temporal value and sources but cannot preserve that the exact date is a curator derivation from a source-relative expression and a separately dated corroborating source.",
+    "fallback_if_schema_unchanged": "Preserve the source-relative temporal expression externally and compile only a lower-precision temporal value rather than silently losing provenance."
+  },
+  "publication_decision": "needs_schema_or_lower_precision_choice",
+  "public_event_authorized": false
+}

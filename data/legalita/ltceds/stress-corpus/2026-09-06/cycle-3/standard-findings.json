@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "cycle": 3,
+  "findings": [
+    {
+      "finding_id": "ASSERTION-PROVENANCE-001",
+      "status": "schema_gap_candidate",
+      "schema_change_required": "under_review",
+      "trigger_cases": [
+        "2019-09-13-LAMEZIA-DISUSED-SCHOOL-WIRE-THEFT",
+        "2017-03-31-VIA-PIAVE-IL-FORNAIO-BOMBING"
+      ],
+      "problem": "The reviewed-bundle v1 schema carries a list of sources but cannot bind a precise field/assertion to the source, derivation or editorial inference that supports it. This loses auditability when exact date/place/classification comes from different sources or a deterministic curator derivation.",
+      "required_semantics": [
+        "subject/predicate or stable assertion target path",
+        "supporting source_id(s)",
+        "assertion_mode: explicit|derived_crosswalk|curator_inference|derived_calendar",
+        "source_locator or source-relative expression where useful",
+        "supersession/conflict status",
+        "optional derivation note without storing person identity"
+      ],
+      "candidate_implementation": "Add an optional canonical assertion/provenance layer referenced by reviewed bundles or compile an attested assertion manifest alongside the bundle. Keep the public-event payload compact.",
+      "compatibility": "Single-source simple events should not require verbose assertion authoring for every field; deterministic defaults may bind all source-stated fields to the sole source while preserving explicit overrides for mixed-source cases.",
+      "decision": "Do not silently flatten mixed-source/derived claims in stable 1.0. Test a minimal assertion layer before promotion from draft."
+    },
+    {
+      "finding_id": "OUTCOME-TIMELINE-001",
+      "status": "schema_gap_candidate",
+      "schema_change_required": "under_review",
+      "trigger_case": "2017-10-17-SS280-ROAD-COLLISION-LATER-DEATH",
+      "problem": "An EVENT can occur on one date while a legally/criminologically material outcome occurs later. The current reviewed-bundle schema has event temporal fields and a short procedural summary but no structured outcome object with its own date and provenance.",
+      "required_semantics": [
+        "outcome_type",
+        "outcome_date or interval",
+        "outcome_precision",
+        "supporting source/assertion provenance",
+        "relationship to offence instance where applicable"
+      ],
+      "rule": "Occurrence temporal identity must remain source-faithful. A later death, recovery, loss amount, injury outcome or other consequence must not overwrite the occurrence date.",
+      "candidate_implementation": "Optional ALLEGATION_OUTCOME / EVENT_OUTCOME canonical entity, or equivalent structured reviewed-bundle section, kept separate from procedural history.",
+      "decision": "Test against at least one additional delayed-outcome case before stable 1.0."
+    }
+  ]
+}

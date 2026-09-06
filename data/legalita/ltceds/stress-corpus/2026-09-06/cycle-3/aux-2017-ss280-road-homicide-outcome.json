@@ -1,0 +1,78 @@
+{
+  "schema_version": "1.0",
+  "cycle": 3,
+  "corpus_role": "auxiliary_edge_case_not_counted_in_30_slots",
+  "case_key": "2017-10-17-SS280-ROAD-COLLISION-LATER-DEATH",
+  "review_mode": true,
+  "candidate_kind": "EVENT_WITH_LATER_OUTCOME",
+  "event_identity": {
+    "event_form": "discrete",
+    "occurrence_temporal": {
+      "start": "2017-10-17",
+      "end": "2017-10-17",
+      "precision": "exact_date",
+      "assertion_basis": "source_stated_primary"
+    },
+    "occurrence_summary": "A three-vehicle collision occurred on SS 280 in the municipality of Lamezia Terme; police later attributed road-homicide and alcohol-related driving offences in the subsequent investigation.",
+    "outcomes": [
+      {
+        "outcome_type": "death_following_injuries",
+        "outcome_date": "2017-11-05",
+        "basis": "contemporaneous_secondary_reporting",
+        "rule": "Outcome date must not replace the 17 October occurrence date."
+      }
+    ],
+    "procedural_history": [
+      {
+        "date": "2018-01-05",
+        "type": "precautionary_measure_reporting",
+        "rule": "Procedural date remains separate from occurrence and outcome."
+      }
+    ]
+  },
+  "offence_assertions": [
+    {
+      "classification_basis": "source_stated_legal",
+      "source_wording": "road homicide"
+    },
+    {
+      "classification_basis": "source_stated_legal",
+      "source_wording": "driving under the influence of alcohol"
+    }
+  ],
+  "location": {
+    "role": "occurrence",
+    "municipality": "Lamezia Terme",
+    "source_place_label": "SS 280, Lamezia Terme",
+    "corroborating_place_label": "imbocco SS 280 a Sant'Eufemia",
+    "evidence_precision": "street_segment",
+    "geometry_internal": null,
+    "geometry_public": null,
+    "map_readiness": "requires_road_segment_resolution_without_false_precision"
+  },
+  "sources": [
+    {
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/15855a4f65b98d045795329352",
+      "source_type": "law_enforcement_primary",
+      "provider": "Questura di Catanzaro / Polizia Stradale",
+      "published_at": "2018-01-05",
+      "role": "collision_date_municipality_and_legal_classification"
+    },
+    {
+      "url": "https://www.lametino.it/cronaca/lamezia-non-ce-l-ha-fatta-il-46enne-rimasto-ferito-in-incidente-ad-ottobre-su-ss280.html",
+      "source_type": "press_secondary",
+      "published_at": "2017-11-05",
+      "role": "death_outcome_date_and_sant_eufemia_road_context"
+    }
+  ],
+  "privacy": {
+    "person_identity_stored": false,
+    "public_text_risk": "medium_victim_context"
+  },
+  "schema_stress": {
+    "reviewed_bundle_status": "blocked_by_outcome_timeline_model",
+    "gap": "The reviewed-bundle v1 schema has event temporal fields and a short procedural summary, but no structured occurrence outcome with its own date/source provenance.",
+    "bad_fallback": "Do not change temporal.start to 2017-11-05 merely because the later death creates the homicide outcome."
+  },
+  "public_event_authorized": false
+}

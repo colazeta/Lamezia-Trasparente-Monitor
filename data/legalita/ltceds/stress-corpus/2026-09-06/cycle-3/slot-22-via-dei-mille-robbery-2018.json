@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.0",
+  "cycle": 3,
+  "slot": 22,
+  "stratum": "E_geoprivacy_sensitive",
+  "case_key": "2018-02-28-VIA-DEI-MILLE-ROBBERY-INJURIES",
+  "review_mode": true,
+  "candidate_kind": "EVENT",
+  "review_status": "primary_source_resolved_privacy_review_required",
+  "event_identity": {
+    "event_form": "discrete",
+    "temporal": {
+      "start": "2018-02-28",
+      "end": "2018-02-28",
+      "precision": "exact_date",
+      "assertion_basis": "source_stated"
+    },
+    "occurrence_summary": "A robbery against an elderly victim occurred in Via dei Mille; the victim was found injured and later treated for facial/head trauma and an arm fracture.",
+    "procedural_separation": "The later investigative arrest is procedural context and not the occurrence date or occurrence location."
+  },
+  "offence_assertions": [
+    {
+      "classification_basis": "source_stated_legal",
+      "source_wording": "robbery",
+      "attempt_status": "completed"
+    },
+    {
+      "classification_basis": "source_stated_legal",
+      "source_wording": "injuries",
+      "attempt_status": "completed"
+    }
+  ],
+  "location": {
+    "role": "occurrence",
+    "municipality": "Lamezia Terme",
+    "source_place_label": "Via Dei Mille",
+    "evidence_basis": "source_stated_street",
+    "evidence_precision": "street_segment",
+    "resolved_precision": "street_segment",
+    "sensitivity": "private_or_sensitive",
+    "publication_risk": "victim_linked",
+    "geometry_internal": null,
+    "geometry_public": null,
+    "public_location_policy": "suppress_or_generalise_beyond_source_street_until_reidentification_review",
+    "map_readiness": "not_mappable_without_privacy_transform"
+  },
+  "primary_source": {
+    "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/12365ab0d32eae8d8004290737",
+    "source_type": "law_enforcement_primary",
+    "provider": "Questura di Catanzaro / Polizia di Stato",
+    "role": "occurrence_date_street_offence_and_injury_support",
+    "publication_support": "primary_possible"
+  },
+  "privacy": {
+    "person_identity_stored": false,
+    "victim_age_exact_stored": false,
+    "ethnicity_or_nationality_stored": false,
+    "private_address_stored": false,
+    "risk": "victim_reidentification_from_street_plus_vulnerability",
+    "required_transform": "no_exact_public_point; prefer non-mappable/generalised public location"
+  },
+  "compiler_readiness": {
+    "status": "reviewed_bundle_ready_candidate_with_privacy_gate",
+    "remaining_steps": [
+      "mint UUIDv7 identifiers using repository generator",
+      "apply ICCS/Istat classification after taxonomy review",
+      "human privacy/editorial review of public text and location transform",
+      "run compiler after PR #1051 lands on target baseline"
+    ]
+  },
+  "publication_decision": "publish_candidate_nonmappable_not_authorized",
+  "public_event_authorized": false
+}

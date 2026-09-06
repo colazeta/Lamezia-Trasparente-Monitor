@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0",
+  "cycle": 3,
+  "status": "completed_review_cycle",
+  "reviewed_bundles_created": 0,
+  "public_events_authorized": 0,
+  "qualified_slots": [11, 12, 14, 22],
+  "auxiliary_edge_cases": 1,
+  "results": {
+    "primary_positive_controls": [
+      {
+        "slot": 11,
+        "case_key": "2023-04-29-LAMEZIA-AIRPORT-FALSE-PASSPORTS",
+        "status": "reviewed_bundle_ready_candidate",
+        "map_profile": "exact_public_site_without_invented_geometry"
+      },
+      {
+        "slot": 22,
+        "case_key": "2018-02-28-VIA-DEI-MILLE-ROBBERY-INJURIES",
+        "status": "reviewed_bundle_ready_candidate_with_privacy_gate",
+        "map_profile": "victim_linked_nonmappable_or_generalised"
+      }
+    ],
+    "assertion_provenance_stress": [
+      {
+        "slot": 12,
+        "case_key": "2019-09-13-LAMEZIA-DISUSED-SCHOOL-WIRE-THEFT",
+        "status": "blocked_by_assertion_provenance_model",
+        "reason": "exact date is a deterministic calendar derivation from source-relative wording plus dated corroboration"
+      },
+      {
+        "slot": 14,
+        "case_key": "2017-03-31-VIA-PIAVE-IL-FORNAIO-BOMBING",
+        "status": "blocked_by_assertion_provenance_model",
+        "reason": "exact date, site granularity and legal/context assertions are supported at different precision by different sources"
+      }
+    ],
+    "outcome_timeline_stress": {
+      "case_key": "2017-10-17-SS280-ROAD-COLLISION-LATER-DEATH",
+      "corpus_role": "auxiliary_not_counted_slot",
+      "occurrence_date": "2017-10-17",
+      "outcome_date": "2017-11-05",
+      "procedural_reporting_date": "2018-01-05",
+      "status": "blocked_by_outcome_timeline_model"
+    }
+  },
+  "standard_findings": [
+    "ASSERTION-PROVENANCE-001",
+    "OUTCOME-TIMELINE-001"
+  ],
+  "key_findings": [
+    "A single primary source with explicit date/place/conduct fits the reviewed-bundle model substantially better than mixed-source cases.",
+    "Exact public-site geography can be source-supported while geometry remains null until a reviewed anchor/geocoder step.",
+    "Victim-linked source-stated streets require a stricter public location transform than the source itself reveals.",
+    "Deterministic curator derivations must remain auditable rather than becoming indistinguishable from source-explicit facts.",
+    "Occurrence date, later material outcome and later procedural action require separate temporal objects."
+  ],
+  "schema_change": "two_gap_candidates_deferred_to_dedicated_review",
+  "next_cycle": [
+    "human-review and compile slot 11 and slot 22 after PR #1051 is available on the same baseline",
+    "design and test minimal assertion provenance support before compiling slots 12 and 14 at full precision",
+    "test OUTCOME-TIMELINE-001 against one additional delayed-outcome event",
+    "continue filling remaining contemporary strata without lowering source hierarchy or privacy rules"
+  ],
+  "publication_policy": "no_auto_publish"
+}
