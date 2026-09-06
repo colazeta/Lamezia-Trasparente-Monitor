@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "applies_to": "data/legalita/ltceds/stress-corpus/2026-09-06/manifest.json",
+  "corrections": [
+    {
+      "slot": 6,
+      "fields": {
+        "case_key": "2025-02-28-03-01-SHATTER-27-AUTONOMOUS-EVENTS",
+        "temporal_hint": "night between 2025-02-28 and 2025-03-01",
+        "candidate_kind": "EVENT_CLUSTER",
+        "location_hint": "centro storico di Lamezia Terme and Sambiase",
+        "next_action": "retain exact reported count 27 as cluster cardinality; resolve individual members only from occurrence-specific evidence; keep 2025-07-06 vehicle fires separate"
+      },
+      "supersedes": "the initial ambiguous one-night/July association"
+    },
+    {
+      "slot": 7,
+      "fields": {
+        "case_key": "2026-01-11-VIA-DEL-PROGRESSO-ADJACENT-BURGLARIES",
+        "temporal_hint": "2026-01-11 around 03:50 according to current secondary reporting",
+        "candidate_kind": "EVENT_IDENTITY_REVIEW",
+        "next_action": "resolve primary source and determine whether one continuous episode with multiple targets is supported"
+      },
+      "supersedes": "initial night-of-2026-01-14/15 hint derived from publication timing"
+    }
+  ],
+  "rule": "These corrections are source-resolution amendments. The original manifest remains a selection snapshot; downstream cycle work must use the corrected facts recorded here and in cycle-1 dossiers."
+}
