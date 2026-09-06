@@ -106,4 +106,6 @@ export const SCOUTED_PROPOSAL_GEOGRAPHY: Record<string, ProposalGeography> = {
   "palasparti-riapertura-manutenzione-mtl-2026": PALASPARTI,
   "fna-disabilita-gravissima-bando-futuro-nazionale-2026": LAMEZIA_CITYWIDE,
   "sanita-pubblica-petizione-presidio-malerba-2026": LAMEZIA_CITYWIDE,
+  "la-mia-estate-avvio-attivita-oltre-autismo-2026": LAMEZIA_CITYWIDE,
+  "emodinamica-h24-commissione-sanita-pd-2026": GIOVANNI_PAOLO_II,
 };
