@@ -1,14 +1,19 @@
 import { createHash } from "node:crypto";
 
 import { describe, it, expect, afterAll, afterEach } from "vitest";
-import { inArray } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 
 import request from "supertest";
 import app from "../app";
 import {
+  crimeEventLocationsTable,
+  crimeEventOffencesTable,
+  crimeEventSourcesTable,
   crimeEventsTable,
   crimePublicEventsTable,
+  crimeSourcesTable,
   db,
+  executeLtcedsPilotImport,
   pool,
   publicationsTable,
 } from "@workspace/db";
@@ -305,6 +310,130 @@ describe("Public API v1", () => {
       riskInterpretation: "prohibited",
       disclaimer: CRIME_EVENTS_DISCLAIMER,
     });
+  });
+
+  it("imports the real LTCEDS pilot idempotently and serves it only from the public projection", async () => {
+    const first = await executeLtcedsPilotImport(db);
+    const eventIds = first.events.map((event) => event.eventId);
+    const sourceLinks = await db
+      .select({ sourceId: crimeEventSourcesTable.sourceId })
+      .from(crimeEventSourcesTable)
+      .where(inArray(crimeEventSourcesTable.eventId, eventIds));
+    const sourceIds = [...new Set(sourceLinks.map((row) => row.sourceId))];
+
+    try {
+      expect(first).toMatchObject({
+        mode: "execute",
+        databaseState: "checked",
+        eventCount: 4,
+        sourceCount: 4,
+        offenceCount: 5,
+        locationCount: 4,
+        publicProjectionCount: 4,
+        operations: { insert: 4, update: 0, noop: 0 },
+      });
+
+      const second = await executeLtcedsPilotImport(db, { runMachineGate: false });
+      expect(second.operations).toMatchObject({ insert: 0, update: 0, noop: 4 });
+
+      expect(
+        await db
+          .select({ eventId: crimeEventsTable.eventId })
+          .from(crimeEventsTable)
+          .where(inArray(crimeEventsTable.eventId, eventIds)),
+      ).toHaveLength(4);
+      expect(
+        await db
+          .select({ eventId: crimePublicEventsTable.eventId })
+          .from(crimePublicEventsTable)
+          .where(inArray(crimePublicEventsTable.eventId, eventIds)),
+      ).toHaveLength(4);
+      expect(
+        await db
+          .select({ offenceId: crimeEventOffencesTable.offenceInstanceId })
+          .from(crimeEventOffencesTable)
+          .where(inArray(crimeEventOffencesTable.eventId, eventIds)),
+      ).toHaveLength(5);
+      expect(
+        await db
+          .select({ locationId: crimeEventLocationsTable.locationId })
+          .from(crimeEventLocationsTable)
+          .where(inArray(crimeEventLocationsTable.eventId, eventIds)),
+      ).toHaveLength(4);
+      expect(sourceLinks).toHaveLength(4);
+      expect(
+        await db
+          .select({ sourceId: crimeSourcesTable.sourceId })
+          .from(crimeSourcesTable)
+          .where(inArray(crimeSourcesTable.sourceId, sourceIds)),
+      ).toHaveLength(4);
+
+      const list = await request(app).get("/api/public/v1/crime-events?pageSize=100");
+      expect(list.status).toBe(200);
+      expect(list.body.pagination.total).toBe(4);
+      expect(list.body.data).toHaveLength(4);
+
+      const coverage = await request(app).get("/api/public/v1/crime-events/coverage");
+      expect(coverage.status).toBe(200);
+      expect(coverage.body).toMatchObject({
+        documentedEventCount: 4,
+        mappableEventCount: 0,
+        publicMapFeatureCount: 0,
+      });
+
+      const geojson = await request(app).get("/api/public/v1/crime-events.geojson");
+      expect(geojson.status).toBe(200);
+      expect(geojson.body).toMatchObject({ type: "FeatureCollection", features: [] });
+
+      const viaCilea = first.events.find((event) => event.fileName.includes("via-cilea"));
+      expect(viaCilea).toBeDefined();
+      const viaCileaId = viaCilea!.eventId;
+      const [storedProjection] = await db
+        .select({ payload: crimePublicEventsTable.payload })
+        .from(crimePublicEventsTable)
+        .where(eq(crimePublicEventsTable.eventId, viaCileaId));
+      const detail = await request(app).get(`/api/public/v1/crime-events/${viaCileaId}`);
+      expect(detail.status).toBe(200);
+      expect(detail.body).toEqual(storedProjection.payload);
+
+      const attemptedHomicide = await request(app).get(
+        "/api/public/v1/crime-events?iccs=01&from=2025-10-25&to=2025-10-25&pageSize=100",
+      );
+      expect(attemptedHomicide.status).toBe(200);
+      expect(attemptedHomicide.body.data).toHaveLength(1);
+      expect(attemptedHomicide.body.data[0].event_id).toBe(viaCileaId);
+
+      const missing = await request(app).get(
+        "/api/public/v1/crime-events/01999999-9999-7000-8000-000000000001",
+      );
+      expect(missing.status).toBe(404);
+
+      await db
+        .update(crimeEventLocationsTable)
+        .set({ longitude: "16.25", latitude: "38.95" })
+        .where(eq(crimeEventLocationsTable.eventId, viaCileaId));
+
+      const geojsonAfterInternalMutation = await request(app).get(
+        "/api/public/v1/crime-events.geojson",
+      );
+      expect(geojsonAfterInternalMutation.status).toBe(200);
+      expect(geojsonAfterInternalMutation.body.features).toHaveLength(0);
+      const detailAfterInternalMutation = await request(app).get(
+        `/api/public/v1/crime-events/${viaCileaId}`,
+      );
+      expect(detailAfterInternalMutation.body).toEqual(storedProjection.payload);
+    } finally {
+      if (eventIds.length) {
+        await db
+          .delete(crimeEventsTable)
+          .where(inArray(crimeEventsTable.eventId, eventIds));
+      }
+      if (sourceIds.length) {
+        await db
+          .delete(crimeSourcesTable)
+          .where(inArray(crimeSourcesTable.sourceId, sourceIds));
+      }
+    }
   });
 
   it("fails closed for invalid crime-event identifiers and nonmatching filters", async () => {
