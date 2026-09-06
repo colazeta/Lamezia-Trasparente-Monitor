@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.0",
+  "cycle": 3,
+  "slot": 11,
+  "stratum": "A_contemporary_simple",
+  "case_key": "2023-04-29-LAMEZIA-AIRPORT-FALSE-PASSPORTS",
+  "review_mode": true,
+  "candidate_kind": "EVENT",
+  "review_status": "primary_source_resolved_candidate_ready",
+  "event_identity": {
+    "event_form": "discrete",
+    "temporal": {
+      "start": "2023-04-29",
+      "end": "2023-04-29",
+      "precision": "exact_date",
+      "assertion_basis": "source_stated"
+    },
+    "occurrence_summary": "Two travellers presented allegedly false passports during border controls while attempting to board an outbound flight from Lamezia Terme airport.",
+    "procedural_separation": {
+      "arrest": "2023-04-29",
+      "judicial_validation": "2023-05-02",
+      "rule": "The judicial validation date is procedural history and does not replace the occurrence date."
+    }
+  },
+  "offence_assertions": [
+    {
+      "classification_basis": "source_stated_legal",
+      "source_wording": "receiving",
+      "attempt_status": "completed"
+    },
+    {
+      "classification_basis": "source_stated_legal",
+      "source_wording": "possession of false identity document valid for expatriation",
+      "attempt_status": "completed"
+    }
+  ],
+  "location": {
+    "role": "occurrence",
+    "municipality": "Lamezia Terme",
+    "place_name": "Aeroporto di Lamezia Terme",
+    "evidence_basis": "source_stated_named_site",
+    "evidence_precision": "exact_public_site",
+    "resolved_precision": "exact_public_site",
+    "sensitivity": "public_place",
+    "publication_risk": "low_public_site",
+    "geometry_internal": null,
+    "geometry_public": null,
+    "map_readiness": "safe_public_site_but_geometry_not_invented"
+  },
+  "primary_source": {
+    "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/1236645133b4cf5d0572757548",
+    "source_type": "law_enforcement_primary",
+    "provider": "Questura di Catanzaro / Polizia di Stato",
+    "published_at": "2023-05-02",
+    "publication_support": "primary_possible",
+    "requires_corroboration": false
+  },
+  "privacy": {
+    "person_identity_stored": false,
+    "nationality_or_ethnicity_stored": false,
+    "public_text_risk": "low_after_identity_removal"
+  },
+  "compiler_readiness": {
+    "status": "reviewed_bundle_ready_candidate",
+    "remaining_steps": [
+      "mint UUIDv7 identifiers using repository generator",
+      "apply ICCS/Istat classification after taxonomy review",
+      "run human editorial review and reviewed-bundle compiler after PR #1051 lands on the target baseline"
+    ]
+  },
+  "publication_decision": "publish_candidate_not_authorized",
+  "public_event_authorized": false
+}
