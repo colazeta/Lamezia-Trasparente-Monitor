@@ -1,0 +1,219 @@
+{
+  "schemaVersion": "lt-data-architecture-migration-plan.v1",
+  "targetModel": "provenance-first canonical civic knowledge system",
+  "strategy": "additive-strangler",
+  "rules": {
+    "noDestructiveCutoverWithoutReconciliation": true,
+    "legacyReadsRemainUntilEquivalenceProof": true,
+    "newCanonicalIds": "UUIDv7",
+    "canonicalStore": "PostgreSQL",
+    "staticFilesAreSemanticSourceOfTruth": false,
+    "phaseNumbersAreIdentifiersNotExecutionOrder": true,
+    "executionOrderIsDefinedByPrerequisites": true,
+    "schemaTablesMissingFromVersionedMigrationsAllowed": false
+  },
+  "phases": [
+    {
+      "id": 0,
+      "key": "architecture_contract",
+      "status": "complete",
+      "objective": "Make the universal conceptual rules normative for all new data work.",
+      "prerequisites": [],
+      "deliverables": ["docs/architecture/data-architecture-contract-v1.md", "architecture/data-domain-registry.v1.json"],
+      "acceptance": ["All exported Drizzle schema modules are architecture-registered", "All top-level data-lake layers are registered", "Stable CI suite enforces registry coverage"]
+    },
+    {
+      "id": 1,
+      "key": "current_state_inventory",
+      "status": "complete",
+      "objective": "Maintain a deterministic machine-readable inventory of database tables, migrations and repository data assets.",
+      "prerequisites": [0],
+      "deliverables": ["architecture/current-data-inventory.json", "scripts/architecture/dataArchitectureInventory.mjs"],
+      "acceptance": ["Inventory is reproducible from repository state", "Inventory drift fails CI", "Schema-to-migration drift is a zero-tolerance forward invariant after convergence", "Unsupported schema construction styles fail closed until the scanner supports them"]
+    },
+    {
+      "id": 2,
+      "key": "canonical_identity",
+      "status": "complete",
+      "objective": "Introduce a universal identity/addressability spine for canonical entities and events without replacing typed domain semantics or legacy local primary keys.",
+      "prerequisites": [0, 1],
+      "deliverables": ["core.canonical_subjects", "core.legacy_subject_map"],
+      "acceptance": ["UUIDv7 enforced for new canonical subject IDs", "subject_kind explicitly distinguishes entity from event", "Typed domain tables remain authoritative for entity/event semantics", "Identity spine is not used as an EAV or generic fact store", "Identity and active legacy mapping helpers are idempotent; domain backfills remain scoped to later domain migration phases", "No active legacy identity silently changes canonical target without an explicit supersession decision", "Unresolved/not-applicable/no-canonical-target outcomes do not require a synthetic subject"]
+    },
+    {
+      "id": 3,
+      "key": "universal_source_registry",
+      "status": "planned",
+      "objective": "Create one provenance model for every external source and acquisition run.",
+      "prerequisites": [2],
+      "deliverables": ["source.sources", "source.endpoints", "source.acquisition_runs", "source.releases", "source.records"],
+      "acceptance": ["Every recurring external ingestion has a source_id", "Runs expose coverage/failure metrics", "Existing source-specific provenance can be mapped without data loss"]
+    },
+    {
+      "id": 4,
+      "key": "artifact_registry",
+      "status": "planned",
+      "objective": "Register physical source artifacts by hash and storage locator while allowing bytes to remain outside PostgreSQL.",
+      "prerequisites": [3],
+      "deliverables": ["source.artifacts", "legacy attachment dual-write"],
+      "acceptance": ["All migrated artifacts have content hash and source ownership", "Legacy publication attachments reconcile to registered artifacts", "No public-safety scope is broadened"]
+    },
+    {
+      "id": 5,
+      "key": "assertion_evidence_layer",
+      "status": "planned",
+      "objective": "Separate source-stated, extracted, derived and editorial claims from resolved canonical values and explicit non-resolution outcomes.",
+      "prerequisites": [2, 3],
+      "deliverables": ["core.assertions", "core.resolution_outcomes", "extraction provenance"],
+      "acceptance": ["Derived canonical facts can be traced to evidence", "Manual corrections supersede rather than erase automatic results", "Unknown/ambiguous/not-applicable/insufficient-evidence states remain explicit", "A source record is never forced into a canonical entity or event merely to complete the pipeline"]
+    },
+    {
+      "id": 6,
+      "key": "taxonomy_core",
+      "status": "planned",
+      "objective": "Persist reusable versioned taxonomies and classifications in the canonical database.",
+      "prerequisites": [5],
+      "deliverables": ["taxonomy.schemes", "taxonomy.concepts", "taxonomy.crosswalks", "taxonomy.classifications"],
+      "acceptance": ["lamezia-canonical-taxonomy.v1 is DB-represented", "Classifications record version/method/review state/evidence", "Classification failure cannot silently drop a record", "not_applicable, insufficient_evidence and review_required are first-class outcomes where applicable"]
+    },
+    {
+      "id": 7,
+      "key": "albo_v2",
+      "status": "planned",
+      "objective": "Separate source record, publication, document, administrative act and administrative event while preserving the current public-safety boundary.",
+      "prerequisites": [2, 3, 4, 5, 6],
+      "legacyModules": ["publications", "acts", "fundamentalActs", "oversightOpinions"],
+      "acceptance": ["Every current publication maps or has an explicit non-migration reason", "Attachments and extracted text retain provenance", "All acquired records receive a taxonomy outcome"]
+    },
+    {
+      "id": 8,
+      "key": "procurement_v2",
+      "status": "planned",
+      "objective": "Replace monolithic contract rows with procedure, lot, contract, lifecycle events, parties and financial events.",
+      "prerequisites": [7, 10],
+      "legacyModules": ["contracts"],
+      "acceptance": ["Albo-only, ANAC-only, overlap and unresolved events reconcile", "CIG is an identifier rather than an ingestion prerequisite", "Legacy contracts becomes a compatibility projection before write freeze"]
+    },
+    {
+      "id": 9,
+      "key": "projects_v2",
+      "status": "planned",
+      "objective": "Resolve Attuazione PNRR, Italia Domani, OpenCUP and related evidence onto canonical project entities.",
+      "prerequisites": [2, 3, 5],
+      "legacyModules": ["attuazionePnrr", "italiadomaniProjects"],
+      "acceptance": ["Same canonical project is not duplicated by source", "CUP is modeled as an identifier", "Source discrepancies remain visible as assertions"]
+    },
+    {
+      "id": 10,
+      "key": "party_core",
+      "status": "planned",
+      "objective": "Introduce canonical persons and organizations shared across domains.",
+      "prerequisites": [2, 3, 5],
+      "legacyModules": ["officials"],
+      "acceptance": ["Person identity is separated from mandate/role", "Suppliers/attuatore/holders/assignees can reference organizations", "Ambiguous name matching remains unresolved rather than forced"]
+    },
+    {
+      "id": 11,
+      "key": "institutions_v2",
+      "status": "planned",
+      "objective": "Model bodies, mandates, memberships, sessions, agenda items, attendance, interventions, votes, media and transcripts.",
+      "prerequisites": [7, 10],
+      "legacyModules": ["organi", "sedute", "sessionReports", "officials"],
+      "acceptance": ["Membership history remains temporally queryable", "Votes can link to person/session/decision or agenda item where evidence permits", "Transcript/media segments have stable provenance"]
+    },
+    {
+      "id": 12,
+      "key": "geo_core",
+      "status": "planned",
+      "objective": "Create shared place/location/geometry/assertion modelling and evaluate PostGIS.",
+      "prerequisites": [2, 3, 5],
+      "legacyModules": ["contracts", "confiscatedAssets", "crimeEvents"],
+      "acceptance": ["Source, resolved and public precision are distinct", "New domain schemas stop duplicating geo field bundles", "PostGIS decision is documented before spatial canonicalization"]
+    },
+    {
+      "id": 13,
+      "key": "assets_v2",
+      "status": "planned",
+      "objective": "Convert confiscated assets from mutable status rows into asset identity plus lifecycle, party, cadastral and geographic relations.",
+      "prerequisites": [10, 12],
+      "legacyModules": ["confiscatedAssets"],
+      "acceptance": ["Seizure/confiscation/destination/assignment/reuse history is reconstructable", "Legacy public view remains equivalent until cutover"]
+    },
+    {
+      "id": 14,
+      "key": "statistics_core",
+      "status": "planned",
+      "objective": "Generalize the demographics series-release-observation pattern to all quantitative time-series data.",
+      "prerequisites": [3],
+      "legacyModules": ["performanceCategories", "performanceIndicators", "performanceIndicatorValues", "demographics"],
+      "acceptance": ["Every migrated observation links to source release", "Unknown/provisional/final statuses are explicit", "Demographics remains losslessly compatible"]
+    },
+    {
+      "id": 15,
+      "key": "cross_domain_relations",
+      "status": "planned",
+      "objective": "Replace expanding polymorphic nullable-FK patterns with canonical cross-domain relations where appropriate.",
+      "prerequisites": [2, 7, 8, 9, 10],
+      "legacyModules": ["bandoMatches", "monitoringReports", "legalityRequirements"],
+      "acceptance": ["No new expanding nullable-FK polymorphism", "Known internal targets use canonical subject relations rather than URLs", "Typed domain-local FKs remain where they are the stronger model"]
+    },
+    {
+      "id": 16,
+      "key": "editorial_override_ledger",
+      "status": "planned",
+      "objective": "Unify manual correction provenance without removing fast legacy override flags during transition.",
+      "prerequisites": [2, 5],
+      "legacyModules": ["publications", "contracts", "confiscatedAssets", "redazione"],
+      "acceptance": ["Previous automatic value remains auditable", "Override actor/reason/time/supersession are recorded"]
+    },
+    {
+      "id": 17,
+      "key": "universal_public_read_models",
+      "status": "planned",
+      "objective": "Generalize the LTCEDS canonical-to-public projection boundary across public domains.",
+      "prerequisites": [7, 8, 9, 11, 12, 13],
+      "acceptance": ["Public APIs/static exports read public-safe projections", "Internal sensitive fields cannot leak through ad-hoc runtime reconstruction", "Projection policy/version is auditable"]
+    },
+    {
+      "id": 18,
+      "key": "eliminate_dual_semantic_authority",
+      "status": "planned",
+      "objective": "Keep the repository data lake as reproducible artifact/export storage while making canonical semantic ownership unambiguous.",
+      "prerequisites": [3, 4, 17],
+      "acceptance": ["No material civic fact exists only in processed/curated/public without registered canonical/source ownership", "Data-lake layer semantics match the architecture contract"]
+    },
+    {
+      "id": 19,
+      "key": "db_driven_static_exports",
+      "status": "planned",
+      "objective": "Move semantic resolution out of Vite/Cloudflare build into validated canonical/public projection jobs.",
+      "prerequisites": [17, 18],
+      "acceptance": ["Vite serializes validated public data rather than resolving entities", "Static fallback remains deterministic and checksum-verifiable"]
+    },
+    {
+      "id": 20,
+      "key": "research_layer",
+      "status": "planned",
+      "objective": "Publish versioned research snapshots with schema/taxonomy/source/coverage contracts.",
+      "prerequisites": [14, 17, 18],
+      "deliverables": ["research.snapshots", "research.exports", "Parquet/CSV/JSON/GeoParquet/DuckDB export contracts"],
+      "acceptance": ["Snapshot declares schema/taxonomy/source cutoff", "Coverage ledger and limitations are embedded", "Artifacts are checksummed and reproducible"]
+    },
+    {
+      "id": 21,
+      "key": "legacy_freeze_and_deprecation",
+      "status": "planned",
+      "objective": "Freeze legacy writes and remove obsolete representations only after reconciliation proof.",
+      "prerequisites": [8, 9, 11, 13, 14, 19],
+      "acceptance": ["Legacy read equivalence demonstrated", "No source evidence is deleted", "Deprecation is documented per table/pipeline"]
+    },
+    {
+      "id": 22,
+      "key": "continuous_architecture_enforcement",
+      "status": "active",
+      "objective": "Make architecture governance a permanent CI/review property.",
+      "prerequisites": [1],
+      "acceptance": ["New tables/sources/data layers require registry ownership", "Architecture inventory drift is reviewed deliberately", "Domain migrations can update status without weakening universal invariants", "Registry, migration plan and migration journal semantics are executable CI gates"]
+    }
+  ]
+}

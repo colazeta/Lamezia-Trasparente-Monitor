@@ -1,25 +1,27 @@
 /**
- * Baseline script: marks all current migrations as already applied in the
- * drizzle.__drizzle_migrations tracking table WITHOUT executing their SQL.
+ * One-shot transition for a database that was bootstrapped with the old
+ * `drizzle-kit push` workflow and has never recorded Drizzle migrations.
  *
- * Run this ONCE on databases that were bootstrapped via `drizzle-kit push`
- * (the old workflow) to safely transition them to the migration-based workflow.
- * After baselining, `pnpm --filter @workspace/db run migrate` and the
- * api-server auto-migrate will work correctly.
- *
- * Usage:
- *   pnpm --filter @workspace/db run baseline
- *
- * It is safe to run multiple times — already-recorded migrations are skipped.
- *
- * NOTE: The api-server now self-baselines at startup (see migrate.ts), so this
- * manual script is rarely needed. It remains available for operators who want
- * to baseline a database out-of-band.
+ * This command is deliberately fail-closed: it refuses fresh databases and
+ * already-tracked databases, applies only bounded additive compatibility
+ * repairs, proves that every migration-created table is present, verifies the
+ * legacy conversation schema, and only then records the current journal as
+ * applied without re-executing its SQL.
  */
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import pg from "pg";
-import { baselineMigrations } from "./baselineLogic";
+import {
+  assertMigrationCreatedTablesPresent,
+  baselineMigrations,
+  ensureReportsPublishedAtColumn,
+  isMigrationTrackingPresent,
+  isSchemaBootstrapped,
+} from "./baselineLogic";
+import {
+  ensureLegacyConversationTables,
+  verifyLegacyConversationTables,
+} from "./legacySchemaCompatibility";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const migrationsFolder = path.resolve(__dirname, "../migrations");
@@ -33,16 +35,28 @@ const client = new pg.Client({ connectionString: dbUrl });
 await client.connect();
 
 try {
+  if (await isMigrationTrackingPresent(client)) {
+    throw new Error(
+      "Refusing manual baseline: migration tracking is already present. Use migrate/status instead of marking additional migrations as applied.",
+    );
+  }
+  if (!(await isSchemaBootstrapped(client))) {
+    throw new Error(
+      "Refusing manual baseline: the application schema is not push-bootstrapped. A fresh database must run the migrations normally.",
+    );
+  }
+
+  await ensureReportsPublishedAtColumn(client);
+  await ensureLegacyConversationTables(client);
+  await verifyLegacyConversationTables(client);
+  await assertMigrationCreatedTablesPresent(client, migrationsFolder);
+
   const baselined = await baselineMigrations(client, migrationsFolder);
-  if (baselined.length === 0) {
-    console.log("  nothing to baseline: all migrations already recorded.");
-  } else {
-    for (const tag of baselined) {
-      console.log(`  baselined: ${tag}`);
-    }
+  for (const tag of baselined) {
+    console.log(`  baselined: ${tag}`);
   }
   console.log(
-    "Baseline complete. Run `pnpm --filter @workspace/db run migrate` to apply any future migrations.",
+    `Baseline complete: ${baselined.length} migration(s) recorded after compatibility verification.`,
   );
 } finally {
   await client.end();
