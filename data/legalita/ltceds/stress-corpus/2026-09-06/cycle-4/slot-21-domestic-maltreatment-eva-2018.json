@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.0",
+  "cycle": 4,
+  "slot": 21,
+  "stratum": "E_geoprivacy_sensitive",
+  "case_key": "2018-05-04-LAMEZIA-EVA-DOMESTIC-MALTREATMENT",
+  "review_mode": true,
+  "candidate_kind": "COURSE_OF_CONDUCT_CANDIDATE",
+  "review_status": "primary_source_resolved_high_privacy_human_gate",
+  "event_identity": {
+    "event_form": "course_of_conduct",
+    "temporal": {
+      "start": null,
+      "end": "2018-05-04",
+      "precision": "approximate",
+      "end_role": "latest_documented_occurrence_and_intervention",
+      "assertion_basis": "source_stated_relative_plus_calendar_derivation",
+      "source_faithful_note": "The official page was published 5 May 2018 and says the arrest/intervention occurred the previous evening. Contemporary reporting describes repeated maltreatment, but no defensible start date is available."
+    },
+    "occurrence_summary": "A domestic-violence intervention in Lamezia Terme led police to place a family member in safety and arrest a person in flagrante for repeated family maltreatment.",
+    "identity_rationale": "The source and contemporaneous reporting support repeated maltreatment rather than reducing the case to the single intervention evening. The course-of-conduct start remains unknown."
+  },
+  "offence_assertions": [
+    {
+      "classification_basis": "source_stated_legal",
+      "source_wording": "family maltreatment",
+      "attempt_status": "completed"
+    }
+  ],
+  "location": {
+    "role": "occurrence",
+    "municipality": "Lamezia Terme",
+    "place_name": null,
+    "evidence_basis": "source_stated_locality",
+    "evidence_precision": "municipality",
+    "resolved_precision": "municipality",
+    "sensitivity": "private_or_sensitive",
+    "publication_risk": "victim_linked",
+    "geometry_internal": null,
+    "geometry_public": null,
+    "map_readiness": "suppressed_nonmappable"
+  },
+  "sources": [
+    {
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/15855aeda7edf34cd546542421",
+      "source_type": "law_enforcement_primary",
+      "provider": "Questura di Catanzaro / Polizia di Stato",
+      "published_at": "2018-05-05",
+      "role": "legal_classification_intervention_and_safety_context",
+      "publication_support": "primary_possible",
+      "candidate_policy": "human_gate",
+      "personal_data_risk": "high",
+      "reputational_risk": "high"
+    },
+    {
+      "url": "https://www.lametino.it/Cronaca/lamezia-minaccia-la-figlia-con-una-bottiglia-arrestato-50enne-per-ripetuti-maltrattamenti-in-famiglia.html",
+      "source_type": "press_secondary",
+      "published_at": "2018-05-05",
+      "role": "repeated_conduct_corroboration"
+    }
+  ],
+  "privacy": {
+    "person_identity_stored": false,
+    "victim_relationship_detail_public": false,
+    "victim_age_public": false,
+    "private_address_stored": false,
+    "public_geometry_allowed": false,
+    "public_text_policy": "minimise to generic family-maltreatment course-of-conduct; omit narrative details that increase re-identification risk"
+  },
+  "compiler_readiness": {
+    "status": "canonical_only_candidate_human_gate",
+    "reason": "The canonical event identity is sufficiently supported for stress testing, but public publication should not be assumed merely because the source is official. Privacy/re-identification risk is high and no public map geometry is appropriate.",
+    "existing_model_validation": "Confirms that course_of_conduct with unknown start and a latest documented end/intervention can be represented without inventing a start date."
+  },
+  "publication_decision": "canonical_only_candidate_not_authorized",
+  "public_event_authorized": false
+}
