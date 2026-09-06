@@ -105,4 +105,5 @@ export const SCOUTED_PROPOSAL_GEOGRAPHY: Record<string, ProposalGeography> = {
   "quartiere-bella-pulizia-mtl-2026": QUARTIERE_BELLA,
   "palasparti-riapertura-manutenzione-mtl-2026": PALASPARTI,
   "fna-disabilita-gravissima-bando-futuro-nazionale-2026": LAMEZIA_CITYWIDE,
+  "sanita-pubblica-petizione-presidio-malerba-2026": LAMEZIA_CITYWIDE,
 };
