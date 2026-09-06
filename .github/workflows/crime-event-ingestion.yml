@@ -25,10 +25,8 @@ permissions:
   contents: read
 
 jobs:
-  validate-and-ingest:
+  validate:
     runs-on: ubuntu-latest
-    env:
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -54,11 +52,64 @@ jobs:
       - name: Run crime persistence tests
         run: pnpm --filter @workspace/db test
 
-      - name: Persist canonical crime events
-        if: github.event_name != 'pull_request' && env.DATABASE_URL != ''
-        run: pnpm --filter @workspace/db run import:crime-monitor --input data/legalita/ltceds/monitor --execute
+  persist-changed-events:
+    if: github.event_name == 'push'
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository with push history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Report missing database secret
-        if: github.event_name != 'pull_request' && env.DATABASE_URL == ''
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.1
+          run_install: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Persist changed canonical crime events
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          BEFORE_SHA: ${{ github.event.before }}
         run: |
-          echo "DATABASE_URL is not configured for this workflow; validation passed but canonical DB ingestion was skipped." >> "$GITHUB_STEP_SUMMARY"
+          set -euo pipefail
+
+          if [ -z "${DATABASE_URL:-}" ]; then
+            echo "DATABASE_URL is not configured; validation passed but canonical DB ingestion was skipped." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          before="$BEFORE_SHA"
+          if [ -z "$before" ] || [[ "$before" =~ ^0+$ ]]; then
+            before="$(git rev-parse HEAD^ 2>/dev/null || true)"
+          fi
+          if [ -z "$before" ]; then
+            echo "No previous commit is available to determine changed monitor events; refusing a whole-inbox DB import." >&2
+            exit 1
+          fi
+
+          mapfile -t changed_files < <(
+            git diff --name-only --diff-filter=AM "$before" "$GITHUB_SHA" -- \
+              'data/legalita/ltceds/monitor/*.json' \
+              'data/legalita/ltceds/monitor/**/*.json'
+          )
+
+          if [ "${#changed_files[@]}" -eq 0 ]; then
+            echo "No added or modified crime monitor JSON artifacts in this push; canonical DB ingestion is a no-op." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          for file in "${changed_files[@]}"; do
+            echo "Ingesting $file"
+            pnpm --filter @workspace/db run import:crime-monitor --input "$file" --execute
+          done
