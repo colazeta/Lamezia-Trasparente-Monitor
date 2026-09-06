@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "slot": 10,
+  "case_key": "1989-09-29-MERCATO-COPERTO-NICASTRO-HOMICIDE",
+  "review_mode": true,
+  "resolution": {
+    "candidate_kind": "HISTORICAL_EVENT_CANDIDATE",
+    "temporal": {"start": "1989-09-29", "precision": "exact_date_from_secondary_judicial_reporting"},
+    "location": {"municipality_historical_context": "Nicastro / Lamezia Terme", "place": "Mercato Coperto di Nicastro", "precision": "named_site_from_secondary_judicial_reporting"},
+    "event_identity_decision": "single_homicide_candidate",
+    "rationale": "Recent reporting about the 2026 appellate outcome consistently locates the historical homicide on 29 September 1989 inside the covered market of Nicastro. The 2026 judgment is a procedural development and must not replace the occurrence date. A primary judgment or archival/judicial source is still required before a reviewed bundle is created."
+  },
+  "sources": [
+    {
+      "url": "https://www.lametino.it/cronaca/lamezia-omicidio-cesare-de-sensi-imputato-prosciolto-in-appello-dopo-37-anni.html",
+      "source_type": "press_secondary",
+      "role": "historical_locator_and_2026_procedural_update"
+    },
+    {
+      "url": "https://calabria7.news/giudiziaria/omicidio-de-sensi-dopo-37-anni-la-corte-dappello-di-catanzaro-dichiara-la-prescrizione-annullata-la-condanna/",
+      "source_type": "press_secondary",
+      "role": "procedural_corroboration"
+    }
+  ],
+  "primary_source_search": {
+    "status": "not_resolved",
+    "searched_surfaces": ["Banca Dati di Merito", "Corte di Cassazione / Italgiure", "parliamentary/archival web search"],
+    "rule": "Do not promote recent reporting about a judgment to judicial_primary without locating the actual decision or an institutional archival source."
+  },
+  "publication_decision": "needs_more_evidence",
+  "next_action": "Resolve the Court of Assizes/Appellate decision, Cassation record, or archival judicial source; preserve 1989 occurrence and 2026 procedural outcome as separate temporal assertions."
+}
