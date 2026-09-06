@@ -18,31 +18,45 @@
       "source_hierarchy_downgrades_allowed": false
     },
     "historical_pre_1968": {
-      "qualified_candidate_slot": 27,
-      "case_key": "1866-01-05-SAMBIASE-B60-F531",
-      "candidate_kind": "HISTORICAL_COURSE_OF_CONDUCT_CANDIDATE",
-      "source_native_locator": "B. 60, fasc. 531",
+      "qualified_candidate_slots": [26, 27],
+      "candidates": [
+        {
+          "slot": 26,
+          "case_key": "1860-03-NICASTRO-B57-F493",
+          "candidate_kind": "HISTORICAL_EVENT_CANDIDATE",
+          "source_native_locator": "B. 57, fasc. 493",
+          "temporal_precision": "month",
+          "reviewed_bundle_created": false
+        },
+        {
+          "slot": 27,
+          "case_key": "1866-01-05-SAMBIASE-B60-F531",
+          "candidate_kind": "HISTORICAL_COURSE_OF_CONDUCT_CANDIDATE",
+          "source_native_locator": "B. 60, fasc. 531",
+          "temporal_precision": "bounded_interval_months",
+          "reviewed_bundle_created": false
+        }
+      ],
       "official_archive_targets_resolved": 4,
       "series_level_penal_target_resolved": true,
-      "reviewed_bundle_created": false,
-      "public_event_authorized": false,
-      "disposition": "qualified_candidate_needs_underlying_fascicolo"
+      "public_events_authorized": 0,
+      "disposition": "two_qualified_candidates_need_underlying_fascicoli"
     }
   },
   "key_findings": [
     "Investigation/procedural geography is not occurrence geography.",
     "Artemis II currently yields no source-supported occurrence inside the municipality of Lamezia Terme.",
     "An official archive/fondo locator alone is not sufficient to create a historical EVENT, but an individual source-native fascicolo locator can qualify a review-mode historical candidate.",
-    "The first pre-1968 candidate is Sambiase B.60 fasc.531, January-May 1866; it remains non-mappable and uncompiled until the underlying proceeding is read.",
+    "Nicastro B.57 fasc.493 (March 1860) and Sambiase B.60 fasc.531 (January-May 1866) are now qualified historical candidates, both non-mappable and uncompiled pending the underlying proceedings.",
     "News-agency corroboration does not replace an unresolved source-native law-enforcement record where the workflow requires primary support."
   ],
   "standard_findings": ["TERRITORIAL-SCOPE-001", "ARCHIVAL-LOCATOR-001"],
   "schema_change": "none",
   "next_cycle": [
-    "retrieve/read B.60 fasc.531 and resolve whether the armed-band and kidnapping allegations form one continuing event or multiple occurrence items",
+    "retrieve/read B.57 fasc.493 and B.60 fasc.531 before deciding event form, modern behavioural classification or finer occurrence geography",
     "search judicial/ordinance material for Artemis II only if it can identify an occurrence inside Lamezia Terme",
     "continue source-native resolution for Joker, Shatter and Via del Progresso without lowering source authority",
-    "continue series/fascicolo/register-level archival acquisition for Nicastro, Sambiase and Sant'Eufemia"
+    "continue individual-fascicolo acquisition for Sant'Eufemia and historical place-name/conflict slots"
   ],
   "publication_policy": "no_auto_publish"
 }
