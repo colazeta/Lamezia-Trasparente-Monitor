@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "cycle": 2,
+  "findings": [
+    {
+      "finding_id": "TERRITORIAL-SCOPE-001",
+      "status": "confirmed_operational_rule",
+      "schema_change_required": false,
+      "trigger_case": "2026-06-18-ARTEMIS-II",
+      "problem": "A case or operation may be led from Lamezia Terme, involve persons resident in Lamezia Terme, or execute measures in Lamezia Terme while the underlying criminal occurrence took place elsewhere.",
+      "rule": "Corpus eligibility and map geography are determined only by source-supported occurrence locations. Investigation office, proceeding venue, residence, arrest, search, seizure or operation geography never creates a Lamezia occurrence.",
+      "implementation": "Use existing location roles and municipality fields; apply a corpus-level territorial eligibility gate before reviewed-bundle promotion.",
+      "why_no_schema_change": "LTCEDS already separates occurrence from arrest/search/procedural locations. The missing control is selection/pipeline policy rather than a new data primitive."
+    },
+    {
+      "finding_id": "ARCHIVAL-LOCATOR-001",
+      "status": "confirmed_operational_rule",
+      "schema_change_required": false,
+      "trigger_case": "pre-1968 stress-corpus acquisition",
+      "problem": "An archive/fondo locator proves source availability, not a criminal EVENT.",
+      "rule": "Do not mint an EVENT from archive-level metadata. Require an individual record or sufficiently specific series/fascicolo/registro locator supporting occurrence identity.",
+      "implementation": "Historical acquisition targets remain source/provenance records until occurrence-level evidence is retrieved."
+    }
+  ]
+}
