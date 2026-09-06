@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0",
+  "cycle": 2,
+  "slot": 26,
+  "stratum": "G_historical_pre_1968",
+  "case_key": "1860-03-NICASTRO-B57-F493",
+  "review_mode": true,
+  "candidate_kind": "HISTORICAL_EVENT_CANDIDATE",
+  "review_status": "qualified_from_official_archival_inventory_needs_fascicolo",
+  "event_identity": {
+    "source_native_locator": "B. 57, fasc. 493",
+    "source_stated_place": "Nicastro",
+    "present_day_relation": "historical municipality now part of Lamezia Terme",
+    "temporal": {
+      "start": "1860-03",
+      "end": "1860-03",
+      "precision": "month"
+    },
+    "event_form_status": "unresolved_pending_fascicolo",
+    "offence_hints_source_faithful": [
+      "aiding brigandage",
+      "receiving"
+    ],
+    "identity_rationale": "The official archival inventory identifies one source-native fascicolo under Nicastro in March 1860 and describes the proceeding as aiding brigandage with receiving. This is sufficient to qualify a historical stress-corpus candidate, but not to determine whether the underlying conduct was a single discrete occurrence or a course of conduct."
+  },
+  "source": {
+    "institution": "Archivio di Stato di Catanzaro",
+    "series": "Miscellanea di Processi Politici e Brigantaggio",
+    "inventory_url": "https://archiviodistatocatanzaro.cultura.gov.it/fileadmin/user_upload/Miscellanea_di_Processi_Politici_e_Brigantaggio.pdf",
+    "source_type": "official_archival_inventory",
+    "locator": "B. 57, fasc. 493; inventory page labelled 83",
+    "authority": "primary_archival_finding_aid",
+    "source_body_status": "fascicolo_not_retrieved"
+  },
+  "location": {
+    "role": "occurrence_scope_candidate",
+    "municipality_historical": "Nicastro",
+    "municipality_current": "Lamezia Terme",
+    "precision": "locality",
+    "geometry_internal": null,
+    "geometry_public": null,
+    "rule": "The inventory locality does not support an address or point and must not be geocoded into false precision."
+  },
+  "classification": {
+    "historical_source_wording": "favoreggiamento brigantaggio con ricettazione",
+    "iccs_status": "pending_fascicolo_review",
+    "istat_status": "pending_fascicolo_review",
+    "modern_legal_reference_status": "not_inferred",
+    "rule": "Preserve historical terminology; determine behavioural ICCS coding only after the proceeding clarifies the underlying conduct."
+  },
+  "privacy": {
+    "person_identity_stored": false,
+    "victim_identity_stored": false,
+    "public_geometry_allowed": false
+  },
+  "pdf_verification": {
+    "indexed_text_verified": true,
+    "screenshot_attempted": true,
+    "screenshot_result": "cache_miss_from_screenshot_service",
+    "consequence": "No claim of successful visual inspection; the official indexed inventory text and locator are retained as the current evidence."
+  },
+  "publication_decision": "needs_more_evidence",
+  "reviewed_bundle_status": "blocked",
+  "blocker": "Retrieve/read B.57 fasc.493 or a more granular official description before reviewed-bundle compilation.",
+  "next_action": "Acquire the fascicolo and resolve occurrence chronology, concrete conduct, location granularity and event form."
+}
