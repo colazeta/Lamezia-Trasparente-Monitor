@@ -1,0 +1,280 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lameziatrasparente.it/schema/ltceds/event-cluster/1.0-draft.2/schema.json",
+  "title": "LTCEDS event cluster with scoped assertions",
+  "description": "Canonical anti-false-precision representation of unresolved or partially resolved criminal-event clusters. Cluster assertions preserve source and subject scope and are never crime-map points.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "cluster_id",
+    "schema_version",
+    "reported_event_count",
+    "count_precision",
+    "resolution_status",
+    "resolved_event_ids",
+    "assertions",
+    "updated_at"
+  ],
+  "properties": {
+    "cluster_id": { "$ref": "#/$defs/uuidV7" },
+    "schema_version": { "const": "1.0-draft.2" },
+    "reported_event_count": {
+      "type": ["integer", "null"],
+      "minimum": 1
+    },
+    "reported_count_text": {
+      "type": ["string", "null"],
+      "maxLength": 200
+    },
+    "count_precision": {
+      "enum": ["exact", "minimum", "approximate", "unknown"]
+    },
+    "resolution_status": {
+      "enum": ["unresolved", "partially_resolved", "resolved"]
+    },
+    "resolved_event_ids": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/uuidV7" },
+      "uniqueItems": true
+    },
+    "assertions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/assertion" }
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "count_precision": { "const": "exact" } },
+        "required": ["count_precision"]
+      },
+      "then": {
+        "properties": {
+          "reported_event_count": { "type": "integer", "minimum": 1 }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "count_precision": { "const": "approximate" } },
+        "required": ["count_precision"]
+      },
+      "then": {
+        "anyOf": [
+          {
+            "properties": {
+              "reported_event_count": { "type": "integer", "minimum": 1 }
+            },
+            "required": ["reported_event_count"]
+          },
+          {
+            "properties": {
+              "reported_count_text": { "type": "string", "minLength": 1 }
+            },
+            "required": ["reported_count_text"]
+          }
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": { "resolution_status": { "const": "unresolved" } },
+        "required": ["resolution_status"]
+      },
+      "then": {
+        "properties": {
+          "resolved_event_ids": { "maxItems": 0 }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "uuidV7": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-7[0-9a-fA-F]{3}-[89aAbB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+    },
+    "temporalPrecision": {
+      "enum": [
+        "exact_datetime",
+        "exact_date",
+        "bounded_interval",
+        "week_or_similar",
+        "month",
+        "year",
+        "approximate",
+        "unknown"
+      ]
+    },
+    "geographicPrecision": {
+      "enum": [
+        "street_segment",
+        "neighbourhood",
+        "locality",
+        "municipality",
+        "unknown"
+      ]
+    },
+    "textValue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "text"],
+      "properties": {
+        "type": { "const": "text" },
+        "text": { "type": "string", "minLength": 1, "maxLength": 2000 }
+      }
+    },
+    "countValue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "count", "count_text", "precision"],
+      "properties": {
+        "type": { "const": "count" },
+        "count": { "type": ["integer", "null"], "minimum": 1 },
+        "count_text": { "type": ["string", "null"], "maxLength": 200 },
+        "precision": {
+          "enum": ["exact", "minimum", "approximate", "unknown"]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "precision": { "const": "exact" } },
+            "required": ["precision"]
+          },
+          "then": {
+            "properties": { "count": { "type": "integer", "minimum": 1 } }
+          }
+        },
+        {
+          "if": {
+            "properties": { "precision": { "const": "approximate" } },
+            "required": ["precision"]
+          },
+          "then": {
+            "anyOf": [
+              {
+                "properties": { "count": { "type": "integer", "minimum": 1 } },
+                "required": ["count"]
+              },
+              {
+                "properties": { "count_text": { "type": "string", "minLength": 1 } },
+                "required": ["count_text"]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "temporalValue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "start", "end", "edtf", "precision"],
+      "properties": {
+        "type": { "const": "temporal" },
+        "start": { "type": ["string", "null"] },
+        "end": { "type": ["string", "null"] },
+        "edtf": { "type": ["string", "null"] },
+        "precision": { "$ref": "#/$defs/temporalPrecision" }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "precision": { "not": { "const": "unknown" } } },
+            "required": ["precision"]
+          },
+          "then": {
+            "anyOf": [
+              { "properties": { "start": { "type": "string", "minLength": 1 } }, "required": ["start"] },
+              { "properties": { "end": { "type": "string", "minLength": 1 } }, "required": ["end"] },
+              { "properties": { "edtf": { "type": "string", "minLength": 1 } }, "required": ["edtf"] }
+            ]
+          }
+        }
+      ]
+    },
+    "geographicValue": {
+      "type": "object",
+      "description": "Descriptive aggregate/context geography only. Point/line/polygon geometry is deliberately absent from the cluster assertion contract.",
+      "additionalProperties": false,
+      "required": ["type", "place_name", "precision"],
+      "properties": {
+        "type": { "const": "geographic" },
+        "place_name": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "precision": { "$ref": "#/$defs/geographicPrecision" }
+      }
+    },
+    "assertionValue": {
+      "oneOf": [
+        { "$ref": "#/$defs/textValue" },
+        { "$ref": "#/$defs/countValue" },
+        { "$ref": "#/$defs/temporalValue" },
+        { "$ref": "#/$defs/geographicValue" }
+      ]
+    },
+    "assertion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "assertion_id",
+        "subject_type",
+        "subject_id",
+        "predicate",
+        "scope",
+        "value",
+        "source_id",
+        "assertion_mode"
+      ],
+      "properties": {
+        "assertion_id": { "$ref": "#/$defs/uuidV7" },
+        "subject_type": { "const": "event_cluster" },
+        "subject_id": { "$ref": "#/$defs/uuidV7" },
+        "predicate": {
+          "enum": [
+            "reported_cardinality",
+            "temporal_scope",
+            "geographic_scope",
+            "offence_family",
+            "target_class",
+            "investigation_context",
+            "other"
+          ]
+        },
+        "scope": {
+          "enum": [
+            "cluster_context",
+            "investigation_seed",
+            "all_reported_members",
+            "member_subset",
+            "procedural_context"
+          ]
+        },
+        "value": { "$ref": "#/$defs/assertionValue" },
+        "source_id": { "$ref": "#/$defs/uuidV7" },
+        "assertion_mode": {
+          "enum": ["explicit", "derived_crosswalk", "curator_inference"]
+        },
+        "source_locator": { "type": ["string", "null"], "maxLength": 1000 },
+        "subset_descriptor": { "type": ["string", "null"], "maxLength": 1000 }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "scope": { "const": "member_subset" } },
+            "required": ["scope"]
+          },
+          "then": {
+            "properties": {
+              "subset_descriptor": { "type": "string", "minLength": 1 }
+            },
+            "required": ["subset_descriptor"]
+          }
+        }
+      ]
+    }
+  }
+}
