@@ -1,0 +1,96 @@
+{
+  "schema_version": "lamezia-tinnvision-procurement-discovery.v1",
+  "updated_at": "2026-09-06",
+  "authority": {
+    "name": "Comune di Lamezia Terme",
+    "tax_id": "00301390795"
+  },
+  "provider": "Tinnvision / Tinnservice",
+  "official_surfaces": [
+    {
+      "id": "amministrazione-trasparente-home",
+      "role": "navigation_root",
+      "url": "https://trasparenza.tinnvision.cloud/traspamm/00301390795/2/home.html",
+      "verified": true
+    },
+    {
+      "id": "bandi-gara-contratti-section",
+      "role": "procurement_navigation",
+      "url": "https://trasparenza.tinnvision.cloud/traspamm/sezioni/00301390795/160/?idperiodosezioni=2",
+      "section_id": 160,
+      "verified": true
+    },
+    {
+      "id": "atti-per-procedura-server-rendered",
+      "role": "procurement_index",
+      "url_pattern": "https://trasparenza.tinnvision.cloud/traspamm/bandidigara/00301390795/2?idsezione=216&idannopubblicazione={year_or_minus_one}&rows=30&page={page}",
+      "section_id": 216,
+      "supports": [
+        "server_rendered_records",
+        "pagination",
+        "publication_year_filter",
+        "text_search",
+        "page_size_30"
+      ],
+      "verified": true,
+      "observed_2026_09_06": {
+        "all_years_total_elements": 947,
+        "rows_per_page": 30,
+        "total_pages": 32,
+        "last_page_contains_record_year": 2017,
+        "claim": "Observed discovery coverage only; not yet a completeness claim for all municipal procurement."
+      }
+    },
+    {
+      "id": "atti-per-procedura-detail-current-section",
+      "role": "procedure_detail",
+      "url_pattern": "https://trasparenza.tinnvision.cloud/traspamm/bandodigara/00301390795/2/{year}/{record}/?idsezione=216",
+      "section_id": 216,
+      "verified": true
+    },
+    {
+      "id": "atti-per-procedura-nuova-versione",
+      "role": "procedure_detail_alternate_section",
+      "url_pattern": "https://trasparenza.tinnservice.com/traspamm/bandodigara/00301390795/2/{year}/{record}/?idsezione=10010",
+      "section_id": 10010,
+      "verified": true
+    },
+    {
+      "id": "amministrazione-trasparente-tree",
+      "role": "section_tree",
+      "url": "https://trasparenza.tinnservice.com/traspamm/home/00301390795/?idperiodosezioni=2",
+      "verified": true
+    }
+  ],
+  "acquisition_status": "server_rendered_discovery_verified_parser_pending",
+  "planned_projection": {
+    "identity_priority": [
+      "formally_valid_specific_contract_cig",
+      "formally_valid_cig",
+      "cup_plus_procedure_reference",
+      "source_record_id"
+    ],
+    "invalid_identifier_policy": "CIG-looking placeholders or formally invalid tokens remain observed source evidence but must not create canonical contract identities.",
+    "event_types": [
+      "gara",
+      "affidamento",
+      "aggiudicazione",
+      "contratto",
+      "sal",
+      "variante",
+      "proroga",
+      "liquidazione",
+      "collaudo",
+      "altro_procurement"
+    ],
+    "public_boundary": "Only fields and attachments that independently pass the existing public-safety policy may enter public projections."
+  },
+  "limitations": [
+    "The server-rendered procurement index is an official discovery surface, but its observed 947 elements are not by themselves a claim of complete municipal procurement history.",
+    "The observed final page contains 2017 records; years before the observed index boundary require independent source discovery and reconciliation.",
+    "Record detail and attachment URLs must be captured from the official page rather than inferred when the source does not expose them.",
+    "Historical completeness must be measured by full page/year traversal and reconciliation with ANAC, not inferred from the presence of a section.",
+    "CIG-looking placeholders such as 0000000000 can occur in the public table and must not be promoted to contract identity without formal validation.",
+    "Attachments remain subject to the existing fail-closed privacy and document-serving policy before extraction or publication."
+  ]
+}

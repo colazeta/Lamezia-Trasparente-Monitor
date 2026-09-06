@@ -7,7 +7,8 @@ import process from "node:process";
 const DEFAULT_DIST_DIR = "artifacts/lamezia-trasparente/dist/public";
 const CONTRACTS_RELATIVE_PATH =
   "data/processed/contracts/lamezia-contracts-current.json";
-const CANONICAL_SCHEMA = "lamezia-contracts-canonical.v2";
+const MULTI_SOURCE_SCHEMA = "lamezia-contracts-multisource.v1";
+const AUTHORITY_SCHEMA = "anac-authority-discovery.v1";
 
 function parseDist(argv) {
   const index = argv.indexOf("--dist");
@@ -25,28 +26,47 @@ function assertNonNegativeInteger(value, label) {
   }
 }
 
-function assertCanonicalContractsDataset(dataset, datasetPath) {
+function assertStringArray(value, label) {
+  if (
+    !Array.isArray(value) ||
+    value.some((entry) => typeof entry !== "string" || !entry.trim()) ||
+    new Set(value).size !== value.length
+  ) {
+    throw new Error(`${label} must be a unique non-empty string array.`);
+  }
+}
+
+function assertMultiSourceContractsDataset(dataset, datasetPath) {
   if (
     !dataset ||
     typeof dataset !== "object" ||
     Array.isArray(dataset) ||
-    dataset.schemaVersion !== CANONICAL_SCHEMA ||
-    dataset.source?.scope !== "current-public-window" ||
+    dataset.schemaVersion !== MULTI_SOURCE_SCHEMA ||
+    dataset.source?.scope !== "known-public-sources" ||
     dataset.source?.publicClaim !==
-      "contratti canonici ed eventi procurement correnti" ||
+      "contratti individuati dalle fonti pubbliche integrate" ||
+    !Array.isArray(dataset.source?.limitations) ||
+    dataset.source.limitations.length === 0 ||
     !Array.isArray(dataset.procurementEvents) ||
     !Array.isArray(dataset.contractEntities) ||
     !Array.isArray(dataset.unresolvedEvents) ||
     !Array.isArray(dataset.contracts) ||
     !dataset.storylines ||
-    typeof dataset.storylines !== "object"
+    typeof dataset.storylines !== "object" ||
+    !dataset.authorityDiscovery ||
+    typeof dataset.authorityDiscovery !== "object" ||
+    dataset.authorityDiscovery.schemaVersion !== AUTHORITY_SCHEMA ||
+    !dataset.reconciliation ||
+    typeof dataset.reconciliation !== "object"
   ) {
-    throw new Error(`Canonical contracts dataset has an invalid schema: ${datasetPath}`);
+    throw new Error(
+      `Multi-source contracts dataset has an invalid schema: ${datasetPath}`,
+    );
   }
 
   const coverage = dataset.coverage;
   if (!coverage || typeof coverage !== "object" || Array.isArray(coverage)) {
-    throw new Error(`Canonical contracts coverage is missing: ${datasetPath}`);
+    throw new Error(`Multi-source contracts coverage is missing: ${datasetPath}`);
   }
 
   for (const key of [
@@ -64,26 +84,117 @@ function assertCanonicalContractsDataset(dataset, datasetPath) {
     "withCup",
     "withExplicitAmount",
     "withExplicitSupplier",
+    "multiSourceContracts",
+    "overlapContracts",
+    "alboOnlyContracts",
+    "anacOnlyContracts",
+    "anacAuthorityDiscoveredContracts",
+    "authorityRequestedYears",
+    "authorityCompletedYears",
   ]) {
     assertNonNegativeInteger(coverage[key], `coverage.${key}`);
   }
 
+  const reconciliation = dataset.reconciliation;
+  for (const key of [
+    "requestedYears",
+    "completedYears",
+    "localCanonicalCigs",
+    "anacAuthorityCigs",
+    "unionCigs",
+    "unresolvedAlboEvents",
+  ]) {
+    assertNonNegativeInteger(reconciliation[key], `reconciliation.${key}`);
+  }
+  for (const key of ["overlapCigs", "alboOnlyCigs", "anacOnlyCigs"]) {
+    assertStringArray(reconciliation[key], `reconciliation.${key}`);
+  }
+  if (
+    !Array.isArray(reconciliation.missingYears) ||
+    reconciliation.missingYears.some(
+      (year) => !Number.isInteger(year) || year < 2000 || year > 2100,
+    ) ||
+    new Set(reconciliation.missingYears).size !==
+      reconciliation.missingYears.length
+  ) {
+    throw new Error(
+      `Multi-source reconciliation has invalid missing years: ${datasetPath}`,
+    );
+  }
+
   if (
     coverage.procurementEvents !== dataset.procurementEvents.length ||
-    coverage.canonicalContracts !== dataset.contracts.length ||
     coverage.canonicalContracts !== dataset.contractEntities.length ||
+    coverage.multiSourceContracts !== dataset.contracts.length ||
     coverage.unresolvedEvents !== dataset.unresolvedEvents.length ||
     coverage.eventsWithoutCig !== dataset.unresolvedEvents.length ||
     coverage.eventsWithCig + coverage.eventsWithoutCig !==
       coverage.procurementEvents ||
     coverage.procurementConfirmed + coverage.procurementPossible !==
       coverage.procurementEvents ||
+    coverage.overlapContracts !== reconciliation.overlapCigs.length ||
+    coverage.alboOnlyContracts !== reconciliation.alboOnlyCigs.length ||
+    coverage.anacOnlyContracts !== reconciliation.anacOnlyCigs.length ||
+    coverage.anacAuthorityDiscoveredContracts !==
+      reconciliation.anacAuthorityCigs ||
+    coverage.authorityRequestedYears !== reconciliation.requestedYears ||
+    coverage.authorityCompletedYears !== reconciliation.completedYears ||
+    coverage.authorityHistoricalBackfillComplete !==
+      reconciliation.historicalBackfillComplete ||
+    reconciliation.localCanonicalCigs !== coverage.canonicalContracts ||
+    reconciliation.unionCigs !== dataset.contracts.length ||
+    reconciliation.unresolvedAlboEvents !== dataset.unresolvedEvents.length ||
+    reconciliation.sourceResolutionInvariantSatisfied !== true ||
     coverage.eventCoverageInvariantSatisfied !== true ||
     coverage.resolutionInvariantSatisfied !== true ||
+    coverage.unionInvariantSatisfied !== true ||
     dataset.feedStatus?.itemsTotal !== dataset.contracts.length
   ) {
     throw new Error(
-      `Canonical contracts coverage invariants are inconsistent: ${datasetPath}`,
+      `Multi-source contracts coverage invariants are inconsistent: ${datasetPath}`,
+    );
+  }
+
+  const localCigs = new Set([
+    ...reconciliation.overlapCigs,
+    ...reconciliation.alboOnlyCigs,
+  ]);
+  const authorityCigs = new Set([
+    ...reconciliation.overlapCigs,
+    ...reconciliation.anacOnlyCigs,
+  ]);
+  const unionCigs = new Set([...localCigs, ...authorityCigs]);
+  if (
+    localCigs.size !== reconciliation.localCanonicalCigs ||
+    authorityCigs.size !== reconciliation.anacAuthorityCigs ||
+    unionCigs.size !== reconciliation.unionCigs ||
+    reconciliation.overlapCigs.some(
+      (cig) =>
+        reconciliation.alboOnlyCigs.includes(cig) ||
+        reconciliation.anacOnlyCigs.includes(cig),
+    )
+  ) {
+    throw new Error(
+      `Multi-source contracts set reconciliation is inconsistent: ${datasetPath}`,
+    );
+  }
+
+  const authority = dataset.authorityDiscovery;
+  if (
+    authority.targetAuthority?.taxId !== reconciliation.authorityTaxId ||
+    authority.targetAuthority?.label !== reconciliation.authorityLabel ||
+    authority.status !== reconciliation.authorityDiscoveryStatus ||
+    authority.generatedAt !== reconciliation.authorityDiscoveryGeneratedAt ||
+    !Array.isArray(authority.requestedYears) ||
+    !Array.isArray(authority.completedYears) ||
+    !Array.isArray(authority.completedPeriods) ||
+    !Array.isArray(authority.records) ||
+    authority.records.length !== reconciliation.anacAuthorityCigs ||
+    authority.requestedYears.length !== reconciliation.requestedYears ||
+    authority.completedYears.length !== reconciliation.completedYears
+  ) {
+    throw new Error(
+      `ANAC authority discovery and reconciliation disagree: ${datasetPath}`,
     );
   }
 
@@ -104,7 +215,10 @@ function assertCanonicalContractsDataset(dataset, datasetPath) {
     eventIds.add(event.eventId);
 
     if (event.resolutionStatus === "unresolved_no_cig") {
-      if (event.contractIdentityCigs.length !== 0 || event.contractIds.length !== 0) {
+      if (
+        event.contractIdentityCigs.length !== 0 ||
+        event.contractIds.length !== 0
+      ) {
         throw new Error(
           `Unresolved procurement event was assigned a contract identity: ${event.eventId}`,
         );
@@ -136,6 +250,7 @@ function assertCanonicalContractsDataset(dataset, datasetPath) {
       contractIds.has(contract.id) ||
       !/^[A-Z0-9]{10}$/u.test(contract.cig ?? "") ||
       contractCigs.has(contract.cig) ||
+      !unionCigs.has(contract.cig) ||
       typeof contract.title !== "string" ||
       !contract.title.trim() ||
       typeof contract.amount !== "number" ||
@@ -144,7 +259,7 @@ function assertCanonicalContractsDataset(dataset, datasetPath) {
       !dataset.storylines[String(contract.id)]
     ) {
       throw new Error(
-        `Canonical contracts dataset contains an invalid contract entity: ${datasetPath}`,
+        `Multi-source contracts dataset contains an invalid contract record: ${datasetPath}`,
       );
     }
     contractIds.add(contract.id);
@@ -155,6 +270,7 @@ function assertCanonicalContractsDataset(dataset, datasetPath) {
     if (
       typeof entity.canonicalId !== "string" ||
       entity.canonicalId !== `contract:cig:${entity.cig}` ||
+      !localCigs.has(entity.cig) ||
       !contractIds.has(entity.id) ||
       !contractCigs.has(entity.cig) ||
       !Array.isArray(entity.eventIds) ||
@@ -162,7 +278,24 @@ function assertCanonicalContractsDataset(dataset, datasetPath) {
       entity.eventIds.some((eventId) => !eventIds.has(eventId))
     ) {
       throw new Error(
-        `Canonical contract entity projection is inconsistent: ${entity.canonicalId ?? "unknown"}`,
+        `Canonical Albo contract entity projection is inconsistent: ${entity.canonicalId ?? "unknown"}`,
+      );
+    }
+  }
+
+  for (const cig of reconciliation.anacOnlyCigs) {
+    const contract = dataset.contracts.find((candidate) => candidate.cig === cig);
+    const storyline = contract && dataset.storylines[String(contract.id)];
+    if (
+      !contract ||
+      !storyline ||
+      !Array.isArray(storyline.timeline) ||
+      storyline.timeline.length !== 1 ||
+      storyline.timeline[0]?.progressivo !== `ANAC:${cig}` ||
+      storyline.timeline[0]?.tipologia !== "Record strutturato ANAC/BDNCP"
+    ) {
+      throw new Error(
+        `ANAC-only contract is missing its explicit discovery provenance: ${cig}`,
       );
     }
   }
@@ -170,9 +303,11 @@ function assertCanonicalContractsDataset(dataset, datasetPath) {
   return {
     schemaVersion: dataset.schemaVersion,
     procurementEvents: dataset.procurementEvents.length,
-    canonicalContracts: dataset.contracts.length,
+    canonicalAlboContracts: dataset.contractEntities.length,
+    multiSourceContracts: dataset.contracts.length,
+    anacOnlyContracts: reconciliation.anacOnlyCigs.length,
     unresolvedEvents: dataset.unresolvedEvents.length,
-    contractEventLinks: coverage.contractEventLinks,
+    historicalBackfillComplete: reconciliation.historicalBackfillComplete,
   };
 }
 
@@ -198,11 +333,11 @@ async function main() {
   const contractsPath = path.join(distDir, CONTRACTS_RELATIVE_PATH);
   const originalText = await readFile(contractsPath, "utf8");
   const dataset = JSON.parse(originalText);
-  const canonicalSummary = assertCanonicalContractsDataset(dataset, contractsPath);
+  const summary = assertMultiSourceContractsDataset(dataset, contractsPath);
 
-  // The legacy smoke contains many unrelated deployment assertions that remain
-  // valuable. Feed it only a temporary wire-compatible view of the contracts
-  // artifact, then restore the canonical artifact before the workflow uploads it.
+  // The legacy smoke contains unrelated deploy assertions that remain valuable.
+  // It receives only a temporary compatibility view of the contracts artifact;
+  // the multi-source artifact is restored before the build artifact is uploaded.
   await writeFile(
     contractsPath,
     `${JSON.stringify(legacySmokeAdapter(dataset))}\n`,
@@ -225,7 +360,7 @@ async function main() {
 
   if (process.exitCode) return;
   console.log(
-    `Canonical contracts smoke passed: ${JSON.stringify(canonicalSummary)}`,
+    `Multi-source contracts smoke passed: ${JSON.stringify(summary)}`,
   );
 }
 

@@ -12,15 +12,16 @@ import {
   readVerifiedAlboDocument,
 } from "./albo-document-serving";
 import {
+  buildStaticContractsDataset,
   STATIC_CONTRACTS_DATA_PATH,
   type AlboPublicSnapshot,
 } from "./src/lib/staticContractsDataset";
-import { buildCanonicalContractsDataset } from "./src/lib/canonicalContractsDataset";
 import {
   buildCanonicalAlboCorpus,
   CANONICAL_ALBO_CORPUS_DATA_PATH,
 } from "./src/lib/canonicalAlboCorpus";
 import { validateAnacBdncpSyncSnapshot } from "./src/lib/anacBdncpSync";
+import { validateAnacAuthorityDiscoverySnapshot } from "./src/lib/anacAuthorityDiscovery";
 
 const rawPort = process.env.PORT ?? "8081";
 
@@ -34,6 +35,8 @@ const basePath = process.env.BASE_PATH ?? "/";
 const repoRoot = path.resolve(import.meta.dirname, "..", "..");
 const alboPublicSnapshotPath = "data/public/albo/latest.json";
 const anacBdncpSnapshotPath = "data/public/contracts/anac-bdncp/latest.json";
+const anacAuthoritySnapshotPath =
+  "data/public/contracts/anac-authority/latest.json";
 const repoPublicDataFiles = [
   "data/processed/territorio/lamezia_confine_comunale.geojson",
   "data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
@@ -205,8 +208,15 @@ function readStaticContractsDataset() {
       `ANAC/BDNCP snapshot is required to build contracts: ${anacBdncpSnapshotPath}`,
     );
   }
+  const authoritySource = readRepoFile(anacAuthoritySnapshotPath);
+  if (!authoritySource) {
+    throw new Error(
+      `ANAC authority snapshot is required to build contracts: ${anacAuthoritySnapshotPath}`,
+    );
+  }
 
   let anacSnapshot;
+  let authoritySnapshot;
   try {
     anacSnapshot = validateAnacBdncpSyncSnapshot(
       JSON.parse(anacSource.toString("utf8")),
@@ -218,8 +228,23 @@ function readStaticContractsDataset() {
       }`,
     );
   }
+  try {
+    authoritySnapshot = validateAnacAuthorityDiscoverySnapshot(
+      JSON.parse(authoritySource.toString("utf8")),
+    );
+  } catch (error) {
+    throw new Error(
+      `ANAC authority snapshot is not valid: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    );
+  }
 
-  return buildCanonicalContractsDataset(snapshot, anacSnapshot);
+  return buildStaticContractsDataset(
+    snapshot,
+    anacSnapshot,
+    authoritySnapshot,
+  );
 }
 
 function contentTypeFor(filePath: string) {

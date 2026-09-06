@@ -13,6 +13,7 @@
     "albo:sanitise-public": "pnpm --filter @workspace/scripts run sanitise:albo-public",
     "albo:seed-delibere-archive": "pnpm --filter @workspace/scripts run seed:delibere-archive",
     "contracts:anac-sync": "pnpm --filter @workspace/scripts run sync:anac-bdncp",
+    "contracts:anac-authority-sync": "pnpm --filter @workspace/scripts run sync:anac-authority",
     "contracts:anac-operators-sync": "pnpm --filter @workspace/scripts run sync:anac-operators",
     "contracts:anac-operators-ingest-local": "pnpm --filter @workspace/scripts run ingest:anac-operators-local",
     "contracts:cardinal-readiness": "pnpm --filter @workspace/scripts run check:cardinal-readiness",

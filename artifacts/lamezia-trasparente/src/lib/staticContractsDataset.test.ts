@@ -8,14 +8,21 @@ import {
   type AlboPublicSnapshot,
 } from "./staticContractsDataset";
 import { createPendingAnacBdncpSnapshot } from "./anacBdncpSync";
+import {
+  createPendingAnacAuthorityDiscoverySnapshot,
+  type AnacAuthorityDiscoverySnapshot,
+} from "./anacAuthorityDiscovery";
 import { BDNCP_CIG_DETAIL_URL } from "./bdncp";
 
 describe("static contracts compatibility facade", () => {
-  it("projects canonical contracts rather than treating publications as contracts", () => {
+  it("projects the canonical Albo corpus through the multi-source census", () => {
     const dataset = buildStaticContractsDataset(fixtureSnapshot());
 
-    expect(dataset.schemaVersion).toBe("lamezia-contracts-canonical.v2");
-    expect(dataset.source.scope).toBe("current-public-window");
+    expect(dataset.schemaVersion).toBe("lamezia-contracts-multisource.v1");
+    expect(dataset.source.scope).toBe("known-public-sources");
+    expect(dataset.source.publicClaim).toBe(
+      "contratti individuati dalle fonti pubbliche integrate",
+    );
     expect(dataset.contracts).toHaveLength(2);
     expect(dataset.coverage).toMatchObject({
       procurementEvents: 2,
@@ -24,19 +31,41 @@ describe("static contracts compatibility facade", () => {
       multiCigEvents: 1,
       canonicalContracts: 2,
       contractEventLinks: 2,
+      multiSourceContracts: 2,
+      overlapContracts: 0,
+      alboOnlyContracts: 2,
+      anacOnlyContracts: 0,
+      anacAuthorityDiscoveredContracts: 0,
+      anacAuthorityWithTenderAmount: 0,
+      authorityHistoricalBackfillComplete: false,
       withCup: 1,
       withExplicitAmount: 1,
       withExplicitSupplier: 1,
       eventCoverageInvariantSatisfied: true,
       resolutionInvariantSatisfied: true,
+      unionInvariantSatisfied: true,
+    });
+    expect(dataset.reconciliation).toMatchObject({
+      localCanonicalCigs: 2,
+      anacAuthorityCigs: 0,
+      unionCigs: 2,
+      overlapCigs: [],
+      alboOnlyCigs: ["A01D5289C5", "B123456789"],
+      anacOnlyCigs: [],
+      historicalBackfillComplete: false,
+      sourceResolutionInvariantSatisfied: true,
     });
     expect(dataset.feedStatus).toMatchObject({
-      source: "canonical_albo_procurement_projection",
-      status: "current-window",
+      source: "multi_source_procurement_census",
+      status: "multi-source-backfill",
       itemsTotal: 2,
     });
     expect(dataset.anacConnection).toMatchObject({
       schemaVersion: "anac-bdncp-connection.v1",
+      status: "pending",
+    });
+    expect(dataset.authorityDiscovery).toMatchObject({
+      schemaVersion: "anac-authority-discovery.v1",
       status: "pending",
     });
 
@@ -52,7 +81,9 @@ describe("static contracts compatibility facade", () => {
       macrotema: "scuole",
     });
     expect(directAward?.procedureType).toContain("dichiarato nell'atto");
-    expect(directAward?.anacUrl).toBe(`${BDNCP_CIG_DETAIL_URL}?cig=B123456789`);
+    expect(directAward?.anacUrl).toBe(
+      `${BDNCP_CIG_DETAIL_URL}?cig=B123456789`,
+    );
 
     const specificContract = dataset.contracts.find(
       (contract) => contract.cig === "A01D5289C5",
@@ -81,7 +112,7 @@ describe("static contracts compatibility facade", () => {
     expect(extractCig("C.I.G. n. B123456789")).toBe("B123456789");
   });
 
-  it("keeps structured ANAC matches separate from current-Albo facts", () => {
+  it("keeps tracked-CIG ANAC enrichment separate from current-Albo facts", () => {
     const anacSnapshot = createPendingAnacBdncpSnapshot(
       "2026-09-01T12:00:00.000Z",
     );
@@ -102,8 +133,19 @@ describe("static contracts compatibility facade", () => {
         cig: "B123456789",
         title: "Record ANAC del lotto",
         contractingAuthority: "Comune di Lamezia Terme",
+        contractingAuthorityCode: null,
+        contractingAuthorityTaxId: "00301390795",
         tenderAmount: 9876.54,
         procedureType: "AFFIDAMENTO DIRETTO",
+        procedureCode: null,
+        publicationDate: "2026-08-01",
+        submissionDeadline: null,
+        cpvCode: null,
+        cpvDescription: null,
+        cpvIsPrimary: null,
+        outcomeCode: null,
+        outcome: null,
+        outcomeDate: null,
         recordId: "GARA-1",
         sourceArchiveUrl: "https://dati.anticorruzione.it/archive.zip",
         sourcePeriod: "2026-08",
@@ -123,7 +165,122 @@ describe("static contracts compatibility facade", () => {
         ?.amount,
     ).toBe(1234.56);
   });
+
+  it("adds ANAC-only CIGs without overwriting overlapping local evidence", () => {
+    const authority = authoritySnapshotFixture();
+    const dataset = buildStaticContractsDataset(
+      fixtureSnapshot(),
+      createPendingAnacBdncpSnapshot(),
+      authority,
+    );
+
+    expect(dataset.contracts.map((contract) => contract.cig).sort()).toEqual([
+      "A01D5289C5",
+      "B123456789",
+      "C000000001",
+    ]);
+    expect(dataset.reconciliation).toMatchObject({
+      overlapCigs: ["B123456789"],
+      alboOnlyCigs: ["A01D5289C5"],
+      anacOnlyCigs: ["C000000001"],
+      unionCigs: 3,
+    });
+    expect(dataset.coverage).toMatchObject({
+      anacAuthorityDiscoveredContracts: 2,
+      anacAuthorityWithTenderAmount: 2,
+    });
+    expect(
+      dataset.contracts.find((contract) => contract.cig === "B123456789")
+        ?.amount,
+    ).toBe(1234.56);
+    expect(
+      dataset.contracts.find((contract) => contract.cig === "C000000001"),
+    ).toMatchObject({
+      title: "Procedura solo ANAC",
+      amount: 0,
+      status: "Individuato in ANAC/BDNCP; lifecycle locale da ricostruire",
+    });
+    const anacOnly = dataset.contracts.find(
+      (contract) => contract.cig === "C000000001",
+    );
+    expect(dataset.storylines[String(anacOnly?.id)].timeline[0]).toMatchObject({
+      estimatedAmount: 5000,
+      tipologia: "Record strutturato ANAC/BDNCP",
+    });
+  });
 });
+
+function authoritySnapshotFixture(): AnacAuthorityDiscoverySnapshot {
+  const generatedAt = "2026-09-01T12:00:00.000Z";
+  return {
+    ...createPendingAnacAuthorityDiscoverySnapshot(generatedAt),
+    status: "current",
+    lastAttemptAt: generatedAt,
+    lastSuccessAt: generatedAt,
+    requestedYears: [2025],
+    completedYears: [2025],
+    completedPeriods: ["2025-01"],
+    consultedArchives: [
+      {
+        period: "2025-01",
+        year: 2025,
+        url: "https://dati.anticorruzione.it/opendata/download/dataset/cig-2025/filesystem/20250101-cig_csv.zip",
+        retrievedAt: generatedAt,
+        recordsScanned: 100,
+        matchedRecords: 2,
+      },
+    ],
+    recordsScanned: 100,
+    records: [
+      {
+        cig: "B123456789",
+        title: "Record ANAC sovrapposto",
+        contractingAuthority: "Comune di Lamezia Terme",
+        contractingAuthorityCode: null,
+        contractingAuthorityTaxId: "00301390795",
+        tenderAmount: 9999,
+        procedureType: "AFFIDAMENTO DIRETTO",
+        procedureCode: null,
+        publicationDate: "2025-01-10",
+        submissionDeadline: null,
+        cpvCode: null,
+        cpvDescription: null,
+        cpvIsPrimary: null,
+        outcomeCode: null,
+        outcome: null,
+        outcomeDate: null,
+        recordId: null,
+        sourceArchiveUrl:
+          "https://dati.anticorruzione.it/opendata/download/dataset/cig-2025/filesystem/20250101-cig_csv.zip",
+        sourcePeriod: "2025-01",
+        acquiredAt: generatedAt,
+      },
+      {
+        cig: "C000000001",
+        title: "Procedura solo ANAC",
+        contractingAuthority: "Comune di Lamezia Terme",
+        contractingAuthorityCode: null,
+        contractingAuthorityTaxId: "00301390795",
+        tenderAmount: 5000,
+        procedureType: "PROCEDURA APERTA",
+        procedureCode: null,
+        publicationDate: "2025-01-15",
+        submissionDeadline: null,
+        cpvCode: null,
+        cpvDescription: null,
+        cpvIsPrimary: null,
+        outcomeCode: null,
+        outcome: null,
+        outcomeDate: null,
+        recordId: null,
+        sourceArchiveUrl:
+          "https://dati.anticorruzione.it/opendata/download/dataset/cig-2025/filesystem/20250101-cig_csv.zip",
+        sourcePeriod: "2025-01",
+        acquiredAt: generatedAt,
+      },
+    ],
+  };
+}
 
 function fixtureSnapshot(): AlboPublicSnapshot {
   return {
