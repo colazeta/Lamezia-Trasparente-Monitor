@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "cycle": 4,
+  "slot": 13,
+  "stratum": "A_contemporary_simple",
+  "slot_status": "reserved_unfilled",
+  "edge_case_target": "simple exact-date occurrence with locality-only geography",
+  "search_engine": "Parallel Search",
+  "search_result": "no_suitable_candidate_promoted",
+  "reason": [
+    "A robbery candidate near the railway station was source-supported but introduced victim-linked geography and an overnight date expression, so it was not a clean locality-only exact-date control.",
+    "A cocaine-seizure search returned semantically similar but distinct operations from different authorities/years; combining them would risk entity conflation.",
+    "Drug-residence candidates were private-location cases and therefore did not match the intended simple/locality-only profile."
+  ],
+  "resolver_rule_validated": "Do not promote a candidate merely because title/amount/location semantics look similar; authority, date, event identity and source-native record must align.",
+  "decision": "keep_slot_open",
+  "next_action": "Continue official-source discovery specifically for one exact-date event whose source supports only Lamezia/locality geography and does not introduce victim/private-location sensitivity."
+}
