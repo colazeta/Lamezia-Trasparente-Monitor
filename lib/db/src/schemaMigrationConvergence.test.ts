@@ -25,9 +25,18 @@ test("legacy application tables are reproducible without breaking push-bootstrap
   );
 });
 
-test("schema convergence migration is tracked by the Drizzle journal", () => {
-  const last = journal.entries.at(-1);
-  assert.equal(last?.idx, 17);
-  assert.equal(last?.tag, "0017_conversations_messages_convergence");
-  assert.equal(last?.breakpoints, true);
+test("schema convergence migration remains tracked by the Drizzle journal", () => {
+  const entry = journal.entries.find(
+    (candidate: { tag?: string }) =>
+      candidate.tag === "0017_conversations_messages_convergence",
+  );
+  assert.ok(entry, "0017 convergence migration must remain in the journal");
+  assert.equal(entry.idx, 17);
+  assert.equal(entry.breakpoints, true);
+
+  const duplicateEntries = journal.entries.filter(
+    (candidate: { tag?: string }) =>
+      candidate.tag === "0017_conversations_messages_convergence",
+  );
+  assert.equal(duplicateEntries.length, 1);
 });
