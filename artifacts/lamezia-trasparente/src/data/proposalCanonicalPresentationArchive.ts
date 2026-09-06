@@ -108,6 +108,38 @@ const SCOUTED_CANONICAL_PROPOSAL_PRESENTATIONS: Record<
     expectedOutcome:
       "Rendere verificabili programmazione, risorse e avanzamento degli interventi richiesti e rafforzare l’accesso ai servizi sanitari sul territorio.",
   },
+  "la-mia-estate-avvio-attivita-oltre-autismo-2026": {
+    proposalId: "la-mia-estate-avvio-attivita-oltre-autismo-2026",
+    version: "1.0",
+    title: "Tempi e condizioni per l’avvio di La mia estate",
+    request:
+      "Definire con chiarezza i tempi e le condizioni amministrative necessari all’avvio delle attività del progetto La mia estate per i beneficiari dell’ATS di Lamezia Terme.",
+    actionTypes: ["organizzazione", "trasparenza", "attivazione_servizio"],
+    measures: [
+      "Comunicare quando potranno iniziare concretamente le attività del progetto.",
+      "Indicare con precisione eventuali documenti ancora necessari per la convenzione.",
+      "Indicare quando gli eventuali documenti mancanti siano stati richiesti e quale termine sia stato assegnato per produrli.",
+      "Chiarire quali spese possano essere rendicontate dagli enti erogatori per organizzare personale e attività.",
+    ],
+    expectedOutcome:
+      "Rendere verificabili gli adempimenti residui e i tempi necessari per l’avvio delle attività senza attribuire esiti non ancora documentati.",
+  },
+  "emodinamica-h24-commissione-sanita-pd-2026": {
+    proposalId: "emodinamica-h24-commissione-sanita-pd-2026",
+    version: "1.0",
+    title: "Emodinamica fissa H24 al Giovanni Paolo II",
+    request:
+      "Configurare al Giovanni Paolo II un servizio di emodinamica fisso H24, superando il modello intermittente e itinerante previsto per il presidio.",
+    actionTypes: ["rafforzamento_servizio", "organizzazione"],
+    measures: [
+      "Modificare la configurazione H6/H12 prevista per Lamezia in favore di un servizio H24.",
+      "Garantire gli adeguamenti di personale necessari alla copertura continuativa richiesta.",
+      "Organizzare il servizio come struttura fissa anziché come équipe itinerante.",
+      "Configurare un hub funzionale per la fascia tirrenica dal basso Cosentino al Vibonese.",
+    ],
+    expectedOutcome:
+      "Rendere continuativa la disponibilità del servizio secondo la configurazione H24 richiesta dal promotore.",
+  },
 };
 
 export function getCanonicalProposalPresentation(
