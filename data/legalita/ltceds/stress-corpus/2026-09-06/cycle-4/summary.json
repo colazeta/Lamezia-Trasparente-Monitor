@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "cycle": 4,
+  "status": "completed_review_cycle",
+  "reviewed_bundles_created": 0,
+  "public_events_authorized": 0,
+  "qualified_slots": [21],
+  "reserved_slots_reviewed_but_unfilled": [13],
+  "results": {
+    "slot_21": {
+      "case_key": "2018-05-04-LAMEZIA-EVA-DOMESTIC-MALTREATMENT",
+      "candidate_kind": "COURSE_OF_CONDUCT_CANDIDATE",
+      "status": "canonical_only_candidate_human_gate",
+      "privacy_profile": "high_risk_private_victim_linked_nonmappable",
+      "temporal_result": "unknown start preserved; latest documented occurrence/intervention 2018-05-04"
+    },
+    "slot_13": {
+      "status": "kept_open",
+      "reason": "No candidate simultaneously satisfied exact-date, locality-only, non-sensitive simple-event criteria without event conflation or private/victim-linked geography."
+    }
+  },
+  "stratum_progress": {
+    "E_geoprivacy_sensitive": {
+      "target": 3,
+      "qualified": 3,
+      "slots": [2, 21, 22],
+      "status": "complete_at_review_candidate_level"
+    }
+  },
+  "key_findings": [
+    "An official source does not by itself justify public publication of a domestic-violence event.",
+    "Course-of-conduct identity can preserve an unknown start rather than backfilling the arrest/intervention date as the event start.",
+    "High-risk victim/private cases should default to non-mappable canonical review and require an explicit human publication decision.",
+    "Leaving a stratified slot empty is preferable to satisfying it with a semantically similar but conflated or privacy-mismatched case."
+  ],
+  "schema_change": "none_new",
+  "existing_model_validation": [
+    "event_form=course_of_conduct",
+    "unknown/open start",
+    "non-mappable municipality-level private occurrence",
+    "source high-risk human gate"
+  ],
+  "next_cycle": [
+    "continue slot 13 discovery with strict exact-date/locality-only criteria",
+    "fill remaining B/C/D/F/G slots without relaxing source/event/privacy gates",
+    "implement or resolve #1065 and #1066 before stable 1.0",
+    "compile only human-reviewed near-ready controls after PR #1051 is on the target baseline"
+  ],
+  "publication_policy": "no_auto_publish"
+}
