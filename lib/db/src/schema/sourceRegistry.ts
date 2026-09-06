@@ -211,6 +211,9 @@ export const sourceRegistryEndpointsTable = pgTable(
       t.sourceId,
       t.endpointKey,
     ),
+    sourceEndpointUnique: uniqueIndex(
+      "source_registry_endpoints_source_endpoint_uq",
+    ).on(t.sourceId, t.endpointId),
     sourceIdx: index("source_registry_endpoints_source_idx").on(t.sourceId),
     uuidV7Check: check(
       "source_registry_endpoints_id_uuidv7_check",
