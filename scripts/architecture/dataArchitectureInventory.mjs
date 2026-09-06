@@ -10,29 +10,18 @@ const schemaDir = path.join(repoRoot, "lib", "db", "src", "schema");
 const schemaIndexPath = path.join(schemaDir, "index.ts");
 const migrationsDir = path.join(repoRoot, "lib", "db", "migrations");
 const dataDir = path.join(repoRoot, "data");
-const registryPath = path.join(
-  repoRoot,
-  "architecture",
-  "data-domain-registry.v1.json",
-);
-const inventoryPath = path.join(
-  repoRoot,
-  "architecture",
-  "current-data-inventory.json",
-);
+const registryPath = path.join(repoRoot, "architecture", "data-domain-registry.v1.json");
+const inventoryPath = path.join(repoRoot, "architecture", "current-data-inventory.json");
 
 function normalizePath(value) {
   return value.split(path.sep).join("/");
 }
-
 function stableJson(value) {
   return `${JSON.stringify(value, null, 2)}\n`;
 }
-
 async function readJson(filePath) {
   return JSON.parse(await readFile(filePath, "utf8"));
 }
-
 async function listFiles(root) {
   const files = [];
   async function visit(current) {
@@ -47,74 +36,83 @@ async function listFiles(root) {
   await visit(root);
   return files;
 }
-
-function extractSchemaExports(indexSource) {
-  return Array.from(indexSource.matchAll(/export \* from ["']\.\/([^"']+)["'];/gu))
+function extractSchemaExports(source) {
+  return Array.from(source.matchAll(/export \* from ["']\.\/([^"']+)["'];/gu))
     .map((match) => match[1])
     .sort((a, b) => a.localeCompare(b));
 }
-
 function extractPgTables(source) {
-  return Array.from(
-    source.matchAll(/pgTable\(\s*["']([^"']+)["']/gu),
-  ).map((match) => match[1]);
+  return Array.from(source.matchAll(/pgTable\(\s*["']([^"']+)["']/gu))
+    .map((match) => match[1])
+    .sort((a, b) => a.localeCompare(b));
 }
-
 function extractMigrationTables(source) {
   return Array.from(
     source.matchAll(/CREATE TABLE(?: IF NOT EXISTS)?\s+["']([^"']+)["']/giu),
   ).map((match) => match[1]);
 }
-
 function uniqueSorted(values) {
   return Array.from(new Set(values)).sort((a, b) => a.localeCompare(b));
 }
-
 function dataGroupFor(relativePath) {
   const parts = normalizePath(relativePath).split("/");
   const layer = parts[1] ?? "unknown";
-  if (parts.length >= 4) return `data/${layer}/${parts[2]}`;
-  return `data/${layer}`;
+  return parts.length >= 4 ? `data/${layer}/${parts[2]}` : `data/${layer}`;
 }
-
 function extensionFor(relativePath) {
-  const ext = path.extname(relativePath).toLowerCase();
-  return ext || "[none]";
+  return path.extname(relativePath).toLowerCase() || "[none]";
 }
-
 function moduleRegistryMap(registry) {
   return new Map(registry.schemaModules.map((entry) => [entry.module, entry]));
+}
+function sameStrings(a, b) {
+  return JSON.stringify(uniqueSorted(a ?? [])) === JSON.stringify(uniqueSorted(b ?? []));
 }
 
 export async function buildCurrentDataInventory() {
   const registry = await readJson(registryPath);
-  const schemaIndexSource = await readFile(schemaIndexPath, "utf8");
-  const exportedModules = extractSchemaExports(schemaIndexSource);
-  const registeredModules = registry.schemaModules
-    .map((entry) => entry.module)
-    .sort((a, b) => a.localeCompare(b));
   const registered = moduleRegistryMap(registry);
+  const exportedModules = extractSchemaExports(await readFile(schemaIndexPath, "utf8"));
+  const registeredModules = registry.schemaModules.map((entry) => entry.module).sort();
 
+  const schemaModules = [];
   const tables = [];
-  for (const moduleName of exportedModules) {
-    const modulePath = path.join(schemaDir, `${moduleName}.ts`);
-    const source = await readFile(modulePath, "utf8");
-    for (const table of extractPgTables(source)) {
-      const registration = registered.get(moduleName) ?? null;
-      tables.push({
-        table,
-        module: moduleName,
-        schemaFile: normalizePath(path.relative(repoRoot, modulePath)),
-        boundedContext: registration?.boundedContext ?? null,
-        targetNamespace: registration?.targetNamespace ?? null,
-        architectureStatus: registration?.status ?? "unregistered",
-        migrationPhase: registration?.migrationPhase ?? null,
-      });
+  const moduleTableMismatches = [];
+  const registeredTableOwners = new Map();
+
+  for (const entry of registry.schemaModules) {
+    for (const table of entry.tables ?? []) {
+      const owners = registeredTableOwners.get(table) ?? [];
+      owners.push(entry.module);
+      registeredTableOwners.set(table, owners);
     }
   }
-  tables.sort((a, b) =>
-    a.table.localeCompare(b.table) || a.module.localeCompare(b.module),
-  );
+
+  for (const moduleName of exportedModules) {
+    const modulePath = path.join(schemaDir, `${moduleName}.ts`);
+    const actualTables = extractPgTables(await readFile(modulePath, "utf8"));
+    const registration = registered.get(moduleName) ?? null;
+    const expectedTables = uniqueSorted(registration?.tables ?? []);
+    if (registration && !sameStrings(actualTables, expectedTables)) {
+      moduleTableMismatches.push({ module: moduleName, expectedTables, actualTables });
+    }
+    schemaModules.push({
+      module: moduleName,
+      tables: actualTables,
+      boundedContext: registration?.boundedContext ?? null,
+      targetNamespace: registration?.targetNamespace ?? null,
+      architectureStatus: registration?.status ?? "unregistered",
+      migrationPhase: registration?.migrationPhase ?? null,
+    });
+    for (const table of actualTables) {
+      tables.push({ table, module: moduleName });
+    }
+  }
+  tables.sort((a, b) => a.table.localeCompare(b.table) || a.module.localeCompare(b.module));
+  const duplicateRegisteredTableOwners = Array.from(registeredTableOwners.entries())
+    .filter(([, owners]) => owners.length > 1)
+    .map(([table, owners]) => ({ table, owners: owners.sort() }))
+    .sort((a, b) => a.table.localeCompare(b.table));
 
   const migrationFiles = (await readdir(migrationsDir, { withFileTypes: true }))
     .filter((entry) => entry.isFile() && entry.name.endsWith(".sql"))
@@ -123,61 +121,32 @@ export async function buildCurrentDataInventory() {
   const migrationTables = [];
   for (const migration of migrationFiles) {
     const source = await readFile(path.join(migrationsDir, migration), "utf8");
-    for (const table of extractMigrationTables(source)) {
-      migrationTables.push({ table, migration });
-    }
+    for (const table of extractMigrationTables(source)) migrationTables.push({ table, migration });
   }
-  migrationTables.sort((a, b) =>
-    a.table.localeCompare(b.table) || a.migration.localeCompare(b.migration),
-  );
+  migrationTables.sort((a, b) => a.table.localeCompare(b.table) || a.migration.localeCompare(b.migration));
 
   const schemaTableNames = uniqueSorted(tables.map((entry) => entry.table));
-  const migrationTableNames = uniqueSorted(
-    migrationTables.map((entry) => entry.table),
-  );
-
+  const migrationTableNames = uniqueSorted(migrationTables.map((entry) => entry.table));
   const dataFiles = await listFiles(dataDir);
-  const groupMap = new Map();
+  const groups = new Map();
   const observedLayers = new Set();
   for (const absolute of dataFiles) {
     const relative = normalizePath(path.relative(repoRoot, absolute));
-    const parts = relative.split("/");
-    const layer = parts[1] ?? "unknown";
+    const layer = relative.split("/")[1] ?? "unknown";
     observedLayers.add(layer);
-    const group = dataGroupFor(relative);
+    const root = dataGroupFor(relative);
+    const group = groups.get(root) ?? { root, layer, fileCount: 0, byteCount: 0, extensions: new Set() };
     const fileStat = await stat(absolute);
-    const existing = groupMap.get(group) ?? {
-      root: group,
-      layer,
-      files: 0,
-      bytes: 0,
-      extensions: {},
-    };
-    existing.files += 1;
-    existing.bytes += fileStat.size;
-    const extension = extensionFor(relative);
-    existing.extensions[extension] =
-      (existing.extensions[extension] ?? 0) + 1;
-    groupMap.set(group, existing);
+    group.fileCount += 1;
+    group.byteCount += fileStat.size;
+    group.extensions.add(extensionFor(relative));
+    groups.set(root, group);
   }
+  const groupList = Array.from(groups.values()).sort((a, b) => a.root.localeCompare(b.root));
+  const allowedLayers = registry.dataLayers.map((entry) => entry.name).sort();
+  const observedLayerList = Array.from(observedLayers).sort();
 
-  const dataGroups = Array.from(groupMap.values())
-    .map((group) => ({
-      ...group,
-      extensions: Object.fromEntries(
-        Object.entries(group.extensions).sort(([a], [b]) => a.localeCompare(b)),
-      ),
-    }))
-    .sort((a, b) => a.root.localeCompare(b.root));
-
-  const allowedLayers = registry.dataLayers
-    .map((entry) => entry.name)
-    .sort((a, b) => a.localeCompare(b));
-  const observedLayerList = Array.from(observedLayers).sort((a, b) =>
-    a.localeCompare(b),
-  );
-
-  return {
+  const structural = {
     schemaVersion: "lt-current-data-inventory.v1",
     architectureContract: registry.architectureContract,
     registryVersion: registry.schemaVersion,
@@ -186,20 +155,10 @@ export async function buildCurrentDataInventory() {
       orm: "drizzle",
       schemaModuleCount: exportedModules.length,
       tableCount: schemaTableNames.length,
-      schemaModules: exportedModules.map((module) => {
-        const entry = registered.get(module) ?? null;
-        return {
-          module,
-          boundedContext: entry?.boundedContext ?? null,
-          targetNamespace: entry?.targetNamespace ?? null,
-          architectureStatus: entry?.status ?? "unregistered",
-          migrationPhase: entry?.migrationPhase ?? null,
-        };
-      }),
+      schemaModules,
       tables,
       migrations: {
         sqlMigrationFiles: migrationFiles,
-        createdTables: migrationTables,
         schemaTablesNotCreatedInVersionedMigrations: schemaTableNames.filter(
           (table) => !migrationTableNames.includes(table),
         ),
@@ -214,55 +173,80 @@ export async function buildCurrentDataInventory() {
         registeredButNotExportedModules: registeredModules.filter(
           (module) => !exportedModules.includes(module),
         ),
+        moduleTableMismatches,
+        duplicateRegisteredTableOwners,
       },
     },
     dataLake: {
-      fileCount: dataFiles.length,
-      byteCount: dataGroups.reduce((sum, group) => sum + group.bytes, 0),
       observedLayers: observedLayerList,
       registeredLayers: allowedLayers,
-      unregisteredLayers: observedLayerList.filter(
-        (layer) => !allowedLayers.includes(layer),
-      ),
-      registeredButMissingLayers: allowedLayers.filter(
-        (layer) => !observedLayerList.includes(layer),
-      ),
-      groups: dataGroups,
+      unregisteredLayers: observedLayerList.filter((layer) => !allowedLayers.includes(layer)),
+      registeredButMissingLayers: allowedLayers.filter((layer) => !observedLayerList.includes(layer)),
+      structuralGroups: groupList.map((group) => ({
+        root: group.root,
+        layer: group.layer,
+        extensionTypes: Array.from(group.extensions).sort(),
+      })),
     },
   };
+
+  const metrics = {
+    schemaVersion: "lt-data-operational-metrics.v1",
+    database: {
+      schemaModuleCount: structural.database.schemaModuleCount,
+      tableCount: structural.database.tableCount,
+      migrationCount: migrationFiles.length,
+    },
+    dataLake: {
+      fileCount: dataFiles.length,
+      byteCount: groupList.reduce((sum, group) => sum + group.byteCount, 0),
+      groups: groupList.map((group) => ({
+        root: group.root,
+        files: group.fileCount,
+        bytes: group.byteCount,
+        extensionTypes: Array.from(group.extensions).sort(),
+      })),
+    },
+  };
+
+  return { structural, metrics };
 }
 
 export function assertArchitectureCoverage(inventory) {
+  const structural = inventory.structural ?? inventory;
+  const coverage = structural.database.registryCoverage;
   const problems = [];
-  if (inventory.database.registryCoverage.exportedButUnregisteredModules.length) {
+  if (coverage.exportedButUnregisteredModules.length) {
+    problems.push(`unregistered schema modules: ${coverage.exportedButUnregisteredModules.join(", ")}`);
+  }
+  if (coverage.registeredButNotExportedModules.length) {
+    problems.push(`stale registered schema modules: ${coverage.registeredButNotExportedModules.join(", ")}`);
+  }
+  if (coverage.moduleTableMismatches.length) {
     problems.push(
-      `unregistered schema modules: ${inventory.database.registryCoverage.exportedButUnregisteredModules.join(", ")}`,
+      `schema modules with undeclared table drift: ${coverage.moduleTableMismatches.map((entry) => entry.module).join(", ")}`,
     );
   }
-  if (inventory.database.registryCoverage.registeredButNotExportedModules.length) {
+  if (coverage.duplicateRegisteredTableOwners.length) {
     problems.push(
-      `stale registered schema modules: ${inventory.database.registryCoverage.registeredButNotExportedModules.join(", ")}`,
+      `tables with multiple registered owners: ${coverage.duplicateRegisteredTableOwners.map((entry) => entry.table).join(", ")}`,
     );
   }
-  if (inventory.dataLake.unregisteredLayers.length) {
-    problems.push(
-      `unregistered data lake layers: ${inventory.dataLake.unregisteredLayers.join(", ")}`,
-    );
+  if (structural.dataLake.unregisteredLayers.length) {
+    problems.push(`unregistered data lake layers: ${structural.dataLake.unregisteredLayers.join(", ")}`);
   }
-  if (problems.length) {
-    throw new Error(`Data architecture registry coverage failed: ${problems.join("; ")}`);
-  }
+  if (problems.length) throw new Error(`Data architecture registry coverage failed: ${problems.join("; ")}`);
 }
 
-async function checkCommittedInventory(inventory) {
-  const expected = stableJson(inventory);
+async function checkCommittedInventory(structural) {
+  const expected = stableJson(structural);
   const actual = await readFile(inventoryPath, "utf8").catch(() => "");
   if (actual !== expected) {
-    console.error("--- GENERATED CURRENT DATA INVENTORY START ---");
+    console.error("--- GENERATED STRUCTURAL DATA INVENTORY START ---");
     console.error(expected.trimEnd());
-    console.error("--- GENERATED CURRENT DATA INVENTORY END ---");
+    console.error("--- GENERATED STRUCTURAL DATA INVENTORY END ---");
     throw new Error(
-      "architecture/current-data-inventory.json is out of date. Run: node scripts/architecture/dataArchitectureInventory.mjs --write",
+      "architecture/current-data-inventory.json has structural drift. Run: node scripts/architecture/dataArchitectureInventory.mjs --write",
     );
   }
 }
@@ -271,19 +255,22 @@ async function main() {
   const args = new Set(process.argv.slice(2));
   const inventory = await buildCurrentDataInventory();
   assertArchitectureCoverage(inventory);
-
   if (args.has("--write")) {
-    await writeFile(inventoryPath, stableJson(inventory), "utf8");
+    await writeFile(inventoryPath, stableJson(inventory.structural), "utf8");
     console.log(
-      `Wrote ${normalizePath(path.relative(repoRoot, inventoryPath))}: ${inventory.database.tableCount} tables, ${inventory.dataLake.fileCount} data files.`,
+      `Wrote structural inventory: ${inventory.structural.database.tableCount} tables; operational scan observed ${inventory.metrics.dataLake.fileCount} data files.`,
     );
     return;
   }
   if (args.has("--check")) {
-    await checkCommittedInventory(inventory);
+    await checkCommittedInventory(inventory.structural);
     console.log(
-      `Data architecture inventory is current: ${inventory.database.tableCount} tables, ${inventory.dataLake.fileCount} data files.`,
+      `Data architecture structure is current: ${inventory.structural.database.tableCount} tables across ${inventory.structural.database.schemaModuleCount} modules.`,
     );
+    return;
+  }
+  if (args.has("--metrics")) {
+    process.stdout.write(stableJson(inventory.metrics));
     return;
   }
   process.stdout.write(stableJson(inventory));
