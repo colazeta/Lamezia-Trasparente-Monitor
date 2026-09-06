@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "slot": 7,
+  "case_key": "2026-01-11-VIA-DEL-PROGRESSO-ADJACENT-BURGLARIES",
+  "review_mode": true,
+  "resolution": {
+    "candidate_kind": "EVENT_IDENTITY_REVIEW",
+    "temporal": {"start": "2026-01-11T03:50:00", "precision": "exact_datetime_from_secondary_report"},
+    "location": {"municipality": "Lamezia Terme", "street": "Via del Progresso", "precision": "street_segment"},
+    "targets_reported": ["Cantine Lento", "adiacente punto vendita Splendidi e Splendenti"],
+    "provisional_identity": "likely_one_continuous_episode_with_multiple_targets",
+    "rationale": "Accessible reporting describes a single 112 intervention at approximately 03:50, two adjacent commercial targets, the same group fleeing from the Cantine Lento perimeter and a continuous police pursuit. This supports, but does not yet prove from a primary source, one continuous criminal transaction with multiple target/offence instances rather than two autonomous EVENTs."
+  },
+  "sources": [
+    {
+      "url": "https://lanuovacalabria.it/lamezia-furti-a-cantine-lento-e-splendidi-e-splendenti-uno-dei-2-ladri-beccato-in-un-cassonetto",
+      "source_type": "press_secondary",
+      "role": "chronology_location_and_continuity"
+    },
+    {
+      "url": "https://www.strettoweb.com/2026/01/lamezia-terme-furto-nella-notte-42enne-arrestato-dopo-un-inseguimento/2024543/",
+      "source_type": "press_secondary",
+      "role": "adjacent-target-corroboration"
+    }
+  ],
+  "primary_source_search": {
+    "status": "not_resolved",
+    "institutional_actor": "Carabinieri della Compagnia di Lamezia Terme",
+    "rule": "Do not promote the one-event interpretation beyond review state until the original release is resolved or equivalent primary evidence confirms continuity."
+  },
+  "publication_decision": "needs_more_evidence",
+  "next_action": "Resolve the source-native Carabinieri communication; if chronology remains continuous, model one continuous_episode with multiple target/offence instances and keep arrest location procedural only."
+}
