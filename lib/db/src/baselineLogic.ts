@@ -3,17 +3,10 @@
  * database onto the migration-based workflow.
  *
  * "Baselining" records every migration listed in the journal as already applied
- * in `drizzle.__drizzle_migrations` WITHOUT executing its SQL. It only writes to
- * Drizzle's internal tracking table — it never creates, alters, or drops any
- * application table or row.
- *
- * This is consumed by:
- * - `baseline.ts`        — the manual one-shot CLI (`pnpm ... run baseline`)
- * - `migrate.ts`         — `runMigrations()` self-baselines at startup when it
- *                          detects a push-bootstrapped database (schema already
- *                          exists but has no migration-tracking record), so the
- *                          first deploy onto the migration workflow does not try
- *                          to re-run CREATE TABLE statements that already exist.
+ * in `drizzle.__drizzle_migrations` WITHOUT executing its SQL. Because that can
+ * only be safe when the legacy schema already contains the structures represented
+ * by those migrations, callers must run the compatibility checks in this module
+ * before recording a baseline.
  */
 import crypto from "node:crypto";
 import fs from "node:fs";
@@ -42,11 +35,6 @@ function readJournal(migrationsFolder: string): Journal {
   return JSON.parse(fs.readFileSync(journalPath, "utf-8")) as Journal;
 }
 
-/**
- * Computes the sha256 hash of a migration's SQL file the exact same way
- * Drizzle's node-postgres migrator does, so a recorded hash can be matched back
- * to the journal entry (and therefore its human-readable tag) that produced it.
- */
 function migrationHash(migrationsFolder: string, tag: string): string {
   const sql = fs.readFileSync(
     path.join(migrationsFolder, `${tag}.sql`),
@@ -55,11 +43,6 @@ function migrationHash(migrationsFolder: string, tag: string): string {
   return crypto.createHash("sha256").update(sql).digest("hex");
 }
 
-/**
- * True when Drizzle's migration-tracking table exists AND has at least one
- * recorded migration. An empty (or missing) tracking table means the database
- * has never been driven by the migration workflow.
- */
 export async function isMigrationTrackingPresent(
   client: QueryClient,
 ): Promise<boolean> {
@@ -75,13 +58,6 @@ export async function isMigrationTrackingPresent(
   return Number(count.rows[0]?.["n"] ?? 0) > 0;
 }
 
-/**
- * True when the application schema already exists (the database was previously
- * brought up via `drizzle-kit push`). We probe a core table that is present in
- * the very first migration; if it exists, re-running the initial CREATE TABLE
- * statements would fail, so the database must be baselined rather than migrated
- * from scratch.
- */
 export async function isSchemaBootstrapped(
   client: QueryClient,
 ): Promise<boolean> {
@@ -94,11 +70,7 @@ export async function isSchemaBootstrapped(
 /**
  * Compatibility repair for the civic issue register publication gate. Some
  * deployments were bootstrapped before the nullable `reports.published_at`
- * column was introduced; if those databases also lack Drizzle tracking, the
- * normal push-bootstrap baseline would otherwise mark the additive migration as
- * applied without running its SQL. The statement is intentionally idempotent and
- * non-destructive, and is safe to run after normal migrations as a post-flight
- * column check too.
+ * column was introduced. The repair is additive and idempotent.
  */
 export async function ensureReportsPublishedAtColumn(
   client: QueryClient,
@@ -111,14 +83,57 @@ export async function ensureReportsPublishedAtColumn(
   `);
 }
 
+function migrationCreatedTableNames(migrationsFolder: string): string[] {
+  const journal = readJournal(migrationsFolder);
+  const tables = new Set<string>();
+  for (const entry of journal.entries) {
+    const sql = fs.readFileSync(
+      path.join(migrationsFolder, `${entry.tag}.sql`),
+      "utf-8",
+    );
+    for (const match of sql.matchAll(/CREATE TABLE(?: IF NOT EXISTS)?\s+"([^"]+)"/giu)) {
+      if (match[1]) tables.add(match[1]);
+    }
+  }
+  return [...tables].sort();
+}
+
+/**
+ * A push-bootstrapped database must not be allowed to baseline the current
+ * journal merely because one old sentinel table exists. Verify that every
+ * application table created anywhere in the current migration chain is already
+ * present before the journal is marked as applied. Known additive column repairs
+ * are handled separately before this check.
+ *
+ * This intentionally fails closed for an older or partial push schema. It is a
+ * structural floor, not a claim that every historical column/index/constraint is
+ * identical; domain-specific compatibility verifiers complement it where needed.
+ */
+export async function assertMigrationCreatedTablesPresent(
+  client: QueryClient,
+  migrationsFolder: string,
+): Promise<void> {
+  const missing: string[] = [];
+  for (const table of migrationCreatedTableNames(migrationsFolder)) {
+    const result = await client.query(
+      "SELECT to_regclass($1) IS NOT NULL AS present",
+      [`public.${table}`],
+    );
+    if (!result.rows[0]?.["present"]) missing.push(table);
+  }
+  if (missing.length) {
+    throw new Error(
+      `Refusing to baseline a stale or partial push-bootstrapped schema; ` +
+      `migration-created table(s) are missing: ${missing.join(", ")}`,
+    );
+  }
+}
+
 /**
  * Records every migration in the journal as already applied without running its
  * SQL. Idempotent: migrations already recorded (matched by content hash) are
- * left untouched. `created_at` is set to the migration's journal timestamp
- * (`folderMillis`) so Drizzle's "apply everything newer than the latest
- * recorded migration" logic behaves identically to a normally-migrated DB.
- *
- * Returns the list of migration tags that were newly baselined.
+ * left untouched. Callers are responsible for compatibility verification before
+ * invoking this function.
  */
 export async function baselineMigrations(
   client: QueryClient,
@@ -138,10 +153,7 @@ export async function baselineMigrations(
   const baselined: string[] = [];
 
   for (const entry of journal.entries) {
-    // Drizzle's node-postgres migrator hashes the full file contents with
-    // sha256; match that exactly so it recognises these as already applied.
     const hash = migrationHash(migrationsFolder, entry.tag);
-
     const existing = await client.query(
       "SELECT id FROM drizzle.__drizzle_migrations WHERE hash = $1",
       [hash],
@@ -159,48 +171,19 @@ export async function baselineMigrations(
   return baselined;
 }
 
-/**
- * A point-in-time snapshot of where the connected database sits relative to the
- * migrations committed in the repository. Used to verify a deploy at a glance
- * and to produce actionable diagnostics when {@link runMigrations} aborts.
- */
 export interface MigrationStatus {
-  /**
-   * Whether Drizzle's tracking table exists and has at least one recorded
-   * migration. `false` means the database has never run the migration workflow.
-   */
   trackingPresent: boolean;
-  /** Number of migrations recorded as applied in the tracking table. */
   appliedCount: number;
-  /** Total number of migrations committed in the journal (source of truth). */
   journalCount: number;
-  /**
-   * Human-readable tag of the most recently applied migration (e.g.
-   * `0042_add_foo`), or `null` when nothing is applied yet.
-   */
   lastAppliedTag: string | null;
-  /**
-   * Tags present in the journal but not yet recorded as applied, in journal
-   * order. The first entry is the migration the migrator will attempt next.
-   */
   pendingTags: string[];
 }
 
-/**
- * Reports the current migration state of the database without modifying it.
- *
- * Maps each recorded migration hash back to its journal tag so the status is
- * legible (`lastAppliedTag`) rather than an opaque hash. Safe to call before or
- * after {@link runMigrations}: when the tracking table is missing it reports
- * `trackingPresent: false` with every journal tag listed as pending.
- */
 export async function getMigrationStatus(
   client: QueryClient,
   migrationsFolder: string,
 ): Promise<MigrationStatus> {
   const journal = readJournal(migrationsFolder);
-  // Order journal entries deterministically so "last" and "next" are stable
-  // regardless of how the journal happens to be serialised.
   const orderedEntries = [...journal.entries].sort((a, b) => a.idx - b.idx);
   const hashToTag = new Map<string, string>(
     orderedEntries.map((entry) => [

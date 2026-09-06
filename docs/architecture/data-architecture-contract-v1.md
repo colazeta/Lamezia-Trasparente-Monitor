@@ -15,11 +15,16 @@ source
   -> acquisition run / release
   -> source artifact and/or source record
   -> extraction / assertion
-  -> canonical entity or event
-  -> identifiers / relations / classifications
+  -> explicit resolution outcome
+       -> canonical entity or event, when evidence and semantics justify one
+       -> unresolved / not_applicable / no_canonical_target /
+          insufficient_evidence / review_required otherwise
+  -> identifiers / relations / classifications, where applicable
   -> publication policy
   -> public read model / research export
 ```
+
+Preservation, provenance and taxonomy do **not** depend on successful entity resolution. A source record must never be forced into a synthetic canonical entity/event merely to complete the pipeline.
 
 Files may physically remain outside PostgreSQL. Their identity, provenance, hash, publication state and relation to canonical records must nevertheless be represented by the canonical data architecture.
 
@@ -31,7 +36,7 @@ The repository contains three different classes of data and they must not be con
 
 Facts about the municipality, institutions, administrative acts, procurement, projects, organizations, people, places, assets, crime events and statistical observations.
 
-These records are governed by the universal source, entity, identifier, relation, evidence and taxonomy rules in this contract.
+These records are governed by the universal source, identity, identifier, relation, evidence and taxonomy rules in this contract.
 
 ### 2.2 Editorial/application state
 
@@ -52,11 +57,13 @@ New domain models must express themselves using the following primitives where a
 - **Artifact** — physical content such as PDF, JSON, CSV, ZIP, image or video.
 - **Source record** — source-native logical row/document/item.
 - **Assertion** — a source-stated, extracted, derived or editorial claim.
+- **Resolution outcome** — explicit result of attempting to map an assertion/source record to canonical identity; successful resolution is only one possible result.
+- **Subject identity** — universal addressability layer for a canonical Entity or Event; it does not define domain semantics.
 - **Entity** — an object with persistent identity.
 - **Event** — something that happens in time.
-- **Identifier** — an externally defined code attached to an entity, not the entity itself.
-- **Relation** — a typed semantic relationship between canonical entities.
-- **Classification** — assignment of a versioned taxonomy concept.
+- **Identifier** — an externally defined code attached to a canonical subject/entity/event as appropriate; it is not the object itself.
+- **Relation** — a typed semantic relationship between canonical subjects/entities/events.
+- **Classification** — assignment of a versioned taxonomy concept or an explicit non-classification outcome.
 - **Observation** — quantitative fact defined by series, time, geography, dimensions, value and unit.
 - **Public projection** — physically or logically separate read model generated through a publication policy.
 
@@ -72,21 +79,43 @@ person != role != mandate != membership
 organization != organization name string
 place != latitude/longitude pair
 source record != canonical entity
+subject identity != entity semantics != event semantics
 unknown != zero
 not available != not applicable != extraction failure != ambiguity
+unresolved != not_applicable != no_canonical_target != insufficient_evidence
 ```
 
 ## 5. Canonical identity
 
-### 5.1 New canonical entities
+### 5.1 Universal subject/addressability spine
 
-New cross-domain canonical entities must use UUIDv7.
+Cross-domain canonical identity must be able to address both **Entities** and **Events** without pretending they are the same semantic primitive.
+
+The target identity layer therefore uses a universal subject spine (for example `canonical_subjects`) with an explicit `subject_kind = entity | event`. Typed domain tables remain authoritative for what a person, organization, contract, project, administrative act, crime event, lifecycle event, etc. actually means.
+
+The subject spine exists for:
+
+- stable global UUIDs;
+- legacy-to-canonical mapping;
+- cross-domain addressability;
+- cross-domain relations;
+- migration reconciliation.
+
+It must **not** become an EAV store, generic fact bag or replacement for typed domain schemas.
+
+A source record with an unresolved, not-applicable or no-canonical-target outcome does not require creation of a subject row.
+
+### 5.2 New canonical subject IDs
+
+New cross-domain canonical subjects must use UUIDv7.
 
 Legacy integer primary keys may remain during migration and may continue to be used as local implementation keys. They must not be treated as the future universal identity.
 
-### 5.2 External identifiers
+Legacy-to-canonical mapping must preserve the legacy namespace/type/id, the target subject ID, resolution method/status and sufficient audit metadata to reconstruct the decision.
 
-CIG, CUP, tax code, VAT number, IPA code, ISTAT code, ANBSC identifiers, CLP, Albo progressivi and source-native IDs are identifiers attached to canonical entities.
+### 5.3 External identifiers
+
+CIG, CUP, tax code, VAT number, IPA code, ISTAT code, ANBSC identifiers, CLP, Albo progressivi and source-native IDs are identifiers attached to canonical subjects/entities/events as appropriate.
 
 A new domain must not use the mere presence of one external identifier as a prerequisite for preserving a source record.
 
@@ -108,7 +137,7 @@ Every automated external source introduced after this contract must declare:
 
 A pipeline may not silently discard an acquired record because it is irrelevant to a current page.
 
-## 7. Evidence and epistemic states
+## 7. Evidence, resolution and epistemic states
 
 Derived data must distinguish at least:
 
@@ -116,6 +145,15 @@ Derived data must distinguish at least:
 - `extracted`;
 - `derived`;
 - `editorial`.
+
+Resolution must expose an explicit outcome, including where applicable:
+
+- `resolved`;
+- `unresolved`;
+- `not_applicable`;
+- `no_canonical_target`;
+- `insufficient_evidence`;
+- `review_required`.
 
 The canonical resolved value may be denormalized into a typed domain table for efficient query, but the supporting assertion/evidence must remain auditable.
 
@@ -126,14 +164,15 @@ Manual corrections must supersede, not erase, previous automatic results.
 Every reusable classification must declare:
 
 - taxonomy/scheme identifier;
-- concept identifier;
+- concept identifier when a concept is assigned;
 - taxonomy version;
 - classification method;
 - confidence or deterministic status where meaningful;
 - review status;
-- evidence/source.
+- evidence/source;
+- explicit non-classification outcome when no concept can defensibly be assigned.
 
-Unknown and review-required states are first-class outcomes. No pipeline may convert classification failure into silent record exclusion.
+At minimum, `unknown`, `not_applicable`, `insufficient_evidence` and `review_required` must remain distinguishable where meaningful. No pipeline may convert classification failure into silent record exclusion.
 
 ## 9. Domain modelling rules
 
@@ -143,7 +182,7 @@ Use events rather than a mutable status-only row when the history is analyticall
 
 ### 9.2 Typed domain relations first
 
-Within a bounded domain, use typed foreign keys and normalized tables. The cross-domain entity/relation layer complements typed relational modelling; it does not replace it with a generic EAV/graph database.
+Within a bounded domain, use typed foreign keys and normalized tables. The cross-domain subject/relation layer complements typed relational modelling; it does not replace it with a generic EAV/graph database.
 
 ### 9.3 No expanding nullable-FK polymorphism
 
@@ -157,7 +196,7 @@ project_id nullable
 ...
 ```
 
-for cross-domain relationships. Use the canonical entity/relation mechanism, or a dedicated typed relation when the relation is domain-local.
+for cross-domain relationships. Use the canonical subject/relation mechanism, or a dedicated typed relation when the relation is domain-local.
 
 ## 10. Geography
 
@@ -231,6 +270,8 @@ parseable
 classified
 resolved
 unresolved
+not_applicable
+insufficient_evidence
 review_required
 failed
 publicly_projected
@@ -259,7 +300,7 @@ Any PR introducing a new table, source pipeline, recurring dataset or public dat
 
 1. bounded context;
 2. source/provenance ownership;
-3. canonical entity/event ownership;
+3. canonical entity/event ownership or explicit non-resolution semantics;
 4. identity/identifier strategy;
 5. taxonomy/classification strategy;
 6. temporal/versioning semantics;
@@ -268,7 +309,7 @@ Any PR introducing a new table, source pipeline, recurring dataset or public dat
 9. migration/deprecation implications;
 10. research/export implications.
 
-The automated architecture inventory enforces that new schema modules and repository data layers do not appear unnoticed.
+The automated architecture inventory must fail closed when schema construction, registry ownership, migration provenance or repository data-layer ownership cannot be interpreted by the current gate.
 
 ## 18. Migration principle
 
@@ -284,6 +325,8 @@ introduce canonical core
 ```
 
 No existing source evidence or raw artifact is deleted merely because a new canonical representation is introduced.
+
+A legacy `drizzle-kit push` database must not be declared equivalent to the current versioned migration chain merely because one sentinel table exists. Baseline recording requires a fail-closed compatibility proof sufficient for the structures being skipped.
 
 ## 19. Reference patterns already in the repository
 

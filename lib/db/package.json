@@ -16,7 +16,7 @@
     "push-force": "drizzle-kit push --force --config ./drizzle.config.ts",
     "seed": "tsx ./src/seed.ts",
     "import:ltceds-pilot": "tsx ./src/ltcedsPilotImport.ts",
-    "test": "tsx --test ./src/crimeEvents.test.ts ./src/ltcedsPilotImportCore.test.ts ./src/schemaMigrationConvergence.test.ts && pnpm run check-migrations"
+    "test": "tsx --test ./src/crimeEvents.test.ts ./src/ltcedsPilotImportCore.test.ts ./src/schemaMigrationConvergence.test.ts ./src/legacySchemaCompatibility.test.ts && pnpm run check-migrations"
   },
   "dependencies": {
     "drizzle-orm": "catalog:",

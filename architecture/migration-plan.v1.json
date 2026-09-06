@@ -7,13 +7,16 @@
     "legacyReadsRemainUntilEquivalenceProof": true,
     "newCanonicalIds": "UUIDv7",
     "canonicalStore": "PostgreSQL",
-    "staticFilesAreSemanticSourceOfTruth": false
+    "staticFilesAreSemanticSourceOfTruth": false,
+    "phaseNumbersAreIdentifiersNotExecutionOrder": true,
+    "executionOrderIsDefinedByPrerequisites": true,
+    "schemaTablesMissingFromVersionedMigrationsAllowed": false
   },
   "phases": [
     {
       "id": 0,
       "key": "architecture_contract",
-      "status": "active",
+      "status": "complete",
       "objective": "Make the universal conceptual rules normative for all new data work.",
       "prerequisites": [],
       "deliverables": ["docs/architecture/data-architecture-contract-v1.md", "architecture/data-domain-registry.v1.json"],
@@ -22,20 +25,20 @@
     {
       "id": 1,
       "key": "current_state_inventory",
-      "status": "active",
+      "status": "complete",
       "objective": "Maintain a deterministic machine-readable inventory of database tables, migrations and repository data assets.",
       "prerequisites": [0],
       "deliverables": ["architecture/current-data-inventory.json", "scripts/architecture/dataArchitectureInventory.mjs"],
-      "acceptance": ["Inventory is reproducible from repository state", "Inventory drift fails CI", "Schema/migration drift is visible rather than implicit"]
+      "acceptance": ["Inventory is reproducible from repository state", "Inventory drift fails CI", "Schema-to-migration drift is a zero-tolerance forward invariant after convergence", "Unsupported schema construction styles fail closed until the scanner supports them"]
     },
     {
       "id": 2,
       "key": "canonical_identity",
       "status": "planned",
-      "objective": "Introduce universal canonical entity identity without replacing legacy local primary keys.",
+      "objective": "Introduce a universal identity/addressability spine for canonical entities and events without replacing typed domain semantics or legacy local primary keys.",
       "prerequisites": [0, 1],
-      "deliverables": ["core.entities", "legacy_entity_map"],
-      "acceptance": ["UUIDv7 enforced for new canonical entity IDs", "Backfill is idempotent", "No two legacy identities collide into one entity without an explicit resolution decision"]
+      "deliverables": ["core.canonical_subjects", "core.legacy_subject_map"],
+      "acceptance": ["UUIDv7 enforced for new canonical subject IDs", "subject_kind explicitly distinguishes entity from event", "Typed domain tables remain authoritative for entity/event semantics", "Identity spine is not used as an EAV or generic fact store", "Backfill is idempotent", "No two legacy identities collide into one subject without an explicit resolution decision", "Unresolved/not-applicable/no-canonical-target outcomes do not require a synthetic subject"]
     },
     {
       "id": 3,
@@ -59,10 +62,10 @@
       "id": 5,
       "key": "assertion_evidence_layer",
       "status": "planned",
-      "objective": "Separate source-stated, extracted, derived and editorial claims from resolved canonical values.",
+      "objective": "Separate source-stated, extracted, derived and editorial claims from resolved canonical values and explicit non-resolution outcomes.",
       "prerequisites": [2, 3],
-      "deliverables": ["core.assertions", "extraction provenance"],
-      "acceptance": ["Derived canonical facts can be traced to evidence", "Manual corrections supersede rather than erase automatic results", "Unknown/ambiguous states remain explicit"]
+      "deliverables": ["core.assertions", "core.resolution_outcomes", "extraction provenance"],
+      "acceptance": ["Derived canonical facts can be traced to evidence", "Manual corrections supersede rather than erase automatic results", "Unknown/ambiguous/not-applicable/insufficient-evidence states remain explicit", "A source record is never forced into a canonical entity or event merely to complete the pipeline"]
     },
     {
       "id": 6,
@@ -71,7 +74,7 @@
       "objective": "Persist reusable versioned taxonomies and classifications in the canonical database.",
       "prerequisites": [5],
       "deliverables": ["taxonomy.schemes", "taxonomy.concepts", "taxonomy.crosswalks", "taxonomy.classifications"],
-      "acceptance": ["lamezia-canonical-taxonomy.v1 is DB-represented", "Classifications record version/method/review state/evidence", "Classification failure cannot silently drop a record"]
+      "acceptance": ["lamezia-canonical-taxonomy.v1 is DB-represented", "Classifications record version/method/review state/evidence", "Classification failure cannot silently drop a record", "not_applicable, insufficient_evidence and review_required are first-class outcomes where applicable"]
     },
     {
       "id": 7,
@@ -152,7 +155,7 @@
       "objective": "Replace expanding polymorphic nullable-FK patterns with canonical cross-domain relations where appropriate.",
       "prerequisites": [2, 7, 8, 9, 10],
       "legacyModules": ["bandoMatches", "monitoringReports", "legalityRequirements"],
-      "acceptance": ["No new expanding nullable-FK polymorphism", "Known internal targets use canonical entity relations rather than URLs", "Typed domain-local FKs remain where they are the stronger model"]
+      "acceptance": ["No new expanding nullable-FK polymorphism", "Known internal targets use canonical subject relations rather than URLs", "Typed domain-local FKs remain where they are the stronger model"]
     },
     {
       "id": 16,
@@ -207,10 +210,10 @@
     {
       "id": 22,
       "key": "continuous_architecture_enforcement",
-      "status": "planned",
+      "status": "active",
       "objective": "Make architecture governance a permanent CI/review property.",
       "prerequisites": [1],
-      "acceptance": ["New tables/sources/data layers require registry ownership", "Architecture inventory drift is reviewed deliberately", "Domain migrations can update status without weakening universal invariants"]
+      "acceptance": ["New tables/sources/data layers require registry ownership", "Architecture inventory drift is reviewed deliberately", "Domain migrations can update status without weakening universal invariants", "Registry, migration plan and migration journal semantics are executable CI gates"]
     }
   ]
 }
