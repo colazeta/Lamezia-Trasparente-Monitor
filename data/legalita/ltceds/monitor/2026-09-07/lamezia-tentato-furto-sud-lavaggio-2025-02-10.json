@@ -1,0 +1,116 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-tentato-furto-sud-lavaggio-2025-02-10",
+  "discovered_at": "2026-09-07T20:06:37+02:00",
+  "updated_at": "2026-09-07T20:06:37+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Tentato furto notturno all'impianto Sud Lavaggio nella Zona Industriale Papa Benedetto XVI",
+  "temporal": {
+    "start": "2025-02-10",
+    "end": "2025-02-10",
+    "edtf": "2025-02-10",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:calabria-diretta-news:2025-02-10:tentato-furto-sud-lavaggio",
+      "source_type": "press_secondary",
+      "provider": "Calabria Diretta News",
+      "title": "Ennesimo furto ai danni della Sud Lavaggio nell'area industriale di Lamezia",
+      "url": "https://www.calabriadirettanews.com/2025/02/10/ennesimo-furto-ai-danni-della-sud-lavaggio-nellarea-industriale-di-lamezia/",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T20:06:37+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:gazzetta-sud:2025-02-10:furto-sud-lavaggio",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Lamezia Terme, furto ai danni di un'azienda specializzata nel lavaggio e nella sanificazione di veicoli industriali",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2025/02/10/lamezia-terme-furto-ai-danni-di-unazienda-specializzata-nel-lavaggio-e-nella-sanificazione-di-veicoli-industriali-9ee29309-8e22-4494-8503-587941ec19e3/",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T20:06:37+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lameziainforma:2025-02-10:furto-notturno-sud-lavaggio",
+      "source_type": "press_secondary",
+      "provider": "LameziaInforma",
+      "title": "Furto notturno fermato presso l'impianto Sud Lavaggio nell'area industriale",
+      "url": "https://www.lameziainforma.it/cronaca/2025/02/10/furto-notturno-fermato-presso-limpianto-sud-lavaggio-nellarea-industriale/60032/",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T20:06:37+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "other:sud-lavaggio:sede-area-industriale-lotto-21",
+      "source_type": "other",
+      "provider": "Sud Lavaggio SRL",
+      "title": "Sede area industriale — Zona Industriale Papa Benedetto XVI - Lotto 21",
+      "url": "https://www.sudlavaggiosrl.it/sede-area-industriale/",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T20:06:37+02:00",
+      "support_roles": [
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:furto",
+      "classification_source_key": "press:calabria-diretta-news:2025-02-10:tentato-furto-sud-lavaggio",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "intorno alle 01:50 del 10 febbraio 2025 alcuni soggetti si sono introdotti nell'impianto Sud Lavaggio della zona industriale di Lamezia Terme",
+        "la dichiarazione dei titolari riportata dalle fonti descrive l'episodio come un tentato furto; le fonti pubbliche reperite non attestano una contestazione giudiziaria più specifica",
+        "l'allarme ha determinato l'intervento in pochi minuti delle pattuglie di Polizia; le cronache riferiscono danni significativi all'attività ma non documentano beni effettivamente asportati",
+        "le fonti pubbliche reperite non riportano arresti né l'identificazione degli autori in relazione a questo episodio"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:sud-lavaggio-zona-industriale-papa-benedetto-xvi-lotto-21",
+      "basis_source_key": "press:gazzetta-sud:2025-02-10:furto-sud-lavaggio",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_address",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Sud Lavaggio SRL, Zona Industriale Papa Benedetto XVI - Lotto 21",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
