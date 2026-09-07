@@ -1,0 +1,121 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-redemptio-furti-estorsioni-veicoli-2024-04-07",
+  "discovered_at": "2026-09-07T04:15:20+02:00",
+  "updated_at": "2026-09-07T04:15:20+02:00",
+  "record_status": "verified_source",
+  "event_form": "course_of_conduct",
+  "title": "Serie di furti di veicoli, richieste estorsive e ricettazioni documentata dall'operazione Redemptio a Lamezia Terme",
+  "temporal": {
+    "start": "2024-04",
+    "end": "2024-07",
+    "edtf": "2024-04/2024-07",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "agency:ansa:2024-08-22:furti-estorsioni-lamezia-redemptio",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Furti ed estorsioni a Lamezia Terme, quattro arresti",
+      "url": "https://www.ansa.it/sito/notizie/cronaca/2024/08/22/furti-ed-estorsioni-a-lamezia-terme-quattro-arresti_499c4f66-b387-4967-9e24-28d148d50806.html",
+      "published_at": "2024-08-22T10:29:00+02:00",
+      "retrieved_at": "2026-09-07T04:15:20+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:corriere-lamezia:2024-08-22:redemptio",
+      "source_type": "press_secondary",
+      "provider": "Corriere di Lamezia",
+      "title": "Lamezia, operazione “Redemptio”, 4 arresti per furti veicoli e ricettazione",
+      "url": "https://www.corrieredilamezia.it/cronaca/2024_08_22/lamezia-operazione-redemptio-4-arresti-per-furti-veicoli-e-ricettazione_47921/",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T04:15:20+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2024-08-22:redemptio",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, operazione “Redemptio” contro furti di auto in città e ricettazione: tre arresti, coinvolto anche minore",
+      "url": "https://www.lametino.it/cronaca/lamezia-operazione-redemptio-contro-furti-di-auto-in-citta-e-ricettazione-tre-arresti-coinvolto-anche-minore.html",
+      "published_at": "2024-08-22T09:16:00+02:00",
+      "retrieved_at": "2026-09-07T04:15:20+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:furto-aggravato-veicoli",
+      "classification_source_key": "press:corriere-lamezia:2024-08-22:redemptio",
+      "classification_basis": "source_stated_legal",
+      "legal_reference": null,
+      "attempt_status": "unknown",
+      "situational_context": [
+        "serie di furti di autovetture, furgoni e scooter",
+        "condotte documentate nell'ambito dell'operazione Redemptio"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:estorsione",
+      "classification_source_key": "agency:ansa:2024-08-22:furti-estorsioni-lamezia-redemptio",
+      "classification_basis": "source_stated_legal",
+      "legal_reference": null,
+      "attempt_status": "unknown",
+      "situational_context": [
+        "richieste di denaro rivolte ai proprietari per ottenere la restituzione dei veicoli rubati",
+        "in numerosi casi le fonti riferiscono il recupero del mezzo prima del pagamento"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:ricettazione",
+      "classification_source_key": "press:corriere-lamezia:2024-08-22:redemptio",
+      "classification_basis": "source_stated_legal",
+      "legal_reference": null,
+      "attempt_status": "unknown",
+      "situational_context": [
+        "ricettazioni connesse ai veicoli oggetto della serie investigata"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:municipality",
+      "basis_source_key": "agency:ansa:2024-08-22:furti-estorsioni-lamezia-redemptio",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
