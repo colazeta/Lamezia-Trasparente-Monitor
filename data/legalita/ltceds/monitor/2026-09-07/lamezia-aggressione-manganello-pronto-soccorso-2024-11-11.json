@@ -1,0 +1,126 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-aggressione-manganello-pronto-soccorso-2024-11-11",
+  "discovered_at": "2026-09-07T21:59:46+02:00",
+  "updated_at": "2026-09-07T21:59:46+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Aggressione con manganello al primario del Pronto Soccorso dell'ospedale Giovanni Paolo II",
+  "temporal": {
+    "start": "2024-11-11",
+    "end": "2024-11-11",
+    "edtf": "2024-11-11",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "law:polizia-stato-catanzaro:2024-11-12:aggressore-medico-pronto-soccorso",
+      "source_type": "law_enforcement_primary",
+      "provider": "Polizia di Stato — Questura di Catanzaro",
+      "title": "Lamezia Terme: la Polizia di Stato ha tratto in arresto l'aggressore del medico del Pronto Soccorso dell'Ospedale di Lamezia Terme",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/180767337be278f46712638923",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T21:59:46+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "agency:ansa:2024-11-12:arrestato-aggressore-primario-lamezia",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Arrestato l'aggressore del primario di Lamezia",
+      "url": "https://www.ansa.it/calabria/notizie/2024/11/12/arrestato-laggressore-del-primario-di-lamezia_af920e1b-66d9-4ff7-bcf5-371ff732e7ff.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T21:59:46+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "authority:asp-catanzaro:2025-10-20:parte-civile-aggressione-pronto-soccorso",
+      "source_type": "public_authority_primary",
+      "provider": "Azienda Sanitaria Provinciale di Catanzaro",
+      "title": "Aggressione in Pronto Soccorso al dr. Procopio; l'ASP di Catanzaro si costituisce parte civile",
+      "url": "https://www.asp.cz.it/news/comunicati-stampa/2025/10/20/aggressione-in-pronto-soccorso-al-dr-procopio-l-asp-di-catanzaro-si-costituisce-parte-civile--2082/",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T21:59:46+02:00",
+      "support_roles": [
+        "event_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "authority:asp-catanzaro:ospedale-lamezia:presidio-giovanni-paolo-ii",
+      "source_type": "public_authority_primary",
+      "provider": "Azienda Sanitaria Provinciale di Catanzaro",
+      "title": "Presidio Ospedaliero Lamezia Terme",
+      "url": "https://www.asp.cz.it/presidi-ospedalieri/presidio-ospedaliero-lamezia-terme/",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T21:59:46+02:00",
+      "support_roles": [
+        "location_support"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:lesioni-aggravate",
+      "classification_source_key": "agency:ansa:2024-11-12:arrestato-aggressore-primario-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "l'11 novembre 2024, nel Pronto Soccorso dell'ospedale di Lamezia Terme, un medico è stato colpito più volte con un manganello durante un contrasto relativo alle dimissioni di una paziente",
+        "la Polizia di Stato riferisce contusioni con 25 giorni di prognosi e l'arresto in flagranza differita dell'autore dell'aggressione",
+        "ANSA riferisce che l'arresto è stato eseguito per lesioni aggravate",
+        "nell'ottobre 2025 l'ASP di Catanzaro ha comunicato la propria costituzione di parte civile e l'avvenuta disposizione del giudizio; il record non rappresenta la responsabilità come definitivamente accertata"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    },
+    {
+      "offence_key": "offence:porto-oggetti-atti-offendere",
+      "classification_source_key": "agency:ansa:2024-11-12:arrestato-aggressore-primario-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "not_applicable",
+      "situational_context": [
+        "ANSA riferisce che l'arresto riguardava anche il porto di oggetti atti ad offendere in relazione al manganello utilizzato nell'aggressione"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:ospedale-giovanni-paolo-ii:pronto-soccorso",
+      "basis_source_key": "law:polizia-stato-catanzaro:2024-11-12:aggressore-medico-pronto-soccorso",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Pronto Soccorso, Presidio Ospedaliero Giovanni Paolo II, via Senatore Arturo Perugini",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
