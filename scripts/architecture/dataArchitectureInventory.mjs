@@ -3,6 +3,7 @@ import { readFile, readdir, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
+import { checkConceptualCatalog } from "./conceptualCatalog.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, "..", "..");
@@ -237,6 +238,7 @@ export async function buildCurrentDataInventory() {
     for (const table of extracted) migrationTables.push({ table, migration });
   }
   const schemaTableNames = uniqueSorted(tables.map((entry) => entry.table));
+  await checkConceptualCatalog(repoRoot, registry, schemaTableNames);
   const migrationTableNames = uniqueSorted(migrationTables.map((entry) => entry.table));
 
   const dataFiles = await listFiles(dataDir);

@@ -1,0 +1,301 @@
+{
+  "observedOn": "2026-09-07",
+  "observationContext": "Read-only queries against the connected production PostgreSQL during the #1115 review; separate queries, not a cross-query snapshot.",
+  "repositoryBaseline": "0d561894b78c47c82ee4c1fae2d650e2cf8a9739",
+  "schema": "public",
+  "counts": [
+    {
+      "rows": 0,
+      "table_name": "accesso_civico_requests"
+    },
+    {
+      "rows": 0,
+      "table_name": "acts"
+    },
+    {
+      "rows": 30,
+      "table_name": "attuazione_pnrr_projects"
+    },
+    {
+      "rows": 0,
+      "table_name": "bandi"
+    },
+    {
+      "rows": 0,
+      "table_name": "bando_matches"
+    },
+    {
+      "rows": 0,
+      "table_name": "canonical_subjects"
+    },
+    {
+      "rows": 0,
+      "table_name": "categories"
+    },
+    {
+      "rows": 0,
+      "table_name": "change_sentinel_events"
+    },
+    {
+      "rows": 0,
+      "table_name": "confiscated_assets"
+    },
+    {
+      "rows": 0,
+      "table_name": "contracts"
+    },
+    {
+      "rows": 0,
+      "table_name": "conversations"
+    },
+    {
+      "rows": 0,
+      "table_name": "crime_event_cluster_members"
+    },
+    {
+      "rows": 0,
+      "table_name": "crime_event_cluster_sources"
+    },
+    {
+      "rows": 0,
+      "table_name": "crime_event_clusters"
+    },
+    {
+      "rows": 33,
+      "table_name": "crime_event_locations"
+    },
+    {
+      "rows": 40,
+      "table_name": "crime_event_offences"
+    },
+    {
+      "rows": 342,
+      "table_name": "crime_event_sources"
+    },
+    {
+      "rows": 24,
+      "table_name": "crime_events"
+    },
+    {
+      "rows": 0,
+      "table_name": "crime_public_events"
+    },
+    {
+      "rows": 86,
+      "table_name": "crime_sources"
+    },
+    {
+      "rows": 0,
+      "table_name": "demographic_observations"
+    },
+    {
+      "rows": 0,
+      "table_name": "demographic_releases"
+    },
+    {
+      "rows": 0,
+      "table_name": "demographic_series"
+    },
+    {
+      "rows": 0,
+      "table_name": "feed_status"
+    },
+    {
+      "rows": 0,
+      "table_name": "fundamental_acts"
+    },
+    {
+      "rows": 0,
+      "table_name": "helper_overrides"
+    },
+    {
+      "rows": 0,
+      "table_name": "italiadomani_projects"
+    },
+    {
+      "rows": 0,
+      "table_name": "legacy_subject_map"
+    },
+    {
+      "rows": 0,
+      "table_name": "legality_areas"
+    },
+    {
+      "rows": 0,
+      "table_name": "legality_overview"
+    },
+    {
+      "rows": 0,
+      "table_name": "legality_requirements"
+    },
+    {
+      "rows": 0,
+      "table_name": "messages"
+    },
+    {
+      "rows": 0,
+      "table_name": "monitoring_reports"
+    },
+    {
+      "rows": 0,
+      "table_name": "official_activities"
+    },
+    {
+      "rows": 0,
+      "table_name": "official_declarations"
+    },
+    {
+      "rows": 0,
+      "table_name": "official_remunerations"
+    },
+    {
+      "rows": 0,
+      "table_name": "official_votes"
+    },
+    {
+      "rows": 0,
+      "table_name": "officials"
+    },
+    {
+      "rows": 0,
+      "table_name": "opendata_datasets"
+    },
+    {
+      "rows": 0,
+      "table_name": "opendata_resources"
+    },
+    {
+      "rows": 0,
+      "table_name": "opendata_snapshots"
+    },
+    {
+      "rows": 0,
+      "table_name": "organi"
+    },
+    {
+      "rows": 0,
+      "table_name": "organi_members"
+    },
+    {
+      "rows": 0,
+      "table_name": "oversight_opinion_documents"
+    },
+    {
+      "rows": 0,
+      "table_name": "oversight_opinions"
+    },
+    {
+      "rows": 0,
+      "table_name": "page_blocks"
+    },
+    {
+      "rows": 0,
+      "table_name": "performance_categories"
+    },
+    {
+      "rows": 0,
+      "table_name": "performance_indicator_values"
+    },
+    {
+      "rows": 0,
+      "table_name": "performance_indicators"
+    },
+    {
+      "rows": 0,
+      "table_name": "publications"
+    },
+    {
+      "rows": 0,
+      "table_name": "questions"
+    },
+    {
+      "rows": 0,
+      "table_name": "reports"
+    },
+    {
+      "rows": 0,
+      "table_name": "sedute"
+    },
+    {
+      "rows": 0,
+      "table_name": "session_interventions"
+    },
+    {
+      "rows": 0,
+      "table_name": "session_reports"
+    },
+    {
+      "rows": 0,
+      "table_name": "shares"
+    },
+    {
+      "rows": 0,
+      "table_name": "site_strings"
+    },
+    {
+      "rows": 45,
+      "table_name": "source_acquisition_runs"
+    },
+    {
+      "rows": 5,
+      "table_name": "source_artifacts"
+    },
+    {
+      "rows": 5,
+      "table_name": "source_endpoints"
+    },
+    {
+      "rows": 260,
+      "table_name": "source_records"
+    },
+    {
+      "rows": 5,
+      "table_name": "source_releases"
+    },
+    {
+      "rows": 5,
+      "table_name": "source_sources"
+    },
+    {
+      "rows": 0,
+      "table_name": "theme_documents"
+    },
+    {
+      "rows": 0,
+      "table_name": "theme_emails"
+    },
+    {
+      "rows": 0,
+      "table_name": "theme_followers"
+    },
+    {
+      "rows": 0,
+      "table_name": "theme_metrics"
+    },
+    {
+      "rows": 0,
+      "table_name": "theme_posts"
+    },
+    {
+      "rows": 0,
+      "table_name": "theme_relevance_events"
+    },
+    {
+      "rows": 0,
+      "table_name": "themes"
+    }
+  ],
+  "pnrrOverlap": [
+    {
+      "distinct_nonempty_cup": 30,
+      "repeated_cup_groups": 0,
+      "source_rows": 30,
+      "without_cup": 0
+    }
+  ],
+  "limitations": [
+    "Counts are observations, not completeness guarantees.",
+    "CUP normalization is trim plus uppercase, not upstream identifier validation.",
+    "Entity, evidence, acquisition and source-record grains must not be summed."
+  ]
+}

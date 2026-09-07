@@ -42,6 +42,17 @@ import {
 } from "@/components/ui/select";
 import { apiUrl, configuredApiBaseUrl } from "@/lib/apiBaseUrl";
 import { databaseAdminDeployment } from "@/lib/databaseAdminDeployment";
+import {
+  tableGroups,
+  tableMeanings,
+  kindLabels,
+} from "@/lib/conceptualCatalog";
+import {
+  DatabaseTree,
+  TableMeaning,
+  ConceptualPane,
+  SiteCoveragePane,
+} from "./DatabaseArchitecture";
 import "./admin-database.css";
 
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
@@ -167,6 +178,13 @@ function DatabaseSession({ userId }: { userId: string }) {
   const cache = useQueryClient();
   const [search, setSearch] = useState("");
   const [selection, setSelection] = useState<string | null>(null);
+  const [overview, setOverview] = useState<"catalog" | "model" | "coverage">(
+    "catalog",
+  );
+  const showOverview = (next: typeof overview) => {
+    setSelection(null);
+    setOverview(next);
+  };
   const catalog = useQuery({
     queryKey: ["database-admin", userId, "catalog"],
     queryFn: ({ signal }) => request<Catalog>("/catalog", signal),
@@ -252,34 +270,46 @@ function DatabaseSession({ userId }: { userId: string }) {
                   id="db-table-search"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Trova una tabella"
+                  placeholder="Cerca entità o tabella"
                 />
                 <nav aria-label="Tabelle del database">
                   <button
-                    className={!selection ? "db-selected" : ""}
-                    onClick={() => setSelection(null)}
+                    className={
+                      !selection && overview === "catalog" ? "db-selected" : ""
+                    }
+                    onClick={() => showOverview("catalog")}
                   >
                     <Folder size={16} /> Catalogo e controlli
                   </button>
-                  {tables
-                    .filter((item) => item.name.includes(search.toLowerCase()))
-                    .map((item) => (
-                      <button
-                        key={item.name}
-                        className={selection === item.name ? "db-selected" : ""}
-                        onClick={() => setSelection(item.name)}
-                      >
-                        <Database size={14} />
-                        <span>{item.name}</span>
-                      </button>
-                    ))}
+                  <button
+                    className={
+                      !selection && overview === "model" ? "db-selected" : ""
+                    }
+                    onClick={() => showOverview("model")}
+                  >
+                    Modello concettuale
+                  </button>
+                  <button
+                    className={
+                      !selection && overview === "coverage" ? "db-selected" : ""
+                    }
+                    onClick={() => showOverview("coverage")}
+                  >
+                    Sito e copertura
+                  </button>
+                  <DatabaseTree
+                    tables={tables}
+                    search={search}
+                    selection={selection}
+                    onTable={setSelection}
+                  />
                 </nav>
               </aside>
               <div className="db-mainpane">
                 {table ? (
                   <TablePaneBoundary
                     key={`${userId}:${table.name}`}
-                    onCatalog={() => setSelection(null)}
+                    onCatalog={() => showOverview("catalog")}
                   >
                     <TablePane
                       table={table}
@@ -287,6 +317,10 @@ function DatabaseSession({ userId }: { userId: string }) {
                       onTable={setSelection}
                     />
                   </TablePaneBoundary>
+                ) : overview === "model" ? (
+                  <ConceptualPane tables={tables} onTable={setSelection} />
+                ) : overview === "coverage" ? (
+                  <SiteCoveragePane tables={tables} onTable={setSelection} />
                 ) : (
                   <CatalogPane catalog={catalog.data} onTable={setSelection} />
                 )}
@@ -330,7 +364,7 @@ function CatalogPane({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Tabella</TableHead>
+            <TableHead>Archivio e ruolo</TableHead>
             <TableHead>Righe stimate</TableHead>
             <TableHead>Dimensione</TableHead>
             <TableHead>Colonne</TableHead>
@@ -338,27 +372,42 @@ function CatalogPane({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {catalog.tables.map((table) => (
-            <TableRow key={table.name}>
-              <TableCell>
-                <button className="db-link" onClick={() => onTable(table.name)}>
-                  {table.name}
-                </button>
+          {tableGroups(catalog.tables).flatMap((group) => [
+            <TableRow key={`domain:${group.id}`} className="db-domain-row">
+              <TableCell colSpan={5}>
+                <strong>{group.label}</strong> · {group.description}
               </TableCell>
-              <TableCell>
-                {table.estimatedRows === null
-                  ? "Non disponibile"
-                  : number(table.estimatedRows)}
-              </TableCell>
-              <TableCell>{size(table.bytes)}</TableCell>
-              <TableCell>{table.columns.length}</TableCell>
-              <TableCell>
-                {table.issues.length
-                  ? table.issues.join("; ")
-                  : "Nessuna difformità di presenza/nullabilità"}
-              </TableCell>
-            </TableRow>
-          ))}
+            </TableRow>,
+            ...group.tables.map((table) => (
+              <TableRow key={table.name}>
+                <TableCell>
+                  <button
+                    className="db-link"
+                    onClick={() => onTable(table.name)}
+                  >
+                    {tableMeanings[table.name]?.label ?? table.name}
+                  </button>
+                  <code className="db-technical">{table.name}</code>
+                  <span>
+                    {kindLabels[tableMeanings[table.name]?.kind ?? ""] ??
+                      "Da classificare"}
+                  </span>
+                </TableCell>
+                <TableCell>
+                  {table.estimatedRows === null
+                    ? "Non disponibile"
+                    : number(table.estimatedRows)}
+                </TableCell>
+                <TableCell>{size(table.bytes)}</TableCell>
+                <TableCell>{table.columns.length}</TableCell>
+                <TableCell>
+                  {table.issues.length
+                    ? table.issues.join("; ")
+                    : "Nessuna difformità di presenza/nullabilità"}
+                </TableCell>
+              </TableRow>
+            )),
+          ])}
         </TableBody>
       </Table>
       <p className="db-note">
@@ -453,6 +502,7 @@ function TablePane({
       <h2>
         {table.schema}.{table.name}
       </h2>
+      <TableMeaning table={table} />
       {table.issues.map((issue) => (
         <Message key={issue} error>
           {issue}

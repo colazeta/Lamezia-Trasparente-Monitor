@@ -5,6 +5,7 @@ import {
   screen,
   waitFor,
   cleanup,
+  within,
 } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Router } from "wouter";
@@ -88,7 +89,10 @@ afterEach(() => {
 });
 
 describe("private database console", () => {
-  function navigationResponses(malformed = false) {
+  function navigationResponses(
+    malformed = false,
+    extraTables: typeof catalog.tables = [],
+  ) {
     const parent = { ...catalog.tables[0], name: "parents" };
     const child = {
       ...catalog.tables[0],
@@ -109,7 +113,7 @@ describe("private database console", () => {
         new Response(
           JSON.stringify(
             String(url).endsWith("/catalog")
-              ? { ...catalog, tables: [child, parent] }
+              ? { ...catalog, tables: [child, parent, ...extraTables] }
               : {
                   table: "categories",
                   rows: [
@@ -130,7 +134,7 @@ describe("private database console", () => {
     navigationResponses();
     view();
     await screen.findByText("Catalogo e controlli", { selector: "h2" });
-    fireEvent.click(screen.getAllByRole("button", { name: "categories" })[0]);
+    fireEvent.click(screen.getAllByRole("button", { name: /categories/ })[0]);
     expect(await screen.findByText("Example")).toBeVisible();
     fireEvent.click(screen.getByRole("button", { name: "Apri", exact: true }));
     expect(await screen.findByRole("dialog")).toHaveTextContent(
@@ -166,7 +170,7 @@ describe("private database console", () => {
       navigationResponses(true);
       view();
       await screen.findByText("Catalogo e controlli", { selector: "h2" });
-      fireEvent.click(screen.getAllByRole("button", { name: "categories" })[0]);
+      fireEvent.click(screen.getAllByRole("button", { name: /categories/ })[0]);
       expect(await screen.findByRole("alert")).toHaveTextContent(
         "Impossibile visualizzare questa tabella",
       );
@@ -187,6 +191,70 @@ describe("private database console", () => {
       log.mockRestore();
     }
   });
+  it("searches concepts, keeps unknown tables visible and links the model to physical records", async () => {
+    navigationResponses(false, [
+      { ...catalog.tables[0], name: "attuazione_pnrr_projects" },
+    ]);
+    view();
+    await screen.findByRole("heading", { name: "Catalogo e controlli" });
+    const navigation = within(
+      screen.getByRole("navigation", { name: "Tabelle del database" }),
+    );
+    expect(navigation.getByRole("button", { name: "parents" })).toBeVisible();
+    fireEvent.change(screen.getByLabelText("Tabelle di test"), {
+      target: { value: "Progetto pubblico" },
+    });
+    expect(
+      navigation.getByRole("button", { name: /attuazione_pnrr_projects/ }),
+    ).toBeVisible();
+    expect(navigation.queryByRole("button", { name: /categories/ })).toBeNull();
+    fireEvent.click(
+      navigation.getByRole("button", { name: "Modello concettuale" }),
+    );
+    const model = within(
+      screen.getByRole("region", { name: "Modello concettuale" }),
+    );
+    expect(model.getByText(/CUP normalizzato e validato/)).toBeVisible();
+    expect(model.getAllByText("Da realizzare").length).toBeGreaterThan(0);
+    fireEvent.click(
+      model.getByRole("button", { name: "Progetti dalla fonte comunale" }),
+    );
+    expect(
+      await screen.findByRole("heading", {
+        name: "public.attuazione_pnrr_projects",
+      }),
+    ).toBeVisible();
+    expect(screen.getByText(/Una riga rappresenta:/)).toBeVisible();
+  });
+
+  it("shows file-only content and labels mappings without pretending the records are imported", async () => {
+    navigationResponses();
+    view();
+    await screen.findByRole("heading", { name: "Catalogo e controlli" });
+    fireEvent.click(screen.getByRole("button", { name: "Sito e copertura" }));
+    const coverage = within(
+      screen.getByRole("region", { name: "Sito e copertura" }),
+    );
+    expect(
+      coverage.getByText(/non misura in tempo reale il popolamento/),
+    ).toBeVisible();
+    fireEvent.click(
+      coverage.getByRole("button", {
+        name: "Solo file senza tabella dedicata",
+      }),
+    );
+    expect(
+      coverage.getAllByText("File; nessuna tabella dedicata").length,
+    ).toBeGreaterThan(0);
+    expect(coverage.queryByText("API e file")).toBeNull();
+    fireEvent.change(coverage.getByLabelText("Cerca una sezione del sito"), {
+      target: { value: "non-esiste" },
+    });
+    expect(
+      coverage.getByText("Nessuna sezione corrisponde al filtro."),
+    ).toBeVisible();
+  });
+
   it("requires sign-in and makes no data request before authentication", () => {
     auth.user = null;
     view();
@@ -227,7 +295,7 @@ describe("private database console", () => {
     );
     const component = view();
     expect(await screen.findByText("Non disponibile")).toBeTruthy();
-    fireEvent.click(screen.getAllByRole("button", { name: "categories" })[0]);
+    fireEvent.click(screen.getAllByRole("button", { name: /categories/ })[0]);
     expect(
       await screen.findByText("Questa tabella non contiene record."),
     ).toBeTruthy();
