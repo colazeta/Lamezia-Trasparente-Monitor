@@ -18,6 +18,10 @@ import router from "./routes";
 import changeSentinelRouter from "./routes/changeSentinel";
 import mcpRouter from "./routes/mcp";
 import { logger } from "./lib/logger";
+import { getMigrationHealth } from "./lib/migrationStatus";
+import { sourceSnapshotStartup } from "./lib/sourceSnapshotRuntime";
+import { createOperationalHealthRouter } from "./routes/operationalHealth";
+import { requireClerkConfiguration } from "./middlewares/requireClerkConfiguration";
 
 const app: Express = express();
 
@@ -48,6 +52,16 @@ app.get("/api/healthz", (_req: Request, res: Response) => {
   res.json(data);
 });
 
+// Operational readiness must remain observable while private auth is missing.
+app.use(
+  "/api/healthz",
+  createOperationalHealthRouter({
+    migrations: getMigrationHealth,
+    snapshots: sourceSnapshotStartup.getState,
+    logError: () => logger.error("Failed to read database migration readiness"),
+  }),
+);
+
 // Clerk proxy must be before body parsers (streams raw bytes)
 app.use(CLERK_PROXY_PATH, clerkProxyMiddleware());
 
@@ -67,6 +81,7 @@ app.use("/api", changeSentinelRouter);
 app.use("/api/mcp", mcpRouter);
 
 // Clerk session middleware — resolves key from host for multi-domain support
+app.use(requireClerkConfiguration);
 app.use(
   clerkMiddleware((req) => ({
     publishableKey: publishableKeyFromHost(
@@ -78,14 +93,12 @@ app.use(
 
 app.use("/api", router);
 
-app.use(
-  (err: unknown, req: Request, res: Response, _next: NextFunction) => {
-    req.log?.error({ err }, "Unhandled request error");
-    if (res.headersSent) {
-      return;
-    }
-    res.status(500).json({ error: "Errore interno del server" });
-  },
-);
+app.use((err: unknown, req: Request, res: Response, _next: NextFunction) => {
+  req.log?.error({ err }, "Unhandled request error");
+  if (res.headersSent) {
+    return;
+  }
+  res.status(500).json({ error: "Errore interno del server" });
+});
 
 export default app;

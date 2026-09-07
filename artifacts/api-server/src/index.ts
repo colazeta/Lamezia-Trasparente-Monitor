@@ -4,6 +4,7 @@ import { startIngestionScheduler } from "./lib/ingestion";
 import { resolveEmbeddedIngestionSchedulerConfig } from "./lib/ingestionSchedulerConfig";
 import { verifySchema } from "./lib/schemaCheck";
 import { runMigrations, MigrationError } from "@workspace/db";
+import { sourceSnapshotStartup } from "./lib/sourceSnapshotRuntime";
 import {
   logMigrationStatus,
   alertMigrationProblem,
@@ -69,7 +70,16 @@ app.listen(port, (err) => {
       }
       return false;
     })
-    .then((ok) => {
+    .then(async (ok) => {
+      const snapshots = await sourceSnapshotStartup.start(ok);
+      if (snapshots.status === "failed") {
+        logger.error(
+          { snapshots },
+          "Source snapshot startup reconciliation failed",
+        );
+      } else {
+        logger.info({ snapshots }, "Source snapshot startup checkpoint");
+      }
       if (ok) {
         const schedulerConfig = resolveEmbeddedIngestionSchedulerConfig();
         if (schedulerConfig.enabled) {

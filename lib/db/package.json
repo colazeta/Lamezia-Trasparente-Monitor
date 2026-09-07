@@ -6,7 +6,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./schema": "./src/schema/index.ts",
-    "./inspection": "./src/inspection.ts"
+    "./inspection": "./src/inspection.ts",
+    "./source-snapshots": "./src/sourceSnapshotRunner.ts"
   },
   "scripts": {
     "audit:live": "tsx ./src/inspectionAudit.ts",
@@ -19,7 +20,7 @@
     "seed": "tsx ./src/seed.ts",
     "import:ltceds-pilot": "tsx ./src/ltcedsPilotImport.ts",
     "import:crime-monitor": "tsx ./src/crimeMonitorIngestion.ts",
-    "test": "tsx --test ./src/crimeEvents.test.ts ./src/ltcedsPilotImportCore.test.ts ./src/crimeMonitorIngestionCore.test.ts ./src/schemaMigrationConvergence.test.ts ./src/legacySchemaCompatibility.test.ts ./src/canonicalIdentity.test.ts ./src/sourceSnapshotPersistence.test.ts && pnpm run check-migrations",
+    "test": "tsx --test ./src/crimeEvents.test.ts ./src/ltcedsPilotImportCore.test.ts ./src/crimeMonitorIngestionCore.test.ts ./src/schemaMigrationConvergence.test.ts ./src/legacySchemaCompatibility.test.ts ./src/canonicalIdentity.test.ts ./src/sourceSnapshotPersistence.test.ts ./src/sourceSnapshotRunner.test.ts && pnpm run check-migrations",
     "import:source-snapshots": "node --import tsx ./src/sourceSnapshotImport.ts"
   },
   "dependencies": {
