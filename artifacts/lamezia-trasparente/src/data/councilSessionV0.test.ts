@@ -197,7 +197,7 @@ describe("councilSessionV0", () => {
   });
 
   it("publishes source-traceable records for both council and commission notices", () => {
-    expect(councilSessionV0ReviewedRecords).toHaveLength(5);
+    expect(councilSessionV0ReviewedRecords).toHaveLength(13);
     expect(
       new Set(councilSessionV0ReviewedRecords.map((item) => item.kind)),
     ).toEqual(new Set(["council", "commission"]));
@@ -376,6 +376,101 @@ describe("councilSessionV0", () => {
       expect(session.dataLimits.value?.join(" ")).toMatch(
         /sede non è indicata.*non viene inferita/i,
       );
+    }
+  });
+
+  it("expands the September IV Commission calendars without inferring occurrence", () => {
+    const earlySessions = councilSessionV0ReviewedRecords.filter(
+      (session) => session.provenance?.publicationNumber === "2026/2840",
+    );
+    const laterSessions = councilSessionV0ReviewedRecords.filter(
+      (session) => session.provenance?.publicationNumber === "2026/2860",
+    );
+
+    expect(earlySessions.map((session) => session.scheduledAt.value)).toEqual([
+      "2026-09-04T11:00:00+02:00",
+      "2026-09-03T11:00:00+02:00",
+    ]);
+    expect(laterSessions.map((session) => session.scheduledAt.value)).toEqual([
+      "2026-09-11T11:00:00+02:00",
+      "2026-09-10T11:00:00+02:00",
+      "2026-09-09T11:00:00+02:00",
+      "2026-09-08T12:00:00+02:00",
+    ]);
+
+    for (const session of [...earlySessions, ...laterSessions]) {
+      expect(session.agenda.value).toEqual([
+        "Regolamento comunale per la promozione della Street Art.",
+      ]);
+      expect(session.agenda.sourceStatus).toBe("verificato");
+      expect(session.scheduledAt.sourceStatus).toBe("verificato");
+      expect(session.sessionStatus.value).toBe("non_verificata");
+      expect(session.contextResearch.status).toBe("checked_no_match");
+      expect(session.contextResearch.articles).toEqual([]);
+      expect(session.contextResearch.media).toEqual([]);
+      expect(session.contextResearch.searchNote).toMatch(/Parallel Search/i);
+      expect(session.dataLimits.value?.join(" ")).toMatch(
+        /sede non è indicata.*non viene inferita/i,
+      );
+    }
+
+    expect(earlySessions[0]?.provenance).toEqual(
+      expect.objectContaining({
+        sourceContentHash:
+          "29b8c30dc8fcfe6e73229bf4b46917876ef46dd3dcc7be4b3a6d277a4e220efc",
+        documentSha256:
+          "365976826d174821dfcd69c4c02710fcc8eb324c24ccefe2549d3fce932abd0b",
+        embeddedDocumentSha256:
+          "d642b7171bc1494ffcdb500eb3e30fd88883fbb166f3ebcd80da83a03d32d768",
+      }),
+    );
+    expect(laterSessions[0]?.provenance).toEqual(
+      expect.objectContaining({
+        documentUrl: expect.stringContaining("2026_2860_1_X"),
+        documentSha256:
+          "dee314eb1f7e9133848be4b48c1c0b5e06ddd60371a92acc40ef9e290a62e411",
+      }),
+    );
+  });
+
+  it("publishes the September VI and joint III-IV Commission notices as separate sessions", () => {
+    const commissionVi = councilSessionV0ReviewedRecords.find(
+      (session) => session.provenance?.publicationNumber === "2026/2859",
+    );
+    const jointSession = councilSessionV0ReviewedRecords.find(
+      (session) => session.provenance?.publicationNumber === "2026/2861",
+    );
+
+    expect(commissionVi?.scheduledAt.value).toBe("2026-09-08T11:00:00+02:00");
+    expect(commissionVi?.agenda.value).toEqual([
+      "Denominazione comunale d'origine (De.Co.).",
+    ]);
+    expect(commissionVi?.provenance).toEqual(
+      expect.objectContaining({
+        documentUrl: expect.stringContaining("2026_2859_1_X"),
+        documentSha256:
+          "a1dad36522921833ac71b994a73032d3454227d0a2c00f57156a8d7059d94baf",
+      }),
+    );
+
+    expect(jointSession?.scheduledAt.value).toBe("2026-09-07T12:00:00+02:00");
+    expect(jointSession?.title.value).toMatch(/III e IV Commissioni/i);
+    expect(jointSession?.agenda.value).toEqual([
+      "Progetto Sport e Disabilità. Audizione dell'assessore al ramo Gennaro Gianturco.",
+    ]);
+    expect(jointSession?.provenance).toEqual(
+      expect.objectContaining({
+        documentUrl: expect.stringContaining("2026_2861_1_X"),
+        documentSha256:
+          "feb500c847880bf03ab1cd09190b961828f5b3873d60bea800e93367a3c74468",
+      }),
+    );
+
+    for (const session of [commissionVi, jointSession]) {
+      expect(session?.sessionStatus.value).toBe("non_verificata");
+      expect(session?.contextResearch.status).toBe("checked_no_match");
+      expect(session?.contextResearch.articles).toEqual([]);
+      expect(session?.contextResearch.media).toEqual([]);
     }
   });
 

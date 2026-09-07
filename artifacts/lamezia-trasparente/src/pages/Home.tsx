@@ -36,10 +36,7 @@ import {
 } from "@/data/alboPublicRun";
 import { ALBO_OPERATIONAL_STATUS } from "@/data/alboStatus";
 import { councilSessionV0ReviewedRecords } from "@/data/councilSessionV0Reviewed";
-import {
-  councilSessionV0StatusLabels,
-  type CouncilSessionV0,
-} from "@/data/councilSessionV0";
+import { type CouncilSessionV0 } from "@/data/councilSessionV0";
 import { asApiList } from "@/lib/apiList";
 import { PUBLIC_NUMBER_PLACEHOLDER } from "@/lib/publicNumbers";
 
@@ -553,7 +550,7 @@ export function HomeInstitutionalSessions() {
           />
           <InstitutionalSessionsHomeCard
             title="Commissioni consiliari"
-            description="Due sedute della II Commissione e due della VI Commissione con date, orari e ordine del giorno controllati nelle rispettive convocazioni ufficiali."
+            description="Sedute delle Commissioni con date e orari controllati nelle rispettive convocazioni ufficiali."
             icon={CalendarClock}
             sessions={commissionHomeSessions}
           />
@@ -622,49 +619,13 @@ function InstitutionalSessionsHomeCard({
       <CardContent className="flex flex-1 flex-col p-0">
         <div className="divide-y divide-border">
           {sessions.map((session) => {
-            const agendaCount = session.agenda.value?.length ?? 0;
             const contextArticleCount = session.contextResearch.articles.length;
             const contextMediaCount = session.contextResearch.media.length;
-            const contextCountSummary = [
-              contextArticleCount > 0
-                ? `${contextArticleCount} ${contextArticleCount === 1 ? "articolo" : "articoli"}`
-                : null,
-              contextMediaCount > 0
-                ? `${contextMediaCount} ${contextMediaCount === 1 ? "video" : "video"}`
-                : null,
-            ]
-              .filter(Boolean)
-              .join(" · ");
             const contextStatusSummary =
-              contextCountSummary ||
-              (session.contextResearch.status === "checked_no_match"
-                ? "Ricerca eseguita · nessun collegamento preciso"
-                : "Ricerca da completare");
-            const sameSessionCount = session.contextResearch.articles.filter(
-              (article) => article.relationship === "same_session",
-            ).length;
-            const possibleSessionCount =
-              session.contextResearch.articles.filter(
-                (article) => article.relationship === "possible_same_session",
-              ).length;
-            const agendaItemCount = session.contextResearch.articles.filter(
-              (article) => article.relationship === "agenda_item",
-            ).length;
-            const contextRelationshipSummary = [
-              sameSessionCount > 0 ? `${sameSessionCount} stessa seduta` : null,
-              possibleSessionCount > 0
-                ? `${possibleSessionCount} ${possibleSessionCount === 1 ? "possibile" : "possibili"}`
-                : null,
-              agendaItemCount > 0
-                ? `${agendaItemCount} sui temi in agenda`
-                : null,
-            ]
-              .filter(Boolean)
-              .join(" · ");
-            const sessionStatusSummary =
-              councilSessionV0StatusLabels[
-                session.sessionStatus.value ?? "non_verificata"
-              ];
+              session.contextResearch.status === "not_run"
+                ? "Ricerca contestuale da completare"
+                : "Ricerca contestuale eseguita";
+            const contextCountSummary = `${contextArticleCount} ${contextArticleCount === 1 ? "articolo" : "articoli"} · ${contextMediaCount} video`;
             return (
               <Link
                 key={session.id}
@@ -681,9 +642,7 @@ function InstitutionalSessionsHomeCard({
                       {formatSessionDate(session.scheduledAt.value)}
                     </p>
                     <p className="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">
-                      {agendaCount > 0
-                        ? `${agendaCount} punti all'ordine del giorno · ${sessionStatusSummary}`
-                        : `Ordine del giorno da verificare · ${sessionStatusSummary}`}
+                      {contextStatusSummary}
                     </p>
                     <p className="mt-1 flex items-center gap-1.5 text-xs font-semibold text-primary">
                       {contextMediaCount > 0 ? (
@@ -697,10 +656,7 @@ function InstitutionalSessionsHomeCard({
                           aria-hidden="true"
                         />
                       )}
-                      {contextStatusSummary}
-                      {contextArticleCount > 0
-                        ? ` · ${contextRelationshipSummary}`
-                        : ""}
+                      {contextCountSummary}
                     </p>
                   </div>
                   <ArrowRight
