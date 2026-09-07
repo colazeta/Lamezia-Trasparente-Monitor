@@ -1,0 +1,16 @@
+{
+  "expectedModel": "Drizzle schema captured with drizzle-kit 0.31.10 into 0019_snapshot.json",
+  "observedAt": "2026-09-07T17:47:58.557Z",
+  "tableCount": 64,
+  "defaultDifferences": [
+    {
+      "table": "publications",
+      "column": "brief_manual",
+      "expected": false,
+      "actual": null
+    }
+  ],
+  "primaryKeyColumnDifferences": [],
+  "foreignKeyTargetDifferences": [],
+  "limitation": "Default normalisation checks simple casts/literals; CHECK expressions, index predicates and all FK action semantics are not certified equivalent."
+}

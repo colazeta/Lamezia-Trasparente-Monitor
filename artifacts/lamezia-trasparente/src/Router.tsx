@@ -67,6 +67,7 @@ const Statistics = lazyNamed(() => import("./pages/Statistics"), "Statistics");
 const Subscriptions = lazyNamed(() => import("./pages/Subscriptions"), "Subscriptions");
 const Guida = lazyNamed(() => import("./pages/Guida"), "Guida");
 const Redazione = lazyNamed(() => import("./pages/Redazione"), "Redazione");
+const AdminDatabase = lazyNamed(() => import("./pages/AdminDatabase"), "AdminDatabase");
 const NotFound = lazy(() => import("./pages/not-found"));
 import { PageMeta } from "./components/seo/PageMeta";
 import { PublicErrorBoundary } from "./components/PublicErrorBoundary";
@@ -148,6 +149,7 @@ export function Router() {
       <Route path="/redazione" component={RedazioneRoute} />
       <Route path="/redazione/*" component={RedazioneRoute} />
 
+      <Route path="/admin/database"><Suspense fallback={<RouteLoading />}><AdminDatabase /></Suspense></Route>
       {/* Legacy /admin/* redirects to /redazione */}
       <Route path="/admin" component={AdminRedirect} />
       <Route path="/admin/*" component={AdminRedirect} />

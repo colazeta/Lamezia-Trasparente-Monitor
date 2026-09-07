@@ -44,6 +44,8 @@ import type {
   Contract,
   ContractAnalytics,
   ContractStoryline,
+  DatabaseInspectionCatalog,
+  DatabaseInspectionPage,
   DeliberaVotes,
   DemographicHouseholdsResponse,
   Error,
@@ -54,6 +56,8 @@ import type {
   FundamentalActCreateInput,
   FundamentalActUpdateInput,
   GetContractsAnalyticsParams,
+  GetDatabaseInspectionRecordParams,
+  GetDatabaseInspectionRowsParams,
   GetDemographicHouseholdsParams,
   GetPublicationsMacrotemiParams,
   GetPublicationsTimelineParams,
@@ -150,6 +154,264 @@ type AwaitedInput<T> = PromiseLike<T> | T;
 
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
+
+
+export const getGetDatabaseInspectionCatalogUrl = () => {
+
+
+
+
+  return `/api/admin/database/catalog`
+}
+
+/**
+ * Private no-store metadata. Row estimates are nullable and are not exact counts. This operation does not certify complete ingestion or schema equivalence.
+ * @summary Inspect the live PostgreSQL catalog as the sole database owner
+ */
+export const getDatabaseInspectionCatalog = async ( options?: RequestInit): Promise<DatabaseInspectionCatalog> => {
+
+  return customFetch<DatabaseInspectionCatalog>(getGetDatabaseInspectionCatalogUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetDatabaseInspectionCatalogQueryKey = () => {
+    return [
+    `/api/admin/database/catalog`
+    ] as const;
+    }
+
+
+export const getGetDatabaseInspectionCatalogQueryOptions = <TData = Awaited<ReturnType<typeof getDatabaseInspectionCatalog>>, TError = ErrorType<void>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getDatabaseInspectionCatalog>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetDatabaseInspectionCatalogQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getDatabaseInspectionCatalog>>> = ({ signal }) => getDatabaseInspectionCatalog({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getDatabaseInspectionCatalog>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetDatabaseInspectionCatalogQueryResult = NonNullable<Awaited<ReturnType<typeof getDatabaseInspectionCatalog>>>
+export type GetDatabaseInspectionCatalogQueryError = ErrorType<void>
+
+
+/**
+ * @summary Inspect the live PostgreSQL catalog as the sole database owner
+ */
+
+export function useGetDatabaseInspectionCatalog<TData = Awaited<ReturnType<typeof getDatabaseInspectionCatalog>>, TError = ErrorType<void>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getDatabaseInspectionCatalog>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetDatabaseInspectionCatalogQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetDatabaseInspectionRowsUrl = (name: string,
+    params?: GetDatabaseInspectionRowsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/admin/database/tables/${name}?${stringifiedParams}` : `/api/admin/database/tables/${name}`
+}
+
+/**
+ * Repeatable-read read-only transaction. Values are text or null; list cells are limited to 2048 characters, with truncation declared. Sensitive credential columns are redacted. Search values are parameterised; table and column names are allowlisted. Query timeout is three seconds per statement.
+ * @summary Read a bounded page from a registered application table
+ */
+export const getDatabaseInspectionRows = async (name: string,
+    params?: GetDatabaseInspectionRowsParams, options?: RequestInit): Promise<DatabaseInspectionPage> => {
+
+  return customFetch<DatabaseInspectionPage>(getGetDatabaseInspectionRowsUrl(name,params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetDatabaseInspectionRowsQueryKey = (name: string,
+    params?: GetDatabaseInspectionRowsParams,) => {
+    return [
+    `/api/admin/database/tables/${name}`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetDatabaseInspectionRowsQueryOptions = <TData = Awaited<ReturnType<typeof getDatabaseInspectionRows>>, TError = ErrorType<void>>(name: string,
+    params?: GetDatabaseInspectionRowsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getDatabaseInspectionRows>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetDatabaseInspectionRowsQueryKey(name,params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getDatabaseInspectionRows>>> = ({ signal }) => getDatabaseInspectionRows(name,params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(name), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getDatabaseInspectionRows>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetDatabaseInspectionRowsQueryResult = NonNullable<Awaited<ReturnType<typeof getDatabaseInspectionRows>>>
+export type GetDatabaseInspectionRowsQueryError = ErrorType<void>
+
+
+/**
+ * @summary Read a bounded page from a registered application table
+ */
+
+export function useGetDatabaseInspectionRows<TData = Awaited<ReturnType<typeof getDatabaseInspectionRows>>, TError = ErrorType<void>>(
+ name: string,
+    params?: GetDatabaseInspectionRowsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getDatabaseInspectionRows>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetDatabaseInspectionRowsQueryOptions(name,params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetDatabaseInspectionRecordUrl = (name: string,
+    params: GetDatabaseInspectionRecordParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/admin/database/tables/${name}/record?${stringifiedParams}` : `/api/admin/database/tables/${name}/record`
+}
+
+/**
+ * The key is a JSON object mapping every primary-key column to its textual value. Each key value is limited to 512 characters. Detail cells are limited to 65536 characters with explicit truncation. A missing record returns an empty rows array.
+ * @summary Read one internal record by its complete primary key
+ */
+export const getDatabaseInspectionRecord = async (name: string,
+    params: GetDatabaseInspectionRecordParams, options?: RequestInit): Promise<DatabaseInspectionPage> => {
+
+  return customFetch<DatabaseInspectionPage>(getGetDatabaseInspectionRecordUrl(name,params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetDatabaseInspectionRecordQueryKey = (name: string,
+    params?: GetDatabaseInspectionRecordParams,) => {
+    return [
+    `/api/admin/database/tables/${name}/record`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetDatabaseInspectionRecordQueryOptions = <TData = Awaited<ReturnType<typeof getDatabaseInspectionRecord>>, TError = ErrorType<void>>(name: string,
+    params: GetDatabaseInspectionRecordParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getDatabaseInspectionRecord>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetDatabaseInspectionRecordQueryKey(name,params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getDatabaseInspectionRecord>>> = ({ signal }) => getDatabaseInspectionRecord(name,params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(name), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getDatabaseInspectionRecord>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetDatabaseInspectionRecordQueryResult = NonNullable<Awaited<ReturnType<typeof getDatabaseInspectionRecord>>>
+export type GetDatabaseInspectionRecordQueryError = ErrorType<void>
+
+
+/**
+ * @summary Read one internal record by its complete primary key
+ */
+
+export function useGetDatabaseInspectionRecord<TData = Awaited<ReturnType<typeof getDatabaseInspectionRecord>>, TError = ErrorType<void>>(
+ name: string,
+    params: GetDatabaseInspectionRecordParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getDatabaseInspectionRecord>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetDatabaseInspectionRecordQueryOptions(name,params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
 
 
 
