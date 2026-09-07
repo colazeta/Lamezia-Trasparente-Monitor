@@ -3,6 +3,7 @@ import { applyScoutingUpdates } from "./proposalScoutingUpdates";
 import { applyScoutingUpdates20260904 } from "./proposalScoutingUpdates20260904";
 import { applyScoutingUpdates20260905 } from "./proposalScoutingUpdates20260905";
 import { applyScoutingUpdates20260906 } from "./proposalScoutingUpdates20260906";
+import { applyScoutingUpdates20260907 } from "./proposalScoutingUpdates20260907";
 import { SCOUTED_PUBLIC_PROPOSALS } from "./propostePubblicheScouting";
 import { SCOUTED_PUBLIC_PROPOSALS_20260903 } from "./propostePubblicheScouting20260903";
 import { SCOUTED_PUBLIC_PROPOSALS_20260904 } from "./propostePubblicheScouting20260904";
@@ -140,10 +141,19 @@ const UPDATED_SCOUTED_PUBLIC_PROPOSALS_20260904_20260906 =
 const UPDATED_SCOUTED_PUBLIC_PROPOSALS_20260906 =
   SCOUTED_PUBLIC_PROPOSALS_20260906.map(applyScoutingUpdates20260906);
 
+const UPDATED_EXISTING_PUBLIC_PROPOSALS_20260907 =
+  UPDATED_EXISTING_PUBLIC_PROPOSALS_20260906.map(applyScoutingUpdates20260907);
+const UPDATED_SCOUTED_PUBLIC_PROPOSALS_20260904_20260907 =
+  UPDATED_SCOUTED_PUBLIC_PROPOSALS_20260904_20260906.map(
+    applyScoutingUpdates20260907,
+  );
+const UPDATED_SCOUTED_PUBLIC_PROPOSALS_20260906_20260907 =
+  UPDATED_SCOUTED_PUBLIC_PROPOSALS_20260906.map(applyScoutingUpdates20260907);
+
 export const PUBLIC_PROPOSALS = [
-  ...UPDATED_EXISTING_PUBLIC_PROPOSALS_20260906,
-  ...UPDATED_SCOUTED_PUBLIC_PROPOSALS_20260904_20260906,
-  ...UPDATED_SCOUTED_PUBLIC_PROPOSALS_20260906,
+  ...UPDATED_EXISTING_PUBLIC_PROPOSALS_20260907,
+  ...UPDATED_SCOUTED_PUBLIC_PROPOSALS_20260904_20260907,
+  ...UPDATED_SCOUTED_PUBLIC_PROPOSALS_20260906_20260907,
 ] as const satisfies readonly core.PublicProposal[];
 
 export function getProposalThemes(
