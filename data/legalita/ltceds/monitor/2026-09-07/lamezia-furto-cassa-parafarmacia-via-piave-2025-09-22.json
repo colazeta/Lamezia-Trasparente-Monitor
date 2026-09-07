@@ -1,0 +1,102 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-furto-cassa-parafarmacia-via-piave-2025-09-22",
+  "discovered_at": "2026-09-07T17:18:11+02:00",
+  "updated_at": "2026-09-07T17:18:11+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Furto della cassa automatica in una parafarmacia di via Piave",
+  "temporal": {
+    "start": "2025-09-22",
+    "end": "2025-09-22",
+    "edtf": "2025-09-22",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:lametino:2025-09-22:furto-parafarmacia-via-piave",
+      "source_type": "press_secondary",
+      "provider": "il Lametino.it",
+      "title": "Lamezia, rubata cassa automatica in una parafarmacia: cresce allarme sicurezza in città",
+      "url": "https://www.lametino.it/cronaca/lamezia-rubata-cassa-automatica-in-una-parafarmacia-cresce-allarme-sicurezza-in-citta.html",
+      "published_at": "2025-09-22T00:00:00+02:00",
+      "retrieved_at": "2026-09-07T17:18:11+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:quicosenza:2025-09-22:furto-parafarmacia-via-piave",
+      "source_type": "press_secondary",
+      "provider": "QuiCosenza",
+      "title": "Rubata la cassa automatica in una parafarmacia: furti in aumento a Lamezia",
+      "url": "https://quicosenza.it/news/rubata-la-cassa-automatica-in-una-parafarmacia-furti-in-aumento-a-lamezia/",
+      "published_at": "2025-09-22T00:00:00+02:00",
+      "retrieved_at": "2026-09-07T17:18:11+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lanovitaonline:2025-09-22:furto-parafarmacia-via-piave",
+      "source_type": "press_secondary",
+      "provider": "La Novità Online",
+      "title": "Furto all’alba in una parafarmacia di Lamezia Terme",
+      "url": "https://lanovitaonline.it/furto-allalba-in-una-parafarmacia-di-lamezia-terme/",
+      "published_at": "2025-09-22T00:00:00+02:00",
+      "retrieved_at": "2026-09-07T17:18:11+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:furto",
+      "classification_source_key": "press:lametino:2025-09-22:furto-parafarmacia-via-piave",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "intorno alle 5:30 del 22 settembre 2025 una parafarmacia in via Piave a Lamezia Terme è stata presa di mira da persone non identificate",
+        "secondo le cronache l'ingresso sarebbe stato forzato e l'intera cassa automatica sarebbe stata asportata",
+        "sul posto è intervenuta la Polizia, che ha avviato le indagini"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-piave:parafarmacia-non-identificata",
+      "basis_source_key": "press:lametino:2025-09-22:furto-parafarmacia-via-piave",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Parafarmacia non identificata, via Piave",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
