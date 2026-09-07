@@ -35,9 +35,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { apiUrl, configuredApiBaseUrl } from "@/lib/apiBaseUrl";
+import { databaseAdminDeployment } from "@/lib/databaseAdminDeployment";
 import "./admin-database.css";
 
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
+const adminApiBaseUrl =
+  configuredApiBaseUrl ?? databaseAdminDeployment?.apiBaseUrl ?? null;
 const number = (value: number) => value.toLocaleString("it-IT");
 const size = (bytes: number) => `${number(Math.round(bytes / 1024))} KiB`;
 const shown = (value: string | null) =>
@@ -50,7 +53,8 @@ function useDatabaseRequest() {
     if (!token) throw new Error("La sessione è scaduta. Accedi nuovamente.");
     const response = await fetch(
       apiUrl(
-        `${configuredApiBaseUrl ? "" : basePath}/api/admin/database${path}`,
+        `${adminApiBaseUrl ? "" : basePath}/api/admin/database${path}`,
+        adminApiBaseUrl,
       ),
       {
         signal,
