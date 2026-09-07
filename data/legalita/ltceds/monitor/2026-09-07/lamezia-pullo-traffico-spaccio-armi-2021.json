@@ -1,0 +1,151 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-pullo-traffico-spaccio-armi-2021",
+  "discovered_at": "2026-09-07T04:48:37+02:00",
+  "updated_at": "2026-09-07T04:48:37+02:00",
+  "record_status": "verified_source",
+  "event_form": "course_of_conduct",
+  "title": "Rete di traffico e spaccio di stupefacenti contestata nell'operazione Pullo a Lamezia Terme",
+  "temporal": {
+    "start": "2021",
+    "end": "2021",
+    "edtf": "2021",
+    "precision": "year"
+  },
+  "sources": [
+    {
+      "source_key": "law:polizia-stato:2026-03-12:operazione-pullo-lamezia",
+      "source_type": "law_enforcement_primary",
+      "provider": "Polizia di Stato",
+      "title": "Operazione antidroga \"Pullo\", 21 indagati a Lamezia Terme",
+      "url": "https://www.poliziadistato.it/articolo/operazione-antidroga--pullo---21-indagati-a-lamezia-terme",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T04:48:37+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:calabria-inchieste:2026-03-12:operazione-pullo",
+      "source_type": "press_secondary",
+      "provider": "Calabria Inchieste",
+      "title": "Operazione \"Pullo\": 21 indagati per traffico di droga a Lamezia",
+      "url": "https://www.calabriainchieste.it/2026/03/12/operazione-pullo-21-indagati-per-traffico-di-droga-a-lamezia-video/",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T04:48:37+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2026-03-12:operazione-pullo",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Operazione \"Pullo\" contro traffico di droga a Lamezia e comuni costieri: 21 indagati",
+      "url": "https://www.lametino.it/cronaca/operazione-pullo-contro-traffico-di-droga-a-lamezia-e-comuni-costieri-21-indagati.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T04:48:37+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:traffico-stupefacenti",
+      "classification_source_key": "law:polizia-stato:2026-03-12:operazione-pullo-lamezia",
+      "classification_basis": "source_stated_legal",
+      "legal_reference": null,
+      "attempt_status": "unknown",
+      "situational_context": [
+        "rete ritenuta dedita al traffico di sostanze stupefacenti nell'area lametina",
+        "le indagini svolte nel 2021 hanno incluso sequestri di eroina, cocaina, hashish e marijuana"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:spaccio-stupefacenti",
+      "classification_source_key": "law:polizia-stato:2026-03-12:operazione-pullo-lamezia",
+      "classification_basis": "source_stated_legal",
+      "legal_reference": null,
+      "attempt_status": "unknown",
+      "situational_context": [
+        "attivita di spaccio contestata a vario titolo agli indagati",
+        "fonti secondarie localizzano l'epicentro della rete a Sant'Eufemia e riferiscono attivita anche a Nicastro e Sambiase"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:detenzione-armi-munizionamento",
+      "classification_source_key": "law:polizia-stato:2026-03-12:operazione-pullo-lamezia",
+      "classification_basis": "source_stated_legal",
+      "legal_reference": null,
+      "attempt_status": "unknown",
+      "situational_context": [
+        "per alcuni indagati le fonti riferiscono anche contestazioni relative alla detenzione di armi comuni e munizionamento"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:sant-eufemia",
+      "basis_source_key": "press:calabria-inchieste:2026-03-12:operazione-pullo",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_neighbourhood",
+      "evidence_precision": "neighbourhood",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "unknown",
+      "publication_risk": "unknown",
+      "geometry": null,
+      "place_name": "Sant'Eufemia",
+      "neighbourhood": "Sant'Eufemia",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:nicastro",
+      "basis_source_key": "press:calabria-inchieste:2026-03-12:operazione-pullo",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_neighbourhood",
+      "evidence_precision": "neighbourhood",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "unknown",
+      "publication_risk": "unknown",
+      "geometry": null,
+      "place_name": "Nicastro",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:sambiase",
+      "basis_source_key": "press:calabria-inchieste:2026-03-12:operazione-pullo",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_neighbourhood",
+      "evidence_precision": "neighbourhood",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "unknown",
+      "publication_risk": "unknown",
+      "geometry": null,
+      "place_name": "Sambiase",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    }
+  ]
+}
