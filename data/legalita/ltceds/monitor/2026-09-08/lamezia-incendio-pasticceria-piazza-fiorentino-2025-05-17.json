@@ -1,0 +1,111 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-incendio-pasticceria-piazza-fiorentino-2025-05-17",
+  "discovered_at": "2026-09-08T00:02:23+02:00",
+  "updated_at": "2026-09-08T00:02:23+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Incendio al laboratorio di pasticceria in Piazza Fiorentino",
+  "temporal": {
+    "start": "2025-05-17",
+    "end": "2025-05-17",
+    "edtf": "2025-05-17",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:lameziaterme:2025-05-17:incendi-esercizi-commerciali",
+      "source_type": "press_secondary",
+      "provider": "LameziaTerme.it",
+      "title": "Lamezia. Nella notte incendio in due esercizi commerciali",
+      "url": "https://www.lameziaterme.it/lamezia-nella-notte-incendio-in-due-esercizi-commerciali/",
+      "published_at": null,
+      "retrieved_at": "2026-09-08T00:02:23+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support"
+      ]
+    },
+    {
+      "source_key": "press:nuova-calabria:2025-05-17:incendi-esercizi-commerciali",
+      "source_type": "press_secondary",
+      "provider": "La Nuova Calabria",
+      "title": "Lamezia, in fiamme laboratorio di pasticceria e una parrucchiera",
+      "url": "https://lanuovacalabria.it/lamezia-in-fiamme-laboratorio-di-pasticceria-e-una-parrucchiera",
+      "published_at": "2025-05-17T08:36:00+02:00",
+      "retrieved_at": "2026-09-08T00:02:23+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "agency:ansa:2025-10-24:jocker-incendi-lamezia",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Tre arresti dei carabinieri per due incendi dolosi a Lamezia",
+      "url": "https://www.ansa.it/calabria/notizie/2025/10/24/tre-arresti-dei-carabinieri-per-due-incendi-dolosi-a-lamezia_14bf2850-3b73-4e4f-b9e5-a597f66dfea0.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-08T00:02:23+02:00",
+      "support_roles": [
+        "event_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lamilano:2025-10-27:operazione-joker-lamezia",
+      "source_type": "press_secondary",
+      "provider": "La Milano",
+      "title": "Lamezia Terme, operazione Joker: tre arresti per l'incendio di due attività commerciali",
+      "url": "https://lamilano.it/catanzaro/lamezia-terme/lamezia-terme-operazione-joker-tre-arresti-per-lincendio-di-due-attivita-commerciali/",
+      "published_at": null,
+      "retrieved_at": "2026-09-08T00:02:23+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:danneggiamento-seguito-incendio",
+      "classification_source_key": "press:lamilano:2025-10-27:operazione-joker-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "laboratorio di pasticceria colpito nella notte del 17 maggio 2025",
+        "intervento dei Vigili del Fuoco segnalato alle 02:30",
+        "fiamme su arredi e suppellettili interni con danni materiali",
+        "episodio successivamente ricondotto nell'operazione Joker a due danneggiamenti seguiti da incendio oggetto di misura cautelare"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:piazza-fiorentino:laboratorio-pasticceria",
+      "basis_source_key": "press:lameziaterme:2025-05-17:incendi-esercizi-commerciali",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Laboratorio di pasticceria, Piazza Fiorentino",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
