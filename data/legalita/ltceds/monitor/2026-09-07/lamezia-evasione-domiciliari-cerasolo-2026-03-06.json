@@ -1,0 +1,102 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-evasione-domiciliari-cerasolo-2026-03-06",
+  "discovered_at": "2026-09-07T10:06:13+02:00",
+  "updated_at": "2026-09-07T10:06:13+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Evasione dalla detenzione domiciliare durante un permesso sanitario nel quartiere Cerasolo",
+  "temporal": {
+    "start": "2026-03-06",
+    "end": "2026-03-06",
+    "edtf": "2026-03-06",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "agency:ansa:2026-03-13:evasione-domiciliari-lamezia",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Evadono dai domiciliari, due arresti a Lamezia Terme",
+      "url": "https://www.ansa.it/calabria/notizie/2026/03/13/evadono-dai-domiciliari-due-arresti-a-lamezia-terme_25466791-dfed-4b59-8cde-e2731557c28b.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T10:06:13+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:gazzetta-sud:2026-03-13:evasione-domiciliari-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Evasione dai domiciliari, due arresti a Lamezia",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2026/03/13/evasione-dai-domiciliari-due-arresti-a-lamezia-4f8621eb-6236-44a1-bae4-c684983e8ebe/",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T10:06:13+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-lamezia:2026-03-13:evasione-permesso-sanitario-cerasolo",
+      "source_type": "press_secondary",
+      "provider": "Corriere di Lamezia",
+      "title": "Lamezia, due arresti dei Carabinieri: violazione dei domiciliari ed evasione durante un permesso sanitario",
+      "url": "https://www.corrieredilamezia.it/cronaca/2026_03_13/lamezia-due-arresti-dei-carabinieri-violazione-dei-domiciliari-ed-evasione-durante-un-permesso-sanitario_60031/",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T10:06:13+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:evasione",
+      "classification_source_key": "agency:ansa:2026-03-13:evasione-domiciliari-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "il 6 marzo 2026 la persona sottoposta a detenzione domiciliare aveva ottenuto un permesso per motivi sanitari e non aveva fatto rientro all'abitazione entro l'orario stabilito",
+        "i Carabinieri della Stazione Lamezia Terme Sambiase hanno avviato le ricerche e l'hanno rintracciata nell'abitazione di un familiare nel quartiere Cerasolo",
+        "la persona è stata arrestata per il reato di evasione",
+        "il 7 marzo 2026 il Tribunale di Lamezia Terme ha convalidato l'arresto e ripristinato la misura precedentemente in atto"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:cerasolo:abitazione-familiare",
+      "basis_source_key": "press:corriere-lamezia:2026-03-13:evasione-permesso-sanitario-cerasolo",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_neighbourhood",
+      "evidence_precision": "neighbourhood",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione di un familiare nel quartiere Cerasolo",
+      "neighbourhood": "Cerasolo",
+      "iccs_location_type": null
+    }
+  ]
+}
