@@ -1,0 +1,116 @@
+{
+  "schemaVersion": "lt-database-activation.v1",
+  "environment": "production",
+  "projectId": "empty-cherry-93566793",
+  "branchId": "br-morning-fire-as9l08lf",
+  "database": "neondb",
+  "repositoryCommit": "fe6cb1e23dc6bbf39e3d25c9e6135334e0b7b9da",
+  "method": "Exact committed migration SQL and importer-generated SQL via Neon connector; full TCP CLI was not executed here",
+  "migration0020": {
+    "hash": "5558d4c53dfe17d861f9049e7c0bf5ecb6e87565717ecef2d875f5a60fd54746",
+    "tag": "0020_source_snapshot_registry",
+    "when": 1788806852141
+  },
+  "observed": {
+    "checked_at": "2026-09-07T19:24:32.305Z",
+    "public_tables": "70",
+    "public_columns": "718",
+    "applied_migrations": "21",
+    "sources": "5",
+    "artifacts": "5",
+    "releases": "5",
+    "source_records": "260",
+    "municipal_pnrr": "30",
+    "database_bytes": "14442496",
+    "reconciliation": [
+      {
+        "byte_hash": "08b0b53b649353a3a48407c38fdbfe3676e66511d2676ad57bdd07fee0a7858d",
+        "byte_size": 627576,
+        "source_key": "lamezia.albo.current",
+        "collections": {
+          "items": 138,
+          "excluded": 2
+        },
+        "import_status": "succeeded",
+        "source_status": "official_source_acquired",
+        "records_expected": 140,
+        "records_inserted": 140,
+        "records_verified": 140,
+        "repository_commit": "fe6cb1e23dc6bbf39e3d25c9e6135334e0b7b9da",
+        "source_timestamp_raw": "2026-09-03T18:34:57.880Z"
+      },
+      {
+        "byte_hash": "55ea9d886f549b576f781268d845d8378384c49416ee0ae1ff2ae98ba48f0ffd",
+        "byte_size": 362650,
+        "source_key": "lamezia.albo.delibere",
+        "collections": {
+          "items": 79
+        },
+        "import_status": "succeeded",
+        "source_status": "official_source_acquired",
+        "records_expected": 79,
+        "records_inserted": 79,
+        "records_verified": 79,
+        "repository_commit": "fe6cb1e23dc6bbf39e3d25c9e6135334e0b7b9da",
+        "source_timestamp_raw": "2026-09-03T18:34:57.880Z"
+      },
+      {
+        "byte_hash": "b8118e626a7411a94014e9972f10b68855ebb43c93f0d321cfbffb5c00bc1a14",
+        "byte_size": 1462,
+        "source_key": "lamezia.anac.authority",
+        "collections": {
+          "records": 0
+        },
+        "import_status": "succeeded",
+        "source_status": "pending",
+        "records_expected": 0,
+        "records_inserted": 0,
+        "records_verified": 0,
+        "repository_commit": "fe6cb1e23dc6bbf39e3d25c9e6135334e0b7b9da",
+        "source_timestamp_raw": "1970-01-01T00:00:00.000Z"
+      },
+      {
+        "byte_hash": "f08c1a0a1613447756a6136feb8c62cb40151b6ed6fa61ae7641852fcbe463f3",
+        "byte_size": 1850,
+        "source_key": "lamezia.anac.cig",
+        "collections": {
+          "records": 0
+        },
+        "import_status": "succeeded",
+        "source_status": "degraded",
+        "records_expected": 0,
+        "records_inserted": 0,
+        "records_verified": 0,
+        "repository_commit": "fe6cb1e23dc6bbf39e3d25c9e6135334e0b7b9da",
+        "source_timestamp_raw": "2026-09-03T10:04:39.844Z"
+      },
+      {
+        "byte_hash": "78de948bd85ae3cc60a18d876057605840a152a48f6a1cb551dd83f440d2a629",
+        "byte_size": 321198,
+        "source_key": "lamezia.pnrr.municipal",
+        "collections": {
+          "projects": 30,
+          "albo_evidence": 11
+        },
+        "import_status": "succeeded",
+        "source_status": "official_municipal_project_pages",
+        "records_expected": 41,
+        "records_inserted": 41,
+        "records_verified": 41,
+        "repository_commit": "fe6cb1e23dc6bbf39e3d25c9e6135334e0b7b9da",
+        "source_timestamp_raw": "2026-09-03T11:10:38.924Z"
+      }
+    ]
+  },
+  "automaticSync": {
+    "status": "blocked",
+    "reason": "GitHub DATABASE_URL secret is not configured",
+    "runUrl": "https://github.com/colazeta/Lamezia-Trasparente-Monitor/actions/runs/34155259023",
+    "importExecuted": false
+  },
+  "ownerConsole": {
+    "codeIntegrated": true,
+    "ownerSessionVerified": false,
+    "backendConnection": "Render connection requested"
+  }
+}

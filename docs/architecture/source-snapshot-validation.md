@@ -2,6 +2,8 @@
 
 Issue #1101, collegata all'assessment #1096. Verifica del 7 settembre 2026.
 
+Aggiornamento successivo: il [resoconto operativo](database-activation-2026-09-07.md) documenta l'applicazione in produzione e i collegamenti ancora mancanti. Le prove isolate descritte qui conservano il loro perimetro originale.
+
 ## Risultato e perimetro
 
 Le prove sono state eseguite su una copia Neon isolata della produzione, PostgreSQL 18.6. Non sono una dichiarazione di popolamento della produzione o di completezza degli universi ufficiali. I cinque input sono file già versionati nel repository al commit `e4a2f80e0bb7e420c19a4461987e7dd815c8d119`.
