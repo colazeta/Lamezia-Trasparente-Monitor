@@ -1,5 +1,7 @@
 # Assessment del database di Lamezia Trasparente
 
+**Aggiornamento operativo:** [primo popolamento verificato in produzione e collegamenti ancora da attivare](database-activation-2026-09-07.md). L'assessment seguente conserva la baseline originale delle 17:47:58 UTC.
+
 **Giudizio: la base relazionale è consistente nelle strutture principali, ma il database esaminato non è ancora un archivio completo dei dati gestiti dal progetto. La migrazione verso un archivio canonico è iniziata; il popolamento e la riconciliazione sono la priorità.**
 
 Issue #1096, collegata al programma #1055. Codice esaminato: `51f393ce587a82c7b93475e3df40f2d787314a66`. Rilevazione principale: **7 settembre 2026, 17:47:58 UTC**. Progetto Neon `lamezia-trasparente`, ramo `production`, database `neondb`, PostgreSQL **18.6**.
