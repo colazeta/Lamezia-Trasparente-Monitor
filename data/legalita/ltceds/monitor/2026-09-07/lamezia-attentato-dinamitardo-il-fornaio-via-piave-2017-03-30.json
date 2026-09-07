@@ -1,0 +1,143 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-attentato-dinamitardo-il-fornaio-via-piave-2017-03-30",
+  "discovered_at": "2026-09-07T20:40:38+02:00",
+  "updated_at": "2026-09-07T20:40:38+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Attentato dinamitardo al panificio Il Fornaio in via Piave",
+  "temporal": {
+    "start": "2017-03-30",
+    "end": "2017-03-30",
+    "edtf": "2017-03-30",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "polizia:questura-catanzaro:2017-04-07:attentato-il-fornaio",
+      "source_type": "law_enforcement_primary",
+      "provider": "Polizia di Stato — Questura di Catanzaro",
+      "title": "'Ndrangheta: Lamezia Terme. Arrestati gli autori di un attentato dinamitardo",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/123658e74d21cdea8932796376",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T20:40:38+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2017-03-31:bomba-il-fornaio-via-piave",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, bomba esplode contro negozio in via Piave",
+      "url": "https://www.lametino.it/cronaca/lamezia-bomba-espode-contro-negozio-in-via-piave.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T20:40:38+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lac-news24:2017-03-31:bomba-il-fornaio",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Paura a Lamezia Terme, bomba distrugge attività commerciale",
+      "url": "https://www.lacnews24.it/cronaca/paura-a-lamezia-terme-bomba-distrugge-attivita-commerciale-b4dctdtv",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T20:40:38+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:gazzetta-sud:2017-03-31:bomba-carta-panificio",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Lamezia, bomba carta devasta un panificio",
+      "url": "https://catanzaro.gazzettadelsud.it/foto/archivio/2017/03/31/lamezia-bomba-carta-devasta-un-panificio-145d8869-a190-4ba5-9a3d-8254cc5564a6/",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T20:40:38+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:danneggiamento",
+      "classification_source_key": "polizia:questura-catanzaro:2017-04-07:attentato-il-fornaio",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la Polizia di Stato colloca l'attentato dinamitardo al 30 marzo 2017 e riferisce gravi danni alla panetteria, oltre a danni a veicoli, altri esercizi e abitazioni prospicienti",
+        "le misure cautelari descritte dalla fonte primaria comprendono la contestazione di danneggiamento aggravato dalla metodologia mafiosa; il record conserva lo stato procedurale e non rappresenta la responsabilità come definitiva"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:esplosioni-pericolose",
+      "classification_source_key": "polizia:questura-catanzaro:2017-04-07:attentato-il-fornaio",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la fonte primaria riferisce che un ordigno esplosivo fu collocato nei pressi della saracinesca del panificio e fatto esplodere",
+        "la contestazione di esplosioni pericolose è riportata dalla Polizia di Stato nell'ambito dei provvedimenti cautelari successivi"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:possesso-esplosivo",
+      "classification_source_key": "polizia:questura-catanzaro:2017-04-07:attentato-il-fornaio",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "not_applicable",
+      "situational_context": [
+        "la fonte primaria include il possesso di esplosivo tra le contestazioni collegate all'attentato dinamitardo"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:panificio-il-fornaio-via-piave",
+      "basis_source_key": "polizia:questura-catanzaro:2017-04-07:attentato-il-fornaio",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Panificio Il Fornaio, Via Piave",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
