@@ -5,8 +5,8 @@
   "database": {
     "dialect": "postgresql",
     "orm": "drizzle",
-    "schemaModuleCount": 44,
-    "tableCount": 64,
+    "schemaModuleCount": 45,
+    "tableCount": 70,
     "sqlMigrationFiles": [
       "0000_clever_wolf_cub.sql",
       "0001_italiadomani_projects.sql",
@@ -27,7 +27,8 @@
       "0016_ltceds_persistence_boundary.sql",
       "0017_conversations_messages_convergence.sql",
       "0018_canonical_subject_identity.sql",
-      "0019_publications_brief_manual_convergence.sql"
+      "0019_publications_brief_manual_convergence.sql",
+      "0020_source_snapshot_registry.sql"
     ],
     "schemaTablesNotCreatedInVersionedMigrations": [],
     "migrationTablesNotInCurrentDrizzleSchema": []
