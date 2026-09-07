@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-furti-cantine-lento-splendidi-splendenti-2026-01-11",
   "discovered_at": "2026-09-07T06:39:23+02:00",
-  "updated_at": "2026-09-07T06:39:23+02:00",
+  "updated_at": "2026-09-07T19:38:37+02:00",
   "record_status": "verified_source",
   "event_form": "continuous_episode",
   "title": "Presunti furti aggravati in due attività adiacenti di via del Progresso a Lamezia Terme",
@@ -58,12 +58,69 @@
         "location_support",
         "corroboration"
       ]
+    },
+    {
+      "source_key": "agency:ansa:2026-01-15:furto-cantine-lento-cassonetto",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Compie un furto e si nasconde in un cassonetto dei rifiuti, arrestato",
+      "url": "https://www.ansa.it/calabria/notizie/2026/01/15/compie-un-furto-e-si-nasconde-in-un-cassonetto-dei-rifiuti-arrestato_a2c3a0d8-3292-473f-8ada-46f3c07e7f6e.html",
+      "published_at": "2026-01-15T12:09:00+01:00",
+      "retrieved_at": "2026-09-07T19:38:37+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:catanzaroinforma:2026-01-15:furti-via-del-progresso-cassonetto",
+      "source_type": "press_secondary",
+      "provider": "CatanzaroInforma",
+      "title": "Lamezia, furti notturni: 42enne arrestato dai Carabinieri",
+      "url": "https://www.catanzaroinforma.it/cronaca/2026/01/15/lamezia-furti-notturni-42enne-arrestato-dai-carabinieri/399964/",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T19:38:37+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "other:paginebianche:cantine-lento-via-del-progresso-1",
+      "source_type": "other",
+      "provider": "PagineBianche",
+      "title": "Cantine Lento Societa' Cooperativa - Lamezia Terme",
+      "url": "https://www.paginebianche.it/scheda/lamezia-terme/cantine-lento.4668249",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T19:38:37+02:00",
+      "support_roles": [
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "other:paginebianche:splendidi-splendenti-via-del-progresso-5",
+      "source_type": "other",
+      "provider": "PagineBianche",
+      "title": "Splendidi e Splendenti a Lamezia Terme (CZ): Indirizzo e Contatti",
+      "url": "https://www.paginebianche.it/scheda/lamezia-terme/splendidi-e-splendenti_T11203081",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T19:38:37+02:00",
+      "support_roles": [
+        "location_support",
+        "corroboration"
+      ]
     }
   ],
   "offences": [
     {
       "offence_key": "offence:furto-aggravato",
-      "classification_source_key": "press:corriere-calabria:2026-01-15:furti-via-del-progresso-cantine-lento",
+      "classification_source_key": "agency:ansa:2026-01-15:furto-cantine-lento-cassonetto",
       "classification_basis": "source_stated_legal",
       "iccs_code": null,
       "istat_catalogue_id": null,
@@ -74,8 +131,9 @@
       "situational_context": [
         "alle 03:50 dell'11 gennaio 2026 una residente di via del Progresso ha segnalato al 112 forti colpi provenienti dalla strada",
         "le fonti riferiscono un furto in atto presso Cantine Lento e presso l'adiacente punto vendita Splendidi e Splendenti",
+        "Gazzetta del Sud riferisce che gli autori sarebbero passati dall'abitazione privata dei proprietari dell'azienda per raggiungere l'adiacente punto vendita",
         "all'arrivo dei Carabinieri due uomini con il volto coperto avrebbero tentato la fuga scavalcando il muro perimetrale delle Cantine Lento",
-        "uno dei soggetti è stato arrestato dopo essersi nascosto in un cassonetto; le indagini per identificare i complici risultavano ancora in corso"
+        "uno dei soggetti è stato arrestato dopo essersi nascosto in un cassonetto; ANSA riferisce che l'arresto è stato successivamente convalidato e che il Tribunale di Lamezia Terme ha applicato la custodia cautelare in carcere"
       ],
       "cyber_related": null,
       "affected_object_count": 2
@@ -89,11 +147,11 @@
       "municipality": "Lamezia Terme",
       "evidence_basis": "source_stated_named_site",
       "evidence_precision": "exact_public_site",
-      "resolved_precision": "exact_public_site",
+      "resolved_precision": "exact_address",
       "sensitivity": "private_or_sensitive",
       "publication_risk": "victim_linked",
       "geometry": null,
-      "place_name": "Cantine Lento, via del Progresso",
+      "place_name": "Cantine Lento, Via del Progresso 1",
       "neighbourhood": null,
       "iccs_location_type": null
     },
@@ -104,11 +162,26 @@
       "municipality": "Lamezia Terme",
       "evidence_basis": "source_stated_named_site",
       "evidence_precision": "exact_public_site",
-      "resolved_precision": "exact_public_site",
+      "resolved_precision": "exact_address",
       "sensitivity": "private_or_sensitive",
       "publication_risk": "victim_linked",
       "geometry": null,
-      "place_name": "Splendidi e Splendenti, via del Progresso",
+      "place_name": "Splendidi e Splendenti, Via del Progresso 5",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata-via-del-progresso-episodio-lento",
+      "basis_source_key": "press:catanzaroinforma:2026-01-15:furti-via-del-progresso-cassonetto",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata in via del Progresso",
       "neighbourhood": null,
       "iccs_location_type": null
     }
