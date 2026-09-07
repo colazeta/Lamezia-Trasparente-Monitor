@@ -1,0 +1,115 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-intimidazione-tanica-benzina-emporio-shopping-2025-12-09",
+  "discovered_at": "2026-09-07T18:55:04+02:00",
+  "updated_at": "2026-09-07T18:55:04+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Presunto atto intimidatorio con tanica di benzina davanti all'Emporio Shopping in via Tommaso Fusco",
+  "temporal": {
+    "start": "2025-12-08",
+    "end": "2025-12-09",
+    "edtf": "2025-12-08/2025-12-09",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "agency:ansa:2025-12-09:intimidazione-benzina-emporio-lamezia",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Ennesima intimidazione a Lamezia, benzina davanti a un negozio",
+      "url": "https://www.ansa.it/calabria/notizie/2025/12/09/ennesima-intimidazione-a-lamezia-benzina-davanti-a-un-negozio_cd578e0d-c426-4de8-966e-bc0d24d14224.html",
+      "published_at": "2025-12-09T10:11:00+01:00",
+      "retrieved_at": "2026-09-07T18:55:04+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lametino:2025-12-09:intimidazione-emporio-via-fusco",
+      "source_type": "press_secondary",
+      "provider": "il Lametino.it",
+      "title": "Lamezia, ennesima intimidazione: tanica di benzina davanti Emporio in via Fusco",
+      "url": "https://www.lametino.it/cronaca/lamezia-ennesima-intimidazione-tanica-di-benzina-davanti-emporio-in-via-fusco.html",
+      "published_at": "2025-12-09T00:00:00+01:00",
+      "retrieved_at": "2026-09-07T18:55:04+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:quotidianodelsud:2025-12-09:emporio-shopping-tanica-benzina",
+      "source_type": "press_secondary",
+      "provider": "Il Quotidiano del Sud",
+      "title": "Lamezia Terme sotto assedio: sesta intimidazione in poche settimane, paura in città",
+      "url": "https://www.quotidianodelsud.it/calabria/catanzaro/cronache/criminalita/2025/12/09/lamezia-terme-intimidazione-tanica-di-benzina-davanti-negozio",
+      "published_at": "2025-12-09T11:09:00+01:00",
+      "retrieved_at": "2026-09-07T18:55:04+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "other:reteimprese:emporio-shopping-clas-via-fusco-18",
+      "source_type": "other",
+      "provider": "Rete Imprese",
+      "title": "Emporio Shopping Clas - 88046 Lamezia Terme",
+      "url": "https://www.reteimprese.it/casalinghi/lamezia-terme/azienda/3728525",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T18:55:04+02:00",
+      "support_roles": [
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:intimidazione",
+      "classification_source_key": "agency:ansa:2025-12-09:intimidazione-benzina-emporio-lamezia",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "not_applicable",
+      "situational_context": [
+        "all'apertura dell'attività il 9 dicembre 2025 è stata rinvenuta una tanica contenente benzina davanti al cancello d'ingresso dell'emporio",
+        "ANSA, il Lametino e altre cronache qualificano l'episodio come atto intimidatorio, ma le fonti pubbliche reperite non attestano una contestazione penale definitiva o l'identificazione degli autori",
+        "sul posto sono intervenuti i Carabinieri, che hanno avviato le indagini e sentito i proprietari dell'esercizio commerciale"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:emporio-shopping-via-tommaso-maria-fusco-18",
+      "basis_source_key": "press:quotidianodelsud:2025-12-09:emporio-shopping-tanica-benzina",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_address",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Emporio Shopping, Via Tommaso Maria Fusco 18",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
