@@ -14,6 +14,8 @@ const databaseConfig = hasTestDatabaseConfig()
 // database-free unit tests instead of failing while loading the config.
 const databaseFreeTests = [
   "src/lib/databaseAdmin.test.ts",
+  "src/lib/operationalHealth.test.ts",
+  "src/lib/sourceSnapshotStartup.test.ts",
   "src/lib/geocode.test.ts",
   "src/lib/confiscatedAssetsCleanup.unit.test.ts",
   "src/lib/confiscatedAssetsSpatial.test.ts",

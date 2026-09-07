@@ -1,4 +1,4 @@
-name: Persist registered civic snapshots
+name: Verify registered civic snapshots on Render
 
 on:
   workflow_dispatch:
@@ -13,6 +13,10 @@ on:
       - "data/public/contracts/anac-authority/latest.json"
       - "artifacts/lamezia-trasparente/src/data/generated/lameziaPnrrProjects.json"
       - "lib/db/src/sourceSnapshot*.ts"
+      - "artifacts/api-server/src/lib/sourceSnapshot*.ts"
+      - "artifacts/api-server/src/routes/operationalHealth.ts"
+      - "scripts/check-database-source-sync.mjs"
+      - "scripts/lib/sourceSnapshotVerification.mjs"
       - ".github/workflows/database-source-sync.yml"
 
 permissions:
@@ -23,10 +27,10 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  import:
+  verify:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -38,19 +42,17 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - name: Require the server database connection
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: node -e 'if (!process.env.DATABASE_URL) { console.error("DATABASE_URL is not configured; no import was performed."); process.exit(1); }'
-      - name: Persist and reconcile registered snapshots
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: pnpm --filter @workspace/db run import:source-snapshots --execute --output /tmp/source-import-report.json
-      - name: Retain the reconciliation report
+      - name: Prepare the expected committed snapshot plan without a database connection
+        run: pnpm --filter @workspace/db run import:source-snapshots --output /tmp/source-import-plan.json
+      - name: Wait for Render and verify its completed reconciliation
+        run: node scripts/check-database-source-sync.mjs --plan /tmp/source-import-plan.json --output /tmp/source-sync-verification.json
+      - name: Retain the plan and remote verification report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: source-import-report
-          path: /tmp/source-import-report.json
+          name: source-sync-verification
+          path: |
+            /tmp/source-import-plan.json
+            /tmp/source-sync-verification.json
           if-no-files-found: warn
           retention-days: 30
