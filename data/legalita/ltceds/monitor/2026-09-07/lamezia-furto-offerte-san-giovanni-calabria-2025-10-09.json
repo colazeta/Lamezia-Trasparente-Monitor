@@ -1,0 +1,101 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-furto-offerte-san-giovanni-calabria-2025-10-09",
+  "discovered_at": "2026-09-07T13:41:47+02:00",
+  "updated_at": "2026-09-07T13:41:47+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Furto di circa 28.000 euro di offerte nell'abitazione nella disponibilità del parroco della Parrocchia San Giovanni Calabria",
+  "temporal": {
+    "start": "2025-10-09",
+    "end": "2025-10-09",
+    "edtf": "2025-10-09",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "law:polizia-catanzaro:2026-06-27:furto-offerte-san-giovanni-calabria",
+      "source_type": "law_enforcement_primary",
+      "provider": "Polizia di Stato — Questura di Catanzaro",
+      "title": "La Polizia di Stato arresta un soggetto gravemente indiziato di essere l’autore del furto di circa 28.000 Euro, provento di offerte presso la Parrocchia “San Giovanni Calabria”",
+      "url": "https://questure.poliziadistato.it/Catanzaro/articolo/34866a3e5dd67d8ae157536795",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T13:41:47+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "agency:ansa:2026-06-27:furto-offerte-san-giovanni-calabria",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Furto di offerte in parrocchia per 28mila euro, un arresto",
+      "url": "https://www.ansa.it/calabria/notizie/2026/06/27/furto-di-offerte-in-parrocchia-per-28mila-euro-un-arresto_c7017d12-3c7c-47a8-bd90-b08cd0dcb9d5.html",
+      "published_at": "2026-06-27T09:46:00+02:00",
+      "retrieved_at": "2026-09-07T13:41:47+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:rainews-calabria:2026-06-27:furto-casa-parroco-lamezia",
+      "source_type": "press_secondary",
+      "provider": "RaiNews TGR Calabria",
+      "title": "Furto di 28 mila euro in casa del parroco, arrestato il presunto responsabile",
+      "url": "https://www.rainews.it/tgr/calabria/articoli/2026/06/furto-di-28000-euro-in-casa-del-parroco-arrestato-il-presunto-responsabile-85eebe93-a6bb-4e90-9f64-21caa8878cdf.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T13:41:47+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:furto",
+      "classification_source_key": "law:polizia-catanzaro:2026-06-27:furto-offerte-san-giovanni-calabria",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "il 9 ottobre 2025 l'autore si è introdotto nell'abitazione nella disponibilità del parroco della Parrocchia San Giovanni Calabria",
+        "l'accesso è avvenuto mediante il danneggiamento di una porta in vetro, di una finestra e di una vetrata ad uso lucernario",
+        "sono stati sottratti circa 28.000 euro in contanti, costituiti per lo più da offerte parrocchiali",
+        "il 24 giugno 2026 la Polizia di Stato ha eseguito un'ordinanza cautelare del GIP disponendo gli arresti domiciliari nella fase delle indagini preliminari"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:abitazione-parroco-san-giovanni-calabria",
+      "basis_source_key": "law:polizia-catanzaro:2026-06-27:furto-offerte-san-giovanni-calabria",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione nella disponibilità del parroco della Parrocchia San Giovanni Calabria",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
