@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-incendi-furto-danneggiamenti-centro-2025-07-06",
   "discovered_at": "2026-09-07T02:41:08+02:00",
-  "updated_at": "2026-09-07T02:41:08+02:00",
+  "updated_at": "2026-09-07T18:21:31+02:00",
   "record_status": "verified_source",
   "event_form": "continuous_episode",
   "title": "Sequenza di incendi, furto e danneggiamenti nel centro di Lamezia Terme nella notte del 6 luglio 2025",
@@ -106,7 +106,7 @@
       "attempt_status": "completed",
       "situational_context": [
         "numerose auto in sosta e arredi urbani risultano danneggiati durante la fuga secondo le fonti",
-        "le fonti aggregano complessivamente la sequenza in 27 reati commessi in una sola notte"
+        "il riferimento a 27 eventi nelle stesse cronache riguarda la distinta serie di furti aggravati e danneggiamenti della notte tra il 28 febbraio e il 1° marzo 2025, non questa sequenza del 6 luglio"
       ],
       "cyber_related": null,
       "affected_object_count": null
