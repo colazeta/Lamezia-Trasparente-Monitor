@@ -1,0 +1,118 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-detenzione-hashish-spaccio-2026-02-21",
+  "discovered_at": "2026-09-07T08:33:51+02:00",
+  "updated_at": "2026-09-07T08:33:51+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Presunta detenzione di hashish ai fini di spaccio rilevata dai Carabinieri a Lamezia Terme",
+  "temporal": {
+    "start": "2026-02-21",
+    "end": "2026-02-21",
+    "edtf": "2026-02-21",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:gazzetta-sud:2026-02-24:hashish-280-lamezia-18enne",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Lamezia Terme, aveva 280 grammi di hashish pronti per lo spaccio: arrestato un 18enne",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2026/02/24/lamezia-terme-aveva-280-grammi-di-hashish-pronti-per-lo-spaccio-arrestato-un-18enne-de73f97c-75fb-4c63-8e25-b7fe37198987/",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T08:33:51+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2026-02-24:hashish-280-lamezia-18enne",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, 18enne trovato con 280 grammi di hashish pronti allo spaccio: obbligo di dimora",
+      "url": "https://www.lametino.it/cronaca/lamezia-18enne-trovato-con-280-grammi-di-hashish-pronti-allo-spaccio-obbligo-di-dimora.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T08:33:51+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:stretto-web:2026-02-24:hashish-280-lamezia-18enne",
+      "source_type": "press_secondary",
+      "provider": "StrettoWeb",
+      "title": "Lamezia Terme, 18enne fermato con hashish: in casa altri 280 grammi e bilancini",
+      "url": "https://www.strettoweb.com/2026/02/lamezia-terme-18enne-fermato-con-hashish-in-casa-altri-280-grammi-e-bilancini/2044656/",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T08:33:51+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:detenzione-stupefacenti-ai-fini-di-spaccio",
+      "classification_source_key": "press:gazzetta-sud:2026-02-24:hashish-280-lamezia-18enne",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "nella notte del 21 febbraio 2026 i Carabinieri della Stazione di Lamezia Terme Sambiase hanno controllato un giovane in un'area periferica del centro cittadino e lo hanno trovato in possesso di una dose di hashish",
+        "la successiva perquisizione domiciliare ha portato al rinvenimento di 280 grammi di hashish suddivisi in tre panetti e cinque bilancini di precisione",
+        "nell'immediatezza l'arrestato è stato posto agli arresti domiciliari su disposizione della Procura della Repubblica di Lamezia Terme",
+        "il 23 febbraio 2026 il GIP del Tribunale di Lamezia Terme ha convalidato l'arresto e disposto l'obbligo di dimora nel Comune di residenza con presentazione giornaliera alla Polizia giudiziaria",
+        "le fonti collocano il procedimento nella fase delle indagini preliminari"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:peripheral-area-2026-02-21",
+      "basis_source_key": "press:gazzetta-sud:2026-02-24:hashish-280-lamezia-18enne",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "public_place",
+      "publication_risk": "unknown",
+      "geometry": null,
+      "place_name": "Area periferica del centro cittadino (non ulteriormente specificata)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:residence-search-2026-02-21",
+      "basis_source_key": "press:gazzetta-sud:2026-02-24:hashish-280-lamezia-18enne",
+      "role": "search",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione oggetto di perquisizione (indirizzo non pubblicato)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
