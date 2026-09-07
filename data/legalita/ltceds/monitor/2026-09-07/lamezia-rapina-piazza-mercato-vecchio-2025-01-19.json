@@ -1,0 +1,132 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-piazza-mercato-vecchio-2025-01-19",
+  "discovered_at": "2026-09-07T18:29:49+02:00",
+  "updated_at": "2026-09-07T18:29:49+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina aggravata in piazza Mercato Vecchio a Lamezia Terme",
+  "temporal": {
+    "start": "2025-01-19",
+    "end": "2025-01-19",
+    "edtf": "2025-01-19",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "law:questura-catanzaro:2025-01-24:rapina-mercato-vecchio-lamezia",
+      "source_type": "law_enforcement_primary",
+      "provider": "Polizia di Stato — Questura di Catanzaro",
+      "title": "LAMEZIA TERME: ARRESTATO DALLA POLIZIA DI STATO UN CITTADINO TUNISINO AUTORE DI RAPINA",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/327767938de213d45023360436",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T18:29:49+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2025-01-24:rapina-mercato-vecchio-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Lamezia Terme, aggredisce e rapina una coppia: 22enne arrestato dalla polizia",
+      "url": "https://www.corrieredellacalabria.it/2025/01/24/lamezia-terme-aggredisce-e-rapina-una-coppia-22enne-arrestato-dalla-polizia/",
+      "published_at": "2025-01-24T14:50:00+01:00",
+      "retrieved_at": "2026-09-07T18:29:49+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2025-01-24:rapina-aggressione-centro-lamezia",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, rapina e aggressione in centro: arrestato 22enne",
+      "url": "https://www.lametino.it/cronaca/lamezia-arrestato-dalla-polizia-giovane-autore-di-rapina.html",
+      "published_at": "2025-01-24T14:21:00+01:00",
+      "retrieved_at": "2026-09-07T18:29:49+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina-aggravata",
+      "classification_source_key": "law:questura-catanzaro:2025-01-24:rapina-mercato-vecchio-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "poco dopo la mezzanotte del 19 gennaio 2025 la Polizia di Stato è intervenuta in piazza Mercato Vecchio a seguito di segnalazioni relative al lancio di bottiglie di vetro",
+        "la fonte primaria riferisce che un giovane è stato minacciato con una bottiglia di vetro infranta e che gli è stata strappata dal collo una catenina d'oro",
+        "la Questura qualifica il fatto come rapina aggravata dall'uso di due bottiglie di vetro infrante e riferisce l'arresto in flagranza",
+        "il 21 gennaio 2025 l'arresto è stato convalidato ed è stata applicata la custodia cautelare in carcere; il procedimento risultava nella fase delle indagini preliminari"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:piazza-mercato-vecchio:occurrence",
+      "basis_source_key": "law:questura-catanzaro:2025-01-24:rapina-mercato-vecchio-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Piazza Mercato Vecchio",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-isonzo:arrest",
+      "basis_source_key": "law:questura-catanzaro:2025-01-24:rapina-mercato-vecchio-lamezia",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "non_sensitive",
+      "geometry": null,
+      "place_name": "Via Isonzo",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-isonzo:recovery",
+      "basis_source_key": "law:questura-catanzaro:2025-01-24:rapina-mercato-vecchio-lamezia",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "non_sensitive",
+      "geometry": null,
+      "place_name": "Via Isonzo",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
