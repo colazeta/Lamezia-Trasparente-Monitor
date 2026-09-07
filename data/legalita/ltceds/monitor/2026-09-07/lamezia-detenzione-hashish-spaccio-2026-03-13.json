@@ -1,0 +1,102 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-detenzione-hashish-spaccio-2026-03-13",
+  "discovered_at": "2026-09-07T06:16:35+02:00",
+  "updated_at": "2026-09-07T06:16:35+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Presunta detenzione di hashish ai fini di spaccio rilevata dai Carabinieri a Lamezia Terme",
+  "temporal": {
+    "start": "2026-03-13",
+    "end": "2026-03-13",
+    "edtf": "2026-03-13",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:gazzetta-sud:2026-03-17:hashish-spaccio-lamezia-19enne",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Lamezia, 19enne arrestato con oltre 50 grammi di hashish: droga pronta per lo spaccio",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2026/03/17/lamezia-19enne-arrestato-con-oltre-50-grammi-di-hashish-droga-pronta-per-lo-spaccio-c67b136e-f751-44de-91fc-51758b8aef3f/",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T06:16:35+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2026-03-17:hashish-spaccio-lamezia-19enne",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, 19enne trovato con hashish: sequestrati droga e materiale per lo spaccio",
+      "url": "https://www.lametino.it/cronaca/lamezia-19enne-arrestato-con-oltre-50-grammi-di-hashish-droga-era-pronta-per-lo-spaccio.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T06:16:35+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:cityone:2026-03-17:hashish-spaccio-lamezia-19enne",
+      "source_type": "press_secondary",
+      "provider": "City One",
+      "title": "Lamezia, 19enne arrestato con oltre 50 grammi di hashish: droga pronta per lo spaccio",
+      "url": "https://www.cityonelamezia.it/lamezia-19enne-arrestato-con-oltre-50-grammi-di-hashish-droga-pronta-per-lo-spaccio/",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T06:16:35+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:detenzione-stupefacenti-ai-fini-di-spaccio",
+      "classification_source_key": "press:gazzetta-sud:2026-03-17:hashish-spaccio-lamezia-19enne",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "controllo dei Carabinieri nella serata del 13 marzo 2026",
+        "durante il controllo sarebbe stata recuperata una dose di hashish che il giovane avrebbe tentato di disfarsi",
+        "la successiva perquisizione domiciliare ha portato al rinvenimento di circa 53 grammi di hashish, materiale per taglio e confezionamento e un bilancino di precisione",
+        "il 14 marzo 2026 il GIP del Tribunale di Lamezia Terme ha convalidato l'arresto senza applicare ulteriori misure cautelari"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:municipality",
+      "basis_source_key": "press:gazzetta-sud:2026-03-17:hashish-spaccio-lamezia-19enne",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
