@@ -1,0 +1,128 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-incendio-auto-via-trento-2022-11-03",
+  "discovered_at": "2026-09-07T23:38:22+02:00",
+  "updated_at": "2026-09-07T23:38:22+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Incendio di un'autovettura con propagazione a una seconda vettura in via Trento",
+  "temporal": {
+    "start": "2022-11-03",
+    "end": "2022-11-03",
+    "edtf": "2022-11-03",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:corriere-lamezia:2022-11-03:due-auto-via-trento",
+      "source_type": "press_secondary",
+      "provider": "Corriere di Lamezia",
+      "title": "Lamezia, stanotte in fiamme due auto in via Trento",
+      "url": "https://www.corrieredilamezia.it/cronaca/2022_11_03/lamezia-stanotte-in-fiamme-due-auto-in-via-trento_26966/",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T23:38:22+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "news:ansa:2023-07-08:incendio-auto-avvocato-lamezia",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Arrestato 45enne accusato di avere incendiato auto avvocato",
+      "url": "https://www.ansa.it/sito/notizie/cronaca/2023/07/08/arrestato-45enne-accusato-di-avere-incendiato-auto-avvocato_0603f230-8c9a-4c1d-bde4-06be927eff21.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T23:38:22+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-lamezia:2023-07-08:arresto-incendio-via-trento",
+      "source_type": "press_secondary",
+      "provider": "Corriere di Lamezia",
+      "title": "Lamezia, in fiamme l'auto di un avvocato lametino, un arresto",
+      "url": "https://www.corrieredilamezia.it/cronaca/2023_07_08/lamezia-in-fiamme-lauto-di-un-avvocato-lametino-un-arresto_38001/",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T23:38:22+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2023-10-04:condanna-incendio-auto-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Incendiata l'auto di un avvocato lametino, condannato il presunto autore",
+      "url": "https://www.corrieredellacalabria.it/2023/10/04/incendio-allauto-del-legale-lametino-condannato-il-presunto-autore/",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T23:38:22+02:00",
+      "support_roles": [
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:quotidiano-sud:2025-10-22:archiviazione-incendio-auto-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Il Quotidiano del Sud",
+      "title": "Auto incendiata a un avvocato di Lamezia, disposta archiviazione per 6 indagati",
+      "url": "https://www.quotidianodelsud.it/calabria/catanzaro/cronache/giudiziaria/2025/10/22/auto-incendiata-a-un-avvocato-di-lamezia-disposta-archiviazione-per-6-indagati",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T23:38:22+02:00",
+      "support_roles": [
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:incendio",
+      "classification_source_key": "press:corriere-lamezia:2023-07-08:arresto-incendio-via-trento",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "incendio appiccato a un'autovettura parcheggiata",
+        "una seconda autovettura parcheggiata è stata danneggiata dalla propagazione del rogo",
+        "ordinanza cautelare eseguita nel luglio 2023",
+        "condanna in rito abbreviato riportata nell'ottobre 2023",
+        "archiviazione nel 2025 nei confronti di sei ulteriori indagati"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 2
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-trento-15:occurrence",
+      "basis_source_key": "press:corriere-lamezia:2023-07-08:arresto-incendio-via-trento",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_exact",
+      "evidence_precision": "exact_address",
+      "resolved_precision": "exact_address",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via Trento 15",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
