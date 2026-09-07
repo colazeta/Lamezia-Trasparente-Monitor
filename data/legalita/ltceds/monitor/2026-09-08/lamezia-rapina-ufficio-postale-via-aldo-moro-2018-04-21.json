@@ -1,0 +1,100 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-ufficio-postale-via-aldo-moro-2018-04-21",
+  "discovered_at": "2026-09-08T00:34:30+02:00",
+  "updated_at": "2026-09-08T00:34:30+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina all'ufficio postale di via Aldo Moro a Lamezia Terme",
+  "temporal": {
+    "start": "2018-04-21",
+    "end": "2018-04-21",
+    "edtf": "2018-04-21",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:lametino:2018-04-21:rapina-poste-via-aldo-moro",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: rapina alle poste di via Aldo Moro, circa 100mila euro di bottino",
+      "url": "https://www.lametino.it/cronaca/lamezia-rapina-alle-poste-di-via-aldo-moro-ricerche-in-corso.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-08T00:34:30+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:gazzetta-sud:2018-04-21:rapina-ufficio-postale-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Rapina in ufficio postale, 100mila euro il bottino",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/archivio/2018/04/21/rapina-in-ufficio-postale-100mila-euro-il-bottino-81581eb6-1cbc-4641-99cd-52e3506e7905/",
+      "published_at": null,
+      "retrieved_at": "2026-09-08T00:34:30+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2019-02-20:cenerentola-poste-via-aldo-moro",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "\"Cenerentola\" incastra la banda delle rapine agli uffici postali",
+      "url": "https://www.corrieredellacalabria.it/2019/02/20/cenerentola-incastra-la-banda-delle-rapine-agli-uffici-postali/",
+      "published_at": null,
+      "retrieved_at": "2026-09-08T00:34:30+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "press:corriere-calabria:2019-02-20:cenerentola-poste-via-aldo-moro",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "rapina ai danni dell'ufficio postale di via Aldo Moro",
+        "il fatto del 21 aprile 2018 fu successivamente ricompreso nelle indagini dell'operazione Cenerentola",
+        "nel febbraio 2019 furono eseguiti provvedimenti cautelari nell'ambito dell'indagine; la fase cautelare non equivale ad accertamento definitivo di responsabilità"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:ufficio-postale-via-aldo-moro:target",
+      "basis_source_key": "press:lametino:2018-04-21:rapina-poste-via-aldo-moro",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Ufficio postale di via Aldo Moro",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
