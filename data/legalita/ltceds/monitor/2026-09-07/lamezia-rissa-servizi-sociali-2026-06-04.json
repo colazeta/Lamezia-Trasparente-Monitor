@@ -1,0 +1,155 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rissa-servizi-sociali-2026-06-04",
+  "discovered_at": "2026-09-07T14:53:35+02:00",
+  "updated_at": "2026-09-07T14:53:35+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rissa e danneggiamenti negli uffici dei Servizi sociali del Comune di Lamezia Terme",
+  "temporal": {
+    "start": "2026-06-04",
+    "end": "2026-06-04",
+    "edtf": "2026-06-04",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "agency:ansa:2026-06-04:rissa-servizi-sociali-lamezia",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Rissa negli uffici del Comune di Lamezia Terme, alcuni fermati",
+      "url": "https://www.ansa.it/calabria/notizie/2026/06/04/rissa-negli-uffici-del-comune-di-lamezia-terme-alcuni-fermati_d4a262cf-c5b5-48a4-8312-065b53b8896d.html",
+      "published_at": "2026-06-04T16:14:00+02:00",
+      "retrieved_at": "2026-09-07T14:53:35+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "agency:ansa:2026-06-05:rissa-servizi-sociali-lamezia-arresto",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Rissa negli uffici del Comune di Lamezia Terme, un arresto",
+      "url": "https://www.ansa.it/calabria/notizie/2026/06/05/rissa-negli-uffici-del-comune-di-lamezia-terme-un-arresto_cb8ebf1b-bc90-428d-92ab-a1da5dc76c77.html",
+      "published_at": "2026-06-05T19:10:00+02:00",
+      "retrieved_at": "2026-09-07T14:53:35+02:00",
+      "support_roles": [
+        "event_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:notizie-catanzaro:2026-06-04:rissa-palazzo-comunale-lamezia",
+      "source_type": "press_secondary",
+      "provider": "notizie.it Catanzaro",
+      "title": "Scontri al Palazzo Comunale di Lamezia Terme per un affido: feriti e indagini in corso",
+      "url": "https://catanzaro.notizie.it/scontri-al-palazzo-comunale-di-lamezia-terme-per-un-affido-feriti-e-indagini-in-corso/",
+      "published_at": "2026-06-04T16:54:00+02:00",
+      "retrieved_at": "2026-09-07T14:53:35+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lametino:2026-06-06:rissa-servizi-sociali-lamezia-convalida",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, rissa per affido minore: convalidato arresto 32enne",
+      "url": "https://www.lametino.it/cronaca/lamezia-rissa-per-affido-minore-convalidato-arresto-32enne.html",
+      "published_at": "2026-06-06T00:00:00+02:00",
+      "retrieved_at": "2026-09-07T14:53:35+02:00",
+      "support_roles": [
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "authority:comune-lamezia:uffici-servizio-sociale-professionale",
+      "source_type": "public_authority_primary",
+      "provider": "Comune di Lamezia Terme",
+      "title": "Uffici di Servizio Sociale professionale",
+      "url": "https://www.comune.lamezia-terme.cz.it/it/unita_organizzative/20174",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T14:53:35+02:00",
+      "support_roles": [
+        "location_support"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rissa",
+      "classification_source_key": "agency:ansa:2026-06-04:rissa-servizi-sociali-lamezia",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "il 4 giugno 2026 una lite tra familiari legata all'affido di un minore è degenerata in uno scontro fisico negli uffici dei Servizi sociali del Comune di Lamezia Terme",
+        "le fonti riferiscono il coinvolgimento di più persone, danni ad arredi e attrezzature e almeno una persona medicata al pronto soccorso",
+        "la classificazione come rissa è mantenuta provvisoria perché le fonti iniziali descrivono il fatto ma non attestano una contestazione giudiziaria definitiva per tutti i partecipanti"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:aggressione-aggravata",
+      "classification_source_key": "press:lametino:2026-06-06:rissa-servizi-sociali-lamezia-convalida",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "il 6 giugno 2026 il GIP del Tribunale di Lamezia Terme ha convalidato l'arresto di una delle persone coinvolte e, secondo la fonte, ha disposto il trasferimento in carcere con l'accusa di aggressione aggravata"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:danneggiamento",
+      "classification_source_key": "press:lametino:2026-06-06:rissa-servizi-sociali-lamezia-convalida",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la fonte relativa alla convalida riferisce anche l'accusa di danneggiamenti, coerente con i danni ad arredi e attrezzature descritti dalle cronache del giorno dell'evento"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:uffici-servizi-sociali-comune",
+      "basis_source_key": "agency:ansa:2026-06-04:rissa-servizi-sociali-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "minor_or_vulnerable",
+      "geometry": null,
+      "place_name": "Uffici dei Servizi sociali del Comune di Lamezia Terme (Palazzo Comunale)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
