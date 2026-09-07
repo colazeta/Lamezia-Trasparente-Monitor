@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-furti-cantine-lento-splendidi-splendenti-2026-01-11",
   "discovered_at": "2026-09-07T06:39:23+02:00",
-  "updated_at": "2026-09-07T19:38:37+02:00",
+  "updated_at": "2026-09-07T19:59:57+02:00",
   "record_status": "verified_source",
   "event_form": "continuous_episode",
   "title": "Presunti furti aggravati in due attività adiacenti di via del Progresso a Lamezia Terme",
@@ -91,19 +91,6 @@
       ]
     },
     {
-      "source_key": "other:paginebianche:cantine-lento-via-del-progresso-1",
-      "source_type": "other",
-      "provider": "PagineBianche",
-      "title": "Cantine Lento Societa' Cooperativa - Lamezia Terme",
-      "url": "https://www.paginebianche.it/scheda/lamezia-terme/cantine-lento.4668249",
-      "published_at": null,
-      "retrieved_at": "2026-09-07T19:38:37+02:00",
-      "support_roles": [
-        "location_support",
-        "corroboration"
-      ]
-    },
-    {
       "source_key": "other:paginebianche:splendidi-splendenti-via-del-progresso-5",
       "source_type": "other",
       "provider": "PagineBianche",
@@ -147,11 +134,11 @@
       "municipality": "Lamezia Terme",
       "evidence_basis": "source_stated_named_site",
       "evidence_precision": "exact_public_site",
-      "resolved_precision": "exact_address",
+      "resolved_precision": "exact_public_site",
       "sensitivity": "private_or_sensitive",
       "publication_risk": "victim_linked",
       "geometry": null,
-      "place_name": "Cantine Lento, Via del Progresso 1",
+      "place_name": "Cantine Lento, via del Progresso",
       "neighbourhood": null,
       "iccs_location_type": null
     },
