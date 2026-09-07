@@ -136,13 +136,15 @@ export async function readInspectionCatalog(
     WHERE n.nspname='public' AND c.relkind IN ('r','p') AND a.attnum>0 AND NOT a.attisdropped
     ORDER BY c.relname,a.attnum`)
   ).rows;
+  // Cast catalog identifiers to text before aggregation: pg does not decode
+  // name[] (OID 1003), whereas text[] becomes the JSON arrays used by the UI.
   const constraints = (
     await client.query(`SELECT c.relname AS table_name, k.conname AS name, k.contype AS type,
     pg_get_constraintdef(k.oid) AS definition, k.convalidated AS validated,
-    ARRAY(SELECT a.attname FROM unnest(k.conkey) WITH ORDINALITY u(id,ord)
+    ARRAY(SELECT a.attname::text FROM unnest(k.conkey) WITH ORDINALITY u(id,ord)
       JOIN pg_attribute a ON a.attrelid=c.oid AND a.attnum=u.id ORDER BY u.ord) AS columns,
     fn.nspname AS "targetSchema", fc.relname AS "targetTable",
-    ARRAY(SELECT a.attname FROM unnest(k.confkey) WITH ORDINALITY u(id,ord)
+    ARRAY(SELECT a.attname::text FROM unnest(k.confkey) WITH ORDINALITY u(id,ord)
       JOIN pg_attribute a ON a.attrelid=fc.oid AND a.attnum=u.id ORDER BY u.ord) AS "targetColumns"
     FROM pg_constraint k JOIN pg_class c ON c.oid=k.conrelid JOIN pg_namespace n ON n.oid=c.relnamespace
     LEFT JOIN pg_class fc ON fc.oid=k.confrelid LEFT JOIN pg_namespace fn ON fn.oid=fc.relnamespace
