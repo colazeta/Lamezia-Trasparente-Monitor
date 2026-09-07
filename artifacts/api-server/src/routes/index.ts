@@ -30,8 +30,12 @@ import publicRouter from "./public";
 import monitoringReportsRouter from "./monitoringReports";
 import helperRouter from "./helper";
 import redazioneRouter from "./redazione";
+import { pool } from "@workspace/db";
+import { createDatabaseAdminRouter } from "./databaseAdmin";
 
 const router: IRouter = Router();
+
+router.use("/admin/database", createDatabaseAdminRouter(pool));
 
 router.use(healthRouter);
 router.use(categoriesRouter);

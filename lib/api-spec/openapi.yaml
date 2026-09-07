@@ -33,6 +33,117 @@ tags:
   - name: demographics
     description: Municipal demographic observations and census profiles
 paths:
+  /admin/database/catalog:
+    get:
+      operationId: getDatabaseInspectionCatalog
+      tags: [database-admin]
+      summary: Inspect the live PostgreSQL catalog as the sole database owner
+      description: Private no-store metadata. Row estimates are nullable and are not exact counts. This operation does not certify complete ingestion or schema equivalence.
+      security:
+        - DatabaseOwnerSession: []
+      responses:
+        "200":
+          description: Private read-only database inspection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DatabaseInspectionCatalog"
+        "400":
+          description: Invalid table, key or query parameters
+        "401":
+          description: Verified Clerk session required
+        "403":
+          description: Session subject or authorised origin does not match the sole owner
+        "429":
+          description: At most two concurrent inspection requests per API process
+        "503":
+          description: Owner configuration missing, database unavailable or query timeout
+  /admin/database/tables/{name}:
+    get:
+      operationId: getDatabaseInspectionRows
+      tags: [database-admin]
+      summary: Read a bounded page from a registered application table
+      description: Repeatable-read read-only transaction. Values are text or null; list cells are limited to 2048 characters, with truncation declared. Sensitive credential columns are redacted. Search values are parameterised; table and column names are allowlisted. Query timeout is three seconds per statement.
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema: { type: string, pattern: '^[a-z_][a-z0-9_]*$' }
+        - name: page
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 1000, default: 1 }
+        - name: pageSize
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 100, default: 50 }
+        - name: column
+          in: query
+          schema: { type: string }
+        - name: value
+          in: query
+          schema: { type: string, maxLength: 200 }
+        - name: match
+          in: query
+          schema: { type: string, enum: [contains, equals], default: contains }
+        - name: sort
+          in: query
+          schema: { type: string }
+        - name: direction
+          in: query
+          schema: { type: string, enum: [asc, desc], default: asc }
+      security:
+        - DatabaseOwnerSession: []
+      responses:
+        "200":
+          description: Private read-only database inspection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DatabaseInspectionPage"
+        "400":
+          description: Invalid table, key or query parameters
+        "401":
+          description: Verified Clerk session required
+        "403":
+          description: Session subject or authorised origin does not match the sole owner
+        "429":
+          description: At most two concurrent inspection requests per API process
+        "503":
+          description: Owner configuration missing, database unavailable or query timeout
+  /admin/database/tables/{name}/record:
+    get:
+      operationId: getDatabaseInspectionRecord
+      tags: [database-admin]
+      summary: Read one internal record by its complete primary key
+      description: The key is a JSON object mapping every primary-key column to its textual value. Each key value is limited to 512 characters. Detail cells are limited to 65536 characters with explicit truncation. A missing record returns an empty rows array.
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema: { type: string, pattern: '^[a-z_][a-z0-9_]*$' }
+        - name: key
+          in: query
+          required: true
+          schema: { type: string, maxLength: 4096 }
+      security:
+        - DatabaseOwnerSession: []
+      responses:
+        "200":
+          description: Private read-only database inspection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DatabaseInspectionPage"
+        "400":
+          description: Invalid table, key or query parameters
+        "401":
+          description: Verified Clerk session required
+        "403":
+          description: Session subject or authorised origin does not match the sole owner
+        "429":
+          description: At most two concurrent inspection requests per API process
+        "503":
+          description: Owner configuration missing, database unavailable or query timeout
+
   /healthz:
     get:
       operationId: healthCheck
@@ -3873,7 +3984,95 @@ paths:
                 $ref: "#/components/schemas/Error"
 
 components:
+  securitySchemes:
+    DatabaseOwnerSession:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Verified Clerk session with the sole configured subject and exact authorised origin. Editor and ingestion credentials are not sufficient.
   schemas:
+    DatabaseInspectionColumn:
+      type: object
+      required: [name, type, nullable, default, ordinal, primaryKey, redacted]
+      properties:
+        name: { type: string }
+        type: { type: string }
+        nullable: { type: boolean }
+        default: { type: [string, 'null'] }
+        ordinal: { type: integer }
+        primaryKey: { type: boolean }
+        redacted: { type: boolean }
+    DatabaseInspectionRelation:
+      type: object
+      required: [name, columns, targetSchema, targetTable, targetColumns, definition, validated]
+      properties:
+        name: { type: string }
+        columns: { type: array, items: { type: string } }
+        targetSchema: { type: string }
+        targetTable: { type: string }
+        targetColumns: { type: array, items: { type: string } }
+        definition: { type: string }
+        validated: { type: boolean }
+    DatabaseInspectionIndex:
+      type: object
+      required: [name, definition, valid]
+      properties:
+        name: { type: string }
+        definition: { type: string }
+        valid: { type: boolean }
+    DatabaseInspectionConstraint:
+      type: object
+      required: [name, type, definition, validated]
+      properties:
+        name: { type: string }
+        type: { type: string }
+        definition: { type: string }
+        validated: { type: boolean }
+    DatabaseInspectionTable:
+      type: object
+      required: [name, schema, estimatedRows, bytes, rls, registered, columns, relations, indexes, constraints, issues]
+      properties:
+        name: { type: string }
+        schema: { type: string }
+        estimatedRows: { type: [number, 'null'] }
+        bytes: { type: number }
+        rls: { type: boolean }
+        registered: { type: boolean }
+        columns: { type: array, items: { $ref: '#/components/schemas/DatabaseInspectionColumn' } }
+        relations: { type: array, items: { $ref: '#/components/schemas/DatabaseInspectionRelation' } }
+        indexes: { type: array, items: { $ref: '#/components/schemas/DatabaseInspectionIndex' } }
+        constraints: { type: array, items: { $ref: '#/components/schemas/DatabaseInspectionConstraint' } }
+        issues: { type: array, items: { type: string } }
+    DatabaseInspectionCatalog:
+      type: object
+      required: [capturedAt, database, version, bytes, migrationCount, tables, missingTables]
+      properties:
+        capturedAt: { type: string }
+        database: { type: string }
+        version: { type: string }
+        bytes: { type: number }
+        migrationCount: { type: [integer, 'null'] }
+        tables: { type: array, items: { $ref: '#/components/schemas/DatabaseInspectionTable' } }
+        missingTables: { type: array, items: { type: string } }
+    DatabaseInspectionRow:
+      type: object
+      required: [values, truncated]
+      properties:
+        values:
+          type: object
+          additionalProperties: { type: [string, 'null'] }
+        truncated: { type: array, items: { type: string } }
+    DatabaseInspectionPage:
+      type: object
+      required: [table, capturedAt, rows, total, page, pageSize]
+      properties:
+        table: { type: string }
+        capturedAt: { type: string }
+        rows: { type: array, items: { $ref: '#/components/schemas/DatabaseInspectionRow' } }
+        total: { type: number }
+        page: { type: integer }
+        pageSize: { type: integer }
+
     HealthStatus:
       type: object
       properties:

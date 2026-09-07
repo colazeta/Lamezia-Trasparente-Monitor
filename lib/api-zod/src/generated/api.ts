@@ -9,6 +9,135 @@ import * as zod from 'zod';
 
 
 /**
+ * Private no-store metadata. Row estimates are nullable and are not exact counts. This operation does not certify complete ingestion or schema equivalence.
+ * @summary Inspect the live PostgreSQL catalog as the sole database owner
+ */
+export const GetDatabaseInspectionCatalogResponse = zod.object({
+  "capturedAt": zod.string(),
+  "database": zod.string(),
+  "version": zod.string(),
+  "bytes": zod.number(),
+  "migrationCount": zod.number().nullable(),
+  "tables": zod.array(zod.object({
+  "name": zod.string(),
+  "schema": zod.string(),
+  "estimatedRows": zod.number().nullable(),
+  "bytes": zod.number(),
+  "rls": zod.boolean(),
+  "registered": zod.boolean(),
+  "columns": zod.array(zod.object({
+  "name": zod.string(),
+  "type": zod.string(),
+  "nullable": zod.boolean(),
+  "default": zod.string().nullable(),
+  "ordinal": zod.number(),
+  "primaryKey": zod.boolean(),
+  "redacted": zod.boolean()
+})),
+  "relations": zod.array(zod.object({
+  "name": zod.string(),
+  "columns": zod.array(zod.string()),
+  "targetSchema": zod.string(),
+  "targetTable": zod.string(),
+  "targetColumns": zod.array(zod.string()),
+  "definition": zod.string(),
+  "validated": zod.boolean()
+})),
+  "indexes": zod.array(zod.object({
+  "name": zod.string(),
+  "definition": zod.string(),
+  "valid": zod.boolean()
+})),
+  "constraints": zod.array(zod.object({
+  "name": zod.string(),
+  "type": zod.string(),
+  "definition": zod.string(),
+  "validated": zod.boolean()
+})),
+  "issues": zod.array(zod.string())
+})),
+  "missingTables": zod.array(zod.string())
+})
+
+
+/**
+ * Repeatable-read read-only transaction. Values are text or null; list cells are limited to 2048 characters, with truncation declared. Sensitive credential columns are redacted. Search values are parameterised; table and column names are allowlisted. Query timeout is three seconds per statement.
+ * @summary Read a bounded page from a registered application table
+ */
+export const getDatabaseInspectionRowsPathNameRegExp = new RegExp('^[a-z_][a-z0-9_]\*$');
+
+
+export const GetDatabaseInspectionRowsParams = zod.object({
+  "name": zod.coerce.string().regex(getDatabaseInspectionRowsPathNameRegExp)
+})
+
+export const getDatabaseInspectionRowsQueryPageDefault = 1;
+export const getDatabaseInspectionRowsQueryPageMax = 1000;
+
+export const getDatabaseInspectionRowsQueryPageSizeDefault = 50;
+export const getDatabaseInspectionRowsQueryPageSizeMax = 100;
+
+export const getDatabaseInspectionRowsQueryValueMax = 200;
+
+export const getDatabaseInspectionRowsQueryMatchDefault = `contains`;
+export const getDatabaseInspectionRowsQueryDirectionDefault = `asc`;
+
+export const GetDatabaseInspectionRowsQueryParams = zod.object({
+  "page": zod.coerce.number().min(1).max(getDatabaseInspectionRowsQueryPageMax).default(getDatabaseInspectionRowsQueryPageDefault),
+  "pageSize": zod.coerce.number().min(1).max(getDatabaseInspectionRowsQueryPageSizeMax).default(getDatabaseInspectionRowsQueryPageSizeDefault),
+  "column": zod.coerce.string().optional(),
+  "value": zod.coerce.string().max(getDatabaseInspectionRowsQueryValueMax).optional(),
+  "match": zod.enum(['contains', 'equals']).default(getDatabaseInspectionRowsQueryMatchDefault),
+  "sort": zod.coerce.string().optional(),
+  "direction": zod.enum(['asc', 'desc']).default(getDatabaseInspectionRowsQueryDirectionDefault)
+})
+
+export const GetDatabaseInspectionRowsResponse = zod.object({
+  "table": zod.string(),
+  "capturedAt": zod.string(),
+  "rows": zod.array(zod.object({
+  "values": zod.record(zod.string(), zod.string().nullable()),
+  "truncated": zod.array(zod.string())
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
+ * The key is a JSON object mapping every primary-key column to its textual value. Each key value is limited to 512 characters. Detail cells are limited to 65536 characters with explicit truncation. A missing record returns an empty rows array.
+ * @summary Read one internal record by its complete primary key
+ */
+export const getDatabaseInspectionRecordPathNameRegExp = new RegExp('^[a-z_][a-z0-9_]\*$');
+
+
+export const GetDatabaseInspectionRecordParams = zod.object({
+  "name": zod.coerce.string().regex(getDatabaseInspectionRecordPathNameRegExp)
+})
+
+export const getDatabaseInspectionRecordQueryKeyMax = 4096;
+
+
+
+export const GetDatabaseInspectionRecordQueryParams = zod.object({
+  "key": zod.coerce.string().max(getDatabaseInspectionRecordQueryKeyMax)
+})
+
+export const GetDatabaseInspectionRecordResponse = zod.object({
+  "table": zod.string(),
+  "capturedAt": zod.string(),
+  "rows": zod.array(zod.object({
+  "values": zod.record(zod.string(), zod.string().nullable()),
+  "truncated": zod.array(zod.string())
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
  * Returns server health status
  * @summary Health check
  */

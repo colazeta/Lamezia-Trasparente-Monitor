@@ -5,6 +5,82 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+export interface DatabaseInspectionColumn {
+  name: string;
+  type: string;
+  nullable: boolean;
+  /** @nullable */
+  default: string | null;
+  ordinal: number;
+  primaryKey: boolean;
+  redacted: boolean;
+}
+
+export interface DatabaseInspectionRelation {
+  name: string;
+  columns: string[];
+  targetSchema: string;
+  targetTable: string;
+  targetColumns: string[];
+  definition: string;
+  validated: boolean;
+}
+
+export interface DatabaseInspectionIndex {
+  name: string;
+  definition: string;
+  valid: boolean;
+}
+
+export interface DatabaseInspectionConstraint {
+  name: string;
+  type: string;
+  definition: string;
+  validated: boolean;
+}
+
+export interface DatabaseInspectionTable {
+  name: string;
+  schema: string;
+  /** @nullable */
+  estimatedRows: number | null;
+  bytes: number;
+  rls: boolean;
+  registered: boolean;
+  columns: DatabaseInspectionColumn[];
+  relations: DatabaseInspectionRelation[];
+  indexes: DatabaseInspectionIndex[];
+  constraints: DatabaseInspectionConstraint[];
+  issues: string[];
+}
+
+export interface DatabaseInspectionCatalog {
+  capturedAt: string;
+  database: string;
+  version: string;
+  bytes: number;
+  /** @nullable */
+  migrationCount: number | null;
+  tables: DatabaseInspectionTable[];
+  missingTables: string[];
+}
+
+export type DatabaseInspectionRowValues = {[key: string]: string | null};
+
+export interface DatabaseInspectionRow {
+  values: DatabaseInspectionRowValues;
+  truncated: string[];
+}
+
+export interface DatabaseInspectionPage {
+  table: string;
+  capturedAt: string;
+  rows: DatabaseInspectionRow[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
 export interface HealthStatus {
   status: string;
 }
@@ -3063,6 +3139,50 @@ export interface AccessoCivicoImportResult {
   /** Rows skipped due to validation errors. */
   scartate: AccessoCivicoImportResultScartateItem[];
 }
+
+export type GetDatabaseInspectionRowsParams = {
+/**
+ * @minimum 1
+ * @maximum 1000
+ */
+page?: number;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
+pageSize?: number;
+column?: string;
+/**
+ * @maxLength 200
+ */
+value?: string;
+match?: GetDatabaseInspectionRowsMatch;
+sort?: string;
+direction?: GetDatabaseInspectionRowsDirection;
+};
+
+export type GetDatabaseInspectionRowsMatch = typeof GetDatabaseInspectionRowsMatch[keyof typeof GetDatabaseInspectionRowsMatch];
+
+
+export const GetDatabaseInspectionRowsMatch = {
+  contains: 'contains',
+  equals: 'equals',
+} as const;
+
+export type GetDatabaseInspectionRowsDirection = typeof GetDatabaseInspectionRowsDirection[keyof typeof GetDatabaseInspectionRowsDirection];
+
+
+export const GetDatabaseInspectionRowsDirection = {
+  asc: 'asc',
+  desc: 'desc',
+} as const;
+
+export type GetDatabaseInspectionRecordParams = {
+/**
+ * @maxLength 4096
+ */
+key: string;
+};
 
 export type ListThemesParams = {
 categoryId?: number;

@@ -1,0 +1,929 @@
+[
+  {
+    "table": "categories",
+    "module": "categories",
+    "boundedContext": "editorial",
+    "targetNamespace": "editorial",
+    "migrationPhase": 17,
+    "architectureStatus": "retain_bounded_context",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/categories.ts",
+      "artifacts/api-server/src/routes/stats.ts",
+      "artifacts/api-server/src/routes/themes.ts",
+      "artifacts/api-server/src/lib/publicData.ts",
+      "lib/db/src/seed.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "themes",
+    "module": "themes",
+    "boundedContext": "editorial",
+    "targetNamespace": "editorial",
+    "migrationPhase": 17,
+    "architectureStatus": "retain_bounded_context",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/categories.ts",
+      "artifacts/api-server/src/routes/stats.ts",
+      "artifacts/api-server/src/routes/redazione.ts",
+      "artifacts/api-server/src/routes/themes.ts",
+      "artifacts/api-server/src/routes/feeds.ts",
+      "artifacts/api-server/src/lib/anacContracts.ts",
+      "artifacts/api-server/src/lib/publicOpenapi.ts",
+      "artifacts/api-server/src/lib/mcpServer.ts",
+      "artifacts/api-server/src/lib/publicData.ts",
+      "artifacts/api-server/src/lib/notifications.ts",
+      "lib/db/src/seed.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "theme_documents",
+    "module": "themeDocuments",
+    "boundedContext": "editorial",
+    "targetNamespace": "editorial",
+    "migrationPhase": 17,
+    "architectureStatus": "retain_bounded_context",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/themes.ts",
+      "artifacts/api-server/src/routes/feeds.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "theme_posts",
+    "module": "themePosts",
+    "boundedContext": "editorial",
+    "targetNamespace": "editorial",
+    "migrationPhase": 17,
+    "architectureStatus": "retain_bounded_context",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/themes.ts",
+      "artifacts/api-server/src/routes/feeds.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "theme_emails",
+    "module": "themeEmails",
+    "boundedContext": "application",
+    "targetNamespace": "editorial",
+    "migrationPhase": 17,
+    "architectureStatus": "retain_bounded_context",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/themes.ts",
+      "artifacts/api-server/src/routes/feeds.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "theme_metrics",
+    "module": "themeMetrics",
+    "boundedContext": "editorial",
+    "targetNamespace": "editorial",
+    "migrationPhase": 14,
+    "architectureStatus": "transition",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/themes.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "performance_categories",
+    "module": "performanceCategories",
+    "boundedContext": "statistics",
+    "targetNamespace": "statistics",
+    "migrationPhase": 14,
+    "architectureStatus": "transition",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/performance.ts",
+      "artifacts/api-server/src/lib/publicData.ts",
+      "lib/db/src/seed.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "performance_indicators",
+    "module": "performanceIndicators",
+    "boundedContext": "statistics",
+    "targetNamespace": "statistics",
+    "migrationPhase": 14,
+    "architectureStatus": "transition",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/performance.ts",
+      "artifacts/api-server/src/lib/demographics.ts",
+      "artifacts/api-server/src/lib/publicData.ts",
+      "lib/db/src/seed.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "performance_indicator_values",
+    "module": "performanceIndicatorValues",
+    "boundedContext": "statistics",
+    "targetNamespace": "statistics",
+    "migrationPhase": 14,
+    "architectureStatus": "transition",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/performance.ts",
+      "artifacts/api-server/src/lib/demographics.ts",
+      "artifacts/api-server/src/lib/publicData.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "demographic_series",
+    "module": "demographics",
+    "boundedContext": "statistics",
+    "targetNamespace": "statistics",
+    "migrationPhase": 14,
+    "architectureStatus": "reference_pattern",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/demographics.ts",
+      "artifacts/api-server/src/lib/demographicBalanceIngestion.ts",
+      "artifacts/api-server/src/lib/populationStructure.ts",
+      "artifacts/api-server/src/lib/populationCitizenship.ts",
+      "artifacts/api-server/src/lib/demographicBalance.ts",
+      "artifacts/api-server/src/lib/demographics.ts",
+      "artifacts/api-server/src/lib/demographicRbd.ts",
+      "artifacts/api-server/src/lib/demographicChangeDrivers.ts",
+      "artifacts/api-server/src/lib/populationHouseholds.ts",
+      "artifacts/api-server/src/lib/populationBirthCountry.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "demographic_releases",
+    "module": "demographics",
+    "boundedContext": "statistics",
+    "targetNamespace": "statistics",
+    "migrationPhase": 14,
+    "architectureStatus": "reference_pattern",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/demographics.ts",
+      "artifacts/api-server/src/lib/demographicBalanceIngestion.ts",
+      "artifacts/api-server/src/lib/populationStructure.ts",
+      "artifacts/api-server/src/lib/populationCitizenship.ts",
+      "artifacts/api-server/src/lib/demographicBalance.ts",
+      "artifacts/api-server/src/lib/demographics.ts",
+      "artifacts/api-server/src/lib/demographicRbd.ts",
+      "artifacts/api-server/src/lib/demographicChangeDrivers.ts",
+      "artifacts/api-server/src/lib/populationHouseholds.ts",
+      "artifacts/api-server/src/lib/populationBirthCountry.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "demographic_observations",
+    "module": "demographics",
+    "boundedContext": "statistics",
+    "targetNamespace": "statistics",
+    "migrationPhase": 14,
+    "architectureStatus": "reference_pattern",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/demographics.ts",
+      "artifacts/api-server/src/lib/demographicBalanceIngestion.ts",
+      "artifacts/api-server/src/lib/populationStructure.ts",
+      "artifacts/api-server/src/lib/populationCitizenship.ts",
+      "artifacts/api-server/src/lib/demographicBalance.ts",
+      "artifacts/api-server/src/lib/demographics.ts",
+      "artifacts/api-server/src/lib/demographicRbd.ts",
+      "artifacts/api-server/src/lib/demographicChangeDrivers.ts",
+      "artifacts/api-server/src/lib/populationHouseholds.ts",
+      "artifacts/api-server/src/lib/populationBirthCountry.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "contracts",
+    "module": "contracts",
+    "boundedContext": "procurement",
+    "targetNamespace": "procurement",
+    "migrationPhase": 8,
+    "architectureStatus": "legacy_projection",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/contracts.ts",
+      "artifacts/api-server/src/routes/monitoringReports.ts",
+      "artifacts/api-server/src/routes/stats.ts",
+      "artifacts/api-server/src/routes/themes.ts",
+      "artifacts/api-server/src/routes/feeds.ts",
+      "artifacts/api-server/src/routes/bandi.ts",
+      "artifacts/api-server/src/routes/publications.ts",
+      "artifacts/api-server/src/lib/anacContracts.ts",
+      "artifacts/api-server/src/lib/publicOpenapi.ts",
+      "artifacts/api-server/src/lib/mcpServer.ts",
+      "artifacts/api-server/src/lib/bandi.ts",
+      "artifacts/api-server/src/lib/publicData.ts",
+      "lib/db/src/seed.ts",
+      "scripts/contracts/discoverOfficialAnacSource.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "acts",
+    "module": "acts",
+    "boundedContext": "document",
+    "targetNamespace": "document",
+    "migrationPhase": 7,
+    "architectureStatus": "legacy_overlap",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/themes.ts",
+      "artifacts/api-server/src/routes/feeds.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "reports",
+    "module": "reports",
+    "boundedContext": "civic_monitoring",
+    "targetNamespace": "editorial",
+    "migrationPhase": 15,
+    "architectureStatus": "retain_bounded_context",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/stats.ts",
+      "artifacts/api-server/src/routes/reports.ts",
+      "artifacts/api-server/src/routes/redazione.ts",
+      "lib/db/src/seed.ts",
+      "lib/db/src/baselineLogic.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "monitoring_reports",
+    "module": "monitoringReports",
+    "boundedContext": "civic_monitoring",
+    "targetNamespace": "core",
+    "migrationPhase": 15,
+    "architectureStatus": "transition",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/monitoringReports.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "shares",
+    "module": "shares",
+    "boundedContext": "application",
+    "targetNamespace": "editorial",
+    "migrationPhase": 17,
+    "architectureStatus": "retain_bounded_context",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/stats.ts",
+      "artifacts/api-server/src/routes/themes.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "theme_relevance_events",
+    "module": "themeRelevanceEvents",
+    "boundedContext": "application",
+    "targetNamespace": "editorial",
+    "migrationPhase": 17,
+    "architectureStatus": "retain_bounded_context",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/themes.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "publications",
+    "module": "publications",
+    "boundedContext": "document",
+    "targetNamespace": "document",
+    "migrationPhase": 7,
+    "architectureStatus": "transition",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/contracts.ts",
+      "artifacts/api-server/src/routes/stats.ts",
+      "artifacts/api-server/src/routes/organi.ts",
+      "artifacts/api-server/src/routes/fundamentalActs.ts",
+      "artifacts/api-server/src/routes/delibere.ts",
+      "artifacts/api-server/src/routes/feeds.ts",
+      "artifacts/api-server/src/routes/officials.ts",
+      "artifacts/api-server/src/routes/bandi.ts",
+      "artifacts/api-server/src/routes/publications.ts",
+      "artifacts/api-server/src/lib/ingestion.ts",
+      "artifacts/api-server/src/lib/fundamentalActs.ts",
+      "artifacts/api-server/src/lib/publicActLookup.ts",
+      "artifacts/api-server/src/lib/alboAttachments.ts",
+      "artifacts/api-server/src/lib/briefs.ts",
+      "artifacts/api-server/src/lib/documentMarkdown.ts",
+      "artifacts/api-server/src/lib/bandi.ts",
+      "artifacts/api-server/src/lib/publicData.ts",
+      "lib/db/src/seed.ts",
+      "lib/db/src/organi-sync.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "attuazione_pnrr_projects",
+    "module": "attuazionePnrr",
+    "boundedContext": "project",
+    "targetNamespace": "project",
+    "migrationPhase": 9,
+    "architectureStatus": "source_specific_legacy",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/monitoringReports.ts",
+      "artifacts/api-server/src/routes/bandi.ts",
+      "artifacts/api-server/src/routes/publications.ts",
+      "artifacts/api-server/src/lib/attuazionePnrr.ts",
+      "artifacts/api-server/src/lib/changeSentinelQueue.ts",
+      "artifacts/api-server/src/lib/bandi.ts",
+      "artifacts/api-server/src/lib/publicData.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "italiadomani_projects",
+    "module": "italiadomaniProjects",
+    "boundedContext": "project",
+    "targetNamespace": "project",
+    "migrationPhase": 9,
+    "architectureStatus": "source_specific_legacy",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/publications.ts",
+      "artifacts/api-server/src/lib/italiadomaniPnrr.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "opendata_datasets",
+    "module": "opendataDatasets",
+    "boundedContext": "source_catalog",
+    "targetNamespace": "source",
+    "migrationPhase": 3,
+    "architectureStatus": "reference_pattern",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/opendata.ts",
+      "artifacts/api-server/src/routes/dcatValidation.ts",
+      "artifacts/api-server/src/lib/opendata.ts",
+      "artifacts/api-server/src/lib/dcat.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "opendata_resources",
+    "module": "opendataResources",
+    "boundedContext": "source_catalog",
+    "targetNamespace": "source",
+    "migrationPhase": 3,
+    "architectureStatus": "reference_pattern",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/opendata.ts",
+      "artifacts/api-server/src/routes/dcatValidation.ts",
+      "artifacts/api-server/src/lib/opendata.ts",
+      "artifacts/api-server/src/lib/dcat.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "opendata_snapshots",
+    "module": "opendataSnapshots",
+    "boundedContext": "source_catalog",
+    "targetNamespace": "source",
+    "migrationPhase": 3,
+    "architectureStatus": "reference_pattern",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/opendata.ts",
+      "artifacts/api-server/src/lib/opendata.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "feed_status",
+    "module": "feedStatus",
+    "boundedContext": "operations",
+    "targetNamespace": "source",
+    "migrationPhase": 3,
+    "architectureStatus": "transition",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/contracts.ts",
+      "artifacts/api-server/src/routes/opendata.ts",
+      "artifacts/api-server/src/routes/redazione.ts",
+      "artifacts/api-server/src/routes/performance.ts",
+      "artifacts/api-server/src/routes/publications.ts",
+      "artifacts/api-server/src/lib/attuazionePnrr.ts",
+      "artifacts/api-server/src/lib/demographicBalanceIngestion.ts",
+      "artifacts/api-server/src/lib/ingestion.ts",
+      "artifacts/api-server/src/lib/populationStructure.ts",
+      "artifacts/api-server/src/lib/populationCitizenship.ts",
+      "artifacts/api-server/src/lib/demographicBalance.ts",
+      "artifacts/api-server/src/lib/italiadomaniPnrr.ts",
+      "artifacts/api-server/src/lib/opendata.ts",
+      "artifacts/api-server/src/lib/anacContracts.ts",
+      "artifacts/api-server/src/lib/demographics.ts",
+      "artifacts/api-server/src/lib/demographicRbd.ts",
+      "artifacts/api-server/src/lib/confiscatedAssets.ts",
+      "artifacts/api-server/src/lib/sourceAudit.ts",
+      "artifacts/api-server/src/lib/populationBirthCountry.ts",
+      "lib/db/src/seed.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "change_sentinel_events",
+    "module": "changeSentinelEvents",
+    "boundedContext": "operations",
+    "targetNamespace": "source",
+    "migrationPhase": 3,
+    "architectureStatus": "transition",
+    "sourceReferences": [
+      "artifacts/api-server/src/lib/changeSentinelQueue.ts",
+      "artifacts/api-server/src/lib/changeSentinelStore.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "theme_followers",
+    "module": "themeFollowers",
+    "boundedContext": "application",
+    "targetNamespace": "editorial",
+    "migrationPhase": 17,
+    "architectureStatus": "retain_bounded_context",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/themes.ts",
+      "artifacts/api-server/src/lib/notifications.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "session_reports",
+    "module": "sessionReports",
+    "boundedContext": "institution",
+    "targetNamespace": "institution",
+    "migrationPhase": 11,
+    "architectureStatus": "transition",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/organi.ts",
+      "artifacts/api-server/src/routes/publications.ts",
+      "lib/db/src/organi-sync.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "session_interventions",
+    "module": "sessionReports",
+    "boundedContext": "institution",
+    "targetNamespace": "institution",
+    "migrationPhase": 11,
+    "architectureStatus": "transition",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/publications.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "officials",
+    "module": "officials",
+    "boundedContext": "institution",
+    "targetNamespace": "party",
+    "migrationPhase": 10,
+    "architectureStatus": "transition",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/organi.ts",
+      "artifacts/api-server/src/routes/officials.ts",
+      "artifacts/api-server/src/routes/publications.ts",
+      "lib/db/src/seed.ts",
+      "lib/db/src/institutional-officials.ts",
+      "lib/db/src/organi-sync.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "official_activities",
+    "module": "officials",
+    "boundedContext": "institution",
+    "targetNamespace": "party",
+    "migrationPhase": 10,
+    "architectureStatus": "transition",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/officials.ts",
+      "lib/db/src/seed.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "official_remunerations",
+    "module": "officials",
+    "boundedContext": "institution",
+    "targetNamespace": "party",
+    "migrationPhase": 10,
+    "architectureStatus": "transition",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/officials.ts",
+      "lib/db/src/seed.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "official_declarations",
+    "module": "officials",
+    "boundedContext": "institution",
+    "targetNamespace": "party",
+    "migrationPhase": 10,
+    "architectureStatus": "transition",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/officials.ts",
+      "lib/db/src/seed.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "official_votes",
+    "module": "officials",
+    "boundedContext": "institution",
+    "targetNamespace": "party",
+    "migrationPhase": 10,
+    "architectureStatus": "transition",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/officials.ts",
+      "artifacts/api-server/src/routes/publications.ts",
+      "lib/db/src/seed.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "questions",
+    "module": "questions",
+    "boundedContext": "editorial",
+    "targetNamespace": "editorial",
+    "migrationPhase": 17,
+    "architectureStatus": "retain_bounded_context",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/questions.ts",
+      "lib/db/src/seed.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "organi",
+    "module": "organi",
+    "boundedContext": "institution",
+    "targetNamespace": "institution",
+    "migrationPhase": 11,
+    "architectureStatus": "partial_target",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/organi.ts",
+      "artifacts/api-server/src/routes/redazione.ts",
+      "artifacts/api-server/src/routes/officials.ts",
+      "artifacts/api-server/src/routes/publications.ts",
+      "artifacts/api-server/src/lib/helperContent.ts",
+      "lib/db/src/organi-sync.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "organi_members",
+    "module": "organi",
+    "boundedContext": "institution",
+    "targetNamespace": "institution",
+    "migrationPhase": 11,
+    "architectureStatus": "partial_target",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/organi.ts",
+      "artifacts/api-server/src/routes/officials.ts",
+      "lib/db/src/organi-sync.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "sedute",
+    "module": "sedute",
+    "boundedContext": "institution",
+    "targetNamespace": "institution",
+    "migrationPhase": 11,
+    "architectureStatus": "transition",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/organi.ts",
+      "artifacts/api-server/src/routes/publications.ts",
+      "lib/db/src/organi-sync.ts",
+      "scripts/civic-source-registry.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "oversight_opinions",
+    "module": "oversightOpinions",
+    "boundedContext": "administrative",
+    "targetNamespace": "document",
+    "migrationPhase": 7,
+    "architectureStatus": "transition",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/oversight.ts",
+      "lib/db/src/seed.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "oversight_opinion_documents",
+    "module": "oversightOpinions",
+    "boundedContext": "administrative",
+    "targetNamespace": "document",
+    "migrationPhase": 7,
+    "architectureStatus": "transition",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/oversight.ts",
+      "lib/db/src/seed.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "fundamental_acts",
+    "module": "fundamentalActs",
+    "boundedContext": "administrative",
+    "targetNamespace": "document",
+    "migrationPhase": 7,
+    "architectureStatus": "transition",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/fundamentalActs.ts",
+      "artifacts/api-server/src/lib/fundamentalActs.ts",
+      "lib/db/src/seed.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "legality_areas",
+    "module": "legalityAreas",
+    "boundedContext": "civic_monitoring",
+    "targetNamespace": "editorial",
+    "migrationPhase": 15,
+    "architectureStatus": "retain_bounded_context",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/legality.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "legality_requirements",
+    "module": "legalityRequirements",
+    "boundedContext": "civic_monitoring",
+    "targetNamespace": "core",
+    "migrationPhase": 15,
+    "architectureStatus": "transition",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/legality.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "legality_overview",
+    "module": "legalityOverview",
+    "boundedContext": "civic_monitoring",
+    "targetNamespace": "editorial",
+    "migrationPhase": 15,
+    "architectureStatus": "retain_bounded_context",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/legality.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "bandi",
+    "module": "bandi",
+    "boundedContext": "administrative",
+    "targetNamespace": "administrative",
+    "migrationPhase": 15,
+    "architectureStatus": "transition",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/bandi.ts",
+      "artifacts/api-server/src/lib/ingestion.ts",
+      "artifacts/api-server/src/lib/sourceRegistry.ts",
+      "artifacts/api-server/src/lib/helperContent.ts",
+      "artifacts/api-server/src/lib/bandi.ts",
+      "lib/db/src/seed.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "bando_matches",
+    "module": "bandoMatches",
+    "boundedContext": "administrative",
+    "targetNamespace": "core",
+    "migrationPhase": 15,
+    "architectureStatus": "transition",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/bandi.ts",
+      "artifacts/api-server/src/lib/bandi.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "confiscated_assets",
+    "module": "confiscatedAssets",
+    "boundedContext": "asset",
+    "targetNamespace": "asset",
+    "migrationPhase": 13,
+    "architectureStatus": "legacy_vertical",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/confiscatedAssets.ts",
+      "artifacts/api-server/src/lib/confiscatedAssets.ts",
+      "lib/db/src/confiscatedAssetsCleanup.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "accesso_civico_requests",
+    "module": "accessoCivico",
+    "boundedContext": "civic_monitoring",
+    "targetNamespace": "administrative",
+    "migrationPhase": 15,
+    "architectureStatus": "transition",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/accessoCivico.ts",
+      "lib/db/src/seed.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "conversations",
+    "module": "conversations",
+    "boundedContext": "application",
+    "targetNamespace": "editorial",
+    "migrationPhase": 17,
+    "architectureStatus": "retain_bounded_context",
+    "sourceReferences": [
+      "lib/db/src/legacySchemaCompatibility.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "messages",
+    "module": "messages",
+    "boundedContext": "application",
+    "targetNamespace": "editorial",
+    "migrationPhase": 17,
+    "architectureStatus": "retain_bounded_context",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/helper.ts",
+      "artifacts/api-server/src/lib/briefs.ts",
+      "lib/db/src/legacySchemaCompatibility.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "page_blocks",
+    "module": "redazione",
+    "boundedContext": "editorial",
+    "targetNamespace": "editorial",
+    "migrationPhase": 16,
+    "architectureStatus": "retain_bounded_context",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/redazione.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "site_strings",
+    "module": "redazione",
+    "boundedContext": "editorial",
+    "targetNamespace": "editorial",
+    "migrationPhase": 16,
+    "architectureStatus": "retain_bounded_context",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/redazione.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "helper_overrides",
+    "module": "redazione",
+    "boundedContext": "editorial",
+    "targetNamespace": "editorial",
+    "migrationPhase": 16,
+    "architectureStatus": "retain_bounded_context",
+    "sourceReferences": [
+      "artifacts/api-server/src/routes/redazione.ts",
+      "artifacts/api-server/src/routes/helper.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "crime_events",
+    "module": "crimeEvents",
+    "boundedContext": "crime",
+    "targetNamespace": "crime",
+    "migrationPhase": 0,
+    "architectureStatus": "reference_pattern",
+    "sourceReferences": [
+      "lib/db/src/crimeMonitorIngestion.ts",
+      "lib/db/src/ltcedsPilotImport.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "crime_sources",
+    "module": "crimeEvents",
+    "boundedContext": "crime",
+    "targetNamespace": "crime",
+    "migrationPhase": 0,
+    "architectureStatus": "reference_pattern",
+    "sourceReferences": [
+      "lib/db/src/crimeMonitorIngestion.ts",
+      "lib/db/src/ltcedsPilotImport.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "crime_event_offences",
+    "module": "crimeEvents",
+    "boundedContext": "crime",
+    "targetNamespace": "crime",
+    "migrationPhase": 0,
+    "architectureStatus": "reference_pattern",
+    "sourceReferences": [
+      "lib/db/src/crimeMonitorIngestion.ts",
+      "lib/db/src/ltcedsPilotImport.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "crime_event_locations",
+    "module": "crimeEvents",
+    "boundedContext": "crime",
+    "targetNamespace": "crime",
+    "migrationPhase": 0,
+    "architectureStatus": "reference_pattern",
+    "sourceReferences": [
+      "lib/db/src/crimeMonitorIngestion.ts",
+      "lib/db/src/ltcedsPilotImport.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "crime_event_sources",
+    "module": "crimeEvents",
+    "boundedContext": "crime",
+    "targetNamespace": "crime",
+    "migrationPhase": 0,
+    "architectureStatus": "reference_pattern",
+    "sourceReferences": [
+      "lib/db/src/crimeMonitorIngestion.ts",
+      "lib/db/src/ltcedsPilotImport.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "crime_event_clusters",
+    "module": "crimeEvents",
+    "boundedContext": "crime",
+    "targetNamespace": "crime",
+    "migrationPhase": 0,
+    "architectureStatus": "reference_pattern",
+    "sourceReferences": [],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "crime_event_cluster_sources",
+    "module": "crimeEvents",
+    "boundedContext": "crime",
+    "targetNamespace": "crime",
+    "migrationPhase": 0,
+    "architectureStatus": "reference_pattern",
+    "sourceReferences": [],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "crime_event_cluster_members",
+    "module": "crimeEvents",
+    "boundedContext": "crime",
+    "targetNamespace": "crime",
+    "migrationPhase": 0,
+    "architectureStatus": "reference_pattern",
+    "sourceReferences": [],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "crime_public_events",
+    "module": "crimeEvents",
+    "boundedContext": "crime",
+    "targetNamespace": "crime",
+    "migrationPhase": 0,
+    "architectureStatus": "reference_pattern",
+    "sourceReferences": [
+      "artifacts/api-server/src/lib/publicCrimeEvents.ts",
+      "lib/db/src/crimeMonitorIngestion.ts",
+      "lib/db/src/ltcedsPilotImport.ts"
+    ],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "canonical_subjects",
+    "module": "canonicalIdentity",
+    "boundedContext": "canonical_identity",
+    "targetNamespace": "core",
+    "migrationPhase": 2,
+    "architectureStatus": "canonical_core",
+    "sourceReferences": [],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  },
+  {
+    "table": "legacy_subject_map",
+    "module": "canonicalIdentity",
+    "boundedContext": "canonical_identity",
+    "targetNamespace": "core",
+    "migrationPhase": 2,
+    "architectureStatus": "canonical_core",
+    "sourceReferences": [],
+    "referenceSemantics": "Static code references, not proof that ingestion ran or that data was persisted."
+  }
+]

@@ -26,7 +26,8 @@
       "0015_change_sentinel_queue.sql",
       "0016_ltceds_persistence_boundary.sql",
       "0017_conversations_messages_convergence.sql",
-      "0018_canonical_subject_identity.sql"
+      "0018_canonical_subject_identity.sql",
+      "0019_publications_brief_manual_convergence.sql"
     ],
     "schemaTablesNotCreatedInVersionedMigrations": [],
     "migrationTablesNotInCurrentDrizzleSchema": []

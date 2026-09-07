@@ -1,0 +1,88 @@
+{
+  "schemaVersion": "lt-database-migration-validation.v1",
+  "issue": 1096,
+  "migration": "lib/db/migrations/0019_publications_brief_manual_convergence.sql",
+  "projectId": "empty-cherry-93566793",
+  "branchId": "br-raspy-sunset-asgudi4n",
+  "branchName": "codex-1096-database-audit",
+  "parentBranchId": "br-morning-fire-as9l08lf",
+  "method": "Execute the exact six migration statements as a transaction through the Neon connector on an isolated copy. This tests the SQL and rollback behaviour; it is not a production deployment or a run of the complete migration pipeline.",
+  "checks": [
+    {
+      "name": "Ambiguous existing brief with NULL override flag",
+      "outcome": "Expected exception before backfill; transaction rolled back",
+      "error": "NeonDbError: brief_manual convergence requires review: existing briefs have unknown override status"
+    },
+    {
+      "name": "Rollback contract",
+      "outcome": "Column remained nullable with no default and both original NULL values retained"
+    },
+    {
+      "name": "Explicit fixture adjudication",
+      "outcome": "Only the synthetic ambiguous fixture was classified as manual before retry"
+    },
+    {
+      "name": "Valid conversion",
+      "outcome": "NULL with no brief became false; existing true/false flags and brief content preserved"
+    },
+    {
+      "name": "Repeat execution",
+      "outcome": "Successful; same column contract and fixture values"
+    },
+    {
+      "name": "Explicit NULL after convergence",
+      "outcome": "Expected PostgreSQL NOT NULL violation"
+    },
+    {
+      "name": "Omitted flag after convergence",
+      "outcome": "Inserted with false default"
+    }
+  ],
+  "finalFixtureResults": [
+    {
+      "captured_at": "2026-09-07T18:13:24.327Z",
+      "postgres_version": "18.6 (c5250a2)",
+      "synthetic_fixtures": [
+        {
+          "brief": "Synthetic legacy brief",
+          "progressivo": "AUDIT-1096-ambiguous",
+          "brief_manual": true
+        },
+        {
+          "brief": "Synthetic generated brief",
+          "progressivo": "AUDIT-1096-auto",
+          "brief_manual": false
+        },
+        {
+          "brief": null,
+          "progressivo": "AUDIT-1096-default",
+          "brief_manual": false
+        },
+        {
+          "brief": null,
+          "progressivo": "AUDIT-1096-empty",
+          "brief_manual": false
+        },
+        {
+          "brief": "Synthetic manual brief",
+          "progressivo": "AUDIT-1096-manual",
+          "brief_manual": true
+        }
+      ],
+      "column_contract": {
+        "default": "false",
+        "is_nullable": "NO"
+      }
+    }
+  ],
+  "productionAfterTest": [
+    {
+      "is_nullable": "YES",
+      "column_default": null,
+      "rows": "0",
+      "migrations": "19"
+    }
+  ],
+  "productionChanged": false,
+  "cleanup": "Temporary branch deleted after verification; a subsequent provider listing by its exact name returned an empty list. Production was not migrated."
+}
