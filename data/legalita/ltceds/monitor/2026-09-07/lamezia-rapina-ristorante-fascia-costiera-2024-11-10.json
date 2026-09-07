@@ -1,0 +1,165 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-ristorante-fascia-costiera-2024-11-10",
+  "discovered_at": "2026-09-07T23:10:29+02:00",
+  "updated_at": "2026-09-07T23:10:29+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina aggravata e danneggiamenti in un ristorante della fascia costiera di Lamezia Terme",
+  "temporal": {
+    "start": "2024-11-10",
+    "end": "2024-11-10",
+    "edtf": "2024-11-10",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "law:polizia-stato-catanzaro:2024-11-14:rapina-ristorante-fascia-costiera",
+      "source_type": "law_enforcement_primary",
+      "provider": "Polizia di Stato — Questura di Catanzaro",
+      "title": "Lamezia Terme: arrestato dalla Polizia di Stato un uomo che, armato di spranga di ferro, ha devastato un ristorante rapinando l'incasso",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/18076735b94e39285061058631",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T23:10:29+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "agency:ansa:2024-11-14:devasta-ristorante-arrestato",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Devasta ristorante dopo non avere pagato il conto, arrestato",
+      "url": "https://www.ansa.it/calabria/notizie/2024/11/14/devasta-ristorante-dopo-non-avere-pagato-il-conto-arrestato_f1499a33-2a31-4ca8-b1ac-1d8b76e642a9.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T23:10:29+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-di-lamezia:2024-11-14:spranga-ristorante-incasso",
+      "source_type": "press_secondary",
+      "provider": "Corriere di Lamezia",
+      "title": "Lamezia, armato di spranga devasta ristorante e ruba incasso, arrestato",
+      "url": "https://www.corrieredilamezia.it/cronaca/2024_11_14/lamezia-armato-di-spranga-devasta-ristorante-e-ruba-incasso-arrestato_49580/",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T23:10:29+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:estorsione",
+      "classification_source_key": "agency:ansa:2024-11-14:devasta-ristorante-arrestato",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti riferiscono che, dopo la cena, il cliente si rifiutò di pagare il conto e minacciò il titolare; ANSA indica l'estorsione tra i reati per i quali fu arrestato",
+        "il record descrive la qualificazione della fase dell'arresto e della convalida e non rappresenta la responsabilità come definitivamente accertata"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:danneggiamento-aggravato",
+      "classification_source_key": "agency:ansa:2024-11-14:devasta-ristorante-arrestato",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti riferiscono la frantumazione della vetrata d'ingresso, ingenti danni agli interni del ristorante e il danneggiamento di due autovetture di clienti",
+        "ANSA e la cronaca che riproduce il comunicato di polizia indicano il danneggiamento aggravato tra i reati contestati in sede di arresto"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 3
+    },
+    {
+      "offence_key": "offence:rapina-aggravata",
+      "classification_source_key": "law:polizia-stato-catanzaro:2024-11-14:rapina-ristorante-fascia-costiera",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la Questura qualifica l'episodio come rapina dell'incasso; ANSA riferisce l'asportazione di 200 euro dal registratore di cassa",
+        "la qualificazione è riferita alla fase dell'arresto e non equivale ad accertamento definitivo di responsabilità"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    },
+    {
+      "offence_key": "offence:resistenza-pubblico-ufficiale",
+      "classification_source_key": "agency:ansa:2024-11-14:devasta-ristorante-arrestato",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti riferiscono che l'uomo rifiutò l'ordine degli agenti di lasciare la spranga e oppose resistenza prima di essere immobilizzato; la resistenza a pubblico ufficiale è indicata tra i reati dell'arresto"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:fascia-costiera:ristorante:occurrence",
+      "basis_source_key": "law:polizia-stato-catanzaro:2024-11-14:rapina-ristorante-fascia-costiera",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Fascia costiera di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:fascia-costiera:ristorante:arrest",
+      "basis_source_key": "law:polizia-stato-catanzaro:2024-11-14:rapina-ristorante-fascia-costiera",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Fascia costiera di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
