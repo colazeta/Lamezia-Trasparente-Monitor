@@ -1,5 +1,7 @@
 # Profilo semantico federato di Lamezia Trasparente
 
+> Proposta storica v0.1. Per lo stato corrente leggere [il disegno concettuale](conceptual-schema.md) e [la matrice di copertura](conceptual-catalog.md). Le strutture target elencate qui non sono tutte implementate. Il registro di identità realizzato si chiama `canonical_subjects`, con `legacy_subject_map`: il nome ipotetico `entities` usato sotto non richiede un secondo registro. Il profilo RDF pubblico corrente è `ontology.ttl` 1.2.0 e copre un sottoinsieme del modello.
+
 **Stato:** baseline architetturale v0.1  
 **Data:** 2026-09-02  
 **Issue:** #920  

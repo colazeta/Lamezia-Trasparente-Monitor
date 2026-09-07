@@ -1,6 +1,14 @@
 import { Link, useLocation } from "wouter";
-import { ChevronDown, FileSearch, Home, Megaphone, Menu, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import {
+  ChevronDown,
+  FileSearch,
+  Home,
+  Megaphone,
+  Menu,
+  X,
+} from "lucide-react";
+import { Fragment, useEffect, useState } from "react";
+import { navigationSubgroups } from "./conceptualNavigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/brand/Logo";
@@ -9,6 +17,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -23,10 +32,7 @@ import {
   findPrimaryNavItemByPath,
   isParticipationPath,
 } from "./navState";
-import {
-  PARTICIPATION_ACTIONS,
-  PRIMARY_NAV_GROUPS,
-} from "./primaryNavigation";
+import { PARTICIPATION_ACTIONS, PRIMARY_NAV_GROUPS } from "./primaryNavigation";
 
 export function Navbar() {
   const [location] = useLocation();
@@ -105,35 +111,43 @@ export function Navbar() {
                     className="w-[19rem] p-1.5"
                     sideOffset={8}
                   >
-                    {group.items.map((item) => {
-                      const Icon = item.icon;
-                      const itemActive = item.href === activePrimaryItemHref;
-                      return (
-                        <DropdownMenuItem key={item.href} asChild>
-                          <Link
-                            href={item.href}
-                            aria-current={itemActive ? "page" : undefined}
-                            className={cn(
-                              "flex cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-2",
-                              itemActive && "bg-primary/10 text-primary",
-                            )}
-                          >
-                            <Icon
-                              className={cn(
-                                "h-4 w-4 shrink-0",
-                                itemActive
-                                  ? "text-primary"
-                                  : "text-muted-foreground",
-                              )}
-                              aria-hidden="true"
-                            />
-                            <span className="min-w-0 truncate text-sm font-semibold leading-5">
-                              {item.label}
-                            </span>
-                          </Link>
-                        </DropdownMenuItem>
-                      );
-                    })}
+                    {navigationSubgroups(group.items).map((subgroup) => (
+                      <Fragment key={subgroup.label}>
+                        <DropdownMenuLabel className="px-2.5 pt-3 text-xs font-medium text-muted-foreground">
+                          {subgroup.label}
+                        </DropdownMenuLabel>
+                        {subgroup.items.map((item) => {
+                          const Icon = item.icon;
+                          const itemActive =
+                            item.href === activePrimaryItemHref;
+                          return (
+                            <DropdownMenuItem key={item.href} asChild>
+                              <Link
+                                href={item.href}
+                                aria-current={itemActive ? "page" : undefined}
+                                className={cn(
+                                  "flex cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-2",
+                                  itemActive && "bg-primary/10 text-primary",
+                                )}
+                              >
+                                <Icon
+                                  className={cn(
+                                    "h-4 w-4 shrink-0",
+                                    itemActive
+                                      ? "text-primary"
+                                      : "text-muted-foreground",
+                                  )}
+                                  aria-hidden="true"
+                                />
+                                <span className="min-w-0 truncate text-sm font-semibold leading-5">
+                                  {item.label}
+                                </span>
+                              </Link>
+                            </DropdownMenuItem>
+                          );
+                        })}
+                      </Fragment>
+                    ))}
                   </DropdownMenuContent>
                 </DropdownMenu>
               );
@@ -151,10 +165,17 @@ export function Navbar() {
                 >
                   <Megaphone className="h-4 w-4" aria-hidden="true" />
                   Partecipa
-                  <ChevronDown className="h-3.5 w-3.5 opacity-70" aria-hidden="true" />
+                  <ChevronDown
+                    className="h-3.5 w-3.5 opacity-70"
+                    aria-hidden="true"
+                  />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-[18rem] p-1.5" sideOffset={8}>
+              <DropdownMenuContent
+                align="end"
+                className="w-[18rem] p-1.5"
+                sideOffset={8}
+              >
                 {PARTICIPATION_ACTIONS.map((item) => {
                   const Icon = item.icon;
                   const itemActive = item.href === activeParticipationItemHref;
@@ -171,7 +192,9 @@ export function Navbar() {
                         <Icon
                           className={cn(
                             "h-4 w-4 shrink-0",
-                            itemActive ? "text-primary" : "text-muted-foreground",
+                            itemActive
+                              ? "text-primary"
+                              : "text-muted-foreground",
                           )}
                           aria-hidden="true"
                         />
@@ -312,14 +335,21 @@ export function Navbar() {
                         hidden={!expanded}
                         className="border-t border-border/70 px-2 py-2"
                       >
-                        {group.items.map((item) => (
-                          <MobileSectionLink
-                            key={item.href}
-                            href={item.href}
-                            label={item.label}
-                            icon={item.icon}
-                            active={item.href === activePrimaryItemHref}
-                          />
+                        {navigationSubgroups(group.items).map((subgroup) => (
+                          <section key={subgroup.label}>
+                            <h3 className="px-3 pt-3 pb-1 text-xs font-medium text-muted-foreground">
+                              {subgroup.label}
+                            </h3>
+                            {subgroup.items.map((item) => (
+                              <MobileSectionLink
+                                key={item.href}
+                                href={item.href}
+                                label={item.label}
+                                icon={item.icon}
+                                active={item.href === activePrimaryItemHref}
+                              />
+                            ))}
+                          </section>
                         ))}
                       </div>
                     </div>

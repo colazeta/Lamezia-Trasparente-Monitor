@@ -59,5 +59,1797 @@
     {"name":"sources","role":"source_manifests_and_snapshots","authoritative":false,"targetRule":"Align with universal source registry; files may remain as auditable manifests."},
     {"name":"geo","role":"geographic_reference_artifacts","authoritative":false,"targetRule":"Register as source/artifact and link to canonical geo model."},
     {"name":"legalita","role":"domain_source_and_research_artifacts","authoritative":false,"targetRule":"Register source/evidence ownership; do not maintain a separate ontology from canonical crime/legal domains."}
-  ]
+  ],
+  "conceptualCatalog": {
+    "version": "1.0.0",
+    "reviewedAt": "2026-09-07",
+    "domains": [
+      {
+        "id": "identity",
+        "label": "Identità comuni",
+        "description": "Identificatori stabili e collegamenti alle identità dei sistemi precedenti."
+      },
+      {
+        "id": "sources",
+        "label": "Fonti e acquisizioni",
+        "description": "Origini, versioni, record osservati e operazioni di acquisizione."
+      },
+      {
+        "id": "documents",
+        "label": "Atti e documenti",
+        "description": "Decisioni amministrative, pubblicazioni, allegati e pareri."
+      },
+      {
+        "id": "institutions",
+        "label": "Persone e istituzioni",
+        "description": "Persone, organi, incarichi nel tempo e sedute."
+      },
+      {
+        "id": "procurement",
+        "label": "Appalti",
+        "description": "Procedure, affidamenti e contratti con i loro identificatori."
+      },
+      {
+        "id": "projects",
+        "label": "Progetti pubblici",
+        "description": "Progetti identificati dal CUP e descritti da più fonti."
+      },
+      {
+        "id": "statistics",
+        "label": "Indicatori e osservazioni",
+        "description": "Definizioni, serie, periodi e valori osservati."
+      },
+      {
+        "id": "territory",
+        "label": "Territorio e beni",
+        "description": "Luoghi, geometrie, beni e loro stato documentato."
+      },
+      {
+        "id": "crime",
+        "label": "Eventi documentati",
+        "description": "Eventi criminali, fonti, qualificazioni, localizzazioni e proiezioni pubbliche."
+      },
+      {
+        "id": "monitoring",
+        "label": "Monitoraggio e partecipazione",
+        "description": "Segnalazioni, richieste, proposte e valutazioni documentate."
+      },
+      {
+        "id": "editorial",
+        "label": "Redazione e classificazioni",
+        "description": "Temi, testi curati e configurazione della presentazione."
+      },
+      {
+        "id": "application",
+        "label": "Servizi applicativi",
+        "description": "Conversazioni, iscrizioni e utilizzo del servizio."
+      }
+    ],
+    "concepts": [
+      {
+        "id": "identity",
+        "label": "Identità canonica",
+        "definition": "Un riferimento stabile a un soggetto, senza duplicarne gli attributi di dominio.",
+        "identityRule": "UUID e tipo di dominio; non si fonde per somiglianza del nome.",
+        "semanticCoverage": "gap",
+        "terms": []
+      },
+      {
+        "id": "source",
+        "label": "Fonte",
+        "definition": "Il soggetto o sistema che pubblica informazioni.",
+        "identityRule": "Codice della fonte; non coincide con il documento acquisito.",
+        "semanticCoverage": "reference",
+        "terms": [
+          "prov:Agent"
+        ]
+      },
+      {
+        "id": "artifact",
+        "label": "Artefatto",
+        "definition": "Una sequenza di byte identificata da hash e formato.",
+        "identityRule": "Hash dei byte; gli allegati possono rimanere fuori PostgreSQL.",
+        "semanticCoverage": "reference",
+        "terms": [
+          "prov:Entity"
+        ]
+      },
+      {
+        "id": "release",
+        "label": "Versione informativa",
+        "definition": "Un insieme di dati acquisito a un determinato stato.",
+        "identityRule": "Fonte, versione e hash; una nuova versione non sovrascrive la precedente.",
+        "semanticCoverage": "reference",
+        "terms": [
+          "dcat:Dataset"
+        ]
+      },
+      {
+        "id": "source_record",
+        "label": "Record di fonte",
+        "definition": "Un'unità informativa di una versione di fonte.",
+        "identityRule": "Chiave originaria dentro la release; non coincide automaticamente con l'entità descritta.",
+        "semanticCoverage": "gap",
+        "terms": []
+      },
+      {
+        "id": "acquisition",
+        "label": "Acquisizione",
+        "definition": "Un tentativo di acquisire o verificare una fonte.",
+        "identityRule": "ID del tentativo ed esito, anche quando non produce nuovi record.",
+        "semanticCoverage": "reference",
+        "terms": [
+          "prov:Activity"
+        ]
+      },
+      {
+        "id": "publication",
+        "label": "Pubblicazione",
+        "definition": "La comparsa di un contenuto in un registro pubblico.",
+        "identityRule": "Fonte e identificativo di pubblicazione, distinti dall'identità dell'atto.",
+        "semanticCoverage": "partial",
+        "terms": [
+          "lt:AdministrativeAct"
+        ]
+      },
+      {
+        "id": "document",
+        "label": "Documento",
+        "definition": "Una risorsa informativa o allegato che descrive un atto o altro soggetto.",
+        "identityRule": "Identità documentale distinta da formato, estrazione testuale e pubblicazione.",
+        "semanticCoverage": "partial",
+        "terms": [
+          "lt:AdministrativeActTextRepresentation"
+        ]
+      },
+      {
+        "id": "act",
+        "label": "Atto amministrativo",
+        "definition": "Una decisione o parere formalizzato da un'autorità.",
+        "identityRule": "Autorità, tipo, numero e data verificati; il titolo da solo non è una chiave.",
+        "semanticCoverage": "partial",
+        "terms": [
+          "lt:AdministrativeAct"
+        ]
+      },
+      {
+        "id": "person",
+        "label": "Persona",
+        "definition": "Un individuo la cui identità rimane stabile al cambiare della carica.",
+        "identityRule": "Identificatori qualificati e risoluzione documentata; mai soltanto il nome.",
+        "semanticCoverage": "reference",
+        "terms": [
+          "CPV-AP_IT"
+        ]
+      },
+      {
+        "id": "organisation",
+        "label": "Organizzazione o organo",
+        "definition": "Un ente o organo istituzionale, con natura e contesto espliciti.",
+        "identityRule": "Ente, unità e periodo; un organo non è la persona che lo presiede.",
+        "semanticCoverage": "reference",
+        "terms": [
+          "COV-AP_IT"
+        ]
+      },
+      {
+        "id": "role",
+        "label": "Incarico o partecipazione",
+        "definition": "Il ruolo svolto da una persona in un contesto e periodo.",
+        "identityRule": "Persona, ruolo, organo e intervallo di validità.",
+        "semanticCoverage": "reference",
+        "terms": [
+          "RO-AP_IT"
+        ]
+      },
+      {
+        "id": "session",
+        "label": "Seduta",
+        "definition": "Una riunione di un organo con documenti, interventi e voti.",
+        "identityRule": "Organo, data e identificativo della fonte; non il singolo verbale.",
+        "semanticCoverage": "gap",
+        "terms": []
+      },
+      {
+        "id": "procurement",
+        "label": "Procedura di affidamento",
+        "definition": "Procedimento con cui un’amministrazione seleziona un contraente. Può produrre uno o più contratti.",
+        "identityRule": "Identificativo qualificato della procedura o del lotto, compreso il CIG dove applicabile; non coincide con il contratto stipulato.",
+        "semanticCoverage": "partial",
+        "terms": [
+          "lt:PublicProcurementRecord"
+        ]
+      },
+      {
+        "id": "project",
+        "label": "Progetto pubblico",
+        "definition": "Un investimento che può essere descritto da più amministrazioni e fonti.",
+        "identityRule": "CUP normalizzato e validato; senza CUP il record resta irrisolto.",
+        "semanticCoverage": "local",
+        "terms": [
+          "lt:PnrrProject"
+        ]
+      },
+      {
+        "id": "indicator",
+        "label": "Indicatore",
+        "definition": "Definizione di ciò che si misura, con unità, metodo e significato. Le serie fissano le dimensioni della misura.",
+        "identityRule": "Definizione, unità e metodo; non il valore di un anno o una serie territoriale.",
+        "semanticCoverage": "partial",
+        "terms": [
+          "lt:PerformanceIndicator"
+        ]
+      },
+      {
+        "id": "observation",
+        "label": "Osservazione",
+        "definition": "Il valore di una misura in un luogo, periodo e versione di fonte.",
+        "identityRule": "Serie, release, periodo e dimensioni; zero e dato mancante sono distinti.",
+        "semanticCoverage": "reference",
+        "terms": [
+          "qb:Observation"
+        ]
+      },
+      {
+        "id": "place",
+        "label": "Luogo",
+        "definition": "Territorio o luogo identificabile, distinto dalle geometrie che ne rappresentano forma e posizione.",
+        "identityRule": "Codice o identificatore geografico qualificato; una coordinata approssimata non è una chiave di identità.",
+        "semanticCoverage": "reference",
+        "terms": [
+          "CLV-AP_IT"
+        ]
+      },
+      {
+        "id": "asset",
+        "label": "Bene",
+        "definition": "Un bene distinto dai provvedimenti che lo riguardano.",
+        "identityRule": "Identificatore del bene; confisca, assegnazione e riuso sono eventi separati.",
+        "semanticCoverage": "gap",
+        "terms": []
+      },
+      {
+        "id": "event",
+        "label": "Evento documentato",
+        "definition": "Un evento con tempo, luogo, fonti e stato probatorio.",
+        "identityRule": "Identità LTCEDS; le fonti possono divergere senza produrre automaticamente nuovi eventi.",
+        "semanticCoverage": "gap",
+        "terms": []
+      },
+      {
+        "id": "evidence",
+        "label": "Evidenza di evento",
+        "definition": "Una fonte, qualificazione o localizzazione a sostegno di un evento.",
+        "identityRule": "Evento, fonte, tipo di attestazione e versione; una menzione non prova responsabilità.",
+        "semanticCoverage": "reference",
+        "terms": [
+          "prov:Entity"
+        ]
+      },
+      {
+        "id": "cluster",
+        "label": "Raggruppamento documentato",
+        "definition": "Un collegamento esplicito tra eventi sostenuto da fonti.",
+        "identityRule": "ID del cluster e criterio documentato; non inferire una rete criminale dalla prossimità.",
+        "semanticCoverage": "gap",
+        "terms": []
+      },
+      {
+        "id": "report",
+        "label": "Segnalazione civica",
+        "definition": "Una comunicazione ricevuta e sottoposta a verifica.",
+        "identityRule": "ID della segnalazione e storia; non è un fatto accertato.",
+        "semanticCoverage": "gap",
+        "terms": []
+      },
+      {
+        "id": "monitoring_case",
+        "label": "Scheda di monitoraggio",
+        "definition": "Una valutazione curata su un oggetto civico e sulle sue evidenze.",
+        "identityRule": "Oggetto, autore, versione e stato di revisione; distinta dalla segnalazione ricevuta.",
+        "semanticCoverage": "gap",
+        "terms": []
+      },
+      {
+        "id": "request",
+        "label": "Richiesta di accesso",
+        "definition": "Un procedimento di accesso civico con istanza, riscontri ed esito.",
+        "identityRule": "Identificativo della richiesta e storia del procedimento.",
+        "semanticCoverage": "gap",
+        "terms": []
+      },
+      {
+        "id": "call",
+        "label": "Bando o avviso",
+        "definition": "Un avviso che stabilisce requisiti, scadenze e risorse disponibili.",
+        "identityRule": "Ente emittente e identificativo del bando; distinto dalla domanda di partecipazione.",
+        "semanticCoverage": "gap",
+        "terms": []
+      },
+      {
+        "id": "proposal",
+        "label": "Proposta civica",
+        "definition": "Una proposta attribuita, con oggetto e stato istituzionale.",
+        "identityRule": "ID della proposta, fonti e revisioni; categoria tematica distinta dall'entità proposta.",
+        "semanticCoverage": "reference",
+        "terms": [
+          "CPSV-AP_IT",
+          "SKOS (classificazione)"
+        ]
+      },
+      {
+        "id": "evaluation",
+        "label": "Valutazione di intervento",
+        "definition": "Valutazione documentata di un intervento, con studio, risultati, limiti e contesto di applicabilità.",
+        "identityRule": "Studio e versione della valutazione; più valutazioni possono riguardare lo stesso intervento.",
+        "semanticCoverage": "gap",
+        "terms": []
+      },
+      {
+        "id": "editorial_content",
+        "label": "Contenuto redazionale",
+        "definition": "Testi, sintesi, pagine e contributi curati per la presentazione.",
+        "identityRule": "ID editoriale e revisione; non crea da solo un soggetto canonico.",
+        "semanticCoverage": "outside",
+        "terms": []
+      },
+      {
+        "id": "taxonomy",
+        "label": "Classificazione",
+        "definition": "Una categoria o tema usato per organizzare i contenuti.",
+        "identityRule": "Schema e codice stabile; temi civici e categorie di performance sono faccette diverse.",
+        "semanticCoverage": "partial",
+        "terms": [
+          "lt:CivicTheme"
+        ]
+      },
+      {
+        "id": "application",
+        "label": "Stato applicativo",
+        "definition": "Dati necessari al funzionamento del servizio.",
+        "identityRule": "ID applicativo; fuori dall'ontologia dei fatti civici.",
+        "semanticCoverage": "outside",
+        "terms": []
+      },
+      {
+        "id": "contract",
+        "label": "Contratto pubblico",
+        "definition": "Accordo stipulato tra un’amministrazione e un contraente nell’ambito di una procedura. Distinto da lotto, aggiudicazione e pagamento.",
+        "identityRule": "Identificativo del contratto qualificato dalla fonte, collegato alla procedura; il CIG non basta a distinguere tutti gli oggetti.",
+        "semanticCoverage": "partial",
+        "terms": [
+          "lt:PublicProcurementRecord"
+        ]
+      },
+      {
+        "id": "series",
+        "label": "Serie di osservazioni",
+        "definition": "Insieme di misure dello stesso indicatore a dimensioni definite, per esempio territorio e popolazione di riferimento.",
+        "identityRule": "Indicatore e dimensioni della serie; periodi e release distinguono le osservazioni.",
+        "semanticCoverage": "gap",
+        "terms": []
+      },
+      {
+        "id": "geometry",
+        "label": "Rappresentazione geografica",
+        "definition": "Geometria o posizione di un luogo, con sistema di riferimento, fonte, versione e precisione.",
+        "identityRule": "Luogo, fonte e versione della geometria; due geometrie diverse non implicano due luoghi.",
+        "semanticCoverage": "gap",
+        "terms": []
+      },
+      {
+        "id": "intervention",
+        "label": "Intervento di politica pubblica",
+        "definition": "Azione o strumento di politica pubblica definito per obiettivi e destinatari, che può essere studiato e proposto localmente.",
+        "identityRule": "Identificativo dell’intervento e della sua versione; distinto da proposta locale e valutazione scientifica.",
+        "semanticCoverage": "reference",
+        "terms": []
+      }
+    ],
+    "tables": {
+      "canonical_subjects": {
+        "label": "Identità canoniche",
+        "domain": "identity",
+        "concept": "identity",
+        "kind": "entity",
+        "grain": "Un soggetto globale e il suo tipo di dominio"
+      },
+      "legacy_subject_map": {
+        "label": "Corrispondenze con il modello precedente",
+        "domain": "identity",
+        "concept": "identity",
+        "kind": "relation",
+        "grain": "Una decisione storicizzata di collegamento di identità"
+      },
+      "source_sources": {
+        "label": "Fonti registrate",
+        "domain": "sources",
+        "concept": "source",
+        "kind": "source",
+        "grain": "Una fonte con il proprio codice"
+      },
+      "source_endpoints": {
+        "label": "Punti di acquisizione",
+        "domain": "sources",
+        "concept": "source",
+        "kind": "source",
+        "grain": "Un endpoint appartenente a una fonte"
+      },
+      "source_artifacts": {
+        "label": "Artefatti acquisiti",
+        "domain": "sources",
+        "concept": "artifact",
+        "kind": "source",
+        "grain": "Un artefatto identificato da endpoint e hash dei byte"
+      },
+      "source_releases": {
+        "label": "Versioni delle fonti",
+        "domain": "sources",
+        "concept": "release",
+        "kind": "source",
+        "grain": "Una release registrata"
+      },
+      "source_records": {
+        "label": "Record acquisiti",
+        "domain": "sources",
+        "concept": "source_record",
+        "kind": "source",
+        "grain": "Una chiave originaria dentro una release"
+      },
+      "source_acquisition_runs": {
+        "label": "Tentativi di acquisizione",
+        "domain": "sources",
+        "concept": "acquisition",
+        "kind": "operation",
+        "grain": "Un tentativo con esito e conteggi"
+      },
+      "opendata_datasets": {
+        "label": "Dataset del catalogo open data",
+        "domain": "sources",
+        "concept": "source",
+        "kind": "source",
+        "grain": "Un dataset censito nel catalogo precedente"
+      },
+      "opendata_resources": {
+        "label": "Distribuzioni open data",
+        "domain": "sources",
+        "concept": "artifact",
+        "kind": "source",
+        "grain": "Una risorsa scaricabile di un dataset"
+      },
+      "opendata_snapshots": {
+        "label": "Snapshot open data",
+        "domain": "sources",
+        "concept": "release",
+        "kind": "source",
+        "grain": "Una versione acquisita di una risorsa"
+      },
+      "feed_status": {
+        "label": "Stato dei feed",
+        "domain": "sources",
+        "concept": "acquisition",
+        "kind": "operation",
+        "grain": "Lo stato operativo di un feed"
+      },
+      "change_sentinel_events": {
+        "label": "Segnalazioni di cambiamento delle fonti",
+        "domain": "sources",
+        "concept": "acquisition",
+        "kind": "operation",
+        "grain": "Un cambiamento rilevato da processare"
+      },
+      "publications": {
+        "label": "Pubblicazioni dell'Albo",
+        "domain": "documents",
+        "concept": "publication",
+        "kind": "source",
+        "grain": "Una pubblicazione identificata dal progressivo"
+      },
+      "acts": {
+        "label": "Schede di atti del modello precedente",
+        "domain": "documents",
+        "concept": "act",
+        "kind": "legacy",
+        "grain": "Una scheda sintetica di atto senza identità documentale comune"
+      },
+      "fundamental_acts": {
+        "label": "Atti fondamentali selezionati",
+        "domain": "documents",
+        "concept": "act",
+        "kind": "editorial",
+        "grain": "Una scheda curata di atto fondamentale"
+      },
+      "oversight_opinions": {
+        "label": "Pareri e vigilanza",
+        "domain": "documents",
+        "concept": "act",
+        "kind": "entity",
+        "grain": "Un parere con autore istituzionale e data"
+      },
+      "oversight_opinion_documents": {
+        "label": "Allegati ai pareri",
+        "domain": "documents",
+        "concept": "document",
+        "kind": "relation",
+        "grain": "Un documento collegato a un parere"
+      },
+      "officials": {
+        "label": "Persone e carica corrente",
+        "domain": "institutions",
+        "concept": "person",
+        "kind": "legacy",
+        "grain": "Una persona con attributi della carica ancora incorporati"
+      },
+      "organi": {
+        "label": "Organi istituzionali",
+        "domain": "institutions",
+        "concept": "organisation",
+        "kind": "entity",
+        "grain": "Un organo identificato da slug"
+      },
+      "organi_members": {
+        "label": "Appartenenze e mandati",
+        "domain": "institutions",
+        "concept": "role",
+        "kind": "relation",
+        "grain": "Una persona in un organo per un periodo"
+      },
+      "sedute": {
+        "label": "Sedute degli organi",
+        "domain": "institutions",
+        "concept": "session",
+        "kind": "entity",
+        "grain": "Una convocazione o seduta"
+      },
+      "session_reports": {
+        "label": "Resoconti delle sedute",
+        "domain": "institutions",
+        "concept": "document",
+        "kind": "relation",
+        "grain": "Un resoconto associato a una seduta"
+      },
+      "session_interventions": {
+        "label": "Interventi nei resoconti",
+        "domain": "institutions",
+        "concept": "role",
+        "kind": "relation",
+        "grain": "Un intervento nel contesto di un resoconto"
+      },
+      "official_activities": {
+        "label": "Attività degli amministratori",
+        "domain": "institutions",
+        "concept": "role",
+        "kind": "relation",
+        "grain": "Una attività documentata attribuita a una persona"
+      },
+      "official_remunerations": {
+        "label": "Compensi degli amministratori",
+        "domain": "institutions",
+        "concept": "observation",
+        "kind": "relation",
+        "grain": "Un importo per persona, tipo e periodo"
+      },
+      "official_declarations": {
+        "label": "Dichiarazioni degli amministratori",
+        "domain": "institutions",
+        "concept": "document",
+        "kind": "relation",
+        "grain": "Una dichiarazione collegata a una persona"
+      },
+      "official_votes": {
+        "label": "Voti documentati",
+        "domain": "institutions",
+        "concept": "role",
+        "kind": "relation",
+        "grain": "Un voto della persona nel contesto di un atto o seduta"
+      },
+      "contracts": {
+        "label": "Schede di contratti e affidamenti",
+        "domain": "procurement",
+        "concept": "contract",
+        "kind": "legacy",
+        "grain": "Una riga che combina campi di procedura, contratto e fornitore"
+      },
+      "attuazione_pnrr_projects": {
+        "label": "Progetti dalla fonte comunale",
+        "domain": "projects",
+        "concept": "project",
+        "kind": "source",
+        "grain": "Un record della fonte Attuazione PNRR"
+      },
+      "italiadomani_projects": {
+        "label": "Progetti da ItaliaDomani",
+        "domain": "projects",
+        "concept": "project",
+        "kind": "source",
+        "grain": "Un record ItaliaDomani identificato dal CUP"
+      },
+      "performance_categories": {
+        "label": "Categorie di performance",
+        "domain": "statistics",
+        "concept": "taxonomy",
+        "kind": "editorial",
+        "grain": "Una categoria per raggruppare indicatori"
+      },
+      "performance_indicators": {
+        "label": "Definizioni degli indicatori",
+        "domain": "statistics",
+        "concept": "indicator",
+        "kind": "entity",
+        "grain": "Una definizione di indicatore amministrativo"
+      },
+      "performance_indicator_values": {
+        "label": "Valori degli indicatori",
+        "domain": "statistics",
+        "concept": "observation",
+        "kind": "entity",
+        "grain": "Un valore dell'indicatore nel periodo"
+      },
+      "demographic_series": {
+        "label": "Serie demografiche",
+        "domain": "statistics",
+        "concept": "series",
+        "kind": "entity",
+        "grain": "Una definizione di serie statistica"
+      },
+      "demographic_releases": {
+        "label": "Release demografiche",
+        "domain": "statistics",
+        "concept": "release",
+        "kind": "source",
+        "grain": "Una versione di fonte della serie"
+      },
+      "demographic_observations": {
+        "label": "Osservazioni demografiche",
+        "domain": "statistics",
+        "concept": "observation",
+        "kind": "entity",
+        "grain": "Una osservazione per serie, release, periodo e dimensioni"
+      },
+      "confiscated_assets": {
+        "label": "Beni confiscati",
+        "domain": "territory",
+        "concept": "asset",
+        "kind": "legacy",
+        "grain": "Un bene con stato e localizzazione ancora incorporati"
+      },
+      "crime_events": {
+        "label": "Eventi criminali documentati",
+        "domain": "crime",
+        "concept": "event",
+        "kind": "entity",
+        "grain": "Un evento LTCEDS con stato probatorio"
+      },
+      "crime_sources": {
+        "label": "Fonti degli eventi",
+        "domain": "crime",
+        "concept": "evidence",
+        "kind": "source",
+        "grain": "Una fonte del dominio LTCEDS"
+      },
+      "crime_event_sources": {
+        "label": "Eventi e fonti collegate",
+        "domain": "crime",
+        "concept": "evidence",
+        "kind": "relation",
+        "grain": "Una associazione tra evento e fonte"
+      },
+      "crime_event_offences": {
+        "label": "Qualificazioni degli eventi",
+        "domain": "crime",
+        "concept": "evidence",
+        "kind": "relation",
+        "grain": "Una qualificazione dell'evento sostenuta da fonte"
+      },
+      "crime_event_locations": {
+        "label": "Localizzazioni degli eventi",
+        "domain": "crime",
+        "concept": "place",
+        "kind": "relation",
+        "grain": "Una attestazione di luogo, precisione e ruolo"
+      },
+      "crime_event_clusters": {
+        "label": "Raggruppamenti di eventi",
+        "domain": "crime",
+        "concept": "cluster",
+        "kind": "entity",
+        "grain": "Un raggruppamento documentato"
+      },
+      "crime_event_cluster_sources": {
+        "label": "Fonti dei raggruppamenti",
+        "domain": "crime",
+        "concept": "evidence",
+        "kind": "relation",
+        "grain": "Una fonte a sostegno del raggruppamento"
+      },
+      "crime_event_cluster_members": {
+        "label": "Eventi nei raggruppamenti",
+        "domain": "crime",
+        "concept": "cluster",
+        "kind": "relation",
+        "grain": "Una appartenenza evento-raggruppamento"
+      },
+      "crime_public_events": {
+        "label": "Proiezioni pubbliche degli eventi",
+        "domain": "crime",
+        "concept": "event",
+        "kind": "projection",
+        "grain": "Una proiezione approvata e minimizzata di un evento"
+      },
+      "reports": {
+        "label": "Segnalazioni ricevute",
+        "domain": "monitoring",
+        "concept": "report",
+        "kind": "editorial",
+        "grain": "Una segnalazione civica con stato di verifica"
+      },
+      "monitoring_reports": {
+        "label": "Analisi di monitoraggio",
+        "domain": "monitoring",
+        "concept": "monitoring_case",
+        "kind": "editorial",
+        "grain": "Una valutazione curata su un contratto o progetto"
+      },
+      "accesso_civico_requests": {
+        "label": "Richieste di accesso civico",
+        "domain": "monitoring",
+        "concept": "request",
+        "kind": "entity",
+        "grain": "Una richiesta con iter e riscontri"
+      },
+      "bandi": {
+        "label": "Bandi e avvisi",
+        "domain": "monitoring",
+        "concept": "call",
+        "kind": "entity",
+        "grain": "Un avviso con requisiti e scadenza"
+      },
+      "bando_matches": {
+        "label": "Collegamenti dei bandi",
+        "domain": "monitoring",
+        "concept": "call",
+        "kind": "relation",
+        "grain": "Un collegamento proposto tra bando e oggetto civico"
+      },
+      "legality_areas": {
+        "label": "Aree del monitoraggio legalità",
+        "domain": "monitoring",
+        "concept": "taxonomy",
+        "kind": "editorial",
+        "grain": "Una area del quadro di monitoraggio"
+      },
+      "legality_requirements": {
+        "label": "Requisiti da verificare",
+        "domain": "monitoring",
+        "concept": "monitoring_case",
+        "kind": "editorial",
+        "grain": "Un requisito con evidenze e stato"
+      },
+      "legality_overview": {
+        "label": "Sintesi del monitoraggio legalità",
+        "domain": "monitoring",
+        "concept": "monitoring_case",
+        "kind": "projection",
+        "grain": "Una sintesi del quadro di monitoraggio"
+      },
+      "themes": {
+        "label": "Temi civici",
+        "domain": "editorial",
+        "concept": "taxonomy",
+        "kind": "editorial",
+        "grain": "Un tema di navigazione civica"
+      },
+      "categories": {
+        "label": "Categorie editoriali",
+        "domain": "editorial",
+        "concept": "taxonomy",
+        "kind": "editorial",
+        "grain": "Una categoria per organizzare i temi"
+      },
+      "theme_documents": {
+        "label": "Documenti nei temi",
+        "domain": "editorial",
+        "concept": "document",
+        "kind": "editorial",
+        "grain": "Una scheda documentale collegata a un tema"
+      },
+      "theme_posts": {
+        "label": "Contributi nei temi",
+        "domain": "editorial",
+        "concept": "editorial_content",
+        "kind": "editorial",
+        "grain": "Un contributo redazionale nel tema"
+      },
+      "theme_metrics": {
+        "label": "Metriche dei temi",
+        "domain": "editorial",
+        "concept": "observation",
+        "kind": "legacy",
+        "grain": "Una metrica editoriale senza modello universale di serie"
+      },
+      "questions": {
+        "label": "Domande civiche",
+        "domain": "editorial",
+        "concept": "editorial_content",
+        "kind": "editorial",
+        "grain": "Una domanda usata come percorso di consultazione"
+      },
+      "page_blocks": {
+        "label": "Blocchi delle pagine",
+        "domain": "editorial",
+        "concept": "editorial_content",
+        "kind": "editorial",
+        "grain": "Un blocco di presentazione con revisione"
+      },
+      "site_strings": {
+        "label": "Testi dell'interfaccia",
+        "domain": "editorial",
+        "concept": "editorial_content",
+        "kind": "editorial",
+        "grain": "Una stringa modificabile del sito"
+      },
+      "helper_overrides": {
+        "label": "Testi di aiuto personalizzati",
+        "domain": "editorial",
+        "concept": "editorial_content",
+        "kind": "editorial",
+        "grain": "Una personalizzazione dell'aiuto contestuale"
+      },
+      "conversations": {
+        "label": "Conversazioni",
+        "domain": "application",
+        "concept": "application",
+        "kind": "application",
+        "grain": "Una conversazione applicativa"
+      },
+      "messages": {
+        "label": "Messaggi",
+        "domain": "application",
+        "concept": "application",
+        "kind": "application",
+        "grain": "Un messaggio dentro una conversazione"
+      },
+      "theme_emails": {
+        "label": "Messaggi associati ai temi",
+        "domain": "application",
+        "concept": "application",
+        "kind": "application",
+        "grain": "Una comunicazione applicativa relativa a un tema"
+      },
+      "theme_followers": {
+        "label": "Iscrizioni ai temi",
+        "domain": "application",
+        "concept": "application",
+        "kind": "application",
+        "grain": "Una iscrizione di un utente a un tema"
+      },
+      "shares": {
+        "label": "Condivisioni",
+        "domain": "application",
+        "concept": "application",
+        "kind": "application",
+        "grain": "Una azione di condivisione nel servizio"
+      },
+      "theme_relevance_events": {
+        "label": "Interazioni con i temi",
+        "domain": "application",
+        "concept": "application",
+        "kind": "application",
+        "grain": "Un evento di utilizzo del sito, non un evento civico"
+      }
+    },
+    "relationships": [
+      {
+        "source": "source",
+        "target": "release",
+        "cardinality": "1:N",
+        "label": "Pubblica versioni informative",
+        "status": "partial"
+      },
+      {
+        "source": "release",
+        "target": "source_record",
+        "cardinality": "1:N",
+        "label": "Contiene record originari",
+        "status": "implemented"
+      },
+      {
+        "source": "release",
+        "target": "artifact",
+        "cardinality": "N:1",
+        "label": "Conserva i byte acquisiti",
+        "status": "implemented"
+      },
+      {
+        "source": "source",
+        "target": "acquisition",
+        "cardinality": "1:N",
+        "label": "È verificata da tentativi di acquisizione",
+        "status": "implemented"
+      },
+      {
+        "source": "source_record",
+        "target": "project",
+        "cardinality": "N:M",
+        "label": "Descrive progetti da riconciliare",
+        "status": "target"
+      },
+      {
+        "source": "publication",
+        "target": "act",
+        "cardinality": "N:M",
+        "label": "Pubblica o richiama atti",
+        "status": "target"
+      },
+      {
+        "source": "act",
+        "target": "document",
+        "cardinality": "N:M",
+        "label": "È documentato da risorse e allegati",
+        "status": "partial"
+      },
+      {
+        "source": "person",
+        "target": "role",
+        "cardinality": "1:N",
+        "label": "Assume incarichi nel tempo",
+        "status": "partial"
+      },
+      {
+        "source": "organisation",
+        "target": "role",
+        "cardinality": "1:N",
+        "label": "È il contesto dell'incarico",
+        "status": "partial"
+      },
+      {
+        "source": "organisation",
+        "target": "session",
+        "cardinality": "1:N",
+        "label": "Tiene sedute",
+        "status": "implemented"
+      },
+      {
+        "source": "session",
+        "target": "document",
+        "cardinality": "1:N",
+        "label": "Ha resoconti e documenti",
+        "status": "partial"
+      },
+      {
+        "source": "procurement",
+        "target": "project",
+        "cardinality": "N:M",
+        "label": "Contribuisce alla realizzazione di progetti",
+        "status": "target"
+      },
+      {
+        "source": "indicator",
+        "target": "observation",
+        "cardinality": "1:N",
+        "label": "Definisce valori osservati",
+        "status": "partial"
+      },
+      {
+        "source": "release",
+        "target": "observation",
+        "cardinality": "1:N",
+        "label": "Documenta la versione dell'osservazione",
+        "status": "partial"
+      },
+      {
+        "source": "event",
+        "target": "evidence",
+        "cardinality": "1:N",
+        "label": "È sostenuto da attestazioni",
+        "status": "implemented"
+      },
+      {
+        "source": "event",
+        "target": "place",
+        "cardinality": "N:M",
+        "label": "è localizzato in",
+        "status": "partial"
+      },
+      {
+        "source": "report",
+        "target": "monitoring_case",
+        "cardinality": "N:M",
+        "label": "Può alimentare una analisi verificata",
+        "status": "target"
+      },
+      {
+        "source": "proposal",
+        "target": "evaluation",
+        "cardinality": "N:M",
+        "label": "Può richiamare interventi valutati",
+        "status": "target"
+      },
+      {
+        "source": "procurement",
+        "target": "contract",
+        "cardinality": "1:N",
+        "label": "può produrre",
+        "status": "target"
+      },
+      {
+        "source": "indicator",
+        "target": "series",
+        "cardinality": "1:N",
+        "label": "è misurato da",
+        "status": "target"
+      },
+      {
+        "source": "series",
+        "target": "observation",
+        "cardinality": "1:N",
+        "label": "raccoglie",
+        "status": "implemented"
+      },
+      {
+        "source": "place",
+        "target": "geometry",
+        "cardinality": "1:N",
+        "label": "ha rappresentazioni",
+        "status": "partial"
+      },
+      {
+        "source": "intervention",
+        "target": "evaluation",
+        "cardinality": "1:N",
+        "label": "è oggetto di",
+        "status": "target"
+      }
+    ],
+    "overlaps": [
+      {
+        "id": "pnrr",
+        "domain": "projects",
+        "tables": [
+          "attuazione_pnrr_projects",
+          "italiadomani_projects"
+        ],
+        "finding": "Rappresentazioni per fonte",
+        "decision": "Mantenere i record fonte e collegarli a una sola identità progetto per CUP validato. I 30 record attuali hanno CUP distinti; nessuna fusione necessaria nel campione osservato.",
+        "phase": 9
+      },
+      {
+        "id": "acts",
+        "domain": "documents",
+        "tables": [
+          "publications",
+          "acts",
+          "fundamental_acts",
+          "oversight_opinions",
+          "theme_documents"
+        ],
+        "finding": "Sovrapposizione di responsabilità",
+        "decision": "Separare pubblicazione, atto, documento e selezione editoriale; riconciliare su autorità, tipo, numero, data e fonte prima di ritirare le schede precedenti.",
+        "phase": 7
+      },
+      {
+        "id": "people",
+        "domain": "institutions",
+        "tables": [
+          "officials",
+          "organi_members"
+        ],
+        "finding": "Identità e ruolo mescolati",
+        "decision": "Conservare la persona; trasferire le cariche in appartenenze temporali solo dopo verifica della storia e delle fonti.",
+        "phase": 10
+      },
+      {
+        "id": "sources",
+        "domain": "sources",
+        "tables": [
+          "source_sources",
+          "opendata_datasets",
+          "crime_sources"
+        ],
+        "finding": "Registri con responsabilità diverse",
+        "decision": "Collegare catalogo dataset e fonti LTCEDS al registro comune; una fonte editoriale e un endpoint non si fondono per URL simile.",
+        "phase": 3
+      },
+      {
+        "id": "statistics",
+        "domain": "statistics",
+        "tables": [
+          "performance_indicators",
+          "performance_indicator_values",
+          "demographic_series",
+          "demographic_observations",
+          "theme_metrics"
+        ],
+        "finding": "Pattern statistici paralleli",
+        "decision": "Usare definizione, release, osservazione e dimensioni comuni; mantenere unità e metodi distinti e non sommare indicatori eterogenei.",
+        "phase": 14
+      },
+      {
+        "id": "reports",
+        "domain": "monitoring",
+        "tables": [
+          "reports",
+          "monitoring_reports"
+        ],
+        "finding": "Entità diverse con nomi simili",
+        "decision": "Mantenere distinte segnalazione ricevuta e analisi curata; introdurre collegamenti espliciti tra le due.",
+        "phase": 15
+      },
+      {
+        "id": "themes",
+        "domain": "editorial",
+        "tables": [
+          "categories",
+          "themes",
+          "performance_categories",
+          "legality_areas"
+        ],
+        "finding": "Classificazioni di contesti diversi",
+        "decision": "Mantenere schemi di classificazione distinti con codici stabili e mapping documentati; non fonderli solo perché sono categorie.",
+        "phase": 6
+      }
+    ],
+    "siteSections": [
+      {
+        "id": "/albo",
+        "label": "Albo e delibere",
+        "domain": "documents",
+        "concepts": [
+          "publication",
+          "act",
+          "document"
+        ],
+        "storage": "files_with_snapshot_ledger",
+        "semanticCoverage": "local",
+        "navigationGroup": "Atti e documenti",
+        "routes": [
+          "/albo",
+          "/albo/:id",
+          "/delibere"
+        ],
+        "tables": [
+          "publications",
+          "acts",
+          "source_records"
+        ],
+        "evidence": [
+          "data/public/albo/latest.json",
+          "data/public/albo/delibere-archive.json"
+        ],
+        "note": "Le due raccolte sono archiviate nel registro fonte; le tabelle degli atti restano un percorso da riconciliare.",
+        "staticPaths": []
+      },
+      {
+        "id": "/atti-fondamentali",
+        "label": "Atti fondamentali e pareri",
+        "domain": "documents",
+        "concepts": [
+          "act",
+          "document"
+        ],
+        "storage": "api_and_files",
+        "semanticCoverage": "partial",
+        "navigationGroup": "Atti e documenti",
+        "routes": [
+          "/atti-fondamentali",
+          "/pareri",
+          "/pareri/:id"
+        ],
+        "tables": [
+          "fundamental_acts",
+          "oversight_opinions",
+          "oversight_opinion_documents"
+        ],
+        "evidence": [
+          "artifacts/lamezia-trasparente/src/pages/AttiFondamentali.tsx",
+          "artifacts/lamezia-trasparente/src/pages/PareriVigilanza.tsx"
+        ],
+        "note": "La selezione editoriale non costituisce una nuova identità dell'atto.",
+        "staticPaths": []
+      },
+      {
+        "id": "/contratti",
+        "label": "Contratti e incarichi",
+        "domain": "procurement",
+        "concepts": [
+          "procurement",
+          "contract"
+        ],
+        "storage": "api_and_files",
+        "semanticCoverage": "partial",
+        "navigationGroup": "Appalti",
+        "routes": [
+          "/contratti",
+          "/contratti/:id",
+          "/incarichimetro"
+        ],
+        "tables": [
+          "contracts",
+          "source_records"
+        ],
+        "evidence": [
+          "artifacts/lamezia-trasparente/src/lib/staticContractsDataset.ts",
+          "data/public/contracts/anac-bdncp/latest.json"
+        ],
+        "note": "La proiezione pubblica da atti non equivale a un contratto canonico o alla copertura completa ANAC.",
+        "staticPaths": []
+      },
+      {
+        "id": "/pnrr",
+        "label": "Progetti PNRR",
+        "domain": "projects",
+        "concepts": [
+          "project"
+        ],
+        "storage": "files_with_domain_projection",
+        "semanticCoverage": "local",
+        "navigationGroup": "Progetti",
+        "routes": [
+          "/pnrr",
+          "/pnrr/:cup"
+        ],
+        "tables": [
+          "attuazione_pnrr_projects",
+          "italiadomani_projects",
+          "source_records"
+        ],
+        "evidence": [
+          "artifacts/lamezia-trasparente/src/data/generated/lameziaPnrrProjects.json",
+          "artifacts/lamezia-trasparente/src/pages/Pnrr.tsx"
+        ],
+        "note": "Persistono i record della fonte comunale; manca l'identità progetto condivisa tra tutte le fonti.",
+        "staticPaths": []
+      },
+      {
+        "id": "/organi",
+        "label": "Persone e organi",
+        "domain": "institutions",
+        "concepts": [
+          "person",
+          "organisation",
+          "role"
+        ],
+        "storage": "api_and_files",
+        "semanticCoverage": "reference",
+        "navigationGroup": "Persone e organi",
+        "routes": [
+          "/organi",
+          "/organi/:slug",
+          "/amministratori",
+          "/amministratori/:id"
+        ],
+        "tables": [
+          "officials",
+          "organi",
+          "organi_members"
+        ],
+        "evidence": [
+          "lib/db/src/institutional-officials-data.ts",
+          "artifacts/lamezia-trasparente/src/lib/institutionalStaticData.ts"
+        ],
+        "note": "I profili statici alimentano il sito anche quando le tabelle sono vuote; cariche e persone vanno riconciliate.",
+        "staticPaths": []
+      },
+      {
+        "id": "/convocazioni",
+        "label": "Sedute",
+        "domain": "institutions",
+        "concepts": [
+          "session",
+          "document",
+          "role"
+        ],
+        "storage": "api_and_files",
+        "semanticCoverage": "gap",
+        "navigationGroup": "Sedute",
+        "routes": [
+          "/convocazioni",
+          "/convocazioni/:id"
+        ],
+        "tables": [
+          "sedute",
+          "session_reports",
+          "session_interventions",
+          "official_votes"
+        ],
+        "evidence": [
+          "artifacts/lamezia-trasparente/src/pages/Convocazioni.tsx",
+          "artifacts/lamezia-trasparente/src/data/councilSessionV0.ts"
+        ],
+        "note": "Convocazione, verbale, intervento e voto sono oggetti collegati; la fixture demo non è una seduta reale.",
+        "staticPaths": []
+      },
+      {
+        "id": "/performance",
+        "label": "Performance",
+        "domain": "statistics",
+        "concepts": [
+          "indicator",
+          "observation",
+          "series"
+        ],
+        "storage": "api_and_files",
+        "semanticCoverage": "partial",
+        "navigationGroup": "Risultati",
+        "routes": [
+          "/performance",
+          "/performance/:id",
+          "/performance/confronta"
+        ],
+        "tables": [
+          "performance_categories",
+          "performance_indicators",
+          "performance_indicator_values"
+        ],
+        "evidence": [
+          "artifacts/lamezia-trasparente/src/data/performanceObjectiveRegistry.ts",
+          "artifacts/lamezia-trasparente/src/pages/Performance.tsx"
+        ],
+        "note": "Gli obiettivi curati nei file non sono automaticamente valori importati negli indicatori.",
+        "staticPaths": []
+      },
+      {
+        "id": "/macchina-comunale",
+        "label": "Capacità e programma comunale",
+        "domain": "monitoring",
+        "concepts": [
+          "monitoring_case",
+          "proposal"
+        ],
+        "storage": "files",
+        "semanticCoverage": "gap",
+        "navigationGroup": "Programma e capacità",
+        "routes": [
+          "/macchina-comunale",
+          "/promessometro"
+        ],
+        "tables": [],
+        "evidence": [
+          "artifacts/lamezia-trasparente/src/data/macchinaComunale.ts",
+          "artifacts/lamezia-trasparente/src/data/promessometro.ts"
+        ],
+        "note": "Dati e dimostrazioni richiedono un modello per obiettivi, impegni, evidenze ed esiti; non diventano giudizi individuali.",
+        "staticPaths": []
+      },
+      {
+        "id": "/opendata",
+        "label": "Catalogo e serie open data",
+        "domain": "statistics",
+        "concepts": [
+          "source",
+          "indicator",
+          "observation",
+          "series"
+        ],
+        "storage": "api_and_files",
+        "semanticCoverage": "reference",
+        "navigationGroup": "Dataset e indicatori",
+        "routes": [
+          "/opendata",
+          "/opendata/:id"
+        ],
+        "tables": [
+          "opendata_datasets",
+          "opendata_resources",
+          "opendata_snapshots",
+          "demographic_series",
+          "demographic_releases",
+          "demographic_observations"
+        ],
+        "evidence": [
+          "artifacts/lamezia-trasparente/src/data/openDataDatasetRegistry.ts",
+          "artifacts/lamezia-trasparente/src/data/generated"
+        ],
+        "note": "Traffico aereo, clima, demografia, famiglie e residenti stranieri sono distribuiti da file; lo schema DB non prova l'importazione dei valori.",
+        "staticPaths": []
+      },
+      {
+        "id": "/atlante-territoriale",
+        "label": "Atlante territoriale",
+        "domain": "territory",
+        "concepts": [
+          "place",
+          "observation",
+          "geometry"
+        ],
+        "storage": "files",
+        "semanticCoverage": "reference",
+        "navigationGroup": "Mappe e beni",
+        "routes": [
+          "/atlante-territoriale"
+        ],
+        "tables": [],
+        "evidence": [
+          "data/processed/territorio",
+          "artifacts/lamezia-trasparente/src/pages/AtlanteTerritoriale.tsx"
+        ],
+        "note": "Geometrie e indicatori territoriali restano artefatti esterni: occorrono registro, release e precisione geografica.",
+        "staticPaths": []
+      },
+      {
+        "id": "/beni-confiscati",
+        "label": "Beni confiscati",
+        "domain": "territory",
+        "concepts": [
+          "asset",
+          "place",
+          "geometry"
+        ],
+        "storage": "api_and_files",
+        "semanticCoverage": "gap",
+        "navigationGroup": "Mappe e beni",
+        "routes": [
+          "/beni-confiscati",
+          "/beni-confiscati/:slug"
+        ],
+        "tables": [
+          "confiscated_assets"
+        ],
+        "evidence": [
+          "data/curated/territorio/beni_confiscati_lamezia_pilot.json",
+          "artifacts/lamezia-trasparente/src/pages/BeniConfiscati.tsx"
+        ],
+        "note": "Il bene, il provvedimento e lo stato di riuso vanno separati mantenendo fonti e limiti di localizzazione.",
+        "staticPaths": []
+      },
+      {
+        "id": "/legalita",
+        "label": "Legalità ed eventi documentati",
+        "domain": "crime",
+        "concepts": [
+          "event",
+          "evidence",
+          "cluster"
+        ],
+        "storage": "api_and_files",
+        "semanticCoverage": "gap",
+        "navigationGroup": "Eventi e memoria",
+        "routes": [
+          "/legalita",
+          "/legalita/timeline"
+        ],
+        "tables": [
+          "crime_events",
+          "crime_sources",
+          "crime_event_sources",
+          "crime_public_events",
+          "legality_areas",
+          "legality_requirements"
+        ],
+        "evidence": [
+          "lib/db/src/schema/crimeEvents.ts",
+          "artifacts/lamezia-trasparente/src/pages/Legalita.tsx"
+        ],
+        "note": "LTCEDS esiste nel backend; il profilo RDF pubblico non ne copre ancora il modello. Eventi registrati non significa eventi approvati per la pubblicazione.",
+        "staticPaths": []
+      },
+      {
+        "id": "/legalita/trame-festival",
+        "label": "Trame Festival",
+        "domain": "monitoring",
+        "concepts": [
+          "proposal",
+          "person",
+          "document"
+        ],
+        "storage": "files",
+        "semanticCoverage": "gap",
+        "navigationGroup": "Eventi e memoria",
+        "routes": [
+          "/legalita/trame-festival"
+        ],
+        "tables": [],
+        "evidence": [
+          "data/legalita/trame/trame_events.csv",
+          "data/legalita/trame/trame_people.csv",
+          "data/legalita/trame/public_cards/trame_public_cards.public.json"
+        ],
+        "note": "Programmi, persone, video, trascrizioni e schede curate restano fuori dalle tabelle applicative.",
+        "staticPaths": []
+      },
+      {
+        "id": "/proposte-civiche",
+        "label": "Proposte civiche",
+        "domain": "monitoring",
+        "concepts": [
+          "proposal"
+        ],
+        "storage": "files",
+        "semanticCoverage": "reference",
+        "navigationGroup": "Proposte e valutazioni",
+        "routes": [
+          "/proposte-civiche",
+          "/archivio-proposte"
+        ],
+        "tables": [],
+        "evidence": [
+          "artifacts/lamezia-trasparente/src/data/propostePubblicheCore.ts",
+          "artifacts/lamezia-trasparente/src/data/proposalPaSemanticProfile.ts"
+        ],
+        "note": "Esiste una classificazione PA nelle proposte; non va confusa con un'entità proposta persistita o un export RDF di tutte le schede.",
+        "staticPaths": []
+      },
+      {
+        "id": "/interventi-locali",
+        "label": "Interventi locali valutati",
+        "domain": "monitoring",
+        "concepts": [
+          "evaluation",
+          "intervention"
+        ],
+        "storage": "files",
+        "semanticCoverage": "gap",
+        "navigationGroup": "Proposte e valutazioni",
+        "routes": [
+          "/interventi-locali",
+          "/interventi-locali/:id"
+        ],
+        "tables": [],
+        "evidence": [
+          "artifacts/lamezia-trasparente/src/data/evidenceInterventionsArchive.ts"
+        ],
+        "note": "Interventi, studi, risultati e limiti sono nei file TypeScript; modello e importazione DB ancora assenti.",
+        "staticPaths": []
+      },
+      {
+        "id": "/monitoraggio",
+        "label": "Segnalazioni e monitoraggio",
+        "domain": "monitoring",
+        "concepts": [
+          "report",
+          "monitoring_case"
+        ],
+        "storage": "api_and_files",
+        "semanticCoverage": "gap",
+        "navigationGroup": "Verifiche civiche",
+        "routes": [
+          "/monitoraggio",
+          "/monitoraggio/nuovo",
+          "/monitoraggio/:id",
+          "/criticita-pubbliche",
+          "/segnalazioni"
+        ],
+        "tables": [
+          "reports",
+          "monitoring_reports"
+        ],
+        "evidence": [
+          "artifacts/lamezia-trasparente/src/pages/Reports.tsx",
+          "artifacts/lamezia-trasparente/src/pages/Monitoraggio.tsx"
+        ],
+        "note": "Segnalazione e analisi curata hanno responsabilità distinte; le due route di segnalazione non rappresentano due entità.",
+        "staticPaths": []
+      },
+      {
+        "id": "/accesso-civico",
+        "label": "Accesso civico",
+        "domain": "monitoring",
+        "concepts": [
+          "request"
+        ],
+        "storage": "api",
+        "semanticCoverage": "gap",
+        "navigationGroup": "Verifiche civiche",
+        "routes": [
+          "/accesso-civico"
+        ],
+        "tables": [
+          "accesso_civico_requests"
+        ],
+        "evidence": [
+          "artifacts/lamezia-trasparente/src/pages/AccessoCivico.tsx"
+        ],
+        "note": "La richiesta è un procedimento con esiti, non un documento generico o un fatto verificato.",
+        "staticPaths": []
+      },
+      {
+        "id": "/bandi",
+        "label": "Bandi (percorsi precedenti)",
+        "domain": "monitoring",
+        "concepts": [
+          "call"
+        ],
+        "storage": "redirect",
+        "semanticCoverage": "gap",
+        "navigationGroup": "Progetti",
+        "routes": [
+          "/bandi",
+          "/bandi/:slug"
+        ],
+        "tables": [
+          "bandi",
+          "bando_matches"
+        ],
+        "evidence": [
+          "artifacts/lamezia-trasparente/src/Router.tsx"
+        ],
+        "note": "Le route reindirizzano; le tabelle restano nello schema. La presenza della route non prova una raccolta attiva.",
+        "staticPaths": []
+      },
+      {
+        "id": "/temi",
+        "label": "Temi e domande",
+        "domain": "editorial",
+        "concepts": [
+          "taxonomy",
+          "editorial_content"
+        ],
+        "storage": "api_and_files",
+        "semanticCoverage": "partial",
+        "navigationGroup": "Percorsi civici",
+        "routes": [
+          "/temi",
+          "/temi/:id",
+          "/domande"
+        ],
+        "tables": [
+          "themes",
+          "categories",
+          "questions",
+          "theme_documents",
+          "theme_posts"
+        ],
+        "evidence": [
+          "artifacts/lamezia-trasparente/src/pages/Themes.tsx",
+          "artifacts/lamezia-trasparente/src/pages/Domande.tsx"
+        ],
+        "note": "Temi e categorie sono faccette editoriali, non nuove entità per ogni documento classificato.",
+        "staticPaths": []
+      },
+      {
+        "id": "/fonti-dati",
+        "label": "Fonti e stato operativo",
+        "domain": "sources",
+        "concepts": [
+          "source",
+          "acquisition"
+        ],
+        "storage": "api_and_files",
+        "semanticCoverage": "reference",
+        "navigationGroup": "Fonti e aggiornamenti",
+        "routes": [
+          "/fonti-dati",
+          "/stato-monitoraggio",
+          "/feeds"
+        ],
+        "tables": [
+          "feed_status",
+          "source_acquisition_runs"
+        ],
+        "evidence": [
+          "artifacts/lamezia-trasparente/src/data/sourceHealth.ts",
+          "artifacts/lamezia-trasparente/src/pages/FontiDati.tsx"
+        ],
+        "note": "Metadati di stato e acquisizioni hanno significati diversi; un workflow riuscito non certifica la copertura della fonte.",
+        "staticPaths": []
+      },
+      {
+        "id": "/statistiche",
+        "label": "Statistiche del servizio",
+        "domain": "application",
+        "concepts": [
+          "application"
+        ],
+        "storage": "api",
+        "semanticCoverage": "outside",
+        "navigationGroup": "Uso del servizio",
+        "routes": [
+          "/statistiche"
+        ],
+        "tables": [
+          "shares",
+          "themes",
+          "publications"
+        ],
+        "evidence": [
+          "artifacts/lamezia-trasparente/src/pages/Statistics.tsx"
+        ],
+        "note": "Conteggi e attività del sito appartengono all'uso del servizio, non alle serie statistiche sulla città.",
+        "staticPaths": []
+      },
+      {
+        "id": "/iscrizioni",
+        "label": "Iscrizioni",
+        "domain": "application",
+        "concepts": [
+          "application"
+        ],
+        "storage": "api",
+        "semanticCoverage": "outside",
+        "navigationGroup": "Servizi",
+        "routes": [
+          "/iscrizioni"
+        ],
+        "tables": [
+          "theme_followers"
+        ],
+        "evidence": [
+          "artifacts/lamezia-trasparente/src/pages/Subscriptions.tsx"
+        ],
+        "note": "Preferenze e iscrizioni sono stato applicativo riservato.",
+        "staticPaths": []
+      },
+      {
+        "id": "/",
+        "label": "Orientamento, metodo e progetto",
+        "domain": "editorial",
+        "concepts": [
+          "editorial_content"
+        ],
+        "storage": "editorial",
+        "semanticCoverage": "outside",
+        "navigationGroup": "Metodo e progetto",
+        "routes": [
+          "/",
+          "/metodologia",
+          "/guida",
+          "/note-legali",
+          "/chi-siamo",
+          "/contatti",
+          "/roadmap"
+        ],
+        "tables": [],
+        "evidence": [
+          "artifacts/lamezia-trasparente/src/Router.tsx"
+        ],
+        "note": "Pagine di orientamento e regole di lettura; non richiedono un'entità civica per ogni blocco di testo.",
+        "staticPaths": []
+      },
+      {
+        "id": "/sviluppatori",
+        "label": "Sviluppatori e profilo semantico",
+        "domain": "sources",
+        "concepts": [
+          "source",
+          "taxonomy"
+        ],
+        "storage": "editorial",
+        "semanticCoverage": "local",
+        "navigationGroup": "Metodo e progetto",
+        "routes": [
+          "/sviluppatori"
+        ],
+        "tables": [],
+        "evidence": [
+          "artifacts/lamezia-trasparente/public/semantic/ontology.ttl",
+          "artifacts/api-server/src/lib/semanticProfile.ts",
+          "artifacts/lamezia-trasparente/public/semantic/index.html",
+          "artifacts/lamezia-trasparente/public/semantic/ontology.ttl"
+        ],
+        "note": "Documentazione tecnica e profilo RDF 1.2.0: le classi dichiarate coprono un sottoinsieme dei concetti, non certificano la persistenza o esportazione di tutti i record.",
+        "staticPaths": [
+          "/semantic/"
+        ]
+      },
+      {
+        "id": "/admin",
+        "label": "Archivio e redazione",
+        "domain": "application",
+        "concepts": [
+          "application",
+          "editorial_content"
+        ],
+        "storage": "api",
+        "semanticCoverage": "outside",
+        "navigationGroup": "Servizi",
+        "routes": [
+          "/admin",
+          "/admin/*",
+          "/admin/database",
+          "/redazione",
+          "/redazione/*"
+        ],
+        "tables": [
+          "page_blocks",
+          "site_strings",
+          "helper_overrides"
+        ],
+        "evidence": [
+          "artifacts/lamezia-trasparente/src/pages/AdminDatabase.tsx"
+        ],
+        "note": "Interfacce riservate; la classificazione del catalogo non amplia i permessi di lettura.",
+        "staticPaths": []
+      }
+    ]
+  }
 }

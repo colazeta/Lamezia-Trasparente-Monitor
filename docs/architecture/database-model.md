@@ -1,5 +1,7 @@
 # Modello concettuale, logico e fisico
 
+> Baseline storica dell’assessment iniziale (64 tabelle). Il punto di ingresso corrente è [Disegno concettuale del database](conceptual-schema.md); la [mappa generata](conceptual-catalog.md) comprende anche il registro snapshot aggiunto successivamente. I conteggi e gli stati sotto restano riferiti all’audit originario.
+
 Companion dell'[assessment del 7 settembre 2026](database-assessment-2026-09-07.md). Estende il contratto architetturale v1; non sostituisce i domini già modellati. **«Esistente» indica strutture nel database; «target» indica strutture da implementare. Nessuna delle due etichette certifica il popolamento.**
 
 ## 1. Modello concettuale

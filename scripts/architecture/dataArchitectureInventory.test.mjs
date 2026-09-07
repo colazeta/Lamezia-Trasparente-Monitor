@@ -3,6 +3,8 @@ import { spawnSync } from "node:child_process";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
+import { readFile } from "node:fs/promises";
+import { validateConceptualCatalog, routerPaths } from "./conceptualCatalog.mjs";
 
 import {
   assertArchitectureCoverage,
@@ -15,6 +17,50 @@ import {
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const inventoryScript = path.join(here, "dataArchitectureInventory.mjs");
+
+test("route coverage accepts JSX literal variants and refuses silent dynamic omissions", () => {
+  assert.deepEqual(
+    routerPaths(
+      `<><Route path="/a" /><PublicRouteWithMeta path={'/b'} /><Route path={\`/c\`} /></>`,
+    ),
+    ["/a", "/b", "/c"],
+  );
+  assert.throws(
+    () => routerPaths(`<Route path={configuration.path} />`),
+    /Unsupported dynamic route/,
+  );
+});
+
+test("conceptual mapping rejects new unclassified tables/routes and false semantic references", async () => {
+  const registry = JSON.parse(
+    await readFile(
+      path.join(here, "../../architecture/data-domain-registry.v1.json"),
+      "utf8",
+    ),
+  );
+  const model = structuredClone(registry.conceptualCatalog);
+  const tableNames = Object.keys(model.tables),
+    routes = model.siteSections.flatMap((s) => [...s.routes, ...s.staticPaths]);
+  const classes = model.concepts
+    .flatMap((c) => c.terms)
+    .filter((t) => t.startsWith("lt:"));
+  assert.deepEqual(
+    validateConceptualCatalog(model, tableNames, routes, classes),
+    [],
+  );
+  model.concepts[0].terms = ["lt:UndeclaredEntity"];
+  model.tables.publications.concept = "missing";
+  const failures = validateConceptualCatalog(
+    model,
+    [...tableNames, "unclassified"],
+    [...routes, "/new-data"],
+    classes,
+  );
+  assert.ok(failures.includes("unclassified table: unclassified"));
+  assert.ok(failures.includes("unclassified route: /new-data"));
+  assert.ok(failures.includes("invalid classification: publications"));
+  assert.ok(failures.includes("undeclared RDF class: lt:UndeclaredEntity"));
+});
 
 test("all Drizzle modules, owned tables, registry semantics and data-lake layers pass the architecture gate", async () => {
   const inventory = await buildCurrentDataInventory();
