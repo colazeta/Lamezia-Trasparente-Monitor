@@ -36,7 +36,10 @@ import {
 } from "@/data/alboPublicRun";
 import { ALBO_OPERATIONAL_STATUS } from "@/data/alboStatus";
 import { councilSessionV0ReviewedRecords } from "@/data/councilSessionV0Reviewed";
-import { type CouncilSessionV0 } from "@/data/councilSessionV0";
+import {
+  councilSessionV0StatusLabels,
+  type CouncilSessionV0,
+} from "@/data/councilSessionV0";
 import { asApiList } from "@/lib/apiList";
 import { PUBLIC_NUMBER_PLACEHOLDER } from "@/lib/publicNumbers";
 
@@ -150,13 +153,15 @@ export const HOME_PRIMARY_GATEWAYS = [
   },
   {
     title: "Territorio e legalità",
-    description: "Mappe, criticità, monitoraggio civico, memoria e beni confiscati.",
+    description:
+      "Mappe, criticità, monitoraggio civico, memoria e beni confiscati.",
     href: "/atlante-territoriale",
     icon: MapPinned,
   },
   {
     title: "Dati e fonti",
-    description: "Dataset, copertura, freschezza e metodo delle fonti pubbliche.",
+    description:
+      "Dataset, copertura, freschezza e metodo delle fonti pubbliche.",
     href: "/opendata",
     icon: Database,
   },
@@ -205,8 +210,8 @@ export function Home() {
             </h1>
 
             <p className="mt-6 max-w-3xl text-base leading-7 text-sidebar-foreground/80 sm:text-lg md:text-xl">
-              Parti da una domanda, cerca una persona o un dataset, oppure
-              segui gli ultimi cambiamenti nelle fonti pubbliche.
+              Parti da una domanda, cerca una persona o un dataset, oppure segui
+              gli ultimi cambiamenti nelle fonti pubbliche.
             </p>
 
             <div className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
@@ -315,7 +320,9 @@ export function Home() {
                 <span className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
                   <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
                   Prossimo controllo{" "}
-                  {formatCivicTime(ALBO_OPERATIONAL_STATUS.next_scheduled_check)}
+                  {formatCivicTime(
+                    ALBO_OPERATIONAL_STATUS.next_scheduled_check,
+                  )}
                 </span>
               </div>
 
@@ -438,7 +445,9 @@ export function Home() {
       <section className="border-b border-border bg-background py-12 md:py-16">
         <div className="container mx-auto grid gap-7 px-4 md:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
           <div className="max-w-xl">
-            <span className="eyebrow text-primary">Trasparenza del monitoraggio</span>
+            <span className="eyebrow text-primary">
+              Trasparenza del monitoraggio
+            </span>
             <h2 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-4xl">
               Qualità e copertura delle fonti
             </h2>
@@ -621,6 +630,15 @@ function InstitutionalSessionsHomeCard({
           {sessions.map((session) => {
             const contextArticleCount = session.contextResearch.articles.length;
             const contextMediaCount = session.contextResearch.media.length;
+            const organLabel =
+              session.title.value?.split(" — ")[0] ??
+              (session.kind === "council"
+                ? "Consiglio comunale"
+                : "Commissione consiliare");
+            const sessionStatusSummary =
+              councilSessionV0StatusLabels[
+                session.sessionStatus.value ?? "non_verificata"
+              ];
             const contextStatusSummary =
               session.contextResearch.status === "not_run"
                 ? "Ricerca contestuale da completare"
@@ -638,11 +656,14 @@ function InstitutionalSessionsHomeCard({
                     aria-hidden="true"
                   />
                   <div className="min-w-0">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-primary">
+                      {organLabel}
+                    </p>
                     <p className="text-sm font-bold text-foreground group-hover:text-primary">
                       {formatSessionDate(session.scheduledAt.value)}
                     </p>
                     <p className="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">
-                      {contextStatusSummary}
+                      {sessionStatusSummary} · {contextStatusSummary}
                     </p>
                     <p className="mt-1 flex items-center gap-1.5 text-xs font-semibold text-primary">
                       {contextMediaCount > 0 ? (

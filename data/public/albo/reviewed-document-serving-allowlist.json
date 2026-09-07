@@ -1,6 +1,6 @@
 {
   "schema_version": "albo-reviewed-document-serving.v1",
-  "reviewed_at": "2026-08-30T00:00:00.000Z",
+  "reviewed_at": "2026-09-07T04:36:00.000Z",
   "source": "Albo Pretorio online del Comune di Lamezia Terme (piattaforma Tinnvision)",
   "source_url": "https://albo.tinnvision.cloud/albo/00301390795",
   "known_limits": [
@@ -14,6 +14,30 @@
       "review_status": "approved_public_civic_document",
       "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
       "reason": "Documento istituzionale gia' revisionato e usato come fonte della sezione sulle commissioni consiliari."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/a1dad36522921833ac71b994a73032d3454227d0a2c00f57156a8d7059d94baf.pdf",
+      "sha256": "a1dad36522921833ac71b994a73032d3454227d0a2c00f57156a8d7059d94baf",
+      "source_publication_number": "2026/2859",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Convocazione istituzionale revisionata e usata come fonte della seduta della VI Commissione dell'8 settembre 2026."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/dee314eb1f7e9133848be4b48c1c0b5e06ddd60371a92acc40ef9e290a62e411.pdf",
+      "sha256": "dee314eb1f7e9133848be4b48c1c0b5e06ddd60371a92acc40ef9e290a62e411",
+      "source_publication_number": "2026/2860",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Convocazione istituzionale revisionata e usata come fonte delle sedute della IV Commissione dall'8 all'11 settembre 2026."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/feb500c847880bf03ab1cd09190b961828f5b3873d60bea800e93367a3c74468.pdf",
+      "sha256": "feb500c847880bf03ab1cd09190b961828f5b3873d60bea800e93367a3c74468",
+      "source_publication_number": "2026/2861",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Convocazione istituzionale revisionata e usata come fonte della seduta congiunta delle Commissioni III e IV del 7 settembre 2026."
     }
   ]
 }

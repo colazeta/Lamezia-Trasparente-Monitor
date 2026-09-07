@@ -43,6 +43,16 @@ describe("HomeInstitutionalSessions", () => {
     expect(screen.getAllByText(/Ricerca contestuale eseguita/i)).toHaveLength(
       13,
     );
+    expect(
+      screen.getAllByText(/Stato della seduta non verificato/i),
+    ).toHaveLength(12);
+    expect(screen.getByText(/Seduta svolta/i)).toBeInTheDocument();
+    expect(
+      screen.getAllByText("IV Commissione consiliare permanente"),
+    ).toHaveLength(6);
+    expect(
+      screen.getByText("III e IV Commissioni consiliari permanenti"),
+    ).toBeInTheDocument();
     expect(screen.getByText("Allegato controllato")).toBeInTheDocument();
     expect(screen.queryByText("Verifica mista")).not.toBeInTheDocument();
     expect(

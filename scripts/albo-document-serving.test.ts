@@ -151,3 +151,18 @@ async function writeJson(filePath: string, value: unknown): Promise<void> {
 function sha256(value: Buffer): string {
   return createHash("sha256").update(value).digest("hex");
 }
+
+test("serves the reviewed September commission attachments", () => {
+  const repoRoot = path.resolve(import.meta.dirname, "..");
+  const expected = [
+    "data/public/albo/documents/2026/a1dad36522921833ac71b994a73032d3454227d0a2c00f57156a8d7059d94baf.pdf",
+    "data/public/albo/documents/2026/dee314eb1f7e9133848be4b48c1c0b5e06ddd60371a92acc40ef9e290a62e411.pdf",
+    "data/public/albo/documents/2026/feb500c847880bf03ab1cd09190b961828f5b3873d60bea800e93367a3c74468.pdf",
+  ];
+
+  const served = alboDocumentServingFiles(repoRoot);
+  for (const documentPath of expected) {
+    assert.ok(served.includes(documentPath));
+    assert.ok(readVerifiedAlboDocument(repoRoot, documentPath));
+  }
+});
