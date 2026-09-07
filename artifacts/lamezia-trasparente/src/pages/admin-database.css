@@ -1,26 +1,26 @@
 .db-desktop {
   min-height: 100dvh;
   padding: 1.25rem;
-  background: #006b6b;
-  color: #111;
+  background: hsl(var(--db-desktop));
+  color: hsl(var(--db-text));
   font-family: Tahoma, Verdana, sans-serif;
   font-size: 1rem;
 }
 .db-window {
   max-width: 1800px;
   margin: 0 auto;
-  background: #c5c5c5;
+  background: hsl(var(--db-chrome));
   border: 3px solid;
-  border-color: #fafafa #373737 #373737 #fafafa;
-  box-shadow: 3px 3px 0 #004141;
+  border-color: hsl(var(--db-bevel-light)) hsl(var(--db-bevel-dark)) hsl(var(--db-bevel-dark)) hsl(var(--db-bevel-light));
+  box-shadow: 3px 3px 0 hsl(var(--db-desktop-shadow));
 }
 .db-titlebar {
   display: flex;
   align-items: center;
   gap: 0.65rem;
   padding: 0.6rem 0.8rem;
-  color: #fff;
-  background: #000080;
+  color: hsl(var(--db-surface));
+  background: hsl(var(--db-title));
 }
 .db-titlebar h1 {
   margin: 0;
@@ -48,29 +48,29 @@
 }
 .db-desktop button:not(.db-link),
 .db-desktop [role="combobox"] {
-  background: #c5c5c5;
-  color: #111;
+  background: hsl(var(--db-chrome));
+  color: hsl(var(--db-text));
   border: 2px solid;
-  border-color: #fff #575757 #575757 #fff;
+  border-color: hsl(var(--db-surface)) hsl(var(--db-control-shadow)) hsl(var(--db-control-shadow)) hsl(var(--db-surface));
   box-shadow: none;
 }
 .db-desktop button:active:not(:disabled) {
-  border-color: #575757 #fff #fff #575757;
+  border-color: hsl(var(--db-control-shadow)) hsl(var(--db-surface)) hsl(var(--db-surface)) hsl(var(--db-control-shadow));
 }
 .db-desktop button:disabled {
-  color: #565656;
+  color: hsl(var(--db-disabled));
   opacity: 0.7;
 }
 .db-desktop button:focus-visible,
 .db-desktop input:focus-visible {
-  outline: 2px dashed #000080;
+  outline: 2px dashed hsl(var(--db-title));
   outline-offset: 2px;
 }
 .db-desktop input {
-  background: #fff;
-  color: #111;
+  background: hsl(var(--db-surface));
+  color: hsl(var(--db-text));
   border: 2px solid;
-  border-color: #575757 #fff #fff #575757;
+  border-color: hsl(var(--db-control-shadow)) hsl(var(--db-surface)) hsl(var(--db-surface)) hsl(var(--db-control-shadow));
 }
 .db-summary {
   display: grid;
@@ -81,7 +81,7 @@
 .db-summary > div {
   padding: 0.7rem;
   border: 1px solid;
-  border-color: #777 #eee #eee #777;
+  border-color: hsl(var(--db-border-dark)) hsl(var(--db-bevel-soft)) hsl(var(--db-bevel-soft)) hsl(var(--db-border-dark));
 }
 .db-summary strong {
   display: block;
@@ -98,9 +98,9 @@
   padding: 0 0.75rem 0.75rem;
 }
 .db-tree {
-  background: #f4f4f4;
+  background: hsl(var(--db-tree));
   border: 2px solid;
-  border-color: #606060 #fff #fff #606060;
+  border-color: hsl(var(--db-inset-shadow)) hsl(var(--db-surface)) hsl(var(--db-surface)) hsl(var(--db-inset-shadow));
   min-width: 0;
   padding: 0.6rem;
 }
@@ -133,14 +133,14 @@
   overflow-wrap: anywhere;
 }
 .db-tree nav button.db-selected {
-  background: #000080;
-  color: #fff;
+  background: hsl(var(--db-title));
+  color: hsl(var(--db-surface));
 }
 .db-mainpane {
   min-width: 0;
-  background: #f6f6f6;
+  background: hsl(var(--db-pane));
   border: 2px solid;
-  border-color: #606060 #fff #fff #606060;
+  border-color: hsl(var(--db-inset-shadow)) hsl(var(--db-surface)) hsl(var(--db-surface)) hsl(var(--db-inset-shadow));
   padding: 0.8rem;
 }
 .db-mainpane h2 {
@@ -162,29 +162,29 @@
 }
 .db-desktop table {
   font-size: 0.875rem;
-  color: #111;
-  background: #fff;
+  color: hsl(var(--db-text));
+  background: hsl(var(--db-surface));
 }
 .db-desktop th {
-  color: #111;
-  background: #dedede;
+  color: hsl(var(--db-text));
+  background: hsl(var(--db-header));
   font-weight: bold;
   white-space: nowrap;
-  border: 1px solid #999;
+  border: 1px solid hsl(var(--db-grid-header));
 }
 .db-desktop td {
   vertical-align: top;
-  border: 1px solid #d1d1d1;
+  border: 1px solid hsl(var(--db-grid));
   padding: 0.5rem;
 }
 .db-desktop tbody tr:nth-child(even) {
-  background: #f1f4fa;
+  background: hsl(var(--db-stripe));
 }
 .db-desktop th button {
   padding: 0.2rem 0.4rem;
 }
 .db-desktop .db-link {
-  color: #000080;
+  color: hsl(var(--db-title));
   text-decoration: underline;
   text-underline-offset: 2px;
   text-align: left;
@@ -205,9 +205,9 @@
   font-size: 0.875rem;
 }
 .db-desktop .db-tabs button[data-state="active"] {
-  background: #fff;
+  background: hsl(var(--db-surface));
   font-weight: bold;
-  border-bottom-color: #fff;
+  border-bottom-color: hsl(var(--db-surface));
 }
 .db-filter {
   display: flex;
@@ -245,14 +245,14 @@
 .db-message {
   margin: 1rem;
   padding: 1rem;
-  color: #111;
-  background: #fff;
-  border: 1px solid #777;
+  color: hsl(var(--db-text));
+  background: hsl(var(--db-surface));
+  border: 1px solid hsl(var(--db-border-dark));
   line-height: 1.6;
 }
 .db-error {
-  border-left: 5px solid #9c1919;
-  background: #fff5f1;
+  border-left: 5px solid hsl(var(--db-error));
+  background: hsl(var(--db-error-surface));
 }
 .db-statusbar {
   display: flex;
@@ -264,12 +264,12 @@
 .db-statusbar span {
   padding: 0.25rem 0.5rem;
   border: 1px solid;
-  border-color: #777 #eee #eee #777;
+  border-color: hsl(var(--db-border-dark)) hsl(var(--db-bevel-soft)) hsl(var(--db-bevel-soft)) hsl(var(--db-border-dark));
 }
 .db-definition {
-  background: #fff;
+  background: hsl(var(--db-surface));
   padding: 0.8rem;
-  border: 1px solid #aaa;
+  border: 1px solid hsl(var(--db-border));
   margin: 0.6rem 0;
   font-size: 0.875rem;
 }
@@ -284,9 +284,9 @@
 .db-login {
   max-width: 500px;
   margin: 8vh auto;
-  background: #c5c5c5;
+  background: hsl(var(--db-chrome));
   padding: 1.5rem;
-  border: 3px outset #eee;
+  border: 3px outset hsl(var(--db-bevel-soft));
 }
 .db-login h1 {
   font-size: 1.3rem;
@@ -297,14 +297,14 @@
   width: min(900px, 96vw) !important;
   max-width: min(900px, 96vw) !important;
   overflow-y: auto;
-  background: #f6f6f6;
-  color: #111;
+  background: hsl(var(--db-pane));
+  color: hsl(var(--db-text));
   font-family: Tahoma, Verdana, sans-serif;
-  border-left: 4px ridge #aaa;
+  border-left: 4px ridge hsl(var(--db-border));
 }
 .db-field {
   padding: 0.8rem 0;
-  border-bottom: 1px solid #aaa;
+  border-bottom: 1px solid hsl(var(--db-border));
 }
 .db-field dt {
   font-weight: bold;
@@ -314,17 +314,17 @@
   display: block;
   font-size: 0.875rem;
   font-weight: normal;
-  color: #555;
+  color: hsl(var(--db-muted));
 }
 .db-field dd {
   margin-top: 0.4rem;
-  background: #fff;
-  border: 1px solid #bbb;
+  background: hsl(var(--db-surface));
+  border: 1px solid hsl(var(--db-field-border));
   padding: 0.6rem;
 }
 .db-field dd > strong {
   font-size: 0.875rem;
-  color: #8b1515;
+  color: hsl(var(--db-error-text));
 }
 @media (max-width: 900px) {
   .db-desktop {

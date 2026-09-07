@@ -345,3 +345,33 @@
     inset: -1px;
   }
 }
+
+/* Fixed, scoped palette for the private database console and its portal. */
+.db-desktop,
+.db-record-sheet {
+  --db-desktop: 180.0000 100.0000% 20.9804%;
+  --db-desktop-shadow: 180.0000 100.0000% 12.7451%;
+  --db-title: 240.0000 100.0000% 25.0980%;
+  --db-text: 0.0000 0.0000% 6.6667%;
+  --db-chrome: 0.0000 0.0000% 77.2549%;
+  --db-bevel-light: 0.0000 0.0000% 98.0392%;
+  --db-bevel-dark: 0.0000 0.0000% 21.5686%;
+  --db-surface: 0.0000 0.0000% 100.0000%;
+  --db-control-shadow: 0.0000 0.0000% 34.1176%;
+  --db-disabled: 0.0000 0.0000% 33.7255%;
+  --db-border-dark: 0.0000 0.0000% 46.6667%;
+  --db-bevel-soft: 0.0000 0.0000% 93.3333%;
+  --db-tree: 0.0000 0.0000% 95.6863%;
+  --db-inset-shadow: 0.0000 0.0000% 37.6471%;
+  --db-pane: 0.0000 0.0000% 96.4706%;
+  --db-header: 0.0000 0.0000% 87.0588%;
+  --db-grid-header: 0.0000 0.0000% 60.0000%;
+  --db-grid: 0.0000 0.0000% 81.9608%;
+  --db-stripe: 220.0000 47.3684% 96.2745%;
+  --db-error: 0.0000 72.3757% 35.4902%;
+  --db-error-surface: 17.1429 100.0000% 97.2549%;
+  --db-border: 0.0000 0.0000% 66.6667%;
+  --db-muted: 0.0000 0.0000% 33.3333%;
+  --db-field-border: 0.0000 0.0000% 73.3333%;
+  --db-error-text: 0.0000 73.7500% 31.3725%;
+}
