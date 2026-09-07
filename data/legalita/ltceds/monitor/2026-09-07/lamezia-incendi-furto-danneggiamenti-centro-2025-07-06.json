@@ -1,0 +1,147 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-incendi-furto-danneggiamenti-centro-2025-07-06",
+  "discovered_at": "2026-09-07T02:41:08+02:00",
+  "updated_at": "2026-09-07T02:41:08+02:00",
+  "record_status": "verified_source",
+  "event_form": "continuous_episode",
+  "title": "Sequenza di incendi, furto e danneggiamenti nel centro di Lamezia Terme nella notte del 6 luglio 2025",
+  "temporal": {
+    "start": "2025-07-06",
+    "end": "2025-07-06",
+    "edtf": "2025-07-06",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:lacnews24:2025-10-30:27-reati-lamezia-minorenne",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Auto in fiamme, furti e danneggiamenti: 27 reati in una sola notte a Lamezia, arrestato 17enne",
+      "url": "https://www.lacnews24.it/cronaca/auto-in-fiamme-furti-e-danneggiamenti-27-reati-in-una-sola-notte-a-lamezia-arrestato-17enne-lme4lnkn",
+      "published_at": "2025-10-30T08:50:00+01:00",
+      "retrieved_at": "2026-09-07T02:41:08+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:citynow:2025-10-30:27-reati-lamezia-minorenne",
+      "source_type": "press_secondary",
+      "provider": "CityNow",
+      "title": "Lamezia, 27 reati in una notte: arrestato 17enne",
+      "url": "https://www.citynow.it/27-reati-notte-arresto-minore-lamezia-terme-incendio-furti/",
+      "published_at": "2025-10-30T14:49:00+01:00",
+      "retrieved_at": "2026-09-07T02:41:08+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lameziaterme-it:2025-10-30:27-reati-lamezia-minorenne",
+      "source_type": "press_secondary",
+      "provider": "LameziaTerme.it",
+      "title": "Lamezia, arrestato 17enne: 27 reati in una notte e auto incendiate (VIDEO)",
+      "url": "https://www.lameziaterme.it/lamezia-arrestato-17enne-27-reati-in-una-notte-auto-incendiate/",
+      "published_at": "2025-10-30T00:00:00+01:00",
+      "retrieved_at": "2026-09-07T02:41:08+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:incendio",
+      "classification_source_key": "press:lacnews24:2025-10-30:27-reati-lamezia-minorenne",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "incendio in viale Primo Maggio nella notte del 6 luglio 2025",
+        "sei autovetture e un ciclomotore in sosta distrutti dalle fiamme secondo le fonti",
+        "attribuzione al minore riferita dalle fonti nel contesto di un'ordinanza cautelare, non di una condanna"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 7
+    },
+    {
+      "offence_key": "offence:furto-autovettura",
+      "classification_source_key": "press:lacnews24:2025-10-30:27-reati-lamezia-minorenne",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "furto di un'autovettura parcheggiata in via XX Settembre nella stessa notte secondo le fonti"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    },
+    {
+      "offence_key": "offence:danneggiamento",
+      "classification_source_key": "press:lacnews24:2025-10-30:27-reati-lamezia-minorenne",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "numerose auto in sosta e arredi urbani risultano danneggiati durante la fuga secondo le fonti",
+        "le fonti aggregano complessivamente la sequenza in 27 reati commessi in una sola notte"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:viale-primo-maggio",
+      "basis_source_key": "press:lacnews24:2025-10-30:27-reati-lamezia-minorenne",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "minor_or_vulnerable",
+      "geometry": null,
+      "place_name": "viale Primo Maggio",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-xx-settembre",
+      "basis_source_key": "press:lacnews24:2025-10-30:27-reati-lamezia-minorenne",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "minor_or_vulnerable",
+      "geometry": null,
+      "place_name": "via XX Settembre",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
