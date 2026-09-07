@@ -1,0 +1,100 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-aggressione-coltello-aeroporto-canadair-2026-05-20",
+  "discovered_at": "2026-09-07T10:51:08+02:00",
+  "updated_at": "2026-09-07T10:51:08+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Aggressione con arma da taglio nel parcheggio dell'aeroporto di Lamezia Terme",
+  "temporal": {
+    "start": "2026-05-20",
+    "end": "2026-05-20",
+    "edtf": "2026-05-20",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "agency:ansa:2026-05-20:pilota-canadair-accoltellato-aeroporto-lamezia",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Pilota Canadair accoltellato davanti all'aeroporto di Lamezia Terme",
+      "url": "https://www.ansa.it/calabria/notizie/2026/05/20/pilota-canadair-accoltellato-davanti-allaeroporto-di-lamezia-terme_fb22d5c3-c9ad-4eae-a89c-6bda983cbe88.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T10:51:08+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:gazzetta-sud:2026-05-20:pilota-canadair-accoltellato-aeroporto-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Terrore all'aeroporto di Lamezia: pilota di Canadair accoltellato al collo nel parcheggio",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2026/05/20/terrore-allaeroporto-di-lamezia-pilota-di-canadair-accoltellato-al-collo-nel-parcheggio-e-caccia-alluomo-febd86b9-d842-4fdb-9b1c-438d9d982d10/",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T10:51:08+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lacnews24:2026-05-28:pilota-canadair-lesioni-aeroporto-lamezia",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Pilota di Canadair accoltellato all'aeroporto di Lamezia, la ricostruzione dell'aggressione: si indaga per lesioni",
+      "url": "https://www.lacnews24.it/cronaca/pilota-di-canadair-accoltellato-allaeroporto-di-lamezia-la-ricostruzione-dellaggressione-si-indaga-per-lesioni-r76bj7kp",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T10:51:08+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:lesioni",
+      "classification_source_key": "press:lacnews24:2026-05-28:pilota-canadair-lesioni-aeroporto-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "il 20 maggio 2026 un pilota di Canadair è stato aggredito con un coltello nel parcheggio dell'aeroporto di Lamezia Terme",
+        "le fonti riferiscono ferite nella zona del collo e della spalla e il trasporto in ospedale; successivamente il ferito è stato dimesso",
+        "il 28 maggio 2026 LaC News24 ha riferito che la Procura di Lamezia Terme aveva aperto un fascicolo per lesioni contro ignoti",
+        "le indagini erano condotte dalla Polizia di Frontiera dello scalo e dal Commissariato di Lamezia Terme"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:aeroporto:parcheggio",
+      "basis_source_key": "agency:ansa:2026-05-20:pilota-canadair-accoltellato-aeroporto-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Parcheggio dell'aeroporto di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
