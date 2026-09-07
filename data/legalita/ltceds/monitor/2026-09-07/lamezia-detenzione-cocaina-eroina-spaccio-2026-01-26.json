@@ -1,0 +1,102 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-detenzione-cocaina-eroina-spaccio-2026-01-26",
+  "discovered_at": "2026-09-07T09:18:19+02:00",
+  "updated_at": "2026-09-07T09:18:19+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Presunta detenzione di cocaina ed eroina ai fini di spaccio rilevata dai Carabinieri a Lamezia Terme",
+  "temporal": {
+    "start": "2026-01-26",
+    "end": "2026-01-26",
+    "edtf": "2026-01-26",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:gazzetta-sud:2026-01-27:cocaina-eroina-domiciliari-50enne",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Spacciava dai domiciliari la 50enne lametina arrestata durante un controllo",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2026/01/27/spacciava-dai-domiciliari-la-50enne-lametina-arrestata-durante-un-controllo-a15d9c2f-1053-4859-9dd5-e33ea2048088/",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T09:18:19+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2026-01-27:cocaina-eroina-domiciliari-50enne",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "È agli arresti domiciliari ma viene sorpresa con cocaina ed eroina in casa: nei guai una donna a Lamezia",
+      "url": "https://www.corrieredellacalabria.it/2026/01/27/e-agli-arresti-domiciliari-ma-viene-sorpresa-con-cocaina-ed-eroina-in-casa-nei-guai-una-donna-a-lamezia/",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T09:18:19+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lamezia-informa:2026-01-27:cocaina-eroina-domiciliari-50enne",
+      "source_type": "press_secondary",
+      "provider": "LameziaInforma",
+      "title": "Sequestrata cocaina ed eroina ad una 50enne già agli arresti domiciliari per spaccio",
+      "url": "https://www.lameziainforma.it/cronaca/2026/01/27/sequestrata-cocaina-ed-eroina-ad-una-50enne-gia-agli-arresti-domiciliari-per-spaccio/65603/",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T09:18:19+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:detenzione-stupefacenti-ai-fini-di-spaccio",
+      "classification_source_key": "press:gazzetta-sud:2026-01-27:cocaina-eroina-domiciliari-50enne",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "nel primo pomeriggio del 26 gennaio 2026 i Carabinieri del Nucleo Operativo e Radiomobile di Lamezia Terme hanno effettuato un controllo presso l'abitazione di una persona già sottoposta agli arresti domiciliari",
+        "secondo le fonti, nel corso del controllo sono stati rinvenuti cocaina ed eroina ritenuti dagli inquirenti detenuti con finalità di spaccio",
+        "le fonti riferiscono inoltre il rinvenimento di sostanza da taglio, un bilancino di precisione e oltre 3.000 euro in contanti",
+        "la persona controllata è stata arrestata; le fonti consultate non documentano in questa tornata un successivo accertamento definitivo di responsabilità"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:residence-search-2026-01-26",
+      "basis_source_key": "press:gazzetta-sud:2026-01-27:cocaina-eroina-domiciliari-50enne",
+      "role": "search",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione oggetto di controllo e perquisizione (indirizzo non pubblicato)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
