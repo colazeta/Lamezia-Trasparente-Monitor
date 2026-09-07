@@ -1,0 +1,116 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-furti-cantine-lento-splendidi-splendenti-2026-01-11",
+  "discovered_at": "2026-09-07T06:39:23+02:00",
+  "updated_at": "2026-09-07T06:39:23+02:00",
+  "record_status": "verified_source",
+  "event_form": "continuous_episode",
+  "title": "Presunti furti aggravati in due attività adiacenti di via del Progresso a Lamezia Terme",
+  "temporal": {
+    "start": "2026-01-11",
+    "end": "2026-01-11",
+    "edtf": "2026-01-11",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:corriere-calabria:2026-01-15:furti-via-del-progresso-cantine-lento",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Furti a Lamezia, i carabinieri sorprendono i ladri: arrestato un 42enne (si era nascosto in un cassonetto)",
+      "url": "https://www.corrieredellacalabria.it/2026/01/15/furti-a-lamezia-i-carabinieri-sorprendono-i-ladri-arrestato-un-42enne-si-era-nascosto-in-un-cassonetto/",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T06:39:23+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:gazzetta-sud:2026-01-15:furti-notte-lamezia-cassonetto",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Furti nella notte a Lamezia, ladro sorpreso in un cassonetto. Indagini in corso per identificare i complici",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2026/01/15/furti-nella-notte-a-lamezia-ladro-sorpreso-in-un-cassonetto-indagini-in-corso-per-identificare-i-complici-a9ea87c3-a28b-43cf-b005-6fe05c834618/",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T06:39:23+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:la-nuova-calabria:2026-01-15:furti-cantine-lento-splendidi-splendenti",
+      "source_type": "press_secondary",
+      "provider": "La Nuova Calabria",
+      "title": "Lamezia, furti a Cantine Lento e Splendidi e Splendenti: uno dei 2 ladri beccato in un cassonetto",
+      "url": "https://lanuovacalabria.it/lamezia-furti-a-cantine-lento-e-splendidi-e-splendenti-uno-dei-2-ladri-beccato-in-un-cassonetto",
+      "published_at": null,
+      "retrieved_at": "2026-09-07T06:39:23+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:furto-aggravato",
+      "classification_source_key": "press:corriere-calabria:2026-01-15:furti-via-del-progresso-cantine-lento",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "unknown",
+      "situational_context": [
+        "alle 03:50 dell'11 gennaio 2026 una residente di via del Progresso ha segnalato al 112 forti colpi provenienti dalla strada",
+        "le fonti riferiscono un furto in atto presso Cantine Lento e presso l'adiacente punto vendita Splendidi e Splendenti",
+        "all'arrivo dei Carabinieri due uomini con il volto coperto avrebbero tentato la fuga scavalcando il muro perimetrale delle Cantine Lento",
+        "uno dei soggetti è stato arrestato dopo essersi nascosto in un cassonetto; le indagini per identificare i complici risultavano ancora in corso"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 2
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:cantine-lento-via-del-progresso",
+      "basis_source_key": "press:corriere-calabria:2026-01-15:furti-via-del-progresso-cantine-lento",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Cantine Lento, via del Progresso",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:splendidi-splendenti-via-del-progresso",
+      "basis_source_key": "press:la-nuova-calabria:2026-01-15:furti-cantine-lento-splendidi-splendenti",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Splendidi e Splendenti, via del Progresso",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
