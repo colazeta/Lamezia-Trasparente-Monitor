@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { isProtectedAppPath } from "@/lib/authRouteMode";
 import { WebMcpBridge } from "@/lib/webmcp";
+import { databaseAdminDeployment } from "@/lib/databaseAdminDeployment";
 import { Router } from "./Router";
 
 const ClerkApp = lazy(() => import("./ClerkApp"));
@@ -22,7 +23,9 @@ const queryClient = new QueryClient({
 });
 
 const configuredClerkPubKey =
-  import.meta.env.VITE_CLERK_PUBLISHABLE_KEY?.trim() ?? "";
+  import.meta.env.VITE_CLERK_PUBLISHABLE_KEY?.trim() ||
+  databaseAdminDeployment?.publishableKey ||
+  "";
 const clerkProxyUrl = import.meta.env.VITE_CLERK_PROXY_URL;
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 
