@@ -1,0 +1,135 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rissa-accoltellamento-condominio-sambiase-2025-05-22",
+  "discovered_at": "2026-09-07T16:14:33+02:00",
+  "updated_at": "2026-09-07T16:14:33+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rissa condominiale con accoltellamento nel quartiere Sambiase",
+  "temporal": {
+    "start": "2025-05-22",
+    "end": "2025-05-22",
+    "edtf": "2025-05-22",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:corriere-lamezia:2025-05-24:tentato-omicidio-lite-vicini-sambiase",
+      "source_type": "press_secondary",
+      "provider": "Corriere di Lamezia",
+      "title": "Lamezia, tentato omicidio al culmine di una lite tra vicini, arrestato 21enne",
+      "url": "https://www.corrieredilamezia.it/cronaca/2025_05_24/lamezia-tentato-omicidio-al-culmine-di-una-lite-tra-vicini-arrestato-21enne_53131/",
+      "published_at": "2025-05-24T00:00:00+02:00",
+      "retrieved_at": "2026-09-07T16:14:33+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lameziaterme-it:2025-05-24:carabinieri-tentato-omicidio-sambiase",
+      "source_type": "press_secondary",
+      "provider": "LameziaTerme.it",
+      "title": "Lamezia. Carabinieri arrestano 21enne per tentato omicidio",
+      "url": "https://www.lameziaterme.it/lamezia-carabinieri-arrestano-21enne-per-tentato-omicidio/",
+      "published_at": "2025-05-24T00:00:00+02:00",
+      "retrieved_at": "2026-09-07T16:14:33+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lacnews24:2026-01-07:rissa-sambiase-otto-indagati",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Era stato accoltellato per un parcheggio condominiale, otto indagati per il tentato omicidio di un 26enne a Lamezia",
+      "url": "https://www.lacnews24.it/cronaca/era-stato-accoltellato-per-un-parcheggio-condominiale-otto-indagati-per-il-tentato-omicidio-di-un-26enne-a-lamezia-kq969x0n",
+      "published_at": "2026-01-07T12:20:00+01:00",
+      "retrieved_at": "2026-09-07T16:14:33+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2026-01-07:procura-rissa-sambiase-otto-indagati",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Tentato omicidio durante una rissa a Lamezia: la Procura chiude le indagini per 8 persone",
+      "url": "https://www.corrieredellacalabria.it/2026/01/07/tentato-omicidio-durante-una-rissa-a-lamezia-la-procura-chiude-le-indagini-per-8-persone/",
+      "published_at": "2026-01-07T00:00:00+01:00",
+      "retrieved_at": "2026-09-07T16:14:33+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rissa",
+      "classification_source_key": "press:lacnews24:2026-01-07:rissa-sambiase-otto-indagati",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la sera del 22 maggio 2025 una lite tra residenti in un condominio del quartiere Sambiase è degenerata in uno scontro violento",
+        "le ricostruzioni investigative successive collegano l'origine dello scontro a contrasti per l'uso di un parcheggio condominiale e riferiscono il coinvolgimento di più persone e l'impiego di armi improprie",
+        "la qualificazione come rissa è mantenuta provvisoria perché le fonti descrivono il fatto e la conclusione delle indagini, ma non consentono di attribuire in modo uniforme e definitivo la medesima fattispecie a tutti i partecipanti"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:tentato-omicidio",
+      "classification_source_key": "press:corriere-lamezia:2025-05-24:tentato-omicidio-lite-vicini-sambiase",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "nel corso dello scontro una persona è stata raggiunta da due profondi fendenti alla schiena con un coltello e trasportata d'urgenza all'ospedale di Lamezia Terme in gravi condizioni",
+        "i Carabinieri hanno eseguito nella notte successiva un arresto in flagranza per tentato omicidio; il Tribunale di Lamezia Terme ha convalidato l'arresto il 24 maggio 2025 e disposto la custodia in carcere",
+        "nel gennaio 2026 la Procura della Repubblica di Lamezia Terme ha notificato avvisi di conclusione delle indagini preliminari a otto persone coinvolte nel complessivo episodio"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:sambiase:condominio-non-specificato",
+      "basis_source_key": "press:corriere-lamezia:2025-05-24:tentato-omicidio-lite-vicini-sambiase",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_neighbourhood",
+      "evidence_precision": "neighbourhood",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Condominio non specificato nel quartiere Sambiase",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    }
+  ]
+}
