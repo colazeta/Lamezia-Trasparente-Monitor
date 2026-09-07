@@ -19,7 +19,7 @@
       "provider": "LameziaTerme.it",
       "title": "Lamezia. Nella notte incendio in due esercizi commerciali",
       "url": "https://www.lameziaterme.it/lamezia-nella-notte-incendio-in-due-esercizi-commerciali/",
-      "published_at": "2025-05-17T00:00:00+02:00",
+      "published_at": null,
       "retrieved_at": "2026-09-08T00:02:23+02:00",
       "support_roles": [
         "event_support",
@@ -46,22 +46,21 @@
       "provider": "ANSA",
       "title": "Tre arresti dei carabinieri per due incendi dolosi a Lamezia",
       "url": "https://www.ansa.it/calabria/notizie/2025/10/24/tre-arresti-dei-carabinieri-per-due-incendi-dolosi-a-lamezia_14bf2850-3b73-4e4f-b9e5-a597f66dfea0.html",
-      "published_at": "2025-10-24T00:00:00+02:00",
+      "published_at": null,
       "retrieved_at": "2026-09-08T00:02:23+02:00",
       "support_roles": [
         "event_support",
-        "classification_support",
         "procedural_context",
         "corroboration"
       ]
     },
     {
-      "source_key": "press:ten:2025-10-24:operazione-joker-lamezia",
+      "source_key": "press:lamilano:2025-10-27:operazione-joker-lamezia",
       "source_type": "press_secondary",
-      "provider": "TEN TV",
-      "title": "Lamezia Terme: operazione \"Joker\", arrestate tre persone per l'incendio di due attività commerciali",
-      "url": "https://www.tenonline.tv/news/cronaca/lamezia-terme-operazione-joker/",
-      "published_at": "2025-10-24T00:00:00+02:00",
+      "provider": "La Milano",
+      "title": "Lamezia Terme, operazione Joker: tre arresti per l'incendio di due attività commerciali",
+      "url": "https://lamilano.it/catanzaro/lamezia-terme/lamezia-terme-operazione-joker-tre-arresti-per-lincendio-di-due-attivita-commerciali/",
+      "published_at": null,
       "retrieved_at": "2026-09-08T00:02:23+02:00",
       "support_roles": [
         "event_support",
@@ -74,7 +73,7 @@
   "offences": [
     {
       "offence_key": "offence:danneggiamento-seguito-incendio",
-      "classification_source_key": "agency:ansa:2025-10-24:jocker-incendi-lamezia",
+      "classification_source_key": "press:lamilano:2025-10-27:operazione-joker-lamezia",
       "classification_basis": "source_stated_legal",
       "iccs_code": null,
       "istat_catalogue_id": null,
