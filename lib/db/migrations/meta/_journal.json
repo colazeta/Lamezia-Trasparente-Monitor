@@ -141,6 +141,13 @@
       "when": 1788803725182,
       "tag": "0019_publications_brief_manual_convergence",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1788806852141,
+      "tag": "0020_source_snapshot_registry",
+      "breakpoints": true
     }
   ]
 }

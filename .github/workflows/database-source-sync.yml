@@ -1,0 +1,56 @@
+name: Persist registered civic snapshots
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "35 20 * * *"
+  push:
+    branches: [main]
+    paths:
+      - "data/public/albo/latest.json"
+      - "data/public/albo/delibere-archive.json"
+      - "data/public/contracts/anac-bdncp/latest.json"
+      - "data/public/contracts/anac-authority/latest.json"
+      - "artifacts/lamezia-trasparente/src/data/generated/lameziaPnrrProjects.json"
+      - "lib/db/src/sourceSnapshot*.ts"
+      - ".github/workflows/database-source-sync.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: database-source-sync
+  cancel-in-progress: false
+
+jobs:
+  import:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.1
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Require the server database connection
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: node -e 'if (!process.env.DATABASE_URL) { console.error("DATABASE_URL is not configured; no import was performed."); process.exit(1); }'
+      - name: Persist and reconcile registered snapshots
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: pnpm --filter @workspace/db run import:source-snapshots --execute --output /tmp/source-import-report.json
+      - name: Retain the reconciliation report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: source-import-report
+          path: /tmp/source-import-report.json
+          if-no-files-found: warn
+          retention-days: 30

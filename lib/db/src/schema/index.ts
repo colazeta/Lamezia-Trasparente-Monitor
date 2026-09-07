@@ -42,3 +42,5 @@ export * from "./messages";
 export * from "./redazione";
 export * from "./crimeEvents";
 export * from "./canonicalIdentity";
+
+export * from "./sourceRegistry";
