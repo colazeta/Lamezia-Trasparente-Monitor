@@ -62,11 +62,11 @@
       ]
     },
     {
-      "source_key": "other:reteimprese:emporio-shopping-clas-via-fusco-18",
+      "source_key": "other:emporioshopping:location-via-fusco-18",
       "source_type": "other",
-      "provider": "Rete Imprese",
-      "title": "Emporio Shopping Clas - 88046 Lamezia Terme",
-      "url": "https://www.reteimprese.it/casalinghi/lamezia-terme/azienda/3728525",
+      "provider": "Emporio Shopping",
+      "title": "Negozio Casalinghi e Pet Shop a Lamezia Terme - Emporio Shopping",
+      "url": "https://www.emporioshopping.it/",
       "published_at": null,
       "retrieved_at": "2026-09-07T18:55:04+02:00",
       "support_roles": [
