@@ -88,6 +88,105 @@ afterEach(() => {
 });
 
 describe("private database console", () => {
+  function navigationResponses(malformed = false) {
+    const parent = { ...catalog.tables[0], name: "parents" };
+    const child = {
+      ...catalog.tables[0],
+      relations: [
+        {
+          name: "parent_fk",
+          columns: malformed ? "{id}" : ["id"],
+          targetSchema: "public",
+          targetTable: "parents",
+          targetColumns: ["id"],
+          definition: "FOREIGN KEY (id) REFERENCES parents(id)",
+          validated: true,
+        },
+      ],
+    };
+    vi.mocked(fetch).mockImplementation(
+      async (url) =>
+        new Response(
+          JSON.stringify(
+            String(url).endsWith("/catalog")
+              ? { ...catalog, tables: [child, parent] }
+              : {
+                  table: "categories",
+                  rows: [
+                    { values: { id: "1", name: "Example" }, truncated: [] },
+                  ],
+                  total: 1,
+                  page: 1,
+                  pageSize: 50,
+                  capturedAt: catalog.capturedAt,
+                },
+          ),
+          { headers: { "Content-Type": "application/json" } },
+        ),
+    );
+  }
+
+  it("opens populated tables, structure, record details and related tables", async () => {
+    navigationResponses();
+    view();
+    await screen.findByText("Catalogo e controlli", { selector: "h2" });
+    fireEvent.click(screen.getAllByRole("button", { name: "categories" })[0]);
+    expect(await screen.findByText("Example")).toBeVisible();
+    fireEvent.click(screen.getByRole("button", { name: "Apri", exact: true }));
+    expect(await screen.findByRole("dialog")).toHaveTextContent(
+      "Scheda · categories",
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Close", exact: true }));
+    fireEvent.mouseDown(screen.getByRole("tab", { name: "Struttura" }), {
+      button: 0,
+      ctrlKey: false,
+    });
+    expect(await screen.findByText("Tipo PostgreSQL")).toBeVisible();
+    fireEvent.mouseDown(screen.getByRole("tab", { name: "Relazioni (1)" }), {
+      button: 0,
+      ctrlKey: false,
+    });
+    fireEvent.click(
+      await screen.findByRole("button", { name: "public.parents" }),
+    );
+    expect(
+      await screen.findByRole("heading", { name: "public.parents" }),
+    ).toBeVisible();
+    fireEvent.click(
+      screen.getByRole("button", { name: "Catalogo e controlli" }),
+    );
+    expect(
+      screen.getByRole("heading", { name: "Catalogo e controlli" }),
+    ).toBeVisible();
+  });
+
+  it("contains a malformed relation rendering error and lets the owner recover", async () => {
+    const log = vi.spyOn(console, "error").mockImplementation(() => {});
+    try {
+      navigationResponses(true);
+      view();
+      await screen.findByText("Catalogo e controlli", { selector: "h2" });
+      fireEvent.click(screen.getAllByRole("button", { name: "categories" })[0]);
+      expect(await screen.findByRole("alert")).toHaveTextContent(
+        "Impossibile visualizzare questa tabella",
+      );
+      expect(
+        screen.getByRole("heading", { name: /Lamezia Trasparente/ }),
+      ).toBeVisible();
+      fireEvent.click(
+        screen.getByRole("button", { name: "Torna al catalogo" }),
+      );
+      expect(
+        screen.getByRole("heading", { name: "Catalogo e controlli" }),
+      ).toBeVisible();
+      fireEvent.click(
+        screen.getAllByRole("button", { name: "parents", exact: true })[0],
+      );
+      expect(await screen.findByText("Example")).toBeVisible();
+    } finally {
+      log.mockRestore();
+    }
+  });
   it("requires sign-in and makes no data request before authentication", () => {
     auth.user = null;
     view();

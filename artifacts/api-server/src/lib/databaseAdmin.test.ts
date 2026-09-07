@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import express from "express";
 import request from "supertest";
 import type { Pool, PoolClient } from "pg";
+import { types } from "pg";
 import {
   buildInspectionRead,
   InspectionInputError,
@@ -89,6 +90,32 @@ function database() {
       return {
         rows: table.columns.map((c) => ({ ...c, table_name: table.name })),
       };
+    if (sql.includes("FROM pg_constraint k JOIN pg_class c")) {
+      // pg_attribute.attname is name (OID 19): name[] (1003) has no
+      // parser in pg. Decode the wire values with the installed driver,
+      // using text[] (1009) only when the actual projection casts to text.
+      const decode = (key: string, value: string) =>
+        types.getTypeParser(
+          (sql.includes(`a.attname::text FROM unnest(k.${key})`)
+            ? 1009
+            : 1003) as Parameters<typeof types.getTypeParser>[0],
+        )(value);
+      return {
+        rows: [
+          {
+            table_name: table.name,
+            name: "categories_parent_fk",
+            type: "f",
+            definition: "FOREIGN KEY (id) REFERENCES categories(id)",
+            validated: true,
+            columns: decode("conkey", "{id}"),
+            targetSchema: "public",
+            targetTable: "categories",
+            targetColumns: decode("confkey", "{id}"),
+          },
+        ],
+      };
+    }
     if (sql.includes("count(*)")) return { rows: [{ count: 1 }] };
     if (sql.startsWith("SELECT left"))
       return {
@@ -121,6 +148,17 @@ beforeEach(() => {
 });
 
 describe("single-owner database boundary", () => {
+  it("serialises PostgreSQL foreign-key columns as JSON arrays for navigation", async () => {
+    owner();
+    const db = database();
+    const result = await request(db.app).get("/api/admin/database/catalog");
+    expect(result.status).toBe(200);
+    const relation = result.body.tables[0].relations[0];
+    expect(relation.columns).toEqual(["id"]);
+    expect(relation.targetColumns).toEqual(["id"]);
+    expect(relation.columns.join(", ")).toBe("id");
+    expect(relation.targetColumns.join(", ")).toBe("id");
+  });
   it("rejects anonymous and ingestion-only requests before acquiring a connection", async () => {
     const db = database();
     for (const path of [

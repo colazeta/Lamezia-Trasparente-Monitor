@@ -1,4 +1,10 @@
-import { useEffect, useState, type FormEvent } from "react";
+import {
+  Component,
+  useEffect,
+  useState,
+  type FormEvent,
+  type ReactNode,
+} from "react";
 import { SignIn, useAuth, useClerk, useUser } from "@clerk/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "wouter";
@@ -87,6 +93,31 @@ function Message({
       {children}
     </p>
   );
+}
+
+class TablePaneBoundary extends Component<
+  { children: ReactNode; onCatalog: () => void },
+  { failed: boolean }
+> {
+  state = { failed: false };
+
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+
+  render() {
+    if (this.state.failed)
+      return (
+        <div>
+          <Message error>
+            Impossibile visualizzare questa tabella. Torna al catalogo e premi
+            Aggiorna per riprovare.
+          </Message>
+          <Button onClick={this.props.onCatalog}>Torna al catalogo</Button>
+        </div>
+      );
+    return this.props.children;
+  }
 }
 
 export function AdminDatabase() {
@@ -246,12 +277,16 @@ function DatabaseSession({ userId }: { userId: string }) {
               </aside>
               <div className="db-mainpane">
                 {table ? (
-                  <TablePane
+                  <TablePaneBoundary
                     key={`${userId}:${table.name}`}
-                    table={table}
-                    userId={userId}
-                    onTable={setSelection}
-                  />
+                    onCatalog={() => setSelection(null)}
+                  >
+                    <TablePane
+                      table={table}
+                      userId={userId}
+                      onTable={setSelection}
+                    />
+                  </TablePaneBoundary>
                 ) : (
                   <CatalogPane catalog={catalog.data} onTable={setSelection} />
                 )}
