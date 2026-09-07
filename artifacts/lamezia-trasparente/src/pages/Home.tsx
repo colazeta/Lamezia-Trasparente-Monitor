@@ -153,13 +153,15 @@ export const HOME_PRIMARY_GATEWAYS = [
   },
   {
     title: "Territorio e legalità",
-    description: "Mappe, criticità, monitoraggio civico, memoria e beni confiscati.",
+    description:
+      "Mappe, criticità, monitoraggio civico, memoria e beni confiscati.",
     href: "/atlante-territoriale",
     icon: MapPinned,
   },
   {
     title: "Dati e fonti",
-    description: "Dataset, copertura, freschezza e metodo delle fonti pubbliche.",
+    description:
+      "Dataset, copertura, freschezza e metodo delle fonti pubbliche.",
     href: "/opendata",
     icon: Database,
   },
@@ -208,8 +210,8 @@ export function Home() {
             </h1>
 
             <p className="mt-6 max-w-3xl text-base leading-7 text-sidebar-foreground/80 sm:text-lg md:text-xl">
-              Parti da una domanda, cerca una persona o un dataset, oppure
-              segui gli ultimi cambiamenti nelle fonti pubbliche.
+              Parti da una domanda, cerca una persona o un dataset, oppure segui
+              gli ultimi cambiamenti nelle fonti pubbliche.
             </p>
 
             <div className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
@@ -318,7 +320,9 @@ export function Home() {
                 <span className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
                   <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
                   Prossimo controllo{" "}
-                  {formatCivicTime(ALBO_OPERATIONAL_STATUS.next_scheduled_check)}
+                  {formatCivicTime(
+                    ALBO_OPERATIONAL_STATUS.next_scheduled_check,
+                  )}
                 </span>
               </div>
 
@@ -441,7 +445,9 @@ export function Home() {
       <section className="border-b border-border bg-background py-12 md:py-16">
         <div className="container mx-auto grid gap-7 px-4 md:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
           <div className="max-w-xl">
-            <span className="eyebrow text-primary">Trasparenza del monitoraggio</span>
+            <span className="eyebrow text-primary">
+              Trasparenza del monitoraggio
+            </span>
             <h2 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-4xl">
               Qualità e copertura delle fonti
             </h2>
@@ -553,7 +559,7 @@ export function HomeInstitutionalSessions() {
           />
           <InstitutionalSessionsHomeCard
             title="Commissioni consiliari"
-            description="Due sedute della II Commissione e due della VI Commissione con date, orari e ordine del giorno controllati nelle rispettive convocazioni ufficiali."
+            description="Sedute delle Commissioni con date e orari controllati nelle rispettive convocazioni ufficiali."
             icon={CalendarClock}
             sessions={commissionHomeSessions}
           />
@@ -622,49 +628,22 @@ function InstitutionalSessionsHomeCard({
       <CardContent className="flex flex-1 flex-col p-0">
         <div className="divide-y divide-border">
           {sessions.map((session) => {
-            const agendaCount = session.agenda.value?.length ?? 0;
             const contextArticleCount = session.contextResearch.articles.length;
             const contextMediaCount = session.contextResearch.media.length;
-            const contextCountSummary = [
-              contextArticleCount > 0
-                ? `${contextArticleCount} ${contextArticleCount === 1 ? "articolo" : "articoli"}`
-                : null,
-              contextMediaCount > 0
-                ? `${contextMediaCount} ${contextMediaCount === 1 ? "video" : "video"}`
-                : null,
-            ]
-              .filter(Boolean)
-              .join(" · ");
-            const contextStatusSummary =
-              contextCountSummary ||
-              (session.contextResearch.status === "checked_no_match"
-                ? "Ricerca eseguita · nessun collegamento preciso"
-                : "Ricerca da completare");
-            const sameSessionCount = session.contextResearch.articles.filter(
-              (article) => article.relationship === "same_session",
-            ).length;
-            const possibleSessionCount =
-              session.contextResearch.articles.filter(
-                (article) => article.relationship === "possible_same_session",
-              ).length;
-            const agendaItemCount = session.contextResearch.articles.filter(
-              (article) => article.relationship === "agenda_item",
-            ).length;
-            const contextRelationshipSummary = [
-              sameSessionCount > 0 ? `${sameSessionCount} stessa seduta` : null,
-              possibleSessionCount > 0
-                ? `${possibleSessionCount} ${possibleSessionCount === 1 ? "possibile" : "possibili"}`
-                : null,
-              agendaItemCount > 0
-                ? `${agendaItemCount} sui temi in agenda`
-                : null,
-            ]
-              .filter(Boolean)
-              .join(" · ");
+            const organLabel =
+              session.title.value?.split(" — ")[0] ??
+              (session.kind === "council"
+                ? "Consiglio comunale"
+                : "Commissione consiliare");
             const sessionStatusSummary =
               councilSessionV0StatusLabels[
                 session.sessionStatus.value ?? "non_verificata"
               ];
+            const contextStatusSummary =
+              session.contextResearch.status === "not_run"
+                ? "Ricerca contestuale da completare"
+                : "Ricerca contestuale eseguita";
+            const contextCountSummary = `${contextArticleCount} ${contextArticleCount === 1 ? "articolo" : "articoli"} · ${contextMediaCount} video`;
             return (
               <Link
                 key={session.id}
@@ -677,13 +656,14 @@ function InstitutionalSessionsHomeCard({
                     aria-hidden="true"
                   />
                   <div className="min-w-0">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-primary">
+                      {organLabel}
+                    </p>
                     <p className="text-sm font-bold text-foreground group-hover:text-primary">
                       {formatSessionDate(session.scheduledAt.value)}
                     </p>
                     <p className="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">
-                      {agendaCount > 0
-                        ? `${agendaCount} punti all'ordine del giorno · ${sessionStatusSummary}`
-                        : `Ordine del giorno da verificare · ${sessionStatusSummary}`}
+                      {sessionStatusSummary} · {contextStatusSummary}
                     </p>
                     <p className="mt-1 flex items-center gap-1.5 text-xs font-semibold text-primary">
                       {contextMediaCount > 0 ? (
@@ -697,10 +677,7 @@ function InstitutionalSessionsHomeCard({
                           aria-hidden="true"
                         />
                       )}
-                      {contextStatusSummary}
-                      {contextArticleCount > 0
-                        ? ` · ${contextRelationshipSummary}`
-                        : ""}
+                      {contextCountSummary}
                     </p>
                   </div>
                   <ArrowRight

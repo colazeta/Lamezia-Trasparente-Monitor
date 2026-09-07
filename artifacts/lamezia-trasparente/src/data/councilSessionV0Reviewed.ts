@@ -19,6 +19,22 @@ const COMMISSION_VI_NOTICE_URL =
   "https://albo.tinnvision.cloud/allegati/2026_2788_2_P?ente=00301390795";
 const COMMISSION_VI_ARCHIVED_DOCUMENT_URL =
   "/data/public/albo/documents/2026/165152190ac39451d35caf5815bfb4d7d6d7ee66c20abe630c98b47d62858c72.pdf";
+const COMMISSION_IV_EARLY_NOTICE_URL =
+  "https://albo.tinnvision.cloud/allegati/2026_2840_2_P?ente=00301390795";
+const COMMISSION_IV_EARLY_ARCHIVED_DOCUMENT_URL =
+  "/data/public/albo/documents/2026/365976826d174821dfcd69c4c02710fcc8eb324c24ccefe2549d3fce932abd0b.pdf";
+const COMMISSION_VI_SEPTEMBER_NOTICE_URL =
+  "https://albo.tinnvision.cloud/allegati/2026_2859_1_X?ente=00301390795";
+const COMMISSION_VI_SEPTEMBER_ARCHIVED_DOCUMENT_URL =
+  "/data/public/albo/documents/2026/a1dad36522921833ac71b994a73032d3454227d0a2c00f57156a8d7059d94baf.pdf";
+const COMMISSION_IV_LATER_NOTICE_URL =
+  "https://albo.tinnvision.cloud/allegati/2026_2860_1_X?ente=00301390795";
+const COMMISSION_IV_LATER_ARCHIVED_DOCUMENT_URL =
+  "/data/public/albo/documents/2026/dee314eb1f7e9133848be4b48c1c0b5e06ddd60371a92acc40ef9e290a62e411.pdf";
+const COMMISSIONS_III_IV_JOINT_NOTICE_URL =
+  "https://albo.tinnvision.cloud/allegati/2026_2861_1_X?ente=00301390795";
+const COMMISSIONS_III_IV_JOINT_ARCHIVED_DOCUMENT_URL =
+  "/data/public/albo/documents/2026/feb500c847880bf03ab1cd09190b961828f5b3873d60bea800e93367a3c74468.pdf";
 const COUNCIL_SESSION_EVIDENCE_URL =
   "https://albo.tinnvision.cloud/allegati/2026_2755_6_ALLEG?ente=00301390795";
 const COUNCIL_SESSION_EVIDENCE_ARCHIVE_URL =
@@ -32,6 +48,7 @@ const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
 const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
 const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-27T21:49:11Z";
 const COMMISSION_VI_RESEARCHED_AT = "2026-08-31T22:02:47Z";
+const SEPTEMBER_COMMISSION_RESEARCHED_AT = "2026-09-07T04:19:06Z";
 
 const councilContextResearch: CouncilSessionV0ContextResearch = {
   status: "reviewed_matches",
@@ -263,6 +280,33 @@ const commissionViContextResearch: CouncilSessionV0ContextResearch = {
   media: [],
 };
 
+const commissionIvStreetArtContextResearch: CouncilSessionV0ContextResearch = {
+  status: "checked_no_match",
+  checkedAt: SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  searchNote:
+    "Ricerca eseguita con Parallel Search e verifica diretta delle fonti originali per IV Commissione, date dal 3 all'11 settembre 2026, orari e regolamento comunale per la promozione della Street Art. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alle singole sedute. L'ordine del giorno ufficiale è disponibile e non viene ricostruita un'agenda editoriale.",
+  articles: [],
+  media: [],
+};
+
+const commissionViSeptemberContextResearch: CouncilSessionV0ContextResearch = {
+  status: "checked_no_match",
+  checkedAt: SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  searchNote:
+    "Ricerca eseguita con Parallel Search e verifica diretta delle fonti originali per la VI Commissione dell'8 settembre 2026 alle 11:00 e il punto sulla Denominazione comunale d'origine (De.Co.). Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione. L'ordine del giorno ufficiale è disponibile e non viene ricostruita un'agenda editoriale.",
+  articles: [],
+  media: [],
+};
+
+const commissionsIiiIvJointContextResearch: CouncilSessionV0ContextResearch = {
+  status: "checked_no_match",
+  checkedAt: SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  searchNote:
+    "Ricerca eseguita con Parallel Search e verifica diretta delle fonti originali per la seduta congiunta di III e IV Commissione del 7 settembre 2026 alle 12:00, usando il progetto Sport e Disabilità e l'audizione dell'assessore Gennaro Gianturco. Non sono emersi articoli o audiovisivi collegabili con sufficiente precisione alla seduta nella finestra attiva. I contenuti generici o fuori finestra non sono stati associati.",
+  articles: [],
+  media: [],
+};
+
 const commissionContextResearch: CouncilSessionV0ContextResearch = {
   status: "reviewed_matches",
   checkedAt: CONTEXT_RESEARCHED_AT,
@@ -343,6 +387,80 @@ const commissionViCandidate = requireCandidate({
   public_visibility: "publishable",
 });
 
+const commissionIvEarlyCandidate = requireCandidate({
+  id: "albo-2026-2840",
+  source: "Albo Pretorio Comune di Lamezia Terme",
+  source_url: OFFICIAL_ALBO_URL,
+  retrieved_at: "2026-09-03T18:34:57.880Z",
+  publication_number: "2026/2840",
+  publication_start: "2026-09-02",
+  publication_end: "2026-09-09",
+  act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+  subject:
+    "Convocazione 4° Commissione Consiliare Permanente. Calendario lavori.",
+  document_url: COMMISSION_IV_EARLY_NOTICE_URL,
+  content_hash:
+    "29b8c30dc8fcfe6e73229bf4b46917876ef46dd3dcc7be4b3a6d277a4e220efc",
+  verification_status: "official_source_acquired",
+  privacy_risk: "low",
+  public_visibility: "publishable",
+});
+
+const commissionViSeptemberCandidate = requireCandidate({
+  id: "albo-2026-2859",
+  source: "Albo Pretorio Comune di Lamezia Terme",
+  source_url: OFFICIAL_ALBO_URL,
+  retrieved_at: SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  publication_number: "2026/2859",
+  publication_start: "2026-09-04",
+  publication_end: "2026-09-11",
+  act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+  subject: "Convocazione 6° Commissione Consiliare Permanente.",
+  document_url: COMMISSION_VI_SEPTEMBER_NOTICE_URL,
+  content_hash:
+    "935417af6dfd7f23abf125c15655a0e031e5e85ec4331dab4131ccca493d9eec",
+  verification_status: "official_source_acquired",
+  privacy_risk: "low",
+  public_visibility: "publishable",
+});
+
+const commissionIvLaterCandidate = requireCandidate({
+  id: "albo-2026-2860",
+  source: "Albo Pretorio Comune di Lamezia Terme",
+  source_url: OFFICIAL_ALBO_URL,
+  retrieved_at: SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  publication_number: "2026/2860",
+  publication_start: "2026-09-04",
+  publication_end: "2026-09-11",
+  act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+  subject:
+    "Convocazione 4° Commissione Consiliare Permanente. Calendario lavori.",
+  document_url: COMMISSION_IV_LATER_NOTICE_URL,
+  content_hash:
+    "422e104e5b17eb72bcb036b6c4816cbc1ee7c1ac77a6b9f080c1a9c66b4c3f20",
+  verification_status: "official_source_acquired",
+  privacy_risk: "low",
+  public_visibility: "publishable",
+});
+
+const commissionsIiiIvJointCandidate = requireCandidate({
+  id: "albo-2026-2861",
+  source: "Albo Pretorio Comune di Lamezia Terme",
+  source_url: OFFICIAL_ALBO_URL,
+  retrieved_at: SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  publication_number: "2026/2861",
+  publication_start: "2026-09-04",
+  publication_end: "2026-09-11",
+  act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+  subject: "Convocazione congiunta 3° e 4° Commissione Consiliare Permanente.",
+  document_url: COMMISSIONS_III_IV_JOINT_NOTICE_URL,
+  content_hash:
+    "1035de7c0cd5355d2d68dfeef8833c838d9e2a8a3ae5e4338f8abd3b5c7f90f7",
+  verification_status: "official_source_acquired",
+  privacy_risk: "low",
+  public_visibility: "publishable",
+});
+
 const councilCandidate = requireCandidate({
   id: "albo-2026-2673",
   source: "Albo Pretorio Comune di Lamezia Terme",
@@ -392,6 +510,71 @@ const commissionViProvenance: CouncilSessionV0Provenance = {
     "c09e7aacd7d22f77f8e72db5b5198203748b5f032dfd604b236f46fe8a28197d",
   retrievedAt: commissionViCandidate.source.retrievedAt,
   reviewedAt: COMMISSION_VI_RESEARCHED_AT,
+  sourceReviewStatus: "reviewed_against_official_attachment",
+};
+
+const commissionIvEarlyProvenance: CouncilSessionV0Provenance = {
+  noticeId: commissionIvEarlyCandidate.id,
+  publicationNumber: commissionIvEarlyCandidate.publicationNumber,
+  sourceLabel: commissionIvEarlyCandidate.source.label,
+  sourceUrl: commissionIvEarlyCandidate.source.url,
+  documentUrl: commissionIvEarlyCandidate.source.documentUrl,
+  archivedDocumentUrl: COMMISSION_IV_EARLY_ARCHIVED_DOCUMENT_URL,
+  sourceContentHash: commissionIvEarlyCandidate.source.contentHash,
+  documentSha256:
+    "365976826d174821dfcd69c4c02710fcc8eb324c24ccefe2549d3fce932abd0b",
+  embeddedDocumentSha256:
+    "d642b7171bc1494ffcdb500eb3e30fd88883fbb166f3ebcd80da83a03d32d768",
+  retrievedAt: commissionIvEarlyCandidate.source.retrievedAt,
+  reviewedAt: SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  sourceReviewStatus: "reviewed_against_official_attachment",
+};
+
+const commissionViSeptemberProvenance: CouncilSessionV0Provenance = {
+  noticeId: commissionViSeptemberCandidate.id,
+  publicationNumber: commissionViSeptemberCandidate.publicationNumber,
+  sourceLabel: commissionViSeptemberCandidate.source.label,
+  sourceUrl: commissionViSeptemberCandidate.source.url,
+  documentUrl: commissionViSeptemberCandidate.source.documentUrl,
+  archivedDocumentUrl: COMMISSION_VI_SEPTEMBER_ARCHIVED_DOCUMENT_URL,
+  sourceContentHash: commissionViSeptemberCandidate.source.contentHash,
+  documentSha256:
+    "a1dad36522921833ac71b994a73032d3454227d0a2c00f57156a8d7059d94baf",
+  embeddedDocumentSha256: null,
+  retrievedAt: commissionViSeptemberCandidate.source.retrievedAt,
+  reviewedAt: SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  sourceReviewStatus: "reviewed_against_official_attachment",
+};
+
+const commissionIvLaterProvenance: CouncilSessionV0Provenance = {
+  noticeId: commissionIvLaterCandidate.id,
+  publicationNumber: commissionIvLaterCandidate.publicationNumber,
+  sourceLabel: commissionIvLaterCandidate.source.label,
+  sourceUrl: commissionIvLaterCandidate.source.url,
+  documentUrl: commissionIvLaterCandidate.source.documentUrl,
+  archivedDocumentUrl: COMMISSION_IV_LATER_ARCHIVED_DOCUMENT_URL,
+  sourceContentHash: commissionIvLaterCandidate.source.contentHash,
+  documentSha256:
+    "dee314eb1f7e9133848be4b48c1c0b5e06ddd60371a92acc40ef9e290a62e411",
+  embeddedDocumentSha256: null,
+  retrievedAt: commissionIvLaterCandidate.source.retrievedAt,
+  reviewedAt: SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  sourceReviewStatus: "reviewed_against_official_attachment",
+};
+
+const commissionsIiiIvJointProvenance: CouncilSessionV0Provenance = {
+  noticeId: commissionsIiiIvJointCandidate.id,
+  publicationNumber: commissionsIiiIvJointCandidate.publicationNumber,
+  sourceLabel: commissionsIiiIvJointCandidate.source.label,
+  sourceUrl: commissionsIiiIvJointCandidate.source.url,
+  documentUrl: commissionsIiiIvJointCandidate.source.documentUrl,
+  archivedDocumentUrl: COMMISSIONS_III_IV_JOINT_ARCHIVED_DOCUMENT_URL,
+  sourceContentHash: commissionsIiiIvJointCandidate.source.contentHash,
+  documentSha256:
+    "feb500c847880bf03ab1cd09190b961828f5b3873d60bea800e93367a3c74468",
+  embeddedDocumentSha256: null,
+  retrievedAt: commissionsIiiIvJointCandidate.source.retrievedAt,
+  reviewedAt: SEPTEMBER_COMMISSION_RESEARCHED_AT,
   sourceReviewStatus: "reviewed_against_official_attachment",
 };
 
@@ -654,6 +837,145 @@ function commissionViSession(
   };
 }
 
+interface SeptemberCommissionSessionInput {
+  id: string;
+  title: string;
+  scheduledAt: string;
+  agenda: readonly string[];
+  candidate: InstitutionalSessionCandidate;
+  provenance: CouncilSessionV0Provenance;
+  contextResearch: CouncilSessionV0ContextResearch;
+  sourceLinkLabel: string;
+  calendarSummary: string;
+}
+
+function septemberCommissionSession({
+  id,
+  title,
+  scheduledAt,
+  agenda,
+  candidate,
+  provenance,
+  contextResearch,
+  sourceLinkLabel,
+  calendarSummary,
+}: SeptemberCommissionSessionInput): CouncilSessionV0 {
+  const documentUrl = candidate.source.documentUrl ?? undefined;
+
+  return {
+    id,
+    kind: "commission",
+    isDemoFixture: false,
+    provenance,
+    contextResearch,
+    title: {
+      key: "title",
+      label: "Titolo",
+      value: title,
+      sourceStatus: "verificato",
+      sourceUrl: documentUrl,
+      limit:
+        "Titolo normalizzato dalla denominazione dell'organo e dalla data riportate nella convocazione ufficiale.",
+    },
+    scheduledAt: {
+      key: "scheduledAt",
+      label: "Data e ora",
+      value: scheduledAt,
+      sourceStatus: "verificato",
+      sourceUrl: documentUrl,
+      limit:
+        "Data e ora trascritte dall'allegato ufficiale; indicano la programmazione, non provano lo svolgimento.",
+    },
+    sessionStatus: {
+      key: "sessionStatus",
+      label: "Stato seduta",
+      value: "non_verificata",
+      sourceStatus: "parziale",
+      sourceUrl: documentUrl,
+      limit:
+        "La convocazione documenta la seduta programmata; non è stata collegata una fonte istituzionale che ne confermi lo svolgimento o l'eventuale rinvio.",
+    },
+    agenda: {
+      key: "agenda",
+      label: "Ordine del giorno",
+      value: agenda,
+      sourceStatus: "verificato",
+      sourceUrl: documentUrl,
+      limit:
+        "Trascrizione fedele dei punti riportati nell'allegato ufficiale; non documenta discussione, votazioni o esiti.",
+    },
+    sourceLink: {
+      key: "sourceLink",
+      label: "Fonte",
+      value: sourceLinkLabel,
+      sourceStatus: "verificato",
+      sourceUrl: documentUrl,
+      limit: `Pubblicazione ${candidate.publicationNumber}; copia acquisita e verificata tramite hash nel repository.`,
+    },
+    liveStreaming: {
+      key: "liveStreaming",
+      label: "Streaming live",
+      value: null,
+      sourceStatus: "assente",
+      sourceUrl: documentUrl,
+      limit:
+        "Non rilevato nella convocazione né nei canali controllati; ciò non equivale a dichiararne l'inesistenza.",
+    },
+    recording: {
+      key: "recording",
+      label: "Registrazione",
+      value: null,
+      sourceStatus: "assente",
+      sourceUrl: documentUrl,
+      limit:
+        "Non rilevata nella fonte istituzionale o nella ricerca editoriale; richiede ulteriori controlli nella finestra attiva.",
+    },
+    minutesOrReport: {
+      key: "minutesOrReport",
+      label: "Verbale o resoconto",
+      value: null,
+      sourceStatus: "assente",
+      sourceUrl: documentUrl,
+      limit:
+        "Non rilevato nella convocazione; verbali o resoconti successivi richiedono una ricerca separata nelle fonti istituzionali.",
+    },
+    lastCheckedAt: {
+      key: "lastCheckedAt",
+      label: "Ultimo controllo",
+      value: SEPTEMBER_COMMISSION_RESEARCHED_AT,
+      sourceStatus: "verificato",
+      sourceUrl: documentUrl,
+      limit:
+        "Controllo dell'allegato ufficiale, della copia archiviata e delle fonti di contesto; la ricerca prosegue durante la finestra attiva.",
+    },
+    dataLimits: {
+      key: "dataLimits",
+      label: "Limiti del dato",
+      value: [
+        calendarSummary,
+        "La sede non è indicata nell'allegato ufficiale e non viene inferita.",
+        "La scheda non certifica svolgimento, presenze, esiti o completezza storica.",
+        "Streaming, registrazione e verbale sono indicati come non rilevati, non come inesistenti.",
+        "Non sono emersi collegamenti editoriali sufficientemente precisi al controllo corrente.",
+      ],
+      sourceStatus: "parziale",
+      sourceUrl: documentUrl,
+      limit:
+        "Verifica basata sulla convocazione ufficiale e su una ricerca contestuale ancora aperta.",
+    },
+  };
+}
+
+const streetArtAgenda = [
+  "Regolamento comunale per la promozione della Street Art.",
+] as const;
+
+const decoAgenda = ["Denominazione comunale d'origine (De.Co.)."] as const;
+
+const sportDisabilityAgenda = [
+  "Progetto Sport e Disabilità. Audizione dell'assessore al ramo Gennaro Gianturco.",
+] as const;
+
 const councilVerifiedSession: CouncilSessionV0 = {
   id: "albo-2026-2673-consiglio-comunale",
   kind: "council",
@@ -757,6 +1079,108 @@ const councilVerifiedSession: CouncilSessionV0 = {
 };
 
 export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
+  septemberCommissionSession({
+    id: "albo-2026-2860-commissione-iv-2026-09-11",
+    title:
+      "IV Commissione consiliare permanente — seduta dell'11 settembre 2026",
+    scheduledAt: "2026-09-11T11:00:00+02:00",
+    agenda: streetArtAgenda,
+    candidate: commissionIvLaterCandidate,
+    provenance: commissionIvLaterProvenance,
+    contextResearch: commissionIvStreetArtContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della IV Commissione",
+    calendarSummary:
+      "La stessa convocazione programma quattro sedute: 8 settembre alle 12:00 e 9, 10 e 11 settembre 2026 alle 11:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-2860-commissione-iv-2026-09-10",
+    title:
+      "IV Commissione consiliare permanente — seduta del 10 settembre 2026",
+    scheduledAt: "2026-09-10T11:00:00+02:00",
+    agenda: streetArtAgenda,
+    candidate: commissionIvLaterCandidate,
+    provenance: commissionIvLaterProvenance,
+    contextResearch: commissionIvStreetArtContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della IV Commissione",
+    calendarSummary:
+      "La stessa convocazione programma quattro sedute: 8 settembre alle 12:00 e 9, 10 e 11 settembre 2026 alle 11:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-2860-commissione-iv-2026-09-09",
+    title: "IV Commissione consiliare permanente — seduta del 9 settembre 2026",
+    scheduledAt: "2026-09-09T11:00:00+02:00",
+    agenda: streetArtAgenda,
+    candidate: commissionIvLaterCandidate,
+    provenance: commissionIvLaterProvenance,
+    contextResearch: commissionIvStreetArtContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della IV Commissione",
+    calendarSummary:
+      "La stessa convocazione programma quattro sedute: 8 settembre alle 12:00 e 9, 10 e 11 settembre 2026 alle 11:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-2860-commissione-iv-2026-09-08",
+    title:
+      "IV Commissione consiliare permanente — seduta dell'8 settembre 2026",
+    scheduledAt: "2026-09-08T12:00:00+02:00",
+    agenda: streetArtAgenda,
+    candidate: commissionIvLaterCandidate,
+    provenance: commissionIvLaterProvenance,
+    contextResearch: commissionIvStreetArtContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della IV Commissione",
+    calendarSummary:
+      "La stessa convocazione programma quattro sedute: 8 settembre alle 12:00 e 9, 10 e 11 settembre 2026 alle 11:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-2859-commissione-vi-2026-09-08",
+    title:
+      "VI Commissione consiliare permanente — seduta dell'8 settembre 2026",
+    scheduledAt: "2026-09-08T11:00:00+02:00",
+    agenda: decoAgenda,
+    candidate: commissionViSeptemberCandidate,
+    provenance: commissionViSeptemberProvenance,
+    contextResearch: commissionViSeptemberContextResearch,
+    sourceLinkLabel: "Apri la convocazione ufficiale della VI Commissione",
+    calendarSummary:
+      "La convocazione programma una seduta della VI Commissione l'8 settembre 2026 alle 11:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-2861-commissioni-iii-iv-2026-09-07",
+    title:
+      "III e IV Commissioni consiliari permanenti — seduta congiunta del 7 settembre 2026",
+    scheduledAt: "2026-09-07T12:00:00+02:00",
+    agenda: sportDisabilityAgenda,
+    candidate: commissionsIiiIvJointCandidate,
+    provenance: commissionsIiiIvJointProvenance,
+    contextResearch: commissionsIiiIvJointContextResearch,
+    sourceLinkLabel:
+      "Apri la convocazione ufficiale della seduta congiunta III–IV",
+    calendarSummary:
+      "La convocazione programma una seduta congiunta della III e IV Commissione il 7 settembre 2026 alle 12:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-2840-commissione-iv-2026-09-04",
+    title: "IV Commissione consiliare permanente — seduta del 4 settembre 2026",
+    scheduledAt: "2026-09-04T11:00:00+02:00",
+    agenda: streetArtAgenda,
+    candidate: commissionIvEarlyCandidate,
+    provenance: commissionIvEarlyProvenance,
+    contextResearch: commissionIvStreetArtContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della IV Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della IV Commissione, il 3 e il 4 settembre 2026 alle 11:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-2840-commissione-iv-2026-09-03",
+    title: "IV Commissione consiliare permanente — seduta del 3 settembre 2026",
+    scheduledAt: "2026-09-03T11:00:00+02:00",
+    agenda: streetArtAgenda,
+    candidate: commissionIvEarlyCandidate,
+    provenance: commissionIvEarlyProvenance,
+    contextResearch: commissionIvStreetArtContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della IV Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della IV Commissione, il 3 e il 4 settembre 2026 alle 11:00.",
+  }),
   commissionViSession("2026-09-04"),
   commissionViSession("2026-09-01"),
   commissionSession("2026-08-11"),

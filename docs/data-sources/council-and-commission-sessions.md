@@ -1,6 +1,6 @@
 # Sedute di Consiglio e Commissioni — identificazione fonte-centrica v0
 
-Issue linkage: #740. Il metodo avvia una tranche verificabile e non dichiara copertura storica completa.
+Issue linkage: #740, #809, #1076. Il metodo avvia una tranche verificabile e non dichiara copertura storica completa.
 
 ## Obiettivo e separazione degli stati
 
@@ -35,11 +35,15 @@ Varianti, refusi o tipi atto più generici non vengono inclusi automaticamente: 
 
 Snapshot Albo di riferimento: commit `5c861b94256c9c659630d8ad19b2f27279d1721b`, acquisito l'11 agosto 2026 dalla [fonte ufficiale Tinnvision](https://albo.tinnvision.cloud/?ente=00301390795).
 
-| Pubblicazione | Tipo               | Scheda                                | Stato fonte                                                                                                                   |
-| ------------- | ------------------ | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `2026/2673`   | Consiglio comunale | Seduta del 13 agosto 2026             | Data e svolgimento confermati da una determinazione ufficiale successiva; orario e ordine del giorno completo non disponibili |
-| `2026/2648`   | II Commissione     | Seduta del 10 agosto 2026 alle 09:30  | Data, ora e due punti all'ordine del giorno confrontati con l'allegato ufficiale                                              |
-| `2026/2648`   | II Commissione     | Seduta dell'11 agosto 2026 alle 09:30 | Stessa convocazione e stesso ordine del giorno della riga precedente                                                          |
+| Pubblicazione | Tipo               | Scheda                                           | Stato fonte                                                                                                                             |
+| ------------- | ------------------ | ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `2026/2673`   | Consiglio comunale | Seduta del 13 agosto 2026                        | Data e svolgimento confermati da una determinazione ufficiale successiva; orario e ordine del giorno completo non disponibili           |
+| `2026/2648`   | II Commissione     | Seduta del 10 agosto 2026 alle 09:30             | Data, ora e due punti all'ordine del giorno confrontati con l'allegato ufficiale                                                        |
+| `2026/2648`   | II Commissione     | Seduta dell'11 agosto 2026 alle 09:30            | Stessa convocazione e stesso ordine del giorno della riga precedente                                                                    |
+| `2026/2840`   | IV Commissione     | Sedute del 3 e 4 settembre 2026 alle 11:00       | Date, orari e punto sulla Street Art verificati nell'allegato ufficiale; svolgimento non verificato                                     |
+| `2026/2859`   | VI Commissione     | Seduta dell'8 settembre 2026 alle 11:00          | Data, ora e punto sulla De.Co. verificati nella convocazione ufficiale; svolgimento non verificato                                      |
+| `2026/2860`   | IV Commissione     | Sedute dall'8 all'11 settembre 2026              | Orario delle 12:00 l'8 settembre e delle 11:00 nei tre giorni successivi; punto sulla Street Art verificato; svolgimento non verificato |
+| `2026/2861`   | III–IV Commissioni | Seduta congiunta del 7 settembre 2026 alle 12:00 | Data, ora, progetto Sport e Disabilità e audizione dell'assessore Gennaro Gianturco verificati; svolgimento non verificato              |
 
 Per `2026/2673`:
 
@@ -56,6 +60,19 @@ Per `2026/2648`:
 - SHA-256 del PDF incorporato nella copia: `3069388db15c43fdbf3cc980195f9c88ded602a6e9f8f89f358a006ce789096c`.
 
 La copia esterna è un PDF Portfolio con un PDF incorporato. Il testo della scheda sintetizza soltanto data, ora e i due punti dell'ordine del giorno; non pubblica l'elenco dei componenti né altri dati personali non necessari.
+
+### Convocazioni del 3–11 settembre 2026
+
+Le date seguenti derivano esclusivamente dal testo delle convocazioni ufficiali e non dalle finestre di pubblicazione dell'Albo. La sede non è indicata negli allegati controllati e non viene inferita. In assenza di verbali o altre fonti istituzionali successive, lo stato delle sedute resta `non_verificata`.
+
+| Pubblicazione | Fonte ufficiale                                                                                        | Copia archiviata e SHA-256                                                                                                                                                                                                                                      | Contenuto verificato                                                                                             |
+| ------------- | ------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `2026/2840`   | [calendario IV Commissione](https://albo.tinnvision.cloud/allegati/2026_2840_2_P?ente=00301390795)     | `data/public/albo/documents/2026/365976826d174821dfcd69c4c02710fcc8eb324c24ccefe2549d3fce932abd0b.pdf` — `365976826d174821dfcd69c4c02710fcc8eb324c24ccefe2549d3fce932abd0b`; PDF incorporato `d642b7171bc1494ffcdb500eb3e30fd88883fbb166f3ebcd80da83a03d32d768` | 3 e 4 settembre alle 11:00; regolamento comunale per la promozione della Street Art                              |
+| `2026/2859`   | [convocazione VI Commissione](https://albo.tinnvision.cloud/allegati/2026_2859_1_X?ente=00301390795)   | `data/public/albo/documents/2026/a1dad36522921833ac71b994a73032d3454227d0a2c00f57156a8d7059d94baf.pdf` — `a1dad36522921833ac71b994a73032d3454227d0a2c00f57156a8d7059d94baf`                                                                                     | 8 settembre alle 11:00; Denominazione comunale d'origine (De.Co.)                                                |
+| `2026/2860`   | [calendario IV Commissione](https://albo.tinnvision.cloud/allegati/2026_2860_1_X?ente=00301390795)     | `data/public/albo/documents/2026/dee314eb1f7e9133848be4b48c1c0b5e06ddd60371a92acc40ef9e290a62e411.pdf` — `dee314eb1f7e9133848be4b48c1c0b5e06ddd60371a92acc40ef9e290a62e411`                                                                                     | 8 settembre alle 12:00; 9, 10 e 11 settembre alle 11:00; regolamento comunale per la promozione della Street Art |
+| `2026/2861`   | [convocazione congiunta III–IV](https://albo.tinnvision.cloud/allegati/2026_2861_1_X?ente=00301390795) | `data/public/albo/documents/2026/feb500c847880bf03ab1cd09190b961828f5b3873d60bea800e93367a3c74468.pdf` — `feb500c847880bf03ab1cd09190b961828f5b3873d60bea800e93367a3c74468`                                                                                     | 7 settembre alle 12:00; progetto Sport e Disabilità e audizione dell'assessore al ramo Gennaro Gianturco         |
+
+Il controllo contestuale del 7 settembre 2026 ha usato Parallel Search per discovery ed espansione e ha poi verificato i candidati sulle pagine originali di Comune, Albo e testate. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alle otto sedute. I contenuti generici sulla disabilità, oppure pubblicati fuori dalla finestra attiva della seduta congiunta, non sono stati associati. Lo stato `checked_no_match` registra questo esito negativo senza affermare che tali contenuti non esistano.
 
 ## Gerarchia delle fonti
 

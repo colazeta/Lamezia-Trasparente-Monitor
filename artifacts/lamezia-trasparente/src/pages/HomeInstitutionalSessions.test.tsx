@@ -23,27 +23,49 @@ describe("HomeInstitutionalSessions", () => {
       screen.getByText("Fonte successiva controllata"),
     ).toBeInTheDocument();
     expect(screen.getByText(/13 agosto 2026/i)).toBeInTheDocument();
-    expect(screen.getByText(/4 settembre 2026/i)).toBeInTheDocument();
-    expect(screen.getByText(/1 settembre 2026/i)).toBeInTheDocument();
+    expect(
+      screen.getByText("11 settembre 2026 alle ore 11:00"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("7 settembre 2026 alle ore 12:00"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("4 settembre 2026 alle ore 11:00"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("4 settembre 2026 alle ore 12:00"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("1 settembre 2026 alle ore 12:00"),
+    ).toBeInTheDocument();
     expect(screen.getByText(/11 agosto 2026/i)).toBeInTheDocument();
     expect(screen.getByText(/10 agosto 2026/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Ricerca contestuale eseguita/i)).toHaveLength(
+      13,
+    );
     expect(
-      screen.getAllByText(/stato della seduta non verificato/i),
-    ).toHaveLength(4);
+      screen.getAllByText(/Stato della seduta non verificato/i),
+    ).toHaveLength(12);
+    expect(screen.getByText(/Seduta svolta/i)).toBeInTheDocument();
+    expect(
+      screen.getAllByText("IV Commissione consiliare permanente"),
+    ).toHaveLength(6);
+    expect(
+      screen.getByText("III e IV Commissioni consiliari permanenti"),
+    ).toBeInTheDocument();
     expect(screen.getByText("Allegato controllato")).toBeInTheDocument();
     expect(screen.queryByText("Verifica mista")).not.toBeInTheDocument();
     expect(
       screen.queryByText(/Data e ora da verificare/i),
     ).not.toBeInTheDocument();
     expect(
-      screen.getByText(/pubblicazioni 2026\/2788, 2026\/2648/i),
+      screen.getByText(
+        /pubblicazioni 2026\/2860, 2026\/2859, 2026\/2861, 2026\/2840, 2026\/2788, 2026\/2648/i,
+      ),
     ).toBeInTheDocument();
-    expect(
-      screen.getByText(/7 articoli · 3 video · 7 stessa seduta/i),
-    ).toBeInTheDocument();
-    expect(
-      screen.getAllByText(/2 articoli · 2 sui temi in agenda/i),
-    ).toHaveLength(2);
+    expect(screen.getByText(/7 articoli · 3 video/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/2 articoli · 0 video/i)).toHaveLength(2);
+    expect(screen.getAllByText(/0 articoli · 0 video/i)).toHaveLength(10);
     expect(
       screen.getByText(/fonte istituzionale successiva lo conferma/i),
     ).toBeInTheDocument();
@@ -64,11 +86,33 @@ describe("HomeInstitutionalSessions", () => {
       "href",
       "/convocazioni/albo-2026-2648-commissione-ii-2026-08-10",
     );
-    expect(screen.getByText(/4 settembre 2026/i).closest("a")).toHaveAttribute(
+    expect(
+      screen.getByText("4 settembre 2026 alle ore 12:00").closest("a"),
+    ).toHaveAttribute(
       "href",
       "/convocazioni/albo-2026-2788-commissione-vi-2026-09-04",
     );
-    expect(screen.getByText(/1 settembre 2026/i).closest("a")).toHaveAttribute(
+    expect(
+      screen.getByText("4 settembre 2026 alle ore 11:00").closest("a"),
+    ).toHaveAttribute(
+      "href",
+      "/convocazioni/albo-2026-2840-commissione-iv-2026-09-04",
+    );
+    expect(
+      screen.getByText("11 settembre 2026 alle ore 11:00").closest("a"),
+    ).toHaveAttribute(
+      "href",
+      "/convocazioni/albo-2026-2860-commissione-iv-2026-09-11",
+    );
+    expect(
+      screen.getByText("7 settembre 2026 alle ore 12:00").closest("a"),
+    ).toHaveAttribute(
+      "href",
+      "/convocazioni/albo-2026-2861-commissioni-iii-iv-2026-09-07",
+    );
+    expect(
+      screen.getByText("1 settembre 2026 alle ore 12:00").closest("a"),
+    ).toHaveAttribute(
       "href",
       "/convocazioni/albo-2026-2788-commissione-vi-2026-09-01",
     );
