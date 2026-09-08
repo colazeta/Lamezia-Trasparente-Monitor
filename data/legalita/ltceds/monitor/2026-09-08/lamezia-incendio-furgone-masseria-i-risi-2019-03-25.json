@@ -1,0 +1,111 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-incendio-furgone-masseria-i-risi-2019-03-25",
+  "discovered_at": "2026-09-08T08:40:44+02:00",
+  "updated_at": "2026-09-08T08:40:44+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Incendio di un furgone con sospetta matrice dolosa nel piazzale della Masseria I Risi",
+  "temporal": {
+    "start": "2019-03-25",
+    "end": "2019-03-25",
+    "edtf": "2019-03-25",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:corriere-calabria:2019-03-26:furgone-masseria-i-risi",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Furgone in fiamme, panico per gli ospiti di un agriturismo",
+      "url": "https://www.corrieredellacalabria.it/2019/03/26/furgone-in-fiamme-panico-per-gli-ospiti-di-un-agriturismo/",
+      "published_at": "2019-03-26T07:21:00+01:00",
+      "retrieved_at": "2026-09-08T08:40:44+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support"
+      ]
+    },
+    {
+      "source_key": "press:gazzetta-sud:2019-03-26:furgone-masseria-i-risi",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Lamezia, furgone in fiamme davanti ad una masseria: rogo doloso - Foto",
+      "url": "https://catanzaro.gazzettadelsud.it/foto/cronaca/2019/03/26/lamezia-furgone-in-fiamme-davanti-ad-una-masseria-rogo-doloso-foto-745d6c77-447e-4a61-9a02-c4dc6fa2f8d4/",
+      "published_at": "2019-03-26T00:00:00+01:00",
+      "retrieved_at": "2026-09-08T08:40:44+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:calabria-magnifica:2019-03-26:furgone-masseria-i-risi",
+      "source_type": "press_secondary",
+      "provider": "CalabriaMagnifica.it",
+      "title": "Furgone incendiato nella notte a Lamezia Terme",
+      "url": "https://www.calabriamagnifica.it/cronaca-e-attualita/furgone-indendiato-nella-notte/",
+      "published_at": "2019-03-26T06:36:00+01:00",
+      "retrieved_at": "2026-09-08T08:40:44+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "other:masseria-i-risi:localita-risi",
+      "source_type": "other",
+      "provider": "Masseria I Risi",
+      "title": "Contatti – Masseria I Risi a Lamezia Terme",
+      "url": "https://www.masseriairisi.com/contatti/",
+      "published_at": null,
+      "retrieved_at": "2026-09-08T08:40:44+02:00",
+      "support_roles": [
+        "location_support"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:incendio-doloso",
+      "classification_source_key": "press:calabria-magnifica:2019-03-26:furgone-masseria-i-risi",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "furgone Fiat Ducato parcheggiato nel piazzale antistante la Masseria I Risi",
+        "danneggiati completamente il vano motore e parte dell'abitacolo del furgone",
+        "danneggiato anche il lato sinistro di una Fiat Panda parcheggiata nelle vicinanze",
+        "dopo le verifiche dei Vigili del Fuoco e della Polizia di Stato non fu esclusa l'ipotesi della matrice dolosa"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 2
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:masseria-i-risi:piazzale",
+      "basis_source_key": "press:calabria-magnifica:2019-03-26:furgone-masseria-i-risi",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Piazzale antistante Masseria I Risi, Località Risi",
+      "neighbourhood": "Sant'Eufemia",
+      "iccs_location_type": null
+    }
+  ]
+}
