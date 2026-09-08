@@ -44,3 +44,5 @@ export * from "./crimeEvents";
 export * from "./canonicalIdentity";
 
 export * from "./sourceRegistry";
+export * from "./assertions";
+export * from "./projects";

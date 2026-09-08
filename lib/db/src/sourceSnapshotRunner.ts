@@ -10,6 +10,7 @@ import {
   snapshotHash,
 } from "./sourceSnapshotPersistence";
 import { pnrrCompatibilityRows } from "./sourceSnapshotPnrr";
+import { reconcileCanonicalPnrr } from "./canonicalPnrr";
 
 type ImportSuccess = Awaited<ReturnType<typeof persistSourceSnapshot>> & {
   status: "succeeded";
@@ -42,6 +43,7 @@ export type SnapshotImportReport = {
   results: Array<ImportSuccess | ImportFailure>;
   status: "planned" | "verified" | "failed";
   connectionOrMigrationError?: string;
+  canonicalPnrr?: Awaited<ReturnType<typeof reconcileCanonicalPnrr>>;
 };
 
 export function snapshotImportError(error: unknown): string {
@@ -166,6 +168,14 @@ export async function executeSourceSnapshotImport(
     report.status = "failed";
     report.connectionOrMigrationError = snapshotImportError(error);
   }
+  if (report.status === "verified") {
+    try {
+      report.canonicalPnrr = await reconcileCanonicalPnrr(pool);
+    } catch (error) {
+      report.status = "failed";
+      report.connectionOrMigrationError = snapshotImportError(error);
+    }
+  }
   report.completedAt = new Date().toISOString();
   return report;
 }
@@ -207,6 +217,23 @@ export function publicSnapshotImportReport(report: SnapshotImportReport) {
     ),
     ...(report.connectionOrMigrationError
       ? { error: report.connectionOrMigrationError }
+      : {}),
+    ...(report.canonicalPnrr
+      ? {
+          canonicalPnrr: {
+            status: report.canonicalPnrr.status,
+            resolverVersion: report.canonicalPnrr.resolverVersion,
+            sourceRecords: report.canonicalPnrr.sourceRecords,
+            projectRecords: report.canonicalPnrr.projectRecords,
+            projects: report.canonicalPnrr.projects,
+            assertions: report.canonicalPnrr.assertions,
+            candidates: report.canonicalPnrr.candidates,
+            resolved: report.canonicalPnrr.resolved,
+            unresolved: report.canonicalPnrr.unresolved,
+            fields: report.canonicalPnrr.fields,
+            fieldsWithAlternatives: report.canonicalPnrr.fieldsWithAlternatives,
+          },
+        }
       : {}),
   };
 }

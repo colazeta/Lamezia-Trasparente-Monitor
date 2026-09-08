@@ -89,6 +89,73 @@ afterEach(() => {
 });
 
 describe("private database console", () => {
+  it("shows exact reconciliation counts and opens the supporting field decisions", async () => {
+    const reconciliation = {
+      status: "verified",
+      sourceSnapshotAt: "2026-09-03T11:10:38.924Z",
+      sourceRecords: 41,
+      projectRecords: 30,
+      canonicalProjects: 30,
+      resolvedCandidates: 71,
+      unresolvedCandidates: 0,
+      unprocessedRecords: 0,
+      currentFieldDecisions: 510,
+      fieldsWithAlternatives: 30,
+      typedValueMismatches: 0,
+      unmappedLegacyRows: 0,
+      legacyValueMismatches: 0,
+    };
+    vi.mocked(fetch).mockImplementation(
+      async (url) =>
+        new Response(
+          JSON.stringify(
+            String(url).endsWith("/catalog")
+              ? {
+                  ...catalog,
+                  projectReconciliation: reconciliation,
+                  tables: [
+                    ...catalog.tables,
+                    { ...catalog.tables[0], name: "project_field_resolutions" },
+                  ],
+                }
+              : {
+                  table: "project_field_resolutions",
+                  rows: [],
+                  total: 0,
+                  page: 1,
+                  pageSize: 50,
+                  capturedAt: catalog.capturedAt,
+                },
+          ),
+          { headers: { "Content-Type": "application/json" } },
+        ),
+    );
+    view();
+    const summary = await screen.findByRole("region", {
+      name: "Riconciliazione PNRR",
+    });
+    expect(within(summary).getByText("71", { selector: "dd" })).toBeVisible();
+    expect(within(summary).getByText("510", { selector: "dd" })).toBeVisible();
+    expect(summary).toHaveTextContent("non certifica la validità");
+    fireEvent.click(
+      within(summary).getByRole("button", { name: "Scelte e varianti" }),
+    );
+    expect(
+      await screen.findByRole("heading", {
+        name: "public.project_field_resolutions",
+      }),
+    ).toBeVisible();
+    await waitFor(() =>
+      expect(
+        vi
+          .mocked(fetch)
+          .mock.calls.some(([url]) =>
+            String(url).includes("/tables/project_field_resolutions"),
+          ),
+      ).toBe(true),
+    );
+  });
+
   function navigationResponses(
     malformed = false,
     extraTables: typeof catalog.tables = [],
@@ -214,7 +281,11 @@ describe("private database console", () => {
     const model = within(
       screen.getByRole("region", { name: "Modello concettuale" }),
     );
-    expect(model.getByText(/CUP normalizzato e validato/)).toBeVisible();
+    expect(
+      model.getByText(
+        /CUP qualificato con fonte, emittente e controllo di formato/,
+      ),
+    ).toBeVisible();
     expect(model.getAllByText("Da realizzare").length).toBeGreaterThan(0);
     fireEvent.click(
       model.getByRole("button", { name: "Progetti dalla fonte comunale" }),

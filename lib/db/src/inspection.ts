@@ -2,6 +2,10 @@ import { is } from "drizzle-orm";
 import { getTableConfig, PgTable } from "drizzle-orm/pg-core";
 import type { Pool, PoolClient } from "pg";
 import * as schema from "./schema";
+import {
+  readCanonicalPnrrCoverage,
+  type ProjectReconciliation,
+} from "./canonicalPnrrCoverage";
 
 export class InspectionInputError extends Error {}
 
@@ -49,6 +53,7 @@ export type InspectionCatalog = {
   migrationCount: number | null;
   tables: InspectionTable[];
   missingTables: string[];
+  projectReconciliation?: ProjectReconciliation;
 };
 export type InspectionRow = {
   values: Record<string, string | null>;
@@ -171,6 +176,9 @@ export async function readInspectionCatalog(
     version: meta.version,
     bytes: meta.bytes,
     migrationCount,
+    ...(tables.some((table) => table.name === "project_field_resolutions")
+      ? { projectReconciliation: await readCanonicalPnrrCoverage(client) }
+      : {}),
     missingTables: [...registered.keys()].filter(
       (name) => !tables.some((table) => table.name === name),
     ),

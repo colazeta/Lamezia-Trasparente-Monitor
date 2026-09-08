@@ -361,6 +361,99 @@ function CatalogPane({
           Tabelle previste assenti: {catalog.missingTables.join(", ")}
         </Message>
       )}
+      {catalog.projectReconciliation && (
+        <section
+          className="db-reconciliation"
+          aria-label="Riconciliazione PNRR"
+        >
+          <h3>PNRR · dalle fonti ai progetti</h3>
+          <p className="db-note">
+            {catalog.projectReconciliation.status === "verified"
+              ? "Riconciliazione verificata sui record acquisiti."
+              : catalog.projectReconciliation.status === "not_materialized"
+                ? "Materializzazione canonica da completare."
+                : "Sono presenti elementi da verificare."}{" "}
+            Il controllo del formato CUP non certifica la validità presso l’ente
+            emittente né la completezza del censimento.
+          </p>
+          <p className="db-note">
+            Versione delle fonti:{" "}
+            {catalog.projectReconciliation.sourceSnapshotAt ??
+              "data non indicata"}
+            . La verifica della riconciliazione non equivale a un nuovo
+            aggiornamento delle fonti.
+          </p>
+          <dl className="db-summary">
+            <div>
+              <dt>Schede di progetto</dt>
+              <dd>{number(catalog.projectReconciliation.projectRecords)}</dd>
+            </div>
+            <div>
+              <dt>Progetti canonici</dt>
+              <dd>{number(catalog.projectReconciliation.canonicalProjects)}</dd>
+            </div>
+            <div>
+              <dt>Collegamenti alle fonti</dt>
+              <dd>
+                {number(catalog.projectReconciliation.resolvedCandidates)}
+              </dd>
+            </div>
+            <div>
+              <dt>Da riconciliare</dt>
+              <dd>
+                {number(
+                  catalog.projectReconciliation.unresolvedCandidates +
+                    catalog.projectReconciliation.unprocessedRecords,
+                )}
+              </dd>
+            </div>
+            <div>
+              <dt>Campi con provenienza</dt>
+              <dd>
+                {number(catalog.projectReconciliation.currentFieldDecisions)}
+              </dd>
+            </div>
+            <div>
+              <dt>Campi con varianti di fonte</dt>
+              <dd>
+                {number(catalog.projectReconciliation.fieldsWithAlternatives)}
+              </dd>
+            </div>
+          </dl>
+          {(catalog.projectReconciliation.typedValueMismatches > 0 ||
+            catalog.projectReconciliation.legacyValueMismatches > 0 ||
+            catalog.projectReconciliation.unmappedLegacyRows > 0) && (
+            <Message error>
+              Valori senza corrispondenza con le evidenze:{" "}
+              {catalog.projectReconciliation.typedValueMismatches}; differenze
+              con gli archivi precedenti:{" "}
+              {catalog.projectReconciliation.legacyValueMismatches}; righe
+              precedenti senza collegamento:{" "}
+              {catalog.projectReconciliation.unmappedLegacyRows}.
+            </Message>
+          )}
+          <div className="db-toolbar">
+            <Button variant="ghost" onClick={() => onTable("project_projects")}>
+              Progetti
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={() => onTable("core_resolution_outcomes")}
+            >
+              Esiti dei collegamenti
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={() => onTable("project_field_resolutions")}
+            >
+              Scelte e varianti
+            </Button>
+            <Button variant="ghost" onClick={() => onTable("core_assertions")}>
+              Evidenze di fonte
+            </Button>
+          </div>
+        </section>
+      )}
       <Table>
         <TableHeader>
           <TableRow>

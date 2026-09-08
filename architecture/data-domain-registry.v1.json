@@ -4,6 +4,8 @@
   "canonicalTargetNamespaces": ["source","core","taxonomy","document","party","geo","administrative","procurement","project","institution","asset","statistics","crime","editorial","public","research"],
   "architectureStatuses": ["canonical_core","reference_pattern","retain_bounded_context","partial_target","transition","legacy_overlap","legacy_vertical","source_specific_legacy","legacy_projection"],
   "schemaModules": [
+    {"module":"assertions","tables":["core_assertions","core_resolution_outcomes"],"boundedContext":"canonical_evidence","targetNamespace":"core","status":"partial_target","migrationPhase":5,"notes":"Source assertions and explicit candidate outcomes; initial controlled extractor is PNRR. Evidence is independent of resolution; typed domain tables own canonical facts."},
+    {"module":"projects","tables":["project_projects","project_identifiers","project_field_resolutions"],"boundedContext":"project","targetNamespace":"project","status":"partial_target","migrationPhase":9,"notes":"Typed canonical projects, qualified reported CUPs and historised per-field provenance. Initial scope: registered municipal/OpenCUP/Albo PNRR snapshot; legacy IDs and tables retained."},
     {"module":"sourceRegistry","tables":["source_sources","source_endpoints","source_artifacts","source_releases","source_records","source_acquisition_runs"],"boundedContext":"source_catalog","targetNamespace":"source","status":"partial_target","migrationPhase":3,"notes":"Additive source/release/artifact foundation (phases 3\u20134). Five repository snapshots are registered with explicit derivation, exact bounded JSON bytes, versioned records and verified attempts; other ingestions and domain resolution remain pending."},
     {"module":"categories","tables":["categories"],"boundedContext":"editorial","targetNamespace":"editorial","status":"retain_bounded_context","migrationPhase":17,"notes":"Presentation/category vocabulary; not automatically a canonical civic entity."},
     {"module":"themes","tables":["themes"],"boundedContext":"editorial","targetNamespace":"editorial","status":"retain_bounded_context","migrationPhase":17,"notes":"Editorial thematic navigation."},
@@ -264,7 +266,7 @@
         "id": "project",
         "label": "Progetto pubblico",
         "definition": "Un investimento che può essere descritto da più amministrazioni e fonti.",
-        "identityRule": "CUP normalizzato e validato; senza CUP il record resta irrisolto.",
+        "identityRule": "UUIDv7 indipendente dalla fonte. CUP qualificato con fonte, emittente e controllo di formato; record senza identità sufficiente conservano un esito esplicito.",
         "semanticCoverage": "local",
         "terms": [
           "lt:PnrrProject"
@@ -443,6 +445,30 @@
         "definition": "Azione o strumento di politica pubblica definito per obiettivi e destinatari, che può essere studiato e proposto localmente.",
         "identityRule": "Identificativo dell’intervento e della sua versione; distinto da proposta locale e valutazione scientifica.",
         "semanticCoverage": "reference",
+        "terms": []
+      },
+      {
+        "id": "assertion",
+        "label": "Asserzione di fonte",
+        "definition": "Un contenuto riportato o derivato da una fonte, conservato con valore, posizione e metodo di estrazione.",
+        "identityRule": "Record di fonte, puntatore al campo e versione dell’estrattore; non richiede un progetto già riconciliato.",
+        "semanticCoverage": "gap",
+        "terms": []
+      },
+      {
+        "id": "resolution",
+        "label": "Decisione di riconciliazione",
+        "definition": "Un esito motivato di collegamento a un soggetto oppure di scelta del valore di un campo.",
+        "identityRule": "Candidato e versione del risolutore; le revisioni delle scelte mantengono la storia.",
+        "semanticCoverage": "gap",
+        "terms": []
+      },
+      {
+        "id": "identifier",
+        "label": "Identificatore qualificato",
+        "definition": "Un codice attribuito da un sistema o ente emittente a un soggetto.",
+        "identityRule": "Schema, emittente e valore; un identificatore non coincide con l’oggetto descritto.",
+        "semanticCoverage": "gap",
         "terms": []
       }
     ],
@@ -936,6 +962,41 @@
         "concept": "application",
         "kind": "application",
         "grain": "Un evento di utilizzo del sito, non un evento civico"
+      },
+      "core_assertions": {
+        "label": "Asserzioni e valori di fonte",
+        "domain": "identity",
+        "concept": "assertion",
+        "kind": "source",
+        "grain": "Un campo o contenuto di un record, con puntatore, fonte e versione dell’estrattore"
+      },
+      "core_resolution_outcomes": {
+        "label": "Esiti di riconciliazione",
+        "domain": "identity",
+        "concept": "resolution",
+        "kind": "relation",
+        "grain": "Un candidato di un record e un esito motivato, anche senza soggetto canonico"
+      },
+      "project_projects": {
+        "label": "Progetti canonici",
+        "domain": "projects",
+        "concept": "project",
+        "kind": "entity",
+        "grain": "Un investimento identificato da UUIDv7, con attributi tipizzati e provenienza dei valori"
+      },
+      "project_identifiers": {
+        "label": "Identificatori dei progetti",
+        "domain": "projects",
+        "concept": "identifier",
+        "kind": "relation",
+        "grain": "Un codice CUP qualificato per schema ed emittente, collegato al progetto"
+      },
+      "project_field_resolutions": {
+        "label": "Scelte dei valori di progetto",
+        "domain": "projects",
+        "concept": "resolution",
+        "kind": "relation",
+        "grain": "Una scelta di campo, la sua evidenza e il periodo di validità; le varianti non sono eliminate"
       }
     },
     "relationships": [
@@ -971,8 +1032,8 @@
         "source": "source_record",
         "target": "project",
         "cardinality": "N:M",
-        "label": "Descrive progetti da riconciliare",
-        "status": "target"
+        "label": "È riconciliato tramite esiti espliciti; primo perimetro PNRR",
+        "status": "partial"
       },
       {
         "source": "publication",
@@ -1099,6 +1160,34 @@
         "cardinality": "1:N",
         "label": "è oggetto di",
         "status": "target"
+      },
+      {
+        "source": "source_record",
+        "target": "assertion",
+        "cardinality": "1:N",
+        "label": "Conserva le asserzioni estratte",
+        "status": "implemented"
+      },
+      {
+        "source": "assertion",
+        "target": "resolution",
+        "cardinality": "1:N",
+        "label": "Documenta le decisioni",
+        "status": "implemented"
+      },
+      {
+        "source": "project",
+        "target": "identifier",
+        "cardinality": "1:N",
+        "label": "È riconosciuto da codici qualificati",
+        "status": "implemented"
+      },
+      {
+        "source": "project",
+        "target": "resolution",
+        "cardinality": "1:N",
+        "label": "Mantiene scelte e varianti dei campi",
+        "status": "implemented"
       }
     ],
     "overlaps": [
@@ -1291,11 +1380,17 @@
         "tables": [
           "attuazione_pnrr_projects",
           "italiadomani_projects",
-          "source_records"
+          "source_records",
+          "project_projects",
+          "project_identifiers",
+          "project_field_resolutions",
+          "core_assertions",
+          "core_resolution_outcomes"
         ],
         "evidence": [
           "artifacts/lamezia-trasparente/src/data/generated/lameziaPnrrProjects.json",
-          "artifacts/lamezia-trasparente/src/pages/Pnrr.tsx"
+          "artifacts/lamezia-trasparente/src/pages/Pnrr.tsx",
+          "lib/db/src/canonicalPnrr.ts"
         ],
         "note": "Persistono i record della fonte comunale; manca l'identità progetto condivisa tra tutte le fonti.",
         "staticPaths": []

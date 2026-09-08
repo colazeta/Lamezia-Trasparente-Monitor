@@ -24,7 +24,7 @@ Leggere prima [il disegno concettuale e le regole di identità](conceptual-schem
 | Incarico o partecipazione | Il ruolo svolto da una persona in un contesto e periodo. | Persona, ruolo, organo e intervallo di validità. | reference · RO-AP_IT |
 | Seduta | Una riunione di un organo con documenti, interventi e voti. | Organo, data e identificativo della fonte; non il singolo verbale. | gap |
 | Procedura di affidamento | Procedimento con cui un’amministrazione seleziona un contraente. Può produrre uno o più contratti. | Identificativo qualificato della procedura o del lotto, compreso il CIG dove applicabile; non coincide con il contratto stipulato. | partial · lt:PublicProcurementRecord |
-| Progetto pubblico | Un investimento che può essere descritto da più amministrazioni e fonti. | CUP normalizzato e validato; senza CUP il record resta irrisolto. | local · lt:PnrrProject |
+| Progetto pubblico | Un investimento che può essere descritto da più amministrazioni e fonti. | UUIDv7 indipendente dalla fonte. CUP qualificato con fonte, emittente e controllo di formato; record senza identità sufficiente conservano un esito esplicito. | local · lt:PnrrProject |
 | Indicatore | Definizione di ciò che si misura, con unità, metodo e significato. Le serie fissano le dimensioni della misura. | Definizione, unità e metodo; non il valore di un anno o una serie territoriale. | partial · lt:PerformanceIndicator |
 | Osservazione | Il valore di una misura in un luogo, periodo e versione di fonte. | Serie, release, periodo e dimensioni; zero e dato mancante sono distinti. | reference · qb:Observation |
 | Luogo | Territorio o luogo identificabile, distinto dalle geometrie che ne rappresentano forma e posizione. | Codice o identificatore geografico qualificato; una coordinata approssimata non è una chiave di identità. | reference · CLV-AP_IT |
@@ -45,6 +45,9 @@ Leggere prima [il disegno concettuale e le regole di identità](conceptual-schem
 | Serie di osservazioni | Insieme di misure dello stesso indicatore a dimensioni definite, per esempio territorio e popolazione di riferimento. | Indicatore e dimensioni della serie; periodi e release distinguono le osservazioni. | gap |
 | Rappresentazione geografica | Geometria o posizione di un luogo, con sistema di riferimento, fonte, versione e precisione. | Luogo, fonte e versione della geometria; due geometrie diverse non implicano due luoghi. | gap |
 | Intervento di politica pubblica | Azione o strumento di politica pubblica definito per obiettivi e destinatari, che può essere studiato e proposto localmente. | Identificativo dell’intervento e della sua versione; distinto da proposta locale e valutazione scientifica. | reference |
+| Asserzione di fonte | Un contenuto riportato o derivato da una fonte, conservato con valore, posizione e metodo di estrazione. | Record di fonte, puntatore al campo e versione dell’estrattore; non richiede un progetto già riconciliato. | gap |
+| Decisione di riconciliazione | Un esito motivato di collegamento a un soggetto oppure di scelta del valore di un campo. | Candidato e versione del risolutore; le revisioni delle scelte mantengono la storia. | gap |
+| Identificatore qualificato | Un codice attribuito da un sistema o ente emittente a un soggetto. | Schema, emittente e valore; un identificatore non coincide con l’oggetto descritto. | gap |
 
 ## Relazioni e cardinalità
 
@@ -56,7 +59,7 @@ Leggere prima [il disegno concettuale e le regole di identità](conceptual-schem
 | Versione informativa | Contiene record originari | Record di fonte | 1:N | implemented |
 | Versione informativa | Conserva i byte acquisiti | Artefatto | N:1 | implemented |
 | Fonte | È verificata da tentativi di acquisizione | Acquisizione | 1:N | implemented |
-| Record di fonte | Descrive progetti da riconciliare | Progetto pubblico | N:M | target |
+| Record di fonte | È riconciliato tramite esiti espliciti; primo perimetro PNRR | Progetto pubblico | N:M | partial |
 | Pubblicazione | Pubblica o richiama atti | Atto amministrativo | N:M | target |
 | Atto amministrativo | È documentato da risorse e allegati | Documento | N:M | partial |
 | Persona | Assume incarichi nel tempo | Incarico o partecipazione | 1:N | partial |
@@ -75,6 +78,10 @@ Leggere prima [il disegno concettuale e le regole di identità](conceptual-schem
 | Serie di osservazioni | raccoglie | Osservazione | 1:N | implemented |
 | Luogo | ha rappresentazioni | Rappresentazione geografica | 1:N | partial |
 | Intervento di politica pubblica | è oggetto di | Valutazione di intervento | 1:N | target |
+| Record di fonte | Conserva le asserzioni estratte | Asserzione di fonte | 1:N | implemented |
+| Asserzione di fonte | Documenta le decisioni | Decisione di riconciliazione | 1:N | implemented |
+| Progetto pubblico | È riconosciuto da codici qualificati | Identificatore qualificato | 1:N | implemented |
+| Progetto pubblico | Mantiene scelte e varianti dei campi | Decisione di riconciliazione | 1:N | implemented |
 
 ## Modello logico: tabelle per dominio
 
@@ -88,6 +95,8 @@ Identificatori stabili e collegamenti alle identità dei sistemi precedenti.
 | --- | --- | --- | --- | --- |
 | `canonical_subjects` | Identità canoniche | Identità canonica | entity | Un soggetto globale e il suo tipo di dominio |
 | `legacy_subject_map` | Corrispondenze con il modello precedente | Identità canonica | relation | Una decisione storicizzata di collegamento di identità |
+| `core_assertions` | Asserzioni e valori di fonte | Asserzione di fonte | source | Un campo o contenuto di un record, con puntatore, fonte e versione dell’estrattore |
+| `core_resolution_outcomes` | Esiti di riconciliazione | Decisione di riconciliazione | relation | Un candidato di un record e un esito motivato, anche senza soggetto canonico |
 
 ### Fonti e acquisizioni
 
@@ -152,6 +161,9 @@ Progetti identificati dal CUP e descritti da più fonti.
 | --- | --- | --- | --- | --- |
 | `attuazione_pnrr_projects` | Progetti dalla fonte comunale | Progetto pubblico | source | Un record della fonte Attuazione PNRR |
 | `italiadomani_projects` | Progetti da ItaliaDomani | Progetto pubblico | source | Un record ItaliaDomani identificato dal CUP |
+| `project_projects` | Progetti canonici | Progetto pubblico | entity | Un investimento identificato da UUIDv7, con attributi tipizzati e provenienza dei valori |
+| `project_identifiers` | Identificatori dei progetti | Identificatore qualificato | relation | Un codice CUP qualificato per schema ed emittente, collegato al progetto |
+| `project_field_resolutions` | Scelte dei valori di progetto | Decisione di riconciliazione | relation | Una scelta di campo, la sua evidenza e il periodo di validità; le varianti non sono eliminate |
 
 ### Indicatori e osservazioni
 
@@ -257,7 +269,7 @@ Semantica: `local` = classe locale dichiarata; `partial` = copertura parziale; `
 | Albo e delibere | Pubblicazione, Atto amministrativo, Documento | `/albo`, `/albo/:id`, `/delibere` | files_with_snapshot_ledger | publications, acts, source_records | local | Le due raccolte sono archiviate nel registro fonte; le tabelle degli atti restano un percorso da riconciliare. |
 | Atti fondamentali e pareri | Atto amministrativo, Documento | `/atti-fondamentali`, `/pareri`, `/pareri/:id` | api_and_files | fundamental_acts, oversight_opinions, oversight_opinion_documents | partial | La selezione editoriale non costituisce una nuova identità dell'atto. |
 | Contratti e incarichi | Procedura di affidamento, Contratto pubblico | `/contratti`, `/contratti/:id`, `/incarichimetro` | api_and_files | contracts, source_records | partial | La proiezione pubblica da atti non equivale a un contratto canonico o alla copertura completa ANAC. |
-| Progetti PNRR | Progetto pubblico | `/pnrr`, `/pnrr/:cup` | files_with_domain_projection | attuazione_pnrr_projects, italiadomani_projects, source_records | local | Persistono i record della fonte comunale; manca l'identità progetto condivisa tra tutte le fonti. |
+| Progetti PNRR | Progetto pubblico | `/pnrr`, `/pnrr/:cup` | files_with_domain_projection | attuazione_pnrr_projects, italiadomani_projects, source_records, project_projects, project_identifiers, project_field_resolutions, core_assertions, core_resolution_outcomes | local | Persistono i record della fonte comunale; manca l'identità progetto condivisa tra tutte le fonti. |
 | Persone e organi | Persona, Organizzazione o organo, Incarico o partecipazione | `/organi`, `/organi/:slug`, `/amministratori`, `/amministratori/:id` | api_and_files | officials, organi, organi_members | reference | I profili statici alimentano il sito anche quando le tabelle sono vuote; cariche e persone vanno riconciliate. |
 | Sedute | Seduta, Documento, Incarico o partecipazione | `/convocazioni`, `/convocazioni/:id` | api_and_files | sedute, session_reports, session_interventions, official_votes | gap | Convocazione, verbale, intervento e voto sono oggetti collegati; la fixture demo non è una seduta reale. |
 | Performance | Indicatore, Osservazione, Serie di osservazioni | `/performance`, `/performance/:id`, `/performance/confronta` | api_and_files | performance_categories, performance_indicators, performance_indicator_values | partial | Gli obiettivi curati nei file non sono automaticamente valori importati negli indicatori. |
@@ -288,7 +300,7 @@ Semantica: `local` = classe locale dichiarata; `partial` = copertura parziale; `
 
 - **Contratti e incarichi**: [artifacts/lamezia-trasparente/src/lib/staticContractsDataset.ts](../../artifacts/lamezia-trasparente/src/lib/staticContractsDataset.ts), [data/public/contracts/anac-bdncp/latest.json](../../data/public/contracts/anac-bdncp/latest.json)
 
-- **Progetti PNRR**: [artifacts/lamezia-trasparente/src/data/generated/lameziaPnrrProjects.json](../../artifacts/lamezia-trasparente/src/data/generated/lameziaPnrrProjects.json), [artifacts/lamezia-trasparente/src/pages/Pnrr.tsx](../../artifacts/lamezia-trasparente/src/pages/Pnrr.tsx)
+- **Progetti PNRR**: [artifacts/lamezia-trasparente/src/data/generated/lameziaPnrrProjects.json](../../artifacts/lamezia-trasparente/src/data/generated/lameziaPnrrProjects.json), [artifacts/lamezia-trasparente/src/pages/Pnrr.tsx](../../artifacts/lamezia-trasparente/src/pages/Pnrr.tsx), [lib/db/src/canonicalPnrr.ts](../../lib/db/src/canonicalPnrr.ts)
 
 - **Persone e organi**: [lib/db/src/institutional-officials-data.ts](../../lib/db/src/institutional-officials-data.ts), [artifacts/lamezia-trasparente/src/lib/institutionalStaticData.ts](../../artifacts/lamezia-trasparente/src/lib/institutionalStaticData.ts)
 

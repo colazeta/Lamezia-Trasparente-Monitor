@@ -4054,6 +4054,25 @@ components:
         migrationCount: { type: [integer, 'null'] }
         tables: { type: array, items: { $ref: '#/components/schemas/DatabaseInspectionTable' } }
         missingTables: { type: array, items: { type: string } }
+        projectReconciliation: { $ref: '#/components/schemas/ProjectReconciliation' }
+    ProjectReconciliation:
+      type: object
+      description: Exact PNRR reconciliation counts for registered source snapshots. Does not certify the completeness of external sources or CUP validity with the issuer.
+      required: [status, sourceSnapshotAt, sourceRecords, projectRecords, canonicalProjects, resolvedCandidates, unresolvedCandidates, unprocessedRecords, currentFieldDecisions, fieldsWithAlternatives, typedValueMismatches, unmappedLegacyRows, legacyValueMismatches]
+      properties:
+        status: { type: string, enum: [verified, review_required, not_materialized] }
+        sourceSnapshotAt: { type: [string, 'null'] }
+        sourceRecords: { type: integer }
+        projectRecords: { type: integer }
+        canonicalProjects: { type: integer }
+        resolvedCandidates: { type: integer }
+        unresolvedCandidates: { type: integer }
+        unprocessedRecords: { type: integer }
+        currentFieldDecisions: { type: integer }
+        fieldsWithAlternatives: { type: integer }
+        typedValueMismatches: { type: integer }
+        unmappedLegacyRows: { type: integer }
+        legacyValueMismatches: { type: integer }
     DatabaseInspectionRow:
       type: object
       required: [values, truncated]

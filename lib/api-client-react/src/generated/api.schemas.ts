@@ -54,6 +54,35 @@ export interface DatabaseInspectionTable {
   issues: string[];
 }
 
+export type ProjectReconciliationStatus = typeof ProjectReconciliationStatus[keyof typeof ProjectReconciliationStatus];
+
+
+export const ProjectReconciliationStatus = {
+  verified: 'verified',
+  review_required: 'review_required',
+  not_materialized: 'not_materialized',
+} as const;
+
+/**
+ * Exact PNRR reconciliation counts for registered source snapshots. Does not certify the completeness of external sources or CUP validity with the issuer.
+ */
+export interface ProjectReconciliation {
+  status: ProjectReconciliationStatus;
+  /** @nullable */
+  sourceSnapshotAt: string | null;
+  sourceRecords: number;
+  projectRecords: number;
+  canonicalProjects: number;
+  resolvedCandidates: number;
+  unresolvedCandidates: number;
+  unprocessedRecords: number;
+  currentFieldDecisions: number;
+  fieldsWithAlternatives: number;
+  typedValueMismatches: number;
+  unmappedLegacyRows: number;
+  legacyValueMismatches: number;
+}
+
 export interface DatabaseInspectionCatalog {
   capturedAt: string;
   database: string;
@@ -63,6 +92,7 @@ export interface DatabaseInspectionCatalog {
   migrationCount: number | null;
   tables: DatabaseInspectionTable[];
   missingTables: string[];
+  projectReconciliation?: ProjectReconciliation;
 }
 
 export type DatabaseInspectionRowValues = {[key: string]: string | null};
