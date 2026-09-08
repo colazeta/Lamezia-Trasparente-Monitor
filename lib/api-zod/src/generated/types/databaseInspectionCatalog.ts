@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { DatabaseInspectionTable } from './databaseInspectionTable';
+import type { ProjectReconciliation } from './projectReconciliation';
 
 export interface DatabaseInspectionCatalog {
   capturedAt: string;
@@ -16,4 +17,5 @@ export interface DatabaseInspectionCatalog {
   migrationCount: number | null;
   tables: DatabaseInspectionTable[];
   missingTables: string[];
+  projectReconciliation?: ProjectReconciliation;
 }

@@ -56,7 +56,22 @@ export const GetDatabaseInspectionCatalogResponse = zod.object({
 })),
   "issues": zod.array(zod.string())
 })),
-  "missingTables": zod.array(zod.string())
+  "missingTables": zod.array(zod.string()),
+  "projectReconciliation": zod.object({
+  "status": zod.enum(['verified', 'review_required', 'not_materialized']),
+  "sourceSnapshotAt": zod.string().nullable(),
+  "sourceRecords": zod.number(),
+  "projectRecords": zod.number(),
+  "canonicalProjects": zod.number(),
+  "resolvedCandidates": zod.number(),
+  "unresolvedCandidates": zod.number(),
+  "unprocessedRecords": zod.number(),
+  "currentFieldDecisions": zod.number(),
+  "fieldsWithAlternatives": zod.number(),
+  "typedValueMismatches": zod.number(),
+  "unmappedLegacyRows": zod.number(),
+  "legacyValueMismatches": zod.number()
+}).optional().describe('Exact PNRR reconciliation counts for registered source snapshots. Does not certify the completeness of external sources or CUP validity with the issuer.')
 })
 
 

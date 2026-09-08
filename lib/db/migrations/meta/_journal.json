@@ -148,6 +148,20 @@
       "when": 1788806852141,
       "tag": "0020_source_snapshot_registry",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1788849754276,
+      "tag": "0021_canonical_pnrr_evidence",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1788851622950,
+      "tag": "0022_canonical_pnrr_lookup_indexes",
+      "breakpoints": true
     }
   ]
 }

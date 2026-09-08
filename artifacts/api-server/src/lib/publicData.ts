@@ -8,6 +8,10 @@ import {
   performanceIndicatorsTable,
   performanceIndicatorValuesTable,
   attuazionePnrrProjectsTable,
+  legacySubjectMapTable,
+  projectsTable,
+  canonicalPnrrReadColumns,
+  canonicalPnrrJoinCondition,
   type PerformanceIndicator,
 } from "@workspace/db";
 import {
@@ -58,7 +62,8 @@ export type Paginated<T> = {
 export function parsePagination(query: Record<string, unknown>): Pagination {
   const rawPage = Number(query.page);
   const rawSize = Number(query.pageSize);
-  const page = Number.isFinite(rawPage) && rawPage >= 1 ? Math.floor(rawPage) : 1;
+  const page =
+    Number.isFinite(rawPage) && rawPage >= 1 ? Math.floor(rawPage) : 1;
   const pageSize =
     Number.isFinite(rawSize) && rawSize >= 1
       ? Math.min(MAX_PAGE_SIZE, Math.floor(rawSize))
@@ -172,7 +177,9 @@ export async function getDocument(identifier: PublicActIdentifier) {
   return row ? mapPublicDocument(row) : null;
 }
 
-export async function getDocumentMarkdown(identifier: PublicActIdentifier): Promise<{
+export async function getDocumentMarkdown(
+  identifier: PublicActIdentifier,
+): Promise<{
   id: number;
   publicId: string;
   progressivo: string;
@@ -226,7 +233,8 @@ function contractFilters(query: Record<string, unknown>): SQL[] {
     if (clause) conditions.push(clause);
   }
   const supplier = asString(query.supplier);
-  if (supplier) conditions.push(ilike(contractsTable.supplier, `%${supplier}%`));
+  if (supplier)
+    conditions.push(ilike(contractsTable.supplier, `%${supplier}%`));
   const procedureType = asString(query.procedureType);
   if (procedureType) {
     conditions.push(eq(contractsTable.procedureType, procedureType));
@@ -363,7 +371,10 @@ export async function listThemes(
     db
       .select(select)
       .from(themesTable)
-      .innerJoin(categoriesTable, eq(themesTable.categoryId, categoriesTable.id))
+      .innerJoin(
+        categoriesTable,
+        eq(themesTable.categoryId, categoriesTable.id),
+      )
       .where(where)
       .orderBy(desc(themesTable.updatedAt), desc(themesTable.id))
       .limit(pagination.pageSize)
@@ -507,7 +518,9 @@ export async function listPerformance(): Promise<
 
 // --- Progetti PNRR (censimento Attuazione) ---
 
-export function mapPnrrProject(p: typeof attuazionePnrrProjectsTable.$inferSelect) {
+export function mapPnrrProject(
+  p: typeof attuazionePnrrProjectsTable.$inferSelect,
+) {
   return {
     id: p.id,
     sourceId: p.sourceId,
@@ -534,36 +547,47 @@ export async function listPnrr(
 ): Promise<Paginated<ReturnType<typeof mapPnrrProject>>> {
   const pagination = parsePagination(query);
   const conditions: SQL[] = [];
+  const columns = canonicalPnrrReadColumns;
+  const bridge = and(
+    eq(legacySubjectMapTable.legacyNamespace, "postgres"),
+    eq(legacySubjectMapTable.legacyType, "attuazione_pnrr_projects"),
+    eq(
+      legacySubjectMapTable.legacyId,
+      sql`${attuazionePnrrProjectsTable.id}::text`,
+    ),
+    sql`${legacySubjectMapTable.validTo} IS NULL`,
+  );
   const search = asString(query.q) ?? asString(query.search);
   if (search) {
     const like = `%${search}%`;
     const clause = or(
-      ilike(attuazionePnrrProjectsTable.title, like),
-      ilike(attuazionePnrrProjectsTable.intervention, like),
+      ilike(columns.title, like),
+      ilike(columns.intervention, like),
       ilike(attuazionePnrrProjectsTable.cup, like),
     );
     if (clause) conditions.push(clause);
   }
   const mission = asString(query.mission);
-  if (mission) conditions.push(eq(attuazionePnrrProjectsTable.mission, mission));
+  if (mission) conditions.push(eq(columns.mission, mission));
   const status = asString(query.status);
-  if (status) conditions.push(eq(attuazionePnrrProjectsTable.status, status));
+  if (status) conditions.push(eq(columns.status, status));
   const where = conditions.length ? and(...conditions) : undefined;
 
   const [rows, [{ count }]] = await Promise.all([
     db
-      .select()
+      .select(columns)
       .from(attuazionePnrrProjectsTable)
+      .leftJoin(legacySubjectMapTable, bridge)
+      .leftJoin(projectsTable, canonicalPnrrJoinCondition)
       .where(where)
-      .orderBy(
-        desc(attuazionePnrrProjectsTable.publishedAt),
-        desc(attuazionePnrrProjectsTable.id),
-      )
+      .orderBy(desc(columns.publishedAt), desc(attuazionePnrrProjectsTable.id))
       .limit(pagination.pageSize)
       .offset(pagination.offset),
     db
       .select({ count: sql<number>`count(*)::int` })
       .from(attuazionePnrrProjectsTable)
+      .leftJoin(legacySubjectMapTable, bridge)
+      .leftJoin(projectsTable, canonicalPnrrJoinCondition)
       .where(where),
   ]);
 

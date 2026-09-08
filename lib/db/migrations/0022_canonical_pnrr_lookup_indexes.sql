@@ -1,0 +1,3 @@
+CREATE INDEX "core_resolution_assertion_idx" ON "core_resolution_outcomes" USING btree ("assertion_id","source_record_id");--> statement-breakpoint
+CREATE INDEX "project_field_resolutions_history_idx" ON "project_field_resolutions" USING btree ("project_id","field","valid_from");--> statement-breakpoint
+CREATE INDEX "project_identifiers_evidence_idx" ON "project_identifiers" USING btree ("evidence_assertion_id");

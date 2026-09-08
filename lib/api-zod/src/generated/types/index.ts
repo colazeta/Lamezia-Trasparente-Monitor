@@ -210,6 +210,8 @@ export * from './pnrrLinkedContract';
 export * from './pnrrLinkedContractRelationKey';
 export * from './pnrrLocationQuality';
 export * from './pnrrProject';
+export * from './projectReconciliation';
+export * from './projectReconciliationStatus';
 export * from './publicActSafety';
 export * from './publicActSafetyAttestationReason';
 export * from './publicActSafetyAttestationSource';

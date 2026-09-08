@@ -43,29 +43,32 @@
     {
       "id": 3,
       "key": "universal_source_registry",
-      "status": "planned",
+      "status": "in_progress",
       "objective": "Create one provenance model for every external source and acquisition run.",
       "prerequisites": [2],
       "deliverables": ["source.sources", "source.endpoints", "source.acquisition_runs", "source.releases", "source.records"],
-      "acceptance": ["Every recurring external ingestion has a source_id", "Runs expose coverage/failure metrics", "Existing source-specific provenance can be mapped without data loss"]
+      "acceptance": ["Every recurring external ingestion has a source_id", "Runs expose coverage/failure metrics", "Existing source-specific provenance can be mapped without data loss"],
+      "implementationNote": "Five repository sources are registered; other external acquisition adapters remain outside this tranche."
     },
     {
       "id": 4,
       "key": "artifact_registry",
-      "status": "planned",
+      "status": "in_progress",
       "objective": "Register physical source artifacts by hash and storage locator while allowing bytes to remain outside PostgreSQL.",
       "prerequisites": [3],
       "deliverables": ["source.artifacts", "legacy attachment dual-write"],
-      "acceptance": ["All migrated artifacts have content hash and source ownership", "Legacy publication attachments reconcile to registered artifacts", "No public-safety scope is broadened"]
+      "acceptance": ["All migrated artifacts have content hash and source ownership", "Legacy publication attachments reconcile to registered artifacts", "No public-safety scope is broadened"],
+      "implementationNote": "Bounded JSON bytes, hashes and versions are registered; binary and attachment adapters remain pending."
     },
     {
       "id": 5,
       "key": "assertion_evidence_layer",
-      "status": "planned",
+      "status": "in_progress",
       "objective": "Separate source-stated, extracted, derived and editorial claims from resolved canonical values and explicit non-resolution outcomes.",
       "prerequisites": [2, 3],
       "deliverables": ["core.assertions", "core.resolution_outcomes", "extraction provenance"],
-      "acceptance": ["Derived canonical facts can be traced to evidence", "Manual corrections supersede rather than erase automatic results", "Unknown/ambiguous/not-applicable/insufficient-evidence states remain explicit", "A source record is never forced into a canonical entity or event merely to complete the pipeline"]
+      "acceptance": ["Derived canonical facts can be traced to evidence", "Manual corrections supersede rather than erase automatic results", "Unknown/ambiguous/not-applicable/insufficient-evidence states remain explicit", "A source record is never forced into a canonical entity or event merely to complete the pipeline"],
+      "implementationNote": "Assertion and resolution foundation implemented with the scoped PNRR extractor; other domain extractors remain pending."
     },
     {
       "id": 6,
@@ -97,11 +100,12 @@
     {
       "id": 9,
       "key": "projects_v2",
-      "status": "planned",
+      "status": "in_progress",
       "objective": "Resolve Attuazione PNRR, Italia Domani, OpenCUP and related evidence onto canonical project entities.",
       "prerequisites": [2, 3, 5],
       "legacyModules": ["attuazionePnrr", "italiadomaniProjects"],
-      "acceptance": ["Same canonical project is not duplicated by source", "CUP is modeled as an identifier", "Source discrepancies remain visible as assertions"]
+      "acceptance": ["Same canonical project is not duplicated by source", "CUP is modeled as an identifier", "Source discrepancies remain visible as assertions"],
+      "implementationNote": "Canonical PNRR backfill, typed fields, qualified identifiers and provenance-aware reads for registered municipal/OpenCUP/Albo records. Italia Domani acquisition and retirement of legacy writers require separate reconciliation."
     },
     {
       "id": 10,

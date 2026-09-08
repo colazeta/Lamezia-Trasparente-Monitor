@@ -106,6 +106,26 @@ const declarations = fields
       `${f} ${f === "attachments" ? "jsonb" : f === "importo_finanziato" ? "numeric(14,2)" : f.endsWith("_date") || f === "published_at" ? "timestamptz" : "text"}`,
   )
   .join(",");
+export function pnrrManagedUpdateStatement(
+  p: SnapshotPlan,
+  previous: JsonObject[],
+): SnapshotStatement {
+  return {
+    text: `WITH expected AS (SELECT * FROM jsonb_to_recordset($1::jsonb) x(${declarations})),
+      previous AS (SELECT * FROM jsonb_to_recordset($2::jsonb) x(${declarations}))
+      UPDATE public.attuazione_pnrr_projects actual SET ${fields
+        .filter((f) => f !== "source_id")
+        .map((f) => `${f}=expected.${f}`)
+        .join(",")},last_seen_at=now()
+      FROM expected,previous WHERE actual.source_id=expected.source_id AND previous.source_id=actual.source_id
+      AND ${fields.map((f) => `actual.${f} IS NOT DISTINCT FROM previous.${f}`).join(" AND ")}
+      AND (${fields.map((f) => `actual.${f}`).join(",")}) IS DISTINCT FROM (${fields.map((f) => `expected.${f}`).join(",")})`,
+    values: [
+      JSON.stringify(pnrrCompatibilityRows(p)),
+      JSON.stringify(previous),
+    ],
+  };
+}
 export function pnrrCompatibilityStatements(p: SnapshotPlan): {
   insert: SnapshotStatement;
   verify: SnapshotStatement;
@@ -129,6 +149,29 @@ export async function reconcilePnrrSnapshot(
   client: SnapshotQueryClient,
   p: SnapshotPlan,
 ) {
+  // Refresh a compatibility row only when its entire current content matches
+  // the preceding successfully registered source version. Unexplained/manual
+  // edits continue to fail closed; source records and prior bytes are retained.
+  const previousRecords = (
+    await client.query(
+      `SELECT r.id,r.collection_key,r.ordinal,r.native_key,r.record_hash,r.payload FROM public.source_records r WHERE r.collection_key='projects' AND r.release_id=(
+    SELECT rel.id FROM public.source_releases rel
+    JOIN public.source_artifacts a ON a.id=rel.artifact_id
+    JOIN public.source_endpoints e ON e.id=rel.endpoint_id
+    JOIN public.source_sources s ON s.id=e.source_id
+    JOIN public.source_acquisition_runs run ON run.release_id=rel.id AND run.status='succeeded'
+    WHERE s.source_key=$1 AND a.byte_hash<>$2 ORDER BY run.started_at DESC,run.id DESC LIMIT 1)`,
+      [p.source.key, p.byteHash],
+    )
+  ).rows;
+  if (previousRecords.length) {
+    const previous = pnrrCompatibilityRows({
+      ...p,
+      records: previousRecords as SnapshotPlan["records"],
+    });
+    const update = pnrrManagedUpdateStatement(p, previous);
+    await client.query(update.text, update.values);
+  }
   const statements = pnrrCompatibilityStatements(p);
   const inserted = Number(
     (await client.query(statements.insert.text, statements.insert.values))

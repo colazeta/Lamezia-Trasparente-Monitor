@@ -1,13 +1,13 @@
 # Disegno concettuale del database
 
-Revisione del 7 settembre 2026, issue #1115. Questo documento è il punto di ingresso corrente. Il [catalogo completo](conceptual-catalog.md) deriva dallo stesso registro usato dall’Archivio interno; gli [esiti dell’assessment](conceptual-assessment-2026-09-07.md) distinguono struttura, contenuti presenti e lavoro residuo.
+Revisione concettuale del 7 settembre 2026 (#1115), aggiornata l’8 settembre con la [migrazione canonica PNRR](pnrr-canonical-model.md) (#1118). Questo documento è il punto di ingresso corrente. Il [catalogo completo](conceptual-catalog.md) deriva dallo stesso registro usato dall’Archivio interno; gli [esiti dell’assessment](conceptual-assessment-2026-09-07.md) distinguono struttura, contenuti presenti e lavoro residuo.
 
 ## I tre livelli
 
 | Livello | Domanda | Fonte di verità |
 | --- | --- | --- |
 | Concettuale | Quale oggetto rappresentiamo e come lo distinguiamo dagli altri? | `conceptualCatalog` in `architecture/data-domain-registry.v1.json`, definizioni, identità e relazioni |
-| Logico | Quale tabella conserva entità, record di fonte, associazione o proiezione? | Mappa delle 70 tabelle nel medesimo registro, con granularità esplicita |
+| Logico | Quale tabella conserva entità, record di fonte, associazione o proiezione? | Mappa delle 75 tabelle nel medesimo registro, con granularità esplicita |
 | Fisico | Quali colonne, tipi, PK, FK, vincoli e indici esistono? | `lib/db/src/schema`, migrazioni versionate e catalogo PostgreSQL effettivo nell’Archivio interno |
 
 Il profilo RDF pubblico è una rappresentazione interoperabile di una parte del dominio. Non è il catalogo delle tabelle e non descrive ancora tutti i contenuti del sito. I nomi dei domini nel catalogo sono raggruppamenti, non nuovi schemi SQL.
@@ -26,7 +26,7 @@ flowchart TD
 
 Il registro `source_*` implementa questo nucleo per gli snapshot di repository previsti dal manifest. Non è ancora un importatore universale delle fonti esterne. Gli artefatti attuali sono identificati fisicamente da endpoint e hash; hash uguale non autorizza a cancellare la provenienza di un altro endpoint.
 
-L’**identità canonica** è già predisposta in `canonical_subjects`, con `legacy_subject_map` per i riferimenti legacy. Non va introdotto un secondo registro parallelo chiamato `entities`. Il soggetto canonico è un riferimento stabile: le proprietà del progetto, della persona o dell’evento restano tipizzate nel dominio. Queste due tabelle risultano ancora vuote nello snapshot dell’assessment.
+L’**identità canonica** è già predisposta in `canonical_subjects`, con `legacy_subject_map` per i riferimenti legacy. Non va introdotto un secondo registro parallelo chiamato `entities`. Il soggetto canonico è un riferimento stabile: le proprietà del progetto, della persona o dell’evento restano tipizzate nel dominio. Erano vuote nello snapshot del 7 settembre; la migrazione PNRR introduce il primo backfill verificato e ne rende visibile la copertura nell’Archivio interno.
 
 Un record può descrivere più entità, non descriverne alcuna o restare irrisolto. Identificatori qualificati, fonte, metodo ed eventuale revisione devono sostenere il collegamento; somiglianza del titolo o del nome non è una regola di fusione.
 
@@ -58,12 +58,12 @@ Il diagramma esprime le responsabilità concettuali; l’implementazione è parz
 
 ```mermaid
 flowchart TD
-  R["Record di fonte"] -->|"N:M, da realizzare"| P["Progetto pubblico"]
+  R["Record di fonte"] -->|"N:M, primo perimetro PNRR"| P["Progetto pubblico"]
   A["Procedura di affidamento"] -->|"N:M, da realizzare"| P
   A -->|"1:N, da realizzare"| C["Contratto pubblico"]
 ```
 
-`attuazione_pnrr_projects` e `italiadomani_projects` sono rappresentazioni per fonte del medesimo tipo di oggetto. La prima è identificata da `source_id`; la seconda dal CUP nel suo schema attuale. Il futuro progetto canonico usa identificatori qualificati e mantiene ogni versione e divergenza di fonte. La mancanza di CUP non deve eliminare il record sorgente.
+`attuazione_pnrr_projects` e `italiadomani_projects` sono rappresentazioni per fonte del medesimo tipo di oggetto. La prima è identificata da `source_id`; la seconda dal CUP nel suo schema attuale. Il progetto canonico in `project_projects` usa un UUIDv7, identificatori qualificati in `project_identifiers` e scelte dei valori sostenute da asserzioni; mantiene versioni e divergenze di fonte. La mancanza di CUP non deve eliminare il record sorgente.
 
 Procedura, lotto, aggiudicazione, contratto e pagamento hanno granularità diverse. Il CIG collega informazioni della procedura o del lotto, ma non identifica indistintamente ogni contratto, pagamento e menzione. `contracts` è ancora una riga monolitica da armonizzare; il modello di dettaglio di lotti, parti ed eventi finanziari appartiene alla fase appalti del piano esistente.
 
@@ -80,11 +80,11 @@ Le cardinalità nel catalogo sono massime; l’assenza di un collegamento resta 
 
 ## Decisioni fisiche e passaggio graduale
 
-Questa revisione non richiede DDL: il problema affrontato è l’ambiguità del mapping e della presentazione. I tipi, gli indici e le FK effettivi restano ispezionabili; il catalogo delle 70 tabelle non viene sostituito da una tabella generica di attributi.
+La revisione del 7 settembre riguardava mapping e presentazione. L’aggiornamento PNRR aggiunge cinque tabelle con migrazioni versionate `0021` e `0022`, backfill controllato e indici per vincoli, identificatori e storia. I tipi, gli indici e le FK effettivi restano ispezionabili; il catalogo delle 75 tabelle non viene sostituito da una tabella generica di attributi.
 
 Per le successive migrazioni: aggiungere prima strutture tipizzate e ponti verso l’identità esistente; eseguire backfill idempotenti con record irrisolti espliciti; riconciliare conteggi e campi per fonte/versione; verificare le letture API; infine convertire i vecchi modelli in proiezioni di compatibilità. La dismissione richiede assenza di scritture legacy e nessuna perdita di evidenza. Non rinominare tabelle solo per farle assomigliare al menu.
 
-PK e vincoli univoci devono esprimere l’identità alla granularità corretta; le FK devono collegare oggetti compatibili. Nuovi indici richiedono query e carichi misurati, senza dedurre prestazioni dalla sola presenza di una struttura. Gli importi esistenti usano tipi numerici e i metadati di acquisizione timestamp con fuso dove previsti dallo schema. Non vengono introdotti nuovi indici, PostGIS o servizi a pagamento in questa revisione.
+PK e vincoli univoci devono esprimere l’identità alla granularità corretta; le FK devono collegare oggetti compatibili. Nuovi indici richiedono query e carichi misurati, senza dedurre prestazioni dalla sola presenza di una struttura. Gli importi esistenti usano tipi numerici e i metadati di acquisizione timestamp con fuso dove previsti dallo schema. La migrazione PNRR introduce gli indici associati ai nuovi vincoli e alle letture documentate. Non introduce PostGIS o nuovi servizi a pagamento.
 
 ## Manutenzione della mappa
 
