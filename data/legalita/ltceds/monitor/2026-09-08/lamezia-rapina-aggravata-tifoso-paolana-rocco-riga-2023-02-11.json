@@ -1,0 +1,96 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-aggravata-tifoso-paolana-rocco-riga-2023-02-11",
+  "discovered_at": "2026-09-08T02:29:26+02:00",
+  "updated_at": "2026-09-08T02:29:26+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina aggravata con pestaggio a un tifoso della Paolana nel parcheggio dello stadio Rocco Riga",
+  "temporal": {
+    "start": "2023-02-11",
+    "end": "2023-02-11",
+    "edtf": "2023-02-11",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "law:questura-catanzaro:2023-03-21:aggressione-tifoso-paolana-rocco-riga",
+      "source_type": "law_enforcement_primary",
+      "provider": "Polizia di Stato — Questura di Catanzaro",
+      "title": "Lamezia Terme: la Polizia di Stato individua e arresta gli autori dell’aggressione ad un tifoso della Paolana",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/12366419cea7b590d741968888",
+      "published_at": null,
+      "retrieved_at": "2026-09-08T02:29:26+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "authority:comune-lamezia-terme:campo-sportivo-rocco-riga",
+      "source_type": "public_authority_primary",
+      "provider": "Città di Lamezia Terme",
+      "title": "Campo sportivo Rocco Riga",
+      "url": "https://www.comune.lamezia-terme.cz.it/it/page/campo-sportivo-g-riga",
+      "published_at": null,
+      "retrieved_at": "2026-09-08T02:29:26+02:00",
+      "support_roles": [
+        "location_support"
+      ]
+    },
+    {
+      "source_key": "press:rai-tgr-calabria:2023-02-11:tifoso-paolana-aggredito-lamezia",
+      "source_type": "press_secondary",
+      "provider": "RaiNews TGR Calabria",
+      "title": "Giovane tifoso della Paolana aggredito a Lamezia",
+      "url": "https://www.rainews.it/tgr/calabria/articoli/2023/02/giovane-tifoso-della-paolana-aggredito-a-lamezia-aefd0d71-a54a-4df8-9e5f-6c8e74d3f13d.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-08T02:29:26+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina-aggravata",
+      "classification_source_key": "law:questura-catanzaro:2023-03-21:aggressione-tifoso-paolana-rocco-riga",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "l'11 febbraio 2023, al termine dell'incontro Promosport-Paolana, un sostenitore della squadra ospite fu accerchiato nel parcheggio antistante lo stadio Rocco Riga e colpito al capo con una spranga e bottiglie",
+        "la Questura riferisce che uno degli aggressori morse il tifoso a una mano per sottrargli lo zaino, contenente tra l'altro portafogli, denaro, documenti, uno striscione e una sciarpa della Paolana",
+        "la Polizia di Stato qualifica la contestazione come rapina aggravata dal fatto di essere stata commessa da più persone riunite e dall'uso di armi",
+        "il GIP di Lamezia Terme dispose gli arresti domiciliari nei confronti di quattro indagati; al 21 marzo 2023 il procedimento risultava ancora in fase investigativa e la misura cautelare non equivale ad accertamento definitivo di responsabilità"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:stadio-rocco-riga-parcheggio:occurrence",
+      "basis_source_key": "law:questura-catanzaro:2023-03-21:aggressione-tifoso-paolana-rocco-riga",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Parcheggio antistante Stadio Rocco Riga, via Boccioni (frazione Pitizzanni)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
