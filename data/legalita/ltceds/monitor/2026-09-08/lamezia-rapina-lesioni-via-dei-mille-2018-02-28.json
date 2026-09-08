@@ -1,0 +1,116 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-lesioni-via-dei-mille-2018-02-28",
+  "discovered_at": "2026-09-08T13:53:41+02:00",
+  "updated_at": "2026-09-08T13:53:41+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina con lesioni ai danni di una persona anziana in via Dei Mille",
+  "temporal": {
+    "start": "2018-02-28",
+    "end": "2018-02-28",
+    "edtf": "2018-02-28",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "law:polizia-stato:2018-03-21:rapina-anziana-via-dei-mille",
+      "source_type": "law_enforcement_primary",
+      "provider": "Polizia di Stato - Questura di Catanzaro",
+      "title": "Lamezia Terme - Commissariato di Polizia arresta autore della rapina ai danni di una anziana donna",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/12365ab0d32eae8d8004290737",
+      "published_at": null,
+      "retrieved_at": "2026-09-08T13:53:41+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "news:ansa:2018-03-21:rapina-anziana-lamezia",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Anziana ferita in scippo, arresto minore",
+      "url": "https://www.ansa.it/calabria/notizie/2018/03/21/anziana-ferita-in-scippo-arresto-minore_6b5ce266-ef72-4503-aaf4-8b9d5d3e22d1.html",
+      "published_at": "2018-03-21T00:00:00+01:00",
+      "retrieved_at": "2026-09-08T13:53:41+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lacnews24:2018-03-21:rapina-anziana-via-dei-mille",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Lamezia, scippa la borsa e ferisce anziana: arrestato minorenne",
+      "url": "https://www.lacnews24.it/cronaca/lamezia-scippa-la-borsa-e-ferisce-anziana-arrestato-minorenne-iqt1831x",
+      "published_at": "2018-03-21T10:49:00+01:00",
+      "retrieved_at": "2026-09-08T13:53:41+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "law:polizia-stato:2018-03-21:rapina-anziana-via-dei-mille",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la fonte primaria colloca il fatto il 28 febbraio 2018 in via Dei Mille a Lamezia Terme e lo qualifica come rapina ai danni di una persona anziana",
+        "la persona offesa fu trovata a terra con il volto sanguinante; le fonti riferiscono lo strappo della borsa e il successivo allontanamento",
+        "le indagini della Polizia di Stato si avvalsero anche di immagini di videosorveglianza e portarono all'arresto riferito il 21 marzo 2018; il record non rappresenta tale arresto come accertamento definitivo di responsabilità"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:lesioni-personali",
+      "classification_source_key": "law:polizia-stato:2018-03-21:rapina-anziana-via-dei-mille",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la fonte primaria qualifica espressamente il fatto anche come lesioni",
+        "le fonti riferiscono traumi al viso e alla testa e fratture al braccio; la gravità clinica non viene trasformata in una sottoclassificazione legale più specifica non attestata"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-dei-mille:occurrence",
+      "basis_source_key": "law:polizia-stato:2018-03-21:rapina-anziana-via-dei-mille",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via Dei Mille",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
