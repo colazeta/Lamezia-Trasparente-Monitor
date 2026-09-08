@@ -139,6 +139,22 @@ const SCOUTED_CANONICAL_PROPOSAL_PRESENTATIONS: Record<
     expectedOutcome:
       "Rendere continuativa la disponibilità del servizio secondo la configurazione H24 richiesta dal promotore.",
   },
+  "parco-via-degli-itali-manutenzione-branca-2026": {
+    proposalId: "parco-via-degli-itali-manutenzione-branca-2026",
+    version: "1.0",
+    title: "Sicurezza e manutenzione del parco di via degli Itali",
+    request:
+      "Ripristinare condizioni di sicurezza, manutenzione e decoro nel parco giochi di via degli Itali.",
+    actionTypes: ["manutenzione", "messa_in_sicurezza"],
+    measures: [
+      "Mettere in sicurezza i giochi per bambini danneggiati.",
+      "Sostituire i cestini danneggiati.",
+      "Effettuare la manutenzione del verde.",
+      "Ripristinare il decoro dell’area del parco.",
+    ],
+    expectedOutcome:
+      "Rendere il parco più sicuro e curato per la fruizione di famiglie e bambini, senza attribuire efficacia agli interventi prima che siano documentati.",
+  },
 };
 
 export function getCanonicalProposalPresentation(

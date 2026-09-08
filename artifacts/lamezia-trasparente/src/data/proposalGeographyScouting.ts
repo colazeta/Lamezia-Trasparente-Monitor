@@ -92,6 +92,26 @@ const PALASPARTI: ProposalGeography = {
     "Il Comune identifica ufficialmente l'impianto all'indirizzo Via Giovanni De Sensi 21. Le coordinate WGS84 corrispondono al poligono OpenStreetMap del Palazzetto dello Sport Alfio Sparti (way 303144181); il tag Sambiase è coerente con la localizzazione territoriale dell'impianto.",
 };
 
+const PARCO_VIA_DEGLI_ITALI: ProposalGeography = {
+  label: "Parco giochi di via degli Itali, quartiere Capizzaglie",
+  scope: "area",
+  areas: ["nicastro"],
+  points: [
+    {
+      id: "parco-via-degli-itali-riferimento-stradale",
+      label: "Via degli Itali — riferimento stradale rappresentativo del parco di Capizzaglie",
+      latitude: 38.948849,
+      longitude: 16.3055,
+      area: "nicastro",
+      precision: "street_approximate",
+      sourceLabel: "ItaliaMappe — Via degli Itali, Lamezia Terme",
+      sourceUrl: "https://www.italiamappe.it/stradario/lamezia-terme/via-degli-itali/",
+    },
+  ],
+  note:
+    "Le fonti della proposta identificano il parco giochi in via degli Itali, nel quartiere Capizzaglie. Il Comune di Lamezia Terme include ufficialmente via degli Itali nell'elenco territoriale di Nicastro per gli interventi di deblatizzazione; il tag Nicastro deriva da quella classificazione istituzionale. La coordinata WGS84 è un riferimento stradale verificabile per via degli Itali e non pretende di localizzare il perimetro o il centro geometrico del parco; per questo la precisione è street_approximate e lo scope resta area.",
+};
+
 export const SCOUTED_PROPOSAL_GEOGRAPHY: Record<string, ProposalGeography> = {
   "emodinamica-h24-vescio-2026": GIOVANNI_PAOLO_II,
   "emodinamica-h24-nucifero-2026": GIOVANNI_PAOLO_II,
@@ -108,4 +128,5 @@ export const SCOUTED_PROPOSAL_GEOGRAPHY: Record<string, ProposalGeography> = {
   "sanita-pubblica-petizione-presidio-malerba-2026": LAMEZIA_CITYWIDE,
   "la-mia-estate-avvio-attivita-oltre-autismo-2026": LAMEZIA_CITYWIDE,
   "emodinamica-h24-commissione-sanita-pd-2026": GIOVANNI_PAOLO_II,
+  "parco-via-degli-itali-manutenzione-branca-2026": PARCO_VIA_DEGLI_ITALI,
 };

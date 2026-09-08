@@ -8,6 +8,7 @@ import { SCOUTED_PUBLIC_PROPOSALS } from "./propostePubblicheScouting";
 import { SCOUTED_PUBLIC_PROPOSALS_20260903 } from "./propostePubblicheScouting20260903";
 import { SCOUTED_PUBLIC_PROPOSALS_20260904 } from "./propostePubblicheScouting20260904";
 import { SCOUTED_PUBLIC_PROPOSALS_20260906 } from "./propostePubblicheScouting20260906";
+import { SCOUTED_PUBLIC_PROPOSALS_20260908 } from "./propostePubblicheScouting20260908";
 
 export type {
   ProposalPromoterType,
@@ -154,6 +155,7 @@ export const PUBLIC_PROPOSALS = [
   ...UPDATED_EXISTING_PUBLIC_PROPOSALS_20260907,
   ...UPDATED_SCOUTED_PUBLIC_PROPOSALS_20260904_20260907,
   ...UPDATED_SCOUTED_PUBLIC_PROPOSALS_20260906_20260907,
+  ...SCOUTED_PUBLIC_PROPOSALS_20260908,
 ] as const satisfies readonly core.PublicProposal[];
 
 export function getProposalThemes(
