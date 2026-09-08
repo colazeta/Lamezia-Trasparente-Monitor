@@ -1,0 +1,99 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-via-colombo-2016-10-09",
+  "discovered_at": "2026-09-08T20:34:48+02:00",
+  "updated_at": "2026-09-08T20:34:48+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina con strappo ai danni di una donna in via Colombo",
+  "temporal": {
+    "start": "2016-10-09",
+    "end": "2016-10-09",
+    "edtf": "2016-10-09",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:catanzaroinforma:2016-12-21:rapina-donna-via-colombo",
+      "source_type": "press_secondary",
+      "provider": "CatanzaroInforma",
+      "title": "Lamezia: rapinò signora in pieno centro. Individuato responsabile",
+      "url": "https://www.catanzaroinforma.it/cronaca/2016/12/21/lamezia-rapino-signora-in-pieno-centro-individuato-responsabile/94901",
+      "published_at": "2016-12-21T12:35:00+01:00",
+      "retrieved_at": "2026-09-08T20:34:48+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:lameziainforma:2016-12-21:rapina-donna-via-colombo",
+      "source_type": "press_secondary",
+      "provider": "LameziaInforma",
+      "title": "Rapinò signora in pieno centro. Arrestato dai Carabinieri",
+      "url": "https://www.lameziainforma.it/cronaca/2016/12/21/rapino-signora-in-pieno-centro-arrestato-dai-carabinieri/12732",
+      "published_at": "2016-12-21T12:36:00+01:00",
+      "retrieved_at": "2026-09-08T20:34:48+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "press:catanzaroinforma:2016-12-21:rapina-donna-via-colombo",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti descrivono espressamente un furto con strappo sfociato in rapina avvenuto il 9 ottobre 2016 in via Colombo a Lamezia Terme",
+        "durante lo strappo della borsa la persona offesa cadde al suolo; una fonte riferisce la frattura del collo dell'omero, ma il record non inferisce una distinta qualificazione legale per lesioni non esplicitamente attestata",
+        "le cronache del 21 dicembre 2016 riferiscono che il soggetto successivamente individuato era già stato arrestato nel mese di ottobre; il dato è conservato come contesto procedurale e non come accertamento definitivo di responsabilità"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-colombo:occurrence",
+      "basis_source_key": "press:catanzaroinforma:2016-12-21:rapina-donna-via-colombo",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via Colombo",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-colombo-prossimita:recovery",
+      "basis_source_key": "press:catanzaroinforma:2016-12-21:rapina-donna-via-colombo",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "A breve distanza dal luogo della rapina in via Colombo",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
