@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-rapina-aggravata-tifoso-paolana-rocco-riga-2023-02-11",
   "discovered_at": "2026-09-08T02:29:26+02:00",
-  "updated_at": "2026-09-08T02:29:26+02:00",
+  "updated_at": "2026-09-08T02:43:40+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Rapina aggravata con pestaggio a un tifoso della Paolana nel parcheggio dello stadio Rocco Riga",
@@ -53,6 +53,21 @@
         "location_support",
         "corroboration"
       ]
+    },
+    {
+      "source_key": "press:calabria-inchieste:2023-10-04:tifoso-paolana-due-condanne-due-rinvii",
+      "source_type": "press_secondary",
+      "provider": "Calabria Inchieste",
+      "title": "Tifoso paolano aggredito: due condanne e due rinvii a giudizio",
+      "url": "https://www.calabriainchieste.it/2023/10/04/tifoso-paolano-aggredito-due-condanne-e-due-rinvii-a-giudizio/",
+      "published_at": "2023-10-04T00:00:00+02:00",
+      "retrieved_at": "2026-09-08T02:43:40+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
     }
   ],
   "offences": [
@@ -70,7 +85,26 @@
         "l'11 febbraio 2023, al termine dell'incontro Promosport-Paolana, un sostenitore della squadra ospite fu accerchiato nel parcheggio antistante lo stadio Rocco Riga e colpito al capo con una spranga e bottiglie",
         "la Questura riferisce che uno degli aggressori morse il tifoso a una mano per sottrargli lo zaino, contenente tra l'altro portafogli, denaro, documenti, uno striscione e una sciarpa della Paolana",
         "la Polizia di Stato qualifica la contestazione come rapina aggravata dal fatto di essere stata commessa da più persone riunite e dall'uso di armi",
-        "il GIP di Lamezia Terme dispose gli arresti domiciliari nei confronti di quattro indagati; al 21 marzo 2023 il procedimento risultava ancora in fase investigativa e la misura cautelare non equivale ad accertamento definitivo di responsabilità"
+        "il GIP di Lamezia Terme dispose gli arresti domiciliari nei confronti di quattro indagati",
+        "il 4 ottobre 2023 una fonte giudiziaria secondaria riferisce due condanne e due rinvii a giudizio all'esito dell'udienza preliminare; la stessa fonte indica contestazioni, a vario titolo, per rapina e lesioni gravi. La definitività dei giudizi non è attestata dalle fonti qui acquisite"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:lesioni-gravi",
+      "classification_source_key": "press:calabria-inchieste:2023-10-04:tifoso-paolana-due-condanne-due-rinvii",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la fonte del 4 ottobre 2023 indica che ai quattro imputati erano contestati, a vario titolo, i reati di rapina e lesioni gravi in relazione all'aggressione al tifoso della Paolana",
+        "la fonte primaria della Questura riferisce che la persona aggredita fu ricoverata per trauma cranico dopo essere stata colpita al capo con una spranga e bottiglie",
+        "la fonte del 4 ottobre 2023 riferisce due condanne e due rinvii a giudizio; la definitività dei giudizi non è attestata dalle fonti qui acquisite"
       ],
       "cyber_related": null,
       "affected_object_count": null
