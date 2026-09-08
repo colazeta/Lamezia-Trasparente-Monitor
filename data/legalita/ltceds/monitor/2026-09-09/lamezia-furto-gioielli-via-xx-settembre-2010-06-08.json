@@ -1,0 +1,99 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-furto-gioielli-via-xx-settembre-2010-06-08",
+  "discovered_at": "2026-09-09T01:18:19+02:00",
+  "updated_at": "2026-09-09T01:18:19+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Furto di un campionario di gioielli da un'autovettura in via XX Settembre",
+  "temporal": {
+    "start": "2010-06-08",
+    "end": "2010-06-08",
+    "edtf": "2010-06-08",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:cn24tv:2011-03-12:gioielli-rubati-lamezia",
+      "source_type": "press_secondary",
+      "provider": "CN24TV",
+      "title": "Gioielli rubati a Lamezia Terme, due arresti a Catania",
+      "url": "https://cn24tv.it/news/21657/gioielli-rubati-a-lamezia-terme-due-arresti-a-catania.html",
+      "published_at": "2011-03-12T10:51:00+01:00",
+      "retrieved_at": "2026-09-09T01:18:19+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:approdo-calabria:2011-03-12:furto-gioielli-imprenditore-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Approdo Calabria",
+      "title": "Due arresti per un furto di gioielli ai danni di un imprenditore di Lamezia Terme",
+      "url": "https://www.approdocalabria.it/due-arresti-per-un-furto-di-gioielli-ai-danni-di-un-imprenditore-di-lamezia-terme/",
+      "published_at": null,
+      "retrieved_at": "2026-09-09T01:18:19+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:furto",
+      "classification_source_key": "press:cn24tv:2011-03-12:gioielli-rubati-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti riferiscono che l'8 giugno 2010 fu sottratto da un'autovettura un campionario di gioielleria del valore complessivo di circa 100.000 euro",
+        "la ricostruzione pubblicata riferisce la rottura del finestrino lato passeggero dell'autovettura e la successiva fuga a bordo di un'altra automobile",
+        "nel marzo 2011 due persone furono arrestate a Catania in esecuzione di provvedimenti cautelari emessi dal GIP del Tribunale di Lamezia Terme su richiesta della Procura; il record non rappresenta un accertamento definitivo di responsabilità"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-xx-settembre:occurrence",
+      "basis_source_key": "press:cn24tv:2011-03-12:gioielli-rubati-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via XX Settembre",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:catania:arrest",
+      "basis_source_key": "press:cn24tv:2011-03-12:gioielli-rubati-lamezia",
+      "role": "arrest",
+      "municipality": "Catania",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "non_sensitive",
+      "geometry": null,
+      "place_name": "Catania",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
