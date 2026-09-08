@@ -1,0 +1,157 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rissa-tutankamon-2024-08-24",
+  "discovered_at": "2026-09-08T05:58:46+02:00",
+  "updated_at": "2026-09-08T05:58:46+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rissa con lesioni e resistenza ai Carabinieri nelle adiacenze del locale Tutankamon",
+  "temporal": {
+    "start": "2024-08-24",
+    "end": "2024-08-24",
+    "edtf": "2024-08-24",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "police:questura-catanzaro:2024-10-17:dacur-rissa-tutankamon",
+      "source_type": "law_enforcement_primary",
+      "provider": "Polizia di Stato — Questura di Catanzaro",
+      "title": "Arresto in flagranza dei Carabinieri di Lamezia Terme: il Questore di Catanzaro emette un provvedimento di D.A.C.Ur",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/32776710c3c387f1c581984707",
+      "published_at": "2024-10-17T00:00:00+02:00",
+      "retrieved_at": "2026-09-08T05:58:46+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:gazzetta-sud:2024-10-17:rissa-tutankamon-dacur",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Lamezia, arrestato per lesioni e rissa nei pressi di un locale: il questore emette il divieto di avvicinamento agli esercizi commerciali per 3 anni",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2024/10/17/lamezia-arrestato-per-lesioni-e-rissa-nei-pressi-di-un-locale-il-questore-emette-il-divieto-di-avvicinamento-agli-esercizi-commerciali-per-3-anni-fa4dce14-9ba5-418e-a4db-1ae3dda8bfc0/",
+      "published_at": "2024-10-17T00:00:00+02:00",
+      "retrieved_at": "2026-09-08T05:58:46+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "other:mapquest:tutankhamon-piazza-mercato-vecchio-lamezia",
+      "source_type": "other",
+      "provider": "MapQuest",
+      "title": "Tutankhamon, Piazza Mercato Vecchio, Lamezia Terme",
+      "url": "https://www.mapquest.com/it/tutankhamon-528303674",
+      "published_at": null,
+      "retrieved_at": "2026-09-08T05:58:46+02:00",
+      "support_roles": [
+        "location_support"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rissa",
+      "classification_source_key": "police:questura-catanzaro:2024-10-17:dacur-rissa-tutankamon",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la Questura riferisce l'arresto in flagranza del 24 agosto 2024 per una rissa nelle adiacenze del locale Tutankamon"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:lesioni-personali",
+      "classification_source_key": "police:questura-catanzaro:2024-10-17:dacur-rissa-tutankamon",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "lesioni personali espressamente indicate tra i reati contestati dalla fonte di polizia"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:resistenza-pubblico-ufficiale",
+      "classification_source_key": "police:questura-catanzaro:2024-10-17:dacur-rissa-tutankamon",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "resistenza a pubblico ufficiale espressamente indicata tra i reati contestati dalla fonte di polizia"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:oltraggio-pubblico-ufficiale",
+      "classification_source_key": "police:questura-catanzaro:2024-10-17:dacur-rissa-tutankamon",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "oltraggio a pubblico ufficiale espressamente indicato tra i reati contestati dalla fonte di polizia"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:tutankamon:occurrence",
+      "basis_source_key": "police:questura-catanzaro:2024-10-17:dacur-rissa-tutankamon",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Tutankamon, Piazza Mercato Vecchio",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:tutankamon:arrest",
+      "basis_source_key": "police:questura-catanzaro:2024-10-17:dacur-rissa-tutankamon",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Adiacenze del locale Tutankamon, Piazza Mercato Vecchio",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
