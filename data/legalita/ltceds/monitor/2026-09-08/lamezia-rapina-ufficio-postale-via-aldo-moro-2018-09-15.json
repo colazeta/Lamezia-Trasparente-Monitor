@@ -1,0 +1,114 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-ufficio-postale-via-aldo-moro-2018-09-15",
+  "discovered_at": "2026-09-08T11:39:49+02:00",
+  "updated_at": "2026-09-08T11:39:49+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina all'ufficio postale di via Aldo Moro a Lamezia Terme il 15 settembre 2018",
+  "temporal": {
+    "start": "2018-09-15",
+    "end": "2018-09-15",
+    "edtf": "2018-09-15",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:lametino:2018-09-15:rapina-poste-via-aldo-moro",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: rapina all'ufficio postale di via Aldo Moro",
+      "url": "https://www.lametino.it/cronaca/lamezia-altra-rapina-alle-poste-di-via-aldo-moro.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-08T11:39:49+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lacnews24:2018-09-15:rapina-poste-via-aldo-moro",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Lamezia, rapina alle poste di via Aldo Moro",
+      "url": "https://www.lacnews24.it/cronaca/lamezia-rapina-alle-poste-di-via-aldo-moro-cbtc3ee8",
+      "published_at": "2018-09-15T14:41:00+02:00",
+      "retrieved_at": "2026-09-08T11:39:49+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:ltnews:2018-09-15:rapina-poste-via-aldo-moro",
+      "source_type": "press_secondary",
+      "provider": "LTNews Lamezia Terme",
+      "title": "Lamezia, ennesima rapina all'ufficio postale di via Aldo Moro",
+      "url": "https://www.lameziatermenews.it/citta/15589-lamezia-ennesima-rapina-all-ufficio-postale-di-via-aldo-moro.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-08T11:39:49+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:approdo-calabria:2018-09-16:rapina-poste-via-aldo-moro",
+      "source_type": "press_secondary",
+      "provider": "Approdo Calabria",
+      "title": "Rapina ufficio postale Lamezia: ricercati due malviventi",
+      "url": "https://www.approdocalabria.it/rapina-ufficio-postale-lamezia-ricercati-due-malviventi/",
+      "published_at": null,
+      "retrieved_at": "2026-09-08T11:39:49+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "press:lacnews24:2018-09-15:rapina-poste-via-aldo-moro",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "due persone si introdussero nell'ufficio postale in prossimità dell'orario di chiusura mentre erano in corso operazioni di caricamento dello sportello bancomat",
+        "le fonti coeve riferiscono che fu sottratta una cassetta contenente denaro e che i responsabili si allontanarono facendo perdere le tracce",
+        "i Carabinieri intervennero sul posto e avviarono le indagini; non è stato individuato un successivo sviluppo giudiziario pubblico sufficientemente verificabile da collegare con certezza a questo specifico episodio"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:ufficio-postale-via-aldo-moro:target",
+      "basis_source_key": "press:lametino:2018-09-15:rapina-poste-via-aldo-moro",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Ufficio postale di via Aldo Moro",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
