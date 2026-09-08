@@ -36,7 +36,7 @@ export const SCOUTED_PUBLIC_PROPOSALS_20260908 = [
     lastUpdated: "2026-09-07",
     events: [
       {
-        id: "parco-via-italiani-branca-richiesta-interventi-7-settembre",
+        id: "parco-via-degli-itali-branca-richiesta-interventi-7-settembre",
         date: "2026-09-07",
         type: "emersione",
         title: "Branca chiede interventi di sicurezza e manutenzione nel parco",
