@@ -1,0 +1,132 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-tentata-rapina-accoltellamento-piazza-mazzini-2021-09-16",
+  "discovered_at": "2026-09-08T08:15:17+02:00",
+  "updated_at": "2026-09-08T08:15:17+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Tentata rapina con accoltellamento in Piazza Mazzini",
+  "temporal": {
+    "start": "2021-09-16",
+    "end": "2021-09-16",
+    "edtf": "2021-09-16",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:il-lametino:2021-09-18:tentata-rapina-piazza-mazzini",
+      "source_type": "press_secondary",
+      "provider": "il Lametino.it",
+      "title": "Lamezia, accoltella connazionale per rubargli soldi e cellulare: arrestato 33enne",
+      "url": "https://www.lametino.it/cronaca/lamezia-accoltella-connazionale-per-rubargli-soldi-e-cellulare-arrestato-33enne.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-08T08:15:17+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:lacnews24:2021-09-18:aggressione-piazza-mazzini",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Lamezia, violenta aggressione in pieno centro: arrestato 33enne",
+      "url": "https://www.lacnews24.it/cronaca/lamezia-violenta-aggressione-in-pieno-centro-arrestato-33enne-tjq1n0in",
+      "published_at": "2021-09-18T11:47:00+02:00",
+      "retrieved_at": "2026-09-08T08:15:17+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2021-09-18:accoltellamento-piazza-mazzini",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Lamezia, uomo accoltellato in piazza Mazzini: arrestato un 33enne",
+      "url": "https://www.corrieredellacalabria.it/2021/09/18/lamezia-uomo-accoltellato-in-piazza-mazzini-arrestato-un-33enne/",
+      "published_at": "2021-09-18T11:23:00+02:00",
+      "retrieved_at": "2026-09-08T08:15:17+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "press:il-lametino:2021-09-18:tentata-rapina-piazza-mazzini",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "le fonti riferiscono che nella notte del 16 settembre 2021 un uomo armato di coltello tentò di sottrarre denaro e un telefono cellulare a un'altra persona in Piazza Mazzini",
+        "le cronache riportano l'arresto in flagranza e la successiva convalida con applicazione della custodia cautelare in carcere"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:lesioni-personali-gravissime",
+      "classification_source_key": "press:il-lametino:2021-09-18:tentata-rapina-piazza-mazzini",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti qualificano il fatto anche come lesioni personali gravissime e riferiscono un fendente al volto con una profonda ferita lacero-contusa",
+        "lo stato probatorio documentato è quello dell'arresto in flagranza e della successiva misura cautelare, non di una responsabilità definitivamente accertata"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:piazza-mazzini:occurrence",
+      "basis_source_key": "press:lacnews24:2021-09-18:aggressione-piazza-mazzini",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Piazza Mazzini",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:piazza-mazzini:arrest",
+      "basis_source_key": "press:il-lametino:2021-09-18:tentata-rapina-piazza-mazzini",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Piazza Mazzini",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
