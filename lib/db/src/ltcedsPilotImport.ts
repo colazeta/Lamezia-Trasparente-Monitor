@@ -275,37 +275,3 @@ export async function executeLtcedsPilotImport(
   });
   return executeLtcedsPilotPlan(plan, db);
 }
-
-async function main(): Promise<void> {
-  const execute = process.argv.includes("--execute");
-  const unknown = process.argv.slice(2).filter((arg) => arg !== "--execute");
-  if (unknown.length) throw new Error(`Unknown arguments: ${unknown.join(", ")}`);
-
-  runLtcedsMachineGate();
-  const files = await loadLtcedsPilotFiles();
-  const plan = buildPilotImportPlan({
-    files,
-    mode: execute ? "execute" : "dry-run",
-    databaseState: execute ? "checked" : "unchecked",
-  });
-
-  if (!execute) {
-    process.stdout.write(`${JSON.stringify(buildLtcedsPilotDryRunReport(plan), null, 2)}\n`);
-    return;
-  }
-
-  const { db, pool } = await import("./client");
-  try {
-    const report = await executeLtcedsPilotPlan(plan, db);
-    process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
-  } finally {
-    await pool.end();
-  }
-}
-
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  main().catch((error: unknown) => {
-    process.stderr.write(`${JSON.stringify({ ok: false, error: error instanceof Error ? error.message : String(error) })}\n`);
-    process.exitCode = 1;
-  });
-}

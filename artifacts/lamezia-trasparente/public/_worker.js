@@ -99,8 +99,14 @@ async function loadContractsDataset(request, env) {
 
   const dataset = await response.json();
   if (
-    dataset?.schemaVersion !== "lamezia-contracts-current.v1" ||
+    dataset?.schemaVersion !== "lamezia-contracts-multisource.v1" ||
+    dataset.source?.scope !== "known-public-sources" ||
     !Array.isArray(dataset.contracts) ||
+    !Array.isArray(dataset.procurementEvents) ||
+    !Array.isArray(dataset.contractEntities) ||
+    !dataset.reconciliation ||
+    dataset.authorityDiscovery?.schemaVersion !==
+      "anac-authority-discovery.v1" ||
     !dataset.feedStatus ||
     dataset.anacConnection?.schemaVersion !== "anac-bdncp-connection.v1" ||
     !dataset.storylines ||
@@ -303,7 +309,7 @@ function buildContractsFeed(request, contracts, feedStatus) {
   <channel>
     <title>Contratti pubblici sotto osservazione — Lamezia Terme</title>
     <link>${escapeXml(`${origin}/contratti`)}</link>
-    <description>Atti correnti dell'Albo Pretorio del Comune di Lamezia Terme che riportano un CIG. Perimetro non storico.</description>
+    <description>Contratti individuati dalle fonti pubbliche integrate per Lamezia Terme. Copertura parziale, senza garanzia di completezza storica.</description>
     <language>it</language>
     ${lastBuildDate}
     ${items.join("\n    ")}
