@@ -1,0 +1,100 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-donna-stazione-centrale-2017-07-11",
+  "discovered_at": "2026-09-08T02:57:22+02:00",
+  "updated_at": "2026-09-08T02:57:22+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina a una donna nei pressi della stazione di Lamezia Terme Centrale",
+  "temporal": {
+    "start": "2017-07-11",
+    "end": "2017-07-11",
+    "edtf": "2017-07-11",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "law:polizia-stato:2017-07-11:rapina-donna-stazione-lamezia",
+      "source_type": "law_enforcement_primary",
+      "provider": "Polizia di Stato - Questura di Catanzaro",
+      "title": "Lamezia Terme: rapina una donna e viene subito arrestato dalla Polizia di Stato e dai Carabinieri",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/12365964ec5be1449422046930",
+      "published_at": null,
+      "retrieved_at": "2026-09-08T02:57:22+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2017-07-11:rapina-donna-stazione-lamezia",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: rapina donna vicino stazione, 30enne arrestato da polizia e carabinieri",
+      "url": "https://www.lametino.it/Cronaca/lamezia-rapina-donna-vicino-stazione-30enne-arrestato-da-polizia-e-carabinieri.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-08T02:57:22+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2017-07-11:rapina-donna-stazione-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Aggredisce e ruba una donna in stazione: arrestato",
+      "url": "https://www.corrieredellacalabria.it/2017/07/11/aggredisce-e-ruba-una-donna-in-stazione-arrestato/",
+      "published_at": "2017-07-11T16:43:00+02:00",
+      "retrieved_at": "2026-09-08T02:57:22+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "law:polizia-stato:2017-07-11:rapina-donna-stazione-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "il fatto è avvenuto intorno alle 03:00 dell'11 luglio 2017 nei pressi della stazione ferroviaria di Lamezia Terme Centrale, nell'area di Sant'Eufemia",
+        "la fonte primaria riferisce che la vittima fu attirata in un'area appartata, aggredita e derubata; dopo la fuga furono recuperati due telefoni cellulari e dieci euro indicati come provento della rapina",
+        "la Polizia di Stato e i Carabinieri procedettero all'arresto in flagranza; il giudice convalidò l'arresto nel rito direttissimo dello stesso giorno e dispose la custodia in carcere in attesa del giudizio"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:stazione-centrale-vicinity:occurrence",
+      "basis_source_key": "law:polizia-stato:2017-07-11:rapina-donna-stazione-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Area nei pressi della stazione ferroviaria di Lamezia Terme Centrale",
+      "neighbourhood": "Sant'Eufemia",
+      "iccs_location_type": null
+    }
+  ]
+}
