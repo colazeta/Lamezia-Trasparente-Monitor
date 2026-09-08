@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { assertMultiSourceContractsDataset } from "./lib/contractsDatasetValidation.mjs";
 import { access, readFile, readdir, stat } from "node:fs/promises";
 import { constants } from "node:fs";
 import path from "node:path";
@@ -200,87 +201,6 @@ function assertHealthzMarker(healthz, healthzPath) {
       );
     }
   }
-}
-
-function assertStaticContractsDataset(dataset, datasetPath) {
-  if (
-    !dataset ||
-    typeof dataset !== "object" ||
-    Array.isArray(dataset) ||
-    dataset.schemaVersion !== "lamezia-contracts-current.v1" ||
-    !Array.isArray(dataset.contracts) ||
-    dataset.anacConnection?.schemaVersion !== "anac-bdncp-connection.v1" ||
-    !dataset.storylines ||
-    typeof dataset.storylines !== "object"
-  ) {
-    throw new Error(
-      `Static contracts dataset has an invalid schema: ${datasetPath}`,
-    );
-  }
-
-  if (
-    dataset.source?.scope !== "current-albo-window" ||
-    dataset.source?.publicClaim !== "atti correnti con CIG" ||
-    !Array.isArray(dataset.source?.limitations) ||
-    dataset.source.limitations.length === 0
-  ) {
-    throw new Error(
-      `Static contracts dataset must declare its current-Albo scope and limitations: ${datasetPath}`,
-    );
-  }
-
-  if (
-    !["pending", "current", "stale", "degraded"].includes(
-      dataset.anacConnection.status,
-    ) ||
-    !Number.isInteger(dataset.anacConnection.coverage?.directCigLinks) ||
-    !Number.isInteger(dataset.anacConnection.coverage?.structuredMatches) ||
-    dataset.anacConnection.coverage.directCigLinks < 0 ||
-    dataset.anacConnection.coverage.structuredMatches < 0 ||
-    dataset.anacConnection.coverage?.directCigLinks >
-      dataset.contracts.length ||
-    dataset.anacConnection.coverage?.structuredMatches >
-      dataset.anacConnection.coverage?.directCigLinks
-  ) {
-    throw new Error(
-      `Static contracts dataset has an invalid ANAC/BDNCP connection status: ${datasetPath}`,
-    );
-  }
-
-  if (
-    dataset.coverage?.contracts !== dataset.contracts.length ||
-    dataset.coverage?.cigBearingItems !== dataset.contracts.length ||
-    dataset.feedStatus?.itemsTotal !== dataset.contracts.length
-  ) {
-    throw new Error(
-      `Static contracts coverage and feed totals are inconsistent: ${datasetPath}`,
-    );
-  }
-
-  for (const contract of dataset.contracts) {
-    if (
-      !Number.isInteger(contract.id) ||
-      !/^[A-Z0-9]{10}$/u.test(contract.cig ?? "") ||
-      typeof contract.title !== "string" ||
-      !contract.title.trim() ||
-      typeof contract.amount !== "number" ||
-      contract.amount < 0 ||
-      contract.withoutMepa !== false ||
-      !dataset.storylines[String(contract.id)]
-    ) {
-      throw new Error(
-        `Static contracts dataset contains an invalid or unsupported contract record: ${datasetPath}`,
-      );
-    }
-  }
-
-  return {
-    schemaVersion: dataset.schemaVersion,
-    contracts: dataset.contracts.length,
-    withCup: dataset.coverage.withCup,
-    withExplicitAmount: dataset.coverage.withExplicitAmount,
-    source: dataset.source.id,
-  };
 }
 
 async function readJsonFile(filePath, label) {
@@ -486,6 +406,85 @@ async function assertEdgeFallbackBehavior(workerPath, contractsDataset) {
   ) {
     throw new Error(
       "Cloudflare worker contracts API must return the generated static dataset.",
+    );
+  }
+
+  if (
+    JSON.stringify(contracts.map((row) => row.cig).sort()) !==
+    JSON.stringify(contractsDataset.contracts.map((row) => row.cig).sort())
+  ) {
+    throw new Error("Cloudflare worker must preserve the census identities.");
+  }
+  const publicResponse = await workerFetch(
+    new Request("https://public.example/api/public/v1/contracts"),
+    env,
+  );
+  if (
+    publicResponse.status !== 200 ||
+    JSON.stringify(await publicResponse.json()) !== JSON.stringify(contracts)
+  ) {
+    throw new Error("Public v1 contracts must match the contracts API.");
+  }
+  const headResponse = await workerFetch(
+    new Request("https://public.example/api/contracts", { method: "HEAD" }),
+    env,
+  );
+  if (headResponse.status !== 200 || (await headResponse.text()) !== "") {
+    throw new Error("Contracts HEAD must have an empty response body.");
+  }
+  const writeResponse = await workerFetch(
+    new Request("https://public.example/api/contracts", { method: "POST" }),
+    env,
+  );
+  if (
+    writeResponse.status !== 405 ||
+    writeResponse.headers.get("allow") !== "GET, HEAD"
+  ) {
+    throw new Error("Contracts API must remain read-only.");
+  }
+  if (contracts.length) {
+    const cig = contracts[0].cig;
+    const filtered = await workerFetch(
+      new Request(
+        `https://public.example/api/contracts?search=${encodeURIComponent(cig)}`,
+      ),
+      env,
+    );
+    const matches = await filtered.json();
+    if (
+      filtered.status !== 200 ||
+      !Array.isArray(matches) ||
+      !matches.some((row) => row.cig === cig)
+    ) {
+      throw new Error("Contracts search must preserve the matching CIG.");
+    }
+  }
+  // Use a fresh module to exercise failure without the valid isolate cache.
+  const invalidWorker = await import(
+    `${pathToFileURL(workerPath).href}?invalid=${Date.now()}`
+  );
+  const invalidEnv = {
+    ASSETS: {
+      fetch: async () =>
+        new Response(
+          JSON.stringify({
+            ...contractsDataset,
+            schemaVersion: "unsupported.v0",
+          }),
+          { headers: { "Content-Type": "application/json" } },
+        ),
+    },
+  };
+  const invalidResponse = await invalidWorker.default.fetch(
+    new Request("https://public.example/api/contracts"),
+    invalidEnv,
+  );
+  if (
+    invalidResponse.status !== 503 ||
+    invalidResponse.headers.get("cache-control") !== "no-store"
+  ) {
+    throw new Error(
+      "Invalid contract artifacts must fail closed without caching.",
     );
   }
 
@@ -731,7 +730,7 @@ async function main() {
     contractsDatasetPath,
     "Static contracts dataset",
   );
-  const staticContracts = assertStaticContractsDataset(
+  const staticContracts = assertMultiSourceContractsDataset(
     contractsDataset,
     contractsDatasetPath,
   );
