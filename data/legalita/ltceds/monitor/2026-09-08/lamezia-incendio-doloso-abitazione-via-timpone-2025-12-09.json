@@ -1,0 +1,148 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-incendio-doloso-abitazione-via-timpone-2025-12-09",
+  "discovered_at": "2026-09-08T11:11:45+02:00",
+  "updated_at": "2026-09-08T11:11:45+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Incendio doloso aggravato in un'abitazione di via Timpone nel quartiere Giudecca",
+  "temporal": {
+    "start": "2025-12-08",
+    "end": "2025-12-09",
+    "edtf": "2025-12-08/2025-12-09",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "press:gazzetta-sud:2025-12-09:incendio-via-timpone",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Paura nella notte nel quartiere Giudecca di Lamezia Terme, appicca il fuoco a un immobile: arrestato un 48enne",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2025/12/09/paura-nella-notte-nel-quartiere-giudecca-di-lamezia-terme-appicca-il-fuoco-a-un-immobile-arrestato-un-48enne-94a4b2c4-41c2-4851-93c1-f069b0724758/",
+      "published_at": "2025-12-09T00:00:00+01:00",
+      "retrieved_at": "2026-09-08T11:11:45+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2025-12-09:incendio-via-timpone",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, notte di paura: uomo incendia abitazione nel centro storico. Fermato dalla Polizia",
+      "url": "https://www.lametino.it/cronaca/lamezia-notte-di-paura-uomo-incendia-abitazione-nel-centro-storico-fermato-dalla-polizia.html",
+      "published_at": "2025-12-09T00:00:00+01:00",
+      "retrieved_at": "2026-09-08T11:11:45+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2025-12-11:incendio-doloso-arresto",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Lamezia, in carcere l'uomo che aveva incendiato un'abitazione nel centro storico",
+      "url": "https://www.corrieredellacalabria.it/2025/12/11/lamezia-in-carcere-luomo-che-aveva-incendiato-unabitazione-nel-centro-storico/",
+      "published_at": "2025-12-11T00:00:00+01:00",
+      "retrieved_at": "2026-09-08T11:11:45+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2026-02-10:giudizio-immediato-via-timpone",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, incendiò abitazione in via Timpone: a giudizio 48enne accusato anche di violenza e minacce a pubblici ufficiali",
+      "url": "https://www.lametino.it/cronaca/lamezia-incendio-abitazione-in-via-timpone-a-giudizio-48enne-accusato-anche-di-violenza-e-minacce-a-pubblici-ufficiali.html",
+      "published_at": "2026-02-10T00:00:00+01:00",
+      "retrieved_at": "2026-09-08T11:11:45+02:00",
+      "support_roles": [
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:incendio-doloso-aggravato",
+      "classification_source_key": "press:corriere-calabria:2025-12-11:incendio-doloso-arresto",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti collocano l'incendio nella notte tra l'8 e il 9 dicembre 2025 in un'abitazione di via Timpone, nel quartiere Giudecca del centro storico di Lamezia Terme",
+        "le cronache riferiscono che l'incendio interessò l'abitazione e determinò un pericolo per gli immobili e i residenti circostanti, anche per la presenza di bombole di gas",
+        "la Polizia di Stato intervenne sul posto insieme ai Vigili del fuoco e l'arresto in flagranza fu successivamente riferito per incendio doloso aggravato",
+        "nel febbraio 2026 è stato disposto il giudizio immediato; tale sviluppo processuale non è rappresentato come accertamento definitivo di responsabilità"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    },
+    {
+      "offence_key": "offence:minaccia-pubblico-ufficiale",
+      "classification_source_key": "press:corriere-calabria:2025-12-11:incendio-doloso-arresto",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la fonte sull'arresto in flagranza riporta anche la contestazione di minaccia a pubblico ufficiale",
+        "la successiva notizia sul giudizio immediato riferisce accuse di violenza e minacce a pubblici ufficiali; il record conserva la qualificazione senza inferire ulteriori fattispecie non precisamente ricostruite"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:oltraggio-pubblico-ufficiale",
+      "classification_source_key": "press:corriere-calabria:2025-12-11:incendio-doloso-arresto",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la fonte sull'arresto in flagranza riporta espressamente anche la contestazione di oltraggio a pubblico ufficiale",
+        "la qualificazione è registrata come contestazione procedurale e non come esito definitivo del procedimento"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-timpone-giudecca:occurrence",
+      "basis_source_key": "press:il-lametino:2025-12-09:incendio-via-timpone",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Via Timpone",
+      "neighbourhood": "Giudecca",
+      "iccs_location_type": null
+    }
+  ]
+}
