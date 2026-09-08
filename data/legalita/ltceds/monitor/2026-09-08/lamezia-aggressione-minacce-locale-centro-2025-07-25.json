@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-aggressione-minacce-locale-centro-2025-07-25",
   "discovered_at": "2026-09-08T19:26:46+02:00",
-  "updated_at": "2026-09-08T19:26:46+02:00",
+  "updated_at": "2026-09-08T19:40:43+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Aggressione e minacce gravi in un esercizio pubblico nella zona della movida del centro di Lamezia Terme",
@@ -13,21 +13,6 @@
     "precision": "exact_date"
   },
   "sources": [
-    {
-      "source_key": "law:questura-catanzaro:2025-08-04:gravi-disordini-dacur-esercizio-pubblico-lamezia",
-      "source_type": "law_enforcement_primary",
-      "provider": "Questura di Catanzaro - Polizia di Stato",
-      "title": "LAMEZIA TERME: Gravi disordini all'interno di un esercizio pubblico. Il Questore emette un D.A.C.U.R. ex art. 13 bis.",
-      "url": null,
-      "published_at": null,
-      "retrieved_at": "2026-09-08T19:26:46+02:00",
-      "support_roles": [
-        "event_support",
-        "classification_support",
-        "location_support",
-        "procedural_context"
-      ]
-    },
     {
       "source_key": "press:lameziaterme-it:2025-08-04:gravi-disordini-dacur-esercizio-pubblico",
       "source_type": "press_secondary",
@@ -77,7 +62,7 @@
   "offences": [
     {
       "offence_key": "offence:aggressione",
-      "classification_source_key": "law:questura-catanzaro:2025-08-04:gravi-disordini-dacur-esercizio-pubblico-lamezia",
+      "classification_source_key": "press:lameziaterme-it:2025-08-04:gravi-disordini-dacur-esercizio-pubblico",
       "classification_basis": "provisional",
       "iccs_code": null,
       "istat_catalogue_id": null,
@@ -86,8 +71,8 @@
       "legal_reference": null,
       "attempt_status": "completed",
       "situational_context": [
-        "la fonte di polizia e le riprese giornalistiche concordanti descrivono comportamenti aggressivi e un'aggressione avvenuti il 25 luglio 2025 all'interno di un esercizio pubblico del centro di Lamezia Terme",
-        "la Squadra Volante intervenuta raccolse le dichiarazioni della persona che aveva chiamato il 112 e dei presenti, mentre il soggetto indicato si era gia allontanato",
+        "le fonti giornalistiche concordanti descrivono comportamenti aggressivi e un'aggressione avvenuti il 25 luglio 2025 all'interno di un esercizio pubblico del centro di Lamezia Terme",
+        "le fonti riferiscono che la Squadra Volante intervenuta raccolse le dichiarazioni della persona che aveva chiamato il 112 e dei presenti, mentre il soggetto indicato si era gia allontanato",
         "non e stata reperita una qualificazione penale formale sufficientemente specifica da sostituire la classificazione comportamentale provvisoria"
       ],
       "cyber_related": null,
@@ -95,7 +80,7 @@
     },
     {
       "offence_key": "offence:minacce-gravi",
-      "classification_source_key": "law:questura-catanzaro:2025-08-04:gravi-disordini-dacur-esercizio-pubblico-lamezia",
+      "classification_source_key": "press:lameziaterme-it:2025-08-04:gravi-disordini-dacur-esercizio-pubblico",
       "classification_basis": "provisional",
       "iccs_code": null,
       "istat_catalogue_id": null,
@@ -104,7 +89,7 @@
       "legal_reference": null,
       "attempt_status": "completed",
       "situational_context": [
-        "la fonte di polizia descrive espressamente minacce gravi nello stesso episodio",
+        "le fonti descrivono espressamente minacce gravi nello stesso episodio",
         "il successivo D.A.C.U.R. costituisce un provvedimento amministrativo di prevenzione e non viene trattato come accertamento definitivo di responsabilita penale"
       ],
       "cyber_related": null,
@@ -114,7 +99,7 @@
   "locations": [
     {
       "location_key": "location:lamezia-terme:esercizio-pubblico-centro-movida:occurrence",
-      "basis_source_key": "law:questura-catanzaro:2025-08-04:gravi-disordini-dacur-esercizio-pubblico-lamezia",
+      "basis_source_key": "press:lameziaterme-it:2025-08-04:gravi-disordini-dacur-esercizio-pubblico",
       "role": "occurrence",
       "municipality": "Lamezia Terme",
       "evidence_basis": "source_stated_locality",
