@@ -1,0 +1,147 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-lesioni-violenza-privata-via-telesio-2019-08-13",
+  "discovered_at": "2026-09-08T16:49:27+02:00",
+  "updated_at": "2026-09-08T16:49:27+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina con lesioni personali e violenza privata in via Telesio",
+  "temporal": {
+    "start": "2019-08-13",
+    "end": "2019-08-13",
+    "edtf": null,
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "law-enforcement:questura-catanzaro:2019-08-20:rapina-via-telesio",
+      "source_type": "law_enforcement_primary",
+      "provider": "Questura di Catanzaro - Polizia di Stato",
+      "title": "Arrestato cittadino marocchino resosi responsabile dei reati di rapina, lesioni personali e violenza privata",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/18085d5ba8a7a6606429466755",
+      "published_at": null,
+      "retrieved_at": "2026-09-08T16:49:27+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "news-agency:ansa:2019-08-20:rapina-minaccia-donna-lamezia",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Rapina e minaccia donna, arrestato",
+      "url": "https://www.ansa.it/calabria/notizie/2019/08/20/rapina-e-minaccia-donna-arrestato_ea04c1fa-e0e8-4740-b761-72f1287facc1.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-08T16:49:27+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lac-news24:2019-08-20:rapina-donna-via-telesio",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Lamezia, rapina e picchia una donna: arrestato un 34enne",
+      "url": "https://www.lacnews24.it/cronaca/lamezia-rapina-aggredisce-donna-arrestato-uomo_96395/",
+      "published_at": "2019-08-20T10:38:00+02:00",
+      "retrieved_at": "2026-09-08T16:49:27+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:ciavula:2019-08-20:rapina-via-telesio",
+      "source_type": "press_secondary",
+      "provider": "Ciavula",
+      "title": "Aggredita e rapinata dopo aver prelevato al Bancomat: la polizia arresta il ladro",
+      "url": "https://www.ciavula.it/2019/08/rapinata-dopo-prelevato-bancomat/",
+      "published_at": "2019-08-20T11:05:00+02:00",
+      "retrieved_at": "2026-09-08T16:49:27+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "law-enforcement:questura-catanzaro:2019-08-20:rapina-via-telesio",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la fonte primaria riferisce che la vittima, mentre rientrava a casa a piedi dopo un prelievo al bancomat, fu aggredita alle spalle, spinta a terra e privata della borsa",
+        "la borsa conteneva complessivamente 180 euro; la Questura qualifica espressamente il fatto come rapina"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:lesioni-personali",
+      "classification_source_key": "law-enforcement:questura-catanzaro:2019-08-20:rapina-via-telesio",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la Questura indica le lesioni personali tra i reati contestati in relazione all'aggressione del 13 agosto 2019"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:violenza-privata",
+      "classification_source_key": "law-enforcement:questura-catanzaro:2019-08-20:rapina-via-telesio",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la Questura indica la violenza privata tra i reati contestati; il record non estende la qualificazione oltre quanto espresso dalla fonte"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-telesio:occurrence",
+      "basis_source_key": "law-enforcement:questura-catanzaro:2019-08-20:rapina-via-telesio",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via Telesio",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
