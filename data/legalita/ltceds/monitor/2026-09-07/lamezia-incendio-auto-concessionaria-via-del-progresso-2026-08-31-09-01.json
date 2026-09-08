@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-incendio-auto-concessionaria-via-del-progresso-2026-08-31-09-01",
   "discovered_at": "2026-09-07T00:31:16+02:00",
-  "updated_at": "2026-09-07T00:31:16+02:00",
+  "updated_at": "2026-09-08T05:10:14+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Incendio doloso di un'autovettura nel piazzale di una concessionaria in via del Progresso",
@@ -57,6 +57,18 @@
         "procedural_context",
         "corroboration"
       ]
+    },
+    {
+      "source_key": "other:mondo-auto:lamezia-terme:via-del-progresso-544",
+      "source_type": "other",
+      "provider": "Mondo Auto",
+      "title": "Mondo Auto Concessionaria | Lamezia Terme",
+      "url": "https://www.mondoautolamezia.it/sedi/vendita-nuovo-usato-lamezia-terme/",
+      "published_at": null,
+      "retrieved_at": "2026-09-08T05:10:14+02:00",
+      "support_roles": [
+        "location_support"
+      ]
     }
   ],
   "offences": [
@@ -82,16 +94,16 @@
   "locations": [
     {
       "location_key": "location:lamezia-terme:via-del-progresso:mondo-auto-dr",
-      "basis_source_key": "press:corriere-calabria:2026-09-01:incendio-concessionaria-lamezia",
+      "basis_source_key": "other:mondo-auto:lamezia-terme:via-del-progresso-544",
       "role": "occurrence",
       "municipality": "Lamezia Terme",
-      "evidence_basis": "source_stated_named_site",
-      "evidence_precision": "exact_public_site",
-      "resolved_precision": "exact_public_site",
+      "evidence_basis": "source_stated_exact",
+      "evidence_precision": "exact_address",
+      "resolved_precision": "exact_address",
       "sensitivity": "private_or_sensitive",
       "publication_risk": "victim_linked",
       "geometry": null,
-      "place_name": "Mondo Auto DR, via del Progresso",
+      "place_name": "Mondo Auto DR, Via del Progresso 544",
       "neighbourhood": null,
       "iccs_location_type": null
     }
