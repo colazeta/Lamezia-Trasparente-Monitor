@@ -1,0 +1,99 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-lesioni-aggravate-proud-mary-corso-numistrano-2019-02-22",
+  "discovered_at": "2026-09-08T23:54:02+02:00",
+  "updated_at": "2026-09-08T23:54:02+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Lesioni aggravate mediante lancio di uno sgabello davanti al Proud Mary su Corso Numistrano",
+  "temporal": {
+    "start": "2019-02-22T01:30:00+01:00",
+    "end": "2019-02-22T01:30:00+01:00",
+    "edtf": "2019-02-22T01:30:00+01:00",
+    "precision": "exact_datetime"
+  },
+  "sources": [
+    {
+      "source_key": "press:il-lametino:2019-03-08:movida-lametina-corso-numistrano",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Operazione \"Movida lametina\", rissa su corso Numistrano: obbligo di dimora per 7 giovani - VIDEO",
+      "url": "https://www.lametino.it/cronaca/operazione-movida-lametina-rissa-su-corso-numistrano-obbligo-di-dimora-per-7-giovani.html",
+      "published_at": "2019-03-08T00:00:00+01:00",
+      "retrieved_at": "2026-09-08T23:54:02+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:approdo-calabria:2019-03-08:operazione-movida-lametina",
+      "source_type": "press_secondary",
+      "provider": "Approdo Calabria",
+      "title": "Operazione “Movida Lametina” della Polizia di Stato",
+      "url": "https://www.approdocalabria.it/operazione-movida-lametina-della-polizia-di-stato/",
+      "published_at": "2019-03-08T00:00:00+01:00",
+      "retrieved_at": "2026-09-08T23:54:02+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2026-03-25:movida-lametina-assoluzioni-condanna",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Operazione “Movida lametina” nel 2019, 7 assoluzioni e una condanna",
+      "url": "https://www.lametino.it/cronaca/operazione-movida-lametina-nel-2019-7-assoluzioni-e-una-condanna.html",
+      "published_at": "2026-03-25T00:00:00+01:00",
+      "retrieved_at": "2026-09-08T23:54:02+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:lesioni-aggravate",
+      "classification_source_key": "press:il-lametino:2026-03-25:movida-lametina-assoluzioni-condanna",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti collocano il fatto intorno alle 01:30 del 22 febbraio 2019 sul marciapiede antistante il Pub Pizzeria Proud Mary, su Corso Numistrano, dove un giovane rimase ferito alla testa dal lancio di uno sgabello in ferro",
+        "nel 2019 il procedimento cautelare aveva incluso anche l'ipotesi di rissa; nel marzo 2026 il Tribunale di Lamezia Terme ha escluso la rissa aggravata ritenendo il fatto insussistente per gli imputati e ha condannato una sola persona per lesioni aggravate; il record codifica quindi soltanto la qualificazione sopravvissuta all'esito giudiziario riportato dalla fonte, senza inferirne la definitività oltre quanto attestato"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:proud-mary-corso-numistrano:occurrence",
+      "basis_source_key": "press:approdo-calabria:2019-03-08:operazione-movida-lametina",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Marciapiede antistante al Pub Pizzeria Proud Mary, Corso Numistrano",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
