@@ -1,0 +1,111 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-tentata-rapina-sparatoria-via-torre-2016-11-26",
+  "discovered_at": "2026-09-08T07:08:24+02:00",
+  "updated_at": "2026-09-08T07:08:24+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Tentata rapina con colpi di pistola in via Torre",
+  "temporal": {
+    "start": "2016-11-26",
+    "end": "2016-11-26",
+    "edtf": "2016-11-26",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:ltnews:2016-11-26:tentata-rapina-via-torre",
+      "source_type": "press_secondary",
+      "provider": "LTNews Lamezia Terme",
+      "title": "Lamezia, tentata rapina con sparatoria in via Torre: un ferito",
+      "url": "https://www.lameziatermenews.it/citta/12904-lamezia-tentata-rapina-con-sparatoria-in-via-torre-un-ferito.html",
+      "published_at": "2016-11-26T00:00:00+01:00",
+      "retrieved_at": "2026-09-08T07:08:24+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2016-11-26:ferito-via-torre",
+      "source_type": "press_secondary",
+      "provider": "il Lametino.it",
+      "title": "Lamezia, uomo ferito a colpi di pistola in via Torre",
+      "url": "https://www.lametino.it/cronaca/lamezia-uomo-ferito-a-colpi-di-pistola-in-via-torre-2.html",
+      "published_at": "2016-11-26T00:00:00+01:00",
+      "retrieved_at": "2026-09-08T07:08:24+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:cn24tv:2016-11-27:barista-ferito-via-torre",
+      "source_type": "press_secondary",
+      "provider": "CN24TV",
+      "title": "Tenta di rapinarlo per strada, lui reagisce e gli spara contro: barista ferito",
+      "url": "https://cn24tv.it/news/145116/barista-sambiase-ferito-a-colpi-di-pistola-a-nicastro-durante-tentata-rapina.html",
+      "published_at": "2016-11-27T10:24:00+01:00",
+      "retrieved_at": "2026-09-08T07:08:24+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2016-11-27:ferito-via-torre",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Lamezia, uomo ferito a colpi di pistola",
+      "url": "https://www.corrieredellacalabria.it/2016/11/27/lamezia-uomo-ferito-a-colpi-di-pistola/",
+      "published_at": "2016-11-27T11:59:00+01:00",
+      "retrieved_at": "2026-09-08T07:08:24+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "press:ltnews:2016-11-26:tentata-rapina-via-torre",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "le cronache coeve descrivono un tentativo di sottrazione dell'incasso seguito dall'esplosione di colpi di pistola; la dinamica era ancora oggetto di indagine della Polizia"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-torre:occurrence",
+      "basis_source_key": "press:il-lametino:2016-11-26:ferito-via-torre",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via Torre, centro storico di Nicastro",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    }
+  ]
+}
