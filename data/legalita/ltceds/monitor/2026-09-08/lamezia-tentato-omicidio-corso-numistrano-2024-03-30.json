@@ -89,7 +89,7 @@
       "situational_context": [
         "nella notte del 30 marzo 2024, indicativamente intorno alle 03:30, la Polizia intervenne su Corso Numistrano per una collisione stradale; le successive indagini ricostruirono il fatto come la fase finale di una violenta lite e di un inseguimento",
         "la ricostruzione investigativa riportata dalle fonti riferisce che un'automobile venne utilizzata per investire intenzionalmente una persona, che riportò gravi lesioni agli arti inferiori",
-        "una successiva ricostruzione basata sull'ordinanza cautelare colloca l'inizio della lite all'interno e all'esterno del Cafè Retro, su Corso Nicotera, mentre l'investimento e la collisione sono ricondotti a Corso Numistrano",
+        "una successiva ricostruzione basata sull'ordinanza cautelare identifica il Cafè Retro come luogo iniziale della lite; le fonti che riportano la ricostruzione della Polizia collocano la sequenza e la collisione lungo Corso Numistrano",
         "il 9 aprile 2024 furono eseguite due ordinanze di custodia cautelare in carcere per tentato omicidio volontario; il 10 dicembre 2024 uno dei due soggetti inizialmente accusati fu assolto per non aver commesso il fatto in rito abbreviato, senza che questa acquisizione consenta di rappresentare un esito definitivo per l'altra posizione"
       ],
       "cyber_related": null,
@@ -113,7 +113,7 @@
       "iccs_location_type": null
     },
     {
-      "location_key": "location:lamezia-terme:cafe-retro-corso-nicotera:precursor-rissa",
+      "location_key": "location:lamezia-terme:cafe-retro:precursor-rissa",
       "basis_source_key": "press:corriere-calabria:2024-04-10:ricostruzione-tentato-omicidio-corso-numistrano",
       "role": "other",
       "municipality": "Lamezia Terme",
@@ -123,7 +123,7 @@
       "sensitivity": "public_place",
       "publication_risk": "victim_linked",
       "geometry": null,
-      "place_name": "Cafè Retro, Corso Nicotera",
+      "place_name": "Cafè Retro",
       "neighbourhood": null,
       "iccs_location_type": null
     },
