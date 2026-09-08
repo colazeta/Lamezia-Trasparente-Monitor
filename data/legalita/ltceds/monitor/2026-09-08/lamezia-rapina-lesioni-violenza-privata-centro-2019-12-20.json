@@ -1,0 +1,150 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-lesioni-violenza-privata-centro-2019-12-20",
+  "discovered_at": "2026-09-08T10:01:49+02:00",
+  "updated_at": "2026-09-08T10:01:49+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina con violenza privata e lesioni in un appartamento nel centro di Lamezia Terme",
+  "temporal": {
+    "start": "2019-12-20",
+    "end": "2019-12-20",
+    "edtf": "2019-12-20",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "news:ansa:2020-02-10:rapina-due-donne-lamezia",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Rapinarono due prostitute, tre arresti",
+      "url": "https://www.ansa.it/calabria/notizie/2020/02/10/rapinarono-due-prostitute-tre-arresti_2bcb4487-b2fb-4564-885a-529eecd73736.html",
+      "published_at": "2020-02-10T00:00:00+01:00",
+      "retrieved_at": "2026-09-08T10:01:49+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2020-02-10:rapina-due-donne-centro",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, malmenano e rapinano due prostitute: in manette tre giovani",
+      "url": "https://www.lametino.it/cronaca/lamezia-malmenano-e-rapinano-due-prostitute-in-manette-tre-giovani.html",
+      "published_at": "2020-02-10T00:00:00+01:00",
+      "retrieved_at": "2026-09-08T10:01:49+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:gazzetta-sud:2020-02-10:rapina-due-donne-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Aggrediscono e derubano prostitute a Lamezia, arrestati tre marocchini",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2020/02/10/aggrediscono-e-derubano-prostitute-a-lamezia-arrestati-tre-marocchini-9d47c81c-b779-4ccf-8b75-734c4ea29fb4/",
+      "published_at": "2020-02-10T00:00:00+01:00",
+      "retrieved_at": "2026-09-08T10:01:49+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lac-news24:2020-02-10:rapina-due-donne-lamezia",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Rapinano e aggrediscono prostitute, in tre finiscono in manette",
+      "url": "https://www.lacnews24.it/cronaca/rapinano-e-aggrediscono-prostitute-tre-arresti-a-lamezia-terme-xiob12ca",
+      "published_at": "2020-02-10T12:58:00+01:00",
+      "retrieved_at": "2026-09-08T10:01:49+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "news:ansa:2020-02-10:rapina-due-donne-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti collocano il fatto nella notte del 20 dicembre 2019 in un appartamento situato in una traversa nel centro lametino",
+        "dopo una richiesta di restituzione del denaro pagato per una prestazione sessuale e il rifiuto, la porta dell'appartamento sarebbe stata sfondata e le due donne aggredite",
+        "le fonti riferiscono la sottrazione di 600 euro e tre telefoni cellulari sotto la minaccia di un coltello",
+        "il 10 febbraio 2020 il GIP del Tribunale di Lamezia Terme dispose la custodia cautelare in carcere nei confronti di tre persone; il provvedimento cautelare non è rappresentato come accertamento definitivo di responsabilità"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 2
+    },
+    {
+      "offence_key": "offence:violenza-privata",
+      "classification_source_key": "news:ansa:2020-02-10:rapina-due-donne-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "ANSA e le cronache coeve riportano espressamente la contestazione di violenza privata insieme a rapina e lesioni personali",
+        "la qualificazione è registrata come contestazione cautelare e non come esito definitivo del procedimento"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 2
+    },
+    {
+      "offence_key": "offence:lesioni-personali",
+      "classification_source_key": "news:ansa:2020-02-10:rapina-due-donne-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti riferiscono che le due donne furono malmenate durante l'episodio",
+        "la contestazione di lesioni personali è riportata nelle fonti che descrivono l'esecuzione della misura cautelare del 10 febbraio 2020"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 2
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:centro-traversa-appartamento:occurrence",
+      "basis_source_key": "press:il-lametino:2020-02-10:rapina-due-donne-centro",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Traversa nel centro lametino",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
