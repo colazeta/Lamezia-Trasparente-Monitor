@@ -1,0 +1,145 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-tentato-omicidio-tabaccheria-mirarchi-2016-05-12",
+  "discovered_at": "2026-09-08T20:16:02+02:00",
+  "updated_at": "2026-09-08T20:16:02+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina a mano armata e tentato omicidio presso una tabaccheria di Sambiase",
+  "temporal": {
+    "start": "2016-05-12",
+    "end": "2016-05-12",
+    "edtf": "2016-05-12",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:corriere-calabria:2016-05-12:rapina-tabaccheria-sambiase",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Lamezia, sparano a un giovane per rubare 150 euro",
+      "url": "https://www.corrieredellacalabria.it/2016/05/12/lamezia-sparano-a-un-giovane-per-rubare-150-euro/",
+      "published_at": "2016-05-12T20:49:00+02:00",
+      "retrieved_at": "2026-09-08T20:16:02+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2016-07-15:arresto-rapina-mirarchi",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Lamezia, preso il rapinatore di tabaccherie",
+      "url": "https://www.corrieredellacalabria.it/2016/07/15/lamezia-preso-il-rapinatore-di-tabaccherie/",
+      "published_at": "2016-07-15T11:20:00+02:00",
+      "retrieved_at": "2026-09-08T20:16:02+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2016-07-15:rapina-mirarchi-tentato-omicidio",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: rapina in tabaccheria a Sambiase, arrestato 51enne anche per tentato omicidio",
+      "url": "https://www.lametino.it/cronaca/lamezia-rapina-in-tabaccheria-a-sambiase-arrestato-51enne-anche-per-tentato-omicidio.html",
+      "published_at": "2016-07-15T00:00:00+02:00",
+      "retrieved_at": "2026-09-08T20:16:02+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2017-01-25:condanna-rapina-mirarchi",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: rapinò tabaccheria e ferì passante a Sambiase, condannato a 10 anni",
+      "url": "https://www.lametino.it/cronaca/lamezia-rapino-tabaccheria-e-feri-passante-a-sambiase-condannato-a-10-anni.html",
+      "published_at": "2017-01-25T00:00:00+01:00",
+      "retrieved_at": "2026-09-08T20:16:02+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "press:corriere-calabria:2016-07-15:arresto-rapina-mirarchi",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti collocano la rapina la sera del 12 maggio 2016 alla tabaccheria Mirarchi di Sambiase e riferiscono la sottrazione di circa 150 euro",
+        "le ricostruzioni dell'arresto qualificano il fatto come rapina a mano armata; il record conserva la chiave generale rapina senza inferire ulteriori aggravanti non documentate in modo autonomo"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:tentato-omicidio",
+      "classification_source_key": "press:corriere-calabria:2016-07-15:arresto-rapina-mirarchi",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "subito dopo la rapina, un giovane intervenuto per fermare uno dei rapinatori fu raggiunto da un colpo di pistola; le fonti successive riportano la contestazione di tentato omicidio",
+        "il Lametino riferisce il 25 gennaio 2017 una condanna a dieci anni per i fatti; il record registra questo sviluppo giudiziario senza assumerne la definitività oltre quanto attestato dalla fonte"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:tabaccheria-mirarchi-sambiase:target",
+      "basis_source_key": "press:il-lametino:2017-01-25:condanna-rapina-mirarchi",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Tabaccheria Mirarchi, Corso Vittorio Emanuele, nei pressi della Chiesa Matrice",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:corso-vittorio-emanuele-chiesa-matrice-sambiase:occurrence",
+      "basis_source_key": "press:il-lametino:2017-01-25:condanna-rapina-mirarchi",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Corso Vittorio Emanuele, nei pressi della Chiesa Matrice",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    }
+  ]
+}
