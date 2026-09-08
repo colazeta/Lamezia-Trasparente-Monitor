@@ -140,7 +140,7 @@
       "evidence_precision": "locality",
       "resolved_precision": "locality",
       "sensitivity": "private_or_sensitive",
-      "publication_risk": "sexual_offence_context",
+      "publication_risk": "victim_linked",
       "geometry": null,
       "place_name": "Traversa nel centro lametino",
       "neighbourhood": null,
