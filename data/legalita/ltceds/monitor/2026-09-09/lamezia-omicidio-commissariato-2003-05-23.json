@@ -1,0 +1,98 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-omicidio-commissariato-2003-05-23",
+  "discovered_at": "2026-09-09T09:12:18+02:00",
+  "updated_at": "2026-09-09T09:12:18+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Omicidio davanti al Commissariato di Pubblica Sicurezza di Lamezia Terme",
+  "temporal": {
+    "start": "2003-05-23",
+    "end": "2003-05-23",
+    "edtf": "2003-05-23",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:gazzetta-sud:2026-07-12:assoluzione-omicidio-commissariato",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Omicidio davanti al Commissariato di Lamezia Terme: dopo 23 anni arriva l’assoluzione",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2026/07/12/omicidio-davanti-al-commissariato-di-lamezia-terme-dopo-23-anni-arriva-lassoluzione-7ea8c73c-d6b3-46fa-976a-b49226a3a78c",
+      "published_at": null,
+      "retrieved_at": "2026-09-09T09:12:18+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lametino:2025-07:assoluzioni-omicidio-commissariato",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Omicidio davanti al commissariato di Lamezia nel 2003, due assoluzioni",
+      "url": "https://www.lametino.it/cronaca/omicidio-davanti-al-commissariato-di-lamezia-nel-2003-due-assoluzioni.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-09T09:12:18+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2020-10:andromeda-cassazione-omicidio",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Andromeda, in quattro tornano in Appello. Confermate 25 condanne",
+      "url": "https://www.corrieredellacalabria.it/2020/10/29/andromeda-in-quattro-tornano-in-appello-confermate-25-condanne/",
+      "published_at": null,
+      "retrieved_at": "2026-09-09T09:12:18+02:00",
+      "support_roles": [
+        "event_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "press:lametino:2025-07:assoluzioni-omicidio-commissariato",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti qualificano espressamente come omicidio il fatto avvenuto il 23 maggio 2003 davanti al Commissariato di Pubblica Sicurezza di Lamezia Terme",
+        "la ricostruzione dell’iter Andromeda riferisce che in un precedente grado il fatto era stato qualificato come omicidio pluriaggravato dalle modalità mafiose",
+        "nel luglio 2026 la Cassazione ha reso definitiva l’assoluzione dall’accusa di omicidio per gli imputati interessati dal ricorso; il presente record censisce il fatto storico e non attribuisce responsabilità individuali"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:commissariato-ps:occurrence",
+      "basis_source_key": "press:lametino:2025-07:assoluzioni-omicidio-commissariato",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Ingresso del Commissariato di Pubblica Sicurezza di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
