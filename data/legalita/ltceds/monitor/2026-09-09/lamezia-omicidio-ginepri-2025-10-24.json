@@ -1,0 +1,126 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-omicidio-ginepri-2025-10-24",
+  "discovered_at": "2026-09-09T10:48:19+02:00",
+  "updated_at": "2026-09-09T10:48:19+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Omicidio con arma da taglio sul lungomare in località Ginepri",
+  "temporal": {
+    "start": "2025-10-24",
+    "end": "2025-10-24",
+    "edtf": null,
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "news:ansa:2025-10-24:omicidio-ginepri-lamezia",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Omicidio a Lamezia Terme, 52enne ucciso a coltellate",
+      "url": "https://www.ansa.it/calabria/notizie/2025/10/24/omicidio-a-lamezia-terme-52enne-ucciso-a-coltellate_7e1a1549-7ef1-4728-90c1-60905d054bfd.html",
+      "published_at": "2025-10-24T09:04:00+02:00",
+      "retrieved_at": "2026-09-09T10:48:19+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support"
+      ]
+    },
+    {
+      "source_key": "news:ansa:2025-10-24:costituzione-ginepri-lamezia",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Omicidio a Lamezia Terme, uomo si costituisce",
+      "url": "https://www.ansa.it/calabria/notizie/2025/10/24/omicidio-a-lamezia-terme-uomo-si-costituisce_0fe05474-40b5-4b79-942d-2dcc7ade1ad0.html",
+      "published_at": "2025-10-24T12:57:00+02:00",
+      "retrieved_at": "2026-09-09T10:48:19+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2025-10-28:convalida-fermo-ginepri",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Omicidio a Lamezia, convalidato il fermo per il 30enne indiziato",
+      "url": "https://www.corrieredellacalabria.it/2025/10/28/omicidio-emiliano-torcasio-a-lamezia-convalidato-il-fermo-per-il-30enne-indiziato/",
+      "published_at": "2025-10-28T16:03:00+01:00",
+      "retrieved_at": "2026-09-09T10:48:19+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2026-01-05:autopsia-omicidio-ginepri",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Omicidio Torcasio a Ginepri, autopsia conferma causa del decesso e movente",
+      "url": "https://www.lametino.it/cronaca/omicidio-torcasio-a-ginepri-autopsia-conferma-causa-del-decesso-e-movente.html",
+      "published_at": "2026-01-05T00:00:00+01:00",
+      "retrieved_at": "2026-09-09T10:48:19+02:00",
+      "support_roles": [
+        "event_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "news:ansa:2025-10-24:omicidio-ginepri-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti qualificano il fatto come omicidio e descrivono una morte causata da arma da taglio sul lungomare in località Ginepri.",
+        "La relazione autoptica, secondo la ricostruzione giornalistica del 5 gennaio 2026, colloca il decesso alle 00:30 del 24 ottobre 2025.",
+        "Il GIP di Lamezia Terme ha convalidato il fermo il 27 ottobre 2025 e disposto la custodia cautelare in carcere; al 28 ottobre 2025 risultavano ulteriori accertamenti sulla dinamica e sul movente."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:occurrence:ginepri-lungomare",
+      "basis_source_key": "news:ansa:2025-10-24:omicidio-ginepri-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Lungomare di Lamezia Terme, località Ginepri",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:arrest:carabinieri-viale-g-marconi",
+      "basis_source_key": "press:corriere-calabria:2025-10-28:convalida-fermo-ginepri",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Caserma Carabinieri di viale G. Marconi",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
