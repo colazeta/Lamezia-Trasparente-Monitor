@@ -1,0 +1,68 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-ufficio-postale-via-aldo-moro-2017-02-10",
+  "discovered_at": "2026-09-09T04:02:17+02:00",
+  "updated_at": "2026-09-09T04:02:17+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina all'ufficio postale di via Aldo Moro a Lamezia Terme il 10 febbraio 2017",
+  "temporal": {
+    "start": "2017-02-10",
+    "end": "2017-02-10",
+    "edtf": "2017-02-10",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:lametino:2017-02-10:rapina-poste-via-aldo-moro",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: rapina alle poste di via Aldo Moro, bottino di quasi 1.000 euro",
+      "url": "https://www.lametino.it/cronaca/lamezia-rapina-alle-poste-di-via-aldo-moro-bottino-di-quasi-1-000-euro.html",
+      "published_at": "2017-02-10T19:51:00+01:00",
+      "retrieved_at": "2026-09-09T04:02:17+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "press:lametino:2017-02-10:rapina-poste-via-aldo-moro",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la cronaca coeva riferisce una rapina avvenuta intorno alle 18:30 del 10 febbraio 2017 nell'ufficio postale di via Aldo Moro",
+        "secondo la prima ricostruzione due persone incappucciate e con guanti in lattice entrarono nell'ufficio e si fecero consegnare un incasso di quasi 1.000 euro; una delle due sarebbe stata armata",
+        "la Polizia di Stato del Commissariato di Lamezia Terme intervenne sul posto per l'avvio delle indagini; non è stato reperito un successivo esito giudiziario univocamente riferibile a questo specifico episodio"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:ufficio-postale-via-aldo-moro:target",
+      "basis_source_key": "press:lametino:2017-02-10:rapina-poste-via-aldo-moro",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Ufficio postale di via Aldo Moro",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
