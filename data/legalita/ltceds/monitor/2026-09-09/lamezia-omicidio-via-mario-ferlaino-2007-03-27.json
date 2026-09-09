@@ -1,0 +1,85 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-omicidio-via-mario-ferlaino-2007-03-27",
+  "discovered_at": "2026-09-09T20:32:44+02:00",
+  "updated_at": "2026-09-09T20:32:44+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Omicidio aggravato in via Mario Ferlaino il 27 marzo 2007",
+  "temporal": {
+    "start": "2007-03-27",
+    "end": "2007-03-27",
+    "edtf": "2007-03-27",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:ildispaccio:2012-07-23:omicidio-via-mario-ferlaino-2007",
+      "source_type": "press_secondary",
+      "provider": "Il Dispaccio",
+      "title": "Arresti per l'omicidio del 27 marzo 2007 a Lamezia Terme",
+      "url": "https://ildispaccio.it/archivio/catanzaro/6428-lamezia-terme-cz-risolto-omicidio-di-federico-gualtieri-fu-trucidato-davanti-alla-moglie",
+      "published_at": "2012-07-23",
+      "retrieved_at": "2026-09-09T20:32:44+02:00",
+      "support_roles": [
+        "event_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lacnews24:2015-03-16:omicidio-via-mario-ferlaino-2007",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Richiesta di conferma in appello delle condanne per l'omicidio del 27 marzo 2007",
+      "url": "https://www.lacnews24.it/cronaca/omicidio-gualtieri-chieste-pene-dai-30-ai-6-anni-di-carcere-video-wrh8g90u",
+      "published_at": "2015-03-16T16:39:00+01:00",
+      "retrieved_at": "2026-09-09T20:32:44+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "press:lacnews24:2015-03-16:omicidio-via-mario-ferlaino-2007",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la fonte processuale giornalistica qualifica il fatto come omicidio aggravato consumato a Lamezia Terme il 27 marzo 2007",
+        "la ricostruzione colloca l'agguato in via Mario Ferlaino e riferisce l'esplosione di otto colpi di pistola mentre la vittima stava sistemando una bancarella di frutta",
+        "nel luglio 2012 furono eseguiti arresti nei confronti di soggetti indicati dagli inquirenti come presunti mandanti ed esecutori; il 3 marzo 2014 furono pronunciate condanne di primo grado nei giudizi abbreviati, oggetto di appello nel 2015",
+        "la ricerca svolta non ha recuperato un successivo esito definitivo univocamente verificabile del procedimento; il record non attribuisce responsabilita individuali definitive"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-mario-ferlaino:occurrence",
+      "basis_source_key": "press:lacnews24:2015-03-16:omicidio-via-mario-ferlaino-2007",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via Mario Ferlaino",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
