@@ -1,0 +1,100 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-tentato-omicidio-villa-comunale-corso-numistrano-2020-06-29",
+  "discovered_at": "2026-09-09T15:28:30+02:00",
+  "updated_at": "2026-09-09T15:28:30+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Tentato omicidio nella Villa Comunale di Corso Numistrano",
+  "temporal": {
+    "start": "2020-06-29",
+    "end": "2020-06-29",
+    "edtf": "2020-06-29",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "law:polizia-stato:2020-06:tentato-omicidio-villa-numistrano",
+      "source_type": "law_enforcement_primary",
+      "provider": "Polizia di Stato — Questura di Catanzaro",
+      "title": "Lamezia Terme: la Polizia di Stato arresta un 92enne per tentato omicidio",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/12365efb1a99eed14149104083",
+      "published_at": null,
+      "retrieved_at": "2026-09-09T15:28:30+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:lametino:2020-06-29:accoltellamento-corso-numistrano",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, 75enne accoltellato su corso Numistrano: individuato responsabile",
+      "url": "https://www.lametino.it/cronaca/lamezia-75enne-accoltellato-su-corso-numistrano-trasportato-in-ospedale.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-09T15:28:30+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lametino:2020-06-30:tentato-omicidio-corso-numistrano",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, 75enne accoltellato su corso Numistrano: Polizia arresta 92enne per tentato omicidio",
+      "url": "https://www.lametino.it/cronaca/lamezia-75enne-accoltellato-su-corso-numistrano-polizia-arresta-92enne-per-tentato-omicidio.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-09T15:28:30+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:tentato-omicidio",
+      "classification_source_key": "law:polizia-stato:2020-06:tentato-omicidio-villa-numistrano",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "la fonte primaria della Questura di Catanzaro qualifica espressamente il fatto come tentato omicidio",
+        "la mattina del 29 giugno 2020 una persona venne colpita con un coltello nella Villa Comunale di Corso Numistrano e riportò gravi ferite",
+        "la cronaca locale coeva identifica ulteriormente il sito come villetta comunale di Corso Numistrano di fronte all'ufficio postale; questa relazione spaziale non viene trasformata in un secondo nodo o in coordinate",
+        "la fonte primaria documenta l'arresto e la sottoposizione agli arresti domiciliari in attesa dell'udienza di convalida; il record non rappresenta tali atti come accertamento definitivo di responsabilità"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:villa-comunale-corso-numistrano:occurrence",
+      "basis_source_key": "law:polizia-stato:2020-06:tentato-omicidio-villa-numistrano",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Villa Comunale di Corso Numistrano",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
