@@ -155,6 +155,23 @@ const SCOUTED_CANONICAL_PROPOSAL_PRESENTATIONS: Record<
     expectedOutcome:
       "Rendere il parco più sicuro e curato per la fruizione di famiglie e bambini, senza attribuire efficacia agli interventi prima che siano documentati.",
   },
+  "sant-eufemia-cimitero-accesso-custodia-vitale-2026": {
+    proposalId: "sant-eufemia-cimitero-accesso-custodia-vitale-2026",
+    version: "1.0",
+    title: "Accessibilità e custodia del cimitero di Sant’Eufemia",
+    request:
+      "Migliorare la sicurezza e l’accessibilità del percorso pedonale verso il cimitero di Sant’Eufemia e rendere verificabili organizzazione della custodia e tempi degli interventi programmati.",
+    actionTypes: ["messa_in_sicurezza", "rafforzamento_servizio", "trasparenza"],
+    measures: [
+      "Programmare controlli mirati e periodici sulle eventuali occupazioni improprie del suolo pubblico e sulla piena fruibilità del percorso pedonale.",
+      "Adottare gli interventi necessari a rimuovere o gestire gli ostacoli che limitano l’accessibilità del marciapiede, sulla base delle verifiche effettuate.",
+      "Rendere nota l’attuale organizzazione del servizio di custodia del cimitero.",
+      "Rafforzare la presenza del personale di custodia nelle ore mattutine, se la verifica del servizio conferma la carenza segnalata.",
+      "Comunicare gli interventi già programmati per l’area e il relativo cronoprogramma.",
+    ],
+    expectedOutcome:
+      "Rendere più sicuro e accessibile il percorso verso il cimitero e più verificabili copertura del servizio di custodia e tempi degli interventi, senza presumere l’efficacia prima della loro esecuzione.",
+  },
 };
 
 export function getCanonicalProposalPresentation(

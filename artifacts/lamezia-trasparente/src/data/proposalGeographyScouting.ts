@@ -112,6 +112,15 @@ const PARCO_VIA_DEGLI_ITALI: ProposalGeography = {
     "Le fonti della proposta identificano il parco giochi in via degli Itali, nel quartiere Capizzaglie. Il Comune di Lamezia Terme include ufficialmente via degli Itali nell'elenco territoriale di Nicastro per gli interventi di deblatizzazione; il tag Nicastro deriva da quella classificazione istituzionale. La coordinata WGS84 è un riferimento stradale verificabile per via degli Itali e non pretende di localizzare il perimetro o il centro geometrico del parco; per questo la precisione è street_approximate e lo scope resta area.",
 };
 
+const SANT_EUFEMIA_CEMETERY_ACCESS: ProposalGeography = {
+  label: "Area di accesso al cimitero di Sant’Eufemia Lamezia",
+  scope: "area",
+  areas: ["sant_eufemia"],
+  points: [],
+  note:
+    "Le fonti della proposta localizzano con chiarezza l'oggetto nell'area di accesso e nel marciapiede che conduce al cimitero di Sant'Eufemia. Lo scouting non ha verificato una coordinata WGS84 ufficiale o sufficientemente precisa per lo specifico tratto pedonale interessato; per evitare falsa precisione il record usa quindi il tag territoriale Sant'Eufemia e scope area senza coordinate.",
+};
+
 export const SCOUTED_PROPOSAL_GEOGRAPHY: Record<string, ProposalGeography> = {
   "emodinamica-h24-vescio-2026": GIOVANNI_PAOLO_II,
   "emodinamica-h24-nucifero-2026": GIOVANNI_PAOLO_II,
@@ -129,4 +138,5 @@ export const SCOUTED_PROPOSAL_GEOGRAPHY: Record<string, ProposalGeography> = {
   "la-mia-estate-avvio-attivita-oltre-autismo-2026": LAMEZIA_CITYWIDE,
   "emodinamica-h24-commissione-sanita-pd-2026": GIOVANNI_PAOLO_II,
   "parco-via-degli-itali-manutenzione-branca-2026": PARCO_VIA_DEGLI_ITALI,
+  "sant-eufemia-cimitero-accesso-custodia-vitale-2026": SANT_EUFEMIA_CEMETERY_ACCESS,
 };
