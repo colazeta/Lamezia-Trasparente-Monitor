@@ -1,0 +1,98 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-duplice-omicidio-netturbini-sambiase-1991-05-24",
+  "discovered_at": "2026-09-09T15:28:30+02:00",
+  "updated_at": "2026-09-09T15:28:30+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Duplice omicidio di due operatori ecologici a Sambiase",
+  "temporal": {
+    "start": "1991-05-24",
+    "end": "1991-05-24",
+    "edtf": "1991-05-24",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:gazzetta-sud:2026-06-15:duplice-omicidio-netturbini",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Lamezia: duplice omicidio dei netturbini, la DDA riapre le indagini",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2026/06/15/lamezia-omicidio-cristiano-e-tramonte-la-dda-riapre-le-indagini-2b3daf21-fc59-4a66-9023-11ab7177c637",
+      "published_at": null,
+      "retrieved_at": "2026-09-09T15:28:30+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:lametino:2018-05-14:duplice-omicidio-netturbini",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: a 27 anni dall'omicidio dei due netturbini, richiesta di riapertura del caso",
+      "url": "https://www.lametino.it/ultimora/lamezia-a-27-anni-dall-omicidio-dei-due-netturbini-parla-stefania-tramonte-vogliamo-tutta-la-verita-si-riapra-il-caso.html",
+      "published_at": "2018-05-14T00:00:00+02:00",
+      "retrieved_at": "2026-09-09T15:28:30+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lacnews24:2026-06-20:eccidio-netturbini",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "L'eccidio dei netturbini a Lamezia e il contesto delle amministrative del 1991",
+      "url": "https://www.lacnews24.it/cronaca/leccidio-dei-netturbini-a-lamezia-uninterrogazione-parlamentare-puntava-il-dito-contro-le-amministrative-del-1991-i0gpo4zm",
+      "published_at": "2026-06-20T00:00:00+02:00",
+      "retrieved_at": "2026-09-09T15:28:30+02:00",
+      "support_roles": [
+        "event_support",
+        "corroboration",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "press:gazzetta-sud:2026-06-15:duplice-omicidio-netturbini",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti qualificano espressamente il fatto come duplice omicidio e lo datano al 24 maggio 1991",
+        "la fonte più recente colloca il delitto a Sambiase e riferisce che nel giugno 2026 la Direzione distrettuale antimafia di Catanzaro ha riaperto le indagini a distanza di trentacinque anni",
+        "la matrice mafiosa è riportata da fonti giornalistiche e memoriali ma non viene trasformata in una distinta qualificazione giuridica nel presente record",
+        "la riapertura dell'indagine mostra che l'attribuzione delle responsabilità resta non definita; il record censisce l'evento storico e non attribuisce responsabilità individuali"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 2
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:sambiase:occurrence",
+      "basis_source_key": "press:gazzetta-sud:2026-06-15:duplice-omicidio-netturbini",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_neighbourhood",
+      "evidence_precision": "neighbourhood",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Sambiase",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    }
+  ]
+}
