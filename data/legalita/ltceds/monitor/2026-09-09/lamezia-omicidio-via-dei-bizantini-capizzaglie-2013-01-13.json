@@ -1,0 +1,98 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-omicidio-via-dei-bizantini-capizzaglie-2013-01-13",
+  "discovered_at": "2026-09-09T14:30:29+02:00",
+  "updated_at": "2026-09-09T14:30:29+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Omicidio nell'ottava traversa di via dei Bizantini, quartiere Capizzaglie, il 13 gennaio 2013",
+  "temporal": {
+    "start": "2013-01-13",
+    "end": "2013-01-13",
+    "edtf": "2013-01-13",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:lametino:2013-01-13:omicidio-capizzaglie-via-bizantini",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: Sparatoria a Capizzaglie, ucciso uomo",
+      "url": "https://www.lametino.it/cronaca/lamezia-sparatoria-a-capizzaglie-ucciso-uomo.html",
+      "published_at": "2013-01-13",
+      "retrieved_at": "2026-09-09T14:30:29+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2013-01-13:omicidio-capizzaglie",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Omicidio a Lamezia, ucciso un 42enne",
+      "url": "https://www.corrieredellacalabria.it/2013/01/13/11594_omicidio_a_lamezia_ucciso_un_42enne/",
+      "published_at": "2013-01-13T19:02:00+01:00",
+      "retrieved_at": "2026-09-09T14:30:29+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lametino:2013-01-14:indagini-omicidio-capizzaglie",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: Indagini in corso su omicidio Gagliardi",
+      "url": "https://www.lametino.it/Cronaca/lamezia-indagini-in-corso-su-omicidio-gagliardi.html",
+      "published_at": "2013-01-14T19:03:00+01:00",
+      "retrieved_at": "2026-09-09T14:30:29+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "press:lametino:2013-01-13:omicidio-capizzaglie-via-bizantini",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti contemporanee qualificano il fatto come omicidio consumato a Lamezia Terme il 13 gennaio 2013, mediante più colpi di arma da fuoco.",
+        "La ricostruzione più precisa colloca l'azione intorno alle 17:30 nell'ottava traversa di via dei Bizantini, in località Capizzaglie; il presente record conserva questo livello stradale senza inferire un civico o la posizione di un'abitazione privata.",
+        "Il giorno successivo le indagini dei Carabinieri risultavano ancora in corso e il movente non risultava accertato; il record non attribuisce responsabilità individuali né inferisce una matrice di criminalità organizzata."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:ottava-traversa-via-dei-bizantini-capizzaglie:occurrence",
+      "basis_source_key": "press:lametino:2013-01-13:omicidio-capizzaglie-via-bizantini",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Ottava traversa di via dei Bizantini",
+      "neighbourhood": "Capizzaglie",
+      "iccs_location_type": null
+    }
+  ]
+}
