@@ -1,0 +1,69 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-spaccio-cocaina-canapa-indiana-sambiase-2013",
+  "discovered_at": "2026-09-09T18:15:02+02:00",
+  "updated_at": "2026-09-09T18:15:02+02:00",
+  "record_status": "verified_source",
+  "event_form": "course_of_conduct",
+  "title": "Attività di spaccio di cocaina e canapa indiana nella zona di Sambiase documentata nel 2013",
+  "temporal": {
+    "start": "2013",
+    "end": "2013",
+    "edtf": "2013",
+    "precision": "year"
+  },
+  "sources": [
+    {
+      "source_key": "polizia-stato:ufficio-stampa:2013-11-05:droga-otto-arresti-lamezia-terme",
+      "source_type": "law_enforcement_primary",
+      "provider": "Polizia di Stato — Ufficio stampa",
+      "title": "Droga: otto arresti a Lamezia Terme",
+      "url": "https://www.poliziadistato.it/articolo/droga--otto-arresti-a-lamezia-terme",
+      "published_at": null,
+      "retrieved_at": "2026-09-09T18:15:02+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:spaccio-stupefacenti",
+      "classification_source_key": "polizia-stato:ufficio-stampa:2013-11-05:droga-otto-arresti-lamezia-terme",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la Polizia di Stato riferisce che otto persone furono arrestate il 5 novembre 2013 per spaccio di cocaina e canapa indiana a Lamezia Terme",
+        "la fonte precisa che lo smercio avveniva nella zona del quartiere Sambiase e che gli agenti impiegarono sei mesi per documentarlo; la durata investigativa non viene convertita in un intervallo criminale con estremi giornalieri inferiti",
+        "il record rappresenta la condotta di spaccio documentata dalla fonte, non la sola operazione di arresto, e non attribuisce responsabilità oltre lo stato procedurale riportato dal comunicato"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:sambiase:occurrence",
+      "basis_source_key": "polizia-stato:ufficio-stampa:2013-11-05:droga-otto-arresti-lamezia-terme",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_neighbourhood",
+      "evidence_precision": "neighbourhood",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "non_sensitive",
+      "geometry": null,
+      "place_name": "Zona del quartiere Sambiase",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    }
+  ]
+}
