@@ -1,0 +1,271 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-aggressione-ultras-stazione-santeufemia-2018-04-29",
+  "discovered_at": "2026-09-09T08:04:25+02:00",
+  "updated_at": "2026-09-09T08:04:25+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Aggressione, rapina e tentato omicidio durante la fuga nei pressi della stazione di Sant'Eufemia il 29 aprile 2018",
+  "temporal": {
+    "start": "2018-04-29",
+    "end": "2018-04-29",
+    "edtf": "2018-04-29",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "law:questura-catanzaro:2018-05-04:tifo-selvaggio",
+      "source_type": "law_enforcement_primary",
+      "provider": "Questura di Catanzaro - Polizia di Stato",
+      "title": "Operazione “Tifo Selvaggio” - notizia di approfondimento",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/12365aec4f287180d280575386",
+      "published_at": "2018-05-04T00:00:00+02:00",
+      "retrieved_at": "2026-09-09T08:04:25+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "news:ansa:2018-05-04:tifo-selvaggio-lamezia",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Aggrediti su A2, arrestati ultra Catania",
+      "url": "https://www.ansa.it/amp/calabria/notizie/2018/05/04/aggrediti-su-a2-arrestati-ultra-catania_5937605f-8c55-4458-aa36-24c78945e57d.html",
+      "published_at": "2018-05-04T00:00:00+02:00",
+      "retrieved_at": "2026-09-09T08:04:25+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lameziaterme:2018-04-30:aggressione-ultras-santeufemia",
+      "source_type": "press_secondary",
+      "provider": "LameziaTerme.it",
+      "title": "Lamezia. Aggressione auto, un fermo e 20 denunce",
+      "url": "https://www.lameziaterme.it/lamezia-aggressione-auto-un-fermo-e-20-denunce/",
+      "published_at": "2018-04-30T00:00:00+02:00",
+      "retrieved_at": "2026-09-09T08:04:25+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2018-06-08:tifo-selvaggio-daspo",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, operazione Tifo Selvaggio dopo aggressione docenti: salgono a 47 i tifosi catanesi denunciati",
+      "url": "https://www.lametino.it/cronaca/lamezia-operazione-tifo-selvaggio-dopo-aggressione-docenti-salgono-a-47-i-tifosi-catanesi-denunciati.html",
+      "published_at": "2018-06-08T00:00:00+02:00",
+      "retrieved_at": "2026-09-09T08:04:25+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina-impropria",
+      "classification_source_key": "law:questura-catanzaro:2018-05-04:tifo-selvaggio",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la Questura di Catanzaro qualifica espressamente tra i reati contestati la rapina impropria nell'episodio del 29 aprile 2018",
+        "le fonti riferiscono che quattro persone, scambiate per tifosi rivali, furono aggredite e rapinate nei pressi della stazione ferroviaria di Lamezia Terme"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:danneggiamento-aggravato",
+      "classification_source_key": "law:questura-catanzaro:2018-05-04:tifo-selvaggio",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la Questura di Catanzaro include il danneggiamento aggravato tra i reati contestati; le cronache riferiscono il danneggiamento dell'autovettura delle persone aggredite"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:incendio",
+      "classification_source_key": "law:questura-catanzaro:2018-05-04:tifo-selvaggio",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la Questura di Catanzaro include l'incendio tra i reati contestati; ANSA riferisce che la parte anteriore dell'autovettura fu incendiata mediante un fumogeno"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:lesioni-aggravate",
+      "classification_source_key": "law:questura-catanzaro:2018-05-04:tifo-selvaggio",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la Questura di Catanzaro include le lesioni aggravate tra i reati contestati per l'aggressione"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:violenza-privata",
+      "classification_source_key": "law:questura-catanzaro:2018-05-04:tifo-selvaggio",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la Questura di Catanzaro include la violenza privata tra i reati contestati nell'episodio"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:resistenza-pubblico-ufficiale",
+      "classification_source_key": "law:questura-catanzaro:2018-05-04:tifo-selvaggio",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la Questura di Catanzaro include la resistenza a pubblico ufficiale tra i reati contestati durante la fuga successiva all'aggressione"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:detenzione-abusiva-materiale-esplodente",
+      "classification_source_key": "law:questura-catanzaro:2018-05-04:tifo-selvaggio",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la Questura di Catanzaro include la detenzione abusiva di materiale esplodente tra i reati contestati"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:utilizzo-oggetti-atti-ad-offendere-manifestazioni-sportive",
+      "classification_source_key": "law:questura-catanzaro:2018-05-04:tifo-selvaggio",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la Questura di Catanzaro include l'utilizzo di oggetti atti ad offendere in occasione di manifestazioni sportive tra i reati contestati"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:tentato-omicidio-aggravato",
+      "classification_source_key": "law:questura-catanzaro:2018-05-04:tifo-selvaggio",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "la Questura di Catanzaro riferisce che per uno dei partecipanti fu configurato il tentato omicidio aggravato per avere cercato di investire con un furgone un agente della Polfer che tentava di impedirne la fuga",
+        "il record rappresenta le qualificazioni e lo stato cautelare documentati dalle fonti e non assume un accertamento giudiziario definitivo"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:pressi-stazione-ferroviaria-santeufemia:occurrence",
+      "basis_source_key": "press:il-lametino:2018-06-08:tifo-selvaggio-daspo",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Area nei pressi della stazione ferroviaria di Lamezia Terme, Sant'Eufemia",
+      "neighbourhood": "Sant'Eufemia",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:svincolo-a2:other",
+      "basis_source_key": "press:lameziaterme:2018-04-30:aggressione-ultras-santeufemia",
+      "role": "other",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Svincolo autostradale di Lamezia Terme sulla A2",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:pizzo-calabro:svincolo-a2:other",
+      "basis_source_key": "press:lameziaterme:2018-04-30:aggressione-ultras-santeufemia",
+      "role": "other",
+      "municipality": "Pizzo Calabro",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "A2 all'altezza dello svincolo di Pizzo Calabro",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
