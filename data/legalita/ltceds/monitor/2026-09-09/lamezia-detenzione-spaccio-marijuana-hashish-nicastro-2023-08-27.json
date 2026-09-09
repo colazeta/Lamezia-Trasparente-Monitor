@@ -1,0 +1,116 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-detenzione-spaccio-marijuana-hashish-nicastro-2023-08-27",
+  "discovered_at": "2026-09-09T23:46:39+02:00",
+  "updated_at": "2026-09-09T23:46:39+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Detenzione ai fini di spaccio e cessione di marijuana e hashish in zona Nicastro",
+  "temporal": {
+    "start": "2023-08-27",
+    "end": "2023-08-27",
+    "edtf": "2023-08-27",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "law:questura-catanzaro:2023-08-30:spaccio-nicastro",
+      "source_type": "law_enforcement_primary",
+      "provider": "Questura di Catanzaro - Polizia di Stato",
+      "title": "Commissariato di P.S. di Lamezia Terme - Arresto per detenzione sostanze stupefacenti",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/180764ef2fd35cad0666391570",
+      "published_at": null,
+      "retrieved_at": "2026-09-09T23:46:39+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:detenzione-ai-fini-di-spaccio-stupefacenti",
+      "classification_source_key": "law:questura-catanzaro:2023-08-30:spaccio-nicastro",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "il 27 agosto 2023 la Squadra Volante del Commissariato di Lamezia Terme svolse un controllo nella zona del mercato coperto di Nicastro e, dopo gli accertamenti, perquisì un'abitazione situata in una via vicina",
+        "nella perquisizione domiciliare furono rinvenuti circa 90 grammi di marijuana e circa 5 grammi di hashish, in parte già suddivisi in dosi, oltre a una bilancia",
+        "la Questura riferisce arresto per detenzione ai fini di spaccio e cessione di sostanza stupefacente; l'arresto fu convalidato dal GIP con applicazione dell'obbligo di presentazione alla polizia giudiziaria, senza che il record rappresenti un accertamento definitivo di responsabilità"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:cessione-stupefacenti",
+      "classification_source_key": "law:questura-catanzaro:2023-08-30:spaccio-nicastro",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la Questura riferisce che gli accertamenti consentirono di risalire alla persona che aveva ceduto sostanza stupefacente a un giovane uscito poco prima dall'abitazione poi perquisita",
+        "la localizzazione puntuale della cessione non è specificata dalla fonte e non viene inferita"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:nicastro-abitazione-via-vicina:occurrence",
+      "basis_source_key": "law:questura-catanzaro:2023-08-30:spaccio-nicastro",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione in una via vicina alla zona del mercato coperto di Nicastro",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:nicastro-abitazione-via-vicina:search",
+      "basis_source_key": "law:questura-catanzaro:2023-08-30:spaccio-nicastro",
+      "role": "search",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione in una via vicina alla zona del mercato coperto di Nicastro",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:nicastro-abitazione-via-vicina:recovery",
+      "basis_source_key": "law:questura-catanzaro:2023-08-30:spaccio-nicastro",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione in una via vicina alla zona del mercato coperto di Nicastro",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    }
+  ]
+}
