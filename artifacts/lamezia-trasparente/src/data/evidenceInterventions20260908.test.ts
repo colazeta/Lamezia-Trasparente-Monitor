@@ -35,7 +35,8 @@ describe("evidence interventions 2026-09-08", () => {
     const star = EVIDENCE_INTERVENTIONS_2026_09_08.find(
       (item) => item.id === "denver-star-alternative-crisis-response",
     );
-    expect(star?.results.toLowerCase()).toContain("registrati");
+    expect(star?.outcomes.join(" ").toLowerCase()).toContain("registrati");
+    expect(star?.effectSize.toLowerCase()).toContain("registrati");
     expect(star?.limitations.join(" ").toLowerCase()).toContain("outcome principale");
   });
 
