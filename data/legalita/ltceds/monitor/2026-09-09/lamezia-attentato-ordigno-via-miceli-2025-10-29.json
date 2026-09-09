@@ -1,0 +1,98 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-attentato-ordigno-via-miceli-2025-10-29",
+  "discovered_at": "2026-09-09T18:31:13+02:00",
+  "updated_at": "2026-09-09T18:31:13+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Attentato con ordigno contro un negozio in via Miceli il 29 ottobre 2025",
+  "temporal": {
+    "start": "2025-10-29",
+    "end": "2025-10-29",
+    "edtf": "2025-10-29",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "ansa:2025-10-29:ordigno-negozio-via-miceli",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Ordigno fatto esplodere davanti a ingresso negozio a Lamezia",
+      "url": "https://www.ansa.it/calabria/notizie/2025/10/29/ordigno-fatto-esplodere-davanti-a-ingresso-negozio-a-lamezia_eeaf2959-a17f-4d73-b9bd-89e63d472d1d.html",
+      "published_at": "2025-10-29T11:13:00+01:00",
+      "retrieved_at": "2026-09-09T18:31:13+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:lacnews24:2025-10-29:ordigno-negozio-via-miceli",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Lamezia Terme, esplosivo danneggia l'ingresso di un negozio in via Miceli: indagini in corso",
+      "url": "https://www.lacnews24.it/cronaca/lamezia-terme-esplosivo-danneggia-lingresso-di-un-negozio-in-via-miceli-indagini-in-corso-ih6eopdh",
+      "published_at": "2025-10-29T10:24:00+01:00",
+      "retrieved_at": "2026-09-09T18:31:13+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lametino:2025-10-29:ordigno-negozio-via-miceli",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, ordigno davanti ingresso negozio in via Miceli",
+      "url": "https://www.lametino.it/cronaca/lamezia-ordigno-davanti-ingresso-negozio-via-miceli.html",
+      "published_at": "2025-10-29",
+      "retrieved_at": "2026-09-09T18:31:13+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:attentato-con-ordigno",
+      "classification_source_key": "ansa:2025-10-29:ordigno-negozio-via-miceli",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti attestano che nella notte del 29 ottobre 2025 ignoti hanno fatto esplodere un ordigno davanti all'ingresso di un negozio per la vendita di prodotti per l'igiene di un noto franchising in via Miceli, a Lamezia Terme.",
+        "LaC News24 riferisce danni lievi all'esercizio e l'attivita immediata dei Carabinieri sul posto, compresa la visione delle immagini delle telecamere.",
+        "Il possibile collegamento con il racket delle estorsioni e riportato da ANSA come ipotesi investigativa non esclusa; il record non qualifica quindi autonomamente il fatto come estorsione e non attribuisce responsabilita individuali."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-miceli:target",
+      "basis_source_key": "ansa:2025-10-29:ordigno-negozio-via-miceli",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Via Miceli",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
