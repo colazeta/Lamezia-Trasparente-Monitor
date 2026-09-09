@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-tentato-omicidio-agguato-2002-07-08",
   "discovered_at": "2026-09-10T01:23:20+02:00",
-  "updated_at": "2026-09-10T01:23:20+02:00",
+  "updated_at": "2026-09-10T01:36:54+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Tentato omicidio in un agguato a Lamezia Terme l'8 luglio 2002",
@@ -19,7 +19,7 @@
       "provider": "LaC News24",
       "title": "Richiesta di rinvio a giudizio per un tentato omicidio dell'8 luglio 2002 a Lamezia Terme",
       "url": "https://www.lacnews24.it/cronaca/ndrangheta-agguato-a-vincenzo-torcasio-chiesto-il-processo-per-6-esponenti-del-clan-giampa-a2fioymq",
-      "published_at": null,
+      "published_at": "2018-03-21T12:35:00+01:00",
       "retrieved_at": "2026-09-10T01:23:20+02:00",
       "support_roles": [
         "event_support",
