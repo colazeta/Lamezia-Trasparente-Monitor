@@ -19,14 +19,22 @@ describe("proposal geography", () => {
     }
   });
 
-  it("never assigns coordinates to citywide proposals", () => {
+  it("never assigns coordinates to citywide proposals and requires them only for point scopes", () => {
     for (const [proposalId, geography] of Object.entries(PROPOSAL_GEOGRAPHY)) {
       if (geography.scope === "citywide") {
         expect(geography.points, proposalId).toHaveLength(0);
         expect(isProposalGeoreferenced(proposalId), proposalId).toBe(false);
-      } else {
+      } else if (geography.scope === "point" || geography.scope === "multi_point") {
         expect(geography.points.length, proposalId).toBeGreaterThan(0);
         expect(isProposalGeoreferenced(proposalId), proposalId).toBe(true);
+      } else {
+        // An area may legitimately be known from the source without a sufficiently
+        // precise, verified WGS84 reference. In that case the territorial tag and
+        // area scope are retained without inventing a centroid or street point.
+        expect(geography.scope, proposalId).toBe("area");
+        expect(isProposalGeoreferenced(proposalId), proposalId).toBe(
+          geography.points.length > 0,
+        );
       }
     }
   });
@@ -65,7 +73,7 @@ describe("proposal geography", () => {
     );
   });
 
-  it("supports filtering georeferenced proposals by geographic area", () => {
+  it("supports filtering proposals by geographic area independently of coordinate availability", () => {
     expect(
       proposalMatchesGeoArea(
         "piazza-italia-sicurezza-prevenzione-2026",
@@ -90,14 +98,25 @@ describe("proposal geography", () => {
         "sant_eufemia",
       ),
     ).toBe(true);
+    expect(
+      proposalMatchesGeoArea(
+        "sant-eufemia-cimitero-accesso-custodia-vitale-2026",
+        "sant_eufemia",
+      ),
+    ).toBe(true);
   });
 
-  it("distinguishes a citywide proposal from a georeferenced one", () => {
+  it("distinguishes geographic applicability from actual georeferencing", () => {
     expect(
       isProposalGeoreferenced("scuole-posticipo-apertura-petizione-2026"),
     ).toBe(false);
     expect(
       isProposalGeoreferenced("aeroporto-intermodalita-rilancio-taverna-2026"),
     ).toBe(true);
+    expect(
+      isProposalGeoreferenced(
+        "sant-eufemia-cimitero-accesso-custodia-vitale-2026",
+      ),
+    ).toBe(false);
   });
 });
