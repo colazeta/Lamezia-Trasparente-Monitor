@@ -1,0 +1,168 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-duplice-omicidio-capizzaglie-2000-09-29",
+  "discovered_at": "2026-09-09T10:17:56+02:00",
+  "updated_at": "2026-09-09T10:17:56+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Duplice omicidio al termine di un inseguimento tra Capizzaglie e il bivio Carrà Cosentino",
+  "temporal": {
+    "start": "2000-09-29",
+    "end": "2000-09-29",
+    "edtf": "2000-09-29",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "police:questura-catanzaro:2020-10-29:resa-dei-conti-duplice-omicidio-2000",
+      "source_type": "law_enforcement_primary",
+      "provider": "Polizia di Stato — Questura di Catanzaro",
+      "title": "Operazione Resa dei Conti: misura cautelare per il duplice omicidio del 29 settembre 2000",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/12365f9a7457cbe5b171629401",
+      "published_at": "2020-10-29",
+      "retrieved_at": "2026-09-09T10:17:56+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "agency:ansa:2020-10-29:duplice-omicidio-lamezia-2000",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Arresti per il duplice omicidio del 2000 a Lamezia Terme",
+      "url": "https://www.ansa.it/calabria/notizie/2020/10/29/ndranghetapresi-mandanti-e-esecutori-duplice-omicidio-2000_12857aee-f4ff-4ab5-ba89-d67963439800.html",
+      "published_at": "2020-10-29T10:50:00+01:00",
+      "retrieved_at": "2026-09-09T10:17:56+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2024-01-24:duplice-omicidio-lamezia-2000",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Condanne di primo grado per il duplice omicidio del 2000",
+      "url": "https://www.corrieredellacalabria.it/2024/01/24/lamezia-omicidio-torcasio-matarasso-30-anni-per-cannizzaro-e-iannazzo/",
+      "published_at": "2024-01-24T16:45:00+01:00",
+      "retrieved_at": "2026-09-09T10:17:56+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:calabria-inchieste:2025-06-20:duplice-omicidio-lamezia-2000",
+      "source_type": "press_secondary",
+      "provider": "Calabria Inchieste",
+      "title": "Ricostruzione geografica e richiesta di conferma delle condanne per il duplice omicidio del 2000",
+      "url": "https://www.calabriainchieste.it/2025/06/20/duplice-omicidio-torcasio-e-materasso-il-pm-chiede-la-conferma-a-30-anni-di-carcere-per-gli-imputati/",
+      "published_at": "2025-06-20",
+      "retrieved_at": "2026-09-09T10:17:56+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:calabria7:2025-10-14:duplice-omicidio-lamezia-appello",
+      "source_type": "press_secondary",
+      "provider": "Calabria 7",
+      "title": "Confermate in appello le condanne a 30 anni per il duplice omicidio del 2000",
+      "url": "https://calabria7.news/insider-24/duplice-omicidio-torcasio-materasso-a-lamezia-2-ergastoli-in-appello-per-mandante-ed-esecutore-nomi/",
+      "published_at": "2025-10-14T19:27:00+02:00",
+      "retrieved_at": "2026-09-09T10:17:56+02:00",
+      "support_roles": [
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:lametino:2026-01-27:duplice-omicidio-lamezia-appello-rito-ordinario",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Prosegue in appello il procedimento ordinario sul duplice omicidio del 2000",
+      "url": "https://www.lametino.it/cronaca/duplice-omicidio-a-lamezia-nel-2000-in-aula-il-collaboratore-torcasio.html",
+      "published_at": "2026-01-27",
+      "retrieved_at": "2026-09-09T10:17:56+02:00",
+      "support_roles": [
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "police:questura-catanzaro:2020-10-29:resa-dei-conti-duplice-omicidio-2000",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la fonte primaria qualifica il fatto come duplice omicidio consumato a Lamezia Terme il 29 settembre 2000, al termine di un inseguimento di circa tre chilometri",
+        "la ricostruzione investigativa colloca la conclusione dell'inseguimento nei pressi del bivio Carrà Cosentino; una fonte processuale successiva documenta l'avvio dell'azione lungo via dei Bizantini, nel quartiere Capizzaglie",
+        "il movente è stato ricostruito dagli inquirenti nel contesto di una faida di 'ndrangheta; il presente record censisce il fatto storico senza attribuire identità o responsabilità individuali",
+        "due imputati sono stati condannati a 30 anni in primo grado con rito abbreviato nel gennaio 2024 e le condanne sono state confermate in appello il 14 ottobre 2025; un distinto imputato, assolto in primo grado nel rito ordinario, è oggetto di appello della Procura con udienza di discussione e decisione fissata al 22 settembre 2026"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 2
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:bivio-carra-cosentino:occurrence",
+      "basis_source_key": "police:questura-catanzaro:2020-10-29:resa-dei-conti-duplice-omicidio-2000",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Pressi del bivio Carrà Cosentino",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-dei-bizantini-capizzaglie:other",
+      "basis_source_key": "press:corriere-calabria:2024-01-24:duplice-omicidio-lamezia-2000",
+      "role": "other",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via dei Bizantini, quartiere Capizzaglie",
+      "neighbourhood": "Capizzaglie",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-dei-patrioti-sambiasini:recovery",
+      "basis_source_key": "press:calabria-inchieste:2025-06-20:duplice-omicidio-lamezia-2000",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via dei Patrioti Sambiasini",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
