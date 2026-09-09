@@ -1,0 +1,83 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-tentata-rapina-conad-2014-05-17",
+  "discovered_at": "2026-09-09T12:59:24+02:00",
+  "updated_at": "2026-09-09T12:59:24+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Tentata rapina armata in un supermercato Conad di Lamezia Terme",
+  "temporal": {
+    "start": "2014-05-17",
+    "end": "2014-05-17",
+    "edtf": null,
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:gazzetta-sud:2014-05-17:tentata-rapina-conad-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Tenta rapina, 31 enne arrestato da ispettore",
+      "url": "https://calabria.gazzettadelsud.it/articoli/archivio/2014/05/17/tenta-rapina-31-enne-arrestatoda-ispettore-d375273c-ffc2-4e49-82db-4b2c61cec45d/",
+      "published_at": "2014-05-17T00:00:00+02:00",
+      "retrieved_at": "2026-09-09T12:59:24+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support"
+      ]
+    },
+    {
+      "source_key": "police:questura-catanzaro:due-arresti-lamezia-rapine-2014",
+      "source_type": "law_enforcement_primary",
+      "provider": "Polizia di Stato — Questura di Catanzaro",
+      "title": "Polizia di Stato: due arresti a Lamezia Terme",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/123658bda1217a8c3993630867",
+      "published_at": null,
+      "retrieved_at": "2026-09-09T12:59:24+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "police:questura-catanzaro:due-arresti-lamezia-rapine-2014",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "Il 17 maggio 2014 una fonte ANSA ripresa da Gazzetta del Sud riferisce un tentativo di rapina ai danni di un supermercato Conad di Lamezia Terme: il soggetto entrò con il volto coperto da un casco e cercò di impossessarsi dell'incasso.",
+        "Un ispettore della Polizia Stradale libero dal servizio intervenne sul posto e procedette all'arresto; nella circostanza fu sequestrata una pistola calibro 6,35 con matricola cancellata.",
+        "La successiva ricostruzione della Questura collega il fatto a una serie di tre rapine ad esercizi commerciali tra aprile e maggio 2014 e riferisce una condanna definitiva a otto anni per due rapine consumate e una tentata; il presente artefatto censisce esclusivamente il tentativo del 17 maggio."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:target:conad-lamezia-filiale-non-specificata",
+      "basis_source_key": "press:gazzetta-sud:2014-05-17:tentata-rapina-conad-lamezia",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Supermercato Conad di Lamezia Terme (filiale non specificata nelle fonti)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
