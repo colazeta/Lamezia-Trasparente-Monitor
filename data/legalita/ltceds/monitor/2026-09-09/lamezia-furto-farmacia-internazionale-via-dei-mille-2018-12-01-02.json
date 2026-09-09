@@ -1,0 +1,86 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-furto-farmacia-internazionale-via-dei-mille-2018-12-01-02",
+  "discovered_at": "2026-09-09T21:45:58+02:00",
+  "updated_at": "2026-09-09T21:45:58+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Furto notturno alla Farmacia Internazionale tra via Dei Mille e via Marconi",
+  "temporal": {
+    "start": "2018-12-01",
+    "end": "2018-12-02",
+    "edtf": "2018-12-01/2018-12-02",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "press:il-lametino:2018-12-02:furto-farmacia-internazionale",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, furto nella notte alla farmacia internazionale: rubato incasso",
+      "url": "https://www.lametino.it/cronaca/lamezia-furto-nella-notte-alla-farmacia-internazionale-rubato-incasso.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-09T21:45:58+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:lameziaterme-it:2018-12-02:furto-farmacia-internazionale",
+      "source_type": "press_secondary",
+      "provider": "LameziaTerme.it",
+      "title": "Lamezia, furto nella notte alla farmarcia internazionale di via Marconi",
+      "url": "https://www.lameziaterme.it/lamezia-furto-nella-notte-alla-farmarcia-internazionale-di-via-marconi/",
+      "published_at": null,
+      "retrieved_at": "2026-09-09T21:45:58+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:furto",
+      "classification_source_key": "press:il-lametino:2018-12-02:furto-farmacia-internazionale",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti contemporanee riferiscono un furto notturno alla Farmacia Internazionale di Lamezia Terme, collocata all'incrocio tra via Dei Mille e via Marconi",
+        "secondo la prima ricostruzione una persona incappucciata si introdusse nel locale attraverso una finestra sul retro e sottrasse l'incasso dalla cassa",
+        "le fonti quantificano l'incasso sottratto in poco più di mille euro / circa 1.500 euro; questa divergenza non viene risolta nel record",
+        "la Polizia di Stato intervenne sul posto e avviò le indagini; le fonti consultate non documentano in questa fase un successivo accertamento giudiziario definitivo"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:farmacia-internazionale-via-dei-mille-via-marconi:target",
+      "basis_source_key": "press:lameziaterme-it:2018-12-02:furto-farmacia-internazionale",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Farmacia Internazionale, incrocio tra Via Dei Mille e Via Marconi",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
