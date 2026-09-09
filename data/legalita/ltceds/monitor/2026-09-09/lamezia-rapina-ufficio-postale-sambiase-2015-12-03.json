@@ -1,0 +1,99 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-ufficio-postale-sambiase-2015-12-03",
+  "discovered_at": "2026-09-09T05:44:25+02:00",
+  "updated_at": "2026-09-09T05:44:25+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina all'ufficio postale di Lamezia Terme-Sambiase il 3 dicembre 2015",
+  "temporal": {
+    "start": "2015-12-03",
+    "end": "2015-12-03",
+    "edtf": "2015-12-03",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:lameziaterme:2018-11-01:rapine-lamezia-gizzeria",
+      "source_type": "press_secondary",
+      "provider": "LameziaTerme.it",
+      "title": "Rapine tra Lamezia e Gizzeria: quattro persone arrestate (Video)",
+      "url": "https://www.lameziaterme.it/rapine-tra-lamezia-e-gizzeria-quattro-persone-arrestate/",
+      "published_at": "2018-11-01T00:00:00+01:00",
+      "retrieved_at": "2026-09-09T05:44:25+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2018-11-01:rapine-lamezia-gizzeria",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Rapine tra Lamezia e Gizzeria dal 2015 al 2017, arrestate 4 persone - VIDEO",
+      "url": "https://www.lametino.it/cronaca/rapine-tra-lamezia-e-gizzeria-dal-2015-al-2017-arrestate-4-persone.html",
+      "published_at": "2018-11-01T00:00:00+01:00",
+      "retrieved_at": "2026-09-09T05:44:25+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:telejonio:2018-11-02:rapine-lamezia-gizzeria",
+      "source_type": "press_secondary",
+      "provider": "Telejonio",
+      "title": "Rapine tra Lamezia e Gizzeria dal 2015 al 2017, arrestate 4 persone",
+      "url": "https://www.telejonio.com/2018/11/02/5187/",
+      "published_at": "2018-11-02T00:00:00+01:00",
+      "retrieved_at": "2026-09-09T05:44:25+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "press:lameziaterme:2018-11-01:rapine-lamezia-gizzeria",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le ricostruzioni dell'indagine dei Carabinieri qualificano espressamente il fatto del 3 dicembre 2015 come rapina presso l'Ufficio Postale di Lamezia Terme Sambiase",
+        "le fonti riferiscono che un soggetto armato di pistola si fece consegnare circa 2.000 euro e si allontanò; viene inoltre indicata la presenza di un secondo soggetto",
+        "nel novembre 2018 quattro persone furono arrestate nell'ambito dell'indagine su sette rapine commesse tra Lamezia Terme e Gizzeria, con responsabilità attribuite a vario titolo; non viene qui assunto un accertamento definitivo di responsabilità per questo singolo episodio"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:ufficio-postale-sambiase:target",
+      "basis_source_key": "press:lameziaterme:2018-11-01:rapine-lamezia-gizzeria",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Ufficio Postale di Lamezia Terme Sambiase",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    }
+  ]
+}
