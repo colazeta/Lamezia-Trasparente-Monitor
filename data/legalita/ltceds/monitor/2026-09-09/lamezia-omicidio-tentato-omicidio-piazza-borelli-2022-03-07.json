@@ -1,0 +1,145 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-omicidio-tentato-omicidio-piazza-borelli-2022-03-07",
+  "discovered_at": "2026-09-09T02:24:38+02:00",
+  "updated_at": "2026-09-09T02:24:38+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Omicidio volontario e tentato omicidio plurimo in piazza Borelli",
+  "temporal": {
+    "start": "2022-03-07",
+    "end": "2022-03-07",
+    "edtf": "2022-03-07",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:lameziaterme:2022-03-08:agguato-piazza-borelli",
+      "source_type": "press_secondary",
+      "provider": "LameziaTerme.it",
+      "title": "Lamezia. Arrestate due persone per l'agguato ai fratelli Trovato",
+      "url": "https://www.lameziaterme.it/lamezia-arrestate-due-persone-per-agguato-fratelli-trovato/",
+      "published_at": null,
+      "retrieved_at": "2026-09-09T02:24:38+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "news:ansa:2022-03-07:agguato-lamezia-un-morto-due-feriti",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "'Ndrangheta: agguato a Lamezia Terme, un morto e 2 feriti",
+      "url": "https://www.ansa.it/calabria/notizie/2022/03/07/-ndrangheta-agguato-a-lamezia-terme-un-morto-e-2-feriti-_80988a57-944b-46ab-ae32-0c6cfe851e1e.html",
+      "published_at": "2022-03-07T20:22:00+01:00",
+      "retrieved_at": "2026-09-09T02:24:38+02:00",
+      "support_roles": [
+        "event_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2022-03-10:omicidio-piazza-borelli-convalida",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Omicidio a Lamezia, l'udienza di convalida: gli screzi precedenti, il tamponamento, la sparatoria",
+      "url": "https://www.corrieredellacalabria.it/2022/03/10/omicidio-a-lamezia-ludienza-di-convalida-gli-screzi-precedenti-il-tamponamento-la-sparatoria/",
+      "published_at": null,
+      "retrieved_at": "2026-09-09T02:24:38+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:lacnews24:2022-03-08:arresti-omicidio-lamezia",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Omicidio a Lamezia, arrestati i due rei confessi del delitto: avrebbero sparato per reagire a un'aggressione",
+      "url": "https://www.lacnews24.it/cronaca/omicidio-a-lamezia-arrestati-i-due-rei-confessi-del-delitto-avrebbero-sparato-per-reagire-a-unaggressione-yodglkxb",
+      "published_at": "2022-03-08T00:00:00+01:00",
+      "retrieved_at": "2026-09-09T02:24:38+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio-volontario",
+      "classification_source_key": "press:lameziaterme:2022-03-08:agguato-piazza-borelli",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la ricostruzione del Gruppo Carabinieri ripresa dalla fonte qualifica espressamente il fatto come concorso in omicidio volontario",
+        "il fatto è collocato nella serata del 7 marzo 2022 in piazza Borelli a Lamezia Terme",
+        "una fonte ANSA coeva usa la denominazione piazza Porcelli; il nodo geografico canonico resta piazza Borelli perché è la denominazione riportata dalla ricostruzione investigativa e dalle successive fonti locali e giudiziarie, senza attribuire coordinate"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    },
+    {
+      "offence_key": "offence:tentato-omicidio-volontario-plurimo",
+      "classification_source_key": "press:lameziaterme:2022-03-08:agguato-piazza-borelli",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "la stessa ricostruzione investigativa qualifica espressamente il fatto anche come tentativo di omicidio volontario plurimo",
+        "le fonti coeve riferiscono ulteriori persone ferite nella sparatoria",
+        "il successivo resoconto dell'udienza di convalida riferisce la contestazione di omicidio, tentato omicidio e reati in materia di armi, senza che il presente record rappresenti tali contestazioni come accertamento definitivo di responsabilità"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:piazza-borelli:occurrence",
+      "basis_source_key": "press:lameziaterme:2022-03-08:agguato-piazza-borelli",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Piazza Borelli",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:caserma-carabinieri-via-marconi:arrest",
+      "basis_source_key": "press:lacnews24:2022-03-08:arresti-omicidio-lamezia",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Caserma dei Carabinieri di via Marconi",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
