@@ -1,0 +1,97 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-incendio-escavatore-ferraro-san-teodoro-2025-12-07",
+  "discovered_at": "2026-09-09T19:45:50+02:00",
+  "updated_at": "2026-09-09T19:45:50+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Incendio doloso di un escavatore Ferraro nel cantiere di riqualificazione di San Teodoro",
+  "temporal": {
+    "start": "2025-12-07",
+    "end": "2025-12-07",
+    "edtf": "2025-12-07",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:gazzetta-sud:2025-12-07:escavatore-ferraro-san-teodoro",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Nuova intimidazione nella notte a Lamezia, incendiato un escavatore della ditta Ferraro. Il sindaco: Attacco alla speranza",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2025/12/07/nuova-intimidazione-nella-notte-a-lamezia-incendiato-un-escavatore-della-ditta-ferraro-il-sindaco-attacco-alla-speranza-a0cc5874-88e4-4c0d-994c-0ad11ade4d0f",
+      "published_at": "2025-12-07T00:00:00+01:00",
+      "retrieved_at": "2026-09-09T19:45:50+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:miocomune:2025-12-07:escavatore-ferraro-san-teodoro",
+      "source_type": "press_secondary",
+      "provider": "MioComune.tv",
+      "title": "Intimidazione a Lamezia Terme: escavatore della Ferraro Spa distrutto dalle fiamme",
+      "url": "https://www.miocomune.tv/post/intimidazione-lamezia-terme-escavatore-ferraro-incendiato",
+      "published_at": "2025-12-07T00:00:00+01:00",
+      "retrieved_at": "2026-09-09T19:45:50+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "ansa:2025-12-09:escavatore-ferraro-corroborazione",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Ennesima intimidazione a Lamezia, benzina davanti a un negozio",
+      "url": "https://www.ansa.it/calabria/notizie/2025/12/09/ennesima-intimidazione-a-lamezia-benzina-davanti-a-un-negozio_cd578e0d-c426-4de8-966e-bc0d24d14224.html",
+      "published_at": "2025-12-09T10:11:00+01:00",
+      "retrieved_at": "2026-09-09T19:45:50+02:00",
+      "support_roles": [
+        "event_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:incendio-doloso",
+      "classification_source_key": "press:gazzetta-sud:2025-12-07:escavatore-ferraro-san-teodoro",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti riferiscono che nella notte del 7 dicembre 2025 ignoti diedero alle fiamme un escavatore della Ferraro Spa impegnato nei lavori di riqualificazione del centro storico di Lamezia Terme",
+        "una fonte locale colloca l'episodio intorno alle 01:30 e specifica che il mezzo era nel cantiere di riqualificazione del quartiere San Teodoro; l'orario approssimativo non viene trasformato in una temporalità exact_datetime",
+        "le cronache e le dichiarazioni istituzionali qualificano l'episodio come atto intimidatorio o attentato incendiario, mentre i Carabinieri risultavano impegnati nelle indagini; il record non inferisce estorsione, matrice mafiosa o una fattispecie penale più specifica"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:cantiere-san-teodoro:target",
+      "basis_source_key": "press:miocomune:2025-12-07:escavatore-ferraro-san-teodoro",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_neighbourhood",
+      "evidence_precision": "neighbourhood",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Cantiere di riqualificazione del quartiere San Teodoro",
+      "neighbourhood": "San Teodoro",
+      "iccs_location_type": null
+    }
+  ]
+}
