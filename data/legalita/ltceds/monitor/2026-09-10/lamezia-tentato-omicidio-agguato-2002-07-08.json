@@ -1,0 +1,70 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-tentato-omicidio-agguato-2002-07-08",
+  "discovered_at": "2026-09-10T01:23:20+02:00",
+  "updated_at": "2026-09-10T01:23:20+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Tentato omicidio in un agguato a Lamezia Terme l'8 luglio 2002",
+  "temporal": {
+    "start": "2002-07-08",
+    "end": "2002-07-08",
+    "edtf": "2002-07-08",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:lacnews24:2018-03-21:tentato-omicidio-lamezia-2002-07-08",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Richiesta di rinvio a giudizio per un tentato omicidio dell'8 luglio 2002 a Lamezia Terme",
+      "url": "https://www.lacnews24.it/cronaca/ndrangheta-agguato-a-vincenzo-torcasio-chiesto-il-processo-per-6-esponenti-del-clan-giampa-a2fioymq",
+      "published_at": null,
+      "retrieved_at": "2026-09-10T01:23:20+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:tentato-omicidio",
+      "classification_source_key": "press:lacnews24:2018-03-21:tentato-omicidio-lamezia-2002-07-08",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "la fonte colloca espressamente l'agguato a Lamezia Terme l'8 luglio 2002 e lo qualifica come tentato omicidio",
+        "la persona colpita sopravvisse dopo un intervento chirurgico; il record non contiene identita personali",
+        "nel marzo 2018 il pubblico ministero della DDA di Catanzaro chiese il rinvio a giudizio di sei persone per il fatto; questo elemento documenta lo stato procedurale riportato dalla fonte e non un accertamento definitivo di responsabilita",
+        "la fonte inquadra l'episodio nella contrapposizione mafiosa dell'epoca, ma non viene aggiunta una qualificazione autonoma ulteriore rispetto al tentato omicidio"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:2002-07-08:occurrence",
+      "basis_source_key": "press:lacnews24:2018-03-21:tentato-omicidio-lamezia-2002-07-08",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
