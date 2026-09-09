@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-rapina-lesioni-violenza-privata-via-telesio-2019-08-13",
   "discovered_at": "2026-09-08T16:49:27+02:00",
-  "updated_at": "2026-09-08T16:49:27+02:00",
+  "updated_at": "2026-09-10T01:57:55+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Rapina con lesioni personali e violenza privata in via Telesio",
@@ -74,6 +74,20 @@
         "procedural_context",
         "corroboration"
       ]
+    },
+    {
+      "source_key": "press:la-nuova-calabria:2019-08-20:rapina-botte-minacce-lamezia",
+      "source_type": "press_secondary",
+      "provider": "La Nuova Calabria",
+      "title": "Rapina con botte e minacce a una connazionale, arrestato a Lamezia",
+      "url": "https://lanuovacalabria.it/rapina-con-botte-e-minacce-a-una-connazionale-arrestato-a-lamezia",
+      "published_at": "2019-08-20T10:21:00+02:00",
+      "retrieved_at": "2026-09-10T01:57:55+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
     }
   ],
   "offences": [
@@ -140,6 +154,21 @@
       "publication_risk": "victim_linked",
       "geometry": null,
       "place_name": "Via Telesio",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:abitazione-rifugio:occurrence",
+      "basis_source_key": "press:la-nuova-calabria:2019-08-20:rapina-botte-minacce-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata dove la vittima si era rifugiata",
       "neighbourhood": null,
       "iccs_location_type": null
     }
