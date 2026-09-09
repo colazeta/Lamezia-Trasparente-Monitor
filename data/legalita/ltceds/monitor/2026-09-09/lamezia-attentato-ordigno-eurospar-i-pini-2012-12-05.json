@@ -1,0 +1,115 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-attentato-ordigno-eurospar-i-pini-2012-12-05",
+  "discovered_at": "2026-09-09T23:30:05+02:00",
+  "updated_at": "2026-09-09T23:30:05+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Attentato con ordigno al supermercato Eurospar del Centro Commerciale I Pini in via del Progresso",
+  "temporal": {
+    "start": "2012-12-05",
+    "end": "2012-12-05",
+    "edtf": "2012-12-05",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:cn24tv:2012-12-06:bomba-centro-commerciale-i-pini",
+      "source_type": "press_secondary",
+      "provider": "CN24TV",
+      "title": "Bomba danneggia centro commerciale a Lamezia Terme",
+      "url": "https://cn24tv.it/news/59877/bomba-danneggia-centro-commerciale-a-lamezia-terme.html",
+      "published_at": "2012-12-06T10:30:00+01:00",
+      "retrieved_at": "2026-09-09T23:30:05+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2012-12-06:bomba-centro-commerciale-i-pini",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: Bomba ad alto potenziale esplode nella notte presso centro commerciale I Pini",
+      "url": "https://www.lametino.it/cronaca/lamezia-bomba-ad-alto-potenziale-esplode-nella-notte-presso-centro-commerciale-i-pini.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-09T23:30:05+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2012-12-06:bomba-eurospar",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Lamezia, bomba davanti a un supermercato",
+      "url": "https://www.corrieredellacalabria.it/2012/12/06/10698_lamezia_bomba_davanti_a_un_supermercato/",
+      "published_at": "2012-12-06T10:28:00+01:00",
+      "retrieved_at": "2026-09-09T23:30:05+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:attentato-con-ordigno",
+      "classification_source_key": "press:cn24tv:2012-12-06:bomba-centro-commerciale-i-pini",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti contemporanee attestano l'esplosione nella sera del 5 dicembre 2012 di un ordigno collocato presso l'ingresso laterale del supermercato Eurospar nell'area del Centro Commerciale I Pini, lungo via del Progresso",
+        "le fonti stimano in circa due chilogrammi l'esplosivo impiegato, ma descrivono in modo non uniforme la potenza dell'ordigno e l'orario preciso; il record conserva quindi la sola data come temporalità esatta",
+        "la deflagrazione provocò danni rilevanti al supermercato, a strutture e attività adiacenti e ad auto in sosta, senza feriti; tra le attività nominate dalle fonti figurano Euronics, un negozio di fiori D'Auria, una galleria d'arte della famiglia Panarello e una società di noleggio auto",
+        "gli investigatori non escludevano un collegamento con il racket delle estorsioni; tale matrice resta una ipotesi investigativa e non viene codificata come distinta qualificazione penale"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:eurospar-centro-commerciale-i-pini:occurrence",
+      "basis_source_key": "press:cn24tv:2012-12-06:bomba-centro-commerciale-i-pini",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Ingresso laterale del supermercato Eurospar, Centro Commerciale I Pini, via del Progresso",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:eurospar-centro-commerciale-i-pini:target",
+      "basis_source_key": "press:il-lametino:2012-12-06:bomba-centro-commerciale-i-pini",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Supermercato Eurospar, Centro Commerciale I Pini, via del Progresso",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
