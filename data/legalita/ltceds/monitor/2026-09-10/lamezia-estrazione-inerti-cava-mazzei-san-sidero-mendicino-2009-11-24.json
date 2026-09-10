@@ -1,0 +1,144 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-estrazione-inerti-cava-mazzei-san-sidero-mendicino-2009-11-24",
+  "discovered_at": "2026-09-10T12:58:44+02:00",
+  "updated_at": "2026-09-10T12:58:44+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Estrazione illecita di inerti nella Cava Mazzei sottoposta a sequestro il 24 novembre 2009",
+  "temporal": {
+    "start": "2009-11-24",
+    "end": "2009-11-24",
+    "edtf": "2009-11-24",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:il-lametino:2011-06-03:cava-mazzei-cinque-arresti",
+      "source_type": "press_secondary",
+      "provider": "Il Lametino",
+      "title": "Lamezia, estrazione di materiale inerte dalla ‘cava Mazzei’. Arrestate cinque persone dai Carabinieri",
+      "url": "https://www.lametino.it/Cronaca/lamezia-estrazione-di-materiale-inerte-dalla-cava-mazzei-arrestate-cinque-persone-dai-carabinieri.html",
+      "published_at": "2011-06-03",
+      "retrieved_at": "2026-09-10T12:58:44+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support"
+      ]
+    },
+    {
+      "source_key": "press:la-prima-pagina:2011-06-03:cava-sequestrata-cinque-arresti",
+      "source_type": "press_secondary",
+      "provider": "La Prima Pagina",
+      "title": "Lamezia Terme, lavoravano in cava sequestrata 5 arresti",
+      "url": "https://www.laprimapagina.it/2011/06/03/lamezia-terme-lavoravano-in-cava-sequestrata-5-arresti/",
+      "published_at": "2011-06-03",
+      "retrieved_at": "2026-09-10T12:58:44+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2011-06-10:cava-mazzei-imprenditore-arrestato",
+      "source_type": "press_secondary",
+      "provider": "Il Lametino",
+      "title": "Lamezia: Cava, Carabinieri arrestano l’imprenditore Salvatore Mazzei",
+      "url": "https://www.lametino.it/cronaca/lamezia-cava-carabinieri-arrestano-limprenditore-salvatore-mazzei.html",
+      "published_at": "2011-06-10",
+      "retrieved_at": "2026-09-10T12:58:44+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:furto-aggravato",
+      "classification_source_key": "press:il-lametino:2011-06-03:cava-mazzei-cinque-arresti",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la fonte del 3 giugno 2011 ricorda espressamente l'intervento dei Carabinieri del 24 novembre 2009 nella stessa cava e riferisce che dodici persone furono sorprese mentre estraevano materiale inerte da un'area sottoposta a sequestro",
+        "la stessa fonte descrive le operazioni del 2009 e del 2010 come relative ai medesimi reati elencati per il successivo episodio del 2011; la classificazione conserva quindi la qualificazione legale riportata dalla fonte senza aggiungere riferimenti normativi non attestati"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:danneggiamento-aggravato-cose-sottoposte-sequestro",
+      "classification_source_key": "press:il-lametino:2011-06-03:cava-mazzei-cinque-arresti",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la fonte del 3 giugno 2011 qualifica il precedente episodio del novembre 2009 come relativo ai medesimi reati contestati per l'estrazione nella cava sottoposta a sequestro"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:crollo-costruzioni-o-altri-disastri-dolosi",
+      "classification_source_key": "press:il-lametino:2011-06-03:cava-mazzei-cinque-arresti",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la fonte del 3 giugno 2011 qualifica il precedente episodio del novembre 2009 come relativo ai medesimi reati contestati per l'estrazione nella cava sottoposta a sequestro"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:violazione-sigilli",
+      "classification_source_key": "press:il-lametino:2011-06-03:cava-mazzei-cinque-arresti",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la cava risultava già sottoposta a sequestro e la fonte riferisce che nel novembre 2009 furono nuovamente apposti i sigilli dopo l'intervento"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:cava-mazzei-san-sidero-mendicino:occurrence",
+      "basis_source_key": "press:il-lametino:2011-06-03:cava-mazzei-cinque-arresti",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "non_sensitive",
+      "geometry": null,
+      "place_name": "Cava Mazzei, località San Sidero-Mendicino",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
