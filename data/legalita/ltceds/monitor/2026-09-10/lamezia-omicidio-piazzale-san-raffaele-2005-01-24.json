@@ -1,0 +1,84 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-omicidio-piazzale-san-raffaele-2005-01-24",
+  "discovered_at": "2026-09-10T11:26:25+02:00",
+  "updated_at": "2026-09-10T11:26:25+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Omicidio nel piazzale della Chiesa di San Raffaele a Lamezia Terme il 24 gennaio 2005",
+  "temporal": {
+    "start": "2005-01-24",
+    "end": "2005-01-24",
+    "edtf": "2005-01-24",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "news:ansa:2014-10-02:omicidio-faida-cosche",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Quattro arresti omicidio faida cosche",
+      "url": "https://www.ansa.it/sito/notizie/cronaca/2014/10/02/quattro-arresti-omicidio-faida-cosche_240b2ca9-9dbf-4a29-9dc0-91e1d5ec8b49.html",
+      "published_at": "2014-10-02T13:25:00+02:00",
+      "retrieved_at": "2026-09-10T11:26:25+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2014-11-28:processo-perseo-testimonianza",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Processo Perseo: Parla Saverio Cappello",
+      "url": "https://www.lametino.it/cronaca/operazione-perseo-parla-saverio-cappello.html",
+      "published_at": "2014-11-28T00:00:00+01:00",
+      "retrieved_at": "2026-09-10T11:26:25+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "news:ansa:2014-10-02:omicidio-faida-cosche",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "ANSA colloca l'omicidio a Lamezia Terme il 24 gennaio 2005 e riferisce che nel 2014 la Squadra mobile di Catanzaro notificò quattro ordinanze di custodia cautelare nell'ambito delle indagini sul delitto",
+        "una successiva cronaca del processo Perseo, riportando dichiarazioni rese in aula da un collaboratore di giustizia, localizza il fatto davanti al piazzale della Chiesa di San Raffaele",
+        "la ricostruzione investigativa colloca il delitto nel contesto della faida tra gruppi di 'ndrangheta; il record censisce il fatto omicidiario e non attribuisce responsabilità individuali"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:chiesa-san-raffaele-piazzale:occurrence",
+      "basis_source_key": "press:il-lametino:2014-11-28:processo-perseo-testimonianza",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Piazzale antistante la Chiesa di San Raffaele",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
