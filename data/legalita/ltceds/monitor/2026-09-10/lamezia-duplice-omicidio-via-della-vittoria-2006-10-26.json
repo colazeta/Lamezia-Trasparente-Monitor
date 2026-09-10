@@ -1,0 +1,127 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-duplice-omicidio-via-della-vittoria-2006-10-26",
+  "discovered_at": "2026-09-10T04:10:32+02:00",
+  "updated_at": "2026-09-10T04:10:32+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Duplice omicidio in via della Vittoria il 26 ottobre 2006",
+  "temporal": {
+    "start": "2006-10-26",
+    "end": "2006-10-26",
+    "edtf": "2006-10-26",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:gazzetta-sud:2006-10-27:duplice-omicidio-via-della-vittoria",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud (rassegna Casa della Legalita)",
+      "title": "Duplice omicidio, Lamezia sotto assedio",
+      "url": "https://www.casadellalegalita.net/index.php/rassegna-2006/1018-duplice-omicidio-lamezia-sotto-assedio",
+      "published_at": "2006-10-27",
+      "retrieved_at": "2026-09-10T04:10:32+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:tgcom24:2006-10-26:agguato-lamezia-due-morti",
+      "source_type": "press_secondary",
+      "provider": "Tgcom24",
+      "title": "Agguato a Lamezia Terme: due morti",
+      "url": "https://www.tgcom24.mediaset.it/cronaca/articoli/333224/agguato-a-lamezia-terme-due-morti.shtml",
+      "published_at": "2006-10-26",
+      "retrieved_at": "2026-09-10T04:10:32+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2012-06-28:operazione-medusa-scia-sangue",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Operazione Medusa, la lunga scia di sangue che ha bagnato Lamezia",
+      "url": "https://www.corrieredellacalabria.it/2012/06/28/6490_operazione_medusa_la_lunga_scia_di_sangue_che_ha_bagnato_lamezia/",
+      "published_at": "2012-06-28",
+      "retrieved_at": "2026-09-10T04:10:32+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lacnews24:2017-07-15:perseo-cassazione",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Ndrangheta: sentenza Perseo ai clan di Lamezia",
+      "url": "https://www.lacnews24.it/cronaca/ndrangheta-processo-perseo-ai-clan-di-lamezia-sentenza-definitiva-v8fw8s14",
+      "published_at": "2017-07-15",
+      "retrieved_at": "2026-09-10T04:10:32+02:00",
+      "support_roles": [
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "press:lacnews24:2017-07-15:perseo-cassazione",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti contemporanee documentano l'uccisione di due occupanti di una Jeep in via della Vittoria nella serata del 26 ottobre 2006",
+        "la ricostruzione contemporanea colloca il veicolo davanti o nelle immediate vicinanze dell'autosalone Aiello e riferisce l'esplosione di almeno dodici colpi di pistola",
+        "una pistola con matricola cancellata fu rinvenuta sul luogo dell'agguato",
+        "il fatto fu successivamente trattato nel procedimento Perseo; nel 2017 la Cassazione annullo con rinvio una condanna all'ergastolo nella parte relativa a questo duplice omicidio, per cui il record non attribuisce responsabilita individuali definitive"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 2
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:auto-aiello-via-della-vittoria:occurrence",
+      "basis_source_key": "press:gazzetta-sud:2006-10-27:duplice-omicidio-via-della-vittoria",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via della Vittoria, davanti all'autosalone Aiello",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:auto-aiello-via-della-vittoria:recovery",
+      "basis_source_key": "press:tgcom24:2006-10-26:agguato-lamezia-due-morti",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Luogo dell'agguato in via della Vittoria, davanti a una concessionaria di auto",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
