@@ -1,0 +1,146 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-detenzione-cocaina-abitazione-2025-03-31",
+  "discovered_at": "2026-09-10T09:43:30+02:00",
+  "updated_at": "2026-09-10T09:43:30+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Detenzione di cocaina ai fini di spaccio contestata in un'abitazione privata a Lamezia Terme il 31 marzo 2025",
+  "temporal": {
+    "start": "2025-03-31",
+    "end": "2025-03-31",
+    "edtf": "2025-03-31",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "news:ansa:2025-03-31:cocaina-armadio-41enne",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Cocaina nascosta in un armadio di casa, arrestato un 41enne",
+      "url": "https://www.ansa.it/calabria/notizie/2025/03/31/cocaina-nascosta-in-un-armadio-di-casa-arrestato-un-41enne_f8b12d8a-8e34-4042-b271-14efce055b04.html",
+      "published_at": "2025-03-31T09:39:00+02:00",
+      "retrieved_at": "2026-09-10T09:43:30+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:calabriainforma:2025-03-31:sei-perquisizioni-cocaina",
+      "source_type": "press_secondary",
+      "provider": "CalabriaInforma",
+      "title": "Droga e armi, sei perquisizioni a Lamezia: un arresto in flagranza per detenzione ai fini di spaccio",
+      "url": "https://www.calabriainforma.it/cronaca/2025/03/31/droga-e-armi-sei-perquisizioni-a-lamezia-un-arresto-in-flagranza-per-detenzione-ai-fini-di-spaccio/52028/",
+      "published_at": "2025-03-31T09:00:00+02:00",
+      "retrieved_at": "2026-09-10T09:43:30+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:rainews-tgr-calabria:2025-03-31:cocaina-armadio",
+      "source_type": "press_secondary",
+      "provider": "RaiNews TGR Calabria",
+      "title": "Cocaina nell'armadio di casa, arrestato un uomo di 41 anni",
+      "url": "https://www.rainews.it/tgr/calabria/articoli/2025/03/cocaina-nellarmadio-di-casa-arrestato-un-uomo-di-41-anni-fbd39add-ed3b-4421-80c0-c518bea7ee59.html",
+      "published_at": "2025-03-31T00:00:00+02:00",
+      "retrieved_at": "2026-09-10T09:43:30+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:detenzione-ai-fini-di-spaccio-stupefacenti",
+      "classification_source_key": "news:ansa:2025-03-31:cocaina-armadio-41enne",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "durante una delle sei perquisizioni domiciliari delegate dalla Procura della Repubblica presso il Tribunale di Lamezia Terme, i Carabinieri rinvennero circa 100 grammi di cocaina suddivisa in più involucri in un armadio della camera da letto, insieme a sostanza da taglio e materiale per il confezionamento",
+        "le fonti qualificano espressamente la condotta contestata come detenzione di sostanze stupefacenti ai fini di spaccio e riferiscono un arresto in flagranza",
+        "CalabriaInforma, riproducendo il comunicato sull'operazione, riferisce la convalida dell'arresto e l'applicazione degli arresti domiciliari; i procedimenti risultavano ancora nella fase delle indagini preliminari"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata-2025-03-31:occurrence",
+      "basis_source_key": "news:ansa:2025-03-31:cocaina-armadio-41enne",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata in Lamezia Terme (indirizzo non specificato nelle fonti)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata-2025-03-31:search",
+      "basis_source_key": "press:calabriainforma:2025-03-31:sei-perquisizioni-cocaina",
+      "role": "search",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata sottoposta a perquisizione in Lamezia Terme (indirizzo non specificato nelle fonti)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata-2025-03-31:recovery",
+      "basis_source_key": "news:ansa:2025-03-31:cocaina-armadio-41enne",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Armadio della camera da letto nell'abitazione privata in Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata-2025-03-31:arrest",
+      "basis_source_key": "press:calabriainforma:2025-03-31:sei-perquisizioni-cocaina",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata in Lamezia Terme durante la perquisizione domiciliare",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
