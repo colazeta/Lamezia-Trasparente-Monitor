@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-rapina-ufficio-postale-via-aldo-moro-2012-08-10",
   "discovered_at": "2026-09-10T08:37:01+02:00",
-  "updated_at": "2026-09-10T08:37:01+02:00",
+  "updated_at": "2026-09-10T08:59:05+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Rapina all'ufficio postale di via Aldo Moro a Lamezia Terme il 10 agosto 2012",
@@ -95,6 +95,21 @@
       "publication_risk": "low_public_site",
       "geometry": null,
       "place_name": "Ufficio postale di via Aldo Moro",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:zona-ufficio-postale-via-aldo-moro:arrest",
+      "basis_source_key": "press:lametino:2012-08-28:rapina-posta-10-agosto",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "non_sensitive",
+      "geometry": null,
+      "place_name": "Zona dell'ufficio postale di via Aldo Moro",
       "neighbourhood": null,
       "iccs_location_type": null
     }
