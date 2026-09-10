@@ -1,7 +1,6 @@
+import { municipalDemographicUrl } from "./municipalDemographics";
 import airTrafficDataUrl from "./generated/lameziaAirTrafficMonthly.json?url";
 import climateDataUrl from "./generated/lameziaClimateDaily.json?url";
-import familiesChildrenDataUrl from "./generated/lameziaFamiliesChildren.json?url";
-import foreignResidentsDataUrl from "./generated/lameziaForeignResidentsAgeSex.json?url";
 import householdCompositionDataUrl from "../../../api-server/src/data/lameziaHouseholdComposition2023.json?url";
 import type {
   OpenDataDatasetFormat,
@@ -36,12 +35,12 @@ const SPECIALIST_DOWNLOADS: Record<string, OpenDataPrimaryDownload> = {
     format: "JSON",
   },
   "lamezia-foreign-residents-age-sex": {
-    url: foreignResidentsDataUrl,
+    url: municipalDemographicUrl("foreign-age-sex", undefined, true),
     downloadName: "lamezia-stranieri-eta-sesso.json",
     format: "JSON",
   },
   "lamezia-families-children": {
-    url: familiesChildrenDataUrl,
+    url: municipalDemographicUrl("families-children", undefined, true),
     downloadName: "lamezia-famiglie-numero-figli.json",
     format: "JSON",
   },

@@ -1,3 +1,6 @@
+import { useMunicipalDemographicSnapshot } from "@/hooks/useMunicipalDemographics";
+import { municipalDemographicUrl } from "@/data/municipalDemographics";
+import { MunicipalDatasetStatus } from "./MunicipalDatasetStatus";
 import { type ReactNode } from "react";
 import {
   ArrowRight,
@@ -14,9 +17,9 @@ import {
 
 import { Button } from "@/components/ui/button";
 import {
-  LAMEZIA_FAMILIES_CHILDREN_DATA,
-  LAMEZIA_FAMILIES_CHILDREN_DATA_URL,
-  LAMEZIA_FAMILIES_CHILDREN_SUMMARY,
+  createFamiliesChildrenDataset,
+  buildFamiliesChildrenSummary,
+  type RawLameziaFamiliesChildrenDataset,
   type LameziaFamiliesChildrenRecord,
 } from "@/data/lameziaFamiliesChildren";
 import { LAMEZIA_HOUSEHOLD_COMPOSITION_2023_DATA } from "@/data/lameziaHouseholdComposition2023";
@@ -36,9 +39,24 @@ const percentFormat = new Intl.NumberFormat("it-IT", {
 });
 
 export function FamiliesChildrenDatasetCard() {
-  const records = LAMEZIA_FAMILIES_CHILDREN_DATA.family_children;
-  const metadata = LAMEZIA_FAMILIES_CHILDREN_DATA.metadata;
-  const summary = LAMEZIA_FAMILIES_CHILDREN_SUMMARY;
+  const query = useMunicipalDemographicSnapshot("families-children");
+  if (!query.data)
+    return (
+      <MunicipalDatasetStatus
+        id="famiglie-figli-lamezia"
+        title="Famiglie per numero di figli - Lamezia Terme"
+        loading={query.isLoading}
+        retry={() => {
+          void query.refetch();
+        }}
+      />
+    );
+  const dataset = createFamiliesChildrenDataset(
+    query.data as unknown as RawLameziaFamiliesChildrenDataset,
+  );
+  const records = dataset.family_children;
+  const metadata = dataset.metadata;
+  const summary = buildFamiliesChildrenSummary(records);
   const householdBenchmark = LAMEZIA_HOUSEHOLD_COMPOSITION_2023_DATA;
 
   return (
@@ -66,7 +84,14 @@ export function FamiliesChildrenDatasetCard() {
               distinto dal profilo ISTAT per numero di componenti.
             </p>
           </div>
-          <a href={LAMEZIA_FAMILIES_CHILDREN_DATA_URL} download>
+          <a
+            href={municipalDemographicUrl(
+              "families-children",
+              query.data.provenance.release_hash,
+              true,
+            )}
+            download
+          >
             <Button variant="outline" size="sm" className="w-full md:w-auto">
               <FileJson className="h-4 w-4" />
               Scarica JSON
@@ -77,6 +102,12 @@ export function FamiliesChildrenDatasetCard() {
       </div>
 
       <div className="p-5 md:p-6">
+        <p className="mb-3 text-xs text-muted-foreground">
+          Proiezione dal database canonico.{" "}
+          {query.isError
+            ? "Aggiornamento non riuscito: è mostrata l’ultima risposta canonica ricevuta, non una nuova verifica della fonte."
+            : "Le date della fonte e di importazione restano distinte."}
+        </p>
         <FamiliesChildrenChart records={records} />
 
         <p className="mt-3 text-sm leading-6 text-muted-foreground">

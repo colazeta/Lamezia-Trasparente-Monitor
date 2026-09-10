@@ -7,7 +7,8 @@
     ".": "./src/index.ts",
     "./schema": "./src/schema/index.ts",
     "./inspection": "./src/inspection.ts",
-    "./source-snapshots": "./src/sourceSnapshotRunner.ts"
+    "./source-snapshots": "./src/sourceSnapshotRunner.ts",
+    "./municipal-demographics": "./src/municipalDemographicReadModel.ts"
   },
   "scripts": {
     "audit:live": "tsx ./src/inspectionAudit.ts",
@@ -20,7 +21,7 @@
     "seed": "tsx ./src/seed.ts",
     "import:ltceds-pilot": "tsx ./src/ltcedsPilotImportCli.ts",
     "import:crime-monitor": "tsx ./src/crimeMonitorIngestion.ts",
-    "test": "tsx --test ./src/crimeEvents.test.ts ./src/ltcedsPilotImportCore.test.ts ./src/crimeMonitorIngestionCore.test.ts ./src/schemaMigrationConvergence.test.ts ./src/legacySchemaCompatibility.test.ts ./src/canonicalIdentity.test.ts ./src/canonicalPnrrPlan.test.ts ./src/sourceSnapshotPersistence.test.ts ./src/sourceSnapshotRunner.test.ts ./src/municipalDemographicPlan.test.ts && pnpm run check-migrations",
+    "test": "tsx --test ./src/crimeEvents.test.ts ./src/ltcedsPilotImportCore.test.ts ./src/crimeMonitorIngestionCore.test.ts ./src/schemaMigrationConvergence.test.ts ./src/legacySchemaCompatibility.test.ts ./src/canonicalIdentity.test.ts ./src/canonicalPnrrPlan.test.ts ./src/sourceSnapshotPersistence.test.ts ./src/sourceSnapshotRunner.test.ts ./src/municipalDemographicPlan.test.ts ./src/municipalDemographicReadModel.test.ts && pnpm run check-migrations",
     "import:source-snapshots": "node --import tsx ./src/sourceSnapshotImport.ts"
   },
   "dependencies": {

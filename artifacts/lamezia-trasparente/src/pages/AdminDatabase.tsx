@@ -10,6 +10,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { Database, RefreshCw, LogOut, Folder, FileSearch } from "lucide-react";
 import type {
+  MunicipalDemographicAdminStatus,
   DatabaseInspectionCatalog as Catalog,
   DatabaseInspectionTable as DbTable,
   DatabaseInspectionRow as DbRow,
@@ -178,9 +179,9 @@ function DatabaseSession({ userId }: { userId: string }) {
   const cache = useQueryClient();
   const [search, setSearch] = useState("");
   const [selection, setSelection] = useState<string | null>(null);
-  const [overview, setOverview] = useState<"catalog" | "model" | "coverage">(
-    "catalog",
-  );
+  const [overview, setOverview] = useState<
+    "catalog" | "model" | "coverage" | "demographics"
+  >("catalog");
   const showOverview = (next: typeof overview) => {
     setSelection(null);
     setOverview(next);
@@ -297,6 +298,16 @@ function DatabaseSession({ userId }: { userId: string }) {
                   >
                     Sito e copertura
                   </button>
+                  <button
+                    className={
+                      !selection && overview === "demographics"
+                        ? "db-selected"
+                        : ""
+                    }
+                    onClick={() => showOverview("demographics")}
+                  >
+                    Demografia canonica
+                  </button>
                   <DatabaseTree
                     tables={tables}
                     search={search}
@@ -317,6 +328,11 @@ function DatabaseSession({ userId }: { userId: string }) {
                       onTable={setSelection}
                     />
                   </TablePaneBoundary>
+                ) : overview === "demographics" ? (
+                  <MunicipalDemographicPane
+                    userId={userId}
+                    onTable={setSelection}
+                  />
                 ) : overview === "model" ? (
                   <ConceptualPane tables={tables} onTable={setSelection} />
                 ) : overview === "coverage" ? (
@@ -337,6 +353,96 @@ function DatabaseSession({ userId }: { userId: string }) {
           </>
         )
       )}
+    </section>
+  );
+}
+
+function MunicipalDemographicPane({
+  userId,
+  onTable,
+}: {
+  userId: string;
+  onTable: (name: string) => void;
+}) {
+  const request = useDatabaseRequest();
+  const query = useQuery({
+    queryKey: ["database-admin", userId, "municipal-demographics"],
+    queryFn: ({ signal }) =>
+      request<MunicipalDemographicAdminStatus[]>(
+        "/municipal-demographics",
+        signal,
+      ),
+    retry: false,
+    gcTime: 0,
+    staleTime: 0,
+  });
+  return (
+    <section aria-label="Demografia canonica">
+      <h2>Demografia canonica</h2>
+      <p>
+        Le verifiche riguardano il database autenticato della console. Non
+        dimostrano quale database utilizzi il sito pubblico.
+      </p>
+      {query.isPending ? (
+        <Message>Lettura e riconciliazione delle serie…</Message>
+      ) : query.error ? (
+        <Message error>{query.error.message}</Message>
+      ) : (
+        query.data?.map((row) => (
+          <section key={row.key} className="db-message">
+            <h3>{row.snapshot?.provenance.series_key ?? row.key}</h3>
+            {row.status !== "available" || !row.snapshot ? (
+              <p>
+                Proiezione non disponibile o non riconciliata. Nessun valore
+                pari a zero viene dedotto. (
+                {row.error ?? "CANONICAL_DATA_UNAVAILABLE"})
+              </p>
+            ) : (
+              <>
+                <dl>
+                  <dt>Righe sorgente / osservazioni canoniche</dt>
+                  <dd>
+                    {row.snapshot.provenance.source_records} /{" "}
+                    {row.snapshot.provenance.canonical_observations}
+                  </dd>
+                  <dt>Versione della fonte</dt>
+                  <dd>
+                    <code>{row.snapshot.provenance.release_hash}</code>
+                  </dd>
+                  <dt>Generazione dell’evidenza nel repository</dt>
+                  <dd>{row.snapshot.provenance.source_generated_at}</dd>
+                  <dt>Importazione nel database</dt>
+                  <dd>{row.snapshot.provenance.acquired_at}</dd>
+                  <dt>Periodo statistico</dt>
+                  <dd>
+                    {row.snapshot.provenance.reference_period_unspecified
+                      ? "Non dichiarato dalla fonte"
+                      : "Annualità dichiarate; giorno di riferimento non specificato"}
+                  </dd>
+                </dl>
+                <p>{String(row.snapshot.metadata.caveat ?? "")}</p>
+              </>
+            )}
+          </section>
+        ))
+      )}
+      <p>
+        Le osservazioni restano separate dalle righe sorgente e dalle prove
+        conservate.
+      </p>
+      <div className="db-toolbar">
+        {[
+          "demographic_series",
+          "demographic_releases",
+          "demographic_observations",
+          "source_records",
+          "source_artifacts",
+        ].map((table) => (
+          <Button key={table} variant="outline" onClick={() => onTable(table)}>
+            {table}
+          </Button>
+        ))}
+      </div>
     </section>
   );
 }

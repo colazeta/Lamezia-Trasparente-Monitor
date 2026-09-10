@@ -9,6 +9,96 @@ import * as zod from 'zod';
 
 
 /**
+ * Aggregate data only. Reads one complete typed release and verifies retained evidence without filesystem fallback or ingestion. Missing or inconsistent canonical data returns 503, not zero observations. Source and import timestamps remain distinct.
+ * @summary Read a reconciled municipal demographic snapshot from the canonical database
+ */
+export const GetMunicipalDemographicSnapshotParams = zod.object({
+  "key": zod.enum(['population', 'foreign-age-sex', 'families-children'])
+})
+
+export const getMunicipalDemographicSnapshotQueryReleaseRegExp = new RegExp('^[a-f0-9]{64}$');
+
+
+export const GetMunicipalDemographicSnapshotQueryParams = zod.object({
+  "release": zod.coerce.string().regex(getMunicipalDemographicSnapshotQueryReleaseRegExp).optional().describe('Pin the source SHA-256 of an imported release for reproducible downloads.'),
+  "download": zod.enum(['1']).optional().describe('Return a download disposition when set to 1.')
+})
+
+export const getMunicipalDemographicSnapshotResponseProvenanceReleaseHashRegExp = new RegExp('^[a-f0-9]{64}$');
+
+
+
+
+export const GetMunicipalDemographicSnapshotResponse = zod.object({
+  "schema_version": zod.literal(1),
+  "metadata": zod.record(zod.string(), zod.unknown()).describe('Allowlisted source metadata checked against canonical observations. Arbitrary source fields are not exposed.'),
+  "annual_columns": zod.array(zod.string()).optional(),
+  "annual_rows": zod.string().optional().describe('Population and reproduced differences, in the declared column order.'),
+  "age_columns": zod.array(zod.string()).optional(),
+  "age_rows": zod.string().optional().describe('Canonical sex counts and reproduced totals and shares.'),
+  "family_children_columns": zod.array(zod.string()).optional(),
+  "family_children_rows": zod.string().optional().describe('Family counts and reproduced shares; reference period is unknown.'),
+  "provenance": zod.object({
+  "schema_version": zod.enum(['lt-municipal-demographic-public.v1']),
+  "canonical": zod.literal(true),
+  "series_key": zod.string(),
+  "source_key": zod.string(),
+  "release_hash": zod.string().regex(getMunicipalDemographicSnapshotResponseProvenanceReleaseHashRegExp),
+  "acquired_at": zod.coerce.date(),
+  "source_generated_at": zod.coerce.date(),
+  "source_status": zod.enum(['unknown']),
+  "reference_period_unspecified": zod.boolean(),
+  "reference_day_unspecified": zod.literal(true),
+  "source_records": zod.number().min(1),
+  "canonical_observations": zod.number().min(1),
+  "extractor_version": zod.string()
+})
+})
+
+
+/**
+ * Uses the database console pool and read-only repeatable-read transaction. Availability requires reconciliation. This does not certify the public deployment's database identity.
+ * @summary Inspect municipal demographics in the authenticated database
+ */
+export const getDatabaseMunicipalDemographicsResponseSnapshotProvenanceReleaseHashRegExp = new RegExp('^[a-f0-9]{64}$');
+
+
+
+
+export const GetDatabaseMunicipalDemographicsResponseItem = zod.object({
+  "key": zod.enum(['population', 'foreign-age-sex', 'families-children']),
+  "status": zod.enum(['available', 'unavailable']),
+  "snapshot": zod.object({
+  "schema_version": zod.literal(1),
+  "metadata": zod.record(zod.string(), zod.unknown()).describe('Allowlisted source metadata checked against canonical observations. Arbitrary source fields are not exposed.'),
+  "annual_columns": zod.array(zod.string()).optional(),
+  "annual_rows": zod.string().optional().describe('Population and reproduced differences, in the declared column order.'),
+  "age_columns": zod.array(zod.string()).optional(),
+  "age_rows": zod.string().optional().describe('Canonical sex counts and reproduced totals and shares.'),
+  "family_children_columns": zod.array(zod.string()).optional(),
+  "family_children_rows": zod.string().optional().describe('Family counts and reproduced shares; reference period is unknown.'),
+  "provenance": zod.object({
+  "schema_version": zod.enum(['lt-municipal-demographic-public.v1']),
+  "canonical": zod.literal(true),
+  "series_key": zod.string(),
+  "source_key": zod.string(),
+  "release_hash": zod.string().regex(getDatabaseMunicipalDemographicsResponseSnapshotProvenanceReleaseHashRegExp),
+  "acquired_at": zod.coerce.date(),
+  "source_generated_at": zod.coerce.date(),
+  "source_status": zod.enum(['unknown']),
+  "reference_period_unspecified": zod.boolean(),
+  "reference_day_unspecified": zod.literal(true),
+  "source_records": zod.number().min(1),
+  "canonical_observations": zod.number().min(1),
+  "extractor_version": zod.string()
+})
+}).optional(),
+  "error": zod.enum(['CANONICAL_DATA_UNAVAILABLE', 'CANONICAL_RECONCILIATION_FAILED']).optional()
+})
+export const GetDatabaseMunicipalDemographicsResponse = zod.array(GetDatabaseMunicipalDemographicsResponseItem)
+
+
+/**
  * Private no-store metadata. Row estimates are nullable and are not exact counts. This operation does not certify complete ingestion or schema equivalence.
  * @summary Inspect the live PostgreSQL catalog as the sole database owner
  */

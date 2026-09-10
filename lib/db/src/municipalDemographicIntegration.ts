@@ -1,3 +1,7 @@
+import {
+  readMunicipalDemographicSnapshot,
+  MUNICIPAL_PUBLIC_KEYS,
+} from "./municipalDemographicReadModel";
 /** Integration test for a disposable local PostgreSQL service; never accepts a remote host. */
 import assert from "node:assert/strict";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
@@ -206,6 +210,100 @@ try {
     injected: true,
     dataUnchanged: true,
     attemptRecorded: true,
+  };
+  const publicSnapshots = [];
+  for (const key of MUNICIPAL_PUBLIC_KEYS) {
+    const snapshot = await readMunicipalDemographicSnapshot(pool, key);
+    publicSnapshots.push(snapshot);
+    assert.equal(snapshot.provenance.canonical, true);
+    assert.equal(snapshot.provenance.source_status, "unknown");
+  }
+  report.publicReadModels = publicSnapshots.map(
+    (snapshot) => snapshot.provenance,
+  );
+  const originalPath = path.join(root, source.source.path);
+  const originalBytes = await readFile(originalPath);
+  try {
+    await writeFile(originalPath, "invalid source file during isolated test");
+    assert.deepEqual(
+      await readMunicipalDemographicSnapshot(pool, "population"),
+      publicSnapshots[0],
+    );
+  } finally {
+    await writeFile(originalPath, originalBytes);
+  }
+  const corruptClient = await pool.connect();
+  try {
+    await corruptClient.query("BEGIN");
+    await corruptClient.query(
+      "UPDATE demographic_observations SET value=value+1 WHERE id=(SELECT min(id) FROM demographic_observations)",
+    );
+    await assert.rejects(
+      readMunicipalDemographicSnapshot(corruptClient, "population"),
+      /CANONICAL_RECONCILIATION_FAILED/,
+    );
+  } finally {
+    await corruptClient.query("ROLLBACK");
+    corruptClient.release();
+  }
+  assert.deepEqual(
+    await readMunicipalDemographicSnapshot(pool, "population"),
+    publicSnapshots[0],
+  );
+  // A newer complete snapshot cannot resurrect a period removed by the source.
+  const revised = JSON.parse(originalBytes.toString());
+  revised.annual_rows = revised.annual_rows.split("\n").slice(0, -1).join("\n");
+  revised.metadata.rows--;
+  revised.metadata.latest_year--;
+  revised.metadata.generated_at = new Date(
+    Date.parse(revised.metadata.generated_at) + 2000,
+  ).toISOString();
+  const revisionPlan = planSourceSnapshot(
+    source.source,
+    Buffer.from(JSON.stringify(revised)),
+    prepared.report.repositoryCommit,
+  );
+  const revisionClient = await pool.connect();
+  try {
+    await persistSourceSnapshot(revisionClient, revisionPlan);
+  } finally {
+    revisionClient.release();
+  }
+  const latest = await readMunicipalDemographicSnapshot(pool, "population");
+  assert.equal(latest.provenance.canonical_observations, 24);
+  assert.equal(latest.metadata.latest_year, 2024);
+  assert.ok(!latest.annual_rows!.includes("|2025|"));
+  assert.deepEqual(
+    await readMunicipalDemographicSnapshot(
+      pool,
+      "population",
+      publicSnapshots[0].provenance.release_hash,
+    ),
+    publicSnapshots[0],
+  );
+  // Break the newest provenance link: the read must fail, not return 25 old rows.
+  const brokenLink = await pool.connect();
+  try {
+    await brokenLink.query("BEGIN");
+    await brokenLink.query(
+      "UPDATE demographic_releases SET metadata=metadata-'source_registry_release_id' WHERE source_hash=$1",
+      [revisionPlan.byteHash],
+    );
+    await assert.rejects(
+      readMunicipalDemographicSnapshot(brokenLink, "population"),
+      /CANONICAL_RECONCILIATION_FAILED/,
+    );
+  } finally {
+    await brokenLink.query("ROLLBACK");
+    brokenLink.release();
+  }
+  report.readModelValidation = {
+    filesystemIndependent: true,
+    corruptionRejected: true,
+    originalRestored: true,
+    completeSnapshotSelection: true,
+    pinnedReleaseReproduced: true,
+    brokenNewestReleaseRejected: true,
   };
   report.status = "passed";
 } catch (error) {
