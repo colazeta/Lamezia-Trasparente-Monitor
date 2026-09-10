@@ -1,0 +1,160 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-detenzione-cocaina-svincolo-autostradale-2023-08-18",
+  "discovered_at": "2026-09-10T13:58:21+02:00",
+  "updated_at": "2026-09-10T13:58:21+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Detenzione ai fini di spaccio di cocaina in un'autovettura nei pressi dello svincolo autostradale di Lamezia Terme",
+  "temporal": {
+    "start": "2023-08-18",
+    "end": "2023-08-18",
+    "edtf": "2023-08-18",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "law:polizia-stato:2023-08-22:cocaina-svincolo-autostradale-lamezia",
+      "source_type": "law_enforcement_primary",
+      "provider": "Polizia di Stato - Questura di Catanzaro",
+      "title": "Lamezia Terme: arrestato dalla Polizia di Stato un giovane sorpreso con oltre un chilo di cocaina",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/123664e4a39716eb7225882170",
+      "published_at": "2023-08-22T18:24:00+02:00",
+      "retrieved_at": "2026-09-10T13:58:21+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:rai-tgr-calabria:2023-08-22:cocaina-svincolo-autostradale-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Rai TGR Calabria",
+      "title": "In auto con oltre un chilo di coca, arrestato 23enne",
+      "url": "https://www.rainews.it/tgr/calabria/articoli/2023/08/in-auto-con-oltre-un-chilo-di-coca-arrestato-23enne-8f5a7973-e270-443c-929e-66b87a932b1b.html",
+      "published_at": "2023-08-22T00:00:00+02:00",
+      "retrieved_at": "2026-09-10T13:58:21+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2023-08-22:cocaina-svincolo-autostradale-lamezia",
+      "source_type": "press_secondary",
+      "provider": "il Lametino.it",
+      "title": "Lamezia, sorpreso con oltre un chilo di cocaina in auto: ai domiciliari 23enne",
+      "url": "https://www.lametino.it/cronaca/lamezia-sorpreso-con-oltre-un-chilo-di-cocaina-in-auto-ai-domiciliari-23enne.html",
+      "published_at": "2023-08-22T00:00:00+02:00",
+      "retrieved_at": "2026-09-10T13:58:21+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:detenzione-ai-fini-di-spaccio-stupefacenti",
+      "classification_source_key": "law:polizia-stato:2023-08-22:cocaina-svincolo-autostradale-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la fonte primaria colloca il controllo nella mattinata del 18 agosto 2023 e riferisce che un'autovettura era parcheggiata sul ciglio della carreggiata nei pressi dello svincolo autostradale di Lamezia Terme",
+        "durante la perquisizione del veicolo la Polizia rinvenne e sequestrò un panetto successivamente risultato cocaina per 1,250 kg",
+        "la Questura qualifica espressamente l'arresto in flagranza per detenzione ai fini di spaccio di sostanze stupefacenti; il GIP convalidò successivamente l'arresto e dispose gli arresti domiciliari, mentre il procedimento era nella fase delle indagini preliminari"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:svincolo-autostradale:occurrence",
+      "basis_source_key": "law:polizia-stato:2023-08-22:cocaina-svincolo-autostradale-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Ciglio della carreggiata nei pressi dello svincolo autostradale di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:svincolo-autostradale:discovery",
+      "basis_source_key": "law:polizia-stato:2023-08-22:cocaina-svincolo-autostradale-lamezia",
+      "role": "discovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Autovettura parcheggiata sul ciglio della carreggiata nei pressi dello svincolo autostradale di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:svincolo-autostradale:search",
+      "basis_source_key": "law:polizia-stato:2023-08-22:cocaina-svincolo-autostradale-lamezia",
+      "role": "search",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Autovettura nei pressi dello svincolo autostradale di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:svincolo-autostradale:recovery",
+      "basis_source_key": "law:polizia-stato:2023-08-22:cocaina-svincolo-autostradale-lamezia",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Autovettura nei pressi dello svincolo autostradale di Lamezia Terme, luogo del rinvenimento del panetto di cocaina",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:svincolo-autostradale:arrest",
+      "basis_source_key": "law:polizia-stato:2023-08-22:cocaina-svincolo-autostradale-lamezia",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Area del controllo nei pressi dello svincolo autostradale di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
