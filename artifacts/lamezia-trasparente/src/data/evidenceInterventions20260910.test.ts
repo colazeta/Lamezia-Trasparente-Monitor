@@ -36,7 +36,8 @@ describe("evidence interventions 2026-09-10", () => {
       (entry) => entry.id === "catalonia-municipal-ibi-solar-pv-rebates",
     );
     expect(item?.effectSize).toContain("+36%");
-    expect(item?.limitations.join(" ").toLowerCase()).toContain("imposta");
+    expect(item?.limitations.join(" ").toLowerCase()).toContain("imu");
+    expect(item?.limitations.join(" ").toLowerCase()).toContain("base legislativa");
     expect(item?.lameziaAdaptation.toLowerCase()).toContain("quali leve fiscali locali siano realmente consentite");
   });
 
@@ -56,6 +57,7 @@ describe("evidence interventions 2026-09-10", () => {
     expect(item?.evaluationMethod.toLowerCase()).toContain("intent-to-treat");
     expect(item?.effectSize).toContain("34%");
     expect(item?.effectSize).toContain("32%");
-    expect(item?.limitations.join(" ").toLowerCase()).toContain("non dai genitori");
+    expect(item?.results.toLowerCase()).toContain("non dai genitori");
+    expect(item?.limitations.join(" ").toLowerCase()).toContain("lavoro materno");
   });
 });
