@@ -27,23 +27,24 @@ export const EVIDENCE_INTERVENTIONS_2026_09_10 = [
       "Difference-in-differences con adozione scaglionata su panel mensile comunale 2015–2022. Lo studio stima group-time treatment effects per confrontare l'evoluzione dei comuni dopo l'introduzione della bonificazione con comuni non ancora esposti nello stesso periodo, tenendo conto della tempistica differenziata dell'adozione.",
     comparator:
       "Comuni catalani non ancora trattati nello stesso periodo del comune che introduce la bonificazione, secondo il disegno staggered DiD del paper.",
-    outcomes: ["capacità fotovoltaica installata", "numero di nuove installazioni fotovoltaiche", "adozione residenziale dell'autoconsumo"],
+    outcomes: ["capacità fotovoltaica installata", "numero di nuove installazioni fotovoltaiche", "adozione residenziale dell'autoconsumo", "addizionalità delle installazioni agevolate", "costo implicito di abbattimento della CO2"],
     results:
-      "L'introduzione della bonificazione IBI è associata a un aumento sostanziale dell'adozione fotovoltaica comunale. Il risultato è coerente tra capacità installata e numero di nuove installazioni, ma non implica che qualsiasi percentuale o durata della bonificazione produca lo stesso rendimento fiscale o ambientale.",
+      "L'introduzione della bonificazione IBI aumenta sostanzialmente l'adozione fotovoltaica comunale, ma la valutazione finale mostra anche un'importante quota inframarginale: il 68% delle installazioni agevolate sarebbe avvenuto anche senza la politica. Il risultato sostiene quindi l'efficacia sul margine di adozione, non l'idea che tutto il beneficio fiscale finanzi capacità addizionale.",
     effectSize:
-      "Stima media pubblicata: capacità fotovoltaica installata +36% dopo l'introduzione della bonificazione e circa una nuova installazione aggiuntiva per comune trattato al mese.",
+      "Nell'articolo pubblicato la bonificazione aumenta la capacità fotovoltaica installata del 34–50% e produce circa una nuova installazione aggiuntiva per comune trattato al mese. Gli autori stimano che il 68% delle installazioni esentate sarebbe avvenuto comunque e un costo implicito di abbattimento di circa 102 €/tCO2.",
     evidenceStrength: "forte",
     costsRequirements:
-      "Richiede base giuridica per l'agevolazione, modifica dell'ordinanza fiscale, criteri di eleggibilità verificabili, collegamento con documentazione tecnica dell'impianto e una stima ex ante del minor gettito. Il costo fiscale dipende da aliquota, durata, base imponibile e numero di beneficiari; lo studio non fornisce un costo unitario trasferibile a un comune italiano.",
+      "Richiede base giuridica per l'agevolazione, modifica dell'ordinanza fiscale, criteri di eleggibilità verificabili, collegamento con documentazione tecnica dell'impianto e una stima ex ante del minor gettito. Il paper stima un costo implicito di abbattimento di circa 102 €/tCO2 nel contesto analizzato; non è un costo fiscale unitario direttamente trasferibile a un comune italiano.",
     limitations: [
       "L'adozione della bonificazione non è randomizzata: il disegno staggered DiD migliora l'identificazione ma non elimina ogni possibile differenza non osservata tra comuni che adottano prima, dopo o mai la misura.",
       "Tra il 2015 e il 2022 cambiano anche prezzi dei pannelli, incentivi nazionali/regionali, prezzi energetici e disciplina dell'autoconsumo; il paper usa la variazione comunale per isolare la bonificazione, ma il contesto di mercato resta importante per la trasferibilità.",
-      "Percentuale, durata, tetti e requisiti differiscono tra ordinanze: l'effect size medio non identifica automaticamente il disegno fiscalmente più efficiente.",
+      "Percentuale, durata, tetti e requisiti differiscono tra ordinanze: l'intervallo di effetto medio pubblicato non identifica automaticamente il disegno fiscalmente più efficiente.",
+      "La quota inframarginale stimata è elevata: il 68% delle installazioni agevolate sarebbe avvenuto anche senza la politica, quindi addizionalità e costo-opportunità del gettito devono essere esplicitamente valutati.",
       "Un incentivo legato alla proprietà immobiliare può favorire maggiormente famiglie proprietarie con capitale o accesso al credito; equità distributiva e accesso dei condomini richiedono analisi separata.",
       "In Italia un comune non può presumere di poter replicare la bonificazione spagnola sull'IMU: la base legislativa e i margini di autonomia tributaria devono essere verificati prima di qualsiasi proposta."
     ],
     unintendedEffects:
-      "Possibili effetti distributivi regressivi, perdita di gettito senza addizionalità per installazioni che sarebbero avvenute comunque e concentrazione del beneficio sugli immobili tecnicamente più adatti o sui proprietari con maggiore capacità finanziaria.",
+      "Possibili effetti distributivi regressivi, perdita di gettito per installazioni che sarebbero avvenute comunque e concentrazione del beneficio sugli immobili tecnicamente più adatti o sui proprietari con maggiore capacità finanziaria.",
     primarySource: {
       label: "Institut Català d'Energia — municipis amb bonificacions IBI per a l'autoconsum",
       url: "https://icaen.gencat.cat/ca/energia/autoconsum/autoconsum-fotovoltaic/cercador-de-municipis-amb-bonificacions-per-a-lautoconsum"
@@ -62,13 +63,13 @@ export const EVIDENCE_INTERVENTIONS_2026_09_10 = [
     ],
     lastVerifiedAt: "2026-09-10",
     transferabilityItaly:
-      "Media per lo strumento fiscale specifico e alta per il principio di policy design. Un comune italiano può usare leve locali per accelerare l'autoconsumo soltanto entro i margini normativi effettivamente disponibili; il valore del caso catalano è mostrare che un incentivo comunale ben identificabile può produrre addizionalità misurabile e che aliquota, durata e costo fiscale devono essere trattati come parametri valutabili.",
+      "Media per lo strumento fiscale specifico e alta per il principio di policy design. Un comune italiano può usare leve locali per accelerare l'autoconsumo soltanto entro i margini normativi effettivamente disponibili; il valore del caso catalano è mostrare sia addizionalità misurabile sia il rischio di finanziare investimenti inframarginali, per cui aliquota, durata e costo fiscale devono essere trattati come parametri valutabili.",
     lameziaAdaptation:
-      "Prima di proporre una nuova agevolazione, mappare impianti fotovoltaici esistenti, nuove installazioni, tipologie immobiliari, autoconsumo collettivo e incentivi già disponibili a Lamezia; verificare con tributi e ufficio legale quali leve fiscali locali siano realmente consentite. Se esiste uno spazio normativo, stimare ex ante beneficiari, minor gettito e addizionalità attesa e introdurre una misura con durata e tetto espliciti, monitorando installazioni addizionali per euro di beneficio.",
+      "Prima di proporre una nuova agevolazione, mappare impianti fotovoltaici esistenti, nuove installazioni, tipologie immobiliari, autoconsumo collettivo e incentivi già disponibili a Lamezia; verificare con tributi e ufficio legale quali leve fiscali locali siano realmente consentite. Se esiste uno spazio normativo, stimare ex ante beneficiari, minor gettito, quota plausibilmente inframarginale e addizionalità attesa e introdurre una misura con durata e tetto espliciti, monitorando installazioni addizionali per euro di beneficio.",
     implementability: "strutturale",
-    capacityDataNeeds: ["registro georeferenziato degli impianti", "dati catastali/tributari aggregati", "quadro normativo IMU e tributi locali", "stima del minor gettito", "baseline e gruppo di confronto", "analisi distributiva"],
+    capacityDataNeeds: ["registro georeferenziato degli impianti", "dati catastali/tributari aggregati", "quadro normativo IMU e tributi locali", "stima del minor gettito", "baseline e gruppo di confronto", "analisi distributiva", "stima dell'addizionalità"],
     tags: ["fotovoltaico", "autoconsumo", "IBI", "incentivo fiscale", "difference-in-differences", "Catalogna", "energia"],
-    revisionHistory: [{ date: "2026-09-10", note: "Prima verifica e inserimento; effect size tratto dalla valutazione 2026 e separato dalla trasferibilità giuridica dello strumento fiscale in Italia." }]
+    revisionHistory: [{ date: "2026-09-10", note: "Prima verifica e inserimento; allineato il record all'articolo finale pubblicato: capacità +34–50%, circa una installazione aggiuntiva per comune/mese, 68% di installazioni agevolate stimate come inframarginali e costo implicito di abbattimento circa 102 €/tCO2; separata la trasferibilità giuridica dello strumento fiscale in Italia." }]
   },
   {
     id: "seattle-king-county-healthy-homes-asthma",
