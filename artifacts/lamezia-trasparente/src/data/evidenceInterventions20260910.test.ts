@@ -31,11 +31,12 @@ describe("evidence interventions 2026-09-10", () => {
     }
   });
 
-  it("keeps Catalonia's causal estimate separate from Italian tax competence", () => {
+  it("keeps Catalonia's published effect range separate from Italian tax competence", () => {
     const item = EVIDENCE_INTERVENTIONS_2026_09_10.find(
       (entry) => entry.id === "catalonia-municipal-ibi-solar-pv-rebates",
     );
-    expect(item?.effectSize).toContain("+36%");
+    expect(item?.effectSize).toContain("34–50%");
+    expect(item?.effectSize).toContain("68%");
     expect(item?.limitations.join(" ").toLowerCase()).toContain("imu");
     expect(item?.limitations.join(" ").toLowerCase()).toContain("base legislativa");
     expect(item?.lameziaAdaptation.toLowerCase()).toContain("quali leve fiscali locali siano realmente consentite");
