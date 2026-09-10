@@ -1,0 +1,27 @@
+name: Consolidation delta workspace
+on:
+  push:
+    branches: [codex/771-demographic-consumer-convergence]
+    paths: [.github/workflows/consolidation-delta-workspace.yml]
+permissions:
+  contents: read
+jobs:
+  delta:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 10
+          persist-credentials: false
+      - name: Export exact committed delta and tree inventory
+        run: |
+          mkdir -p "$RUNNER_TEMP/consolidation-delta"
+          git diff --binary 11d28a5089c0b878cbf70fe40f9b79513b06d7d9 HEAD > "$RUNNER_TEMP/consolidation-delta/delta.patch"
+          git rev-parse HEAD HEAD^{tree} > "$RUNNER_TEMP/consolidation-delta/commit.txt"
+          git ls-tree -r HEAD > "$RUNNER_TEMP/consolidation-delta/tree.txt"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: consolidation-delta
+          path: ${{ runner.temp }}/consolidation-delta/
+          retention-days: 3
