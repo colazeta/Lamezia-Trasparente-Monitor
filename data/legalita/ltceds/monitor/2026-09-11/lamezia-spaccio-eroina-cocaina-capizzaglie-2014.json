@@ -75,7 +75,7 @@
       "situational_context": [
         "la Questura riferisce che sette persone erano ritenute responsabili a vario titolo di spaccio in concorso di eroina e cocaina",
         "le indagini avviate nel giugno 2014 e protratte per quattro mesi sino a ottobre documentarono una gestione sistematica dello spaccio; l'intervallo temporale rappresenta la finestra investigativa documentata e non viene interpretato come data certa di inizio o cessazione della condotta",
-        "le fonti riferiscono la presenza di giovani assuntori nei pressi delle abitazioni interessate dall'indagine, con specifico riferimento al quartiere Capizzaglie; non viene inferita alcuna via, abitazione o coordinate"
+        "CN24TV riferisce espressamente che lo spaccio sistematico di eroina e cocaina era gestito nel quartiere Capizzaglie; non viene inferita alcuna via, abitazione o coordinata"
       ],
       "cyber_related": null,
       "affected_object_count": null
@@ -101,14 +101,14 @@
   "locations": [
     {
       "location_key": "location:lamezia-terme:capizzaglie:occurrence",
-      "basis_source_key": "law-enforcement:questura-catanzaro:2015-04-24:drug-family-spaccio",
+      "basis_source_key": "press:cn24tv:2015-04-24:drug-family-spaccio",
       "role": "occurrence",
       "municipality": "Lamezia Terme",
       "evidence_basis": "source_stated_neighbourhood",
       "evidence_precision": "neighbourhood",
       "resolved_precision": "neighbourhood",
-      "sensitivity": "private_or_sensitive",
-      "publication_risk": "residential",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "non_sensitive",
       "geometry": null,
       "place_name": "Quartiere Capizzaglie",
       "neighbourhood": "Capizzaglie",
