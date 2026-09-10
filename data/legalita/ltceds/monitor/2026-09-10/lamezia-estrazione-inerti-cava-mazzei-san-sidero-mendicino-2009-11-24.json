@@ -59,9 +59,9 @@
   ],
   "offences": [
     {
-      "offence_key": "offence:furto-aggravato",
+      "offence_key": "offence:estrazione-illecita-inerti",
       "classification_source_key": "press:il-lametino:2011-06-03:cava-mazzei-cinque-arresti",
-      "classification_basis": "source_stated_legal",
+      "classification_basis": "provisional",
       "iccs_code": null,
       "istat_catalogue_id": null,
       "istat_synthetic_code": null,
@@ -70,55 +70,8 @@
       "attempt_status": "completed",
       "situational_context": [
         "la fonte del 3 giugno 2011 ricorda espressamente l'intervento dei Carabinieri del 24 novembre 2009 nella stessa cava e riferisce che dodici persone furono sorprese mentre estraevano materiale inerte da un'area sottoposta a sequestro",
-        "la stessa fonte descrive le operazioni del 2009 e del 2010 come relative ai medesimi reati elencati per il successivo episodio del 2011; la classificazione conserva quindi la qualificazione legale riportata dalla fonte senza aggiungere riferimenti normativi non attestati"
-      ],
-      "cyber_related": null,
-      "affected_object_count": null
-    },
-    {
-      "offence_key": "offence:danneggiamento-aggravato-cose-sottoposte-sequestro",
-      "classification_source_key": "press:il-lametino:2011-06-03:cava-mazzei-cinque-arresti",
-      "classification_basis": "source_stated_legal",
-      "iccs_code": null,
-      "istat_catalogue_id": null,
-      "istat_synthetic_code": null,
-      "istat_analytical_code": null,
-      "legal_reference": null,
-      "attempt_status": "completed",
-      "situational_context": [
-        "la fonte del 3 giugno 2011 qualifica il precedente episodio del novembre 2009 come relativo ai medesimi reati contestati per l'estrazione nella cava sottoposta a sequestro"
-      ],
-      "cyber_related": null,
-      "affected_object_count": null
-    },
-    {
-      "offence_key": "offence:crollo-costruzioni-o-altri-disastri-dolosi",
-      "classification_source_key": "press:il-lametino:2011-06-03:cava-mazzei-cinque-arresti",
-      "classification_basis": "source_stated_legal",
-      "iccs_code": null,
-      "istat_catalogue_id": null,
-      "istat_synthetic_code": null,
-      "istat_analytical_code": null,
-      "legal_reference": null,
-      "attempt_status": "completed",
-      "situational_context": [
-        "la fonte del 3 giugno 2011 qualifica il precedente episodio del novembre 2009 come relativo ai medesimi reati contestati per l'estrazione nella cava sottoposta a sequestro"
-      ],
-      "cyber_related": null,
-      "affected_object_count": null
-    },
-    {
-      "offence_key": "offence:violazione-sigilli",
-      "classification_source_key": "press:il-lametino:2011-06-03:cava-mazzei-cinque-arresti",
-      "classification_basis": "source_stated_legal",
-      "iccs_code": null,
-      "istat_catalogue_id": null,
-      "istat_synthetic_code": null,
-      "istat_analytical_code": null,
-      "legal_reference": null,
-      "attempt_status": "completed",
-      "situational_context": [
-        "la cava risultava già sottoposta a sequestro e la fonte riferisce che nel novembre 2009 furono nuovamente apposti i sigilli dopo l'intervento"
+        "una seconda fonte del 3 giugno 2011 conferma che nel novembre 2009 dodici persone furono arrestate mentre proseguivano l'attività nella cava nonostante il sequestro",
+        "le fonti del 2011 elencano specifiche fattispecie penali per i successivi episodi del 2010 e del 2011, ma non le attribuiscono al fatto del 24 novembre 2009 con sufficiente chiarezza; per evitare inferenze, il record mantiene una classificazione provvisoria limitata alla condotta direttamente attestata"
       ],
       "cyber_related": null,
       "affected_object_count": null
