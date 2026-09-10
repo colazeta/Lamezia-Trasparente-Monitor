@@ -10,7 +10,12 @@ on:
       - "artifacts/lamezia-trasparente/src/data/generated/lameziaForeignResidentsAgeSex.json"
       - "artifacts/lamezia-trasparente/src/data/generated/lameziaFamiliesChildren.json"
   push:
-    branches: [main, codex/771-canonical-demographic-backfill]
+    branches:
+      [
+        main,
+        codex/771-canonical-demographic-backfill,
+        codex/771-demographic-consumer-convergence,
+      ]
     paths:
       - "lib/db/**"
       - ".github/workflows/municipal-demographics-integration.yml"
@@ -51,10 +56,14 @@ jobs:
         run: pnpm --filter @workspace/db exec tsx src/municipalDemographicIntegration.ts
         env:
           MUNICIPAL_DEMOGRAPHIC_TEST_URL: postgresql://test:disposable-test-only@127.0.0.1:5432/municipal_demographic_test
+      - name: Audit canonicalisation queue and source ownership
+        run: node scripts/architecture/canonicalisationLedger.mjs --write
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: municipal-demographic-integration
-          path: reports/municipal-demographic-integration/
+          path: |
+            reports/municipal-demographic-integration/
+            reports/canonicalisation/
           if-no-files-found: warn
           retention-days: 14
