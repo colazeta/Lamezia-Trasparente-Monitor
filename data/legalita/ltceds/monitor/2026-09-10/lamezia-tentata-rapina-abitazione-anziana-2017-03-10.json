@@ -1,0 +1,101 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-tentata-rapina-abitazione-anziana-2017-03-10",
+  "discovered_at": "2026-09-10T04:57:40+02:00",
+  "updated_at": "2026-09-10T04:57:40+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Tentata rapina aggravata in abitazione ai danni di una persona anziana a Lamezia Terme",
+  "temporal": {
+    "start": "2017-03-10",
+    "end": "2017-03-10",
+    "edtf": "2017-03-10",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "law:polizia-stato:2017-04-07:tentata-rapina-anziana-abitazione",
+      "source_type": "law_enforcement_primary",
+      "provider": "Polizia di Stato - Questura di Catanzaro",
+      "title": "’Ndrangheta: Lamezia Terme. Arrestati gli autori di un attentato dinamitardo",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/123658e74d21cdea8932796376",
+      "published_at": "2017-04-07T00:00:00+02:00",
+      "retrieved_at": "2026-09-10T04:57:40+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2017-04-07:tentata-rapina-anziana-abitazione",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Bombe e rapine a Lamezia, in manette due giovani – IL VIDEO",
+      "url": "https://www.corrieredellacalabria.it/2017/04/07/bombe-e-rapine-a-lamezia-in-manette-due-giovani/",
+      "published_at": "2017-04-07T06:31:00+02:00",
+      "retrieved_at": "2026-09-10T04:57:40+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2018-07-04:condanne-tentata-rapina-anziana-abitazione",
+      "source_type": "press_secondary",
+      "provider": "il Lametino.it",
+      "title": "Lamezia, furto in abitazione e tentata rapina ad anziana: condannati due giovani",
+      "url": "https://www.lametino.it/cronaca/lamezia-furto-in-abitazione-e-tentata-rapina-ad-anziana-condannati-due-giovani.html",
+      "published_at": "2018-07-04T00:00:00+02:00",
+      "retrieved_at": "2026-09-10T04:57:40+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "law:polizia-stato:2017-04-07:tentata-rapina-anziana-abitazione",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "la fonte primaria riferisce che il 10 marzo 2017 due persone si introdussero, dopo aver divelto la porta d'ingresso, nell'abitazione di una persona anziana a Lamezia Terme, la minacciarono e la malmenarono intimandole di consegnare denaro e gioielli, per poi fuggire al sopraggiungere di un'autovettura",
+        "Polizia di Stato e fonti giudiziarie successive qualificano questo episodio come tentata rapina aggravata; il record conserva quindi la fattispecie rapina con attempt_status attempted senza inferire ulteriori reati non espressamente attribuiti a questo episodio",
+        "la fonte primaria riferisce inoltre un distinto furto in abitazione commesso poco prima dagli stessi soggetti; tale episodio separato non è incorporato nel presente evento",
+        "il Lametino riferisce nel luglio 2018 condanne per tentata rapina aggravata e furto in abitazione; il record tratta tale esito come contesto procedurale e non include identità personali"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata:occurrence",
+      "basis_source_key": "law:polizia-stato:2017-04-07:tentata-rapina-anziana-abitazione",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata in Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
