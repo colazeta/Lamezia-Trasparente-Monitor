@@ -64,8 +64,17 @@ jobs:
           const ids = new Set(manifest.series.map((series) => series.id));
           if (ids.size !== 6) throw new Error('Open Data series IDs must be unique.');
           const automated = manifest.series.filter((series) => series.automation_status === 'active');
-          if (automated.length !== 5 || !automated.every((series) => series.monitoring_cadence === 'daily')) {
-            throw new Error('The five automated Open Data series must declare daily source checking.');
+          if (automated.length !== 3 || !automated.every((series) => series.monitoring_cadence === 'daily')) {
+            throw new Error('The three legacy automated Open Data series must declare daily source checking.');
+          }
+          for (const id of ['lamezia-foreign-residents-age-sex', 'lamezia-families-children']) {
+            const canonical = manifest.series.find((series) => series.id === id);
+            if (!canonical || canonical.automation_status !== 'unverified' ||
+                canonical.monitoring_cadence !== 'unverified' ||
+                canonical.latest_observation !== null ||
+                canonical.source_modified_at !== null || canonical.materialised_at !== null) {
+              throw new Error('Canonical municipal catalogue entries must not invent freshness or certify an unverified delivery pipeline.');
+            }
           }
           const household = manifest.series.find((series) => series.id === 'lamezia-household-composition-2023');
           const householdData = JSON.parse(
@@ -106,7 +115,7 @@ jobs:
           NODE
 
       - name: Commit changed public series
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
