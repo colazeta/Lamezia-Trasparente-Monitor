@@ -47,8 +47,9 @@ describe("evidence interventions 2026-09-10", () => {
       (entry) => entry.id === "seattle-king-county-healthy-homes-asthma",
     );
     expect(item?.comparator.toLowerCase()).toContain("intervento attivo");
+    expect(item?.effectSize.toLowerCase()).toContain("p=0,138");
     expect(item?.effectSize.toLowerCase()).toContain("non un risparmio di bilancio direttamente osservato");
-    expect(item?.limitations.join(" ").toLowerCase()).toContain("p=0,138");
+    expect(item?.limitations.join(" ").toLowerCase()).toContain("non raggiunge la significatività statistica");
   });
 
   it("keeps Rio's lottery estimate as ITT and records the working-paper revision", () => {
