@@ -1,0 +1,51 @@
+name: Isolated consolidation workspace
+
+on:
+  push:
+    branches:
+      - codex/771-canonical-demographic-backfill
+    paths:
+      - .github/workflows/consolidation-workspace.yml
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Package committed source only
+        run: |
+          mkdir -p "$RUNNER_TEMP/consolidation-source"
+          git archive --format=tar.gz HEAD > "$RUNNER_TEMP/consolidation-source/source.tar.gz"
+          git rev-parse HEAD > "$RUNNER_TEMP/consolidation-source/commit.txt"
+          sha256sum "$RUNNER_TEMP/consolidation-source/source.tar.gz" > "$RUNNER_TEMP/consolidation-source/SHA256SUMS"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: consolidation-source
+          path: ${{ runner.temp }}/consolidation-source/
+          retention-days: 3
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.1
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install locked workspace dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Package dependency directories without repository credentials
+        run: |
+          mkdir -p "$RUNNER_TEMP/consolidation-dependencies"
+          find . -name node_modules -type d -prune -print0 > "$RUNNER_TEMP/node-modules.list"
+          tar --null --files-from="$RUNNER_TEMP/node-modules.list" -czf "$RUNNER_TEMP/consolidation-dependencies/node-modules.tar.gz"
+          sha256sum "$RUNNER_TEMP/consolidation-dependencies/node-modules.tar.gz" > "$RUNNER_TEMP/consolidation-dependencies/SHA256SUMS"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: consolidation-dependencies
+          path: ${{ runner.temp }}/consolidation-dependencies/
+          retention-days: 3
