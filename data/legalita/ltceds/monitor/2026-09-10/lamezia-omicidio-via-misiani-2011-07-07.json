@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-omicidio-via-misiani-2011-07-07",
   "discovered_at": "2026-09-10T08:09:06+02:00",
-  "updated_at": "2026-09-10T08:09:06+02:00",
+  "updated_at": "2026-09-10T08:28:12+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Omicidio con arma da fuoco in via Misiani",
@@ -55,6 +55,22 @@
         "procedural_context",
         "corroboration"
       ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2017-01-13:appello-omicidio-via-misiani",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Delitto in via Misiani, pena ridotta in appello",
+      "url": "https://www.corrieredellacalabria.it/2017/01/13/delitto-torcasio-sconto-di-pena-per-il-palo/",
+      "published_at": "2017-01-13T17:42:00+01:00",
+      "retrieved_at": "2026-09-10T08:28:12+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
     }
   ],
   "offences": [
@@ -71,7 +87,7 @@
       "situational_context": [
         "la mattina del 7 luglio 2011 una persona di venti anni fu uccisa con più colpi d'arma da fuoco mentre si trovava a bordo di un'autovettura parcheggiata in via Misiani",
         "due fonti contemporanee qualificano l'episodio come omicidio o agguato mortale e lo collocano nel centro di Lamezia Terme",
-        "una fonte del 2015 documenta una condanna di primo grado a 28 anni per la partecipazione all'omicidio; il record non assume tale sviluppo come esito definitivo dell'intero procedimento"
+        "fonti procedurali documentano una condanna di primo grado a 28 anni nel 2015 e una riduzione a 20 anni in appello nel 2017 per uno dei partecipanti; il record non assume tali sviluppi come esito definitivo dell'intero procedimento"
       ],
       "cyber_related": null,
       "affected_object_count": null
