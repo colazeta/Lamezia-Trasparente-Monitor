@@ -1,0 +1,131 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-pressi-chiesa-pieta-via-miceli-2015-02-14",
+  "discovered_at": "2026-09-10T15:38:29+02:00",
+  "updated_at": "2026-09-10T15:38:29+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina ai danni di una donna nei pressi della Chiesa della Pietà a Lamezia Terme il 14 febbraio 2015",
+  "temporal": {
+    "start": "2015-02-14",
+    "end": "2015-02-14",
+    "edtf": "2015-02-14",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:ltnews:2015-02-16:rapina-anziana-chiesa-pieta",
+      "source_type": "press_secondary",
+      "provider": "LTNews Lamezia Terme",
+      "title": "Lamezia, 26enne arrestato per rapina ad anziana",
+      "url": "https://lameziatermenews.it/citta/759-lamezia-26enne-rom-arrestato-per-rapina-ad-anziana.html",
+      "published_at": "2015-02-16T00:00:00+01:00",
+      "retrieved_at": "2026-09-10T15:38:29+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2015-02-16:borsa-rapina-passante",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Borseggiatore arrestato grazie alla denuncia di un passante",
+      "url": "https://www.corrieredellacalabria.it/2015/02/16/borseggiatore-arrestato-grazie-alla-denuncia-di-un-passante/",
+      "published_at": "2015-02-16T12:56:00+01:00",
+      "retrieved_at": "2026-09-10T15:38:29+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:approdo-calabria:2015-02-16:rapina-passante-polizia",
+      "source_type": "press_secondary",
+      "provider": "Approdo Calabria",
+      "title": "Lamezia: assiste ad una rapina, chiama la polizia e fa arrestare il colpevole",
+      "url": "https://www.approdocalabria.it/lamezia-assiste-ad-una-rapina-chiama-la-polizia-e-fa-arrestare-il-colpevole/",
+      "published_at": "2015-02-16T00:00:00+01:00",
+      "retrieved_at": "2026-09-10T15:38:29+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "press:ltnews:2015-02-16:rapina-anziana-chiesa-pieta",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la fonte più dettagliata riferisce che, nella serata di sabato precedente alla pubblicazione del 16 febbraio 2015, una donna fu privata con violenza della borsa mentre era appena entrata nella propria autovettura nei pressi della Chiesa della Pietà",
+        "la data del 14 febbraio 2015 deriva dalla risoluzione del riferimento contemporaneo 'sabato sera' rispetto alla pubblicazione di lunedì 16 febbraio 2015",
+        "un passante segnalò immediatamente il fatto al 113 e fornì indicazioni sulla direzione di fuga; la persona sospettata fu rintracciata poco dopo in via Miceli e arrestata",
+        "durante la perquisizione personale furono rinvenuti beni successivamente riconosciuti dalla persona offesa come propri; le fonti descrivono l'arresto in flagranza, senza che ciò costituisca accertamento definitivo di responsabilità"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:pressi-chiesa-pieta-2015-02-14:occurrence",
+      "basis_source_key": "press:ltnews:2015-02-16:rapina-anziana-chiesa-pieta",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Area nei pressi della Chiesa della Pietà",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-miceli-2015-02-14:arrest",
+      "basis_source_key": "press:ltnews:2015-02-16:rapina-anziana-chiesa-pieta",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Via Miceli",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-miceli-2015-02-14:recovery",
+      "basis_source_key": "press:ltnews:2015-02-16:rapina-anziana-chiesa-pieta",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Via Miceli",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
