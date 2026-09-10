@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-duplice-omicidio-via-della-vittoria-2006-10-26",
   "discovered_at": "2026-09-10T04:10:32+02:00",
-  "updated_at": "2026-09-10T04:10:32+02:00",
+  "updated_at": "2026-09-10T14:28:13+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Duplice omicidio in via della Vittoria il 26 ottobre 2006",
@@ -57,6 +57,21 @@
       ]
     },
     {
+      "source_key": "police:questura-catanzaro:2016-08-10:cosca-giampa-sette-arresti",
+      "source_type": "law_enforcement_primary",
+      "provider": "Polizia di Stato — Questura di Catanzaro",
+      "title": "’Ndrangheta: la Polizia arresta sette appartenenti alla cosca Giampà",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/123657ab1071c9232409546848",
+      "published_at": "2016-08-10",
+      "retrieved_at": "2026-09-10T14:28:13+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
       "source_key": "press:lacnews24:2017-07-15:perseo-cassazione",
       "source_type": "press_secondary",
       "provider": "LaC News24",
@@ -74,7 +89,7 @@
   "offences": [
     {
       "offence_key": "offence:omicidio",
-      "classification_source_key": "press:lacnews24:2017-07-15:perseo-cassazione",
+      "classification_source_key": "police:questura-catanzaro:2016-08-10:cosca-giampa-sette-arresti",
       "classification_basis": "source_stated_legal",
       "iccs_code": null,
       "istat_catalogue_id": null,
@@ -86,6 +101,7 @@
         "le fonti contemporanee documentano l'uccisione di due occupanti di una Jeep in via della Vittoria nella serata del 26 ottobre 2006",
         "la ricostruzione contemporanea colloca il veicolo davanti o nelle immediate vicinanze dell'autosalone Aiello e riferisce l'esplosione di almeno dodici colpi di pistola",
         "una pistola con matricola cancellata fu rinvenuta sul luogo dell'agguato",
+        "un comunicato della Polizia di Stato del 2016 conferma il duplice omicidio consumato a Lamezia Terme nell'ottobre 2006 e lo colloca in pieno centro davanti a una concessionaria di autovetture",
         "il fatto fu successivamente trattato nel procedimento Perseo; nel 2017 la Cassazione annullo con rinvio una condanna all'ergastolo nella parte relativa a questo duplice omicidio, per cui il record non attribuisce responsabilita individuali definitive"
       ],
       "cyber_related": null,
