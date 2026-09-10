@@ -42,6 +42,21 @@
         "procedural_context",
         "corroboration"
       ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2018-04-14:tentato-omicidio-sala-giochi-2008",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Sparatoria in una sala giochi a Lamezia: eseguite misure cautelari per il tentato omicidio del 2008",
+      "url": "https://www.corrieredellacalabria.it/2018/04/14/sparatoria-in-una-sala-giochi-a-lamezia-in-carcere-chirico-e-strangis/",
+      "published_at": "2018-04-14T14:05:00+02:00",
+      "retrieved_at": "2026-09-10T20:23:46+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
     }
   ],
   "offences": [
@@ -59,7 +74,7 @@
         "la fonte primaria della Questura colloca il tentato omicidio al 5 dicembre 2008 e lo qualifica come aggravato dalla metodologia mafiosa",
         "il fatto avvenne in orario serale all'interno di una sala giochi del centro cittadino di Lamezia Terme, alla presenza di numerosi avventori; una successiva fonte giornalistica identifica il locale come un punto SNAI di via Aldo Moro",
         "la fonte primaria riferisce l'esplosione di diversi colpi di arma da fuoco; la vittima evitò di essere colpita trovando riparo in un bagno",
-        "la Questura riferisce la successiva esecuzione di un'ordinanza di custodia cautelare emessa dal GIP distrettuale su richiesta della DDA; le fonti qui acquisite descrivono la ricostruzione investigativa e cautelare, non un accertamento definitivo di responsabilità"
+        "la Questura riferisce la successiva esecuzione di un'ordinanza di custodia cautelare emessa dal GIP distrettuale su richiesta della DDA; Corriere della Calabria riferisce inoltre una condanna a 16 anni di reclusione emessa in giudizio abbreviato il 9 giugno 2017 per il tentato omicidio, senza che da questa fonte venga inferita la definitività della decisione"
       ],
       "cyber_related": null,
       "affected_object_count": 1
