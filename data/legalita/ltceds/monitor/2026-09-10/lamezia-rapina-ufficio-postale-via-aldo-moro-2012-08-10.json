@@ -1,0 +1,102 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-ufficio-postale-via-aldo-moro-2012-08-10",
+  "discovered_at": "2026-09-10T08:37:01+02:00",
+  "updated_at": "2026-09-10T08:37:01+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina all'ufficio postale di via Aldo Moro a Lamezia Terme il 10 agosto 2012",
+  "temporal": {
+    "start": "2012-08-10",
+    "end": "2012-08-10",
+    "edtf": "2012-08-10",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:cn24tv:2012-08-28:rapina-poste-via-aldo-moro",
+      "source_type": "press_secondary",
+      "provider": "CN24TV",
+      "title": "Rapina alle poste a Lamezia, fermato un giovane",
+      "url": "https://cn24tv.it/news/53867/rapina-alle-poste-a-lamezia-fermato-un-giovane.html",
+      "published_at": "2012-08-28T14:14:00+02:00",
+      "retrieved_at": "2026-09-10T08:37:01+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lametino:2012-08-28:rapina-posta-10-agosto",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: Arrestato presunto autore rapina alla posta del 10 agosto",
+      "url": "https://www.lametino.it/cronaca/lamezia-arrestato-autore-rapina-alla-posta-del-10-agosto.html",
+      "published_at": "2012-08-28T00:00:00+02:00",
+      "retrieved_at": "2026-09-10T08:37:01+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2012-08-28:rapina-840-euro",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Rapina da 840 euro, preso l'autore",
+      "url": "https://www.corrieredellacalabria.it/2012/08/28/7905_rapina_da_840_euro_preso_lautore/",
+      "published_at": "2012-08-28T15:56:00+02:00",
+      "retrieved_at": "2026-09-10T08:37:01+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "press:cn24tv:2012-08-28:rapina-poste-via-aldo-moro",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti collocano il fatto il 10 agosto 2012 presso l'ufficio postale di via Aldo Moro a Lamezia Terme",
+        "la persona che commise la rapina aveva il volto travisato da un passamontagna, minacciò con un coltello e si impossessò di 840 euro",
+        "le cronache del 28 agosto 2012 riferiscono un fermo di indiziato di delitto dopo attività investigativa basata anche sulle immagini di videosorveglianza; tale sviluppo procedurale non equivale ad accertamento definitivo di responsabilità"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:ufficio-postale-via-aldo-moro:target",
+      "basis_source_key": "press:cn24tv:2012-08-28:rapina-poste-via-aldo-moro",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Ufficio postale di via Aldo Moro",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
