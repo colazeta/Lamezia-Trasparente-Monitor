@@ -1,0 +1,114 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-attentato-ordigno-farmacia-feroleto-corso-numistrano-2015-04-17",
+  "discovered_at": "2026-09-10T13:30:29+02:00",
+  "updated_at": "2026-09-10T13:30:29+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Attentato con ordigno alla Farmacia Feroleto in Corso Numistrano",
+  "temporal": {
+    "start": "2015-04-17",
+    "end": "2015-04-17",
+    "edtf": "2015-04-17",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:il-lametino:2015-04-17:bomba-farmacia-feroleto-corso-numistrano",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: bomba a farmacia esplode nella notte su corso Numistrano. Reazioni",
+      "url": "https://www.lametino.it/Cronaca/lamezia-bomba-a-farmacia-esplode-nella-notte-su-corso-numistrano.html",
+      "published_at": "2015-04-17T09:50:00+02:00",
+      "retrieved_at": "2026-09-10T13:30:29+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2015-04-17:farmacia-feroleto-ordigno",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Lamezia, farmacia devastata da una bomba",
+      "url": "https://www.corrieredellacalabria.it/2015/04/17/lamezia-farmacia-devastata-da-un-ordigno/",
+      "published_at": "2015-04-17T07:25:00+02:00",
+      "retrieved_at": "2026-09-10T13:30:29+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:cn24tv:2015-04-17:bomba-farmacia-feroleto",
+      "source_type": "press_secondary",
+      "provider": "CN24TV",
+      "title": "Bomba esplode davanti ad una farmacia in pieno centro a Lamezia",
+      "url": "https://cn24tv.it/news/110250/bomba-esplode-davanti-ad-una-farmacia-in-pieno-centro-a-lamezia.html",
+      "published_at": "2015-04-17T10:01:00+02:00",
+      "retrieved_at": "2026-09-10T13:30:29+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:attentato-con-ordigno",
+      "classification_source_key": "press:il-lametino:2015-04-17:bomba-farmacia-feroleto-corso-numistrano",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "nelle prime ore del 17 aprile 2015 un ordigno esplose davanti alla Farmacia Feroleto, attività nominata dalle fonti contemporanee e situata in Corso Numistrano, nel centro di Lamezia Terme",
+        "le fonti collocano l'esplosione intorno alle 02:30-03:00 e descrivono danni all'ingresso della farmacia, ai vetri dei piani superiori dello stabile e ad alcune autovetture in sosta; il record conserva la sola data come temporalità esatta",
+        "i Carabinieri intervennero sul posto e avviarono le indagini; le fonti e dichiarazioni istituzionali contemporanee descrissero l'episodio come attentato o atto intimidatorio, ma non è stata reperita una fonte giudiziaria o di polizia primaria che sostenga una qualificazione penale più specifica o una matrice definitivamente accertata"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:farmacia-feroleto-corso-numistrano:occurrence",
+      "basis_source_key": "press:il-lametino:2015-04-17:bomba-farmacia-feroleto-corso-numistrano",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Ingresso della Farmacia Feroleto, Corso Numistrano",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:farmacia-feroleto-corso-numistrano:target",
+      "basis_source_key": "press:il-lametino:2015-04-17:bomba-farmacia-feroleto-corso-numistrano",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Farmacia Feroleto, Corso Numistrano",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
