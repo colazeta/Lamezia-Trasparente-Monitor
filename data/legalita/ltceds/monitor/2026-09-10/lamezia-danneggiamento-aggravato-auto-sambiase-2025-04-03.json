@@ -1,0 +1,99 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-danneggiamento-aggravato-auto-sambiase-2025-04-03",
+  "discovered_at": "2026-09-10T09:06:13+02:00",
+  "updated_at": "2026-09-10T09:06:13+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Danneggiamento aggravato di un'autovettura in sosta nel quartiere Sambiase",
+  "temporal": {
+    "start": "2025-04-03",
+    "end": "2025-04-03",
+    "edtf": "2025-04-03",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:corriere-di-lamezia:2025-06-16:shatter-danneggiamento-auto-sambiase",
+      "source_type": "press_secondary",
+      "provider": "Corriere di Lamezia",
+      "title": "Lamezia, operazione ‘Shatter’, due arresti per numerosi furti e danneggiamenti di auto",
+      "url": "https://www.corrieredilamezia.it/cronaca/2025_06_16/lamezia-operazione-shatter-due-arresti-per-numerosi-furti-e-danneggiamenti-di-auto_53562/",
+      "published_at": null,
+      "retrieved_at": "2026-09-10T09:06:13+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:lameziaterme-it:2025-10-30:shatter-danneggiamento-auto-sambiase",
+      "source_type": "press_secondary",
+      "provider": "LameziaTerme.it",
+      "title": "Lamezia, arrestato 17enne: 27 reati in una notte e auto incendiate (VIDEO)",
+      "url": "https://www.lameziaterme.it/lamezia-arrestato-17enne-27-reati-in-una-notte-auto-incendiate/",
+      "published_at": null,
+      "retrieved_at": "2026-09-10T09:06:13+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2025-10-30:shatter-danneggiamento-auto-sambiase",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Notte di follia a Lamezia, incendia un'auto e ne distrugge altre 6: arrestato un 17enne - VIDEO",
+      "url": "https://www.corrieredellacalabria.it/2025/10/30/notte-di-follia-a-lamezia-incendia-unauto-e-ne-distrugge-altre-6-arrestato-un-17enne-video/",
+      "published_at": null,
+      "retrieved_at": "2026-09-10T09:06:13+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:danneggiamento-aggravato",
+      "classification_source_key": "press:corriere-di-lamezia:2025-06-16:shatter-danneggiamento-auto-sambiase",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti investigative derivate dai Carabinieri qualificano l'episodio come danneggiamento aggravato di un veicolo in sosta nel quartiere Sambiase",
+        "le fonti successive precisano che l'evento avvenne il 3 aprile 2025 e che furono forati tutti gli pneumatici dell'autovettura parcheggiata",
+        "l'attribuzione personale deriva da indagini basate anche su filmati di videosorveglianza e da misure cautelari; i procedimenti risultavano nella fase delle indagini preliminari e il record non rappresenta un accertamento definitivo di responsabilità"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:sambiase-auto-in-sosta:occurrence",
+      "basis_source_key": "press:lameziaterme-it:2025-10-30:shatter-danneggiamento-auto-sambiase",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_neighbourhood",
+      "evidence_precision": "neighbourhood",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Quartiere Sambiase, autovettura in sosta sulla pubblica via",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    }
+  ]
+}
