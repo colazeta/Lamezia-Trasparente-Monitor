@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0",
+  "corpus_id": "ltceds-stress-corpus-2026-09-06",
+  "corpus_slot": 19,
+  "case_key": "2020-12-PERRI-PITAGORA-SCHOOL-THEFT",
+  "status": "review_mode",
+  "candidate_kind": "EVENT_CANDIDATE",
+  "source_state": "primary_institutional_source_verified",
+  "retrieval_date": "2026-09-06",
+  "sources": [
+    {
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/123660473d535a788922909498",
+      "source_type": "law_enforcement_primary",
+      "source_role": "occurrence_primary_and_later_procedural_context",
+      "published_at": "2021-03-09",
+      "supported_scope": "theft during December 2020 at the Perri-Pitagora comprehensive school; later custodial measure in March 2021"
+    }
+  ],
+  "supported_facts": [
+    "The official source places the theft during the month of December 2020 rather than on an exact day.",
+    "The occurrence target is the Perri-Pitagora comprehensive school in Lamezia Terme.",
+    "The source describes unlawful entry with force against property and theft of a computer and money from a vending machine.",
+    "The March 2021 custodial measure is later procedural history and not the event date."
+  ],
+  "event_identity_analysis": {
+    "preferred_model": "one_EVENT_candidate",
+    "event_form": "discrete",
+    "rationale": "One individually described school theft is supported despite coarse temporal precision."
+  },
+  "temporal_analysis": {
+    "source_time": "December 2020",
+    "precision": "month",
+    "synthetic_midpoint_allowed": false,
+    "caution": "Do not manufacture a day within December for sorting, mapping or display."
+  },
+  "geography_analysis": {
+    "municipality": "Lamezia Terme",
+    "place": "Istituto Scolastico Comprensivo Perri-Pitagora",
+    "evidence_precision": "exact_public_site_or_named_site_pending_site_identity_review",
+    "publication_risk": "low_public_site",
+    "public_geometry_candidate": true
+  },
+  "offence_analysis": {
+    "reported_family": "theft/burglary from school premises with property damage",
+    "classification_status": "source_supported_pending_ICCS_Istat_review",
+    "affected_objects": ["computer", "cash from vending machine"]
+  },
+  "privacy_and_publication": {
+    "person_identity_in_dossier": false,
+    "public_institution_target": true,
+    "auto_publish": false
+  },
+  "recommended_resolution": "Individually resolvable discrete EVENT candidate with temporal precision=month. Preserve the December 2020 source-faithful interval and keep the March 2021 measure procedural.",
+  "review_decision": "reviewed_bundle_candidate",
+  "publication_blockers": [
+    "Human review required for named-site identity/geography and public wording before approved bundle status."
+  ]
+}

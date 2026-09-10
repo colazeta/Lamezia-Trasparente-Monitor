@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0",
+  "corpus_id": "ltceds-stress-corpus-2026-09-06",
+  "corpus_slot": 5,
+  "case_key": "2025-05-17-JOKER-TWO-COMMERCIAL-FIRES",
+  "status": "review_mode",
+  "candidate_kind": "TWO_EVENT_CANDIDATES_LINKED_SERIES",
+  "source_state": "primary_source_not_resolved",
+  "retrieval_date": "2026-09-06",
+  "sources": [
+    {
+      "url": "https://www.cityonelamezia.it/lamezia-operazione-jocker-tre-arresti-per-lincendio-di-2-esercizi-commerciali/",
+      "source_type": "press_secondary",
+      "source_role": "direct_carabinieri_derived_discovery",
+      "supported_scope": "two separate damage-followed-by-fire episodes, night of 17 May 2025, two commercial targets"
+    },
+    {
+      "url": "https://www.tenonline.tv/news/cronaca/lamezia-terme-operazione-joker/",
+      "source_type": "press_secondary",
+      "source_role": "corroboration",
+      "supported_scope": "two episodes of damage followed by fire against a pastry shop and a barber shop"
+    },
+    {
+      "url": "https://www.calabriamagnifica.it/cronaca-e-attualita/operazione-joker-arresti-per-gli-incendi-a-due-attivita-commerciali/",
+      "source_type": "press_secondary",
+      "source_role": "corroboration",
+      "supported_scope": "two fires during the night of 17 May 2025"
+    },
+    {
+      "url": "https://www.corrieredilamezia.it/cronaca/2025_10_24/lamezia-operazione-joker-carabinieri-arrestano-3-persone-per-lincendio-di-due-esercizi-commerciali_56162/",
+      "source_type": "press_secondary",
+      "source_role": "corroboration",
+      "supported_scope": "Carabinieri investigation and two commercial-fire episodes"
+    }
+  ],
+  "supported_facts": [
+    "The investigative operation labelled Joker is not itself a criminal EVENT.",
+    "Reporting consistently describes two separate episodes of damage followed by fire.",
+    "Both episodes are reported as occurring during the night of 17 May 2025 in Lamezia Terme.",
+    "The two targets are described as two distinct commercial activities: a pastry shop and a barber shop."
+  ],
+  "event_identity_analysis": {
+    "operation_is_event": false,
+    "reported_occurrence_count": 2,
+    "preferred_model": "two_EVENT_candidates_plus_EVENT_SERIES",
+    "rationale": "The sources expressly distinguish two episodes and two targets. Shared suspected actors and the same night support a series link, not automatic event collapse.",
+    "remaining_identity_question": "Confirm occurrence-level locations and continuity from the original institutional release or equivalent primary record."
+  },
+  "temporal_analysis": {
+    "supported_window": "2025-05-17",
+    "precision": "exact_date_at_series_level",
+    "caution": "Do not infer an exact time or ordering between the two episodes without occurrence-level source evidence."
+  },
+  "geography_analysis": {
+    "municipality": "Lamezia Terme",
+    "target_precision": "named_business_type_only_in_current_dossier",
+    "public_geometry_ready": false,
+    "caution": "Do not geocode the two commercial targets from press naming alone until the occurrence source and publication risk are reviewed."
+  },
+  "offence_analysis": {
+    "source_wording": "danneggiamento seguito da incendio / incendi dolosi",
+    "classification_status": "provisional_pending_primary_source",
+    "multiple_offence_instances_possible": true
+  },
+  "privacy_and_publication": {
+    "person_identity_in_dossier": false,
+    "publication_risk": "commercial_targets_need_review",
+    "auto_publish": false
+  },
+  "recommended_resolution": "Keep two separately resolvable EVENT candidates linked by EVENT_SERIES; do not mint final EVENT IDs until primary occurrence support is resolved.",
+  "review_decision": "needs_more_evidence",
+  "publication_blockers": [
+    "Original Carabinieri or equivalent primary occurrence source not resolved in the current search.",
+    "Occurrence-level location and sequence have not been reviewed from a primary record."
+  ]
+}

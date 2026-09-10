@@ -1,0 +1,129 @@
+{
+  "schema_version": "1.0",
+  "cycle_id": "ltceds-stress-resolution-02",
+  "corpus_id": "ltceds-stress-corpus-2026-09-06",
+  "date": "2026-09-06",
+  "scope_slots": [11, 12, 14, 19, 22],
+  "research_method": {
+    "discovery_engine": "Parallel Search",
+    "primary_source_preference": "Questura di Catanzaro / Polizia di Stato official releases",
+    "sampling_rule": "A reserved slot is consumed only when its pre-specified diagnostic target is actually satisfied."
+  },
+  "outcomes": [
+    {
+      "slot": 11,
+      "case_key": "2020-03-LAMEZIA-AIRPORT-FALSE-DOCUMENTS",
+      "candidate_kind": "EVENT_CANDIDATE",
+      "decision": "reviewed_bundle_candidate",
+      "source_state": "primary_institutional_source_verified",
+      "sampling_target_result": "satisfied",
+      "diagnostic_result": "simple discrete occurrence at an exact public site; source uses a relative date that can be calendar-resolved only with derivation provenance"
+    },
+    {
+      "slot": 12,
+      "case_key": null,
+      "candidate_kind": null,
+      "decision": "slot_remains_reserved",
+      "source_state": "target_not_satisfied",
+      "sampling_target_result": "not_satisfied",
+      "diagnostic_result": "Via dei Mille candidate has one primary source plus multiple media reproductions/corroborations that are not counted as independent evidentiary sources"
+    },
+    {
+      "slot": 14,
+      "case_key": "2017-10-17-SS280-ROAD-HOMICIDE",
+      "candidate_kind": "EVENT_CANDIDATE",
+      "decision": "reviewed_bundle_candidate",
+      "source_state": "primary_institutional_source_verified",
+      "sampling_target_result": "satisfied",
+      "diagnostic_result": "one continuous driving/collision transaction supports multiple offence instances; later death is an outcome date, not a second EVENT or replacement occurrence date"
+    },
+    {
+      "slot": 19,
+      "case_key": "2020-12-PERRI-PITAGORA-SCHOOL-THEFT",
+      "candidate_kind": "EVENT_CANDIDATE",
+      "decision": "reviewed_bundle_candidate",
+      "source_state": "primary_institutional_source_verified",
+      "sampling_target_result": "satisfied",
+      "diagnostic_result": "individually resolvable event with source-faithful temporal precision=month; no synthetic day may be created"
+    },
+    {
+      "slot": 22,
+      "case_key": "2022-LAMEZIA-REPEATED-DOMESTIC-MALTREATMENT",
+      "candidate_kind": "COURSE_OF_CONDUCT_CANDIDATE",
+      "decision": "reviewed_bundle_candidate",
+      "source_state": "primary_institutional_source_verified",
+      "sampling_target_result": "satisfied",
+      "diagnostic_result": "official source explicitly supports reiterated conduct; public point geometry must be suppressed for the private high-vulnerability setting"
+    }
+  ],
+  "unassigned_candidates": [
+    {
+      "case_key": "2018-02-28-VIA-DEI-MILLE-ROBBERY-INJURY",
+      "path": "data/legalita/ltceds/stress-corpus/2026-09-06/candidates/unassigned-via-dei-mille-robbery.json",
+      "reason": "individually resolvable event, but current additional media sources appear derived from the same police account and do not satisfy slot 12's independent-source target"
+    }
+  ],
+  "counts": {
+    "slots_examined": 5,
+    "slots_newly_filled": 4,
+    "slots_left_reserved": 1,
+    "unassigned_candidates_retained": 1,
+    "primary_institutional_sources_verified_for_filled_slots": 4,
+    "reviewed_bundle_candidates": 4,
+    "human_approved_reviewed_bundles": 0,
+    "real_case_compiler_dry_runs": 0
+  },
+  "standard_findings": [
+    {
+      "finding_id": "RELATIVE-DATE-001",
+      "status": "model_rule_added",
+      "component": "temporal provenance",
+      "observation": "A source can state a relative date such as 'Friday last' while publication date is known.",
+      "rule": "A resolved calendar date may be stored only with an explicit derivation basis; it must not masquerade as a source-literal field.",
+      "schema_change_now": false
+    },
+    {
+      "finding_id": "OUTCOME-DATE-001",
+      "status": "model_validated",
+      "component": "EVENT outcome/procedural history",
+      "observation": "The 17 October 2017 collision and a later death demonstrate that outcome date and occurrence date must remain separate.",
+      "schema_change_now": false
+    },
+    {
+      "finding_id": "MONTH-PRECISION-001",
+      "status": "model_validated",
+      "component": "temporal precision",
+      "observation": "The December 2020 school theft is individually resolvable even when only month-level occurrence time is source-supported.",
+      "rule": "Never manufacture a midpoint/day for sorting or display.",
+      "schema_change_now": false
+    },
+    {
+      "finding_id": "COURSE-OF-CONDUCT-001",
+      "status": "model_validated",
+      "component": "event_form",
+      "observation": "An official source explicitly describing reiterated domestic abuse supports course_of_conduct without inventing discrete incidents.",
+      "schema_change_now": false
+    },
+    {
+      "finding_id": "SOURCE-INDEPENDENCE-001",
+      "status": "sampling_and_provenance_rule_added",
+      "component": "source corroboration",
+      "observation": "Several URLs can reproduce the same institutional account and therefore do not constitute independent evidentiary sources.",
+      "rule": "Count source independence by provenance/origin of factual support, not by URL or publisher count.",
+      "schema_change_now": false
+    },
+    {
+      "finding_id": "PUBLIC-SITE-001",
+      "status": "model_validated",
+      "component": "geoprivacy",
+      "observation": "Airport control provides a low-risk exact-public-site occurrence class distinct from residential/sensitive cases.",
+      "schema_change_now": false
+    }
+  ],
+  "compiler_status": {
+    "real_case_dry_run": "not_executed",
+    "reason": "These records are reviewed-bundle candidates, not human-approved reviewed bundles. Compiler dry-run follows explicit editorial review rather than simulating approval."
+  },
+  "cycle_conclusion": "keep_1.0-draft.1; four diagnostic targets satisfied; source-independence rule strengthened; no additional schema gap requiring immediate revision",
+  "publication_policy": "no_auto_publish"
+}
