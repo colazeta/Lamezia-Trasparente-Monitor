@@ -1,0 +1,148 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-estorsione-sequestro-lesioni-via-marsala-2013-04-08",
+  "discovered_at": "2026-09-10T14:47:33+02:00",
+  "updated_at": "2026-09-10T14:47:33+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Estorsione, sequestro di persona e lesioni in un'abitazione di via Marsala",
+  "temporal": {
+    "start": "2013-04-08",
+    "end": "2013-04-08",
+    "edtf": "2013-04-08",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:lametino:2013-04-09:aggressione-sequestro-via-marsala",
+      "source_type": "press_secondary",
+      "provider": "Il Lametino",
+      "title": "Lamezia: Aggredisce e sequestra la madre per 10 euro, arrestato",
+      "url": "https://www.lametino.it/Cronaca/lamezia-aggredisce-e-sequestra-la-madre-per-10-euro-arrestato.html",
+      "published_at": "2013-04-09T10:37:00+02:00",
+      "retrieved_at": "2026-09-10T14:47:33+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2013-04-09:aggressione-sequestro-via-marsala",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Picchia e sequestra la madre: non gli aveva consegnato i soldi per la droga",
+      "url": "https://www.corrieredellacalabria.it/2013/04/09/13720_picchia_e_sequestra_la_madre_non_gli_aveva_consegnato_i_soldi_per_la_droga/",
+      "published_at": "2013-04-09T12:44:00+02:00",
+      "retrieved_at": "2026-09-10T14:47:33+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:infooggi:2013-04-09:aggressione-sequestro-via-marsala",
+      "source_type": "press_secondary",
+      "provider": "InfoOggi",
+      "title": "Un arresto a Lamezia Terme: aggredisce la mamma per 10 euro",
+      "url": "https://www.infooggi.it/articolo/un-arresto-a-lamezia-terme-aggredisce-la-mamma-per-10-euro/40275/amp",
+      "published_at": "2013-04-09",
+      "retrieved_at": "2026-09-10T14:47:33+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:estorsione",
+      "classification_source_key": "press:corriere-calabria:2013-04-09:aggressione-sequestro-via-marsala",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "unknown",
+      "situational_context": [
+        "le cronache contemporanee riferiscono che la sera dell'8 aprile 2013, dopo il rifiuto di consegnare 10 euro, una persona fu aggredita nella propria abitazione in via Marsala e poi chiusa a chiave all'interno dell'alloggio",
+        "Corriere della Calabria e InfoOggi riportano espressamente l'accusa di estorsione; poiché la ricostruzione disponibile descrive il rifiuto della specifica richiesta di 10 euro ma non chiarisce l'esatta consumazione giuridica dell'estorsione contestata, lo stato del tentativo è conservato come unknown"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:sequestro-persona",
+      "classification_source_key": "press:corriere-calabria:2013-04-09:aggressione-sequestro-via-marsala",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti riferiscono che la persona aggredita fu chiusa a chiave all'interno della propria abitazione e impedita nel chiedere aiuto",
+        "Corriere della Calabria e InfoOggi riportano l'accusa di sequestro di persona; il titolo del Lametino usa la formulazione tentato sequestro, mentre il corpo dell'articolo descrive l'effettiva chiusura della vittima nell'abitazione"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    },
+    {
+      "offence_key": "offence:lesioni-personali",
+      "classification_source_key": "press:corriere-calabria:2013-04-09:aggressione-sequestro-via-marsala",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti descrivono percosse e segni visibili di maltrattamento; la persona offesa fu accompagnata all'ospedale di Lamezia per le cure",
+        "Corriere della Calabria e InfoOggi riportano espressamente l'accusa di lesioni"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-marsala:abitazione-privata:occurrence",
+      "basis_source_key": "press:lametino:2013-04-09:aggressione-sequestro-via-marsala",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata in via Marsala",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-marsala:stesso-edificio:arrest",
+      "basis_source_key": "press:lametino:2013-04-09:aggressione-sequestro-via-marsala",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata nello stesso edificio del luogo dell'aggressione, in via Marsala",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
