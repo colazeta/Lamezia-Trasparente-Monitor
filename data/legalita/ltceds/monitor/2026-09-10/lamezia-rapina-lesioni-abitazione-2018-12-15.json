@@ -1,0 +1,134 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-lesioni-abitazione-2018-12-15",
+  "discovered_at": "2026-09-10T19:29:49+02:00",
+  "updated_at": "2026-09-10T19:29:49+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina e lesioni in un'abitazione privata a Lamezia Terme il 15 dicembre 2018",
+  "temporal": {
+    "start": "2018-12-15",
+    "end": "2018-12-15",
+    "edtf": "2018-12-15",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "agency:ansa:2019-06-17:rapine-continue-60enne",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Rapine continue a 60enne, due arresti",
+      "url": "https://www.ansa.it/calabria/notizie/2019/06/17/rapine-continue-a-60enne-due-arresti_8c93cc40-46ad-4f04-bb74-de06d4253996.html",
+      "published_at": "2019-06-17T15:27:00+02:00",
+      "retrieved_at": "2026-09-10T19:29:49+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2019-06-17:rapinato-per-anni",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Anziano aggredito e rapinato per anni, arrestati due giovani lametini",
+      "url": "https://www.corrieredellacalabria.it/2019/06/17/anziano-aggredito-e-rapinato-per-anni-arrestati-due-giovani-lametini/",
+      "published_at": "2019-06-17T10:45:00+02:00",
+      "retrieved_at": "2026-09-10T19:29:49+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:calabria-magnifica:2019-06-17:60enne-rapine",
+      "source_type": "press_secondary",
+      "provider": "Calabria Magnifica",
+      "title": "Approfittano di un 60enne lametino: arrestati due giovani",
+      "url": "https://www.calabriamagnifica.it/cronaca-e-attualita/approfittano-di-un-60enne-lametino-arrestati-due-giovani/",
+      "published_at": "2019-06-17T00:00:00+02:00",
+      "retrieved_at": "2026-09-10T19:29:49+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "agency:ansa:2019-06-17:rapine-continue-60enne",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti ricostruiscono una serie di rapine ai danni della stessa persona tra il 2013 e dicembre 2018; questo artefatto censisce esclusivamente l'episodio discreto del 15 dicembre 2018, per il quale è disponibile una data specifica",
+        "la notte del 15 dicembre 2018 due persone si sarebbero introdotte nell'abitazione della persona offesa a Lamezia Terme, avrebbero rovistato la casa e si sarebbero impossessate del portafogli contenente poche centinaia di euro",
+        "l'episodio è ricostruito nelle fonti nell'ambito delle indagini che portarono nel giugno 2019 all'esecuzione di una misura cautelare; tale sviluppo procedurale non costituisce accertamento definitivo di responsabilità"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:lesioni-personali",
+      "classification_source_key": "agency:ansa:2019-06-17:rapine-continue-60enne",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti riferiscono che durante l'episodio del 15 dicembre 2018 la persona offesa fu colpita con calci e pugni e lasciata sanguinante nell'abitazione",
+        "la qualificazione di lesioni è espressamente riportata dalle fonti relative alla misura cautelare"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata-2018-12-15:occurrence",
+      "basis_source_key": "press:calabria-magnifica:2019-06-17:60enne-rapine",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata a Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata-2018-12-15:target",
+      "basis_source_key": "press:calabria-magnifica:2019-06-17:60enne-rapine",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata a Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
