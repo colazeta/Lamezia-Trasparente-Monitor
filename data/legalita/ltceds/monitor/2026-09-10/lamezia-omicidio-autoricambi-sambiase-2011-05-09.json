@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-omicidio-autoricambi-sambiase-2011-05-09",
   "discovered_at": "2026-09-10T22:38:19+02:00",
-  "updated_at": "2026-09-10T22:38:19+02:00",
+  "updated_at": "2026-09-10T22:52:00+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Omicidio con arma da fuoco in un negozio di autoricambi nel quartiere Sambiase il 9 maggio 2011",
@@ -72,7 +72,6 @@
       "attempt_status": "completed",
       "situational_context": [
         "la sera del 9 maggio 2011 una persona entrò in un negozio di autoricambi nel quartiere Sambiase di Lamezia Terme e sparò diversi colpi di pistola, provocando la morte sul posto della persona presente nell'esercizio",
-        "una cronaca contemporanea colloca l'agguato poco prima delle 20; il record conserva prudentemente la sola data come temporalità esatta",
         "le fonti contemporanee attestano l'avvio delle indagini da parte della Polizia; non è stata reperita una fonte giudiziaria o di polizia primaria accessibile che consenta di attribuire una qualificazione aggravata, una matrice o una responsabilità individuale definitiva"
       ],
       "cyber_related": null,
