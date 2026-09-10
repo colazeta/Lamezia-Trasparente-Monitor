@@ -24,6 +24,7 @@ import { EVIDENCE_INTERVENTIONS_2026_09_06 } from "./evidenceInterventions202609
 import { EVIDENCE_INTERVENTIONS_2026_09_07 } from "./evidenceInterventions20260907";
 import { EVIDENCE_INTERVENTIONS_2026_09_08 } from "./evidenceInterventions20260908";
 import { EVIDENCE_INTERVENTIONS_2026_09_09 } from "./evidenceInterventions20260909";
+import { EVIDENCE_INTERVENTIONS_2026_09_10 } from "./evidenceInterventions20260910";
 
 export {
   EVIDENCE_AREA_LABELS,
@@ -56,6 +57,7 @@ export const EVIDENCE_INTERVENTIONS: readonly EvidenceIntervention[] = [
   ...EVIDENCE_INTERVENTIONS_2026_09_07,
   ...EVIDENCE_INTERVENTIONS_2026_09_08,
   ...EVIDENCE_INTERVENTIONS_2026_09_09,
+  ...EVIDENCE_INTERVENTIONS_2026_09_10,
 ];
 
 export function getEvidenceCountries() {
