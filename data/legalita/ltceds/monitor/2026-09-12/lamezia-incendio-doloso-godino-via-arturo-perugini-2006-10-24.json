@@ -1,0 +1,112 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-incendio-doloso-godino-via-arturo-perugini-2006-10-24",
+  "discovered_at": "2026-09-12T00:33:00+02:00",
+  "updated_at": "2026-09-12T00:33:00+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Incendio doloso alla rivendita di pneumatici Godino in via Arturo Perugini il 24 ottobre 2006",
+  "temporal": {
+    "start": "2006-10-24",
+    "end": "2006-10-24",
+    "edtf": "2006-10-24",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:il-manifesto:2006-11-04:serrata-pizzo",
+      "source_type": "press_secondary",
+      "provider": "il manifesto",
+      "title": "Una serrata contro il «pizzo»",
+      "url": "https://ilmanifesto.it/archivio/2003099079",
+      "published_at": null,
+      "retrieved_at": "2026-09-12T00:33:00+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:gazzetta-del-sud:2007-08-09:secondo-incendio-godino",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Non c’è pace per i Godino. Secondo incendio in azienda",
+      "url": "https://www.messinaantiusura.it/wp-content/uploads/sites/2/2022/07/20070809gazc.pdf",
+      "published_at": null,
+      "retrieved_at": "2026-09-12T00:33:00+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lacnews24:2015-03-13:incendio-godino-verbali-chimera",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Incendio azienda Godino, parla il pentito Arzente",
+      "url": "https://www.lacnews24.it/cronaca/incendio-azienda-godino-parla-il-pentito-arzente-s8rxfqh6",
+      "published_at": null,
+      "retrieved_at": "2026-09-12T00:33:00+02:00",
+      "support_roles": [
+        "event_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:incendio-doloso",
+      "classification_source_key": "press:il-manifesto:2006-11-04:serrata-pizzo",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Una cronaca contemporanea del novembre 2006 qualifica esplicitamente come incendio doloso l'episodio del 24 ottobre, che carbonizzò il deposito di gomme e l'edificio in cui si trovava, abitato anche da quattro famiglie.",
+        "Gazzetta del Sud, nel documentare un secondo incendio nell'agosto 2007, identifica il deposito della Giuseppe Godino in via Arturo Perugini come la stessa attività già presa di mira il 24 ottobre 2006 e riferisce che in quell'occasione erano stati incendiati e devastati deposito e abitazione.",
+        "LaC News24 nel 2015, richiamando verbali dell'operazione Chimera, riferisce dichiarazioni di un collaboratore di giustizia sull'attentato e sulle sue motivazioni. Questo elemento è conservato come contesto procedurale e non come accertamento giudiziario definitivo.",
+        "La ricerca geografica dedicata consente di identificare il sito commerciale e la strada, ma non un civico verificato per il 2006. Non vengono quindi attribuite coordinate né un indirizzo puntuale; la compresenza di abitazione privata nello stesso edificio impone sensibilità e rischio di pubblicazione conservativi."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:giuseppe-godino-via-arturo-perugini:occurrence",
+      "basis_source_key": "press:gazzetta-del-sud:2007-08-09:secondo-incendio-godino",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Deposito/rivendita pneumatici Giuseppe Godino, via Arturo Perugini",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:giuseppe-godino-via-arturo-perugini:target",
+      "basis_source_key": "press:gazzetta-del-sud:2007-08-09:secondo-incendio-godino",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Deposito/rivendita pneumatici Giuseppe Godino, via Arturo Perugini",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
