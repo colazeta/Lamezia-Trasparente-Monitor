@@ -60,7 +60,7 @@
       "sensitivity": "public_place",
       "publication_risk": "low_public_site",
       "geometry": null,
-      "place_name": "Supermercato non identificato in via del Progresso",
+      "place_name": "Via del Progresso",
       "neighbourhood": null,
       "iccs_location_type": null
     },
@@ -75,7 +75,7 @@
       "sensitivity": "public_place",
       "publication_risk": "low_public_site",
       "geometry": null,
-      "place_name": "Supermercato non identificato in via del Progresso",
+      "place_name": "Via del Progresso",
       "neighbourhood": null,
       "iccs_location_type": null
     }
