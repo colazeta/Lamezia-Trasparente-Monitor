@@ -1,0 +1,84 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-attentato-bomba-negozio-elettronica-2006-10",
+  "discovered_at": "2026-09-11T12:44:38+02:00",
+  "updated_at": "2026-09-11T12:44:38+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Attentato con ordigno contro un negozio di materiale elettronico a Lamezia Terme nell'ottobre 2006",
+  "temporal": {
+    "start": "2006-10",
+    "end": "2006-10",
+    "edtf": "2006-10",
+    "precision": "month"
+  },
+  "sources": [
+    {
+      "source_key": "press:tgcom24:2006-10-29:bomba-negozio-elettronica-lamezia",
+      "source_type": "press_secondary",
+      "provider": "TGCOM24",
+      "title": "Lamezia: bomba contro negozio",
+      "url": "https://www.tgcom24.mediaset.it/cronaca/articoli/333590/lamezia-bomba-contro-negozio.shtml",
+      "published_at": "2006-10-29T21:12:00+01:00",
+      "retrieved_at": "2026-09-11T12:44:38+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:intimidazione",
+      "classification_source_key": "press:tgcom24:2006-10-29:bomba-negozio-elettronica-lamezia",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "not_applicable",
+      "situational_context": [
+        "TGCOM24 descrive l'episodio come un attentato di matrice estorsiva e lo presenta come intimidazione, riferendo che un ordigno fu collocato alla base della saracinesca di un negozio di materiale elettronico a Lamezia Terme.",
+        "L'esplosione provocò un incendio, spento da abitanti della zona; la fonte consultata non documenta lesioni né consente di stabilire una qualificazione penale formale più specifica.",
+        "La fonte è pubblicata il 29 ottobre 2006 ma non afferma in modo autonomo e inequivoco che l'attentato sia avvenuto proprio quel giorno; la temporalità canonica resta pertanto al livello del mese di ottobre 2006.",
+        "La ricerca geografica dedicata non ha individuato una fonte affidabile che nomini il negozio, la strada o il quartiere; non vengono quindi inferiti indirizzo, coordinate o una localizzazione più precisa del Comune."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:negozio-elettronica-non-identificato:occurrence",
+      "basis_source_key": "press:tgcom24:2006-10-29:bomba-negozio-elettronica-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Negozio di materiale elettronico non identificato a Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:negozio-elettronica-non-identificato:target",
+      "basis_source_key": "press:tgcom24:2006-10-29:bomba-negozio-elettronica-lamezia",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Negozio di materiale elettronico non identificato a Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
