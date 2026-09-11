@@ -21,12 +21,7 @@
       "url": "https://www.carabinieri.it/in-vostro-aiuto/informazioni/comunicati-stampa/operazione-artemis-ii-associazione-di-tipo-mafioso-usura-estorsione-corruzione-ed-altro.-9-arresti",
       "published_at": "2026-06-18T10:43:00+02:00",
       "retrieved_at": "2026-09-11T06:49:33+02:00",
-      "support_roles": [
-        "event_support",
-        "classification_support",
-        "procedural_context",
-        "corroboration"
-      ]
+      "support_roles": ["event_support", "classification_support", "procedural_context", "corroboration"]
     },
     {
       "source_key": "press:il-lametino:2024-11-07:artemis-traffico-spaccio-guiscardo",
@@ -36,13 +31,7 @@
       "url": "https://www.lametino.it/cronaca/lamezia-operazione-dei-carabinieri-contro-ndrangheta-e-spaccio-59-arresti.html",
       "published_at": "2024-11-07T00:00:00+01:00",
       "retrieved_at": "2026-09-11T06:49:33+02:00",
-      "support_roles": [
-        "event_support",
-        "classification_support",
-        "location_support",
-        "procedural_context",
-        "corroboration"
-      ]
+      "support_roles": ["event_support", "classification_support", "location_support", "procedural_context", "corroboration"]
     },
     {
       "source_key": "press:cn24tv:2024-11-07:artemis-droga-guiscardo",
@@ -52,13 +41,7 @@
       "url": "https://cn24tv.it/news/operazione-artemis-l-egemonia-dei-cracolici-dal-lametino-al-nord-italia-a-suon-di-coca-e-marijuana/",
       "published_at": "2024-11-07T12:20:00+01:00",
       "retrieved_at": "2026-09-11T06:49:33+02:00",
-      "support_roles": [
-        "event_support",
-        "classification_support",
-        "location_support",
-        "procedural_context",
-        "corroboration"
-      ]
+      "support_roles": ["event_support", "classification_support", "location_support", "procedural_context", "corroboration"]
     }
   ],
   "offences": [
@@ -112,7 +95,7 @@
       "sensitivity": "private_or_sensitive",
       "publication_risk": "unknown",
       "geometry": null,
-      "place_name": "Base logistica operativa in via Roberto il Guiscardo",
+      "place_name": "Via Roberto il Guiscardo",
       "neighbourhood": null,
       "iccs_location_type": null
     }
