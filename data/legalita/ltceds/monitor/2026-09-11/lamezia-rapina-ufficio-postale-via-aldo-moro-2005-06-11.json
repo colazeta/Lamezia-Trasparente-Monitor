@@ -1,0 +1,83 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-ufficio-postale-via-aldo-moro-2005-06-11",
+  "discovered_at": "2026-09-11T17:52:57.000Z",
+  "updated_at": "2026-09-11T17:52:57.000Z",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina armata all'ufficio postale di via Aldo Moro a Lamezia Terme l'11 giugno 2005",
+  "temporal": {
+    "start": "2005-06-11",
+    "end": "2005-06-11",
+    "edtf": "2005-06-11",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "source:uscatanzaro:2005-06-11:rapina-ufficio-postale-via-aldo-moro",
+      "source_type": "press_secondary",
+      "provider": "UsCatanzaro.net",
+      "title": "CRONACA - Rapina ad ufficio postale",
+      "url": "https://www.uscatanzaro.net/cronaca-rapina-ad-ufficio-postale",
+      "published_at": null,
+      "retrieved_at": "2026-09-11T17:52:57.000Z",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "source:uscatanzaro:2005-06-11:rapina-ufficio-postale-via-aldo-moro",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La fonte contemporanea riferisce che due uomini armati e con il volto coperto compirono la rapina intorno alle 9 dell'11 giugno 2005.",
+        "La rapina ebbe luogo nell'ufficio postale di via Aldo Moro a Lamezia Terme; l'ammontare del denaro sottratto non era noto al momento della pubblicazione.",
+        "Dopo il colpo i due rapinatori si allontanarono a piedi facendo perdere le tracce; sul posto intervennero i Carabinieri del Nucleo operativo e radiomobile della Compagnia di Lamezia Terme."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:ufficio-postale-via-aldo-moro:occurrence",
+      "basis_source_key": "source:uscatanzaro:2005-06-11:rapina-ufficio-postale-via-aldo-moro",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Ufficio postale di via Aldo Moro",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:ufficio-postale-via-aldo-moro:target",
+      "basis_source_key": "source:uscatanzaro:2005-06-11:rapina-ufficio-postale-via-aldo-moro",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Ufficio postale di via Aldo Moro",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
