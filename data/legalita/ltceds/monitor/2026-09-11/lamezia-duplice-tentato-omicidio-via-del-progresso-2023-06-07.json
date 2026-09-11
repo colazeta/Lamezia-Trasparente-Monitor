@@ -1,8 +1,8 @@
 {
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-duplice-tentato-omicidio-via-del-progresso-2023-06-07",
-  "discovered_at": "2026-09-11T21:18:00.000Z",
-  "updated_at": "2026-09-11T21:18:00.000Z",
+  "discovered_at": "2026-09-11T21:07:00.000Z",
+  "updated_at": "2026-09-11T21:07:00.000Z",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Duplice tentato omicidio con pistola inceppata in via del Progresso il 7 giugno 2023",
@@ -20,7 +20,7 @@
       "title": "Spara contro due conoscenti ma l’arma si inceppa: arrestato a Lamezia Terme per duplice tentato omicidio",
       "url": "https://ildispaccio.it/calabria/catanzaro/2023/06/12/spara-contro-due-conoscenti-ma-larma-si-inceppa-arrestato-a-lamezia-terme-per-duplice-tentato-omicidio",
       "published_at": "2023-06-12T15:23:00+02:00",
-      "retrieved_at": "2026-09-11T21:18:00.000Z",
+      "retrieved_at": "2026-09-11T21:07:00.000Z",
       "support_roles": [
         "event_support",
         "classification_support",
@@ -35,7 +35,7 @@
       "title": "Lamezia Terme, tenta di sparare a due parenti dell'amante ma la pistola s'inceppa: arrestato 25enne",
       "url": "https://www.lacnews24.it/cronaca/lamezia-terme-tenta-di-sparare-a-due-parenti-dellamante-ma-la-pistola-sinceppa-arrestato-25enne-u5kz86c0",
       "published_at": null,
-      "retrieved_at": "2026-09-11T21:18:00.000Z",
+      "retrieved_at": "2026-09-11T21:07:00.000Z",
       "support_roles": [
         "event_support",
         "classification_support",
@@ -51,7 +51,7 @@
       "title": "Spara contro conoscenti, illesi perché l'arma si inceppa",
       "url": "https://www.rainews.it/tgr/calabria/articoli/2023/06/spara-contro-conoscenti-illesi-perche-larma-si-inceppa-lamezia-terme-1919da15-1b59-4fe6-825c-e295821e4260.html",
       "published_at": null,
-      "retrieved_at": "2026-09-11T21:18:00.000Z",
+      "retrieved_at": "2026-09-11T21:07:00.000Z",
       "support_roles": [
         "event_support",
         "classification_support",
