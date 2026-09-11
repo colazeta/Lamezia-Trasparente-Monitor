@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-rapina-piazza-mercato-vecchio-2025-01-19",
   "discovered_at": "2026-09-07T18:29:49+02:00",
-  "updated_at": "2026-09-07T18:29:49+02:00",
+  "updated_at": "2026-09-11T13:35:56+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Rapina aggravata in piazza Mercato Vecchio a Lamezia Terme",
@@ -75,6 +75,7 @@
       "situational_context": [
         "poco dopo la mezzanotte del 19 gennaio 2025 la Polizia di Stato è intervenuta in piazza Mercato Vecchio a seguito di segnalazioni relative al lancio di bottiglie di vetro",
         "la fonte primaria riferisce che un giovane è stato minacciato con una bottiglia di vetro infranta e che gli è stata strappata dal collo una catenina d'oro",
+        "dopo la rapina la fonte primaria riferisce che l'autore si è dato alla fuga verso via Isonzo, dove è stato individuato e bloccato poco dopo",
         "la Questura qualifica il fatto come rapina aggravata dall'uso di due bottiglie di vetro infrante e riferisce l'arresto in flagranza",
         "il 21 gennaio 2025 l'arresto è stato convalidato ed è stata applicata la custodia cautelare in carcere; il procedimento risultava nella fase delle indagini preliminari"
       ],
@@ -95,6 +96,21 @@
       "publication_risk": "victim_linked",
       "geometry": null,
       "place_name": "Piazza Mercato Vecchio",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-isonzo:flight",
+      "basis_source_key": "law:questura-catanzaro:2025-01-24:rapina-mercato-vecchio-lamezia",
+      "role": "other",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "non_sensitive",
+      "geometry": null,
+      "place_name": "Via Isonzo",
       "neighbourhood": null,
       "iccs_location_type": null
     },
