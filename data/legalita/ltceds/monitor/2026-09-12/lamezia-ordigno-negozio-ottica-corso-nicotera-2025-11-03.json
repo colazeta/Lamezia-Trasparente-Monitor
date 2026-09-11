@@ -72,7 +72,7 @@
         "ANSA e le cronache locali convergono sull'esplosione, poco dopo la mezzanotte del 3 novembre 2025, di un ordigno rudimentale davanti all'ingresso di un negozio di ottica sul centralissimo Corso Giovanni Nicotera a Lamezia Terme.",
         "Le fonti riferiscono l'intervento degli agenti del Commissariato della Polizia per i rilievi e l'avvio delle indagini.",
         "Le fonti descrivono la sequenza come atti intimidatori e formulano l'ipotesi di una ripresa del racket estorsivo; in assenza di una qualificazione giudiziaria o di polizia primaria reperita per il singolo episodio, la classificazione resta provvisoria e non viene inferito un reato estorsivo.",
-        "La ricerca geografica dedicata conferma Corso Giovanni Nicotera e la tipologia dell'esercizio, ma non ha prodotto un nome commerciale o un civico affidabilmente attestati. La localizzazione resta quindi a livello di tratto stradale, senza coordinate."
+        "La ricerca geografica dedicata conferma Corso Giovanni Nicotera e la tipologia dell'esercizio, ma non ha prodotto un nome commerciale o un civico affidabilmente attestati. La localizzazione resta quindi a livello di tratto stradale, senza coordinate; la tipologia del target è conservata nel titolo e nel contesto senza alterare lo street scope canonico."
       ],
       "cyber_related": null,
       "affected_object_count": null
@@ -90,7 +90,7 @@
       "sensitivity": "private_or_sensitive",
       "publication_risk": "victim_linked",
       "geometry": null,
-      "place_name": "Corso Giovanni Nicotera, presso l'ingresso di un negozio di ottica",
+      "place_name": "Corso Giovanni Nicotera",
       "neighbourhood": null,
       "iccs_location_type": null
     },
@@ -105,7 +105,7 @@
       "sensitivity": "private_or_sensitive",
       "publication_risk": "victim_linked",
       "geometry": null,
-      "place_name": "Corso Giovanni Nicotera, presso l'ingresso di un negozio di ottica",
+      "place_name": "Corso Giovanni Nicotera",
       "neighbourhood": null,
       "iccs_location_type": null
     }
