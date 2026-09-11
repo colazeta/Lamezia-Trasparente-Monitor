@@ -1,0 +1,120 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-artemis-traffico-spaccio-via-roberto-il-guiscardo-2021-2024",
+  "discovered_at": "2026-09-11T06:49:33+02:00",
+  "updated_at": "2026-09-11T06:49:33+02:00",
+  "record_status": "verified_source",
+  "event_form": "course_of_conduct",
+  "title": "Traffico e spaccio di marijuana e cocaina con base logistica in via Roberto il Guiscardo documentati nell'indagine Artemis",
+  "temporal": {
+    "start": "2021-11",
+    "end": "2024-06",
+    "edtf": "2021-11/2024-06",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "law:carabinieri:2026-06-18:artemis-ii-retrospettiva-artemis",
+      "source_type": "law_enforcement_primary",
+      "provider": "Arma dei Carabinieri - Comando Provinciale di Catanzaro",
+      "title": "Operazione Artemis II; associazione di tipo mafioso, usura, estorsione, corruzione ed altro. 9 arresti",
+      "url": "https://www.carabinieri.it/in-vostro-aiuto/informazioni/comunicati-stampa/operazione-artemis-ii-associazione-di-tipo-mafioso-usura-estorsione-corruzione-ed-altro.-9-arresti",
+      "published_at": "2026-06-18T10:43:00+02:00",
+      "retrieved_at": "2026-09-11T06:49:33+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2024-11-07:artemis-traffico-spaccio-guiscardo",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, operazione contro 'ndrangheta e spaccio anche a Cortale, Maida e Jacurso: 59 arresti e 86 indagati",
+      "url": "https://www.lametino.it/cronaca/lamezia-operazione-dei-carabinieri-contro-ndrangheta-e-spaccio-59-arresti.html",
+      "published_at": "2024-11-07T00:00:00+01:00",
+      "retrieved_at": "2026-09-11T06:49:33+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:cn24tv:2024-11-07:artemis-droga-guiscardo",
+      "source_type": "press_secondary",
+      "provider": "CN24TV",
+      "title": "Artemis. L'egemonia dei Cracolici dal Lametino al Nord Italia a suon di coca e marijuana",
+      "url": "https://cn24tv.it/news/operazione-artemis-l-egemonia-dei-cracolici-dal-lametino-al-nord-italia-a-suon-di-coca-e-marijuana/",
+      "published_at": "2024-11-07T12:20:00+01:00",
+      "retrieved_at": "2026-09-11T06:49:33+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:traffico-stupefacenti",
+      "classification_source_key": "press:il-lametino:2024-11-07:artemis-traffico-spaccio-guiscardo",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "unknown",
+      "situational_context": [
+        "le fonti descrivono, a livello di gravita indiziaria cautelare, una ulteriore associazione a delinquere finalizzata al traffico di sostanze stupefacenti, in particolare marijuana e cocaina, operante nel Comune di Lamezia Terme",
+        "l'indagine Artemis ha documentato una struttura di spacciatori e una intensa attivita di commercializzazione; il procedimento era ancora nella fase delle indagini preliminari al momento della comunicazione del 7 novembre 2024",
+        "il comunicato ufficiale Artemis II del 18 giugno 2026 conferma che la prima fase Artemis aveva ricostruito un sistema di produzione e traffico di stupefacenti e colloca l'attivita investigativa complessiva tra novembre 2021 e giugno 2024",
+        "l'intervallo temporale del record rappresenta la finestra investigativa documentata dalle fonti e non implica che l'attivita criminale sia iniziata esattamente nel novembre 2021 o cessata esattamente nel giugno 2024"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:spaccio-stupefacenti",
+      "classification_source_key": "press:il-lametino:2024-11-07:artemis-traffico-spaccio-guiscardo",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "unknown",
+      "situational_context": [
+        "le fonti descrivono uno spaccio diffuso organizzato dalla base logistica operativa in via Roberto il Guiscardo",
+        "la stessa base viene indicata come luogo utilizzato per la detenzione, l'occultamento e lo smercio della sostanza stupefacente",
+        "il record censisce la condotta oggetto della ricostruzione investigativa senza attribuire responsabilita individuali e senza rappresentare le contestazioni cautelari come accertamenti definitivi"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-roberto-il-guiscardo:base-logistica-occurrence",
+      "basis_source_key": "press:il-lametino:2024-11-07:artemis-traffico-spaccio-guiscardo",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "unknown",
+      "geometry": null,
+      "place_name": "Base logistica operativa in via Roberto il Guiscardo",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
