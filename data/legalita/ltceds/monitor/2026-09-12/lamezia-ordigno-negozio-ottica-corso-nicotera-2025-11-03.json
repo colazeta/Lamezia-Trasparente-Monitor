@@ -1,0 +1,113 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-ordigno-negozio-ottica-corso-nicotera-2025-11-03",
+  "discovered_at": "2026-09-12T00:14:32+02:00",
+  "updated_at": "2026-09-12T00:14:32+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Attentato con ordigno a un negozio di ottica in Corso Giovanni Nicotera il 3 novembre 2025",
+  "temporal": {
+    "start": "2025-11-03",
+    "end": "2025-11-03",
+    "edtf": "2025-11-03",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "news:ansa:2025-11-03:due-ordigni-negozi-lamezia",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Due ordigni in due giorni davanti a negozi a Lamezia Terme",
+      "url": "https://www.ansa.it/calabria/notizie/2025/11/03/due-ordigni-in-due-giorni-davanti-a-negozi-a-lamezia-terme_52f70045-70e9-4fe7-9ca6-a7bf413e0083.html",
+      "published_at": "2025-11-03T09:25:00+01:00",
+      "retrieved_at": "2026-09-12T00:14:32+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support"
+      ]
+    },
+    {
+      "source_key": "press:lameziainforma:2025-11-03:atti-intimidatori-attivita-commerciali",
+      "source_type": "press_secondary",
+      "provider": "LameziaInforma",
+      "title": "Nuovi atti intimidatori per attività commerciali a Lamezia Terme",
+      "url": "https://www.lameziainforma.it/cronaca/2025/11/03/nuovi-atti-intimidatori-per-attivita-commerciali-a-lamezia-terme/64222",
+      "published_at": "2025-11-03T09:51:00+01:00",
+      "retrieved_at": "2026-09-12T00:14:32+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2025-11-03:ordigni-ottica-abbigliamento",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, altri due ordigni a un'ottica e un negozio d'abbigliamento: escalation criminale in città",
+      "url": "https://www.lametino.it/cronaca/lamezia-ordigno-a-negozio-di-ottica-su-corso-nicotera-preso-di-mira-anche-negozio-d-abbigliamento-in-via-xx-settembre.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-12T00:14:32+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:intimidazione",
+      "classification_source_key": "news:ansa:2025-11-03:due-ordigni-negozi-lamezia",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "not_applicable",
+      "situational_context": [
+        "ANSA e le cronache locali convergono sull'esplosione, poco dopo la mezzanotte del 3 novembre 2025, di un ordigno rudimentale davanti all'ingresso di un negozio di ottica sul centralissimo Corso Giovanni Nicotera a Lamezia Terme.",
+        "Le fonti riferiscono l'intervento degli agenti del Commissariato della Polizia per i rilievi e l'avvio delle indagini.",
+        "Le fonti descrivono la sequenza come atti intimidatori e formulano l'ipotesi di una ripresa del racket estorsivo; in assenza di una qualificazione giudiziaria o di polizia primaria reperita per il singolo episodio, la classificazione resta provvisoria e non viene inferito un reato estorsivo.",
+        "La ricerca geografica dedicata conferma Corso Giovanni Nicotera e la tipologia dell'esercizio, ma non ha prodotto un nome commerciale o un civico affidabilmente attestati. La localizzazione resta quindi a livello di tratto stradale, senza coordinate."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:corso-giovanni-nicotera-negozio-ottica:occurrence",
+      "basis_source_key": "news:ansa:2025-11-03:due-ordigni-negozi-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Corso Giovanni Nicotera, presso l'ingresso di un negozio di ottica",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:corso-giovanni-nicotera-negozio-ottica:target",
+      "basis_source_key": "news:ansa:2025-11-03:due-ordigni-negozi-lamezia",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Corso Giovanni Nicotera, presso l'ingresso di un negozio di ottica",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
