@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-furto-reliquia-santa-chiara-via-felice-scalzo-2023-09-06",
   "discovered_at": "2026-09-09T03:17:31+02:00",
-  "updated_at": "2026-09-09T03:17:31+02:00",
+  "updated_at": "2026-09-11T04:27:33+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Furto di una reliquia nella Chiesa di Santa Chiara in via Felice Scalzo",
@@ -43,6 +43,22 @@
         "procedural_context",
         "corroboration"
       ]
+    },
+    {
+      "source_key": "agency:ansa:2023-09-11:reliquia-san-francesco-lamezia",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Ruba preziosa reliquia di San Francesco d'Assisi, arrestato",
+      "url": "https://www.ansa.it/calabria/notizie/2023/09/11/ruba-preziosa-reliquia-di-san-francesco-dassisi-arrestato_df1960e2-d63d-400a-b402-0fdcac9d8b24.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-11T04:27:33+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
     }
   ],
   "offences": [
@@ -59,7 +75,9 @@
       "situational_context": [
         "nel pomeriggio del 6 settembre 2023 un uomo si è introdotto nella Chiesa di Santa Chiara in via Felice Scalzo",
         "la Questura riferisce il danneggiamento del raccoglitore delle offerte e l'asportazione di una reliquia di San Francesco d'Assisi contenente parte delle ceneri del Santo",
-        "la fonte riferisce la fuga a bordo di una bicicletta elettrica; la Polizia di Stato riferisce il successivo arresto e il ritrovamento della reliquia, senza indicare un ulteriore luogo operativo sufficientemente preciso"
+        "la Questura qualifica l'arresto in stato di quasi-flagranza per furto pluriaggravato continuato; la qualificazione è conservata come stato investigativo e procedurale della fonte, non come accertamento definitivo di responsabilità",
+        "la Polizia e ANSA riferiscono che il soggetto è stato intercettato mentre percorreva in bicicletta elettrica una via non specificata del centro cittadino e che, nel controllo, sono stati rinvenuti la reliquia, il porta particole e attrezzi atti allo scasso",
+        "le fonti riferiscono la successiva convalida dell'arresto e l'applicazione degli arresti domiciliari"
       ],
       "cyber_related": null,
       "affected_object_count": 1
@@ -78,6 +96,51 @@
       "publication_risk": "low_public_site",
       "geometry": null,
       "place_name": "Chiesa di Santa Chiara, via Felice Scalzo",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:chiesa-santa-chiara-via-felice-scalzo:target",
+      "basis_source_key": "law:questura-catanzaro:2023-09-06:furto-reliquia-santa-chiara-lamezia",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Chiesa di Santa Chiara, via Felice Scalzo",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:centro-cittadino-via-non-specificata:arrest",
+      "basis_source_key": "agency:ansa:2023-09-11:reliquia-san-francesco-lamezia",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "municipality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Una via non specificata del centro cittadino",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:centro-cittadino-via-non-specificata:recovery",
+      "basis_source_key": "agency:ansa:2023-09-11:reliquia-san-francesco-lamezia",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "municipality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Una via non specificata del centro cittadino",
       "neighbourhood": null,
       "iccs_location_type": null
     }
