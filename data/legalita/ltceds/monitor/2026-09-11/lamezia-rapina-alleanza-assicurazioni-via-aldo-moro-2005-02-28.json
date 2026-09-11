@@ -1,0 +1,99 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-alleanza-assicurazioni-via-aldo-moro-2005-02-28",
+  "discovered_at": "2026-09-11T10:16:41+02:00",
+  "updated_at": "2026-09-11T10:16:41+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina armata all'agenzia Alleanza Assicurazioni di via Aldo Moro",
+  "temporal": {
+    "start": "2005-02-28",
+    "end": "2005-02-28",
+    "edtf": "2005-02-28",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:lac-news24:2016-04-15:rapine-cosca-giampa-alleanza",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Rapine, chiuse le indagini per 12 appartenenti alla cosca Giampà",
+      "url": "https://www.lacnews24.it/cronaca/rapine-chiuse-le-indagini-per-12-appartenenti-alla-cosca-giampa-wdu6fu8l",
+      "published_at": "2016-04-15T16:26:00+02:00",
+      "retrieved_at": "2026-09-11T10:16:41+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:soverato-web:2016-04-15:rapine-cosca-giampa-alleanza",
+      "source_type": "press_secondary",
+      "provider": "Soverato Web",
+      "title": "“Gang” delle rapine nel catanzarese, chiuse indagini per 12 della cosca Giampà",
+      "url": "https://www.soveratoweb.com/gang-delle-rapine-nel-catanzarese-chiuse-indagini-per-12-della-cosca-giampa/",
+      "published_at": "2016-04-15T00:00:00+02:00",
+      "retrieved_at": "2026-09-11T10:16:41+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "press:lac-news24:2016-04-15:rapine-cosca-giampa-alleanza",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti retrospettive convergono su una rapina consumata il 28 febbraio 2005 presso la sede dell'agenzia Alleanza Assicurazioni in via Aldo Moro a Lamezia Terme",
+        "le fonti riferiscono che gli autori fecero irruzione armati di pistola e costrinsero i dipendenti a consegnare 4.400 euro",
+        "le fonti del 15 aprile 2016 riportano la conclusione di indagini della Squadra Mobile di Catanzaro su una serie di rapine e attribuiscono investigativamente responsabilità per questo episodio; il record non trasforma tale ricostruzione investigativa in un accertamento definitivo di responsabilità né attribuisce aggravanti ulteriori al singolo evento"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:alleanza-assicurazioni-via-aldo-moro:occurrence",
+      "basis_source_key": "press:lac-news24:2016-04-15:rapine-cosca-giampa-alleanza",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Agenzia Alleanza Assicurazioni, via Aldo Moro",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:alleanza-assicurazioni-via-aldo-moro:target",
+      "basis_source_key": "press:lac-news24:2016-04-15:rapine-cosca-giampa-alleanza",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Agenzia Alleanza Assicurazioni, via Aldo Moro",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
