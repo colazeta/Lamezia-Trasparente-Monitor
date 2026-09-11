@@ -172,6 +172,40 @@ const SCOUTED_CANONICAL_PROPOSAL_PRESENTATIONS: Record<
     expectedOutcome:
       "Rendere più sicuro e accessibile il percorso verso il cimitero e più verificabili copertura del servizio di custodia e tempi degli interventi, senza presumere l’efficacia prima della loro esecuzione.",
   },
+  "urologia-ripristino-operativita-pd-2026": {
+    proposalId: "urologia-ripristino-operativita-pd-2026",
+    version: "1.0",
+    title: "Ripristino dell’operatività del reparto di Urologia",
+    request:
+      "Accelerare il reclutamento degli specialisti necessari e ripristinare la piena operatività ordinaria del reparto di Urologia del Giovanni Paolo II.",
+    actionTypes: ["rafforzamento_servizio", "organizzazione"],
+    measures: [
+      "Accelerare la conclusione delle procedure di reclutamento degli specialisti urologi.",
+      "Utilizzare con urgenza mobilità e scorrimento delle graduatorie disponibili quando applicabili.",
+      "Immettere in servizio il personale necessario per ricostituire l’organico del reparto.",
+      "Ripristinare i posti letto e i ricoveri ordinari di Urologia.",
+      "Riattivare a pieno regime l’attività chirurgica collegata al reparto.",
+    ],
+    expectedOutcome:
+      "Ripristinare la capacità ordinaria del reparto senza attribuire alla misura efficacia o tempi non ancora documentati.",
+  },
+  "polizia-locale-mobilita-quattro-agenti-dicapp-2026": {
+    proposalId: "polizia-locale-mobilita-quattro-agenti-dicapp-2026",
+    version: "1.0",
+    title: "Conclusione della mobilità per quattro agenti di Polizia Locale",
+    request:
+      "Concludere e rendere trasparente la procedura di mobilità per quattro agenti e, se non produce assunzioni, valutare ulteriori strumenti legittimi per coprire i posti.",
+    actionTypes: ["organizzazione", "trasparenza", "rafforzamento_servizio"],
+    measures: [
+      "Formalizzare l’esito della procedura di mobilità per quattro Istruttori Agenti di Vigilanza.",
+      "Comunicare lo stato della procedura, l’eventuale esito e le successive determinazioni per la copertura dei posti.",
+      "Chiarire le ragioni delle modifiche intervenute nei requisiti dell’avviso, come richiesto dal promotore.",
+      "In caso di esito infruttuoso, valutare lo scorrimento di graduatorie vigenti o ulteriori procedure di reclutamento consentite.",
+      "Valutare, nel rispetto delle condizioni normative e finanziarie applicabili, la possibilità di valorizzare personale già impiegato e formato presso l’Ente.",
+    ],
+    expectedOutcome:
+      "Rendere concluso e verificabile il procedimento in corso e definire le successive modalità di copertura dei posti senza presumere assunzioni non documentate.",
+  },
 };
 
 export function getCanonicalProposalPresentation(
