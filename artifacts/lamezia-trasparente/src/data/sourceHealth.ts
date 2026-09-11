@@ -1,11 +1,12 @@
+import type {
+  MunicipalSnapshot,
+  MunicipalDatasetKey,
+} from "./municipalDemographics";
 import { ALBO_OPERATIONAL_STATUS } from "./alboStatus";
 import atlanteMetadata from "../../../../data/processed/territorio/istat_sezioni_censimento_lamezia.metadata.json";
 import confiscatedAssets from "../../../../data/curated/territorio/beni_confiscati_lamezia_pilot.json";
 import airTrafficMetadata from "./generated/lameziaAirTrafficMonthly.metadata.json";
 import climateMetadata from "./generated/lameziaClimateDaily.metadata.json";
-import demographicTrend from "./generated/lameziaDemographicTrend.json";
-import familiesChildren from "./generated/lameziaFamiliesChildren.json";
-import foreignResidents from "./generated/lameziaForeignResidentsAgeSex.json";
 import pnrrProjects from "./generated/lameziaPnrrProjects.json";
 import householdComposition from "../../../api-server/src/data/lameziaHouseholdComposition2023.json";
 import { OPEN_DATA_THEME_LIBRARY } from "./opendataThemeCategories";
@@ -250,13 +251,12 @@ function buildOpenDataHealthItem({
   metricLabel,
   cautionNote,
   evidenceValues,
-  evidenceLabel =
-    "Snapshot JSON generato dalla pipeline locale con metadati di fonte separati e versionati.",
+  evidenceLabel = "Snapshot JSON generato dalla pipeline locale con metadati di fonte separati e versionati.",
 }: {
   id: string;
-  datasetId: string;
+  datasetId?: string;
   name: string;
-  checkedAt: string;
+  checkedAt: string | null;
   updatedAt: string | null;
   sourceUrl: string;
   expectedRefresh: string;
@@ -339,27 +339,6 @@ const openDataItems: SourceHealthItem[] = [
     ],
   }),
   buildOpenDataHealthItem({
-    id: "opendata-trend-demografico",
-    datasetId: "lamezia-demographic-trend",
-    name: "Open Data comunale — trend demografico",
-    checkedAt: demographicTrend.metadata.generated_at,
-    updatedAt: demographicTrend.metadata.resource_last_modified,
-    sourceUrl: demographicTrend.metadata.source_url,
-    expectedRefresh: demographicTrend.metadata.update_policy,
-    expectedDays: 14,
-    metricLabel: `${demographicTrend.metadata.rows} annualità, fino al ${demographicTrend.metadata.latest_year}`,
-    cautionNote:
-      "Serie aggregata del portale comunale: non sostituisce una ricostruzione statistica indipendente o la verifica sulla risorsa CSV originale.",
-    evidenceValues: [
-      demographicTrend.metadata.source_url,
-      demographicTrend.metadata.generated_at,
-      demographicTrend.metadata.resource_last_modified,
-      demographicTrend.metadata.rows,
-      demographicTrend.metadata.update_policy,
-      demographicTrend.metadata.caveat,
-    ],
-  }),
-  buildOpenDataHealthItem({
     id: "opendata-famiglie-componenti-2023",
     datasetId: "lamezia-household-composition-2023",
     name: "Open Data ISTAT — famiglie per numero di componenti 2023",
@@ -382,48 +361,6 @@ const openDataItems: SourceHealthItem[] = [
       householdComposition.totalHouseholds,
       householdComposition.quality.includedRows,
       householdComposition.quality.exactReconciliation,
-    ],
-  }),
-  buildOpenDataHealthItem({
-    id: "opendata-famiglie-figli",
-    datasetId: "lamezia-families-children",
-    name: "Open Data comunale — famiglie per numero di figli",
-    checkedAt: familiesChildren.metadata.generated_at,
-    updatedAt: familiesChildren.metadata.resource_last_modified,
-    sourceUrl: familiesChildren.metadata.source_url,
-    expectedRefresh: familiesChildren.metadata.update_policy,
-    expectedDays: 14,
-    metricLabel: `${familiesChildren.metadata.rows} classi; ${familiesChildren.metadata.total_families_with_children.toLocaleString("it-IT")} famiglie nella risorsa`,
-    cautionNote:
-      "La risorsa non espone l'anno di riferimento e non include esplicitamente le famiglie senza figli; la scheda rappresenta lo snapshot acquisito.",
-    evidenceValues: [
-      familiesChildren.metadata.source_url,
-      familiesChildren.metadata.generated_at,
-      familiesChildren.metadata.resource_last_modified,
-      familiesChildren.metadata.rows,
-      familiesChildren.metadata.update_policy,
-      familiesChildren.metadata.caveat,
-    ],
-  }),
-  buildOpenDataHealthItem({
-    id: "opendata-residenti-stranieri",
-    datasetId: "lamezia-foreign-residents-age-sex",
-    name: "Open Data comunale — residenti stranieri per età e sesso",
-    checkedAt: foreignResidents.metadata.generated_at,
-    updatedAt: foreignResidents.metadata.resource_last_modified,
-    sourceUrl: foreignResidents.metadata.source_url,
-    expectedRefresh: foreignResidents.metadata.update_policy,
-    expectedDays: 14,
-    metricLabel: `${foreignResidents.metadata.rows} classi; anno ${foreignResidents.metadata.latest_year}`,
-    cautionNote:
-      "Dato aggregato, privo di elenchi nominativi: non sostituisce una validazione statistica indipendente della risorsa comunale.",
-    evidenceValues: [
-      foreignResidents.metadata.source_url,
-      foreignResidents.metadata.generated_at,
-      foreignResidents.metadata.resource_last_modified,
-      foreignResidents.metadata.rows,
-      foreignResidents.metadata.update_policy,
-      foreignResidents.metadata.caveat,
     ],
   }),
   buildOpenDataHealthItem({
@@ -491,7 +428,7 @@ const atlanteAssessment = assessSourceHealth({
   hasWarnings: atlanteMetadata.counts.missingVariables > 0,
 });
 
-const sources: SourceHealthItem[] = [
+const baseSources: SourceHealthItem[] = [
   {
     id: "albo-pretorio",
     name: "Albo Pretorio — acquisizione pubblica",
@@ -548,39 +485,156 @@ const sources: SourceHealthItem[] = [
   ...openDataItems,
 ];
 
-const publishedOpenDataDatasetIds = OPEN_DATA_THEME_LIBRARY.filter(
-  (theme) => theme.status === "published",
-).flatMap((theme) => theme.datasets.map((dataset) => dataset.id));
-const monitoredOpenDataDatasetIds = new Set(
-  sources
-    .map((source) => source.openDataDatasetId)
-    .filter((datasetId): datasetId is string => Boolean(datasetId)),
-);
-const missingOpenDataDatasetIds = publishedOpenDataDatasetIds.filter(
-  (datasetId) => !monitoredOpenDataDatasetIds.has(datasetId),
-);
-const openDataCoverage: OpenDataHealthCoverage = {
-  published: publishedOpenDataDatasetIds.length,
-  monitored:
-    publishedOpenDataDatasetIds.length - missingOpenDataDatasetIds.length,
-  percentage:
-    publishedOpenDataDatasetIds.length === 0
-      ? 100
-      : clampScore(
-          ((publishedOpenDataDatasetIds.length -
-            missingOpenDataDatasetIds.length) /
-            publishedOpenDataDatasetIds.length) *
-            100,
-        ),
-  missingDatasetIds: missingOpenDataDatasetIds,
+export type CanonicalPopulationHealth = {
+  series: { seriesKey: string; source: string; sourceUrl: string | null };
+  current: Array<{ period: string; acquiredAt: string }>;
+  releases: Array<{ acquiredAt: string; releaseDate: string | null }>;
 };
+const municipalHealthDescriptors = {
+  population: {
+    id: "opendata-popolazione-comunale",
+    name: "Serie comunale — popolazione residente",
+    datasetId: undefined,
+  },
+  "foreign-age-sex": {
+    id: "opendata-residenti-stranieri",
+    name: "Open Data — stranieri per sesso ed età",
+    datasetId: "lamezia-foreign-residents-age-sex",
+  },
+  "families-children": {
+    id: "opendata-famiglie-figli",
+    name: "Open Data — famiglie per numero di figli",
+    datasetId: "lamezia-families-children",
+  },
+} as const;
+export function buildSourceHealth(
+  municipal: Partial<Record<MunicipalDatasetKey, MunicipalSnapshot>> = {},
+  istat?: CanonicalPopulationHealth,
+  failed: readonly string[] = [],
+): SourceHealthPayload {
+  const canonicalItems = Object.entries(municipalHealthDescriptors).map(
+    ([key, descriptor]): SourceHealthItem => {
+      const snapshot = municipal[key as MunicipalDatasetKey],
+        metadata = snapshot?.metadata;
+      const item = buildOpenDataHealthItem({
+        ...descriptor,
+        checkedAt: snapshot?.provenance.source_generated_at ?? null,
+        updatedAt: metadata?.resource_last_modified ?? null,
+        sourceUrl:
+          metadata?.source_url ??
+          "https://opendata.comune.lamezia-terme.cz.it/it",
+        expectedRefresh:
+          metadata?.update_policy ??
+          "Stato corrente via proiezione canonica; automazione da verificare separatamente.",
+        expectedDays: 14,
+        metricLabel: snapshot
+          ? `${snapshot.provenance.source_records} righe sorgente; ${snapshot.provenance.canonical_observations} osservazioni canoniche`
+          : "Dati canonici non disponibili",
+        cautionNote:
+          metadata?.caveat ??
+          "Una risposta mancante non equivale a zero. La lettura del database non costituisce una nuova verifica della fonte esterna.",
+        evidenceValues: snapshot
+          ? [
+              snapshot.provenance.release_hash,
+              snapshot.provenance.source_generated_at,
+              snapshot.provenance.acquired_at,
+              metadata?.source_url,
+              metadata?.caveat,
+            ]
+          : [],
+        evidenceLabel:
+          "Proiezione del database riconciliata con la fonte conservata; nessun ripiego su file statici.",
+      });
+      if (!descriptor.datasetId)
+        item.route = "/api/demographics/municipal/population";
+      if (snapshot)
+        item.history.push({
+          at: snapshot.provenance.acquired_at,
+          kind: "baseline",
+          label:
+            "Importazione nel database canonico, non nuova verifica della fonte",
+        });
+      if (!snapshot)
+        item.statusReason =
+          "Il database non ha fornito una proiezione canonica verificata.";
+      if (failed.includes(key)) {
+        item.status = "error";
+        item.statusReason =
+          "Lettura canonica non riuscita; eventuali dati conservati appartengono all’ultima risposta ricevuta.";
+      }
+      return item;
+    },
+  );
+  const istatItem = buildOpenDataHealthItem({
+    id: "opendata-trend-demografico",
+    datasetId: "lamezia-demographic-trend",
+    name: "Open Data ISTAT — osservatorio demografico",
+    checkedAt: istat
+      ? latestTimestamp(istat.releases.map((r) => r.acquiredAt))
+      : null,
+    updatedAt: istat
+      ? latestTimestamp(istat.releases.map((r) => r.releaseDate))
+      : null,
+    sourceUrl: istat?.series.sourceUrl ?? "https://esploradati.istat.it",
+    expectedRefresh: "Nuove release ISTAT nel database demografico versionato.",
+    expectedDays: 365,
+    metricLabel: istat
+      ? `${istat.current.length} osservazioni correnti nella serie ISTAT`
+      : "Serie ISTAT canonica non disponibile",
+    cautionNote:
+      "La serie ISTAT al 1° gennaio non coincide con la serie annuale comunale. La disponibilità tecnica non certifica la completezza della fonte.",
+    evidenceValues: istat
+      ? [
+          istat.series.source,
+          istat.series.sourceUrl,
+          istat.releases.length || null,
+        ]
+      : [],
+    evidenceLabel:
+      "Serie ISTAT letta dall’API demografica; non dai file della serie comunale.",
+  });
+  if (failed.includes("istat")) {
+    istatItem.status = "error";
+    istatItem.statusReason = "API della serie ISTAT non disponibile.";
+  }
+  const sources = [...baseSources, ...canonicalItems, istatItem];
+  const publishedOpenDataDatasetIds = OPEN_DATA_THEME_LIBRARY.filter(
+    (theme) => theme.status === "published",
+  ).flatMap((theme) => theme.datasets.map((dataset) => dataset.id));
+  const monitoredOpenDataDatasetIds = new Set(
+    sources
+      .map((source) => source.openDataDatasetId)
+      .filter((datasetId): datasetId is string => Boolean(datasetId)),
+  );
+  const missingOpenDataDatasetIds = publishedOpenDataDatasetIds.filter(
+    (datasetId) => !monitoredOpenDataDatasetIds.has(datasetId),
+  );
+  const openDataCoverage: OpenDataHealthCoverage = {
+    published: publishedOpenDataDatasetIds.length,
+    monitored:
+      publishedOpenDataDatasetIds.length - missingOpenDataDatasetIds.length,
+    percentage:
+      publishedOpenDataDatasetIds.length === 0
+        ? 100
+        : clampScore(
+            ((publishedOpenDataDatasetIds.length -
+              missingOpenDataDatasetIds.length) /
+              publishedOpenDataDatasetIds.length) *
+              100,
+          ),
+    missingDatasetIds: missingOpenDataDatasetIds,
+  };
 
-export const SOURCE_HEALTH: SourceHealthPayload = {
-  generatedAt: latestTimestamp(sources.map((source) => source.lastCheckedAt)),
-  traceabilityScore: average(sources, "traceabilityScore"),
-  freshnessScore: average(sources, "freshnessScore"),
-  sources,
-  openDataCoverage,
-  methodologyNote:
-    "Il registro deriva esclusivamente da manifesti e snapshot versionati nel repository. Tracciabilità e freschezza descrivono l'evidenza tecnica disponibile nella piattaforma; le coperture reali restano espresse nelle metriche proprie di ogni dataset. Nessuno di questi valori certifica la completezza assoluta delle fonti esterne o sostituisce la verifica sui documenti originali.",
-};
+  return {
+    generatedAt: latestTimestamp(sources.map((source) => source.lastCheckedAt)),
+    traceabilityScore: average(sources, "traceabilityScore"),
+    freshnessScore: average(sources, "freshnessScore"),
+    sources,
+    openDataCoverage,
+    methodologyNote:
+      "Il registro combina proiezioni canoniche lette dal database e, per i domini non ancora migrati, manifesti e snapshot del repository. Tracciabilità e freschezza descrivono l'evidenza tecnica disponibile nella piattaforma; le coperture reali restano espresse nelle metriche proprie di ogni dataset. Nessuno di questi valori certifica la completezza assoluta delle fonti esterne o sostituisce la verifica sui documenti originali.",
+  };
+}
+
+// No fabricated demographic evidence before the runtime queries finish.
+export const SOURCE_HEALTH = buildSourceHealth();

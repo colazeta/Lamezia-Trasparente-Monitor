@@ -1,3 +1,4 @@
+import { useCanonicalSourceHealth } from "@/hooks/useCanonicalSourceHealth";
 import { Link } from "wouter";
 import {
   Activity,
@@ -19,7 +20,6 @@ import {
   ALBO_VERIFICATION_LABELS,
 } from "@/data/alboStatus";
 import {
-  SOURCE_HEALTH,
   SOURCE_PRIORITY_LABELS,
   SOURCE_STATUS_LABELS,
   SOURCE_TYPE_LABELS,
@@ -383,7 +383,7 @@ function SourceMobileCard({ source }: { source: SourceHealthItem }) {
 }
 
 export function StatoMonitoraggio() {
-  const payload = SOURCE_HEALTH;
+  const payload = useCanonicalSourceHealth();
   const statusCounts = payload.sources.reduce<Record<SourceHealthStatus, number>>(
     (acc, source) => ({ ...acc, [source.status]: acc[source.status] + 1 }),
     { ok: 0, warning: 0, stale: 0, error: 0, missing: 0 },
@@ -408,7 +408,7 @@ export function StatoMonitoraggio() {
           dell'ente e non certificano la completezza assoluta delle fonti esterne.
         </p>
         <p className="mt-3 text-sm text-muted-foreground">
-          Registro costruito da manifesti e snapshot versionati. Ultima evidenza
+          Registro costruito da proiezioni del database e snapshot dei domini non ancora migrati. Ultima evidenza
           integrata:{" "}
           <strong className="font-semibold text-foreground">
             {formatDateTime(payload.generatedAt)}

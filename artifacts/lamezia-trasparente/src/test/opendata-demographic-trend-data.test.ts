@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   LAMEZIA_DEMOGRAPHIC_TREND_DATA,
   LAMEZIA_DEMOGRAPHIC_TREND_SUMMARY,
-} from "../data/lameziaDemographicTrend";
+} from "./fixtures/municipalDemographics";
 
 function roundFour(value: number) {
   return Number(value.toFixed(4));
@@ -33,7 +33,11 @@ describe("Lamezia demographic trend OpenData dataset", () => {
     const years = annual.map((record) => record.year);
     expect([...years].sort((a, b) => a - b)).toEqual(years);
     expect(new Set(years).size).toBe(years.length);
-    expect(annual[0]).toMatchObject({ index: 1, delta_abs: null, delta_pct: null });
+    expect(annual[0]).toMatchObject({
+      index: 1,
+      delta_abs: null,
+      delta_pct: null,
+    });
   });
 
   it("keeps every annual delta and summary consistent with the generated records", () => {

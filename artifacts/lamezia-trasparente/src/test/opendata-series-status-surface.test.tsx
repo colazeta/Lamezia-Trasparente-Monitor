@@ -46,11 +46,9 @@ describe("Open Data discovery surface", () => {
       screen.queryByRole("button", { name: /accesso/i }),
     ).not.toBeInTheDocument();
 
+    expect(screen.getByText(/6\/9 con stato documentato/i)).toBeInTheDocument();
     expect(
-      screen.getByText(/6\/9 con stato documentato/i),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(/5 aggiornati automaticamente/i),
+      screen.getByText(/3 aggiornati automaticamente/i),
     ).toBeInTheDocument();
     const disclosure = screen
       .getByText("Aggiornamento e fonti")
@@ -88,7 +86,9 @@ describe("Open Data discovery surface", () => {
       scope.getByText(`Ultimo dato: ${airTraffic!.latest_observation_label}`),
     ).toBeInTheDocument();
     expect(
-      scope.getByText("Ultimo dato: Risorsa corrente"),
+      scope.getByText(
+        "Ultimo dato: Periodo non dichiarato; dati via API canonica",
+      ),
     ).toBeInTheDocument();
     expect(scope.getByText("Ultimo dato: 2023")).toBeInTheDocument();
     expect(

@@ -1,3 +1,7 @@
+import {
+  isMunicipalDemographicSource,
+  planMunicipalDemographicSource,
+} from "./municipalDemographicPlan";
 import { createHash } from "node:crypto";
 import { generateCanonicalUuidV7 } from "./canonicalIdentity";
 import type { SnapshotSource } from "./sourceSnapshotManifest";
@@ -83,7 +87,10 @@ export function planSourceSnapshot(
     fatal: true,
     ignoreBOM: true,
   }).decode(bytes);
-  const input: unknown = JSON.parse(contentText);
+  const raw: unknown = JSON.parse(contentText);
+  const input: unknown = isMunicipalDemographicSource(source.key)
+    ? planMunicipalDemographicSource(source.key, raw).expanded
+    : raw;
   if (!object(input)) throw new Error("SNAPSHOT_OBJECT_REQUIRED");
   canonicalSnapshotJson(input);
   const metadata = { ...input },
@@ -116,7 +123,10 @@ export function planSourceSnapshot(
   const nested = object(input.metadata) ? input.metadata : {};
   const state = input.status ?? input.verification_status ?? nested.source_type;
   const date =
-    input.generated_at ?? input.generatedAt ?? nested.materialized_at;
+    input.generated_at ??
+    input.generatedAt ??
+    nested.materialized_at ??
+    nested.generated_at;
   return {
     source,
     commit,
@@ -217,29 +227,31 @@ export function snapshotVerificationStatement(
   p: SnapshotPlan,
 ): SnapshotStatement {
   const expected = p.records.map(
-    ({ collection_key, ordinal, native_key, record_hash }) => ({
+    ({ collection_key, ordinal, native_key, record_hash, payload }) => ({
       collection_key,
       ordinal,
       native_key,
       record_hash,
+      payload,
     }),
   );
   return {
     text: `WITH artifact AS MATERIALIZED (
-      SELECT id,byte_size,content_role,content_text::jsonb AS document FROM public.source_artifacts
+      SELECT id,byte_size,content_role,content_text,content_text::jsonb AS document FROM public.source_artifacts
       WHERE endpoint_id=(${endpoint}) AND byte_hash=$3)
       SELECT r.id AS release_id,
       (SELECT count(*)::integer FROM public.source_records WHERE release_id=r.id) AS records,
       (a.byte_size=$4 AND a.content_role=$5 AND r.collections=$6::jsonb
+       AND a.content_text=$11 AND octet_length(convert_to(a.content_text,'UTF8'))=$4
        AND r.metadata=(a.document - ARRAY(SELECT jsonb_object_keys($6::jsonb)))
        AND r.source_status IS NOT DISTINCT FROM $7::text AND r.source_timestamp_raw IS NOT DISTINCT FROM $8::text
        AND r.importer_version=$9 AND NOT EXISTS (
          SELECT 1 FROM (SELECT * FROM public.source_records WHERE release_id=r.id) actual
-         FULL JOIN jsonb_to_recordset($10::jsonb) expected(collection_key text,ordinal integer,native_key text,record_hash text)
+         FULL JOIN jsonb_to_recordset($10::jsonb) expected(collection_key text,ordinal integer,native_key text,record_hash text,payload jsonb)
            ON actual.collection_key=expected.collection_key AND actual.ordinal=expected.ordinal
          WHERE actual.collection_key IS NULL OR expected.collection_key IS NULL
            OR actual.native_key IS DISTINCT FROM expected.native_key OR actual.record_hash IS DISTINCT FROM expected.record_hash
-           OR actual.payload IS DISTINCT FROM (a.document -> expected.collection_key -> expected.ordinal))) AS verified
+           OR actual.payload IS DISTINCT FROM expected.payload)) AS verified
       FROM public.source_releases r JOIN artifact a ON a.id=r.artifact_id`,
     values: [
       ...releaseValues(p),
@@ -250,6 +262,7 @@ export function snapshotVerificationStatement(
       p.sourceTimestampRaw,
       SNAPSHOT_IMPORTER_VERSION,
       JSON.stringify(expected),
+      p.contentText,
     ],
   };
 }
@@ -312,6 +325,23 @@ export async function persistSourceSnapshot(
       const { reconcilePnrrSnapshot } = await import("./sourceSnapshotPnrr");
       legacy = await reconcilePnrrSnapshot(client, p);
     }
+    let demographics:
+      | {
+          seriesKey: string;
+          observations: number;
+          inserted: number;
+          verified: number;
+        }
+      | undefined;
+    if (isMunicipalDemographicSource(p.source.key)) {
+      const { reconcileMunicipalDemographicSnapshot } =
+        await import("./municipalDemographicPersistence");
+      demographics = await reconcileMunicipalDemographicSnapshot(
+        client,
+        p,
+        String(verified.release_id),
+      );
+    }
     const complete = snapshotCompleteStatement(p, inserted);
     if ((await client.query(complete.text, complete.values)).rows.length !== 1)
       throw new Error("RUN_COMPLETION_FAILED");
@@ -326,6 +356,7 @@ export async function persistSourceSnapshot(
       verified: p.records.length,
       sourceStatus: p.sourceStatus,
       legacy,
+      ...(demographics ? { demographics } : {}),
     };
   } catch (error) {
     await client.query("ROLLBACK");

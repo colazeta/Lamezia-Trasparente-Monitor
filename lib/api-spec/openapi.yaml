@@ -33,6 +33,76 @@ tags:
   - name: demographics
     description: Municipal demographic observations and census profiles
 paths:
+  /demographics/municipal/{key}:
+    get:
+      operationId: getMunicipalDemographicSnapshot
+      tags: [demographics]
+      summary: Read a reconciled municipal demographic snapshot from the canonical database
+      description: Aggregate data only. Reads one complete typed release and verifies retained evidence without filesystem fallback or ingestion. Missing or inconsistent canonical data returns 503, not zero observations. Source and import timestamps remain distinct.
+      security: []
+      parameters:
+        - in: path
+          name: key
+          required: true
+          schema:
+            {
+              type: string,
+              enum: [population, foreign-age-sex, families-children],
+            }
+        - in: query
+          name: release
+          description: Pin the source SHA-256 of an imported release for reproducible downloads.
+          schema: { type: string, pattern: "^[a-f0-9]{64}$" }
+        - in: query
+          name: download
+          description: Return a download disposition when set to 1.
+          schema: { type: string, enum: ["1"] }
+      responses:
+        "200":
+          description: A complete reconciled canonical snapshot and allowlisted provenance.
+          content:
+            application/json:
+              schema:
+                { $ref: "#/components/schemas/MunicipalDemographicSnapshot" }
+        "400":
+          description: Invalid release parameter
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+        "404":
+          description: Unsupported dataset key
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+        "503":
+          description: Canonical data unavailable or inconsistent; no static replacement.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /admin/database/municipal-demographics:
+    get:
+      operationId: getDatabaseMunicipalDemographics
+      tags: [database-admin]
+      summary: Inspect municipal demographics in the authenticated database
+      description: Uses the database console pool and read-only repeatable-read transaction. Availability requires reconciliation. This does not certify the public deployment's database identity.
+      security:
+        - DatabaseOwnerSession: []
+      responses:
+        "200":
+          description: Availability and source-linked canonical snapshots by series
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  {
+                    $ref: "#/components/schemas/MunicipalDemographicAdminStatus",
+                  }
+        "400": { description: Query parameters are not accepted }
+        "401": { description: Verified session required }
+        "403": { description: Sole owner and authorised origin required }
+        "429": { description: Inspection concurrency limit }
+        "503": { description: Database or owner configuration unavailable }
   /admin/database/catalog:
     get:
       operationId: getDatabaseInspectionCatalog
@@ -68,7 +138,7 @@ paths:
         - name: name
           in: path
           required: true
-          schema: { type: string, pattern: '^[a-z_][a-z0-9_]*$' }
+          schema: { type: string, pattern: "^[a-z_][a-z0-9_]*$" }
         - name: page
           in: query
           schema: { type: integer, minimum: 1, maximum: 1000, default: 1 }
@@ -119,7 +189,7 @@ paths:
         - name: name
           in: path
           required: true
-          schema: { type: string, pattern: '^[a-z_][a-z0-9_]*$' }
+          schema: { type: string, pattern: "^[a-z_][a-z0-9_]*$" }
         - name: key
           in: query
           required: true
@@ -1214,7 +1284,7 @@ paths:
               - type: integer
                 minimum: 1
               - type: string
-                pattern: '^albo-(?:[0-9]{4}-[1-9][0-9]*|raw-(?:[a-f0-9]{4})+)$'
+                pattern: "^albo-(?:[0-9]{4}-[1-9][0-9]*|raw-(?:[a-f0-9]{4})+)$"
       responses:
         "200":
           description: Publication detail
@@ -1244,7 +1314,7 @@ paths:
               - type: integer
                 minimum: 1
               - type: string
-                pattern: '^albo-(?:[0-9]{4}-[1-9][0-9]*|raw-(?:[a-f0-9]{4})+)$'
+                pattern: "^albo-(?:[0-9]{4}-[1-9][0-9]*|raw-(?:[a-f0-9]{4})+)$"
       responses:
         "200":
           description: Linked story
@@ -3991,6 +4061,85 @@ components:
       bearerFormat: JWT
       description: Verified Clerk session with the sole configured subject and exact authorised origin. Editor and ingestion credentials are not sufficient.
   schemas:
+    MunicipalDemographicAdminStatus:
+      type: object
+      additionalProperties: false
+      required: [key, status]
+      properties:
+        key:
+          {
+            type: string,
+            enum: [population, foreign-age-sex, families-children],
+          }
+        status: { type: string, enum: [available, unavailable] }
+        snapshot: { $ref: "#/components/schemas/MunicipalDemographicSnapshot" }
+        error:
+          {
+            type: string,
+            enum: [CANONICAL_DATA_UNAVAILABLE, CANONICAL_RECONCILIATION_FAILED],
+          }
+    MunicipalDemographicSnapshot:
+      type: object
+      additionalProperties: false
+      required: [schema_version, metadata, provenance]
+      properties:
+        schema_version: { type: integer, enum: [1] }
+        metadata:
+          type: object
+          description: Allowlisted source metadata checked against canonical observations. Arbitrary source fields are not exposed.
+          additionalProperties: true
+        annual_columns: { type: array, items: { type: string } }
+        annual_rows:
+          {
+            type: string,
+            description: "Population and reproduced differences, in the declared column order.",
+          }
+        age_columns: { type: array, items: { type: string } }
+        age_rows:
+          {
+            type: string,
+            description: Canonical sex counts and reproduced totals and shares.,
+          }
+        family_children_columns: { type: array, items: { type: string } }
+        family_children_rows:
+          {
+            type: string,
+            description: Family counts and reproduced shares; reference period is unknown.,
+          }
+        provenance:
+          type: object
+          additionalProperties: false
+          required:
+            [
+              schema_version,
+              canonical,
+              series_key,
+              source_key,
+              release_hash,
+              acquired_at,
+              source_generated_at,
+              source_status,
+              reference_period_unspecified,
+              reference_day_unspecified,
+              source_records,
+              canonical_observations,
+              extractor_version,
+            ]
+          properties:
+            schema_version:
+              { type: string, enum: [lt-municipal-demographic-public.v1] }
+            canonical: { type: boolean, enum: [true] }
+            series_key: { type: string }
+            source_key: { type: string }
+            release_hash: { type: string, pattern: "^[a-f0-9]{64}$" }
+            acquired_at: { type: string, format: date-time }
+            source_generated_at: { type: string, format: date-time }
+            source_status: { type: string, enum: [unknown] }
+            reference_period_unspecified: { type: boolean }
+            reference_day_unspecified: { type: boolean, enum: [true] }
+            source_records: { type: integer, minimum: 1 }
+            canonical_observations: { type: integer, minimum: 1 }
+            extractor_version: { type: string }
     DatabaseInspectionColumn:
       type: object
       required: [name, type, nullable, default, ordinal, primaryKey, redacted]
@@ -3998,13 +4147,22 @@ components:
         name: { type: string }
         type: { type: string }
         nullable: { type: boolean }
-        default: { type: [string, 'null'] }
+        default: { type: [string, "null"] }
         ordinal: { type: integer }
         primaryKey: { type: boolean }
         redacted: { type: boolean }
     DatabaseInspectionRelation:
       type: object
-      required: [name, columns, targetSchema, targetTable, targetColumns, definition, validated]
+      required:
+        [
+          name,
+          columns,
+          targetSchema,
+          targetTable,
+          targetColumns,
+          definition,
+          validated,
+        ]
       properties:
         name: { type: string }
         columns: { type: array, items: { type: string } }
@@ -4030,38 +4188,98 @@ components:
         validated: { type: boolean }
     DatabaseInspectionTable:
       type: object
-      required: [name, schema, estimatedRows, bytes, rls, registered, columns, relations, indexes, constraints, issues]
+      required:
+        [
+          name,
+          schema,
+          estimatedRows,
+          bytes,
+          rls,
+          registered,
+          columns,
+          relations,
+          indexes,
+          constraints,
+          issues,
+        ]
       properties:
         name: { type: string }
         schema: { type: string }
-        estimatedRows: { type: [number, 'null'] }
+        estimatedRows: { type: [number, "null"] }
         bytes: { type: number }
         rls: { type: boolean }
         registered: { type: boolean }
-        columns: { type: array, items: { $ref: '#/components/schemas/DatabaseInspectionColumn' } }
-        relations: { type: array, items: { $ref: '#/components/schemas/DatabaseInspectionRelation' } }
-        indexes: { type: array, items: { $ref: '#/components/schemas/DatabaseInspectionIndex' } }
-        constraints: { type: array, items: { $ref: '#/components/schemas/DatabaseInspectionConstraint' } }
+        columns:
+          {
+            type: array,
+            items: { $ref: "#/components/schemas/DatabaseInspectionColumn" },
+          }
+        relations:
+          {
+            type: array,
+            items: { $ref: "#/components/schemas/DatabaseInspectionRelation" },
+          }
+        indexes:
+          {
+            type: array,
+            items: { $ref: "#/components/schemas/DatabaseInspectionIndex" },
+          }
+        constraints:
+          {
+            type: array,
+            items:
+              { $ref: "#/components/schemas/DatabaseInspectionConstraint" },
+          }
         issues: { type: array, items: { type: string } }
     DatabaseInspectionCatalog:
       type: object
-      required: [capturedAt, database, version, bytes, migrationCount, tables, missingTables]
+      required:
+        [
+          capturedAt,
+          database,
+          version,
+          bytes,
+          migrationCount,
+          tables,
+          missingTables,
+        ]
       properties:
         capturedAt: { type: string }
         database: { type: string }
         version: { type: string }
         bytes: { type: number }
-        migrationCount: { type: [integer, 'null'] }
-        tables: { type: array, items: { $ref: '#/components/schemas/DatabaseInspectionTable' } }
+        migrationCount: { type: [integer, "null"] }
+        tables:
+          {
+            type: array,
+            items: { $ref: "#/components/schemas/DatabaseInspectionTable" },
+          }
         missingTables: { type: array, items: { type: string } }
-        projectReconciliation: { $ref: '#/components/schemas/ProjectReconciliation' }
+        projectReconciliation:
+          { $ref: "#/components/schemas/ProjectReconciliation" }
     ProjectReconciliation:
       type: object
       description: Exact PNRR reconciliation counts for registered source snapshots. Does not certify the completeness of external sources or CUP validity with the issuer.
-      required: [status, sourceSnapshotAt, sourceRecords, projectRecords, canonicalProjects, resolvedCandidates, unresolvedCandidates, unprocessedRecords, currentFieldDecisions, fieldsWithAlternatives, typedValueMismatches, unmappedLegacyRows, legacyValueMismatches]
+      required:
+        [
+          status,
+          sourceSnapshotAt,
+          sourceRecords,
+          projectRecords,
+          canonicalProjects,
+          resolvedCandidates,
+          unresolvedCandidates,
+          unprocessedRecords,
+          currentFieldDecisions,
+          fieldsWithAlternatives,
+          typedValueMismatches,
+          unmappedLegacyRows,
+          legacyValueMismatches,
+        ]
       properties:
-        status: { type: string, enum: [verified, review_required, not_materialized] }
-        sourceSnapshotAt: { type: [string, 'null'] }
+        status:
+          { type: string, enum: [verified, review_required, not_materialized] }
+        sourceSnapshotAt: { type: [string, "null"] }
         sourceRecords: { type: integer }
         projectRecords: { type: integer }
         canonicalProjects: { type: integer }
@@ -4079,7 +4297,7 @@ components:
       properties:
         values:
           type: object
-          additionalProperties: { type: [string, 'null'] }
+          additionalProperties: { type: [string, "null"] }
         truncated: { type: array, items: { type: string } }
     DatabaseInspectionPage:
       type: object
@@ -4087,7 +4305,11 @@ components:
       properties:
         table: { type: string }
         capturedAt: { type: string }
-        rows: { type: array, items: { $ref: '#/components/schemas/DatabaseInspectionRow' } }
+        rows:
+          {
+            type: array,
+            items: { $ref: "#/components/schemas/DatabaseInspectionRow" },
+          }
         total: { type: number }
         page: { type: integer }
         pageSize: { type: integer }
@@ -5190,7 +5412,8 @@ components:
 
     StoriaPublicationItem:
       type: object
-      required: [id, publicId, progressivo, oggetto, tipologia, category, matchedBy]
+      required:
+        [id, publicId, progressivo, oggetto, tipologia, category, matchedBy]
       properties:
         id:
           type: integer

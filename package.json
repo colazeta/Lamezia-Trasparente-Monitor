@@ -9,6 +9,7 @@
     "typecheck:libs": "tsc --build",
     "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck",
     "test": "pnpm -r --if-present run test",
+    "architecture:canonicalisation": "node scripts/architecture/canonicalisationLedger.mjs --write",
     "architecture:audit": "node scripts/architecture/dataArchitectureInventory.mjs --check",
     "architecture:inventory": "node scripts/architecture/dataArchitectureInventory.mjs --write",
     "albo:fetch": "pnpm --filter @workspace/scripts run fetch:albo",

@@ -127,6 +127,8 @@ export function validateConceptualCatalog(
   for (const route of routes)
     if (!routeNames.includes(route)) problems.push(`stale route: ${route}`);
   for (const section of model.siteSections) {
+    if (new Set(section.evidence).size !== section.evidence.length)
+      problems.push(`duplicate section evidence: ${section.id}`);
     if (
       !domains.has(section.domain) ||
       section.concepts.some((c) => !concepts.has(c))
