@@ -1,0 +1,131 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-favoreggiamento-sfruttamento-prostituzione-stazione-centrale-2019-01-21",
+  "discovered_at": "2026-09-11T11:00:34+02:00",
+  "updated_at": "2026-09-11T11:00:34+02:00",
+  "record_status": "verified_source",
+  "event_form": "course_of_conduct",
+  "title": "Favoreggiamento e sfruttamento aggravato della prostituzione documentato con prelievi presso Lamezia Terme Centrale",
+  "temporal": {
+    "start": null,
+    "end": "2019-01-21",
+    "edtf": null,
+    "precision": "approximate"
+  },
+  "sources": [
+    {
+      "source_key": "press:lameziaterme-it:2019-01-22:sfruttamento-prostituzione",
+      "source_type": "press_secondary",
+      "provider": "LameziaTerme.it",
+      "title": "Lamezia. Arrestato 60enne per favoreggiamento e sfruttamento della prostituzione",
+      "url": "https://www.lameziaterme.it/lamezia-sessantenne-sfruttamento-della-prostituzione/",
+      "published_at": "2019-01-22T00:00:00+01:00",
+      "retrieved_at": "2026-09-11T11:00:34+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:approdo-calabria:2019-01-22:sfruttamento-prostituzione",
+      "source_type": "press_secondary",
+      "provider": "Approdo Calabria",
+      "title": "Sfruttamento della prostituzione, arrestato 60enne",
+      "url": "https://www.approdocalabria.it/favoreggiamento-e-sfruttamento-della-prostituzione-arrestato/",
+      "published_at": "2019-01-22T00:00:00+01:00",
+      "retrieved_at": "2026-09-11T11:00:34+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "other:t-hotel-lamezia:location-feroleto-antico",
+      "source_type": "other",
+      "provider": "T Hotel Lamezia",
+      "title": "T Hotel Lamezia",
+      "url": "https://www.thotelamezia.it/",
+      "published_at": null,
+      "retrieved_at": "2026-09-11T11:00:34+02:00",
+      "support_roles": [
+        "location_support"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:favoreggiamento-prostituzione",
+      "classification_source_key": "press:lameziaterme-it:2019-01-22:sfruttamento-prostituzione",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti riportano che nella mattinata del 21 gennaio 2019 la Polizia Locale di Lamezia Terme osservò il prelievo di tre donne nei pressi della stazione ferroviaria di Lamezia Terme Centrale e il loro trasporto verso i rispettivi luoghi di esercizio della prostituzione",
+        "le fonti qualificano l'arresto in flagranza come relativo al favoreggiamento e allo sfruttamento della prostituzione aggravato; il record conserva la qualificazione della fonte senza rappresentarla come accertamento definitivo di responsabilità",
+        "le fonti riferiscono che la medesima condotta era stata osservata per circa dieci giorni; poiché non è attestato un estremo iniziale esatto, il record rappresenta un corso di condotta con termine documentato il 21 gennaio 2019 e lascia indeterminato l'inizio"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:sfruttamento-prostituzione",
+      "classification_source_key": "press:lameziaterme-it:2019-01-22:sfruttamento-prostituzione",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti riportano che nella mattinata del 21 gennaio 2019 la Polizia Locale di Lamezia Terme osservò il prelievo di tre donne nei pressi della stazione ferroviaria di Lamezia Terme Centrale e il loro trasporto verso i rispettivi luoghi di esercizio della prostituzione",
+        "dopo l'ultima discesa nei pressi del T Hotel, il veicolo fu fermato dalla Polizia Locale; l'hotel è un riferimento geografico pubblico e la sua sede ufficiale è in località Garrubbe, SS280, nel Comune di Feroleto Antico, ma il record non attribuisce alcun coinvolgimento alla struttura",
+        "le fonti riportano il sequestro del veicolo e il trasferimento dell'arrestato a disposizione dell'autorità giudiziaria; il dato descrive la fase di arresto e non un accertamento definitivo di responsabilità",
+        "le fonti riferiscono una reiterazione della medesima condotta per circa dieci giorni, senza fornire una data iniziale esatta"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:stazione-centrale-vicinity:occurrence",
+      "basis_source_key": "press:lameziaterme-it:2019-01-22:sfruttamento-prostituzione",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "sexual_offence_context",
+      "geometry": null,
+      "place_name": "Area nei pressi della Stazione ferroviaria di Lamezia Terme Centrale",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:feroleto-antico:t-hotel-vicinity:last-drop-stop",
+      "basis_source_key": "press:lameziaterme-it:2019-01-22:sfruttamento-prostituzione",
+      "role": "other",
+      "municipality": "Feroleto Antico",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "sexual_offence_context",
+      "geometry": null,
+      "place_name": "Area nei pressi del T Hotel Lamezia, località Garrubbe, SS280",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
