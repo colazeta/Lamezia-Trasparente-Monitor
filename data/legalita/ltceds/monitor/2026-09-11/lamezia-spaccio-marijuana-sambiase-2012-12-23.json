@@ -1,0 +1,90 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-spaccio-marijuana-sambiase-2012-12-23",
+  "discovered_at": "2026-09-11T11:48:40+02:00",
+  "updated_at": "2026-09-11T11:48:40+02:00",
+  "record_status": "verified_source",
+  "event_form": "continuous_episode",
+  "title": "Attività di spaccio di marijuana in una piazza e in una piccola via non nominate di Sambiase il 23 dicembre 2012",
+  "temporal": {
+    "start": "2012-12-23",
+    "end": "2012-12-23",
+    "edtf": "2012-12-23",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:corriere-calabria:2012-12-24:sambiase-spaccio-marijuana",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Lamezia, un arresto per spaccio di droga",
+      "url": "https://www.corrieredellacalabria.it/2012/12/24/11170_lamezia_un_arresto_per_spaccio_di_droga/",
+      "published_at": "2012-12-24T12:51:00+01:00",
+      "retrieved_at": "2026-09-11T11:48:40+02:00",
+      "support_roles": ["event_support", "classification_support", "location_support", "procedural_context"]
+    },
+    {
+      "source_key": "press:quicosenza:2012-12-24:sambiase-blitz-droga",
+      "source_type": "press_secondary",
+      "provider": "QuiCosenza (ripresa AGI)",
+      "title": "Droga: blitz a Lamezia Terme",
+      "url": "https://quicosenza.it/news/4614-droga-blitz-a-lamezia-terme/",
+      "published_at": "2012-12-24T00:00:00+01:00",
+      "retrieved_at": "2026-09-11T11:48:40+02:00",
+      "support_roles": ["event_support", "classification_support", "location_support", "procedural_context", "corroboration"]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:spaccio-stupefacenti",
+      "classification_source_key": "press:corriere-calabria:2012-12-24:sambiase-spaccio-marijuana",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti collocano l'attività nella tarda serata del 23 dicembre 2012: la data deriva dal riferimento alla 'tarda serata di ieri' contenuto nella cronaca pubblicata il 24 dicembre 2012",
+        "una pattuglia dei Carabinieri osservò sin dal mattino un intenso via vai di giovani da una piazza di Sambiase verso una piccola via non nominata; nell'intervento furono identificate quindici persone tra soggetti indicati dalle fonti come spacciatori e assuntori",
+        "le successive perquisizioni nelle abitazioni portarono al rinvenimento complessivo di circa 80 grammi di marijuana confezionata e indicata come pronta per lo smercio; le fonti non specificano gli indirizzi delle abitazioni",
+        "una persona fu arrestata e altre cinque furono denunciate; il record conserva il quadro di polizia giudiziaria contemporaneo senza rappresentarlo come accertamento definitivo di responsabilità"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:sambiase:piccola-via-non-nominata:occurrence",
+      "basis_source_key": "press:corriere-calabria:2012-12-24:sambiase-spaccio-marijuana",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_neighbourhood",
+      "evidence_precision": "neighbourhood",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Piccola via non nominata collegata a una piazza di Sambiase",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:sambiase:piazza-non-nominata:other",
+      "basis_source_key": "press:corriere-calabria:2012-12-24:sambiase-spaccio-marijuana",
+      "role": "other",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_neighbourhood",
+      "evidence_precision": "neighbourhood",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Piazza non nominata di Sambiase dalla quale fu osservato il via vai verso la piccola via",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    }
+  ]
+}
