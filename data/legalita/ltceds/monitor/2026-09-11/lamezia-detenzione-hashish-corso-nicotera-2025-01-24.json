@@ -1,0 +1,117 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-detenzione-hashish-corso-nicotera-2025-01-24",
+  "discovered_at": "2026-09-11T06:49:33+02:00",
+  "updated_at": "2026-09-11T06:49:33+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Detenzione di hashish ai fini di spaccio contestata dopo un controllo in Corso Nicotera",
+  "temporal": {
+    "start": "2025-01-24",
+    "end": "2025-01-24",
+    "edtf": "2025-01-24",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "agency:ansa:2025-01-29:hashish-slip-corso-nicotera-lamezia",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Nascondeva mezzo chilo di hascisc negli slip, arrestato 23enne",
+      "url": "https://www.ansa.it/calabria/notizie/2025/01/29/nascondeva-mezzo-chilo-di-hascisc-negli-slip-arrestato-23enne_8de0ad6f-2429-4e57-a070-769e902e41a7.html",
+      "published_at": "2025-01-29T10:55:00+01:00",
+      "retrieved_at": "2026-09-11T06:49:33+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-di-lamezia:2025-01-29:hashish-corso-nicotera",
+      "source_type": "press_secondary",
+      "provider": "Corriere di Lamezia",
+      "title": "Lamezia, arrestato 23enne per spaccio, nascondeva negli slip oltre mezzo chilo di hashish",
+      "url": "https://www.corrieredilamezia.it/cronaca/2025_01_29/lamezia-arrestato-23enne-per-spaccio-nascondeva-negli-slip-oltre-mezzo-chilo-di-hashish_50749/",
+      "published_at": null,
+      "retrieved_at": "2026-09-11T06:49:33+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:detenzione-ai-fini-di-spaccio-stupefacenti",
+      "classification_source_key": "agency:ansa:2025-01-29:hashish-slip-corso-nicotera-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti collocano il controllo nel pomeriggio del 24 gennaio 2025 in Corso Nicotera a Lamezia Terme e riferiscono il rinvenimento, durante la perquisizione personale, di cinque panetti di hashish per un peso complessivo superiore a 500 grammi e di circa 800 euro in contanti.",
+        "ANSA e Corriere di Lamezia riferiscono l'arresto in flagranza per detenzione di sostanza stupefacente ai fini di spaccio; la qualificazione è conservata come contestazione procedimentale e non come accertamento definitivo di responsabilità.",
+        "Una successiva perquisizione presso l'abitazione della persona arrestata ebbe esito negativo; le fonti consultate non forniscono una localizzazione dell'abitazione sufficientemente precisa o verificabile e pertanto tale luogo non viene georeferenziato.",
+        "Il 27 gennaio 2025 il G.I.P. del Tribunale di Lamezia Terme convalidò l'arresto e dispose l'obbligo di presentazione quotidiana al Commissariato di Pubblica Sicurezza di Lamezia Terme; il procedimento era allora nella fase delle indagini preliminari."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:corso-nicotera:occurrence",
+      "basis_source_key": "agency:ansa:2025-01-29:hashish-slip-corso-nicotera-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Corso Nicotera",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:corso-nicotera:discovery",
+      "basis_source_key": "agency:ansa:2025-01-29:hashish-slip-corso-nicotera-lamezia",
+      "role": "discovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Corso Nicotera",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:corso-nicotera:recovery",
+      "basis_source_key": "agency:ansa:2025-01-29:hashish-slip-corso-nicotera-lamezia",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Corso Nicotera",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
