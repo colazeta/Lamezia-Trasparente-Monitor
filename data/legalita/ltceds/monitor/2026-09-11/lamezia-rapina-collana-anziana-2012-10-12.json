@@ -1,0 +1,116 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-collana-anziana-2012-10-12",
+  "discovered_at": "2026-09-11T20:29:39.000Z",
+  "updated_at": "2026-09-11T20:29:39.000Z",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina di una collana ai danni di una donna anziana a Lamezia Terme il 12 ottobre 2012",
+  "temporal": {
+    "start": "2012-10-12",
+    "end": "2012-10-12",
+    "edtf": "2012-10-12",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "source:corriere-calabria:2012-10-12:deruba-anziana-passanti",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Deruba un'anziana, fermato grazie ai passanti",
+      "url": "https://www.corrieredellacalabria.it/2012/10/12/9130_deruba_unanziana_fermato_grazie_ai_passanti/",
+      "published_at": "2012-10-12T17:39:00+02:00",
+      "retrieved_at": "2026-09-11T20:29:39.000Z",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "source:quicosenza:2012-10-12:passanti-arrestare-rapinatore",
+      "source_type": "press_secondary",
+      "provider": "QuiCosenza (ripresa ANSA)",
+      "title": "Passanti fanno arrestare rapinatore",
+      "url": "https://quicosenza.it/news/2100-passanti-fanno-arrestare-rapinatore/",
+      "published_at": null,
+      "retrieved_at": "2026-09-11T20:29:39.000Z",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "source:corriere-calabria:2012-10-12:deruba-anziana-passanti",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti contemporanee riferiscono una rapina ai danni di una donna anziana a Lamezia Terme, alla quale fu strappata una collana d'oro.",
+        "L'autore fu bloccato poco dopo da agenti del Commissariato grazie alla segnalazione di passanti che avevano assistito all'episodio.",
+        "La collana fu recuperata dagli agenti dopo che era stata gettata a terra durante il tentativo di fuga.",
+        "Le fonti accessibili non indicano strada, quartiere, esercizio o altro luogo più preciso per la rapina, la fuga, il recupero o l'arresto; le localizzazioni restano pertanto al livello comunale."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:luogo-non-specificato:occurrence",
+      "basis_source_key": "source:corriere-calabria:2012-10-12:deruba-anziana-passanti",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "unknown",
+      "publication_risk": "unknown",
+      "geometry": null,
+      "place_name": "Luogo non specificato a Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:luogo-non-specificato:recovery",
+      "basis_source_key": "source:corriere-calabria:2012-10-12:deruba-anziana-passanti",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "unknown",
+      "publication_risk": "unknown",
+      "geometry": null,
+      "place_name": "Luogo non specificato a Lamezia Terme durante la fuga, dove la collana fu gettata a terra e recuperata",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:luogo-non-specificato:arrest",
+      "basis_source_key": "source:corriere-calabria:2012-10-12:deruba-anziana-passanti",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "unknown",
+      "publication_risk": "unknown",
+      "geometry": null,
+      "place_name": "Luogo non specificato a Lamezia Terme durante il tentativo di fuga",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
