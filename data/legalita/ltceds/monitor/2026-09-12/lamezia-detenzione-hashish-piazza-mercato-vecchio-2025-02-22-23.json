@@ -1,0 +1,117 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-detenzione-hashish-piazza-mercato-vecchio-2025-02-22-23",
+  "discovered_at": "2026-09-12T20:05:38+02:00",
+  "updated_at": "2026-09-12T20:05:38+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Detenzione ai fini di spaccio di hashish nella zona di Piazza Mercato Vecchio",
+  "temporal": {
+    "start": "2025-02-22",
+    "end": "2025-02-23",
+    "edtf": "2025-02-22/2025-02-23",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "press:lameziainforma:2025-02-24:spaccio-piazza-mercato-vecchio",
+      "source_type": "press_secondary",
+      "provider": "LameziaInforma",
+      "title": "Spacciatori di 19 e 15 anni fermati in Piazza Mercato Vecchio dai carabinieri",
+      "url": "https://www.lameziainforma.it/cronaca/2025/02/24/spacciatori-di-19-e-15-anni-fermati-in-piazza-mercato-vecchio-dai-carabinieri/60223",
+      "published_at": "2025-02-24T09:25:00+01:00",
+      "retrieved_at": "2026-09-12T20:05:38+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2025-02-24:spaccio-piazza-mercato-vecchio",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Lamezia Terme, un arresto per droga. Allarme giovani, anche un minorenne nelle attività di spaccio",
+      "url": "https://www.corrieredellacalabria.it/2025/02/24/lamezia-terme-un-arresto-per-droga-allarme-giovani-anche-un-minorenne-nelle-attivita-di-spaccio",
+      "published_at": "2025-02-24T09:39:00+01:00",
+      "retrieved_at": "2026-09-12T20:05:38+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:detenzione-stupefacenti-fini-spaccio",
+      "classification_source_key": "press:lameziainforma:2025-02-24:spaccio-piazza-mercato-vecchio",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti collocano l'operazione nel fine settimana precedente alla pubblicazione del 24 febbraio 2025 e non indicano il giorno esatto dell'arresto; il record conserva quindi l'intervallo 22-23 febbraio 2025",
+        "i servizi di osservazione, controllo e pedinamento nella zona di Piazza Mercato Vecchio hanno portato all'arresto di una persona per detenzione ai fini di spaccio, sorpresa in possesso di 41 grammi di hashish suddivisi in dosi, un bilancino di precisione e oltre 500 euro in contanti ritenuti provento dell'attivita di spaccio",
+        "le fonti riferiscono che l'arresto e stato convalidato dal G.I.P. del Tribunale di Lamezia Terme su richiesta della locale Procura della Repubblica; il record conserva lo stato procedurale senza rappresentarlo come accertamento definitivo di responsabilita",
+        "nella stessa circostanza le fonti riferiscono anche la denuncia di un minorenne per lo stesso reato; il primo tranche LTCEDS non conserva identita personali e questo record censisce l'evento di detenzione ai fini di spaccio documentato nella medesima area operativa",
+        "non e stato reperito un comunicato individuale dell'Arma dei Carabinieri direttamente indicizzato; le fonti giornalistiche riportano in modo concorde i dettagli dell'operazione dei Carabinieri"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:zona-piazza-mercato-vecchio:occurrence",
+      "basis_source_key": "press:lameziainforma:2025-02-24:spaccio-piazza-mercato-vecchio",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Zona di Piazza Mercato Vecchio, Nicastro",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:zona-piazza-mercato-vecchio:recovery",
+      "basis_source_key": "press:lameziainforma:2025-02-24:spaccio-piazza-mercato-vecchio",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Zona di Piazza Mercato Vecchio, Nicastro; punto esatto del rinvenimento non specificato",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:zona-piazza-mercato-vecchio:arrest",
+      "basis_source_key": "press:lameziainforma:2025-02-24:spaccio-piazza-mercato-vecchio",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Zona di Piazza Mercato Vecchio, Nicastro; punto esatto dell'arresto non specificato",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    }
+  ]
+}
