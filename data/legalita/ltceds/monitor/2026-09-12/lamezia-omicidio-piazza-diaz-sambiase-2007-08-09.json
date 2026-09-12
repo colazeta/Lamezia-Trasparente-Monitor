@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-omicidio-piazza-diaz-sambiase-2007-08-09",
   "discovered_at": "2026-09-12T23:27:10+02:00",
-  "updated_at": "2026-09-12T23:27:10+02:00",
+  "updated_at": "2026-09-12T23:43:29+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Omicidio con arma da fuoco in Piazza Diaz, Sambiase, il 9 agosto 2007",
@@ -33,7 +33,7 @@
       "provider": "Fondazione Antiusura Padre Pino Puglisi E.T.S. (archivio Gazzetta del Sud)",
       "title": "Ucciso con sette colpi di pistola",
       "url": "https://www.messinaantiusura.it/luogo/lamezia/",
-      "published_at": "2007-08-10",
+      "published_at": "2007-08-09",
       "retrieved_at": "2026-09-12T23:27:10+02:00",
       "support_roles": [
         "event_support",
@@ -56,8 +56,8 @@
       "attempt_status": "completed",
       "situational_context": [
         "una fonte contemporanea pubblicata il 9 agosto 2007 alle 13:24 riferisce l'uccisione con arma da fuoco nelle vicinanze dell'ufficio postale nel quartiere Sambiase, con sette colpi di pistola calibro 32 automatico",
-        "l'archivio della Fondazione Antiusura, che indicizza la cronaca della Gazzetta del Sud del 10 agosto 2007, qualifica il fatto come omicidio in pieno giorno e lo localizza in Piazza Diaz",
-        "la data dell'evento è fissata al 9 agosto 2007 perché la cronaca contemporanea era già pubblicata nel primo pomeriggio di quel giorno; il 10 agosto è trattato come data di pubblicazione della successiva cronaca d'archivio, non come data del fatto",
+        "l'archivio della Fondazione Antiusura, che indicizza una cronaca della Gazzetta del Sud datata 9 agosto 2007, qualifica il fatto come omicidio in pieno giorno e lo localizza in Piazza Diaz",
+        "le due fonti convergono sulla data del 9 agosto 2007; non è stato inferito un civico né un punto cartografico dell'ufficio postale",
         "non è stato reperito in questa iterazione un successivo esito giudiziario specifico sufficientemente verificabile; il record non attribuisce responsabilità individuali"
       ],
       "cyber_related": null,
