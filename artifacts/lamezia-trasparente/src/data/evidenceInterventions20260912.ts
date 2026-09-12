@@ -31,7 +31,7 @@ export const EVIDENCE_INTERVENTIONS_2026_09_12 = [
     results:
       "La revisione NBER più recente, aggiornata nell'aprile 2026, conclude che il matching casuale interrompe i legami revisore-sindaco e che i comuni trattati migliorano in modo significativo e persistente avanzo netto e rimborso del debito. Il miglioramento fiscale deriva soprattutto da un aumento della capacità tributaria, non da un taglio generalizzato della spesa. Il record tratta questi risultati come evidenza sul disegno istituzionale dell'oversight, non come prova che ogni forma di randomizzazione degli incarichi produca automaticamente gli stessi effetti.",
     effectSize:
-      "La versione NBER corrente verificata nell'aprile 2026 conferma effetti significativi e persistenti su avanzo netto, rimborso del debito e capacità tributaria. Versioni pubbliche precedenti dello stesso studio quantificavano gli aumenti di avanzo netto e rimborso del debito nell'ordine dell'8–9% e circa 16 euro pro capite di avanzo netto aggiuntivo; questi valori sono mantenuti come ordine di grandezza storico e non come trascrizione puntuale della revisione 2026.",
+      "Nella revisione NBER di aprile 2026 i comuni trattati aumentano il rimborso del debito del 9% e l'avanzo netto di bilancio dell'8%. Il paper attribuisce il miglioramento soprattutto a un aumento della capacità tributaria e rileva effetti persistenti nel tempo.",
     evidenceStrength: "forte",
     costsRequirements:
       "Il sistema richiede un elenco professionale aggiornato, requisiti verificabili, procedure di sorteggio tracciabili, gestione delle incompatibilità e capacità dell'ente di fornire tempestivamente documentazione contabile al revisore. Per un singolo Comune il costo diretto della randomizzazione è limitato, ma il modello dipende da una cornice nazionale che assicuri qualità e indipendenza della platea dei revisori.",
@@ -39,7 +39,7 @@ export const EVIDENCE_INTERVENTIONS_2026_09_12 = [
       "La riforma è nazionale e il singolo Comune non può scegliere autonomamente di sostituire il sistema legale di nomina dei revisori con un meccanismo diverso.",
       "L'identificazione sfrutta il rinnovo scaglionato degli organi e richiede che i comuni trattati prima e quelli trattati dopo avrebbero seguito traiettorie comparabili in assenza della riforma.",
       "Lo studio più recente resta un NBER working paper, sebbene aggiornato nell'aprile 2026; il record evita di presentarlo come evidenza peer-reviewed definitiva.",
-      "Gli ordini di grandezza percentuali riportati nell'effect size provengono da versioni pubbliche precedenti dello stesso studio; la revisione 2026 è stata verificata sul risultato qualitativo e sulla persistenza degli effetti, non su una nuova trascrizione tabellare completa.",
+      "L'aumento della capacità tributaria è un meccanismo aggregato: il risultato non implica che ogni specifico strumento di accertamento o riscossione locale produca lo stesso effetto.",
       "Un aumento della capacità tributaria può riflettere maggiore disciplina e riscossione ma richiede attenzione distributiva e non coincide automaticamente con un miglioramento del benessere dei contribuenti."
     ],
     unintendedEffects:
