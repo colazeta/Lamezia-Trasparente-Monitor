@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-omicidio-via-fiume-sambiase-2017-01-19",
   "discovered_at": "2026-09-12T12:52:08+02:00",
-  "updated_at": "2026-09-12T12:52:08+02:00",
+  "updated_at": "2026-09-12T13:13:39+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Omicidio con arma da fuoco davanti a un negozio di ortofrutta in via Fiume, Sambiase, il 19 gennaio 2017",
@@ -49,6 +49,20 @@
       "url": "https://www.ansa.it/calabria/notizie/2020/11/18/omicidio-fruttivendolo-condannati-marito-e-moglie_14ca6f19-d0f2-4777-9fd8-b70bb15d5af2.html",
       "published_at": "2020-11-18",
       "retrieved_at": "2026-09-12T12:52:08+02:00",
+      "support_roles": [
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "source:lametino-2023-11-28-cassazione",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Motivazioni della Cassazione sull'omicidio del 19 gennaio 2017 a Lamezia Terme",
+      "url": "https://www.lametino.it/Cronaca/omicidio-berlingieri-a-lamezia-dalle-videocamere-ai-telefoni-per-cassazione-pluralita-di-prove-contro-gallo-e-la-moglie.html",
+      "published_at": "2023-11-28T11:49:00+01:00",
+      "retrieved_at": "2026-09-12T13:13:39+02:00",
       "support_roles": [
         "classification_support",
         "procedural_context",
