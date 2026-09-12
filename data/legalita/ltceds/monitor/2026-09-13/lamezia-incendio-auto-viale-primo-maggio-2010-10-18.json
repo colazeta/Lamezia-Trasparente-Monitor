@@ -1,0 +1,84 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-incendio-auto-viale-primo-maggio-2010-10-18",
+  "discovered_at": "2026-09-13T01:36:06+02:00",
+  "updated_at": "2026-09-13T01:36:06+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Incendio doloso di un'autovettura in viale Primo Maggio il 18 ottobre 2010",
+  "temporal": {
+    "start": "2010-10-18",
+    "end": "2010-10-18",
+    "edtf": "2010-10-18",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "source:il-lametino-2010-10-18-auto-viale-primo-maggio",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, bruciata auto a proprietario centro commerciale",
+      "url": "https://www.lametino.it/cronaca/lamezia-bruciata-auto-a-proprietario-centro-commerciale.html",
+      "published_at": "2010-10-18T00:00:00+02:00",
+      "retrieved_at": "2026-09-13T01:36:06+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:incendio-doloso",
+      "classification_source_key": "source:il-lametino-2010-10-18-auto-viale-primo-maggio",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la fonte contemporanea riferisce che nella notte del 18 ottobre 2010 ignoti diedero alle fiamme una Fiat Panda a Lamezia Terme",
+        "l'incendio si sviluppo in viale Primo Maggio e fu spento dai Vigili del fuoco del distaccamento di Caronte; i Carabinieri intervennero e avviarono le indagini",
+        "la condotta incendiaria e esplicitamente descritta dalla fonte, ma non e stata reperita una qualificazione giudiziaria specifica del singolo episodio; la classificazione resta pertanto provvisoria e non vengono inferiti movente estorsivo, matrice mafiosa o ulteriori fattispecie"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:viale-primo-maggio:occurrence",
+      "basis_source_key": "source:il-lametino-2010-10-18-auto-viale-primo-maggio",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Viale Primo Maggio",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:viale-primo-maggio:target",
+      "basis_source_key": "source:il-lametino-2010-10-18-auto-viale-primo-maggio",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Viale Primo Maggio",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
