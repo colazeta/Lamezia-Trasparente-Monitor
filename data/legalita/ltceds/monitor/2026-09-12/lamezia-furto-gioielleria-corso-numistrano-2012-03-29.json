@@ -1,0 +1,117 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-furto-gioielleria-corso-numistrano-2012-03-29",
+  "discovered_at": "2026-09-12T21:40:46+02:00",
+  "updated_at": "2026-09-12T21:40:46+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Furto in una gioielleria di Corso Numistrano il 29 marzo 2012",
+  "temporal": {
+    "start": "2012-03-29",
+    "end": "2012-03-29",
+    "edtf": "2012-03-29",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:il-lametino:2012-03-29:furto-gioielleria-corso-numistrano",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: Furto in gioielleria su corso Numistrano",
+      "url": "https://www.lametino.it/cronaca/lamezia-furto-in-gioielleria-su-corso-numistrano.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-12T21:40:46+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:approdo-calabria:2012-03-29:gioielleria-piccini",
+      "source_type": "press_secondary",
+      "provider": "Approdo Calabria",
+      "title": "Lamezia, svaligiata gioielleria Piccini",
+      "url": "https://www.approdocalabria.it/svaligiata-la-gioielleria-piccini/",
+      "published_at": null,
+      "retrieved_at": "2026-09-12T21:40:46+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:la-prima-pagina:2012-03-29:furto-gioielleria-corso-numistrano",
+      "source_type": "press_secondary",
+      "provider": "La Prima Pagina",
+      "title": "Lamezia Terme, rapinata una gioielleria",
+      "url": "https://www.laprimapagina.it/2012/03/29/lamezia-terme-rapinata-una-gioielleria/",
+      "published_at": null,
+      "retrieved_at": "2026-09-12T21:40:46+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:furto",
+      "classification_source_key": "press:il-lametino:2012-03-29:furto-gioielleria-corso-numistrano",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le cronache contemporanee collocano il furto nella notte del 29 marzo 2012, attorno alle 2:00-3:00, in una gioielleria di Corso Numistrano a Lamezia Terme.",
+        "Gli autori praticarono fori nella saracinesca e sottrassero i preziosi esposti nella vetrina; il valore della refurtiva non era stato quantificato nelle fonti consultate.",
+        "Il Lametino indica l'esercizio come gioielleria Piccioni, mentre Approdo Calabria usa la denominazione Piccini; per evitare di risolvere editorialmente la variante nominale, il titolo e la localizzazione canonica conservano il tipo di esercizio e Corso Numistrano senza attribuire un nome univoco.",
+        "Le fonti riferiscono l'intervento e le indagini dei Carabinieri, senza un successivo esito giudiziario verificato in questa acquisizione.",
+        "Non sono attribuiti numero civico o coordinate: il luogo è sufficientemente individuato come esercizio commerciale nominato dalle cronache su Corso Numistrano, ma non è stata verificata una corrispondenza univoca con un indirizzo civico storico."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:gioielleria-corso-numistrano:occurrence",
+      "basis_source_key": "press:il-lametino:2012-03-29:furto-gioielleria-corso-numistrano",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Gioielleria di Corso Numistrano",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:gioielleria-corso-numistrano:target",
+      "basis_source_key": "press:il-lametino:2012-03-29:furto-gioielleria-corso-numistrano",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Gioielleria di Corso Numistrano",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
