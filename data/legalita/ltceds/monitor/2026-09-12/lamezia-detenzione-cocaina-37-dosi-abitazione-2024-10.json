@@ -1,0 +1,115 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-detenzione-cocaina-37-dosi-abitazione-2024-10",
+  "discovered_at": "2026-09-12T03:29:04+02:00",
+  "updated_at": "2026-09-12T03:29:04+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Detenzione ai fini di spaccio di 22 grammi di cocaina in 37 dosi rinvenuti in un'abitazione a Lamezia Terme nell'ottobre 2024",
+  "temporal": {
+    "start": "2024-10",
+    "end": "2024-10",
+    "edtf": "2024-10",
+    "precision": "month"
+  },
+  "sources": [
+    {
+      "source_key": "press:rainews-tgr-calabria:2024-10-23:cocaina-37-dosi",
+      "source_type": "press_secondary",
+      "provider": "RaiNews TGR Calabria",
+      "title": "In casa aveva cocaina pronta per lo spaccio, arrestato",
+      "url": "https://www.rainews.it/tgr/calabria/articoli/2024/10/in-casa-aveva-cocaina-pronta-per-lo-spaccio-arrestato-436ae826-87b3-48bc-b3c2-5e34159d6892.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-12T03:29:04+02:00",
+      "support_roles": ["event_support", "classification_support", "location_support", "corroboration"]
+    },
+    {
+      "source_key": "press:gazzetta-del-sud:2024-10-23:cocaina-37-dosi",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Lamezia, nascondeva in casa 37 dosi di cocaina",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2024/10/23/lamezia-nascondeva-in-casa-37-dosi-di-cocaina-arrestato-64enne-26e1333d-6c78-4088-8aad-e5bb12a0d5a0",
+      "published_at": null,
+      "retrieved_at": "2026-09-12T03:29:04+02:00",
+      "support_roles": ["event_support", "classification_support", "location_support", "procedural_context", "corroboration"]
+    },
+    {
+      "source_key": "press:lac-news24:2024-10-23:cocaina-37-dosi",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Lamezia Terme, dosi di cocaina pronte per lo spaccio rinvenute in casa",
+      "url": "https://www.lacnews24.it/cronaca/lamezia-terme-nascondeva-in-casa-dosi-di-cocaina-pronte-per-lo-spaccio-arrestato-un-64enne-wonmqxzs",
+      "published_at": null,
+      "retrieved_at": "2026-09-12T03:29:04+02:00",
+      "support_roles": ["event_support", "classification_support", "location_support", "corroboration"]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:detenzione-stupefacenti-fini-spaccio",
+      "classification_source_key": "press:gazzetta-del-sud:2024-10-23:cocaina-37-dosi",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": "D.P.R. 309/1990",
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti riferiscono il rinvenimento, durante una perquisizione dell'abitazione e delle relative pertinenze, di 22 grammi di cocaina suddivisi in 37 dosi e descrivono la contestazione come detenzione di stupefacente ai fini di spaccio.",
+        "La perquisizione fu eseguita dai Carabinieri della Compagnia di Lamezia Terme con il supporto di un'unità cinofila del Gruppo Guardia di Finanza di Lamezia Terme.",
+        "Gazzetta del Sud riferisce che il GIP del Tribunale di Lamezia Terme, su richiesta della locale Procura, convalidò l'arresto e dispose la custodia cautelare in carcere; il procedimento era nella fase delle indagini preliminari.",
+        "Le fonti consultate non pubblicano strada, quartiere o località dell'abitazione. La localizzazione resta quindi al livello comunale, senza indirizzo o coordinate e non è idonea a generare un hotspot puntuale."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata-pertinenze:occurrence",
+      "basis_source_key": "press:rainews-tgr-calabria:2024-10-23:cocaina-37-dosi",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata e relative pertinenze a Lamezia Terme (indirizzo non pubblicato)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata-pertinenze:search",
+      "basis_source_key": "press:rainews-tgr-calabria:2024-10-23:cocaina-37-dosi",
+      "role": "search",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata e relative pertinenze a Lamezia Terme (indirizzo non pubblicato)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata-pertinenze:recovery",
+      "basis_source_key": "press:rainews-tgr-calabria:2024-10-23:cocaina-37-dosi",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata e relative pertinenze a Lamezia Terme (indirizzo non pubblicato)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
