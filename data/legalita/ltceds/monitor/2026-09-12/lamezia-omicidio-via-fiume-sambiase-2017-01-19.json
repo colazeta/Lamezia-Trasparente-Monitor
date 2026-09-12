@@ -1,0 +1,95 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-omicidio-via-fiume-sambiase-2017-01-19",
+  "discovered_at": "2026-09-12T12:52:08+02:00",
+  "updated_at": "2026-09-12T12:52:08+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Omicidio con arma da fuoco davanti a un negozio di ortofrutta in via Fiume, Sambiase, il 19 gennaio 2017",
+  "temporal": {
+    "start": "2017-01-19",
+    "end": "2017-01-19",
+    "edtf": "2017-01-19",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "source:lametino-2017-01-19",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: omicidio in via Fiume a Sambiase, ucciso fruttivendolo",
+      "url": "https://www.lametino.it/cronaca/lamezia-omicidio-in-via-fiume-a-sambiase-ucciso-fruttivendolo.html",
+      "published_at": "2017-01-19",
+      "retrieved_at": "2026-09-12T12:52:08+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "source:ansa-2017-10-18",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Omicidio a Lamezia Terme, fermati coniugi",
+      "url": "https://www.ansa.it/calabria/notizie/2017/10/18/omicidio-a-lamezia-termefermati-coniugi_b57ae24c-cf56-4b77-b68b-9b1ec3d7eb4b.html",
+      "published_at": "2017-10-18",
+      "retrieved_at": "2026-09-12T12:52:08+02:00",
+      "support_roles": [
+        "event_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "source:ansa-2020-11-18",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Omicidio fruttivendolo: condannati marito e moglie",
+      "url": "https://www.ansa.it/calabria/notizie/2020/11/18/omicidio-fruttivendolo-condannati-marito-e-moglie_14ca6f19-d0f2-4777-9fd8-b70bb15d5af2.html",
+      "published_at": "2020-11-18",
+      "retrieved_at": "2026-09-12T12:52:08+02:00",
+      "support_roles": [
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "source:ansa-2020-11-18",
+      "classification_basis": "source_stated_legal",
+      "attempt_status": "completed"
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:occurrence-via-fiume",
+      "basis_source_key": "source:lametino-2017-01-19",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "minor_or_vulnerable",
+      "place_name": "Via Fiume",
+      "neighbourhood": "Sambiase"
+    },
+    {
+      "location_key": "location:target-ortofrutta-via-fiume",
+      "basis_source_key": "source:lametino-2017-01-19",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "place_name": "Negozio di ortofrutta in Via Fiume",
+      "neighbourhood": "Sambiase"
+    }
+  ]
+}
