@@ -35,6 +35,18 @@ const COMMISSIONS_III_IV_JOINT_NOTICE_URL =
   "https://albo.tinnvision.cloud/allegati/2026_2861_1_X?ente=00301390795";
 const COMMISSIONS_III_IV_JOINT_ARCHIVED_DOCUMENT_URL =
   "/data/public/albo/documents/2026/feb500c847880bf03ab1cd09190b961828f5b3873d60bea800e93367a3c74468.pdf";
+const COMMISSION_III_GUARANTOR_NOTICE_URL =
+  "https://albo.tinnvision.cloud/allegati/2026_2879_1_X?ente=00301390795";
+const COMMISSION_III_GUARANTOR_ARCHIVED_DOCUMENT_URL =
+  "/data/public/albo/documents/2026/b3f2d6a2b5884cd5e17b77b03289abeff7ab1f9994d7b70aa0d66ade22abdb09.pdf";
+const COMMISSION_IV_MID_SEPTEMBER_NOTICE_URL =
+  "https://albo.tinnvision.cloud/allegati/2026_2925_1_X?ente=00301390795";
+const COMMISSION_IV_MID_SEPTEMBER_ARCHIVED_DOCUMENT_URL =
+  "/data/public/albo/documents/2026/671bbd99e42677437d3c2b424d2ffd1794c8b1195efbf867591e3550480d31d1.pdf";
+const COMMISSION_III_MID_SEPTEMBER_NOTICE_URL =
+  "https://albo.tinnvision.cloud/allegati/2026_2926_1_X?ente=00301390795";
+const COMMISSION_III_MID_SEPTEMBER_ARCHIVED_DOCUMENT_URL =
+  "/data/public/albo/documents/2026/3de7a9e3185b36116474d8ecb3bed1c425b7395af5e85c9bb83bb16ca082e8d0.pdf";
 const COUNCIL_SESSION_EVIDENCE_URL =
   "https://albo.tinnvision.cloud/allegati/2026_2755_6_ALLEG?ente=00301390795";
 const COUNCIL_SESSION_EVIDENCE_ARCHIVE_URL =
@@ -49,6 +61,7 @@ const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
 const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-27T21:49:11Z";
 const COMMISSION_VI_RESEARCHED_AT = "2026-08-31T22:02:47Z";
 const SEPTEMBER_COMMISSION_RESEARCHED_AT = "2026-09-07T04:19:06Z";
+const MID_SEPTEMBER_COMMISSION_RESEARCHED_AT = "2026-09-12T10:18:08Z";
 
 const councilContextResearch: CouncilSessionV0ContextResearch = {
   status: "reviewed_matches",
@@ -307,6 +320,25 @@ const commissionsIiiIvJointContextResearch: CouncilSessionV0ContextResearch = {
   media: [],
 };
 
+const commissionIiiGuarantorContextResearch: CouncilSessionV0ContextResearch = {
+  status: "checked_no_match",
+  checkedAt: MID_SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  searchNote:
+    "Ricerca eseguita con Parallel Search e verifica diretta delle fonti originali per la III Commissione dell'11, 14 e 15 settembre 2026, usando date, orari e il regolamento per l'istituzione del Garante delle persone con disabilità. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alle singole sedute. L'ordine del giorno ufficiale è disponibile e non viene ricostruita un'agenda editoriale.",
+  articles: [],
+  media: [],
+};
+
+const commissionIvMidSeptemberContextResearch: CouncilSessionV0ContextResearch =
+  {
+    status: "checked_no_match",
+    checkedAt: MID_SEPTEMBER_COMMISSION_RESEARCHED_AT,
+    searchNote:
+      "Ricerca eseguita con Parallel Search e verifica diretta delle fonti originali per la IV Commissione del 14, 15 e 16 settembre 2026, usando date, orari, Trasporto Pubblico Scolastico Locale, Asili Nido Comunali e regolamento Street Art con le audizioni indicate. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alle singole sedute. L'ordine del giorno ufficiale è disponibile e non viene ricostruita un'agenda editoriale.",
+    articles: [],
+    media: [],
+  };
+
 const commissionContextResearch: CouncilSessionV0ContextResearch = {
   status: "reviewed_matches",
   checkedAt: CONTEXT_RESEARCHED_AT,
@@ -461,6 +493,62 @@ const commissionsIiiIvJointCandidate = requireCandidate({
   public_visibility: "publishable",
 });
 
+const commissionIiiGuarantorCandidate = requireCandidate({
+  id: "albo-2026-2879",
+  source: "Albo Pretorio Comune di Lamezia Terme",
+  source_url: OFFICIAL_ALBO_URL,
+  retrieved_at: MID_SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  publication_number: "2026/2879",
+  publication_start: "2026-09-09",
+  publication_end: "2026-09-16",
+  act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+  subject: "Convocazione 3° Commissione Consiliare Permanente.",
+  document_url: COMMISSION_III_GUARANTOR_NOTICE_URL,
+  content_hash:
+    "04f12caf167315030334618ea41d7e5091cf271b75baf33da58cccb1e35326c9",
+  verification_status: "official_source_acquired",
+  privacy_risk: "low",
+  public_visibility: "publishable",
+});
+
+const commissionIvMidSeptemberCandidate = requireCandidate({
+  id: "albo-2026-2925",
+  source: "Albo Pretorio Comune di Lamezia Terme",
+  source_url: OFFICIAL_ALBO_URL,
+  retrieved_at: MID_SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  publication_number: "2026/2925",
+  publication_start: "2026-09-11",
+  publication_end: "2026-09-18",
+  act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+  subject:
+    "Convocazione 4° Commissione Consiliare Permanente. Calendario lavori.",
+  document_url: COMMISSION_IV_MID_SEPTEMBER_NOTICE_URL,
+  content_hash:
+    "5a9d168246b9a4ed62e13c53e6a1106415f2c5d7c8825ea8d439ce165deaa500",
+  verification_status: "official_source_acquired",
+  privacy_risk: "low",
+  public_visibility: "publishable",
+});
+
+const commissionIiiMidSeptemberCandidate = requireCandidate({
+  id: "albo-2026-2926",
+  source: "Albo Pretorio Comune di Lamezia Terme",
+  source_url: OFFICIAL_ALBO_URL,
+  retrieved_at: MID_SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  publication_number: "2026/2926",
+  publication_start: "2026-09-11",
+  publication_end: "2026-09-18",
+  act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+  subject:
+    "Convocazione 3° Commissione Consiliare Permanente. Calendario lavori.",
+  document_url: COMMISSION_III_MID_SEPTEMBER_NOTICE_URL,
+  content_hash:
+    "fc6d1aaf789ee6902f85d537cd5b8dde937ea9e62573eacf8c75fd84d0c14117",
+  verification_status: "official_source_acquired",
+  privacy_risk: "low",
+  public_visibility: "publishable",
+});
+
 const councilCandidate = requireCandidate({
   id: "albo-2026-2673",
   source: "Albo Pretorio Comune di Lamezia Terme",
@@ -575,6 +663,54 @@ const commissionsIiiIvJointProvenance: CouncilSessionV0Provenance = {
   embeddedDocumentSha256: null,
   retrievedAt: commissionsIiiIvJointCandidate.source.retrievedAt,
   reviewedAt: SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  sourceReviewStatus: "reviewed_against_official_attachment",
+};
+
+const commissionIiiGuarantorProvenance: CouncilSessionV0Provenance = {
+  noticeId: commissionIiiGuarantorCandidate.id,
+  publicationNumber: commissionIiiGuarantorCandidate.publicationNumber,
+  sourceLabel: commissionIiiGuarantorCandidate.source.label,
+  sourceUrl: commissionIiiGuarantorCandidate.source.url,
+  documentUrl: commissionIiiGuarantorCandidate.source.documentUrl,
+  archivedDocumentUrl: COMMISSION_III_GUARANTOR_ARCHIVED_DOCUMENT_URL,
+  sourceContentHash: commissionIiiGuarantorCandidate.source.contentHash,
+  documentSha256:
+    "b3f2d6a2b5884cd5e17b77b03289abeff7ab1f9994d7b70aa0d66ade22abdb09",
+  embeddedDocumentSha256: null,
+  retrievedAt: commissionIiiGuarantorCandidate.source.retrievedAt,
+  reviewedAt: MID_SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  sourceReviewStatus: "reviewed_against_official_attachment",
+};
+
+const commissionIvMidSeptemberProvenance: CouncilSessionV0Provenance = {
+  noticeId: commissionIvMidSeptemberCandidate.id,
+  publicationNumber: commissionIvMidSeptemberCandidate.publicationNumber,
+  sourceLabel: commissionIvMidSeptemberCandidate.source.label,
+  sourceUrl: commissionIvMidSeptemberCandidate.source.url,
+  documentUrl: commissionIvMidSeptemberCandidate.source.documentUrl,
+  archivedDocumentUrl: COMMISSION_IV_MID_SEPTEMBER_ARCHIVED_DOCUMENT_URL,
+  sourceContentHash: commissionIvMidSeptemberCandidate.source.contentHash,
+  documentSha256:
+    "671bbd99e42677437d3c2b424d2ffd1794c8b1195efbf867591e3550480d31d1",
+  embeddedDocumentSha256: null,
+  retrievedAt: commissionIvMidSeptemberCandidate.source.retrievedAt,
+  reviewedAt: MID_SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  sourceReviewStatus: "reviewed_against_official_attachment",
+};
+
+const commissionIiiMidSeptemberProvenance: CouncilSessionV0Provenance = {
+  noticeId: commissionIiiMidSeptemberCandidate.id,
+  publicationNumber: commissionIiiMidSeptemberCandidate.publicationNumber,
+  sourceLabel: commissionIiiMidSeptemberCandidate.source.label,
+  sourceUrl: commissionIiiMidSeptemberCandidate.source.url,
+  documentUrl: commissionIiiMidSeptemberCandidate.source.documentUrl,
+  archivedDocumentUrl: COMMISSION_III_MID_SEPTEMBER_ARCHIVED_DOCUMENT_URL,
+  sourceContentHash: commissionIiiMidSeptemberCandidate.source.contentHash,
+  documentSha256:
+    "3de7a9e3185b36116474d8ecb3bed1c425b7395af5e85c9bb83bb16ca082e8d0",
+  embeddedDocumentSha256: null,
+  retrievedAt: commissionIiiMidSeptemberCandidate.source.retrievedAt,
+  reviewedAt: MID_SEPTEMBER_COMMISSION_RESEARCHED_AT,
   sourceReviewStatus: "reviewed_against_official_attachment",
 };
 
@@ -942,7 +1078,7 @@ function septemberCommissionSession({
     lastCheckedAt: {
       key: "lastCheckedAt",
       label: "Ultimo controllo",
-      value: SEPTEMBER_COMMISSION_RESEARCHED_AT,
+      value: contextResearch.checkedAt,
       sourceStatus: "verificato",
       sourceUrl: documentUrl,
       limit:
@@ -974,6 +1110,22 @@ const decoAgenda = ["Denominazione comunale d'origine (De.Co.)."] as const;
 
 const sportDisabilityAgenda = [
   "Progetto Sport e Disabilità. Audizione dell'assessore al ramo Gennaro Gianturco.",
+] as const;
+
+const disabilityGuarantorAgenda = [
+  'Regolamento per l\'istituzione della figura del "Garante delle persone con disabilità".',
+] as const;
+
+const schoolTransportAgenda = [
+  "Trasporto Pubblico Scolastico Locale. Audizione del dirigente della Lamezia Multiservizi, ing. Alessandro Vescio.",
+] as const;
+
+const municipalNurseriesAgenda = [
+  "Asili Nido Comunali. Audizione dell'assessore al ramo Gennaro Gianturco.",
+] as const;
+
+const streetArtIcicaAgenda = [
+  "Regolamento comunale per la promozione della Street Art. Audizione dell'Associazione Icica.",
 ] as const;
 
 const councilVerifiedSession: CouncilSessionV0 = {
@@ -1079,6 +1231,84 @@ const councilVerifiedSession: CouncilSessionV0 = {
 };
 
 export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
+  septemberCommissionSession({
+    id: "albo-2026-2925-commissione-iv-2026-09-16",
+    title:
+      "IV Commissione consiliare permanente — seduta del 16 settembre 2026",
+    scheduledAt: "2026-09-16T11:00:00+02:00",
+    agenda: streetArtIcicaAgenda,
+    candidate: commissionIvMidSeptemberCandidate,
+    provenance: commissionIvMidSeptemberProvenance,
+    contextResearch: commissionIvMidSeptemberContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della IV Commissione",
+    calendarSummary:
+      "La stessa convocazione programma tre sedute della IV Commissione: 14 settembre alle 11:00, 15 settembre alle 12:00 e 16 settembre 2026 alle 11:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-2925-commissione-iv-2026-09-15",
+    title:
+      "IV Commissione consiliare permanente — seduta del 15 settembre 2026",
+    scheduledAt: "2026-09-15T12:00:00+02:00",
+    agenda: municipalNurseriesAgenda,
+    candidate: commissionIvMidSeptemberCandidate,
+    provenance: commissionIvMidSeptemberProvenance,
+    contextResearch: commissionIvMidSeptemberContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della IV Commissione",
+    calendarSummary:
+      "La stessa convocazione programma tre sedute della IV Commissione: 14 settembre alle 11:00, 15 settembre alle 12:00 e 16 settembre 2026 alle 11:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-2926-commissione-iii-2026-09-15",
+    title:
+      "III Commissione consiliare permanente — seduta del 15 settembre 2026",
+    scheduledAt: "2026-09-15T11:00:00+02:00",
+    agenda: disabilityGuarantorAgenda,
+    candidate: commissionIiiMidSeptemberCandidate,
+    provenance: commissionIiiMidSeptemberProvenance,
+    contextResearch: commissionIiiGuarantorContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della III Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della III Commissione: 14 settembre alle 12:00 e 15 settembre 2026 alle 11:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-2926-commissione-iii-2026-09-14",
+    title:
+      "III Commissione consiliare permanente — seduta del 14 settembre 2026",
+    scheduledAt: "2026-09-14T12:00:00+02:00",
+    agenda: disabilityGuarantorAgenda,
+    candidate: commissionIiiMidSeptemberCandidate,
+    provenance: commissionIiiMidSeptemberProvenance,
+    contextResearch: commissionIiiGuarantorContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della III Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della III Commissione: 14 settembre alle 12:00 e 15 settembre 2026 alle 11:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-2925-commissione-iv-2026-09-14",
+    title:
+      "IV Commissione consiliare permanente — seduta del 14 settembre 2026",
+    scheduledAt: "2026-09-14T11:00:00+02:00",
+    agenda: schoolTransportAgenda,
+    candidate: commissionIvMidSeptemberCandidate,
+    provenance: commissionIvMidSeptemberProvenance,
+    contextResearch: commissionIvMidSeptemberContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della IV Commissione",
+    calendarSummary:
+      "La stessa convocazione programma tre sedute della IV Commissione: 14 settembre alle 11:00, 15 settembre alle 12:00 e 16 settembre 2026 alle 11:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-2879-commissione-iii-2026-09-11",
+    title:
+      "III Commissione consiliare permanente — seduta dell'11 settembre 2026",
+    scheduledAt: "2026-09-11T12:00:00+02:00",
+    agenda: disabilityGuarantorAgenda,
+    candidate: commissionIiiGuarantorCandidate,
+    provenance: commissionIiiGuarantorProvenance,
+    contextResearch: commissionIiiGuarantorContextResearch,
+    sourceLinkLabel: "Apri la convocazione ufficiale della III Commissione",
+    calendarSummary:
+      "La convocazione programma una seduta della III Commissione l'11 settembre 2026 alle 12:00.",
+  }),
   septemberCommissionSession({
     id: "albo-2026-2860-commissione-iv-2026-09-11",
     title:

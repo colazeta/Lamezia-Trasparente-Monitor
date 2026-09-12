@@ -1,6 +1,6 @@
 {
   "schema_version": "albo-reviewed-document-serving.v1",
-  "reviewed_at": "2026-09-07T04:36:00.000Z",
+  "reviewed_at": "2026-09-12T10:18:08.000Z",
   "source": "Albo Pretorio online del Comune di Lamezia Terme (piattaforma Tinnvision)",
   "source_url": "https://albo.tinnvision.cloud/albo/00301390795",
   "known_limits": [
@@ -38,6 +38,30 @@
       "review_status": "approved_public_civic_document",
       "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
       "reason": "Convocazione istituzionale revisionata e usata come fonte della seduta congiunta delle Commissioni III e IV del 7 settembre 2026."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/b3f2d6a2b5884cd5e17b77b03289abeff7ab1f9994d7b70aa0d66ade22abdb09.pdf",
+      "sha256": "b3f2d6a2b5884cd5e17b77b03289abeff7ab1f9994d7b70aa0d66ade22abdb09",
+      "source_publication_number": "2026/2879",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Convocazione istituzionale revisionata e usata come fonte della seduta della III Commissione dell'11 settembre 2026."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/671bbd99e42677437d3c2b424d2ffd1794c8b1195efbf867591e3550480d31d1.pdf",
+      "sha256": "671bbd99e42677437d3c2b424d2ffd1794c8b1195efbf867591e3550480d31d1",
+      "source_publication_number": "2026/2925",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Calendario istituzionale revisionato e usato come fonte delle sedute della IV Commissione dal 14 al 16 settembre 2026."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/3de7a9e3185b36116474d8ecb3bed1c425b7395af5e85c9bb83bb16ca082e8d0.pdf",
+      "sha256": "3de7a9e3185b36116474d8ecb3bed1c425b7395af5e85c9bb83bb16ca082e8d0",
+      "source_publication_number": "2026/2926",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Calendario istituzionale revisionato e usato come fonte delle sedute della III Commissione del 14 e 15 settembre 2026."
     }
   ]
 }

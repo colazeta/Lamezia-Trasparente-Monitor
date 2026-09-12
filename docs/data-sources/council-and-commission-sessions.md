@@ -1,6 +1,6 @@
 # Sedute di Consiglio e Commissioni — identificazione fonte-centrica v0
 
-Issue linkage: #740, #809, #1076. Il metodo avvia una tranche verificabile e non dichiara copertura storica completa.
+Issue linkage: #740, #809, #1076, #1257. Il metodo avvia una tranche verificabile e non dichiara copertura storica completa.
 
 ## Obiettivo e separazione degli stati
 
@@ -44,6 +44,9 @@ Snapshot Albo di riferimento: commit `5c861b94256c9c659630d8ad19b2f27279d1721b`,
 | `2026/2859`   | VI Commissione     | Seduta dell'8 settembre 2026 alle 11:00          | Data, ora e punto sulla De.Co. verificati nella convocazione ufficiale; svolgimento non verificato                                      |
 | `2026/2860`   | IV Commissione     | Sedute dall'8 all'11 settembre 2026              | Orario delle 12:00 l'8 settembre e delle 11:00 nei tre giorni successivi; punto sulla Street Art verificato; svolgimento non verificato |
 | `2026/2861`   | III–IV Commissioni | Seduta congiunta del 7 settembre 2026 alle 12:00 | Data, ora, progetto Sport e Disabilità e audizione dell'assessore Gennaro Gianturco verificati; svolgimento non verificato              |
+| `2026/2879`   | III Commissione    | Seduta dell'11 settembre 2026 alle 12:00         | Data, ora e regolamento sul Garante delle persone con disabilità verificati; svolgimento non verificato                                 |
+| `2026/2925`   | IV Commissione     | Sedute dal 14 al 16 settembre 2026               | Date, orari, tre temi e relative audizioni verificati nel calendario ufficiale; svolgimento non verificato                              |
+| `2026/2926`   | III Commissione    | Sedute del 14 e 15 settembre 2026                | Date, orari e regolamento sul Garante delle persone con disabilità verificati; svolgimento non verificato                               |
 
 Per `2026/2673`:
 
@@ -61,7 +64,7 @@ Per `2026/2648`:
 
 La copia esterna è un PDF Portfolio con un PDF incorporato. Il testo della scheda sintetizza soltanto data, ora e i due punti dell'ordine del giorno; non pubblica l'elenco dei componenti né altri dati personali non necessari.
 
-### Convocazioni del 3–11 settembre 2026
+### Convocazioni del 3–16 settembre 2026
 
 Le date seguenti derivano esclusivamente dal testo delle convocazioni ufficiali e non dalle finestre di pubblicazione dell'Albo. La sede non è indicata negli allegati controllati e non viene inferita. In assenza di verbali o altre fonti istituzionali successive, lo stato delle sedute resta `non_verificata`.
 
@@ -71,8 +74,11 @@ Le date seguenti derivano esclusivamente dal testo delle convocazioni ufficiali 
 | `2026/2859`   | [convocazione VI Commissione](https://albo.tinnvision.cloud/allegati/2026_2859_1_X?ente=00301390795)   | `data/public/albo/documents/2026/a1dad36522921833ac71b994a73032d3454227d0a2c00f57156a8d7059d94baf.pdf` — `a1dad36522921833ac71b994a73032d3454227d0a2c00f57156a8d7059d94baf`                                                                                     | 8 settembre alle 11:00; Denominazione comunale d'origine (De.Co.)                                                |
 | `2026/2860`   | [calendario IV Commissione](https://albo.tinnvision.cloud/allegati/2026_2860_1_X?ente=00301390795)     | `data/public/albo/documents/2026/dee314eb1f7e9133848be4b48c1c0b5e06ddd60371a92acc40ef9e290a62e411.pdf` — `dee314eb1f7e9133848be4b48c1c0b5e06ddd60371a92acc40ef9e290a62e411`                                                                                     | 8 settembre alle 12:00; 9, 10 e 11 settembre alle 11:00; regolamento comunale per la promozione della Street Art |
 | `2026/2861`   | [convocazione congiunta III–IV](https://albo.tinnvision.cloud/allegati/2026_2861_1_X?ente=00301390795) | `data/public/albo/documents/2026/feb500c847880bf03ab1cd09190b961828f5b3873d60bea800e93367a3c74468.pdf` — `feb500c847880bf03ab1cd09190b961828f5b3873d60bea800e93367a3c74468`                                                                                     | 7 settembre alle 12:00; progetto Sport e Disabilità e audizione dell'assessore al ramo Gennaro Gianturco         |
+| `2026/2879`   | [convocazione III Commissione](https://albo.tinnvision.cloud/allegati/2026_2879_1_X?ente=00301390795)  | `data/public/albo/documents/2026/b3f2d6a2b5884cd5e17b77b03289abeff7ab1f9994d7b70aa0d66ade22abdb09.pdf` — `b3f2d6a2b5884cd5e17b77b03289abeff7ab1f9994d7b70aa0d66ade22abdb09`                                                                                     | 11 settembre alle 12:00; regolamento per l'istituzione del Garante delle persone con disabilità                  |
+| `2026/2925`   | [calendario IV Commissione](https://albo.tinnvision.cloud/allegati/2026_2925_1_X?ente=00301390795)     | `data/public/albo/documents/2026/671bbd99e42677437d3c2b424d2ffd1794c8b1195efbf867591e3550480d31d1.pdf` — `671bbd99e42677437d3c2b424d2ffd1794c8b1195efbf867591e3550480d31d1`                                                                                     | 14 settembre alle 11:00, trasporto scolastico; 15 alle 12:00, asili nido; 16 alle 11:00, Street Art              |
+| `2026/2926`   | [calendario III Commissione](https://albo.tinnvision.cloud/allegati/2026_2926_1_X?ente=00301390795)    | `data/public/albo/documents/2026/3de7a9e3185b36116474d8ecb3bed1c425b7395af5e85c9bb83bb16ca082e8d0.pdf` — `3de7a9e3185b36116474d8ecb3bed1c425b7395af5e85c9bb83bb16ca082e8d0`                                                                                     | 14 settembre alle 12:00 e 15 settembre alle 11:00; regolamento sul Garante delle persone con disabilità          |
 
-Il controllo contestuale del 7 settembre 2026 ha usato Parallel Search per discovery ed espansione e ha poi verificato i candidati sulle pagine originali di Comune, Albo e testate. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alle otto sedute. I contenuti generici sulla disabilità, oppure pubblicati fuori dalla finestra attiva della seduta congiunta, non sono stati associati. Lo stato `checked_no_match` registra questo esito negativo senza affermare che tali contenuti non esistano.
+I controlli contestuali del 7 e del 12 settembre 2026 hanno usato Parallel Search per discovery ed espansione e hanno poi verificato i candidati sulle pagine originali di Comune, Albo e testate. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alle quattordici sedute. I contenuti generici sui temi in agenda, privi di data, organo o altro riscontro distintivo, non sono stati associati. Lo stato `checked_no_match` registra questo esito negativo senza affermare che tali contenuti non esistano.
 
 ## Gerarchia delle fonti
 
