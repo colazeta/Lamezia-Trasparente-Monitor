@@ -29,12 +29,13 @@ describe("evidence interventions 2026-09-12", () => {
     }
   });
 
-  it("keeps causal estimates separate from descriptive or version-specific evidence", () => {
+  it("keeps causal estimates separate from descriptive evidence", () => {
     const auditor = EVIDENCE_INTERVENTIONS_2026_09_12.find(
       (item) => item.id === "italy-random-municipal-auditor-assignment",
     );
     expect(auditor?.limitations.join(" ").toLowerCase()).toContain("working paper");
-    expect(auditor?.effectSize.toLowerCase()).toContain("versioni pubbliche precedenti");
+    expect(auditor?.effectSize).toContain("9%");
+    expect(auditor?.effectSize).toContain("8%");
 
     const benchmarking = EVIDENCE_INTERVENTIONS_2026_09_12.find(
       (item) => item.id === "nyc-building-energy-benchmarking-disclosure",
