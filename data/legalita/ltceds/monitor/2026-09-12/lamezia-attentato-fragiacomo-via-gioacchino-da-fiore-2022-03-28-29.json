@@ -1,0 +1,115 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-attentato-fragiacomo-via-gioacchino-da-fiore-2022-03-28-29",
+  "discovered_at": "2026-09-12T15:25:25+02:00",
+  "updated_at": "2026-09-12T15:25:25+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Attentato con ordigno all'azienda agricola Fragiacomo in via Gioacchino da Fiore nella notte tra 28 e 29 marzo 2022",
+  "temporal": {
+    "start": "2022-03-28",
+    "end": "2022-03-29",
+    "edtf": "2022-03-28/2022-03-29",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "press:gazzetta-sud:2022-03-30:fragiacomo-bomba-via-gioacchino-da-fiore",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Lamezia, intimidazione a un’azienda agricola: bomba danneggia la ‘Fragiacomo’",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2022/03/30/lamezia-intimidazione-a-unazienda-agricola-bomba-danneggia-la-fragiacomo-ebf77378-e3ca-40a7-b26a-11a56783dbe3",
+      "published_at": null,
+      "retrieved_at": "2026-09-12T15:25:25+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:rainews-tgr-calabria:2022-03:fragiacomo-bomba",
+      "source_type": "press_secondary",
+      "provider": "RaiNews TGR Calabria",
+      "title": "Bomba all'azienda Fragiacomo: ‘Non ce lo saremmo mai aspettati’",
+      "url": "https://www.rainews.it/tgr/calabria/video/2022/03/cal-bomba-azienda-fragiacomo-lamezia-13a25112-ff2d-42e9-99be-6988c869d93d.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-12T15:25:25+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:gazzetta-sud:2022-03-31:fragiacomo-indagini",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Lamezia, attentato all’azienda Fragiacomo. I cittadini: basta bombe e violenza",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2022/03/31/lamezia-attentato-allazienda-fragiacomo-i-cittadini-basta-bombe-e-violenza-7fb6d821-73d7-4a6a-bd39-25f79908fa1e",
+      "published_at": null,
+      "retrieved_at": "2026-09-12T15:25:25+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:intimidazione",
+      "classification_source_key": "press:gazzetta-sud:2022-03-30:fragiacomo-bomba-via-gioacchino-da-fiore",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "not_applicable",
+      "situational_context": [
+        "Le cronache contemporanee riferiscono l'esplosione notturna di un ordigno contro l'azienda agricola Fragiacomo, specializzata in agricoltura biologica e apicoltura, con sede in via Gioacchino da Fiore a Lamezia Terme.",
+        "RaiNews riferisce finestre distrutte e portone squarciato; Gazzetta del Sud descrive l'ordigno come ad alto potenziale e colloca l'esplosione nei pressi del casale sede dell'azienda.",
+        "Le fonti descrivono il fatto come attentato o intimidazione e riferiscono indagini dei Carabinieri e della Procura; non è stata reperita una fonte primaria o giudiziaria accessibile che sostenga per lo specifico episodio una qualificazione legale più forte.",
+        "La temporalità resta un intervallo tra il 28 e il 29 marzo 2022: RaiNews colloca la bomba nella notte di lunedì e le cronache del 30-31 marzo parlano dell'episodio come avvenuto nella notte precedente o due notti prima; non viene attribuito un orario o un lato della mezzanotte non attestato in modo univoco."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:fragiacomo-via-gioacchino-da-fiore:occurrence",
+      "basis_source_key": "press:gazzetta-sud:2022-03-30:fragiacomo-bomba-via-gioacchino-da-fiore",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Azienda agricola Fragiacomo, via Gioacchino da Fiore",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:fragiacomo-via-gioacchino-da-fiore:target",
+      "basis_source_key": "press:gazzetta-sud:2022-03-30:fragiacomo-bomba-via-gioacchino-da-fiore",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Azienda agricola Fragiacomo, via Gioacchino da Fiore",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
