@@ -1,0 +1,105 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-detenzione-cocaina-hashish-marijuana-abitazione-2024-09",
+  "discovered_at": "2026-09-12T13:20:10+02:00",
+  "updated_at": "2026-09-12T13:20:10+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Detenzione ai fini di spaccio di cocaina, hashish e marijuana rinvenuti in un'abitazione a Lamezia Terme nel settembre 2024",
+  "temporal": {
+    "start": "2024-09",
+    "end": "2024-09",
+    "edtf": "2024-09",
+    "precision": "month"
+  },
+  "sources": [
+    {
+      "source_key": "press:gazzetta-del-sud:2024-09-19:droga-abitazione-30g-cocaina",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Nascondeva droga in casa, arrestato un uomo a Lamezia Terme",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2024/09/19/nascondeva-droga-in-un-appartamento-arrestato-giovane-a-lamezia-terme-30bb51b8-7b72-4e2f-98d7-a52fa3af0126",
+      "published_at": null,
+      "retrieved_at": "2026-09-12T13:20:10+02:00",
+      "support_roles": ["event_support", "classification_support", "location_support", "procedural_context"]
+    },
+    {
+      "source_key": "press:la-milano:2024-09-21:droga-abitazione-30g-cocaina",
+      "source_type": "press_secondary",
+      "provider": "La Milano",
+      "title": "Lamezia Terme: Carabinieri arrest a 37-year-old found in possession of 30 grams of cocaine",
+      "url": "https://en.lamilano.it/catanzaro/lamezia-terme-in-the-fight-against-drug-dealing-the-carabinieri-arrest-a-37-year-old-found-in-possession-of-30-grams-of-cocaine",
+      "published_at": null,
+      "retrieved_at": "2026-09-12T13:20:10+02:00",
+      "support_roles": ["event_support", "classification_support", "corroboration"]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:detenzione-stupefacenti-fini-spaccio",
+      "classification_source_key": "press:gazzetta-del-sud:2024-09-19:droga-abitazione-30g-cocaina",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti qualificano espressamente la contestazione come detenzione ai fini di spaccio di sostanze stupefacenti.",
+        "Durante una perquisizione domiciliare furono rinvenuti circa 30 grammi di cocaina, piccoli quantitativi di hashish e marijuana e materiale per il taglio, la pesatura e il confezionamento; quanto rinvenuto fu sottoposto a sequestro.",
+        "Gazzetta del Sud riferisce che il GIP del Tribunale di Lamezia Terme, su richiesta della locale Procura, convalidò l'arresto e dispose l'obbligo di dimora nel comune di residenza e l'obbligo di presentazione alla polizia giudiziaria.",
+        "Le fonti recuperate non indicano il giorno esatto della perquisizione né strada, quartiere o località dell'abitazione; la temporalità resta quindi al mese di settembre 2024 e la geografia al livello comunale, senza coordinate."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata:occurrence",
+      "basis_source_key": "press:gazzetta-del-sud:2024-09-19:droga-abitazione-30g-cocaina",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata a Lamezia Terme (indirizzo non pubblicato)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata:search",
+      "basis_source_key": "press:gazzetta-del-sud:2024-09-19:droga-abitazione-30g-cocaina",
+      "role": "search",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata a Lamezia Terme (indirizzo non pubblicato)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata:recovery",
+      "basis_source_key": "press:gazzetta-del-sud:2024-09-19:droga-abitazione-30g-cocaina",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata a Lamezia Terme (indirizzo non pubblicato)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
