@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-attentato-fragiacomo-via-gioacchino-da-fiore-2022-03-28-29",
   "discovered_at": "2026-09-12T15:25:25+02:00",
-  "updated_at": "2026-09-12T15:25:25+02:00",
+  "updated_at": "2026-09-12T15:37:00+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Attentato con ordigno all'azienda agricola Fragiacomo in via Gioacchino da Fiore nella notte tra 28 e 29 marzo 2022",
@@ -74,7 +74,8 @@
         "Le cronache contemporanee riferiscono l'esplosione notturna di un ordigno contro l'azienda agricola Fragiacomo, specializzata in agricoltura biologica e apicoltura, con sede in via Gioacchino da Fiore a Lamezia Terme.",
         "RaiNews riferisce finestre distrutte e portone squarciato; Gazzetta del Sud descrive l'ordigno come ad alto potenziale e colloca l'esplosione nei pressi del casale sede dell'azienda.",
         "Le fonti descrivono il fatto come attentato o intimidazione e riferiscono indagini dei Carabinieri e della Procura; non è stata reperita una fonte primaria o giudiziaria accessibile che sostenga per lo specifico episodio una qualificazione legale più forte.",
-        "La temporalità resta un intervallo tra il 28 e il 29 marzo 2022: RaiNews colloca la bomba nella notte di lunedì e le cronache del 30-31 marzo parlano dell'episodio come avvenuto nella notte precedente o due notti prima; non viene attribuito un orario o un lato della mezzanotte non attestato in modo univoco."
+        "La temporalità resta un intervallo tra il 28 e il 29 marzo 2022: RaiNews colloca la bomba nella notte di lunedì e le cronache del 30-31 marzo parlano dell'episodio come avvenuto nella notte precedente o due notti prima; non viene attribuito un orario o un lato della mezzanotte non attestato in modo univoco.",
+        "La localizzazione occurrence è risolta a livello street_segment in via Gioacchino da Fiore perché la fonte colloca l'esplosione nei pressi del casale, mentre il target è conservato come exact_public_site dell'azienda nominata; non sono attribuite coordinate o civico."
       ],
       "cyber_related": null,
       "affected_object_count": null
@@ -88,11 +89,11 @@
       "municipality": "Lamezia Terme",
       "evidence_basis": "source_stated_named_site",
       "evidence_precision": "exact_public_site",
-      "resolved_precision": "exact_public_site",
+      "resolved_precision": "street_segment",
       "sensitivity": "private_or_sensitive",
       "publication_risk": "victim_linked",
       "geometry": null,
-      "place_name": "Azienda agricola Fragiacomo, via Gioacchino da Fiore",
+      "place_name": "Via Gioacchino da Fiore",
       "neighbourhood": null,
       "iccs_location_type": null
     },
