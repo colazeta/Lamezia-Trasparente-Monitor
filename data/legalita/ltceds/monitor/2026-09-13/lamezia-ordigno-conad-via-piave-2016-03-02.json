@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-ordigno-conad-via-piave-2016-03-02",
   "discovered_at": "2026-09-13T00:09:10+02:00",
-  "updated_at": "2026-09-13T00:09:10+02:00",
+  "updated_at": "2026-09-13T00:18:00+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Esplosione di un ordigno davanti al supermercato Conad di via Piave il 2 marzo 2016",
@@ -37,6 +37,7 @@
       "retrieved_at": "2026-09-13T00:09:10+02:00",
       "support_roles": [
         "event_support",
+        "classification_support",
         "location_support",
         "corroboration",
         "procedural_context"
