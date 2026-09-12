@@ -197,7 +197,7 @@ describe("councilSessionV0", () => {
   });
 
   it("publishes source-traceable records for both council and commission notices", () => {
-    expect(councilSessionV0ReviewedRecords).toHaveLength(13);
+    expect(councilSessionV0ReviewedRecords).toHaveLength(19);
     expect(
       new Set(councilSessionV0ReviewedRecords.map((item) => item.kind)),
     ).toEqual(new Set(["council", "commission"]));
@@ -471,6 +471,93 @@ describe("councilSessionV0", () => {
       expect(session?.contextResearch.status).toBe("checked_no_match");
       expect(session?.contextResearch.articles).toEqual([]);
       expect(session?.contextResearch.media).toEqual([]);
+    }
+  });
+
+  it("materializes the 11–16 September III and IV Commission calendars from three official notices", () => {
+    const guarantorSingle = councilSessionV0ReviewedRecords.filter(
+      (session) => session.provenance?.publicationNumber === "2026/2879",
+    );
+    const commissionIv = councilSessionV0ReviewedRecords.filter(
+      (session) => session.provenance?.publicationNumber === "2026/2925",
+    );
+    const guarantorCalendar = councilSessionV0ReviewedRecords.filter(
+      (session) => session.provenance?.publicationNumber === "2026/2926",
+    );
+
+    expect(guarantorSingle.map((session) => session.scheduledAt.value)).toEqual(
+      ["2026-09-11T12:00:00+02:00"],
+    );
+    expect(commissionIv.map((session) => session.scheduledAt.value)).toEqual([
+      "2026-09-16T11:00:00+02:00",
+      "2026-09-15T12:00:00+02:00",
+      "2026-09-14T11:00:00+02:00",
+    ]);
+    expect(
+      guarantorCalendar.map((session) => session.scheduledAt.value),
+    ).toEqual(["2026-09-15T11:00:00+02:00", "2026-09-14T12:00:00+02:00"]);
+
+    for (const session of [...guarantorSingle, ...guarantorCalendar]) {
+      expect(session.title.value).toMatch(/III Commissione/i);
+      expect(session.agenda.value).toEqual([
+        'Regolamento per l\'istituzione della figura del "Garante delle persone con disabilità".',
+      ]);
+      expect(session.contextResearch.searchNote).toMatch(/Parallel Search/i);
+    }
+
+    expect(commissionIv.map((session) => session.agenda.value)).toEqual([
+      [
+        "Regolamento comunale per la promozione della Street Art. Audizione dell'Associazione Icica.",
+      ],
+      [
+        "Asili Nido Comunali. Audizione dell'assessore al ramo Gennaro Gianturco.",
+      ],
+      [
+        "Trasporto Pubblico Scolastico Locale. Audizione del dirigente della Lamezia Multiservizi, ing. Alessandro Vescio.",
+      ],
+    ]);
+
+    expect(guarantorSingle[0]?.provenance).toEqual(
+      expect.objectContaining({
+        documentUrl: expect.stringContaining("2026_2879_1_X"),
+        sourceContentHash:
+          "04f12caf167315030334618ea41d7e5091cf271b75baf33da58cccb1e35326c9",
+        documentSha256:
+          "b3f2d6a2b5884cd5e17b77b03289abeff7ab1f9994d7b70aa0d66ade22abdb09",
+      }),
+    );
+    expect(commissionIv[0]?.provenance).toEqual(
+      expect.objectContaining({
+        documentUrl: expect.stringContaining("2026_2925_1_X"),
+        sourceContentHash:
+          "5a9d168246b9a4ed62e13c53e6a1106415f2c5d7c8825ea8d439ce165deaa500",
+        documentSha256:
+          "671bbd99e42677437d3c2b424d2ffd1794c8b1195efbf867591e3550480d31d1",
+      }),
+    );
+    expect(guarantorCalendar[0]?.provenance).toEqual(
+      expect.objectContaining({
+        documentUrl: expect.stringContaining("2026_2926_1_X"),
+        sourceContentHash:
+          "fc6d1aaf789ee6902f85d537cd5b8dde937ea9e62573eacf8c75fd84d0c14117",
+        documentSha256:
+          "3de7a9e3185b36116474d8ecb3bed1c425b7395af5e85c9bb83bb16ca082e8d0",
+      }),
+    );
+
+    for (const session of [
+      ...guarantorSingle,
+      ...commissionIv,
+      ...guarantorCalendar,
+    ]) {
+      expect(session.sessionStatus.value).toBe("non_verificata");
+      expect(session.contextResearch.status).toBe("checked_no_match");
+      expect(session.contextResearch.articles).toEqual([]);
+      expect(session.contextResearch.media).toEqual([]);
+      expect(session.lastCheckedAt.value).toBe("2026-09-12T10:18:08Z");
+      expect(session.dataLimits.value?.join(" ")).toMatch(
+        /sede non è indicata.*non viene inferita/i,
+      );
     }
   });
 

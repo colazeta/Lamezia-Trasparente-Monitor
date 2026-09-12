@@ -24,6 +24,9 @@ describe("HomeInstitutionalSessions", () => {
     ).toBeInTheDocument();
     expect(screen.getByText(/13 agosto 2026/i)).toBeInTheDocument();
     expect(
+      screen.getByText("16 settembre 2026 alle ore 11:00"),
+    ).toBeInTheDocument();
+    expect(
       screen.getByText("11 settembre 2026 alle ore 11:00"),
     ).toBeInTheDocument();
     expect(
@@ -41,15 +44,15 @@ describe("HomeInstitutionalSessions", () => {
     expect(screen.getByText(/11 agosto 2026/i)).toBeInTheDocument();
     expect(screen.getByText(/10 agosto 2026/i)).toBeInTheDocument();
     expect(screen.getAllByText(/Ricerca contestuale eseguita/i)).toHaveLength(
-      13,
+      19,
     );
     expect(
       screen.getAllByText(/Stato della seduta non verificato/i),
-    ).toHaveLength(12);
+    ).toHaveLength(18);
     expect(screen.getByText(/Seduta svolta/i)).toBeInTheDocument();
     expect(
       screen.getAllByText("IV Commissione consiliare permanente"),
-    ).toHaveLength(6);
+    ).toHaveLength(9);
     expect(
       screen.getByText("III e IV Commissioni consiliari permanenti"),
     ).toBeInTheDocument();
@@ -60,12 +63,12 @@ describe("HomeInstitutionalSessions", () => {
     ).not.toBeInTheDocument();
     expect(
       screen.getByText(
-        /pubblicazioni 2026\/2860, 2026\/2859, 2026\/2861, 2026\/2840, 2026\/2788, 2026\/2648/i,
+        /pubblicazioni 2026\/2925, 2026\/2926, 2026\/2879, 2026\/2860, 2026\/2859, 2026\/2861, 2026\/2840, 2026\/2788, 2026\/2648/i,
       ),
     ).toBeInTheDocument();
     expect(screen.getByText(/7 articoli · 3 video/i)).toBeInTheDocument();
     expect(screen.getAllByText(/2 articoli · 0 video/i)).toHaveLength(2);
-    expect(screen.getAllByText(/0 articoli · 0 video/i)).toHaveLength(10);
+    expect(screen.getAllByText(/0 articoli · 0 video/i)).toHaveLength(16);
     expect(
       screen.getByText(/fonte istituzionale successiva lo conferma/i),
     ).toBeInTheDocument();
