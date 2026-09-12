@@ -1,6 +1,6 @@
 # Sedute di Consiglio e Commissioni — identificazione fonte-centrica v0
 
-Issue linkage: #740, #809, #1076, #1257. Il metodo avvia una tranche verificabile e non dichiara copertura storica completa.
+Issue linkage: #740, #809, #1076, #1257, #1269. Il metodo avvia una tranche verificabile e non dichiara copertura storica completa.
 
 ## Obiettivo e separazione degli stati
 
@@ -78,7 +78,7 @@ Le date seguenti derivano esclusivamente dal testo delle convocazioni ufficiali 
 | `2026/2925`   | [calendario IV Commissione](https://albo.tinnvision.cloud/allegati/2026_2925_1_X?ente=00301390795)     | `data/public/albo/documents/2026/671bbd99e42677437d3c2b424d2ffd1794c8b1195efbf867591e3550480d31d1.pdf` — `671bbd99e42677437d3c2b424d2ffd1794c8b1195efbf867591e3550480d31d1`                                                                                     | 14 settembre alle 11:00, trasporto scolastico; 15 alle 12:00, asili nido; 16 alle 11:00, Street Art              |
 | `2026/2926`   | [calendario III Commissione](https://albo.tinnvision.cloud/allegati/2026_2926_1_X?ente=00301390795)    | `data/public/albo/documents/2026/3de7a9e3185b36116474d8ecb3bed1c425b7395af5e85c9bb83bb16ca082e8d0.pdf` — `3de7a9e3185b36116474d8ecb3bed1c425b7395af5e85c9bb83bb16ca082e8d0`                                                                                     | 14 settembre alle 12:00 e 15 settembre alle 11:00; regolamento sul Garante delle persone con disabilità          |
 
-I controlli contestuali del 7 e del 12 settembre 2026 hanno usato Parallel Search per discovery ed espansione e hanno poi verificato i candidati sulle pagine originali di Comune, Albo e testate. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alle quattordici sedute. I contenuti generici sui temi in agenda, privi di data, organo o altro riscontro distintivo, non sono stati associati. Lo stato `checked_no_match` registra questo esito negativo senza affermare che tali contenuti non esistano.
+I controlli contestuali del 7 e del 12 settembre 2026 hanno usato Parallel Search per discovery ed espansione e hanno poi verificato i candidati sulle pagine originali di Comune, Albo e testate. Per la seduta della IV Commissione del 15 settembre è stato collegato come `agenda_item` l'avviso comunale sull'avvio, nella stessa data, del servizio nei tre asili nido; la fonte non nomina la Commissione e non ne prova lo svolgimento o gli esiti. Non sono emersi collegamenti `same_session`, dirette, registrazioni, clip o interviste sufficientemente precisi per le quattordici sedute. Lo stato `checked_no_match` registra gli altri esiti negativi senza affermare che tali contenuti non esistano.
 
 ## Gerarchia delle fonti
 
@@ -126,7 +126,7 @@ Le regole non permettono di usare la stampa o la copertura audiovisiva editorial
 
 Se la ricerca è stata eseguita senza risultati abbastanza precisi, lo stato è `checked_no_match`. Questo documenta il controllo compiuto e non dimostra che non esistano articoli pertinenti.
 
-### Contesto revisionato il 26 agosto 2026
+### Contesto revisionato fino al 12 settembre 2026
 
 | Pubblicazione / seduta                     | Articolo                                                                                                                                                                                                                                                                                                             | Relazione               | Limite del collegamento                                                                                                                           |
 | ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -138,6 +138,7 @@ Se la ricerca è stata eseguita senza risultati abbastanza precisi, lo stato è 
 | `2026/2673` Consiglio                      | [Lamezia, Amministrazione Comunale su disabilità: “Sottoscritti 142 Progetti di Vita. Ora rafforziamo rete territoriale”](https://www.lametino.it/ultimora/lamezia-amministrazione-comunale-su-disabilita-sottoscritti-142-progetti-di-vita-ora-rafforziamo-rete-territoriale.html) — il Lametino, 14 agosto 2026    | `possible_same_session` | La pubblicazione e il tema sono compatibili con la seduta, ma manca l'ordine del giorno ufficiale completo per un collegamento certo              |
 | `2026/2648` II Commissione, 10 e 11 agosto | [Approvato in giunta l'assestamento generale di bilancio e salvaguardia degli equilibri per l'esercizio 2026](https://www.lameziainforma.it/istituzione/2026/08/06/approvato-in-giunta-lassestamento-generale-di-bilancio-e-salvaguardia-degli-equilibri-per-lesercizio-2026/68773/) — LameziaInforma, 6 agosto 2026 | `agenda_item`           | Approfondisce l'assestamento indicato in agenda; non documenta le riunioni della Commissione                                                      |
 | `2026/2648` II Commissione, 10 e 11 agosto | [LAMEZIA \| Bilancio, la maggioranza si sfalda in Giunta: tre assessori assenti. Muraca: «È sfiducia al sindaco»](https://lanovitaonline.it/lamezia-bilancio-la-maggioranza-si-sfalda-in-giunta-tre-assessori-assenti-muraca-e-sfiducia-al-sindaco/) — La Novità Online, 8 agosto 2026                               | `agenda_item`           | Riporta una posizione politica sul tema dell'assestamento; non verifica attività o esiti della Commissione                                        |
+| `2026/2925` IV Commissione, 15 settembre   | [Avvio del servizio di Asilo Nido comunale](https://www.comune.lamezia-terme.cz.it/it/news/avvio-del-servizio-di-asilo-nido-comunale) — Comune di Lamezia Terme, 11 settembre 2026                                                                                                                                   | `agenda_item`           | Data di avvio e tema coincidono con il punto ufficiale; l'avviso non nomina la Commissione né ne attesta svolgimento, audizione o risultati       |
 
 Non sono emersi articoli che nominino con sufficiente precisione le sedute della II Commissione del 10 o 11 agosto. Per questo i due risultati sono presentati soltanto come contesto sui temi in agenda.
 
