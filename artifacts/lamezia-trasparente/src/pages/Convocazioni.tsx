@@ -48,6 +48,7 @@ import {
 import { CouncilSessionV0SummaryCard } from "@/components/launch/CouncilSessionV0Card";
 import { councilSessionV0ReviewedRecords } from "@/data/councilSessionV0Reviewed";
 import { asApiList } from "@/lib/apiList";
+import { summarizeReviewedCommissions } from "@/lib/reviewedCommissionSummary";
 import { V0SectionLanding } from "@/components/launch/V0SectionLanding";
 
 function MacrotemasRow({ macrotemi }: { macrotemi: string[] }) {
@@ -72,6 +73,9 @@ function formatDate(value: string | null | undefined) {
 
 const UNGROUPED = "Altre sedute";
 const ALL_ORGANI = "all";
+const reviewedCommissionSummary = summarizeReviewedCommissions(
+  councilSessionV0ReviewedRecords,
+);
 
 type CoverageFilterKey = "report" | "votes" | "acts";
 
@@ -281,10 +285,8 @@ export function Convocazioni() {
             </h2>
             <p className="mt-1 max-w-3xl text-sm leading-relaxed text-muted-foreground">
               Tranche iniziale: una seduta del Consiglio confermata da fonte
-              istituzionale successiva e dodici sedute di Commissione trascritte
-              dagli allegati ufficiali: due della II, sei della IV, tre della VI
-              e una congiunta III–IV. La selezione non costituisce una copertura
-              storica completa.
+              istituzionale successiva e {reviewedCommissionSummary}. La
+              selezione non costituisce una copertura storica completa.
             </p>
           </div>
         </div>
