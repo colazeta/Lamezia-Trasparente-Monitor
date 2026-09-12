@@ -1,0 +1,113 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-ordigno-conad-via-piave-2016-03-02",
+  "discovered_at": "2026-09-13T00:09:10+02:00",
+  "updated_at": "2026-09-13T00:09:10+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Esplosione di un ordigno davanti al supermercato Conad di via Piave il 2 marzo 2016",
+  "temporal": {
+    "start": "2016-03-02",
+    "end": "2016-03-02",
+    "edtf": "2016-03-02",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "source:il-lametino-2016-03-03-bomba-conad-via-piave",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, bomba carta contro Conad di via Piave. Pd: ‘E' il momento di reagire’",
+      "url": "https://www.lametino.it/cronaca/lamezia-bomba-contro-conad-di-via-piave.html",
+      "published_at": "2016-03-03T00:00:00+01:00",
+      "retrieved_at": "2026-09-13T00:09:10+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "source:approdo-calabria-2016-03-03-bomba-conad-via-piave",
+      "source_type": "press_secondary",
+      "provider": "Approdo Calabria",
+      "title": "Nuova intimidazione a Lamezia, bomba a supermercato",
+      "url": "https://www.approdocalabria.it/nuova-intimidazione-a-lamezia-bomba-esplode-davanti-a-supermercato/",
+      "published_at": "2016-03-03T00:00:00+01:00",
+      "retrieved_at": "2026-09-13T00:09:10+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "source:cn24tv-2016-03-03-ordigno-conad-lamezia",
+      "source_type": "press_secondary",
+      "provider": "CN24TV",
+      "title": "Ordigno davanti Conad Lamezia: solidarietà Pd",
+      "url": "https://cn24tv.it/news/129755/ordigno-davanti-conad-lamezia-solidarieta-pd.html",
+      "published_at": "2016-03-03T17:00:00+01:00",
+      "retrieved_at": "2026-09-13T00:09:10+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:intimidazione",
+      "classification_source_key": "source:approdo-calabria-2016-03-03-bomba-conad-via-piave",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "not_applicable",
+      "situational_context": [
+        "fonti contemporanee pubblicate il 3 marzo 2016 riferiscono l'esplosione, nella sera o notte precedente, di un ordigno di basso o medio potenziale davanti all'ingresso del supermercato Conad di via Piave a Lamezia Terme",
+        "le fonti concordano sul fatto che l'esplosione non abbia causato danni alla struttura e che sul posto sia intervenuta la Polizia, che ha avviato accertamenti anche sulle immagini di videosorveglianza",
+        "l'episodio è distinto dalla precedente intimidazione con cartucce e biglietto minatorio subita dallo stesso esercizio a fine gennaio 2016",
+        "non è stata reperita in questa iterazione una fonte primaria o giudiziaria che sostenga per questo specifico episodio una qualificazione legale più forte; la classificazione resta pertanto provvisoria e non attribuisce responsabilità individuali"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:conad-via-piave:occurrence",
+      "basis_source_key": "source:il-lametino-2016-03-03-bomba-conad-via-piave",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Ingresso del supermercato Conad di via Piave",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:conad-via-piave:target",
+      "basis_source_key": "source:il-lametino-2016-03-03-bomba-conad-via-piave",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Supermercato Conad di via Piave",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
