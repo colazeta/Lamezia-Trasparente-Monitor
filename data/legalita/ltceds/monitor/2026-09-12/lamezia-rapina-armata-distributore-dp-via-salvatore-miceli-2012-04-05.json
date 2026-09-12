@@ -1,0 +1,130 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-armata-distributore-dp-via-salvatore-miceli-2012-04-05",
+  "discovered_at": "2026-09-12T11:05:09+02:00",
+  "updated_at": "2026-09-12T11:05:09+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina a mano armata al distributore DP di via Salvatore Miceli",
+  "temporal": {
+    "start": "2012-04-05",
+    "end": "2012-04-05",
+    "edtf": "2012-04-05",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:la-prima-pagina:2012-04-06:rapina-dp-via-miceli-lamezia",
+      "source_type": "press_secondary",
+      "provider": "La Prima Pagina",
+      "title": "Lamezia Terme, due giovani in manette per furto di carburante",
+      "url": "https://www.laprimapagina.it/2012/04/06/lamezia-terme-due-giovani-in-manette-per-furto-di-carburante/",
+      "published_at": null,
+      "retrieved_at": "2026-09-12T11:05:09+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "press:la-prima-pagina:2012-04-06:rapina-dp-via-miceli-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la fonte contemporanea riferisce una rapina a mano armata consumata la sera del 5 aprile 2012 ai danni del distributore di carburanti DP di via Salvatore Miceli a Lamezia Terme-Nicastro",
+        "la fonte riferisce che i due autori si allontanarono a piedi in direzione di via Gen. C.A. Dalla Chiesa e che i Carabinieri li fermarono poco dopo a pochi isolati dal distributore",
+        "in un campo incolto presso il luogo del fermo furono rinvenuti due giubbotti scuri, una pistola modificata calibro 7,65 e un borsello contenente 487,80 euro indicati come provento della rapina; la somma fu restituita al titolare",
+        "la fonte riferisce l'arresto in flagranza dei due autori; il record non rappresenta questo dato come accertamento giudiziario definitivo"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:distributore-dp-via-salvatore-miceli:occurrence",
+      "basis_source_key": "press:la-prima-pagina:2012-04-06:rapina-dp-via-miceli-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Distributore di carburanti DP, via Salvatore Miceli",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:distributore-dp-via-salvatore-miceli:target",
+      "basis_source_key": "press:la-prima-pagina:2012-04-06:rapina-dp-via-miceli-lamezia",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Distributore di carburanti DP, via Salvatore Miceli",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-gen-c-a-dalla-chiesa:escape",
+      "basis_source_key": "press:la-prima-pagina:2012-04-06:rapina-dp-via-miceli-lamezia",
+      "role": "other",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Via Gen. C.A. Dalla Chiesa",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:campo-incolto-pochi-isolati-dp:arrest",
+      "basis_source_key": "press:la-prima-pagina:2012-04-06:rapina-dp-via-miceli-lamezia",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "unknown",
+      "publication_risk": "unknown",
+      "geometry": null,
+      "place_name": "A pochi isolati dal distributore DP, presso un campo incolto; strada non specificata",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:campo-incolto-pochi-isolati-dp:recovery",
+      "basis_source_key": "press:la-prima-pagina:2012-04-06:rapina-dp-via-miceli-lamezia",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "unknown",
+      "publication_risk": "unknown",
+      "geometry": null,
+      "place_name": "Campo incolto a pochi isolati dal distributore DP; strada non specificata",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

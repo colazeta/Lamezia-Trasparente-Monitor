@@ -1,0 +1,130 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-furto-aggravato-mance-winebar-aeroporto-2021-10-05",
+  "discovered_at": "2026-09-12T12:28:19+02:00",
+  "updated_at": "2026-09-12T12:28:19+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Furto aggravato del raccoglitore di mance al Winebar dell'Aeroporto di Lamezia Terme",
+  "temporal": {
+    "start": "2021-10-05",
+    "end": "2021-10-05",
+    "edtf": "2021-10-05",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "law:questura-catanzaro:2021-10-05:furto-winebar-aeroporto",
+      "source_type": "law_enforcement_primary",
+      "provider": "Polizia di Stato — Questura di Catanzaro",
+      "title": "Aeroporto di Lamezia Terme: la Polizia di Stato denuncia un 31enne per furto aggravato",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/1236615c7047d544d641261206",
+      "published_at": null,
+      "retrieved_at": "2026-09-12T12:28:19+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:cn24tv:2021-10-05:furto-mance-winebar-aeroporto",
+      "source_type": "press_secondary",
+      "provider": "CN24TV",
+      "title": "Aeroporto Lamezia, ruba le mance in un bar, c'è la videosorveglianza: denunciato",
+      "url": "https://cn24tv.it/news/aeroporto-lamezia-ruba-le-mance-in-un-bar-c-e-la-videosorveglianza-denunciato/",
+      "published_at": "2021-10-05T18:09:00+02:00",
+      "retrieved_at": "2026-09-12T12:28:19+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:furto-aggravato",
+      "classification_source_key": "law:questura-catanzaro:2021-10-05:furto-winebar-aeroporto",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la fonte primaria riferisce la sottrazione di un raccoglitore di mance contenente circa 250 euro, collocato vicino al registratore di cassa del Winebar presso il Gate 1 delle partenze nazionali dell'Aeroporto di Lamezia Terme",
+        "la Polizia di Frontiera Aerea acquisì le immagini della videosorveglianza dello scalo e identificò in breve tempo la persona indicata come autore del fatto",
+        "una fonte contemporanea riferisce che la persona fu rintracciata mentre era ancora in attesa di imbarcarsi su un volo nazionale e che il raccoglitore di mance fu riconsegnato",
+        "la persona fu denunciata per furto aggravato; il record conserva la qualificazione e lo stato procedurale riportati dalle fonti senza rappresentarli come accertamento giudiziario definitivo"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:aeroporto-winebar-gate-1:occurrence",
+      "basis_source_key": "law:questura-catanzaro:2021-10-05:furto-winebar-aeroporto",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Winebar, presso Gate 1 delle partenze nazionali, Aeroporto di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:aeroporto-winebar-gate-1:target",
+      "basis_source_key": "law:questura-catanzaro:2021-10-05:furto-winebar-aeroporto",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Winebar, presso Gate 1 delle partenze nazionali, Aeroporto di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:aeroporto-partenze-nazionali:recovery",
+      "basis_source_key": "press:cn24tv:2021-10-05:furto-mance-winebar-aeroporto",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Aeroporto di Lamezia Terme, area partenze nazionali; punto esatto del recupero non specificato",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:aeroporto-partenze-nazionali:rintraccio",
+      "basis_source_key": "press:cn24tv:2021-10-05:furto-mance-winebar-aeroporto",
+      "role": "other",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Aeroporto di Lamezia Terme, area di attesa per l'imbarco su un volo nazionale; punto esatto non specificato",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
