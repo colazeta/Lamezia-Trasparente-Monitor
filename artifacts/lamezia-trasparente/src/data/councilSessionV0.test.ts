@@ -517,6 +517,32 @@ describe("councilSessionV0", () => {
       ],
     ]);
 
+    const municipalNurseriesSession = commissionIv.find(
+      (session) => session.scheduledAt.value === "2026-09-15T12:00:00+02:00",
+    );
+    expect(municipalNurseriesSession?.contextResearch).toEqual(
+      expect.objectContaining({
+        status: "reviewed_matches",
+        checkedAt: "2026-09-12T15:28:36Z",
+        media: [],
+      }),
+    );
+    expect(municipalNurseriesSession?.contextResearch.articles).toEqual([
+      expect.objectContaining({
+        title: "Avvio del servizio di Asilo Nido comunale",
+        publisher: "Comune di Lamezia Terme",
+        publishedAt: "2026-09-11",
+        relationship: "agenda_item",
+        url: "https://www.comune.lamezia-terme.cz.it/it/news/avvio-del-servizio-di-asilo-nido-comunale",
+      }),
+    ]);
+    expect(municipalNurseriesSession?.lastCheckedAt.value).toBe(
+      "2026-09-12T15:28:36Z",
+    );
+    expect(municipalNurseriesSession?.dataLimits.value?.join(" ")).toMatch(
+      /collegamenti di contesto non certificano svolgimento/i,
+    );
+
     expect(guarantorSingle[0]?.provenance).toEqual(
       expect.objectContaining({
         documentUrl: expect.stringContaining("2026_2879_1_X"),
@@ -547,7 +573,9 @@ describe("councilSessionV0", () => {
 
     for (const session of [
       ...guarantorSingle,
-      ...commissionIv,
+      ...commissionIv.filter(
+        (entry) => entry.id !== municipalNurseriesSession?.id,
+      ),
       ...guarantorCalendar,
     ]) {
       expect(session.sessionStatus.value).toBe("non_verificata");

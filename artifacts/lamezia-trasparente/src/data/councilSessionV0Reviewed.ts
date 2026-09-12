@@ -56,12 +56,15 @@ const COUNCIL_PROJECTS_OF_LIFE_URL =
 const COUNCIL_CITY_ONE_RECORDING_URL =
   "https://www.cityonelamezia.it/episodio/video/consiglio-comunale-del-13-agosto-consiglio-comunale/?format=video";
 const COUNCIL_VITALE_VIDEO_URL = "https://www.instagram.com/reel/DcGRDc8o1qI/";
+const MUNICIPAL_NURSERIES_NOTICE_URL =
+  "https://www.comune.lamezia-terme.cz.it/it/news/avvio-del-servizio-di-asilo-nido-comunale";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
 const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
 const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-27T21:49:11Z";
 const COMMISSION_VI_RESEARCHED_AT = "2026-08-31T22:02:47Z";
 const SEPTEMBER_COMMISSION_RESEARCHED_AT = "2026-09-07T04:19:06Z";
 const MID_SEPTEMBER_COMMISSION_RESEARCHED_AT = "2026-09-12T10:18:08Z";
+const MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT = "2026-09-12T15:28:36Z";
 
 const councilContextResearch: CouncilSessionV0ContextResearch = {
   status: "reviewed_matches",
@@ -336,6 +339,27 @@ const commissionIvMidSeptemberContextResearch: CouncilSessionV0ContextResearch =
     searchNote:
       "Ricerca eseguita con Parallel Search e verifica diretta delle fonti originali per la IV Commissione del 14, 15 e 16 settembre 2026, usando date, orari, Trasporto Pubblico Scolastico Locale, Asili Nido Comunali e regolamento Street Art con le audizioni indicate. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alle singole sedute. L'ordine del giorno ufficiale è disponibile e non viene ricostruita un'agenda editoriale.",
     articles: [],
+    media: [],
+  };
+
+const commissionIvMunicipalNurseriesContextResearch: CouncilSessionV0ContextResearch =
+  {
+    status: "reviewed_matches",
+    checkedAt: MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT,
+    searchNote:
+      "Ricerca eseguita con Parallel Search per discovery e verifica diretta delle fonti originali per la IV Commissione del 15 settembre 2026. L'avviso del Comune dell'11 settembre riguarda l'avvio, nella stessa data, del servizio presso i tre asili nido comunali e viene collegato come contesto del punto ufficiale. Non nomina la Commissione e non ne prova svolgimento, audizione o esiti. Non sono emerse dirette, registrazioni, clip o interviste collegabili con sufficiente precisione.",
+    articles: [
+      {
+        title: "Avvio del servizio di Asilo Nido comunale",
+        url: MUNICIPAL_NURSERIES_NOTICE_URL,
+        publisher: "Comune di Lamezia Terme",
+        publishedAt: "2026-09-11",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'avviso istituzionale comunica l'avvio del servizio il 15 settembre 2026 nei tre asili nido comunali, data e tema coincidenti con il punto della convocazione. Non menziona la Commissione e non attesta svolgimento, audizione o risultati della seduta.",
+        reviewedAt: MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT,
+      },
+    ],
     media: [],
   };
 
@@ -997,6 +1021,8 @@ function septemberCommissionSession({
   calendarSummary,
 }: SeptemberCommissionSessionInput): CouncilSessionV0 {
   const documentUrl = candidate.source.documentUrl ?? undefined;
+  const hasContextMatches =
+    contextResearch.articles.length > 0 || contextResearch.media.length > 0;
 
   return {
     id,
@@ -1092,7 +1118,9 @@ function septemberCommissionSession({
         "La sede non è indicata nell'allegato ufficiale e non viene inferita.",
         "La scheda non certifica svolgimento, presenze, esiti o completezza storica.",
         "Streaming, registrazione e verbale sono indicati come non rilevati, non come inesistenti.",
-        "Non sono emersi collegamenti editoriali sufficientemente precisi al controllo corrente.",
+        hasContextMatches
+          ? "I collegamenti di contesto non certificano svolgimento, audizioni, votazioni o esiti della seduta."
+          : "Non sono emersi collegamenti editoriali sufficientemente precisi al controllo corrente.",
       ],
       sourceStatus: "parziale",
       sourceUrl: documentUrl,
@@ -1252,7 +1280,7 @@ export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
     agenda: municipalNurseriesAgenda,
     candidate: commissionIvMidSeptemberCandidate,
     provenance: commissionIvMidSeptemberProvenance,
-    contextResearch: commissionIvMidSeptemberContextResearch,
+    contextResearch: commissionIvMunicipalNurseriesContextResearch,
     sourceLinkLabel: "Apri il calendario ufficiale della IV Commissione",
     calendarSummary:
       "La stessa convocazione programma tre sedute della IV Commissione: 14 settembre alle 11:00, 15 settembre alle 12:00 e 16 settembre 2026 alle 11:00.",
