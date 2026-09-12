@@ -523,7 +523,7 @@ describe("councilSessionV0", () => {
     expect(municipalNurseriesSession?.contextResearch).toEqual(
       expect.objectContaining({
         status: "reviewed_matches",
-        checkedAt: "2026-09-12T15:28:36Z",
+        checkedAt: "2026-09-12T21:51:17Z",
         media: [],
       }),
     );
@@ -535,9 +535,16 @@ describe("councilSessionV0", () => {
         relationship: "agenda_item",
         url: "https://www.comune.lamezia-terme.cz.it/it/news/avvio-del-servizio-di-asilo-nido-comunale",
       }),
+      expect.objectContaining({
+        title: "Asili nido comunali aperti dal 15 settembre",
+        publisher: "LameziaInforma",
+        publishedAt: "2026-09-11",
+        relationship: "agenda_item",
+        url: "https://www.lameziainforma.it/scuola-e-universita/2026/09/11/asili-nido-comunali-aperti-dal-15-settembre/69226/",
+      }),
     ]);
     expect(municipalNurseriesSession?.lastCheckedAt.value).toBe(
-      "2026-09-12T15:28:36Z",
+      "2026-09-12T21:51:17Z",
     );
     expect(municipalNurseriesSession?.dataLimits.value?.join(" ")).toMatch(
       /collegamenti di contesto non certificano svolgimento/i,

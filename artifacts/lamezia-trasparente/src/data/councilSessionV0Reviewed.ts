@@ -58,13 +58,15 @@ const COUNCIL_CITY_ONE_RECORDING_URL =
 const COUNCIL_VITALE_VIDEO_URL = "https://www.instagram.com/reel/DcGRDc8o1qI/";
 const MUNICIPAL_NURSERIES_NOTICE_URL =
   "https://www.comune.lamezia-terme.cz.it/it/news/avvio-del-servizio-di-asilo-nido-comunale";
+const MUNICIPAL_NURSERIES_LAMEZIAINFORMA_URL =
+  "https://www.lameziainforma.it/scuola-e-universita/2026/09/11/asili-nido-comunali-aperti-dal-15-settembre/69226/";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
 const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
 const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-27T21:49:11Z";
 const COMMISSION_VI_RESEARCHED_AT = "2026-08-31T22:02:47Z";
 const SEPTEMBER_COMMISSION_RESEARCHED_AT = "2026-09-07T04:19:06Z";
 const MID_SEPTEMBER_COMMISSION_RESEARCHED_AT = "2026-09-12T10:18:08Z";
-const MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT = "2026-09-12T15:28:36Z";
+const MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT = "2026-09-12T21:51:17Z";
 
 const councilContextResearch: CouncilSessionV0ContextResearch = {
   status: "reviewed_matches",
@@ -347,7 +349,7 @@ const commissionIvMunicipalNurseriesContextResearch: CouncilSessionV0ContextRese
     status: "reviewed_matches",
     checkedAt: MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT,
     searchNote:
-      "Ricerca eseguita con Parallel Search per discovery e verifica diretta delle fonti originali per la IV Commissione del 15 settembre 2026. L'avviso del Comune dell'11 settembre riguarda l'avvio, nella stessa data, del servizio presso i tre asili nido comunali e viene collegato come contesto del punto ufficiale. Non nomina la Commissione e non ne prova svolgimento, audizione o esiti. Non sono emerse dirette, registrazioni, clip o interviste collegabili con sufficiente precisione.",
+      "Ricerca eseguita con Parallel Search per discovery e verifica diretta delle fonti originali per la IV Commissione del 15 settembre 2026. L'avviso del Comune e l'articolo di LameziaInforma dell'11 settembre riguardano l'avvio, nella stessa data, del servizio presso i tre asili nido comunali e vengono collegati come contesto del punto ufficiale. Nessuna delle due fonti nomina la Commissione o ne prova svolgimento, audizione o esiti. L'avviso comunale del 25 agosto sul precedente rinvio è fuori dalla finestra di sette giorni e non viene aggiunto. Non sono emerse dirette, registrazioni, clip o interviste collegabili con sufficiente precisione.",
     articles: [
       {
         title: "Avvio del servizio di Asilo Nido comunale",
@@ -357,6 +359,16 @@ const commissionIvMunicipalNurseriesContextResearch: CouncilSessionV0ContextRese
         relationship: "agenda_item",
         relevanceNote:
           "L'avviso istituzionale comunica l'avvio del servizio il 15 settembre 2026 nei tre asili nido comunali, data e tema coincidenti con il punto della convocazione. Non menziona la Commissione e non attesta svolgimento, audizione o risultati della seduta.",
+        reviewedAt: MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT,
+      },
+      {
+        title: "Asili nido comunali aperti dal 15 settembre",
+        url: MUNICIPAL_NURSERIES_LAMEZIAINFORMA_URL,
+        publisher: "LameziaInforma",
+        publishedAt: "2026-09-11",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo riporta l'avvio del servizio il 15 settembre 2026 nei tre asili nido comunali e l'incontro dell'assessore con i genitori. Data, strutture e tema coincidono con il punto della convocazione, ma il testo non menziona la Commissione e non ne attesta svolgimento, audizione o risultati.",
         reviewedAt: MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT,
       },
     ],
