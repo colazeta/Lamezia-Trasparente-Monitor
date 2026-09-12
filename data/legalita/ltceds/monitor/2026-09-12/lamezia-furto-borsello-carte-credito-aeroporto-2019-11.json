@@ -1,0 +1,100 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-furto-borsello-carte-credito-aeroporto-2019-11",
+  "discovered_at": "2026-09-12T17:59:46+02:00",
+  "updated_at": "2026-09-12T17:59:46+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Furto di un borsello con carte di credito all'interno dell'Aeroporto di Lamezia Terme nel novembre 2019",
+  "temporal": {
+    "start": "2019-11",
+    "end": "2019-11",
+    "edtf": "2019-11",
+    "precision": "month"
+  },
+  "sources": [
+    {
+      "source_key": "law:polizia-stato-questura-catanzaro:2020-01-13:furto-borsello-aeroporto",
+      "source_type": "law_enforcement_primary",
+      "provider": "Polizia di Stato — Questura di Catanzaro",
+      "title": "La Polizia di Frontiera Aerea ha denunciato un 54enne per utilizzo di carta di credito rubata",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/12365e1c68dc4048c893822336",
+      "published_at": "2020-01-13",
+      "retrieved_at": "2026-09-12T17:59:46+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:approdo-calabria:2020-01-13:carta-credito-rubata-aeroporto",
+      "source_type": "press_secondary",
+      "provider": "Approdo Calabria",
+      "title": "La Polizia di Frontiera Aerea ha denunciato un 54enne per utilizzo di carta di credito rubata",
+      "url": "https://www.approdocalabria.it/la-polizia-di-frontiera-aerea-ha-denunciato-un-54enne-per-utilizzo-di-carta-di-credito-rubata/",
+      "published_at": "2020-01-13",
+      "retrieved_at": "2026-09-12T17:59:46+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:furto",
+      "classification_source_key": "law:polizia-stato-questura-catanzaro:2020-01-13:furto-borsello-aeroporto",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Il comunicato della Questura riferisce che nel novembre 2019 fu denunciato il furto di un borsello contenente alcune carte di credito, perpetrato all'interno dell'Aeroporto di Lamezia Terme.",
+        "La successiva indagine della Polizia di Frontiera Aerea identificò un soggetto per ricettazione e uso indebito di una delle carte rubate, utilizzata per acquisti; la fonte non attribuisce a tale soggetto il furto originario e il record non inferisce l'autore del furto.",
+        "Le fonti non specificano il giorno esatto del furto né l'area interna dello scalo in cui il borsello fu sottratto; non vengono quindi attribuiti terminale, esercizio commerciale, indirizzo interno o coordinate."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:aeroporto-interno-2019-11:occurrence",
+      "basis_source_key": "law:polizia-stato-questura-catanzaro:2020-01-13:furto-borsello-aeroporto",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Aeroporto di Lamezia Terme — area interna non specificata",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:aeroporto-interno-2019-11:target",
+      "basis_source_key": "law:polizia-stato-questura-catanzaro:2020-01-13:furto-borsello-aeroporto",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Aeroporto di Lamezia Terme — area interna non specificata",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
