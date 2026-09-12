@@ -1,0 +1,116 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-spari-negozio-via-giorgio-la-pira-2012-03-30-31",
+  "discovered_at": "2026-09-12T05:51:11+02:00",
+  "updated_at": "2026-09-12T05:51:11+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Spari contro la vetrina di un negozio in via Giorgio La Pira tra il 30 e il 31 marzo 2012",
+  "temporal": {
+    "start": "2012-03-30",
+    "end": "2012-03-31",
+    "edtf": "2012-03-30/2012-03-31",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "press:stretto-web:2012-03-31:colpi-pistola-vetrina-negozio",
+      "source_type": "press_secondary",
+      "provider": "StrettoWeb",
+      "title": "Lamezia Terme. Colpi di pistola contro la vetrina di un nuovo negozio",
+      "url": "https://www.strettoweb.com/2012/03/lamezia-terme-colpi-di-pistola-contro-la-vetrina-di-un-nuovo-negozio/29812",
+      "published_at": "2012-03-31T17:55:00+02:00",
+      "retrieved_at": "2026-09-12T05:51:11+02:00",
+      "support_roles": [
+        "event_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:approdo-calabria:2012-03-31:colpi-pistola-negozio-giorgio-la-pira",
+      "source_type": "press_secondary",
+      "provider": "Approdo Calabria",
+      "title": "Lamezia Terme, colpi di pistola contro un negozio di abbigliamento e profumeria",
+      "url": "https://www.approdocalabria.it/lamezia-terme-colpi-di-pistola-contro-un-negozio-di-abbigliamento-e-profumeria/",
+      "published_at": null,
+      "retrieved_at": "2026-09-12T05:51:11+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2012-03-31:colpi-pistola-vetrine-giorgio-la-pira",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Colpi di pistola esplosi contro le vetrine di un negozio a Lamezia",
+      "url": "https://www.corrieredellacalabria.it/2012/03/31/4519_colpi_di_pistola_esplosi_contro_le_vetrine_di_un_negozio_a_lamezia/",
+      "published_at": "2012-03-31T21:15:00+02:00",
+      "retrieved_at": "2026-09-12T05:51:11+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:intimidazione",
+      "classification_source_key": "press:corriere-calabria:2012-03-31:colpi-pistola-vetrine-giorgio-la-pira",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "not_applicable",
+      "situational_context": [
+        "Tre cronache contemporanee documentano l'esplosione di sette colpi di pistola contro la vetrina di un esercizio commerciale aperto da poche settimane; StrettoWeb specifica il calibro 9.",
+        "Approdo Calabria descrive il target come un negozio di abbigliamento con annessa profumeria in via Giorgio La Pira; Corriere della Calabria colloca anch'esso il fatto in via Giorgio La Pira e riferisce che i colpi furono esplosi a distanza ravvicinata in una zona abitata e frequentata.",
+        "Non è stata reperita una fonte primaria di polizia o giudiziaria accessibile che attribuisca al singolo episodio una qualificazione legale o un movente. La classificazione come intimidazione resta pertanto provvisoria e non viene inferita un'estorsione o una matrice mafiosa.",
+        "Le fonti divergono sull'ufficio di polizia che svolse gli accertamenti: StrettoWeb riferisce Polizia di Stato e accertamenti scientifici svolti la mattina del 31 marzo, mentre Corriere della Calabria attribuisce le indagini ai Carabinieri. Il record conserva la divergenza senza risolverla per inferenza.",
+        "La temporalità è mantenuta come intervallo 30-31 marzo 2012: le cronache sono pubblicate il 31 marzo e StrettoWeb riferisce accertamenti sul posto svolti quella mattina dopo la denuncia, ma le fonti recuperate non stabiliscono in modo univoco il lato della mezzanotte in cui furono esplosi i colpi."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-giorgio-la-pira:occurrence",
+      "basis_source_key": "press:corriere-calabria:2012-03-31:colpi-pistola-vetrine-giorgio-la-pira",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via Giorgio La Pira",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-giorgio-la-pira:target",
+      "basis_source_key": "press:approdo-calabria:2012-03-31:colpi-pistola-negozio-giorgio-la-pira",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via Giorgio La Pira",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
