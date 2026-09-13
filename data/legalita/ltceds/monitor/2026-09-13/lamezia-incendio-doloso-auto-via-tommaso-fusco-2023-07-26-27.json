@@ -1,0 +1,98 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-incendio-doloso-auto-via-tommaso-fusco-2023-07-26-27",
+  "discovered_at": "2026-09-13T05:36:48+02:00",
+  "updated_at": "2026-09-13T05:36:48+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Incendio doloso di un'autovettura in via Tommaso Fusco tra il 26 e il 27 luglio 2023",
+  "temporal": {
+    "start": "2023-07-26",
+    "end": "2023-07-27",
+    "edtf": "2023-07-26/2023-07-27",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "source:il-lametino:2023-07-27:auto-in-fiamme-via-fusco",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, auto in fiamme in via Fusco: si indaga su pista dolosa",
+      "url": "https://www.lametino.it/cronaca/lamezia-auto-in-fiamme-in-via-fusco.html",
+      "published_at": "2023-07-27T00:00:00+02:00",
+      "retrieved_at": "2026-09-13T05:36:48+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "source:gazzetta-del-sud:2023-07-27:auto-in-fiamme-via-fusco",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Lamezia, auto in fiamme crea disagi in via Fusco. Immediato intervento dei pompieri",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2023/07/27/lamezia-auto-in-fiamme-crea-disagi-in-via-fusco-immediato-intervento-dei-pompieri-0a775fd2-9f7b-46a6-b925-dd0d585b0270",
+      "published_at": "2023-07-27T00:00:00+02:00",
+      "retrieved_at": "2026-09-13T05:36:48+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:incendio-doloso",
+      "classification_source_key": "source:il-lametino:2023-07-27:auto-in-fiamme-via-fusco",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti collocano l'incendio intorno alla mezzanotte in via Tommaso Fusco, nel centro di Lamezia Terme; per evitare una falsa precisione temporale il record conserva l'intervallo 26-27 luglio 2023.",
+        "Il Lametino riferisce che, dopo l'intervento dei Vigili del fuoco, i Carabinieri accertarono in breve tempo la natura dolosa dell'incendio; la notizia riportava ancora indagini in corso e indicava solo come ipotesi un possibile risentimento personale.",
+        "Gazzetta del Sud conferma l'incendio di una Mercedes Classe A parcheggiata a bordo strada in via Tommaso Fusco, l'intervento dei Vigili del fuoco e la presenza dei Carabinieri per gli accertamenti."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-tommaso-fusco:occurrence",
+      "basis_source_key": "source:il-lametino:2023-07-27:auto-in-fiamme-via-fusco",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Via Tommaso Fusco",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-tommaso-fusco:target-vehicle",
+      "basis_source_key": "source:gazzetta-del-sud:2023-07-27:auto-in-fiamme-via-fusco",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via Tommaso Fusco",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
