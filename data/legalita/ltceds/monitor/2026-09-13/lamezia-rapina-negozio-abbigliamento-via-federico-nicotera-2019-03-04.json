@@ -1,0 +1,101 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-negozio-abbigliamento-via-federico-nicotera-2019-03-04",
+  "discovered_at": "2026-09-13T10:04:30+02:00",
+  "updated_at": "2026-09-13T10:04:30+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina in un negozio di abbigliamento in via Federico Nicotera il 4 marzo 2019",
+  "temporal": {
+    "start": "2019-03-04T18:45:00+01:00",
+    "end": "2019-03-04T18:45:00+01:00",
+    "edtf": "2019-03-04T18:45:00+01:00",
+    "precision": "exact_datetime"
+  },
+  "sources": [
+    {
+      "source_key": "press:corriere-calabria:2019-03-04:rapina-maschera-via-federico-nicotera",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Rapina in maschera a Lamezia Terme",
+      "url": "https://www.corrieredellacalabria.it/2019/03/04/rapina-in-maschera-a-lamezia-terme/",
+      "published_at": "2019-03-04T20:09:00+01:00",
+      "retrieved_at": "2026-09-13T10:04:30+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:lameziaterme-it:2019-03-04:rapina-negozio-abbigliamento-via-federico-nicotera",
+      "source_type": "press_secondary",
+      "provider": "LameziaTerme.it",
+      "title": "Lamezia. Rapina in un negozio di abbigliamento in via Federico Nicotera",
+      "url": "https://www.lameziaterme.it/lamezia-rapina-in-un-negozio-di-abbigliamento-in-via-federico-nicotera/",
+      "published_at": "2019-03-04",
+      "retrieved_at": "2026-09-13T10:04:30+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "press:corriere-calabria:2019-03-04:rapina-maschera-via-federico-nicotera",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti contemporanee qualificano espressamente il fatto come rapina ai danni di un negozio di abbigliamento in via Federico Nicotera.",
+        "Il Corriere della Calabria colloca l'ingresso nel negozio alle 18:45 del 4 marzo 2019 e riferisce la sottrazione dell'incasso e di due borse.",
+        "Le fonti concordano sull'uso di un martello; differiscono sull'altro oggetto indicato durante l'azione, descritto come coltello dal Corriere della Calabria e come bastone da LameziaTerme.it.",
+        "Una commessa fu colpita durante la reazione e soccorsa dal 118; non viene aggiunta una distinta fattispecie di lesioni in assenza di una qualificazione legale esplicita nelle fonti reperite.",
+        "La Polizia di Stato intervenne sul posto, effettuò i primi rilievi e acquisì le immagini delle telecamere della zona; nelle fonti reperite non emerge un successivo esito giudiziario specificamente collegabile a questo evento."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-federico-nicotera:occurrence",
+      "basis_source_key": "press:corriere-calabria:2019-03-04:rapina-maschera-via-federico-nicotera",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Via Federico Nicotera",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-federico-nicotera:target",
+      "basis_source_key": "press:lameziaterme-it:2019-03-04:rapina-negozio-abbigliamento-via-federico-nicotera",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via Federico Nicotera",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
