@@ -1,0 +1,85 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-ufficio-postale-viale-aldo-moro-2014-05-03",
+  "discovered_at": "2026-09-13T10:32:02+02:00",
+  "updated_at": "2026-09-13T10:32:02+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina armata all'ufficio postale di viale Aldo Moro il 3 maggio 2014",
+  "temporal": {
+    "start": "2014-05-03",
+    "end": "2014-05-03",
+    "edtf": "2014-05-03",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:corriere-calabria:2014-05-03:rapina-posta-viale-aldo-moro",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Lamezia, rapina alla posta",
+      "url": "https://www.corrieredellacalabria.it/2014/05/03/23186_lamezia_rapina_alla_posta/",
+      "published_at": "2014-05-03T15:16:00+02:00",
+      "retrieved_at": "2026-09-13T10:32:02+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "press:corriere-calabria:2014-05-03:rapina-posta-viale-aldo-moro",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La fonte contemporanea qualifica espressamente il fatto come rapina ai danni dell'ufficio postale di viale Aldo Moro a Lamezia Terme.",
+        "La rapina avvenne nella mattinata del 3 maggio 2014; la fonte non consente di stabilire un orario più preciso.",
+        "Una persona con il volto coperto da un casco e armata di pistola si fece consegnare l'incasso della giornata, quantificato dalla fonte in circa 2.500 euro, e si allontanò a piedi.",
+        "I Carabinieri intervennero sul posto e raccolsero le dichiarazioni di dipendenti e utenti; nelle fonti reperite in questa iterazione non emerge un successivo esito investigativo o giudiziario specificamente collegabile con sicurezza a questo evento."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:ufficio-postale-viale-aldo-moro:occurrence",
+      "basis_source_key": "press:corriere-calabria:2014-05-03:rapina-posta-viale-aldo-moro",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Ufficio postale di viale Aldo Moro",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:ufficio-postale-viale-aldo-moro:target",
+      "basis_source_key": "press:corriere-calabria:2014-05-03:rapina-posta-viale-aldo-moro",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Ufficio postale di viale Aldo Moro",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
