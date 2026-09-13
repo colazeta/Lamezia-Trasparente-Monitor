@@ -1,0 +1,101 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-intimidazione-spari-carrozzeria-via-del-progresso-2019-07-17",
+  "discovered_at": "2026-09-13T07:34:38+02:00",
+  "updated_at": "2026-09-13T07:34:38+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Cinque colpi di pistola contro una carrozzeria nella Traversa delle Ginestre di via del Progresso il 17 luglio 2019",
+  "temporal": {
+    "start": "2019-07-17T02:00:00+02:00",
+    "end": "2019-07-17T02:00:00+02:00",
+    "edtf": "2019-07-17T02:00:00+02:00",
+    "precision": "exact_datetime"
+  },
+  "sources": [
+    {
+      "source_key": "source:la-nuova-calabria-2019-07-18-spari-carrozzeria-via-progresso",
+      "source_type": "press_secondary",
+      "provider": "La Nuova Calabria",
+      "title": "Lamezia Terme, spari contro una carrozzeria in via del Progresso",
+      "url": "https://lanuovacalabria.it/lamezia-terme-spari-contro-una-carrozzeria-in-via-del-progresso",
+      "published_at": "2019-07-18T15:16:00+02:00",
+      "retrieved_at": "2026-09-13T07:34:38+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "source:pillamaro-2019-07-18-colpi-pistola-carrozzeria",
+      "source_type": "press_secondary",
+      "provider": "PillaMaro.it",
+      "title": "Lamezia Terme, colpi di pistola nella notte contro attività commerciale",
+      "url": "https://www.pillamaro.it/cronaca/lamezia-terme-colpi-di-pistola-nella-notte-contro-attivita-commerciale",
+      "published_at": "2019-07-18T00:00:00+02:00",
+      "retrieved_at": "2026-09-13T07:34:38+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:intimidazione",
+      "classification_source_key": "source:pillamaro-2019-07-18-colpi-pistola-carrozzeria",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "not_applicable",
+      "situational_context": [
+        "nella notte tra il 16 e il 17 luglio 2019, intorno alle 02:00, furono esplosi cinque colpi di pistola contro le serrande di una carrozzeria in una traversa interna di via del Progresso a Lamezia Terme",
+        "La Nuova Calabria localizza il fatto esattamente nella Traversa delle Ginestre; il titolare denunciò l'episodio alla Polizia di Stato, che avviò le indagini, mentre la Polizia scientifica effettuò i rilievi",
+        "PillaMaro descrive il fatto come intimidazione e riferisce la trasmissione di un rapporto alla Procura, ma non è stata reperita in questa iterazione una fonte primaria o giudiziaria che sostenga una qualificazione penale più specifica o un movente accertato",
+        "la classificazione resta pertanto provvisoria; non sono inferite tentata estorsione, aggravante mafiosa, danneggiamento o ulteriori fattispecie"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:traversa-delle-ginestre-via-del-progresso:occurrence",
+      "basis_source_key": "source:la-nuova-calabria-2019-07-18-spari-carrozzeria-via-progresso",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Traversa delle Ginestre, Via del Progresso",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:traversa-delle-ginestre-via-del-progresso:target",
+      "basis_source_key": "source:la-nuova-calabria-2019-07-18-spari-carrozzeria-via-progresso",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Traversa delle Ginestre, Via del Progresso",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
