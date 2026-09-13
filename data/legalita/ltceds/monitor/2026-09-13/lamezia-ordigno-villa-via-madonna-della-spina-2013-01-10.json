@@ -1,0 +1,98 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-ordigno-villa-via-madonna-della-spina-2013-01-10",
+  "discovered_at": "2026-09-13T21:29:27+02:00",
+  "updated_at": "2026-09-13T21:29:27+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Esplosione di un ordigno contro il cancello di una villa in via Madonna della Spina il 10 gennaio 2013",
+  "temporal": {
+    "start": "2013-01-10",
+    "end": "2013-01-10",
+    "edtf": "2013-01-10",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "source:il-lametino-2013-01-10-bomba-villa-annunziata",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: Bomba nella notte contro la villa di un parente di Angelo Torcasio",
+      "url": "https://www.lametino.it/cronaca/lamezia-bomba-nella-notte-contro-la-villa-di-un-parente-di-angelo-torcasio.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-13T21:29:27+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "source:quicosenza-2013-01-10-ndrangheta-esplosa-bomba",
+      "source_type": "press_secondary",
+      "provider": "QuiCosenza",
+      "title": "'Ndrangheta, esplosa bomba",
+      "url": "https://quicosenza.it/news/5143-ndrangheta-esplosa-bomba/",
+      "published_at": null,
+      "retrieved_at": "2026-09-13T21:29:27+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:attentato-con-ordigno",
+      "classification_source_key": "source:il-lametino-2013-01-10-bomba-villa-annunziata",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti contemporanee riferiscono che nella notte del 10 gennaio 2013, intorno alle 00:30, un ordigno esplose contro il cancello d'ingresso di una villa in contrada Annunziata, nella zona di via Madonna della Spina sopra il quartiere Bella",
+        "la deflagrazione distrusse il cancelletto d'ingresso; la Polizia del Commissariato di Lamezia Terme avvio le indagini su dinamica e movente",
+        "le fonti descrivono l'episodio come attentato o atto criminale, ma non consentono in questa iterazione di attribuire responsabilita individuali, movente estorsivo, aggravante mafiosa o una qualificazione penale definitiva"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-madonna-della-spina-contrada-annunziata:occurrence",
+      "basis_source_key": "source:il-lametino-2013-01-10-bomba-villa-annunziata",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Via Madonna della Spina, contrada Annunziata",
+      "neighbourhood": "Bella",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-madonna-della-spina-contrada-annunziata:target",
+      "basis_source_key": "source:il-lametino-2013-01-10-bomba-villa-annunziata",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Via Madonna della Spina, contrada Annunziata",
+      "neighbourhood": "Bella",
+      "iccs_location_type": null
+    }
+  ]
+}
