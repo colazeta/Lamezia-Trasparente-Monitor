@@ -14,96 +14,131 @@ import {
 
 const SCORDOVILLO_ID =
   "scordovillo-consiglio-aperto-trasparenza-futuro-nazionale-2026";
+const POLIZIA_LOCALE_RENDA_ID =
+  "polizia-locale-piano-assunzioni-h24-parco-agricolo-2026";
+const RUN_IDS = [SCORDOVILLO_ID, POLIZIA_LOCALE_RENDA_ID] as const;
 
 describe("scouted public proposals 13 September 2026", () => {
-  it("publishes the Scordovillo proposal exactly once end to end", () => {
-    expect(
-      PUBLIC_PROPOSALS.filter((proposal) => proposal.id === SCORDOVILLO_ID),
-    ).toHaveLength(1);
+  it("publishes the run proposal IDs exactly once end to end", () => {
+    for (const proposalId of RUN_IDS) {
+      expect(
+        PUBLIC_PROPOSALS.filter((proposal) => proposal.id === proposalId),
+      ).toHaveLength(1);
 
-    const proposal = PUBLIC_PROPOSALS.find(
-      (item) => item.id === SCORDOVILLO_ID,
-    );
-    expect(proposal).toBeDefined();
-    if (!proposal) return;
+      const proposal = PUBLIC_PROPOSALS.find((item) => item.id === proposalId);
+      expect(proposal).toBeDefined();
+      if (!proposal) continue;
 
-    expect(getCanonicalProposalPresentation(proposal).proposalId).toBe(
-      SCORDOVILLO_ID,
-    );
-    expect(getProposalGeography(SCORDOVILLO_ID)).toBeDefined();
-    expect(getProposalPrimaryPaSubject(proposal)).toBeDefined();
-    expect(getProposalInstitutionalCompetence(proposal).proposalId).toBe(
-      SCORDOVILLO_ID,
-    );
+      expect(getCanonicalProposalPresentation(proposal).proposalId).toBe(
+        proposalId,
+      );
+      expect(getProposalGeography(proposalId)).toBeDefined();
+      expect(getProposalPrimaryPaSubject(proposal)).toBeDefined();
+      expect(getProposalInstitutionalCompetence(proposal).proposalId).toBe(
+        proposalId,
+      );
+    }
   });
 
-  it("keeps the complete 15-concept backend vocabulary and uses an official fallback without LT extensions", () => {
+  it("keeps the complete 15-concept backend vocabulary and no LT thematic extensions", () => {
     expect(getAllPaPublicServiceSubjects()).toHaveLength(15);
     expect(Object.keys(LT_SEMANTIC_EXTENSIONS)).toHaveLength(0);
 
-    const proposal = PUBLIC_PROPOSALS.find(
+    const scordovillo = PUBLIC_PROPOSALS.find(
       (item) => item.id === SCORDOVILLO_ID,
     );
-    expect(proposal).toBeDefined();
-    if (!proposal) return;
+    const poliziaLocale = PUBLIC_PROPOSALS.find(
+      (item) => item.id === POLIZIA_LOCALE_RENDA_ID,
+    );
+    expect(scordovillo).toBeDefined();
+    expect(poliziaLocale).toBeDefined();
+    if (!scordovillo || !poliziaLocale) return;
 
-    expect(getProposalPrimaryPaSubject(proposal).code).toBe("GOVE");
-    expect(getProposalSecondaryPaSubjects(proposal)).toHaveLength(0);
+    expect(getProposalPrimaryPaSubject(scordovillo).code).toBe("GOVE");
+    expect(getProposalSecondaryPaSubjects(scordovillo)).toHaveLength(0);
+    expect(getProposalPrimaryPaSubject(poliziaLocale).code).toBe("8");
+    expect(getProposalSecondaryPaSubjects(poliziaLocale)).toHaveLength(0);
   });
 
-  it("uses a neutral canonical presentation with atomic operational measures", () => {
-    const proposal = PUBLIC_PROPOSALS.find(
+  it("uses neutral canonical presentations with atomic operational measures", () => {
+    const scordovillo = PUBLIC_PROPOSALS.find(
       (item) => item.id === SCORDOVILLO_ID,
     );
-    expect(proposal).toBeDefined();
-    if (!proposal) return;
+    const poliziaLocale = PUBLIC_PROPOSALS.find(
+      (item) => item.id === POLIZIA_LOCALE_RENDA_ID,
+    );
+    expect(scordovillo).toBeDefined();
+    expect(poliziaLocale).toBeDefined();
+    if (!scordovillo || !poliziaLocale) return;
 
-    const canonical = getCanonicalProposalPresentation(proposal);
-    expect(canonical.title).toBe(
+    const scordovilloCanonical = getCanonicalProposalPresentation(scordovillo);
+    expect(scordovilloCanonical.title).toBe(
       "Consiglio comunale aperto su Scordovillo e trasparenza del percorso abitativo",
     );
-    expect(canonical.measures).toHaveLength(4);
-    expect(canonical.actionTypes).toEqual([
+    expect(scordovilloCanonical.measures).toHaveLength(4);
+    expect(scordovilloCanonical.actionTypes).toEqual([
       "organizzazione",
       "trasparenza",
       "coordinamento",
     ]);
+
+    const poliziaCanonical = getCanonicalProposalPresentation(poliziaLocale);
+    expect(poliziaCanonical.title).toBe(
+      "Rafforzamento strutturale dell’organico della Polizia Locale",
+    );
+    expect(poliziaCanonical.measures).toHaveLength(3);
+    expect(poliziaCanonical.actionTypes).toEqual([
+      "rafforzamento_servizio",
+      "organizzazione",
+    ]);
   });
 
-  it("keeps the documented addressee separate from partially verified competence", () => {
-    const proposal = PUBLIC_PROPOSALS.find(
+  it("keeps documented addressees separate from partially verified competence", () => {
+    const scordovillo = PUBLIC_PROPOSALS.find(
       (item) => item.id === SCORDOVILLO_ID,
     );
-    expect(proposal).toBeDefined();
-    if (!proposal) return;
+    const poliziaLocale = PUBLIC_PROPOSALS.find(
+      (item) => item.id === POLIZIA_LOCALE_RENDA_ID,
+    );
+    expect(scordovillo).toBeDefined();
+    expect(poliziaLocale).toBeDefined();
+    if (!scordovillo || !poliziaLocale) return;
 
-    const competence = getProposalInstitutionalCompetence(proposal);
-    expect(competence.publicAddressee).toBe("Comune di Lamezia Terme");
-    expect(competence.assessmentStatus).toBe("partially_verified");
-    expect(competence.primaryAuthority?.id).toBe(
+    const scordovilloCompetence =
+      getProposalInstitutionalCompetence(scordovillo);
+    expect(scordovilloCompetence.publicAddressee).toBe(
+      "Comune di Lamezia Terme",
+    );
+    expect(scordovilloCompetence.assessmentStatus).toBe("partially_verified");
+    expect(scordovilloCompetence.primaryAuthority?.id).toBe(
       "presidente-consiglio-comunale-lamezia-terme",
     );
-    expect(competence.sourceAddressee).toContain(
-      "Presidente del Consiglio comunale",
-    );
+
+    const poliziaCompetence = getProposalInstitutionalCompetence(poliziaLocale);
+    expect(poliziaCompetence.sourceAddressee).toContain("Autorità competenti");
+    expect(poliziaCompetence.publicAddressee).toBe("Autorità competenti");
+    expect(poliziaCompetence.assessmentStatus).toBe("partially_verified");
+    expect(poliziaCompetence.primaryAuthority?.id).toBe("comune-lamezia-terme");
   });
 
-  it("does not turn the promoters' account of an earlier agreement into a deposit, calendarisation or implementation", () => {
-    const proposal = PUBLIC_PROPOSALS.find(
-      (item) => item.id === SCORDOVILLO_ID,
-    );
-    expect(proposal).toBeDefined();
-    if (!proposal) return;
+  it("does not infer deposits, calendarisation, reception or implementation", () => {
+    for (const proposalId of RUN_IDS) {
+      const proposal = PUBLIC_PROPOSALS.find((item) => item.id === proposalId);
+      expect(proposal).toBeDefined();
+      if (!proposal) continue;
 
-    expect(proposal.status).toBe("proposta_emersa");
-    expect(proposal.events.map((event) => event.type)).toEqual(["emersione"]);
-    expect(getProposalInstitutionalState(proposal).implementation).toBe("none");
+      expect(proposal.status).toBe("proposta_emersa");
+      expect(proposal.events.map((event) => event.type)).toEqual(["emersione"]);
+      expect(getProposalInstitutionalState(proposal).implementation).toBe("none");
+    }
   });
 
-  it("uses coordinate-free citywide geography", () => {
-    const geography = getProposalGeography(SCORDOVILLO_ID);
-    expect(geography?.scope).toBe("citywide");
-    expect(geography?.areas).toEqual(["intera_citta"]);
-    expect(geography?.points).toHaveLength(0);
+  it("uses coordinate-free citywide geography for the same proposal IDs", () => {
+    for (const proposalId of RUN_IDS) {
+      const geography = getProposalGeography(proposalId);
+      expect(geography?.scope).toBe("citywide");
+      expect(geography?.areas).toEqual(["intera_citta"]);
+      expect(geography?.points).toHaveLength(0);
+    }
   });
 });
