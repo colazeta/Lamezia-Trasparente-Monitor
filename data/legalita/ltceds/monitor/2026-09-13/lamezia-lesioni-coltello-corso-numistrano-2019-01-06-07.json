@@ -1,0 +1,132 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-lesioni-coltello-corso-numistrano-2019-01-06-07",
+  "discovered_at": "2026-09-13T08:44:36+02:00",
+  "updated_at": "2026-09-13T08:44:36+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Aggressione con coltello e lesioni aggravate in prossimità di Corso Numistrano nella notte tra il 6 e il 7 gennaio 2019",
+  "temporal": {
+    "start": "2019-01-06",
+    "end": "2019-01-07",
+    "edtf": "2019-01-06/2019-01-07",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "source:lacnews24-2019-01-09-accoltellamento-corso-numistrano",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Lamezia, accoltella un ragazzo sul corso e fugge via",
+      "url": "https://www.lacnews24.it/cronaca/lamezia-accoltella-un-ragazzo-sul-corso-e-fugge-via-yvud93ft",
+      "published_at": "2019-01-09T14:24:00+01:00",
+      "retrieved_at": "2026-09-13T08:44:36+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "source:approdo-calabria-2019-01-09-lesioni-coltello-corso-numistrano",
+      "source_type": "press_secondary",
+      "provider": "Approdo Calabria",
+      "title": "Aggredì un giovane con un coltello, denunciato 45enne",
+      "url": "https://www.approdocalabria.it/aggredi-un-giovane-con-un-coltello-denunciato-45enne/",
+      "published_at": "2019-01-09T00:00:00+01:00",
+      "retrieved_at": "2026-09-13T08:44:36+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "source:soverato-web-2019-01-09-lesioni-coltello-corso-numistrano",
+      "source_type": "press_secondary",
+      "provider": "Soverato Web",
+      "title": "Ferisce a coltellate un ragazzo, 45enne denunciato per lesioni aggravate",
+      "url": "https://www.soveratoweb.com/ferisce-a-coltellate-un-ragazzo-45enne-denunciato-per-lesioni-aggravate/",
+      "published_at": "2019-01-09T00:00:00+01:00",
+      "retrieved_at": "2026-09-13T08:44:36+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:lesioni-personali",
+      "classification_source_key": "source:approdo-calabria-2019-01-09-lesioni-coltello-corso-numistrano",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti collocano l'aggressione nella notte tra il 6 e il 7 gennaio 2019 davanti a un locale sito in prossimità di Corso Numistrano; il locale non è nominato e non viene quindi risolto a un esercizio specifico",
+        "l'aggressore cercò di colpire più volte il giovane con un coltello, provocandogli una vistosa ferita a una mano; il Commissariato di P.S. di Lamezia Terme qualificò il fatto come lesioni aggravate",
+        "dopo l'allontanamento dal luogo, le indagini della Polizia portarono all'individuazione del soggetto presso una residenza privata a Sant'Eufemia Lamezia; la successiva perquisizione personale e locale non consentì di rinvenire il coltello",
+        "il record non inferisce tentato omicidio o ulteriori fattispecie e non contiene identità personali"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:corso-numistrano:occurrence",
+      "basis_source_key": "source:approdo-calabria-2019-01-09-lesioni-coltello-corso-numistrano",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Corso Numistrano",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:corso-numistrano:target",
+      "basis_source_key": "source:approdo-calabria-2019-01-09-lesioni-coltello-corso-numistrano",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Corso Numistrano",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:sant-eufemia-lamezia:search",
+      "basis_source_key": "source:soverato-web-2019-01-09-lesioni-coltello-corso-numistrano",
+      "role": "search",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Sant'Eufemia Lamezia",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
