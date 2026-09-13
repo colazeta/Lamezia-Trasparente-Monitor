@@ -1,0 +1,100 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-via-ubaldo-de-medici-2016-04-20",
+  "discovered_at": "2026-09-14T00:20:08+02:00",
+  "updated_at": "2026-09-14T00:20:08+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina ai danni di una donna in via Ubaldo De Medici il 20 aprile 2016",
+  "temporal": {
+    "start": "2016-04-20",
+    "end": "2016-04-20",
+    "edtf": "2016-04-20",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "source:ltnews:2016-04-20:rapina-via-ubaldo-de-medici",
+      "source_type": "press_secondary",
+      "provider": "LTNews Lamezia Terme",
+      "title": "Lamezia, anziana donna rapinata in via Ubaldo De Medici",
+      "url": "https://lameziatermenews.it/citta/11855-lamezia-anziana-donna-rapinata-in-via-ubaldo-de-medici.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-14T00:20:08+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "source:ltnews:2016-04-20:rapina-via-ubaldo-de-medici",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "LTNews riferisce che il 20 aprile 2016 una donna anziana fu rapinata in via Ubaldo De Medici, nel centro storico di Lamezia Terme, dopo essere appena entrata nella propria autovettura.",
+        "Secondo la fonte, un giovane aprì violentemente lo sportello dell'auto e portò via con la forza la borsa; la fonte descrive espressamente il fatto come rapina.",
+        "La stessa fonte riferisce che l'autore si diede alla fuga in direzione di via Sapri, nei pressi dell'ex carcere cittadino, e che la persona offesa si recò successivamente dai Carabinieri per denunciare l'accaduto.",
+        "Non è emersa in questa iterazione una fonte primaria o una seconda fonte contemporanea indipendente che consenta di rafforzare ulteriormente lo stato probatorio o documentare un successivo esito investigativo o giudiziario."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-ubaldo-de-medici:occurrence",
+      "basis_source_key": "source:ltnews:2016-04-20:rapina-via-ubaldo-de-medici",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via Ubaldo De Medici",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-ubaldo-de-medici:target",
+      "basis_source_key": "source:ltnews:2016-04-20:rapina-via-ubaldo-de-medici",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via Ubaldo De Medici",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-sapri:flight",
+      "basis_source_key": "source:ltnews:2016-04-20:rapina-via-ubaldo-de-medici",
+      "role": "other",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Via Sapri",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
