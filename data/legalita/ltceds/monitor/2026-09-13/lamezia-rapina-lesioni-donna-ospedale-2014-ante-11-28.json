@@ -1,0 +1,117 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-lesioni-donna-ospedale-2014-ante-11-28",
+  "discovered_at": "2026-09-13T16:54:23+02:00",
+  "updated_at": "2026-09-13T16:54:23+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina con lesioni nei pressi dell'ospedale di Lamezia Terme nelle settimane precedenti al 28 novembre 2014",
+  "temporal": {
+    "start": null,
+    "end": "2014-11-28",
+    "edtf": null,
+    "precision": "approximate"
+  },
+  "sources": [
+    {
+      "source_key": "source:corriere-calabria-2014-11-28-aggredi-donna-arrestato",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Aggredì una donna, arrestato",
+      "url": "https://www.corrieredellacalabria.it/2014/11/28/aggredi-una-donna-arrestato/",
+      "published_at": "2014-11-28T09:47:00+01:00",
+      "retrieved_at": "2026-09-13T16:54:23+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "source:preserre-dintorni-2014-11-28-picchiata-rapinata",
+      "source_type": "press_secondary",
+      "provider": "PreSerre e Dintorni",
+      "title": "LAMEZIA TERME (CZ) – Picchiata e rapinata, un arresto",
+      "url": "https://www.preserreedintorni.it/lamezia-terme-cz-picchiata-e-rapinata-un-arresto/",
+      "published_at": null,
+      "retrieved_at": "2026-09-13T16:54:23+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "source:corriere-calabria-2014-11-28-aggredi-donna-arrestato",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti contemporanee riferiscono che, nelle settimane precedenti al 28 novembre 2014, una donna fu aggredita e picchiata nei pressi dell'ospedale di Lamezia Terme e privata della borsa",
+        "Corriere della Calabria e la riproduzione di una notizia ANSA qualificano espressamente il fatto come rapina; i Carabinieri identificarono il presunto autore attraverso testimonianze e diedero esecuzione all'arresto",
+        "le fonti reperite non indicano il giorno di calendario del fatto; il 28 novembre 2014 è il terminus ante quem dato dalla pubblicazione e non viene trattato come data dell'evento"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    },
+    {
+      "offence_key": "offence:lesioni-personali",
+      "classification_source_key": "source:corriere-calabria-2014-11-28-aggredi-donna-arrestato",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la vittima riportò ferite giudicate guaribili con una prognosi di dieci giorni",
+        "la qualificazione come lesioni è esplicitamente riferita dalle fonti in relazione al provvedimento eseguito dai Carabinieri"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:nei-pressi-ospedale:occurrence",
+      "basis_source_key": "source:corriere-calabria-2014-11-28-aggredi-donna-arrestato",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "municipality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Nei pressi dell'ospedale di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:nei-pressi-ospedale:target",
+      "basis_source_key": "source:corriere-calabria-2014-11-28-aggredi-donna-arrestato",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "municipality",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Nei pressi dell'ospedale di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
