@@ -1,0 +1,99 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-tentato-omicidio-via-foderaro-2011-11-19",
+  "discovered_at": "2026-09-13T04:56:14+02:00",
+  "updated_at": "2026-09-13T04:56:14+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Tentato omicidio con arma da fuoco in via Foderaro il 19 novembre 2011",
+  "temporal": {
+    "start": "2011-11-19",
+    "end": "2011-11-19",
+    "edtf": "2011-11-19",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "source:lacnews24:2016-08-06:duplice-tentato-omicidio-lamezia",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Duplice tentato omicidio a Lamezia: due arresti - FOTO",
+      "url": "https://www.lacnews24.it/cronaca/duplice-tentato-omicidio-a-lamezia-due-arresti-foto-ls9f80s1",
+      "published_at": "2016-08-06T10:51:00+02:00",
+      "retrieved_at": "2026-09-13T04:56:14+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "source:cn24tv:2018-01-17:tentato-duplice-omicidio-condanne",
+      "source_type": "press_secondary",
+      "provider": "CN24TV",
+      "title": "Tentato duplice omicidio, pesanti condanne per mandante ed esecutore",
+      "url": "https://cn24tv.it/news/167378/tentato-duplice-omicidio-pesanti-condanne-per-mandante-ed-esecutore.html",
+      "published_at": "2018-01-17T13:25:00+01:00",
+      "retrieved_at": "2026-09-13T04:56:14+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:tentato-omicidio",
+      "classification_source_key": "source:lacnews24:2016-08-06:duplice-tentato-omicidio-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "Le fonti giudiziarie e investigative riprese dalla stampa collocano il fatto il 19 novembre 2011 in via Foderaro, a Lamezia Terme: una persona alla guida di un'autovettura fu affiancata da una moto con due occupanti e vennero esplosi nove colpi di pistola, tre dei quali la raggiunsero.",
+        "Nel 2016 il fatto fu contestato nell'ambito dell'indagine Chimera come tentato omicidio aggravato; il provvedimento cautelare richiamava indagini dei Carabinieri coordinate dalla Procura distrettuale di Catanzaro e riscontri tecnici del RIS.",
+        "Una successiva cronaca giudiziaria del gennaio 2018 riferisce condanne pronunciate dal GUP di Catanzaro con rito abbreviato per i due tentati omicidi oggetto del procedimento; il record non rappresenta tale esito come sentenza irrevocabile e non contiene identità personali."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-foderaro:occurrence",
+      "basis_source_key": "source:lacnews24:2016-08-06:duplice-tentato-omicidio-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Via Foderaro",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-foderaro:target",
+      "basis_source_key": "source:lacnews24:2016-08-06:duplice-tentato-omicidio-lamezia",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via Foderaro",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
