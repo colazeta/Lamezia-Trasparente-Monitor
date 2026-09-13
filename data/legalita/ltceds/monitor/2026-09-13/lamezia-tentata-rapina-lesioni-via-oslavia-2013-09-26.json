@@ -1,0 +1,116 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-tentata-rapina-lesioni-via-oslavia-2013-09-26",
+  "discovered_at": "2026-09-13T03:26:57+02:00",
+  "updated_at": "2026-09-13T03:26:57+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Tentata rapina con lesioni ai danni di una persona anziana in via Oslavia il 26 settembre 2013",
+  "temporal": {
+    "start": "2013-09-26",
+    "end": "2013-09-26",
+    "edtf": "2013-09-26",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "source:corriere-calabria-2014-01-24-aggressione-anziana-via-oslavia",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Aggressione a un'anziana, due arresti a Lamezia",
+      "url": "https://www.corrieredellacalabria.it/2014/01/24/20717_aggressione_a_unanziana_due_arresti_a_lamezia/",
+      "published_at": "2014-01-24T10:41:00+01:00",
+      "retrieved_at": "2026-09-13T03:26:57+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "source:approdo-calabria-2014-01-24-tentata-rapina-anziana-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Approdo Calabria",
+      "title": "Buttano a terra anziana per rubare collana in oro. Tentata rapina, arrestati due giovani a Lamezia",
+      "url": "https://www.approdocalabria.it/buttano-a-terra-anziana-per-rubare-collana-in-oro-tentata-rapina-arrestati-due-giovani-a-lamezia/",
+      "published_at": "2014-01-24T00:00:00+01:00",
+      "retrieved_at": "2026-09-13T03:26:57+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "source:corriere-calabria-2014-01-24-aggressione-anziana-via-oslavia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "Il 26 settembre 2013, in via Oslavia a Lamezia Terme, una persona anziana che rientrava dalla spesa fu presa di mira in un tentativo di sottrarle con la forza una catenina d'oro.",
+        "La sottrazione non risulta completata nelle fonti verificate: la persona aggredita riusci a chiedere aiuto e l'autore materiale si allontano.",
+        "Il 24 gennaio 2014 fonti contemporanee riferirono l'esecuzione di misure cautelari nei confronti di due persone per tentata rapina e lesioni; tale fase procedurale non costituisce accertamento definitivo di responsabilita."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:lesioni-personali",
+      "classification_source_key": "source:corriere-calabria-2014-01-24-aggressione-anziana-via-oslavia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Durante l'aggressione la persona anziana cadde a terra riportando lesioni alla testa e a un braccio; la fonte riferisce cure del 118 e una prognosi di dieci giorni.",
+        "La qualificazione di lesioni e riportata dalle fonti in relazione alle misure cautelari eseguite il 24 gennaio 2014 e non viene trasformata in un accertamento definitivo di responsabilita."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-oslavia:occurrence",
+      "basis_source_key": "source:corriere-calabria-2014-01-24-aggressione-anziana-via-oslavia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Via Oslavia",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-oslavia:target",
+      "basis_source_key": "source:corriere-calabria-2014-01-24-aggressione-anziana-via-oslavia",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "minor_or_vulnerable",
+      "geometry": null,
+      "place_name": "Via Oslavia",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
