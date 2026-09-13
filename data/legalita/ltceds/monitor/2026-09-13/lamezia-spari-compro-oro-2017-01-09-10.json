@@ -1,0 +1,98 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-spari-compro-oro-2017-01-09-10",
+  "discovered_at": "2026-09-13T02:06:15+02:00",
+  "updated_at": "2026-09-13T02:28:28+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Spari contro un negozio Compro Oro a Lamezia Terme nella notte tra il 9 e il 10 gennaio 2017",
+  "temporal": {
+    "start": "2017-01-09",
+    "end": "2017-01-10",
+    "edtf": "2017-01-09/2017-01-10",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "source:lacnews24-2017-01-10-compro-oro-spari",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Intimidazioni a Lamezia, spari contro un “Compro oro” e incendiato portone avvocato",
+      "url": "https://www.lacnews24.it/cronaca/intimidazioni-a-lamezia-spari-contro-un-compro-oro-e-incendiato-portone-avvocato-gk1olp8l",
+      "published_at": "2017-01-10T15:51:00+01:00",
+      "retrieved_at": "2026-09-13T02:06:15+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "source:lacnews24-2017-01-12-tre-intimidazioni",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Lamezia, tre atti intimidatori in pochi giorni. Città della Piana sotto assedio",
+      "url": "https://www.lacnews24.it/cronaca/lamezia-tre-atti-intimidatori-in-pochi-giorni-citta-della-piana-sotto-assedio-enxzg851",
+      "published_at": "2017-01-12T12:34:00+01:00",
+      "retrieved_at": "2026-09-13T02:06:15+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:intimidazione",
+      "classification_source_key": "source:lacnews24-2017-01-10-compro-oro-spari",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "not_applicable",
+      "situational_context": [
+        "le fonti descrivono come intimidazione l'esplosione di colpi d'arma da fuoco contro un negozio Compro Oro a Lamezia Terme nella notte successiva all'incendio del portone di uno studio legale in piazza Fiorentino",
+        "una ricostruzione pubblicata il 12 gennaio 2017 riferisce che contro l'esercizio commerciale furono esplosi dieci colpi di pistola",
+        "non e stata reperita una fonte primaria o giudiziaria accessibile che consenta di qualificare il singolo episodio come estorsione, danneggiamento aggravato, fatto di matrice mafiosa o altra fattispecie piu specifica; la classificazione resta pertanto provvisoria"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:compro-oro:occurrence",
+      "basis_source_key": "source:lacnews24-2017-01-10-compro-oro-spari",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Negozio di Compro Oro (esercizio non ulteriormente identificato dalle fonti)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:compro-oro:target",
+      "basis_source_key": "source:lacnews24-2017-01-10-compro-oro-spari",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Negozio di Compro Oro (esercizio non ulteriormente identificato dalle fonti)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
