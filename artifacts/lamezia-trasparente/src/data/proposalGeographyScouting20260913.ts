@@ -1,21 +1,33 @@
 import type { ProposalGeography } from "./proposalGeographyCore";
 
+const LAMEZIA_CITYWIDE: ProposalGeography = {
+  label: "Intero territorio comunale di Lamezia Terme",
+  scope: "citywide",
+  areas: ["intera_citta"],
+  points: [],
+  note:
+    "Ambito cittadino non georeferenziato: la proposta riguarda l'intero territorio comunale e, coerentemente con il contratto geografico LT, non riceve coordinate artificiali.",
+};
+
 /**
- * The proposal is triggered by Scordovillo but explicitly concerns housing
- * choices and their possible effects across several neighbourhoods. It is
- * therefore classified citywide and deliberately carries no coordinates.
+ * Scordovillo is the trigger for the first proposal, but its housing choices are
+ * explicitly framed as having effects across several neighbourhoods. The local
+ * police proposal is likewise about service coverage across the whole city.
  */
 export const SCOUTED_PROPOSAL_GEOGRAPHY_20260913: Record<
   string,
   ProposalGeography
 > = {
   "scordovillo-consiglio-aperto-trasparenza-futuro-nazionale-2026": {
+    ...LAMEZIA_CITYWIDE,
     label:
       "Scordovillo e scelte abitative collegate al suo superamento nel territorio comunale",
-    scope: "citywide",
-    areas: ["intera_citta"],
-    points: [],
     note:
-      "La richiesta nasce dalla vicenda Scordovillo ma riguarda espressamente criteri e impatto sociale di soluzioni abitative in diverse zone della città. Lo scope è quindi citywide; coerentemente con il contratto geografico LT, non vengono assegnate coordinate artificiali.",
+      "La richiesta nasce dalla vicenda Scordovillo ma riguarda espressamente criteri e impatto sociale di soluzioni abitative in diverse zone della città. Lo scope è quindi citywide; non vengono assegnate coordinate artificiali.",
+  },
+  "polizia-locale-piano-assunzioni-h24-parco-agricolo-2026": {
+    ...LAMEZIA_CITYWIDE,
+    note:
+      "La richiesta riguarda il rafforzamento dell'organico e l'estensione della copertura operativa della Polizia Locale sull'intero territorio comunale. Lo scope è citywide e resta privo di coordinate.",
   },
 };
