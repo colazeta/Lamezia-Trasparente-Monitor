@@ -1,0 +1,100 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-spari-via-marzabotto-sambiase-2021-09-22",
+  "discovered_at": "2026-09-13T04:19:30+02:00",
+  "updated_at": "2026-09-13T04:19:30+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Esplosione di colpi di pistola in via Marzabotto a Sambiase il 22 settembre 2021",
+  "temporal": {
+    "start": "2021-09-22",
+    "end": "2021-09-22",
+    "edtf": "2021-09-22",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "source:gazzetta-sud-2021-09-22-sparatoria-via-marzabotto",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Sparatoria tra vicini di casa, attimi di terrore a Lamezia Terme",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2021/09/22/sparatoria-tra-vicini-di-casa-attimi-di-terrore-a-lamezia-terme-3fdf612c-6ece-4786-b1eb-ce4f8bf9eab4",
+      "published_at": "2021-09-22T00:00:00+02:00",
+      "retrieved_at": "2026-09-13T04:19:30+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "source:calabria7-2021-09-22-colpi-pistola-via-marzabotto",
+      "source_type": "press_secondary",
+      "provider": "Calabria 7",
+      "title": "Colpi di pistola in strada a Lamezia Terme, indagano i carabinieri",
+      "url": "https://calabria7.news/cronaca/colpi-di-pistola-in-strada-a-lamezia-terme-indagano-i-carabinieri",
+      "published_at": "2021-09-22T00:00:00+02:00",
+      "retrieved_at": "2026-09-13T04:19:30+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:sparatoria",
+      "classification_source_key": "source:gazzetta-sud-2021-09-22-sparatoria-via-marzabotto",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "not_applicable",
+      "situational_context": [
+        "nel tardo pomeriggio del 22 settembre 2021 furono esplosi colpi di pistola in via Marzabotto, nella zona di Sambiase a Lamezia Terme; le fonti concordano sull'assenza di feriti",
+        "i carabinieri intervennero sul posto e furono rinvenuti bossoli a terra; una fonte riferisce la segnalazione di almeno tre colpi esplosi da una persona non ancora identificata, mentre un'altra ricostruisce l'episodio nel contesto di una lite tra vicini",
+        "non e stata reperita in questa iterazione una fonte primaria o giudiziaria accessibile che consenta di qualificare il fatto come tentato omicidio, minaccia, danneggiamento, porto o detenzione illecita di arma o altra specifica fattispecie penale; la classificazione resta pertanto provvisoria e descrittiva"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-marzabotto-sambiase:occurrence",
+      "basis_source_key": "source:gazzetta-sud-2021-09-22-sparatoria-via-marzabotto",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Via Marzabotto",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-marzabotto-sambiase:recovery",
+      "basis_source_key": "source:gazzetta-sud-2021-09-22-sparatoria-via-marzabotto",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Via Marzabotto",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    }
+  ]
+}
