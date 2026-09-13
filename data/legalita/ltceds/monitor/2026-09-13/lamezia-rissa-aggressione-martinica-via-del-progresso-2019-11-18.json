@@ -1,0 +1,99 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rissa-aggressione-martinica-via-del-progresso-2019-11-18",
+  "discovered_at": "2026-09-13T14:09:31+02:00",
+  "updated_at": "2026-09-13T14:09:31+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rissa e aggressione alla stazione di servizio Martinica in via del Progresso il 18 novembre 2019",
+  "temporal": {
+    "start": "2019-11-18",
+    "end": "2019-11-18",
+    "edtf": "2019-11-18",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "police:questura-catanzaro:2019-11-18:rissa-martinica-via-del-progresso",
+      "source_type": "law_enforcement_primary",
+      "provider": "Polizia di Stato — Questura di Catanzaro",
+      "title": "La Polizia di Stato identifica e denuncia tre persone responsabili di rissa ed aggressione",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/12365dd27d5e87353868459299",
+      "published_at": null,
+      "retrieved_at": "2026-09-13T14:09:31+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:gazzetta-sud:2019-11-18:rissa-martinica-via-del-progresso",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Compra un'auto ma non la paga e viene picchiato, tre denunciati a Lamezia",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2019/11/18/compra-unauto-ma-non-la-paga-e-viene-picchiato-tre-denunciati-a-lamezia-2fc5878f-2eb3-4618-a366-fc9f98c4ea72",
+      "published_at": "2019-11-18T00:00:00+01:00",
+      "retrieved_at": "2026-09-13T14:09:31+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rissa",
+      "classification_source_key": "police:questura-catanzaro:2019-11-18:rissa-martinica-via-del-progresso",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La fonte primaria della Questura riferisce l'intervento del Commissariato di Lamezia Terme per una rissa segnalata davanti alla stazione di servizio Martinica, in via del Progresso, e identifica il fatto come rissa ed aggressione.",
+        "Le indagini ricostruirono che tre persone, giunte in automobile, avevano aggredito con calci, pugni e un bastone un quarto uomo, al quale fu riscontrato un trauma cranio-facciale non commotivo.",
+        "La Polizia di Stato identificò i tre aggressori e li deferì alla Procura della Repubblica; il record non rappresenta tale fase come accertamento definitivo di responsabilità."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:stazione-servizio-martinica:occurrence",
+      "basis_source_key": "police:questura-catanzaro:2019-11-18:rissa-martinica-via-del-progresso",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Stazione di servizio Martinica, Via del Progresso",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:stazione-servizio-martinica:target",
+      "basis_source_key": "police:questura-catanzaro:2019-11-18:rissa-martinica-via-del-progresso",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Stazione di servizio Martinica, Via del Progresso",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
