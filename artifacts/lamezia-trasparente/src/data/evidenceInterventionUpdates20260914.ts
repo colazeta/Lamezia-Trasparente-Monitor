@@ -3,6 +3,34 @@ import type { EvidenceIntervention } from "./evidenceInterventions";
 export function applyEvidenceInterventionUpdates20260914(
   item: EvidenceIntervention,
 ): EvidenceIntervention {
+  if (item.id === "london-mini-hollands-active-travel") {
+    return {
+      ...item,
+      results:
+        `${item.results} Il follow-up pubblicato nel 2024, basato su sei anni di dati longitudinali, conferma un forte e coerente gradiente dose-risposta tra intensità dell'infrastruttura e uptake della mobilità attiva e rileva qualche evidenza di minore possesso e/o uso dell'auto nelle aree con più interventi.`,
+      effectSize:
+        `${item.effectSize} Il follow-up a cinque anni aggiorna la valutazione economica modellata a oltre £1 miliardo di benefici sanitari per un programma del costo di circa £100 milioni; anche questa cifra è una proiezione modellata, non un risparmio di bilancio osservato.`,
+      evaluationStudies: [
+        ...item.evaluationStudies,
+        {
+          label: "Journal of Transport & Health — five-year follow-up",
+          url: "https://www.sciencedirect.com/science/article/pii/S2214140524000173",
+          citation:
+            "Aldred R, Woodcock J, Goodman A (2024), Impacts of active travel interventions on travel behaviour and health: Results from a five-year longitudinal travel survey in Outer London",
+          doi: "10.1016/j.jth.2024.101771",
+        },
+      ],
+      revisionHistory: [
+        ...item.revisionHistory,
+        {
+          date: "2026-09-14",
+          note:
+            "Aggiunto il follow-up 2024 su sei anni di dati, che conferma il gradiente dose-risposta e aggiorna la valutazione sanitaria economica modellata; mantenuta distinta dai benefici osservati di mobilità attiva.",
+        },
+      ],
+    };
+  }
+
   if (item.id !== "philadelphia-vacant-lot-greening") return item;
 
   return {
