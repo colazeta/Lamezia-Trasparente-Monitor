@@ -6,6 +6,7 @@ import {
   EVIDENCE_STRENGTHS,
   EVIDENCE_THEMATIC_AREAS,
 } from "./evidenceInterventions";
+import { EVIDENCE_INTERVENTIONS } from "./evidenceInterventionsArchive";
 import { EVIDENCE_INTERVENTIONS_2026_09_14_EUROPE } from "./evidenceInterventions20260914Europe";
 
 describe("evidence interventions 2026-09-14 Europe", () => {
@@ -35,5 +36,16 @@ describe("evidence interventions 2026-09-14 Europe", () => {
     expect(item.effectSize).toContain("£724");
     expect(item.effectSize.toLowerCase()).toContain("proiezione");
     expect(item.limitations.join(" ").toLowerCase()).toContain("modellato");
+  });
+
+  it("publishes the five-year follow-up through the canonical archive without duplicating the case", () => {
+    const items = EVIDENCE_INTERVENTIONS.filter(
+      (item) => item.id === "london-mini-hollands-active-travel",
+    );
+    expect(items).toHaveLength(1);
+    expect(items[0]?.evaluationStudies.some((study) => study.doi === "10.1016/j.jth.2024.101771")).toBe(true);
+    expect(items[0]?.results.toLowerCase()).toContain("sei anni");
+    expect(items[0]?.effectSize).toContain("£1 miliardo");
+    expect(items[0]?.revisionHistory.at(-1)?.date).toBe("2026-09-14");
   });
 });
