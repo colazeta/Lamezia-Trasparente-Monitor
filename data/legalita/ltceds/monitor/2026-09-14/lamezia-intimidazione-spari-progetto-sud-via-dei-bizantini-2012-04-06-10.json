@@ -1,0 +1,127 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-intimidazione-spari-progetto-sud-via-dei-bizantini-2012-04-06-10",
+  "discovered_at": "2026-09-14T02:37:12+02:00",
+  "updated_at": "2026-09-14T02:37:12+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Intimidazione con colpi d'arma da fuoco contro il centro Pensieri e Parole di Progetto Sud in via dei Bizantini durante le festivita pasquali del 2012",
+  "temporal": {
+    "start": "2012-04-06",
+    "end": "2012-04-10",
+    "edtf": "2012-04-06/2012-04-10",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "press:corriere-calabria:2012-04-10:intimidazione-panizza-pensieri-parole",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Ennesima intimidazione a don Giacomo Panizza",
+      "url": "https://www.corrieredellacalabria.it/2012/04/10/4696_ennesima_intimidazione_a_don_giacomo_panizza/",
+      "published_at": "2012-04-10T13:05:00+02:00",
+      "retrieved_at": "2026-09-14T02:37:12+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:vita:2012-04-10:intimidazione-progetto-sud",
+      "source_type": "press_secondary",
+      "provider": "Vita",
+      "title": "Nuova intimidazione a Don Panizza",
+      "url": "https://www.vita.it/nuova-intimidazione-a-don-panizza/",
+      "published_at": "2012-04-10T00:00:00+02:00",
+      "retrieved_at": "2026-09-14T02:37:12+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-sera:2012-04-10:spari-progetto-sud-capizzaglie",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Sera",
+      "title": "Lamezia Terme, colpi di pistola contro la comunita di Don Panizza",
+      "url": "https://www.corriere.it/cronache/12_aprile_10/don-panizza-attentato-lamezia-ricchio_60f46c48-8312-11e1-b660-48593c628107.shtml",
+      "published_at": "2012-04-10T00:00:00+02:00",
+      "retrieved_at": "2026-09-14T02:37:12+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:contropiano:2011-12-26:progetto-sud-via-dei-bizantini",
+      "source_type": "press_secondary",
+      "provider": "Contropiano",
+      "title": "Lamezia: bomba contro comunita per migranti",
+      "url": "https://contropiano.org/news/aggiornamenti-in-breve/italia/2011/12/26/lamezia-bomba-contro-comunita-per-migranti-05724",
+      "published_at": "2011-12-26T00:00:00+01:00",
+      "retrieved_at": "2026-09-14T02:37:12+02:00",
+      "support_roles": [
+        "location_support"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:intimidazione-con-arma-da-fuoco",
+      "classification_source_key": "press:corriere-calabria:2012-04-10:intimidazione-panizza-pensieri-parole",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti coeve descrivono il fatto come una nuova intimidazione: ignoti esplosero due colpi di pistola contro la saracinesca o porta di un magazzino al piano terra del centro Pensieri e Parole della Comunita Progetto Sud",
+        "il centro era chiuso per le festivita pasquali: venerdi 6 aprile non erano stati osservati segni e i colpi furono scoperti alla riapertura nella mattina di martedi 10 aprile; non essendo determinabile il giorno esatto, la temporalita e conservata come intervallo 6-10 aprile 2012",
+        "le fonti identificano la struttura come il bene confiscato alla cosca Torcasio nel quartiere Capizzaglie; una fonte coeva relativa allo stesso immobile lo colloca esplicitamente in via dei Bizantini",
+        "sul posto intervenne personale del Commissariato di Polizia di Lamezia Terme che avvio le indagini; non viene inferita una qualificazione penale ulteriore ne una matrice mafiosa come fatto giudiziariamente accertato",
+        "l'episodio e distinto dall'attentato con ordigno del 26 dicembre 2011 e dal colpo di pistola contro una finestra della stessa struttura nel febbraio 2012"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:progetto-sud-pensieri-parole-via-bizantini:occurrence",
+      "basis_source_key": "press:contropiano:2011-12-26:progetto-sud-via-dei-bizantini",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "minor_or_vulnerable",
+      "geometry": null,
+      "place_name": "Centro Comunita Pensieri e Parole (Progetto Sud), via dei Bizantini",
+      "neighbourhood": "Capizzaglie",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:progetto-sud-pensieri-parole-via-bizantini:target",
+      "basis_source_key": "press:contropiano:2011-12-26:progetto-sud-via-dei-bizantini",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "minor_or_vulnerable",
+      "geometry": null,
+      "place_name": "Centro Comunita Pensieri e Parole (Progetto Sud), via dei Bizantini",
+      "neighbourhood": "Capizzaglie",
+      "iccs_location_type": null
+    }
+  ]
+}
