@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-tentato-omicidio-corso-numistrano-2024-03-30",
   "discovered_at": "2026-09-14T08:30:57+02:00",
-  "updated_at": "2026-09-14T08:30:57+02:00",
+  "updated_at": "2026-09-14T08:49:29+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Tentato omicidio con investimento dopo una rissa tra Corso Nicotera e Corso Numistrano il 30 marzo 2024",
@@ -42,6 +42,19 @@
         "procedural_context",
         "corroboration"
       ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2024-12-10:assoluzione-corso-numistrano",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Tentato omicidio a Lamezia Terme, assolto un giovane – NOME",
+      "url": "https://www.corrieredellacalabria.it/2024/12/10/tentato-omicidio-a-lamezia-terme-assolto-un-giovane-nome/",
+      "published_at": "2024-12-10T18:47:00+01:00",
+      "retrieved_at": "2026-09-14T08:49:29+02:00",
+      "support_roles": [
+        "procedural_context",
+        "corroboration"
+      ]
     }
   ],
   "offences": [
@@ -59,7 +72,8 @@
         "le fonti collocano la vicenda nella notte del 30 marzo 2024: una rissa iniziata in un locale di Corso Nicotera precedette l'inseguimento e il successivo tentativo di investimento ricostruito su Corso Numistrano",
         "la ricostruzione investigativa, basata su testimonianze e immagini del sistema di videosorveglianza cittadino, descrive un'autovettura diretta deliberatamente contro la persona bersaglio, che riuscì a evitare conseguenze letali riportando gravi lesioni a un arto inferiore",
         "le ordinanze di custodia cautelare in carcere eseguite il 9 aprile 2024 qualificavano i fatti come tentato omicidio volontario in concorso; il procedimento era indicato come pendente nella fase delle indagini preliminari e il record non attribuisce responsabilità individuali",
-        "gli agenti intervennero su Corso Numistrano dopo una segnalazione di incidente stradale e trovarono i veicoli abbandonati sulla sede stradale dopo la collisione"
+        "gli agenti intervennero su Corso Numistrano dopo una segnalazione di incidente stradale e trovarono i veicoli abbandonati sulla sede stradale dopo la collisione",
+        "il 10 dicembre 2024, all'esito di un processo con rito abbreviato, il GIP di Lamezia Terme ha assolto per non aver commesso il fatto una delle due persone inizialmente sottoposte a custodia cautelare e ne ha disposto l'immediata scarcerazione; il presente record conserva separatamente tale esito individuale senza estenderlo alla posizione dell'altra persona coinvolta nel procedimento"
       ],
       "cyber_related": null,
       "affected_object_count": 1
