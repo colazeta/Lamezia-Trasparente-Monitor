@@ -60,6 +60,8 @@ const MUNICIPAL_NURSERIES_NOTICE_URL =
   "https://www.comune.lamezia-terme.cz.it/it/news/avvio-del-servizio-di-asilo-nido-comunale";
 const MUNICIPAL_NURSERIES_LAMEZIAINFORMA_URL =
   "https://www.lameziainforma.it/scuola-e-universita/2026/09/11/asili-nido-comunali-aperti-dal-15-settembre/69226/";
+const SCHOOL_TRANSPORT_CITY_ONE_URL =
+  "https://www.cityonelamezia.it/lamezia-gianturco-assistenza-specialistica-si-parte-con-il-nuovo-anno-scolastico-piu-ore-per-gli-alunni-con-disabilita/";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
 const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
 const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-27T21:49:11Z";
@@ -67,6 +69,7 @@ const COMMISSION_VI_RESEARCHED_AT = "2026-08-31T22:02:47Z";
 const SEPTEMBER_COMMISSION_RESEARCHED_AT = "2026-09-07T04:19:06Z";
 const MID_SEPTEMBER_COMMISSION_RESEARCHED_AT = "2026-09-12T10:18:08Z";
 const MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT = "2026-09-12T21:51:17Z";
+const SCHOOL_TRANSPORT_CONTEXT_RESEARCHED_AT = "2026-09-14T10:13:39Z";
 
 const councilContextResearch: CouncilSessionV0ContextResearch = {
   status: "reviewed_matches",
@@ -341,6 +344,28 @@ const commissionIvMidSeptemberContextResearch: CouncilSessionV0ContextResearch =
     searchNote:
       "Ricerca eseguita con Parallel Search e verifica diretta delle fonti originali per la IV Commissione del 14, 15 e 16 settembre 2026, usando date, orari, Trasporto Pubblico Scolastico Locale, Asili Nido Comunali e regolamento Street Art con le audizioni indicate. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alle singole sedute. L'ordine del giorno ufficiale è disponibile e non viene ricostruita un'agenda editoriale.",
     articles: [],
+    media: [],
+  };
+
+const commissionIvSchoolTransportContextResearch: CouncilSessionV0ContextResearch =
+  {
+    status: "reviewed_matches",
+    checkedAt: SCHOOL_TRANSPORT_CONTEXT_RESEARCHED_AT,
+    searchNote:
+      "Ricerca eseguita con Parallel Search per discovery e verifica diretta delle fonti originali per la IV Commissione del 14 settembre 2026. L'articolo di City One dell'11 settembre tratta il trasporto scolastico degli alunni con disabilità e la presenza di Lamezia Multiservizi, elementi pertinenti al punto ufficiale, e viene collegato come contesto tematico. La fonte non nomina la Commissione né documenta la seduta o l'audizione dell'ing. Alessandro Vescio. Non sono emerse dirette, registrazioni, clip o interviste collegabili con sufficiente precisione.",
+    articles: [
+      {
+        title:
+          "Lamezia, Gianturco: «Assistenza specialistica, si parte con il nuovo anno scolastico. Più ore per gli alunni con disabilità»",
+        url: SCHOOL_TRANSPORT_CITY_ONE_URL,
+        publisher: "City One",
+        publishedAt: "2026-09-11",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo tratta il trasporto scolastico degli alunni con disabilità e indica la presenza di Lamezia Multiservizi in un incontro comunale. Questi elementi sono pertinenti al punto ufficiale del 14 settembre, ma il testo non nomina la Commissione né attesta svolgimento, audizione o risultati della seduta.",
+        reviewedAt: SCHOOL_TRANSPORT_CONTEXT_RESEARCHED_AT,
+      },
+    ],
     media: [],
   };
 
@@ -1331,7 +1356,7 @@ export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
     agenda: schoolTransportAgenda,
     candidate: commissionIvMidSeptemberCandidate,
     provenance: commissionIvMidSeptemberProvenance,
-    contextResearch: commissionIvMidSeptemberContextResearch,
+    contextResearch: commissionIvSchoolTransportContextResearch,
     sourceLinkLabel: "Apri il calendario ufficiale della IV Commissione",
     calendarSummary:
       "La stessa convocazione programma tre sedute della IV Commissione: 14 settembre alle 11:00, 15 settembre alle 12:00 e 16 settembre 2026 alle 11:00.",
