@@ -30,6 +30,7 @@ import { EVIDENCE_INTERVENTIONS_2026_09_12 } from "./evidenceInterventions202609
 import { EVIDENCE_INTERVENTIONS_2026_09_13 } from "./evidenceInterventions20260913";
 import { EVIDENCE_INTERVENTIONS_2026_09_14 } from "./evidenceInterventions20260914";
 import { EVIDENCE_INTERVENTIONS_2026_09_14_EUROPE } from "./evidenceInterventions20260914Europe";
+import { EVIDENCE_INTERVENTIONS_2026_09_14_SUPPLEMENT } from "./evidenceInterventions20260914Supplement";
 import { applyEvidenceInterventionUpdates20260914 } from "./evidenceInterventionUpdates20260914";
 
 export {
@@ -69,6 +70,7 @@ const EVIDENCE_INTERVENTIONS_BEFORE_2026_09_14_UPDATES: readonly EvidenceInterve
   ...EVIDENCE_INTERVENTIONS_2026_09_13,
   ...EVIDENCE_INTERVENTIONS_2026_09_14,
   ...EVIDENCE_INTERVENTIONS_2026_09_14_EUROPE,
+  ...EVIDENCE_INTERVENTIONS_2026_09_14_SUPPLEMENT,
 ];
 
 export const EVIDENCE_INTERVENTIONS: readonly EvidenceIntervention[] =
