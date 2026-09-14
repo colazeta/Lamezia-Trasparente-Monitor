@@ -40,6 +40,7 @@ describe("evidence interventions 2026-09-14 supplement", () => {
     expect(capeTown?.results.toLowerCase()).toContain("eterogeneo");
     expect(capeTown?.results.toLowerCase()).toContain("non sostituisce");
     expect(capeTown?.limitations.join(" ").toLowerCase()).toContain("reddito");
+    expect(capeTown?.interventionTypes).not.toContain("targeting_data_analytics");
   });
 
   it("does not attribute Preston outcomes to procurement alone or turn local sourcing into a legal preference", () => {
@@ -47,7 +48,7 @@ describe("evidence interventions 2026-09-14 supplement", () => {
       (item) => item.id === "preston-community-wealth-building-progressive-procurement",
     );
     expect(preston?.evaluationMethod.toLowerCase()).toContain("difference-in-differences");
-    expect(preston?.effectSize).toContain("+4,1 p.p.");
+    expect(preston?.effectSize).toContain("+4,1%");
     expect(preston?.results.toLowerCase()).toContain("non trova un aumento statisticamente significativo");
     expect(preston?.limitations.join(" ").toLowerCase()).toContain("multi-componente");
     expect(preston?.transferabilityItaly.toLowerCase()).toContain("non discriminazione");
