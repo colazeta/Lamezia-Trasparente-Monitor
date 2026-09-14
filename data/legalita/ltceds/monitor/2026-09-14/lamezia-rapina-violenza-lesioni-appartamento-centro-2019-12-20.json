@@ -1,0 +1,161 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-violenza-lesioni-appartamento-centro-2019-12-20",
+  "discovered_at": "2026-09-14T20:43:49+02:00",
+  "updated_at": "2026-09-14T20:43:49+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina, violenza privata e lesioni personali ai danni di due donne in un appartamento del centro di Lamezia Terme",
+  "temporal": {
+    "start": "2019-12-20",
+    "end": "2019-12-20",
+    "edtf": null,
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "public-authority:gnews:2020-02-10:rapina-due-donne-lamezia",
+      "source_type": "public_authority_primary",
+      "provider": "gNews Giustizia News Online - Ministero della Giustizia",
+      "title": "Aggressione e rapina a prostitute, tre arresti a Lamezia Terme",
+      "url": "https://www.gnewsonline.it/brevi/aggressione-e-rapina-a-prostitute-tre-arresti-a-lamezia-terme",
+      "published_at": null,
+      "retrieved_at": "2026-09-14T20:43:49+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "news-agency:ansa:2020-02-10:rapina-due-donne-lamezia",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Rapinarono due prostitute, tre arresti",
+      "url": "https://www.ansa.it/calabria/notizie/2020/02/10/rapinarono-due-prostitute-tre-arresti_2bcb4487-b2fb-4564-885a-529eecd73736.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-14T20:43:49+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:gazzetta-del-sud:2020-02-10:rapina-due-donne-centro-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Aggrediscono e derubano prostitute a Lamezia, arrestati tre marocchini",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2020/02/10/aggrediscono-e-derubano-prostitute-a-lamezia-arrestati-tre-marocchini-9d47c81c-b779-4ccf-8b75-734c4ea29fb4",
+      "published_at": null,
+      "retrieved_at": "2026-09-14T20:43:49+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lameziaterme-it:2020-02-10:rapina-violenza-lesioni",
+      "source_type": "press_secondary",
+      "provider": "LameziaTerme.it",
+      "title": "Lamezia. Tre arresti per rapina, violenza privata e lesioni",
+      "url": "https://www.lameziaterme.it/lamezia-tre-arresti-rapina-violenza-privata-lesioni",
+      "published_at": null,
+      "retrieved_at": "2026-09-14T20:43:49+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "news-agency:ansa:2020-02-10:rapina-due-donne-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti collocano l'episodio nella notte del 20 dicembre 2019 in un appartamento situato in una traversa del centro di Lamezia Terme",
+        "le fonti riferiscono la sottrazione complessiva di 600 euro e tre telefoni cellulari alle due donne, in un contesto di aggressione e minaccia con un coltello",
+        "il 10 febbraio 2020 la Polizia di Stato ha eseguito un'ordinanza di custodia cautelare disposta dal GIP del Tribunale di Lamezia Terme nei confronti di tre indagati"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:violenza-privata",
+      "classification_source_key": "public-authority:gnews:2020-02-10:rapina-due-donne-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "gNews del Ministero della Giustizia e le cronache contemporanee indicano espressamente la violenza privata tra i reati contestati in relazione al medesimo episodio del 20 dicembre 2019"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:lesioni-personali",
+      "classification_source_key": "public-authority:gnews:2020-02-10:rapina-due-donne-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "gNews del Ministero della Giustizia e le cronache contemporanee indicano espressamente le lesioni personali tra i reati contestati in relazione al medesimo episodio"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:traversa-centro-appartamento:occurrence",
+      "basis_source_key": "press:gazzetta-del-sud:2020-02-10:rapina-due-donne-centro-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "sexual_offence_context",
+      "geometry": null,
+      "place_name": "Appartamento in una traversa del centro di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:traversa-centro-appartamento:target",
+      "basis_source_key": "press:gazzetta-del-sud:2020-02-10:rapina-due-donne-centro-lamezia",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "sexual_offence_context",
+      "geometry": null,
+      "place_name": "Appartamento in una traversa del centro di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
