@@ -58,12 +58,12 @@
       ]
     },
     {
-      "source_key": "press:contropiano:2011-12-26:progetto-sud-via-dei-bizantini",
+      "source_key": "press:cn24tv:2012-03-25:pensieri-parole-via-bizantini",
       "source_type": "press_secondary",
-      "provider": "Contropiano",
-      "title": "Lamezia: bomba contro comunità per migranti",
-      "url": "https://contropiano.org/news/aggiornamenti-in-breve/italia/2011/12/26/lamezia-bomba-contro-comunita-per-migranti-05724",
-      "published_at": "2011-12-26T00:00:00+01:00",
+      "provider": "CN24TV",
+      "title": "‘Infami’ prima nazionale al Teatro Politeama di Lamezia Terme",
+      "url": "https://cn24tv.it/news/infami-prima-nazionale-al-teatro-politeama-di-lamezia-terme/",
+      "published_at": "2012-03-25T11:14:00+02:00",
       "retrieved_at": "2026-09-14T02:37:12+02:00",
       "support_roles": [
         "location_support"
@@ -84,7 +84,7 @@
       "situational_context": [
         "le fonti coeve descrivono il fatto come una nuova intimidazione: ignoti esplosero due colpi di pistola contro la saracinesca o porta di un magazzino al piano terra del centro Pensieri e Parole della Comunità Progetto Sud",
         "il centro era chiuso per le festività pasquali: venerdì 6 aprile non erano stati osservati segni e i colpi furono scoperti alla riapertura nella mattina di martedì 10 aprile; non essendo determinabile il giorno esatto, la temporalità è conservata come intervallo 6-10 aprile 2012",
-        "le fonti identificano la struttura come il bene confiscato alla cosca Torcasio nel quartiere Capizzaglie; una fonte coeva relativa allo stesso immobile lo colloca esplicitamente in via dei Bizantini",
+        "le fonti identificano la struttura come il bene confiscato alla cosca Torcasio nel quartiere Capizzaglie; una fonte coeva, pubblicata poche settimane prima dell'episodio, identifica la medesima sede Pensieri e Parole in via dei Bizantini",
         "sul posto intervenne personale del Commissariato di Polizia di Lamezia Terme che avviò le indagini; non viene inferita una qualificazione penale ulteriore né una matrice mafiosa come fatto giudiziariamente accertato",
         "l'episodio è distinto dall'attentato con ordigno del 26 dicembre 2011 e dal colpo di pistola contro una finestra della stessa struttura nel febbraio 2012"
       ],
@@ -95,7 +95,7 @@
   "locations": [
     {
       "location_key": "location:lamezia-terme:progetto-sud-pensieri-parole-via-bizantini:occurrence",
-      "basis_source_key": "press:contropiano:2011-12-26:progetto-sud-via-dei-bizantini",
+      "basis_source_key": "press:cn24tv:2012-03-25:pensieri-parole-via-bizantini",
       "role": "occurrence",
       "municipality": "Lamezia Terme",
       "evidence_basis": "source_stated_named_site",
@@ -110,7 +110,7 @@
     },
     {
       "location_key": "location:lamezia-terme:progetto-sud-pensieri-parole-via-bizantini:target",
-      "basis_source_key": "press:contropiano:2011-12-26:progetto-sud-via-dei-bizantini",
+      "basis_source_key": "press:cn24tv:2012-03-25:pensieri-parole-via-bizantini",
       "role": "target",
       "municipality": "Lamezia Terme",
       "evidence_basis": "source_stated_named_site",
