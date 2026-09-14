@@ -1,0 +1,101 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-impropria-carrefour-santeufemia-2014-12",
+  "discovered_at": "2026-09-14T02:17:09+02:00",
+  "updated_at": "2026-09-14T02:17:09+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina impropria al Carrefour di Sant'Eufemia segnalata il 23 dicembre 2014",
+  "temporal": {
+    "start": "2014-12-23",
+    "end": "2014-12-23",
+    "edtf": "2014-12-23~",
+    "precision": "approximate"
+  },
+  "sources": [
+    {
+      "source_key": "source:lacnews24:2014-12-23:carrefour-santeufemia",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Lamezia Terme, rapina ai danni di un supermercato",
+      "url": "https://www.lacnews24.it/cronaca/lamezia-terme-rapina-ai-danni-di-un-supermercato-mh6w4k4e",
+      "published_at": "2014-12-23T12:38:00+01:00",
+      "retrieved_at": "2026-09-14T02:17:09+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina-impropria",
+      "classification_source_key": "source:lacnews24:2014-12-23:carrefour-santeufemia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "LaC News24 riferisce il 23 dicembre 2014 che i Carabinieri di Lamezia Terme hanno arrestato in flagranza un uomo per rapina impropria ai danni del supermercato Carrefour di Lamezia Terme-Sant'Eufemia.",
+        "Secondo la fonte, una dipendente sorprese l'uomo mentre cercava di sottrarre dagli scaffali generi alimentari costosi; quando tentò di bloccarlo, fu aggredita con calci e pugni.",
+        "La fonte riferisce inoltre che, dopo essersi dato alla fuga, l'autore abbandonò la merce nel cortile di un condominio vicino.",
+        "La data del 23 dicembre 2014 è mantenuta con precisione temporale approximate: la fonte è pubblicata quel giorno e descrive un arresto in flagranza, ma nell'estratto disponibile non formula esplicitamente la data del fatto.",
+        "La ricerca geografica dedicata non ha prodotto una fonte storica sufficientemente affidabile per attribuire al Carrefour del 2014 un civico o coordinate; resta quindi canonico il sito pubblico nominato e il quartiere Sant'Eufemia."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:carrefour-santeufemia:occurrence",
+      "basis_source_key": "source:lacnews24:2014-12-23:carrefour-santeufemia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Supermercato Carrefour di Lamezia Terme-Sant'Eufemia",
+      "neighbourhood": "Sant'Eufemia",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:carrefour-santeufemia:target",
+      "basis_source_key": "source:lacnews24:2014-12-23:carrefour-santeufemia",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Supermercato Carrefour di Lamezia Terme-Sant'Eufemia",
+      "neighbourhood": "Sant'Eufemia",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:condominio-vicino-carrefour-santeufemia:recovery",
+      "basis_source_key": "source:lacnews24:2014-12-23:carrefour-santeufemia",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Cortile di un condominio vicino al Carrefour di Sant'Eufemia",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
