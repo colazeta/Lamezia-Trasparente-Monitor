@@ -5,7 +5,7 @@
   "updated_at": "2026-09-14T02:37:12+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
-  "title": "Intimidazione con colpi d'arma da fuoco contro il centro Pensieri e Parole di Progetto Sud in via dei Bizantini durante le festivita pasquali del 2012",
+  "title": "Intimidazione con colpi d'arma da fuoco contro il centro Pensieri e Parole di Progetto Sud in via dei Bizantini durante le festività pasquali del 2012",
   "temporal": {
     "start": "2012-04-06",
     "end": "2012-04-10",
@@ -47,7 +47,7 @@
       "source_key": "press:corriere-sera:2012-04-10:spari-progetto-sud-capizzaglie",
       "source_type": "press_secondary",
       "provider": "Corriere della Sera",
-      "title": "Lamezia Terme, colpi di pistola contro la comunita di Don Panizza",
+      "title": "Lamezia Terme, colpi di pistola contro la comunità di Don Panizza",
       "url": "https://www.corriere.it/cronache/12_aprile_10/don-panizza-attentato-lamezia-ricchio_60f46c48-8312-11e1-b660-48593c628107.shtml",
       "published_at": "2012-04-10T00:00:00+02:00",
       "retrieved_at": "2026-09-14T02:37:12+02:00",
@@ -61,7 +61,7 @@
       "source_key": "press:contropiano:2011-12-26:progetto-sud-via-dei-bizantini",
       "source_type": "press_secondary",
       "provider": "Contropiano",
-      "title": "Lamezia: bomba contro comunita per migranti",
+      "title": "Lamezia: bomba contro comunità per migranti",
       "url": "https://contropiano.org/news/aggiornamenti-in-breve/italia/2011/12/26/lamezia-bomba-contro-comunita-per-migranti-05724",
       "published_at": "2011-12-26T00:00:00+01:00",
       "retrieved_at": "2026-09-14T02:37:12+02:00",
@@ -72,7 +72,7 @@
   ],
   "offences": [
     {
-      "offence_key": "offence:intimidazione-con-arma-da-fuoco",
+      "offence_key": "offence:intimidazione",
       "classification_source_key": "press:corriere-calabria:2012-04-10:intimidazione-panizza-pensieri-parole",
       "classification_basis": "provisional",
       "iccs_code": null,
@@ -80,13 +80,13 @@
       "istat_synthetic_code": null,
       "istat_analytical_code": null,
       "legal_reference": null,
-      "attempt_status": "completed",
+      "attempt_status": "not_applicable",
       "situational_context": [
-        "le fonti coeve descrivono il fatto come una nuova intimidazione: ignoti esplosero due colpi di pistola contro la saracinesca o porta di un magazzino al piano terra del centro Pensieri e Parole della Comunita Progetto Sud",
-        "il centro era chiuso per le festivita pasquali: venerdi 6 aprile non erano stati osservati segni e i colpi furono scoperti alla riapertura nella mattina di martedi 10 aprile; non essendo determinabile il giorno esatto, la temporalita e conservata come intervallo 6-10 aprile 2012",
+        "le fonti coeve descrivono il fatto come una nuova intimidazione: ignoti esplosero due colpi di pistola contro la saracinesca o porta di un magazzino al piano terra del centro Pensieri e Parole della Comunità Progetto Sud",
+        "il centro era chiuso per le festività pasquali: venerdì 6 aprile non erano stati osservati segni e i colpi furono scoperti alla riapertura nella mattina di martedì 10 aprile; non essendo determinabile il giorno esatto, la temporalità è conservata come intervallo 6-10 aprile 2012",
         "le fonti identificano la struttura come il bene confiscato alla cosca Torcasio nel quartiere Capizzaglie; una fonte coeva relativa allo stesso immobile lo colloca esplicitamente in via dei Bizantini",
-        "sul posto intervenne personale del Commissariato di Polizia di Lamezia Terme che avvio le indagini; non viene inferita una qualificazione penale ulteriore ne una matrice mafiosa come fatto giudiziariamente accertato",
-        "l'episodio e distinto dall'attentato con ordigno del 26 dicembre 2011 e dal colpo di pistola contro una finestra della stessa struttura nel febbraio 2012"
+        "sul posto intervenne personale del Commissariato di Polizia di Lamezia Terme che avviò le indagini; non viene inferita una qualificazione penale ulteriore né una matrice mafiosa come fatto giudiziariamente accertato",
+        "l'episodio è distinto dall'attentato con ordigno del 26 dicembre 2011 e dal colpo di pistola contro una finestra della stessa struttura nel febbraio 2012"
       ],
       "cyber_related": null,
       "affected_object_count": 1
@@ -104,7 +104,7 @@
       "sensitivity": "public_place",
       "publication_risk": "minor_or_vulnerable",
       "geometry": null,
-      "place_name": "Centro Comunita Pensieri e Parole (Progetto Sud), via dei Bizantini",
+      "place_name": "Centro Comunità Pensieri e Parole (Progetto Sud), via dei Bizantini",
       "neighbourhood": "Capizzaglie",
       "iccs_location_type": null
     },
@@ -119,7 +119,7 @@
       "sensitivity": "public_place",
       "publication_risk": "minor_or_vulnerable",
       "geometry": null,
-      "place_name": "Centro Comunita Pensieri e Parole (Progetto Sud), via dei Bizantini",
+      "place_name": "Centro Comunità Pensieri e Parole (Progetto Sud), via dei Bizantini",
       "neighbourhood": "Capizzaglie",
       "iccs_location_type": null
     }
