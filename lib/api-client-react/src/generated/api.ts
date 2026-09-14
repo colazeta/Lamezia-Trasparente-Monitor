@@ -59,6 +59,7 @@ import type {
   GetDatabaseInspectionRecordParams,
   GetDatabaseInspectionRowsParams,
   GetDemographicHouseholdsParams,
+  GetMunicipalDemographicSnapshotParams,
   GetPublicationsMacrotemiParams,
   GetPublicationsTimelineParams,
   HealthStatus,
@@ -89,6 +90,8 @@ import type {
   MonitoringReport,
   MonitoringReportInput,
   MonitoringReportModerationInput,
+  MunicipalDemographicAdminStatus,
+  MunicipalDemographicSnapshot,
   Official,
   OfficialInput,
   OfficialProfile,
@@ -154,6 +157,174 @@ type AwaitedInput<T> = PromiseLike<T> | T;
 
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
+
+
+export const getGetMunicipalDemographicSnapshotUrl = (key: 'population' | 'foreign-age-sex' | 'families-children',
+    params?: GetMunicipalDemographicSnapshotParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/demographics/municipal/${key}?${stringifiedParams}` : `/api/demographics/municipal/${key}`
+}
+
+/**
+ * Aggregate data only. Reads one complete typed release and verifies retained evidence without filesystem fallback or ingestion. Missing or inconsistent canonical data returns 503, not zero observations. Source and import timestamps remain distinct.
+ * @summary Read a reconciled municipal demographic snapshot from the canonical database
+ */
+export const getMunicipalDemographicSnapshot = async (key: 'population' | 'foreign-age-sex' | 'families-children',
+    params?: GetMunicipalDemographicSnapshotParams, options?: RequestInit): Promise<MunicipalDemographicSnapshot> => {
+
+  return customFetch<MunicipalDemographicSnapshot>(getGetMunicipalDemographicSnapshotUrl(key,params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetMunicipalDemographicSnapshotQueryKey = (key: 'population' | 'foreign-age-sex' | 'families-children',
+    params?: GetMunicipalDemographicSnapshotParams,) => {
+    return [
+    `/api/demographics/municipal/${key}`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetMunicipalDemographicSnapshotQueryOptions = <TData = Awaited<ReturnType<typeof getMunicipalDemographicSnapshot>>, TError = ErrorType<Error>>(key: 'population' | 'foreign-age-sex' | 'families-children',
+    params?: GetMunicipalDemographicSnapshotParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getMunicipalDemographicSnapshot>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetMunicipalDemographicSnapshotQueryKey(key,params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMunicipalDemographicSnapshot>>> = ({ signal }) => getMunicipalDemographicSnapshot(key,params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(key), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getMunicipalDemographicSnapshot>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetMunicipalDemographicSnapshotQueryResult = NonNullable<Awaited<ReturnType<typeof getMunicipalDemographicSnapshot>>>
+export type GetMunicipalDemographicSnapshotQueryError = ErrorType<Error>
+
+
+/**
+ * @summary Read a reconciled municipal demographic snapshot from the canonical database
+ */
+
+export function useGetMunicipalDemographicSnapshot<TData = Awaited<ReturnType<typeof getMunicipalDemographicSnapshot>>, TError = ErrorType<Error>>(
+ key: 'population' | 'foreign-age-sex' | 'families-children',
+    params?: GetMunicipalDemographicSnapshotParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getMunicipalDemographicSnapshot>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetMunicipalDemographicSnapshotQueryOptions(key,params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetDatabaseMunicipalDemographicsUrl = () => {
+
+
+
+
+  return `/api/admin/database/municipal-demographics`
+}
+
+/**
+ * Uses the database console pool and read-only repeatable-read transaction. Availability requires reconciliation. This does not certify the public deployment's database identity.
+ * @summary Inspect municipal demographics in the authenticated database
+ */
+export const getDatabaseMunicipalDemographics = async ( options?: RequestInit): Promise<MunicipalDemographicAdminStatus[]> => {
+
+  return customFetch<MunicipalDemographicAdminStatus[]>(getGetDatabaseMunicipalDemographicsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetDatabaseMunicipalDemographicsQueryKey = () => {
+    return [
+    `/api/admin/database/municipal-demographics`
+    ] as const;
+    }
+
+
+export const getGetDatabaseMunicipalDemographicsQueryOptions = <TData = Awaited<ReturnType<typeof getDatabaseMunicipalDemographics>>, TError = ErrorType<void>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getDatabaseMunicipalDemographics>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetDatabaseMunicipalDemographicsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getDatabaseMunicipalDemographics>>> = ({ signal }) => getDatabaseMunicipalDemographics({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getDatabaseMunicipalDemographics>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetDatabaseMunicipalDemographicsQueryResult = NonNullable<Awaited<ReturnType<typeof getDatabaseMunicipalDemographics>>>
+export type GetDatabaseMunicipalDemographicsQueryError = ErrorType<void>
+
+
+/**
+ * @summary Inspect municipal demographics in the authenticated database
+ */
+
+export function useGetDatabaseMunicipalDemographics<TData = Awaited<ReturnType<typeof getDatabaseMunicipalDemographics>>, TError = ErrorType<void>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getDatabaseMunicipalDemographics>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetDatabaseMunicipalDemographicsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
 
 
 

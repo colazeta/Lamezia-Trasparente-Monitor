@@ -3,7 +3,7 @@ import {
   LAMEZIA_FAMILIES_CHILDREN_DATA,
   LAMEZIA_FAMILIES_CHILDREN_SUMMARY,
   getLameziaFamiliesChildrenRecord,
-} from "../data/lameziaFamiliesChildren";
+} from "./fixtures/municipalDemographics";
 
 function roundFour(value: number) {
   return Number(value.toFixed(4));
@@ -33,7 +33,10 @@ describe("Lamezia families by children count OpenData dataset", () => {
 
   it("keeps metadata totals, shares and cumulative values consistent with the rows", () => {
     const { family_children, metadata } = LAMEZIA_FAMILIES_CHILDREN_DATA;
-    const total = family_children.reduce((sum, record) => sum + record.families, 0);
+    const total = family_children.reduce(
+      (sum, record) => sum + record.families,
+      0,
+    );
     const oneChild = getLameziaFamiliesChildrenRecord(1);
     const twoChildren = getLameziaFamiliesChildrenRecord(2);
     const threeOrMore = family_children
@@ -58,7 +61,9 @@ describe("Lamezia families by children count OpenData dataset", () => {
       one_child: oneChild?.families ?? 0,
       one_child_share: oneChild ? roundFour(oneChild.families / total) : 0,
       two_children: twoChildren?.families ?? 0,
-      two_children_share: twoChildren ? roundFour(twoChildren.families / total) : 0,
+      two_children_share: twoChildren
+        ? roundFour(twoChildren.families / total)
+        : 0,
       three_or_more: threeOrMore,
       three_or_more_share: roundFour(threeOrMore / total),
     });
@@ -66,7 +71,9 @@ describe("Lamezia families by children count OpenData dataset", () => {
     const largestClass = family_children.reduce((best, record) =>
       record.families > best.families ? record : best,
     );
-    expect(LAMEZIA_FAMILIES_CHILDREN_SUMMARY.largest_class).toEqual(largestClass);
+    expect(LAMEZIA_FAMILIES_CHILDREN_SUMMARY.largest_class).toEqual(
+      largestClass,
+    );
     expect(getLameziaFamiliesChildrenRecord(6)?.children_count_label).toBe(
       "6 o piu",
     );

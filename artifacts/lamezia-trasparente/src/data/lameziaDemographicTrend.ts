@@ -1,6 +1,3 @@
-import demographicTrendData from "./generated/lameziaDemographicTrend.json";
-import demographicTrendDataUrl from "./generated/lameziaDemographicTrend.json?url";
-
 type LameziaDemographicTrendAnnualRow = [
   index: number,
   year: number,
@@ -57,37 +54,23 @@ export interface LameziaDemographicTrendDataset {
   annual: LameziaDemographicTrendAnnualRecord[];
 }
 
-interface RawLameziaDemographicTrendDataset
-  extends Omit<LameziaDemographicTrendDataset, "annual"> {
+export interface RawLameziaDemographicTrendDataset extends Omit<
+  LameziaDemographicTrendDataset,
+  "annual"
+> {
   annual_rows: string;
 }
 
-const rawDemographicTrendData =
-  demographicTrendData as RawLameziaDemographicTrendDataset;
-const annualRecords = parseAnnualRows(rawDemographicTrendData.annual_rows);
-
-export const LAMEZIA_DEMOGRAPHIC_TREND_DATA: LameziaDemographicTrendDataset = {
-  ...rawDemographicTrendData,
-  annual: annualRecords,
-};
-
-export const LAMEZIA_DEMOGRAPHIC_TREND_DATA_URL = demographicTrendDataUrl;
-
-export const LAMEZIA_DEMOGRAPHIC_TREND_YEARS =
-  LAMEZIA_DEMOGRAPHIC_TREND_DATA.annual.map((record) => record.year);
-
-export const LAMEZIA_DEMOGRAPHIC_TREND_LATEST_YEAR =
-  LAMEZIA_DEMOGRAPHIC_TREND_DATA.metadata.latest_year;
-
-export const LAMEZIA_DEMOGRAPHIC_TREND_SUMMARY =
-  buildDemographicTrendSummary(LAMEZIA_DEMOGRAPHIC_TREND_DATA.annual);
-
-export function getLameziaDemographicTrendRecord(year: number) {
-  return (
-    LAMEZIA_DEMOGRAPHIC_TREND_DATA.annual.find(
-      (record) => record.year === year,
-    ) ?? null
-  );
+export function createDemographicTrendDataset(
+  input: RawLameziaDemographicTrendDataset,
+): LameziaDemographicTrendDataset {
+  return { ...input, annual: parseAnnualRows(input.annual_rows) };
+}
+export function getLameziaDemographicTrendRecord(
+  dataset: LameziaDemographicTrendDataset,
+  year: number,
+) {
+  return dataset.annual.find((record) => record.year === year) ?? null;
 }
 
 function expandAnnualRow([
@@ -124,7 +107,7 @@ function parseAnnualRows(rows: string) {
 
 function toRequiredNumber(value: string | undefined) {
   const number = Number(value);
-  if (!Number.isFinite(number)) {
+  if (value === undefined || value.trim() === "" || !Number.isFinite(number)) {
     throw new Error(`Invalid numeric value in demographic trend row: ${value}`);
   }
   return number;
@@ -138,7 +121,7 @@ function toNullableNumber(value: string | undefined) {
   return Number.isFinite(number) ? number : null;
 }
 
-function buildDemographicTrendSummary(
+export function buildDemographicTrendSummary(
   records: LameziaDemographicTrendAnnualRecord[],
 ) {
   const first = records[0] ?? null;
@@ -162,7 +145,9 @@ function buildDemographicTrendSummary(
     peak,
     minimum,
     change_since_first_abs:
-      first && latest ? latest.population_resident - first.population_resident : null,
+      first && latest
+        ? latest.population_resident - first.population_resident
+        : null,
     change_since_first_pct:
       first && latest && first.population_resident > 0
         ? roundFour(
@@ -171,7 +156,9 @@ function buildDemographicTrendSummary(
           )
         : null,
     change_since_peak_abs:
-      peak && latest ? latest.population_resident - peak.population_resident : null,
+      peak && latest
+        ? latest.population_resident - peak.population_resident
+        : null,
     change_since_peak_pct:
       peak && latest && peak.population_resident > 0
         ? roundFour(

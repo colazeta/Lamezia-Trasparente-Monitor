@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "lt-consolidation-resolutions.v1",
+  "scope": "candidate implementation, not production certification",
+  "issues": [
+    {
+      "id": "static-municipal-consumers",
+      "disposition": "REMODELLED",
+      "before": "Independent frontend JSON reads/downloads",
+      "after": "Database-reconciled snapshots, pinned downloads and explicit unavailability",
+      "evidence": [
+        "artifacts/lamezia-trasparente/src/hooks/useMunicipalDemographics.ts"
+      ]
+    },
+    {
+      "id": "population-source-identity",
+      "disposition": "RESOLVED",
+      "before": "Municipal metadata used for ISTAT observatory health",
+      "after": "Municipal and ISTAT identities/health are separate",
+      "evidence": ["artifacts/lamezia-trasparente/src/data/sourceHealth.ts"]
+    },
+    {
+      "id": "import-freshness",
+      "disposition": "RESOLVED",
+      "before": "Import of an old file could appear as fresh external verification",
+      "after": "Keep source generation, acquisition and read failure distinct",
+      "evidence": ["artifacts/lamezia-trasparente/src/data/sourceHealth.ts"]
+    },
+    {
+      "id": "latest-release-evidence",
+      "disposition": "RESOLVED",
+      "before": "Broken newest evidence might be filtered away, exposing older data",
+      "after": "Select newest typed release first; broken links fail closed",
+      "evidence": ["lib/db/src/municipalDemographicReadModel.ts"]
+    },
+    {
+      "id": "snapshot-periods",
+      "disposition": "RESOLVED",
+      "before": "Rowwise latest could reintroduce observations removed by newer release",
+      "after": "Choose complete release and pin historic downloads",
+      "evidence": ["lib/db/src/municipalDemographicIntegration.ts"]
+    },
+    {
+      "id": "duplicate-ontology-reference",
+      "disposition": "NORMALISED",
+      "before": "Identical ontology path twice in one conceptual section",
+      "after": "Remove duplicate in registry, regenerate projections, guard uniqueness",
+      "evidence": ["architecture/data-domain-registry.v1.json"]
+    },
+    {
+      "id": "family-reference-year",
+      "disposition": "UNRESOLVED — INSUFFICIENT EVIDENCE",
+      "before": "Source gives no reference year",
+      "after": "Keep period unknown; never replace with import year",
+      "evidence": [
+        "artifacts/lamezia-trasparente/src/data/generated/lameziaFamiliesChildren.json"
+      ]
+    },
+    {
+      "id": "business-role",
+      "disposition": "UNRESOLVED — INSUFFICIENT EVIDENCE",
+      "before": "Business names in crime bundles may be victims or premises",
+      "after": "Do not infer corporate measures, wrongdoing or guilt",
+      "evidence": [
+        "data/legalita/ltceds/monitor/2026-09-07/lamezia-tentato-furto-sud-lavaggio-2025-02-10.json"
+      ]
+    }
+  ]
+}

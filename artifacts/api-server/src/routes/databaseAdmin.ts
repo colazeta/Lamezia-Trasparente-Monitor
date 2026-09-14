@@ -1,3 +1,8 @@
+import {
+  MUNICIPAL_PUBLIC_KEYS,
+  MunicipalReadModelError,
+  readMunicipalDemographicSnapshot,
+} from "@workspace/db/municipal-demographics";
 import { Router } from "express";
 import type { Pool } from "pg";
 import {
@@ -16,7 +21,12 @@ export function createDatabaseAdminRouter(pool: Pick<Pool, "connect">) {
   // Mounted on the prefix: unauthorised requests cannot reach any catalog query.
   router.use(requireDatabaseOwner);
   router.get(
-    ["/catalog", "/tables/:name", "/tables/:name/record"],
+    [
+      "/catalog",
+      "/municipal-demographics",
+      "/tables/:name",
+      "/tables/:name/record",
+    ],
     async (req, res) => {
       if (active >= 2) {
         res
@@ -28,6 +38,28 @@ export function createDatabaseAdminRouter(pool: Pick<Pool, "connect">) {
       active++;
       try {
         const result = await withInspectionTransaction(pool, async (client) => {
+          if (req.path === "/municipal-demographics") {
+            if (Object.keys(req.query).length)
+              throw new InspectionInputError("Parametro non supportato");
+            const results = [];
+            for (const key of MUNICIPAL_PUBLIC_KEYS) {
+              try {
+                results.push({
+                  key,
+                  status: "available" as const,
+                  snapshot: await readMunicipalDemographicSnapshot(client, key),
+                });
+              } catch (error) {
+                if (!(error instanceof MunicipalReadModelError)) throw error;
+                results.push({
+                  key,
+                  status: "unavailable" as const,
+                  error: error.code,
+                });
+              }
+            }
+            return results;
+          }
           const catalog = await readInspectionCatalog(client);
           if (req.path === "/catalog") return catalog;
           const table = inspectionTable(catalog, String(req.params.name));
@@ -89,11 +121,9 @@ export function createDatabaseAdminRouter(pool: Pick<Pool, "connect">) {
             .status(400)
             .json({ error: "Tabella, chiave o parametri non validi" });
         } else if (code === "57014" || code === "55P03") {
-          res
-            .status(503)
-            .json({
-              error: "Lettura oltre il limite: restringi il filtro e riprova",
-            });
+          res.status(503).json({
+            error: "Lettura oltre il limite: restringi il filtro e riprova",
+          });
         } else {
           req.log?.error({ code }, "Database inspection failed");
           res

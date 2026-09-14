@@ -1,3 +1,4 @@
+import { MUNICIPAL_FIXTURES } from "./fixtures/municipalDemographics";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   fireEvent,
@@ -89,6 +90,45 @@ afterEach(() => {
 });
 
 describe("private database console", () => {
+  it("reads demographic provenance from the same authenticated console database", async () => {
+    vi.mocked(fetch).mockImplementation(
+      async (url) =>
+        new Response(
+          JSON.stringify(
+            String(url).endsWith("/municipal-demographics")
+              ? [
+                  {
+                    key: "families-children",
+                    status: "available",
+                    snapshot: MUNICIPAL_FIXTURES["families-children"],
+                  },
+                ]
+              : catalog,
+          ),
+          { headers: { "content-type": "application/json" } },
+        ),
+    );
+    view();
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Demografia canonica" }),
+    );
+    expect(
+      await screen.findByText("municipal-families-by-children"),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Non dichiarato dalla fonte")).toBeInTheDocument();
+    expect(screen.getByText("6 / 6")).toBeInTheDocument();
+    const call = vi
+      .mocked(fetch)
+      .mock.calls.find(([url]) =>
+        String(url).endsWith("/municipal-demographics"),
+      );
+    expect(String(call?.[0])).toContain("/api/admin/database/");
+    expect(call?.[1]).toMatchObject({
+      cache: "no-store",
+      headers: { Authorization: "Bearer test-session" },
+    });
+  });
+
   it("shows exact reconciliation counts and opens the supporting field decisions", async () => {
     const reconciliation = {
       status: "verified",

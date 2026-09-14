@@ -5,6 +5,99 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+export type MunicipalDemographicAdminStatusKey = typeof MunicipalDemographicAdminStatusKey[keyof typeof MunicipalDemographicAdminStatusKey];
+
+
+export const MunicipalDemographicAdminStatusKey = {
+  population: 'population',
+  'foreign-age-sex': 'foreign-age-sex',
+  'families-children': 'families-children',
+} as const;
+
+export type MunicipalDemographicAdminStatusStatus = typeof MunicipalDemographicAdminStatusStatus[keyof typeof MunicipalDemographicAdminStatusStatus];
+
+
+export const MunicipalDemographicAdminStatusStatus = {
+  available: 'available',
+  unavailable: 'unavailable',
+} as const;
+
+export type MunicipalDemographicAdminStatusError = typeof MunicipalDemographicAdminStatusError[keyof typeof MunicipalDemographicAdminStatusError];
+
+
+export const MunicipalDemographicAdminStatusError = {
+  CANONICAL_DATA_UNAVAILABLE: 'CANONICAL_DATA_UNAVAILABLE',
+  CANONICAL_RECONCILIATION_FAILED: 'CANONICAL_RECONCILIATION_FAILED',
+} as const;
+
+export type MunicipalDemographicSnapshotSchemaVersion = typeof MunicipalDemographicSnapshotSchemaVersion[keyof typeof MunicipalDemographicSnapshotSchemaVersion];
+
+
+export const MunicipalDemographicSnapshotSchemaVersion = {
+  NUMBER_1: 1,
+} as const;
+
+export type MunicipalDemographicSnapshotProvenanceSchemaVersion = typeof MunicipalDemographicSnapshotProvenanceSchemaVersion[keyof typeof MunicipalDemographicSnapshotProvenanceSchemaVersion];
+
+
+export const MunicipalDemographicSnapshotProvenanceSchemaVersion = {
+  'lt-municipal-demographic-publicv1': 'lt-municipal-demographic-public.v1',
+} as const;
+
+export type MunicipalDemographicSnapshotProvenanceSourceStatus = typeof MunicipalDemographicSnapshotProvenanceSourceStatus[keyof typeof MunicipalDemographicSnapshotProvenanceSourceStatus];
+
+
+export const MunicipalDemographicSnapshotProvenanceSourceStatus = {
+  unknown: 'unknown',
+} as const;
+
+/**
+ * Allowlisted source metadata checked against canonical observations. Arbitrary source fields are not exposed.
+ */
+export type MunicipalDemographicSnapshotMetadata = { [key: string]: unknown };
+
+export type MunicipalDemographicSnapshotProvenance = {
+  schema_version: MunicipalDemographicSnapshotProvenanceSchemaVersion;
+  canonical: true;
+  series_key: string;
+  source_key: string;
+  /** @pattern ^[a-f0-9]{64}$ */
+  release_hash: string;
+  acquired_at: string;
+  source_generated_at: string;
+  source_status: MunicipalDemographicSnapshotProvenanceSourceStatus;
+  reference_period_unspecified: boolean;
+  reference_day_unspecified: true;
+  /** @minimum 1 */
+  source_records: number;
+  /** @minimum 1 */
+  canonical_observations: number;
+  extractor_version: string;
+};
+
+export interface MunicipalDemographicSnapshot {
+  schema_version: MunicipalDemographicSnapshotSchemaVersion;
+  /** Allowlisted source metadata checked against canonical observations. Arbitrary source fields are not exposed. */
+  metadata: MunicipalDemographicSnapshotMetadata;
+  annual_columns?: string[];
+  /** Population and reproduced differences, in the declared column order. */
+  annual_rows?: string;
+  age_columns?: string[];
+  /** Canonical sex counts and reproduced totals and shares. */
+  age_rows?: string;
+  family_children_columns?: string[];
+  /** Family counts and reproduced shares; reference period is unknown. */
+  family_children_rows?: string;
+  provenance: MunicipalDemographicSnapshotProvenance;
+}
+
+export interface MunicipalDemographicAdminStatus {
+  key: MunicipalDemographicAdminStatusKey;
+  status: MunicipalDemographicAdminStatusStatus;
+  snapshot?: MunicipalDemographicSnapshot;
+  error?: MunicipalDemographicAdminStatusError;
+}
+
 export interface DatabaseInspectionColumn {
   name: string;
   type: string;
@@ -3169,6 +3262,25 @@ export interface AccessoCivicoImportResult {
   /** Rows skipped due to validation errors. */
   scartate: AccessoCivicoImportResultScartateItem[];
 }
+
+export type GetMunicipalDemographicSnapshotParams = {
+/**
+ * Pin the source SHA-256 of an imported release for reproducible downloads.
+ * @pattern ^[a-f0-9]{64}$
+ */
+release?: string;
+/**
+ * Return a download disposition when set to 1.
+ */
+download?: GetMunicipalDemographicSnapshotDownload;
+};
+
+export type GetMunicipalDemographicSnapshotDownload = typeof GetMunicipalDemographicSnapshotDownload[keyof typeof GetMunicipalDemographicSnapshotDownload];
+
+
+export const GetMunicipalDemographicSnapshotDownload = {
+  NUMBER_1: '1',
+} as const;
 
 export type GetDatabaseInspectionRowsParams = {
 /**

@@ -1,6 +1,3 @@
-import foreignResidentsData from "./generated/lameziaForeignResidentsAgeSex.json";
-import foreignResidentsDataUrl from "./generated/lameziaForeignResidentsAgeSex.json?url";
-
 export type LameziaForeignResidentsAgeGroup = "0-14" | "15-64" | "65+";
 
 type LameziaForeignResidentsAgeRow = [
@@ -70,42 +67,25 @@ export interface LameziaForeignResidentsDataset {
   age: LameziaForeignResidentsAgeRecord[];
 }
 
-interface RawLameziaForeignResidentsDataset extends Omit<
+export interface RawLameziaForeignResidentsDataset extends Omit<
   LameziaForeignResidentsDataset,
   "age"
 > {
   age_rows: string;
 }
 
-const rawForeignResidentsData =
-  foreignResidentsData as RawLameziaForeignResidentsDataset;
-const ageRecords = parseAgeRows(rawForeignResidentsData.age_rows);
-
-export const LAMEZIA_FOREIGN_RESIDENTS_DATA: LameziaForeignResidentsDataset = {
-  ...rawForeignResidentsData,
-  age: ageRecords,
-};
-
-export const LAMEZIA_FOREIGN_RESIDENTS_DATA_URL = foreignResidentsDataUrl;
-
-export const LAMEZIA_FOREIGN_RESIDENTS_LATEST_YEAR =
-  LAMEZIA_FOREIGN_RESIDENTS_DATA.metadata.latest_year;
-
-export const LAMEZIA_FOREIGN_RESIDENTS_LATEST_RECORDS =
-  LAMEZIA_FOREIGN_RESIDENTS_DATA.age.filter(
-    (record) => record.year === LAMEZIA_FOREIGN_RESIDENTS_LATEST_YEAR,
-  );
-
-export const LAMEZIA_FOREIGN_RESIDENTS_SUMMARY = buildForeignResidentsSummary(
-  LAMEZIA_FOREIGN_RESIDENTS_LATEST_RECORDS,
-);
-
+export function createForeignResidentsDataset(
+  input: RawLameziaForeignResidentsDataset,
+): LameziaForeignResidentsDataset {
+  return { ...input, age: parseAgeRows(input.age_rows) };
+}
 export function getLameziaForeignResidentsAgeRecord(
+  dataset: LameziaForeignResidentsDataset,
   ageClass: string,
-  year = LAMEZIA_FOREIGN_RESIDENTS_LATEST_YEAR,
+  year = dataset.metadata.latest_year,
 ) {
   return (
-    LAMEZIA_FOREIGN_RESIDENTS_DATA.age.find(
+    dataset.age.find(
       (record) => record.year === year && record.age_class === ageClass,
     ) ?? null
   );
@@ -158,7 +138,7 @@ function toRequiredString(value: string | undefined) {
 
 function toRequiredNumber(value: string | undefined) {
   const number = Number(value);
-  if (!Number.isFinite(number)) {
+  if (value === undefined || value.trim() === "" || !Number.isFinite(number)) {
     throw new Error(`Invalid numeric value in foreign residents row: ${value}`);
   }
   return number;
@@ -173,7 +153,7 @@ function toAgeGroup(
   throw new Error(`Invalid age group in foreign residents row: ${value}`);
 }
 
-function buildForeignResidentsSummary(
+export function buildForeignResidentsSummary(
   records: LameziaForeignResidentsAgeRecord[],
 ) {
   const totals = records.reduce(

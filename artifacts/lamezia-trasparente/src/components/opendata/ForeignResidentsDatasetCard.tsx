@@ -1,3 +1,6 @@
+import { useMunicipalDemographicSnapshot } from "@/hooks/useMunicipalDemographics";
+import { municipalDemographicUrl } from "@/data/municipalDemographics";
+import { MunicipalDatasetStatus } from "./MunicipalDatasetStatus";
 import { type ReactNode } from "react";
 import {
   BarChart3,
@@ -13,10 +16,9 @@ import {
 
 import { Button } from "@/components/ui/button";
 import {
-  LAMEZIA_FOREIGN_RESIDENTS_DATA,
-  LAMEZIA_FOREIGN_RESIDENTS_DATA_URL,
-  LAMEZIA_FOREIGN_RESIDENTS_LATEST_RECORDS,
-  LAMEZIA_FOREIGN_RESIDENTS_SUMMARY,
+  createForeignResidentsDataset,
+  buildForeignResidentsSummary,
+  type RawLameziaForeignResidentsDataset,
   type LameziaForeignResidentsAgeRecord,
 } from "@/data/lameziaForeignResidents";
 
@@ -33,9 +35,26 @@ const percentFormat = new Intl.NumberFormat("it-IT", {
 });
 
 export function ForeignResidentsDatasetCard() {
-  const records = LAMEZIA_FOREIGN_RESIDENTS_LATEST_RECORDS;
-  const metadata = LAMEZIA_FOREIGN_RESIDENTS_DATA.metadata;
-  const summary = LAMEZIA_FOREIGN_RESIDENTS_SUMMARY;
+  const query = useMunicipalDemographicSnapshot("foreign-age-sex");
+  if (!query.data)
+    return (
+      <MunicipalDatasetStatus
+        id="stranieri-eta-sesso-lamezia"
+        title="Stranieri per sesso ed eta - Lamezia Terme"
+        loading={query.isLoading}
+        retry={() => {
+          void query.refetch();
+        }}
+      />
+    );
+  const dataset = createForeignResidentsDataset(
+    query.data as unknown as RawLameziaForeignResidentsDataset,
+  );
+  const metadata = dataset.metadata;
+  const records = dataset.age.filter(
+    (record) => record.year === metadata.latest_year,
+  );
+  const summary = buildForeignResidentsSummary(records);
 
   return (
     <section
@@ -61,7 +80,14 @@ export function ForeignResidentsDatasetCard() {
               sesso, pubblicata dal Portale OpenData del Comune.
             </p>
           </div>
-          <a href={LAMEZIA_FOREIGN_RESIDENTS_DATA_URL} download>
+          <a
+            href={municipalDemographicUrl(
+              "foreign-age-sex",
+              query.data.provenance.release_hash,
+              true,
+            )}
+            download
+          >
             <Button variant="outline" size="sm" className="w-full md:w-auto">
               <FileJson className="h-4 w-4" />
               Scarica JSON
@@ -72,6 +98,12 @@ export function ForeignResidentsDatasetCard() {
       </div>
 
       <div className="p-5 md:p-6">
+        <p className="mb-3 text-xs text-muted-foreground">
+          Proiezione dal database canonico.{" "}
+          {query.isError
+            ? "Aggiornamento non riuscito: è mostrata l’ultima risposta canonica ricevuta, non una nuova verifica della fonte."
+            : "Le date della fonte e di importazione restano distinte."}
+        </p>
         <ForeignResidentsPyramid records={records} />
 
         <p className="mt-3 text-sm leading-6 text-muted-foreground">

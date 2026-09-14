@@ -1,0 +1,684 @@
+{
+  "schemaVersion": "lt-canonicalisation-ledger.v1",
+  "baselineMain": "af5f8318a2d97300b33604f2e7f500c79cacdfe4",
+  "predecessorPR": 1211,
+  "predecessorHead": "e532475c5462ab5522e0d532e943da769a4fd1a8",
+  "scope": {
+    "reviewType": "bounded delta audit, not a complete semantic classification",
+    "discoveryRoots": [
+      "data",
+      "sources",
+      "artifacts/lamezia-trasparente/src/data",
+      "artifacts/api-server/src/data"
+    ],
+    "unknownPolicy": "Unreviewed files have null semantic status. Do not label them migrated or evidentially ambiguous.",
+    "countingPolicy": "Files, asset groups, source rows and typed observations have distinct denominators; no overall completion percentage."
+  },
+  "runtimeObservation": {
+    "observedAt": "2026-09-10T20:21:15.818Z",
+    "projectId": "empty-cherry-93566793",
+    "branchId": "br-morning-fire-as9l08lf",
+    "database": "neondb",
+    "queryMode": "read-only SELECT counts",
+    "counts": {
+      "demographic_series": 0,
+      "demographic_releases": 0,
+      "demographic_observations": 0,
+      "source_sources": 5,
+      "source_records": 260,
+      "project_projects": 30,
+      "crime_events": 99,
+      "publications": 0,
+      "contracts": 0,
+      "confiscated_assets": 0,
+      "officials": 0
+    },
+    "publicDeploymentConnectionVerified": false,
+    "writesPerformed": false
+  },
+  "productionBlockers": [
+    {
+      "id": "runtime-target",
+      "reason": "Render requires user-confirmed workspace selection. Current session has none; names cannot be used as implicit consent.",
+      "affectedActions": [
+        "identify actual public runtime database",
+        "production import",
+        "production deployment"
+      ],
+      "independentWorkAllowed": true
+    }
+  ],
+  "assets": [
+    {
+      "id": "municipal-population",
+      "domain": "statistics",
+      "locations": [
+        "artifacts/lamezia-trasparente/src/data/generated/lameziaDemographicTrend.json"
+      ],
+      "consumers": [
+        "artifacts/lamezia-trasparente/src/hooks/useMunicipalDemographics.ts",
+        "artifacts/lamezia-trasparente/src/hooks/useCanonicalSourceHealth.ts",
+        "artifacts/lamezia-trasparente/src/pages/AdminDatabase.tsx",
+        "artifacts/api-server/src/routes/municipalDemographics.ts"
+      ],
+      "canonicalDestination": [
+        "source_records",
+        "demographic_series",
+        "demographic_releases",
+        "demographic_observations"
+      ],
+      "status": "STRUCTURED_INFORMATION_OUTSIDE_DATABASE",
+      "priority": "P0",
+      "substantiveContent": "municipal-population-resident-annual: municipal source rows and typed observations have distinct grains.",
+      "recordCounts": {
+        "sourceRows": 25,
+        "typedObservations": 25,
+        "basis": "candidate importer expectations; observed Neon demographic count is zero"
+      },
+      "dependencies": ["PR #1211", "verified-runtime-target"],
+      "provenanceQuality": "Source-specific evidence inspected; universal provenance coverage not certified.",
+      "duplicationRisk": "Independent source, canonical and consumer representations require reconciliation.",
+      "migrationComplexity": "bounded",
+      "publicImpact": "Preserve source meaning, uncertainty, coverage and publication restrictions.",
+      "statusBasis": "Bounded repository/consumer review and identified Neon count, not evidence of public deployment.",
+      "sourceRegistration": "implemented-in-candidate",
+      "typedCanonicalisation": "implemented-in-candidate",
+      "consumerCutover": "implemented-in-candidate",
+      "legacyWriteStatus": "repository-generators-retained-as-ingestion-inputs",
+      "legacyReadStatus": "protected-runtime-imports-removed-in-candidate",
+      "provenanceStatus": "exact-source-and-typed-reconciliation",
+      "validationStatus": "See executable tests and separate run receipts; no deployment inferred.",
+      "productionStatus": "unverified-not-deployed",
+      "residualIssue": "Identify runtime target; reconcile importer and deploy consumer together; retain source writers as documented migration input."
+    },
+    {
+      "id": "municipal-foreign-age-sex",
+      "domain": "statistics",
+      "locations": [
+        "artifacts/lamezia-trasparente/src/data/generated/lameziaForeignResidentsAgeSex.json"
+      ],
+      "consumers": [
+        "artifacts/lamezia-trasparente/src/hooks/useMunicipalDemographics.ts",
+        "artifacts/lamezia-trasparente/src/hooks/useCanonicalSourceHealth.ts",
+        "artifacts/lamezia-trasparente/src/pages/AdminDatabase.tsx",
+        "artifacts/api-server/src/routes/municipalDemographics.ts",
+        "artifacts/lamezia-trasparente/src/components/opendata/ForeignResidentsDatasetCard.tsx",
+        "artifacts/lamezia-trasparente/src/data/openDataPrimaryDownload.ts"
+      ],
+      "canonicalDestination": [
+        "source_records",
+        "demographic_series",
+        "demographic_releases",
+        "demographic_observations"
+      ],
+      "status": "STRUCTURED_INFORMATION_OUTSIDE_DATABASE",
+      "priority": "P0",
+      "substantiveContent": "municipal-foreign-residents-age-sex: municipal source rows and typed observations have distinct grains.",
+      "recordCounts": {
+        "sourceRows": 19,
+        "typedObservations": 38,
+        "basis": "candidate importer expectations; observed Neon demographic count is zero"
+      },
+      "dependencies": ["PR #1211", "verified-runtime-target"],
+      "provenanceQuality": "Source-specific evidence inspected; universal provenance coverage not certified.",
+      "duplicationRisk": "Independent source, canonical and consumer representations require reconciliation.",
+      "migrationComplexity": "bounded",
+      "publicImpact": "Preserve source meaning, uncertainty, coverage and publication restrictions.",
+      "statusBasis": "Bounded repository/consumer review and identified Neon count, not evidence of public deployment.",
+      "sourceRegistration": "implemented-in-candidate",
+      "typedCanonicalisation": "implemented-in-candidate",
+      "consumerCutover": "implemented-in-candidate",
+      "legacyWriteStatus": "repository-generators-retained-as-ingestion-inputs",
+      "legacyReadStatus": "protected-runtime-imports-removed-in-candidate",
+      "provenanceStatus": "exact-source-and-typed-reconciliation",
+      "validationStatus": "See executable tests and separate run receipts; no deployment inferred.",
+      "productionStatus": "unverified-not-deployed",
+      "residualIssue": "Identify runtime target; reconcile importer and deploy consumer together; retain source writers as documented migration input."
+    },
+    {
+      "id": "municipal-families-children",
+      "domain": "statistics",
+      "locations": [
+        "artifacts/lamezia-trasparente/src/data/generated/lameziaFamiliesChildren.json"
+      ],
+      "consumers": [
+        "artifacts/lamezia-trasparente/src/hooks/useMunicipalDemographics.ts",
+        "artifacts/lamezia-trasparente/src/hooks/useCanonicalSourceHealth.ts",
+        "artifacts/lamezia-trasparente/src/pages/AdminDatabase.tsx",
+        "artifacts/api-server/src/routes/municipalDemographics.ts",
+        "artifacts/lamezia-trasparente/src/components/opendata/FamiliesChildrenDatasetCard.tsx",
+        "artifacts/lamezia-trasparente/src/data/openDataPrimaryDownload.ts"
+      ],
+      "canonicalDestination": [
+        "source_records",
+        "demographic_series",
+        "demographic_releases",
+        "demographic_observations"
+      ],
+      "status": "STRUCTURED_INFORMATION_OUTSIDE_DATABASE",
+      "priority": "P0",
+      "substantiveContent": "municipal-families-by-children: municipal source rows and typed observations have distinct grains.",
+      "recordCounts": {
+        "sourceRows": 6,
+        "typedObservations": 6,
+        "basis": "candidate importer expectations; observed Neon demographic count is zero"
+      },
+      "dependencies": ["PR #1211", "verified-runtime-target"],
+      "provenanceQuality": "Source-specific evidence inspected; universal provenance coverage not certified.",
+      "duplicationRisk": "Independent source, canonical and consumer representations require reconciliation.",
+      "migrationComplexity": "bounded",
+      "publicImpact": "Preserve source meaning, uncertainty, coverage and publication restrictions.",
+      "statusBasis": "Bounded repository/consumer review and identified Neon count, not evidence of public deployment.",
+      "sourceRegistration": "implemented-in-candidate",
+      "typedCanonicalisation": "implemented-in-candidate",
+      "consumerCutover": "implemented-in-candidate",
+      "legacyWriteStatus": "repository-generators-retained-as-ingestion-inputs",
+      "legacyReadStatus": "protected-runtime-imports-removed-in-candidate",
+      "provenanceStatus": "exact-source-and-typed-reconciliation",
+      "validationStatus": "See executable tests and separate run receipts; no deployment inferred.",
+      "productionStatus": "unverified-not-deployed",
+      "residualIssue": "Identify runtime target; reconcile importer and deploy consumer together; retain source writers as documented migration input."
+    },
+    {
+      "id": "household-composition-2023",
+      "domain": "statistics",
+      "locations": [
+        "artifacts/api-server/src/data/lameziaHouseholdComposition2023.json"
+      ],
+      "consumers": [
+        "artifacts/lamezia-trasparente/src/data/lameziaHouseholdComposition2023.ts",
+        "artifacts/lamezia-trasparente/src/components/opendata/FamiliesChildrenDatasetCard.tsx"
+      ],
+      "canonicalDestination": [
+        "demographic_series",
+        "demographic_releases",
+        "demographic_observations"
+      ],
+      "status": "STRUCTURED_INFORMATION_OUTSIDE_DATABASE",
+      "priority": "P0",
+      "substantiveContent": "Distinct six-class ISTAT household benchmark. It remains static inside the family card: that card is not an entirely migrated demographic domain.",
+      "recordCounts": {
+        "sourceRows": 6,
+        "sourceTotalHouseholds": 27591
+      },
+      "dependencies": ["statistics-source-adapter"],
+      "provenanceQuality": "Source-specific evidence inspected; universal provenance coverage not certified.",
+      "duplicationRisk": "Independent source, canonical and consumer representations require reconciliation.",
+      "migrationComplexity": "requires-domain-review",
+      "publicImpact": "Preserve source meaning, uncertainty, coverage and publication restrictions.",
+      "statusBasis": "Bounded repository/consumer review and identified Neon count, not evidence of public deployment.",
+      "sourceRegistration": "not-certified-for-entire-domain",
+      "typedCanonicalisation": "not-certified-for-entire-domain",
+      "consumerCutover": "pending",
+      "legacyWriteStatus": "requires-review",
+      "legacyReadStatus": "active-or-requires-review",
+      "provenanceStatus": "domain-specific",
+      "validationStatus": "See executable tests and separate run receipts; no deployment inferred.",
+      "productionStatus": "unverified-not-deployed",
+      "residualIssue": "Domain migration and consumer convergence remain pending."
+    },
+    {
+      "id": "pnrr-projects",
+      "domain": "projects",
+      "locations": [
+        "artifacts/lamezia-trasparente/src/data/generated/lameziaPnrrProjects.json"
+      ],
+      "consumers": ["artifacts/lamezia-trasparente/src/data/lameziaPnrr.ts"],
+      "canonicalDestination": [
+        "project_projects",
+        "project_identifiers",
+        "project_field_resolutions",
+        "core_assertions"
+      ],
+      "status": "CANONICAL_BUT_LEGACY_CONSUMER_REMAINS",
+      "priority": "P1",
+      "substantiveContent": "Typed project/field resolution exists; frontend still imports and combines source JSON.",
+      "recordCounts": {
+        "observedCanonicalProjects": 30
+      },
+      "dependencies": ["canonical-project-projection"],
+      "provenanceQuality": "Source-specific evidence inspected; universal provenance coverage not certified.",
+      "duplicationRisk": "Independent source, canonical and consumer representations require reconciliation.",
+      "migrationComplexity": "requires-domain-review",
+      "publicImpact": "Preserve source meaning, uncertainty, coverage and publication restrictions.",
+      "statusBasis": "Bounded repository/consumer review and identified Neon count, not evidence of public deployment.",
+      "sourceRegistration": "not-certified-for-entire-domain",
+      "typedCanonicalisation": "not-certified-for-entire-domain",
+      "consumerCutover": "pending",
+      "legacyWriteStatus": "requires-review",
+      "legacyReadStatus": "active-or-requires-review",
+      "provenanceStatus": "domain-specific",
+      "validationStatus": "See executable tests and separate run receipts; no deployment inferred.",
+      "productionStatus": "unverified-not-deployed",
+      "residualIssue": "Domain migration and consumer convergence remain pending."
+    },
+    {
+      "id": "albo-current",
+      "domain": "administrative-documents",
+      "locations": ["data/public/albo/latest.json"],
+      "consumers": ["artifacts/lamezia-trasparente/src/data/alboStatus.ts"],
+      "canonicalDestination": ["source_records", "publications", "acts"],
+      "status": "SOURCE_REGISTERED_BUT_NOT_CANONICALISED",
+      "priority": "P2",
+      "substantiveContent": "Public source export retained. Publication, document and administrative act are different objects; preserve excluded-record boundary.",
+      "recordCounts": {
+        "known_limits": 8,
+        "items": 138,
+        "excluded": 2
+      },
+      "dependencies": ["taxonomy_core", "albo_v2"],
+      "provenanceQuality": "Source-specific evidence inspected; universal provenance coverage not certified.",
+      "duplicationRisk": "Independent source, canonical and consumer representations require reconciliation.",
+      "migrationComplexity": "requires-domain-review",
+      "publicImpact": "Preserve source meaning, uncertainty, coverage and publication restrictions.",
+      "statusBasis": "Bounded repository/consumer review and identified Neon count, not evidence of public deployment.",
+      "sourceRegistration": "not-certified-for-entire-domain",
+      "typedCanonicalisation": "not-certified-for-entire-domain",
+      "consumerCutover": "pending",
+      "legacyWriteStatus": "requires-review",
+      "legacyReadStatus": "active-or-requires-review",
+      "provenanceStatus": "domain-specific",
+      "validationStatus": "See executable tests and separate run receipts; no deployment inferred.",
+      "productionStatus": "unverified-not-deployed",
+      "residualIssue": "Domain migration and consumer convergence remain pending."
+    },
+    {
+      "id": "albo-archive",
+      "domain": "administrative-documents",
+      "locations": ["data/public/albo/delibere-archive.json"],
+      "consumers": [
+        "artifacts/lamezia-trasparente/src/data/delibereArchive.ts"
+      ],
+      "canonicalDestination": ["source_records", "publications", "acts"],
+      "status": "SOURCE_REGISTERED_BUT_NOT_CANONICALISED",
+      "priority": "P2",
+      "substantiveContent": "Public source export retained. Publication, document and administrative act are different objects; preserve excluded-record boundary.",
+      "recordCounts": {
+        "known_limits": 10,
+        "items": 79
+      },
+      "dependencies": ["taxonomy_core", "albo_v2"],
+      "provenanceQuality": "Source-specific evidence inspected; universal provenance coverage not certified.",
+      "duplicationRisk": "Independent source, canonical and consumer representations require reconciliation.",
+      "migrationComplexity": "requires-domain-review",
+      "publicImpact": "Preserve source meaning, uncertainty, coverage and publication restrictions.",
+      "statusBasis": "Bounded repository/consumer review and identified Neon count, not evidence of public deployment.",
+      "sourceRegistration": "not-certified-for-entire-domain",
+      "typedCanonicalisation": "not-certified-for-entire-domain",
+      "consumerCutover": "pending",
+      "legacyWriteStatus": "requires-review",
+      "legacyReadStatus": "active-or-requires-review",
+      "provenanceStatus": "domain-specific",
+      "validationStatus": "See executable tests and separate run receipts; no deployment inferred.",
+      "productionStatus": "unverified-not-deployed",
+      "residualIssue": "Domain migration and consumer convergence remain pending."
+    },
+    {
+      "id": "anac-cig",
+      "domain": "procurement",
+      "locations": ["data/public/contracts/anac-bdncp/latest.json"],
+      "consumers": ["lib/db/src/sourceSnapshotManifest.ts"],
+      "canonicalDestination": ["source_records", "contracts"],
+      "status": "SOURCE_REGISTERED_BUT_NOT_CANONICALISED",
+      "priority": "P2",
+      "substantiveContent": "Zero source rows in this acquired snapshot is a coverage gap, not proof of zero contracts.",
+      "recordCounts": {
+        "sourceRows": 0
+      },
+      "dependencies": ["party_core", "procurement_v2"],
+      "provenanceQuality": "Source-specific evidence inspected; universal provenance coverage not certified.",
+      "duplicationRisk": "Independent source, canonical and consumer representations require reconciliation.",
+      "migrationComplexity": "requires-domain-review",
+      "publicImpact": "Preserve source meaning, uncertainty, coverage and publication restrictions.",
+      "statusBasis": "Bounded repository/consumer review and identified Neon count, not evidence of public deployment.",
+      "sourceRegistration": "not-certified-for-entire-domain",
+      "typedCanonicalisation": "not-certified-for-entire-domain",
+      "consumerCutover": "pending",
+      "legacyWriteStatus": "requires-review",
+      "legacyReadStatus": "active-or-requires-review",
+      "provenanceStatus": "domain-specific",
+      "validationStatus": "See executable tests and separate run receipts; no deployment inferred.",
+      "productionStatus": "unverified-not-deployed",
+      "residualIssue": "Domain migration and consumer convergence remain pending."
+    },
+    {
+      "id": "anac-authority",
+      "domain": "procurement",
+      "locations": ["data/public/contracts/anac-authority/latest.json"],
+      "consumers": ["lib/db/src/sourceSnapshotManifest.ts"],
+      "canonicalDestination": ["source_records", "contracts"],
+      "status": "SOURCE_REGISTERED_BUT_NOT_CANONICALISED",
+      "priority": "P2",
+      "substantiveContent": "Zero source rows in this acquired snapshot is a coverage gap, not proof of zero contracts.",
+      "recordCounts": {
+        "sourceRows": 0
+      },
+      "dependencies": ["party_core", "procurement_v2"],
+      "provenanceQuality": "Source-specific evidence inspected; universal provenance coverage not certified.",
+      "duplicationRisk": "Independent source, canonical and consumer representations require reconciliation.",
+      "migrationComplexity": "requires-domain-review",
+      "publicImpact": "Preserve source meaning, uncertainty, coverage and publication restrictions.",
+      "statusBasis": "Bounded repository/consumer review and identified Neon count, not evidence of public deployment.",
+      "sourceRegistration": "not-certified-for-entire-domain",
+      "typedCanonicalisation": "not-certified-for-entire-domain",
+      "consumerCutover": "pending",
+      "legacyWriteStatus": "requires-review",
+      "legacyReadStatus": "active-or-requires-review",
+      "provenanceStatus": "domain-specific",
+      "validationStatus": "See executable tests and separate run receipts; no deployment inferred.",
+      "productionStatus": "unverified-not-deployed",
+      "residualIssue": "Domain migration and consumer convergence remain pending."
+    },
+    {
+      "id": "documented-reuse-sites",
+      "domain": "assets",
+      "locations": [
+        "data/curated/territorio/beni_confiscati_lamezia_pilot.json"
+      ],
+      "consumers": [
+        "artifacts/lamezia-trasparente/src/data/documentedConfiscatedAssets.ts"
+      ],
+      "canonicalDestination": ["confiscated_assets", "source_records"],
+      "status": "STRUCTURED_INFORMATION_OUTSIDE_DATABASE",
+      "priority": "P0",
+      "substantiveContent": "Two documented reuse sites; neither a site nor an activity automatically identifies one ANBSC asset.",
+      "recordCounts": {
+        "documentedSites": 2
+      },
+      "dependencies": ["party_core", "geo_core", "assets_v2"],
+      "provenanceQuality": "Source-specific evidence inspected; universal provenance coverage not certified.",
+      "duplicationRisk": "Independent source, canonical and consumer representations require reconciliation.",
+      "migrationComplexity": "requires-domain-review",
+      "publicImpact": "Preserve source meaning, uncertainty, coverage and publication restrictions.",
+      "statusBasis": "Bounded repository/consumer review and identified Neon count, not evidence of public deployment.",
+      "sourceRegistration": "not-certified-for-entire-domain",
+      "typedCanonicalisation": "not-certified-for-entire-domain",
+      "consumerCutover": "pending",
+      "legacyWriteStatus": "requires-review",
+      "legacyReadStatus": "active-or-requires-review",
+      "provenanceStatus": "domain-specific",
+      "validationStatus": "See executable tests and separate run receipts; no deployment inferred.",
+      "productionStatus": "unverified-not-deployed",
+      "residualIssue": "Domain migration and consumer convergence remain pending."
+    },
+    {
+      "id": "institutional-rosters",
+      "domain": "institutions",
+      "locations": ["data/sources/organi-istituzionali-source-snapshot.json"],
+      "consumers": ["scripts/check-institutional-roster.ts"],
+      "canonicalDestination": ["officials", "organi", "organi_members"],
+      "status": "STRUCTURED_INFORMATION_OUTSIDE_DATABASE",
+      "priority": "P0",
+      "substantiveContent": "Person, office and membership must be distinguished; source lists overlap, so their counts cannot be summed as people.",
+      "recordCounts": null,
+      "dependencies": ["party_core", "institutions_v2"],
+      "provenanceQuality": "Source-specific evidence inspected; universal provenance coverage not certified.",
+      "duplicationRisk": "Independent source, canonical and consumer representations require reconciliation.",
+      "migrationComplexity": "requires-domain-review",
+      "publicImpact": "Preserve source meaning, uncertainty, coverage and publication restrictions.",
+      "statusBasis": "Bounded repository/consumer review and identified Neon count, not evidence of public deployment.",
+      "sourceRegistration": "not-certified-for-entire-domain",
+      "typedCanonicalisation": "not-certified-for-entire-domain",
+      "consumerCutover": "pending",
+      "legacyWriteStatus": "requires-review",
+      "legacyReadStatus": "active-or-requires-review",
+      "provenanceStatus": "domain-specific",
+      "validationStatus": "See executable tests and separate run receipts; no deployment inferred.",
+      "productionStatus": "unverified-not-deployed",
+      "residualIssue": "Domain migration and consumer convergence remain pending."
+    },
+    {
+      "id": "territorial-atlas",
+      "domain": "geography",
+      "locations": [
+        "data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
+        "data/processed/territorio/istat_indicator_dictionary.json"
+      ],
+      "consumers": [
+        "artifacts/lamezia-trasparente/src/data/atlanteTerritoriale.ts"
+      ],
+      "canonicalDestination": [
+        "planned geography and statistical observations"
+      ],
+      "status": "STRUCTURED_INFORMATION_OUTSIDE_DATABASE",
+      "priority": "P0",
+      "substantiveContent": "Source census geometry and attributes need shared location/time/measure ownership.",
+      "recordCounts": null,
+      "dependencies": ["geo_core", "statistics_core"],
+      "provenanceQuality": "Source-specific evidence inspected; universal provenance coverage not certified.",
+      "duplicationRisk": "Independent source, canonical and consumer representations require reconciliation.",
+      "migrationComplexity": "requires-domain-review",
+      "publicImpact": "Preserve source meaning, uncertainty, coverage and publication restrictions.",
+      "statusBasis": "Bounded repository/consumer review and identified Neon count, not evidence of public deployment.",
+      "sourceRegistration": "not-certified-for-entire-domain",
+      "typedCanonicalisation": "not-certified-for-entire-domain",
+      "consumerCutover": "pending",
+      "legacyWriteStatus": "requires-review",
+      "legacyReadStatus": "active-or-requires-review",
+      "provenanceStatus": "domain-specific",
+      "validationStatus": "See executable tests and separate run receipts; no deployment inferred.",
+      "productionStatus": "unverified-not-deployed",
+      "residualIssue": "Domain migration and consumer convergence remain pending."
+    },
+    {
+      "id": "climate-series",
+      "domain": "statistics",
+      "locations": [
+        "artifacts/lamezia-trasparente/src/data/generated/lameziaClimateDaily.json"
+      ],
+      "consumers": ["artifacts/lamezia-trasparente/src/data/lameziaClimate.ts"],
+      "canonicalDestination": [
+        "planned statistical series/releases/observations"
+      ],
+      "status": "STRUCTURED_INFORMATION_OUTSIDE_DATABASE",
+      "priority": "P0",
+      "substantiveContent": "Gridded/reanalysis estimates, not certified local station readings; preserve units and derivation.",
+      "recordCounts": null,
+      "dependencies": ["statistics_core"],
+      "provenanceQuality": "Source-specific evidence inspected; universal provenance coverage not certified.",
+      "duplicationRisk": "Independent source, canonical and consumer representations require reconciliation.",
+      "migrationComplexity": "requires-domain-review",
+      "publicImpact": "Preserve source meaning, uncertainty, coverage and publication restrictions.",
+      "statusBasis": "Bounded repository/consumer review and identified Neon count, not evidence of public deployment.",
+      "sourceRegistration": "not-certified-for-entire-domain",
+      "typedCanonicalisation": "not-certified-for-entire-domain",
+      "consumerCutover": "pending",
+      "legacyWriteStatus": "requires-review",
+      "legacyReadStatus": "active-or-requires-review",
+      "provenanceStatus": "domain-specific",
+      "validationStatus": "See executable tests and separate run receipts; no deployment inferred.",
+      "productionStatus": "unverified-not-deployed",
+      "residualIssue": "Domain migration and consumer convergence remain pending."
+    },
+    {
+      "id": "airport-series",
+      "domain": "statistics",
+      "locations": [
+        "artifacts/lamezia-trasparente/src/data/generated/lameziaAirTrafficMonthly.json"
+      ],
+      "consumers": [
+        "artifacts/lamezia-trasparente/src/data/lameziaAirTraffic.ts"
+      ],
+      "canonicalDestination": [
+        "planned statistical series/releases/observations"
+      ],
+      "status": "STRUCTURED_INFORMATION_OUTSIDE_DATABASE",
+      "priority": "P0",
+      "substantiveContent": "Monthly airport observations and derived summaries currently reside in generated files.",
+      "recordCounts": null,
+      "dependencies": ["statistics_core"],
+      "provenanceQuality": "Source-specific evidence inspected; universal provenance coverage not certified.",
+      "duplicationRisk": "Independent source, canonical and consumer representations require reconciliation.",
+      "migrationComplexity": "requires-domain-review",
+      "publicImpact": "Preserve source meaning, uncertainty, coverage and publication restrictions.",
+      "statusBasis": "Bounded repository/consumer review and identified Neon count, not evidence of public deployment.",
+      "sourceRegistration": "not-certified-for-entire-domain",
+      "typedCanonicalisation": "not-certified-for-entire-domain",
+      "consumerCutover": "pending",
+      "legacyWriteStatus": "requires-review",
+      "legacyReadStatus": "active-or-requires-review",
+      "provenanceStatus": "domain-specific",
+      "validationStatus": "See executable tests and separate run receipts; no deployment inferred.",
+      "productionStatus": "unverified-not-deployed",
+      "residualIssue": "Domain migration and consumer convergence remain pending."
+    },
+    {
+      "id": "crime-event-bundles",
+      "domain": "events",
+      "locations": ["data/legalita/ltceds/monitor"],
+      "consumers": ["lib/db/src/crimeMonitorIngestion.ts"],
+      "canonicalDestination": [
+        "crime_events",
+        "crime_sources",
+        "crime_event_sources",
+        "crime_public_events"
+      ],
+      "status": "REQUIRES_ENTITY_RESOLUTION",
+      "priority": "P1",
+      "substantiveContent": "Domain persistence exists; universal addressability, source coverage and public eligibility require separate checks.",
+      "recordCounts": {
+        "observedEvents": 99,
+        "notEquivalentToPublishableEvents": true
+      },
+      "dependencies": ["canonical-event-addressability", "publication-policy"],
+      "provenanceQuality": "Source-specific evidence inspected; universal provenance coverage not certified.",
+      "duplicationRisk": "Independent source, canonical and consumer representations require reconciliation.",
+      "migrationComplexity": "requires-domain-review",
+      "publicImpact": "Preserve source meaning, uncertainty, coverage and publication restrictions.",
+      "statusBasis": "Bounded repository/consumer review and identified Neon count, not evidence of public deployment.",
+      "sourceRegistration": "not-certified-for-entire-domain",
+      "typedCanonicalisation": "not-certified-for-entire-domain",
+      "consumerCutover": "pending",
+      "legacyWriteStatus": "requires-review",
+      "legacyReadStatus": "active-or-requires-review",
+      "provenanceStatus": "domain-specific",
+      "validationStatus": "See executable tests and separate run receipts; no deployment inferred.",
+      "productionStatus": "unverified-not-deployed",
+      "residualIssue": "Domain migration and consumer convergence remain pending."
+    },
+    {
+      "id": "company-measure-scope",
+      "domain": "organisations",
+      "locations": [
+        "data/legalita/ltceds/monitor/2026-09-07/lamezia-attentato-dinamitardo-il-fornaio-via-piave-2017-03-30.json",
+        "data/legalita/ltceds/monitor/2026-09-07/lamezia-tentato-furto-sud-lavaggio-2025-02-10.json"
+      ],
+      "consumers": ["lib/db/src/crimeMonitorIngestion.ts"],
+      "canonicalDestination": [
+        "planned organisations/measure/proceeding relations"
+      ],
+      "status": "REQUIRES_ENTITY_RESOLUTION",
+      "priority": "P1",
+      "substantiveContent": "Inspected bundles mention business premises or victims, not necessarily businesses subject to measures. A complete separate corporate-measures register was not located in this bounded review. Do not synthesise one from these mentions.",
+      "recordCounts": null,
+      "dependencies": ["party_core", "measure-versus-occurrence-semantics"],
+      "provenanceQuality": "Source-specific evidence inspected; universal provenance coverage not certified.",
+      "duplicationRisk": "Independent source, canonical and consumer representations require reconciliation.",
+      "migrationComplexity": "requires-domain-review",
+      "publicImpact": "Preserve source meaning, uncertainty, coverage and publication restrictions.",
+      "statusBasis": "Bounded repository/consumer review and identified Neon count, not evidence of public deployment.",
+      "sourceRegistration": "not-certified-for-entire-domain",
+      "typedCanonicalisation": "not-certified-for-entire-domain",
+      "consumerCutover": "pending",
+      "legacyWriteStatus": "requires-review",
+      "legacyReadStatus": "active-or-requires-review",
+      "provenanceStatus": "domain-specific",
+      "validationStatus": "See executable tests and separate run receipts; no deployment inferred.",
+      "productionStatus": "unverified-not-deployed",
+      "residualIssue": "Domain migration and consumer convergence remain pending."
+    },
+    {
+      "id": "reusable-taxonomy",
+      "domain": "taxonomy",
+      "locations": ["scripts/albo-classification-dictionary.ts"],
+      "consumers": ["scripts/albo-tinnvision.ts"],
+      "canonicalDestination": [
+        "planned taxonomy schemes/concepts/classifications"
+      ],
+      "status": "STRUCTURED_INFORMATION_OUTSIDE_DATABASE",
+      "priority": "P3",
+      "substantiveContent": "Substantive classifications are held in code; retain version and source meaning.",
+      "recordCounts": null,
+      "dependencies": ["taxonomy_core"],
+      "provenanceQuality": "Source-specific evidence inspected; universal provenance coverage not certified.",
+      "duplicationRisk": "Independent source, canonical and consumer representations require reconciliation.",
+      "migrationComplexity": "requires-domain-review",
+      "publicImpact": "Preserve source meaning, uncertainty, coverage and publication restrictions.",
+      "statusBasis": "Bounded repository/consumer review and identified Neon count, not evidence of public deployment.",
+      "sourceRegistration": "not-certified-for-entire-domain",
+      "typedCanonicalisation": "not-certified-for-entire-domain",
+      "consumerCutover": "pending",
+      "legacyWriteStatus": "requires-review",
+      "legacyReadStatus": "active-or-requires-review",
+      "provenanceStatus": "domain-specific",
+      "validationStatus": "See executable tests and separate run receipts; no deployment inferred.",
+      "productionStatus": "unverified-not-deployed",
+      "residualIssue": "Domain migration and consumer convergence remain pending."
+    },
+    {
+      "id": "policy-evidence",
+      "domain": "editorial-research",
+      "locations": [
+        "artifacts/lamezia-trasparente/src/data/evidenceInterventionsArchive.ts",
+        "artifacts/lamezia-trasparente/src/data/evidenceInterventions20260910.ts"
+      ],
+      "consumers": [
+        "artifacts/lamezia-trasparente/src/data/evidenceInterventionsArchive.ts"
+      ],
+      "canonicalDestination": [
+        "editorial research records and source evidence"
+      ],
+      "status": "STRUCTURED_INFORMATION_OUTSIDE_DATABASE",
+      "priority": "P0",
+      "substantiveContent": "Curated research evidence is held in TypeScript; distinguish external study interpretations from observed municipal events.",
+      "recordCounts": null,
+      "dependencies": ["editorial-research-context"],
+      "provenanceQuality": "Source-specific evidence inspected; universal provenance coverage not certified.",
+      "duplicationRisk": "Independent source, canonical and consumer representations require reconciliation.",
+      "migrationComplexity": "requires-domain-review",
+      "publicImpact": "Preserve source meaning, uncertainty, coverage and publication restrictions.",
+      "statusBasis": "Bounded repository/consumer review and identified Neon count, not evidence of public deployment.",
+      "sourceRegistration": "not-certified-for-entire-domain",
+      "typedCanonicalisation": "not-certified-for-entire-domain",
+      "consumerCutover": "pending",
+      "legacyWriteStatus": "requires-review",
+      "legacyReadStatus": "active-or-requires-review",
+      "provenanceStatus": "domain-specific",
+      "validationStatus": "See executable tests and separate run receipts; no deployment inferred.",
+      "productionStatus": "unverified-not-deployed",
+      "residualIssue": "Domain migration and consumer convergence remain pending."
+    },
+    {
+      "id": "opendata-catalogue-status",
+      "domain": "presentation",
+      "locations": [
+        "artifacts/lamezia-trasparente/src/data/generated/lameziaOpenDataSeriesStatus.json"
+      ],
+      "consumers": [
+        "artifacts/lamezia-trasparente/src/data/lameziaOpenDataSeriesStatus.ts"
+      ],
+      "canonicalDestination": [
+        "derived catalogue; runtime snapshots for migrated measurements"
+      ],
+      "status": "DERIVED_OUTPUT",
+      "priority": "P4",
+      "substantiveContent": "Mixed-domain catalogue no longer copies municipal measurement years or freshness. Other domains still use static source metadata.",
+      "recordCounts": null,
+      "dependencies": ["remaining-domain-cutover"],
+      "provenanceQuality": "Source-specific evidence inspected; universal provenance coverage not certified.",
+      "duplicationRisk": "Independent source, canonical and consumer representations require reconciliation.",
+      "migrationComplexity": "requires-domain-review",
+      "publicImpact": "Preserve source meaning, uncertainty, coverage and publication restrictions.",
+      "statusBasis": "Bounded repository/consumer review and identified Neon count, not evidence of public deployment.",
+      "sourceRegistration": "not-certified-for-entire-domain",
+      "typedCanonicalisation": "not-certified-for-entire-domain",
+      "consumerCutover": "pending",
+      "legacyWriteStatus": "requires-review",
+      "legacyReadStatus": "active-or-requires-review",
+      "provenanceStatus": "domain-specific",
+      "validationStatus": "See executable tests and separate run receipts; no deployment inferred.",
+      "productionStatus": "unverified-not-deployed",
+      "residualIssue": "Domain migration and consumer convergence remain pending."
+    }
+  ]
+}
