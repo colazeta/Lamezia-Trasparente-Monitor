@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
+import { sourceSnapshotManifest } from "./sourceSnapshotManifest";
 import type { Pool } from "pg";
 import {
   prepareSourceSnapshotImport,
@@ -15,7 +16,13 @@ test("planning validates committed inputs without requiring any database configu
   const prepared = await prepareSourceSnapshotImport(root);
   assert.equal(prepared.report.mode, "plan");
   assert.equal(prepared.report.status, "planned");
-  assert.equal(prepared.sources.length, 5);
+  assert.equal(prepared.sources.length, sourceSnapshotManifest.length);
+  assert.equal(
+    prepared.sources.filter((source) =>
+      source.source.key.startsWith("lamezia.demographics."),
+    ).length,
+    3,
+  );
   assert.deepEqual(prepared.report.results, []);
   assert.match(prepared.report.repositoryCommit, /^[a-f0-9]{40}$/);
 });
