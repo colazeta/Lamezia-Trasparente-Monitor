@@ -1,0 +1,132 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-piantagione-cannabis-contrada-fiala-2021-06",
+  "discovered_at": "2026-09-14T22:20:44+02:00",
+  "updated_at": "2026-09-14T22:20:44+02:00",
+  "record_status": "verified_source",
+  "event_form": "continuous_episode",
+  "title": "Piantagione illegale di cannabis in contrada Fialà individuata dalla Guardia di Finanza nel giugno 2021",
+  "temporal": {
+    "start": "2021-06",
+    "end": "2021-06",
+    "edtf": "2021-06",
+    "precision": "month"
+  },
+  "sources": [
+    {
+      "source_key": "press:cn24tv:2021-06-08:piantagione-cannabis-fiala",
+      "source_type": "press_secondary",
+      "provider": "CN24TV",
+      "title": "Lamezia, blitz in contrada Fialà: scoperta vasta piantagione di marijuana",
+      "url": "https://cn24tv.it/news/223594/lamezia-blitz-in-contrada-fiala-scoperta-vasta-piantagione-di-marijuana.html",
+      "published_at": "2021-06-08T08:39:00+02:00",
+      "retrieved_at": "2026-09-14T22:20:44+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:calabriamagnifica:2021-06-08:piantagione-cannabis-fiala",
+      "source_type": "press_secondary",
+      "provider": "CalabriaMagnifica.it",
+      "title": "Scoperta nel Lametino piantagione di marijuana, arrestato il proprietario",
+      "url": "https://www.calabriamagnifica.it/cronaca-e-attualita/scoperta-nel-lametino-piantagione-di-marijuana-arrestato-il-proprietario/",
+      "published_at": "2021-06-08T00:00:00+02:00",
+      "retrieved_at": "2026-09-14T22:20:44+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:quotidiano-la-voce:2021-06-08:piantagione-cannabis-fiala",
+      "source_type": "press_secondary",
+      "provider": "Quotidiano La Voce",
+      "title": "Lamezia Terme, la Finanza scopre una piantagione di oltre 2mila piante di marijuana: un arresto",
+      "url": "https://www.quotidianolavoce.it/2021/06/08/lamezia-terme-la-finanza-scopre-una-piantagione-di-oltre-2mila-piante-di-marijuana-un-arresto/",
+      "published_at": "2021-06-08T00:00:00+02:00",
+      "retrieved_at": "2026-09-14T22:20:44+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:produzione-spaccio-stupefacenti",
+      "classification_source_key": "press:calabriamagnifica:2021-06-08:piantagione-cannabis-fiala",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": "art. 73 D.P.R. 309/1990",
+      "attempt_status": "completed",
+      "situational_context": [
+        "fonti contemporanee riferiscono che i finanzieri del Gruppo di Lamezia Terme individuarono in contrada Fialà un terreno di circa 3.500 metri quadrati, interamente recintato, con un piccolo caseggiato, cinque serre e impianti di irrigazione funzionali alla coltivazione intensiva di cannabis",
+        "nel terreno furono documentate 2.190 piante di Cannabis indica, di altezza compresa indicativamente tra 1,5 e 2,2 metri; le fonti stimavano che a fine ciclo produttivo avrebbero potuto generare almeno 200 kg di sostanza stupefacente",
+        "i controlli documentali riferiti dalle fonti non rilevarono titoli o autorizzazioni idonei a giustificare la liceità della coltivazione",
+        "le fonti qualificano il fatto ai sensi dell'art. 73 D.P.R. 309/1990 e riferiscono un arresto in flagranza; successivamente il Tribunale di Lamezia Terme, in rito direttissimo, dispose gli arresti domiciliari",
+        "le cronache dell'8 giugno 2021 collocano la scoperta nei giorni precedenti senza indicare un giorno univoco; per evitare falsa precisione, il record conserva la sola precisione mensile giugno 2021"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:contrada-fiala-piantagione:occurrence",
+      "basis_source_key": "press:cn24tv:2021-06-08:piantagione-cannabis-fiala",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "unknown",
+      "geometry": null,
+      "place_name": "Terreno di circa 3.500 m² in contrada Fialà",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:contrada-fiala-piantagione:discovery",
+      "basis_source_key": "press:cn24tv:2021-06-08:piantagione-cannabis-fiala",
+      "role": "discovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "unknown",
+      "geometry": null,
+      "place_name": "Terreno di circa 3.500 m² in contrada Fialà",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:contrada-fiala-piantagione:recovery",
+      "basis_source_key": "press:quotidiano-la-voce:2021-06-08:piantagione-cannabis-fiala",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "unknown",
+      "geometry": null,
+      "place_name": "Terreno di circa 3.500 m² in contrada Fialà",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
