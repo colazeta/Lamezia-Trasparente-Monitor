@@ -126,7 +126,7 @@ Le regole non permettono di usare la stampa o la copertura audiovisiva editorial
 
 Se la ricerca è stata eseguita senza risultati abbastanza precisi, lo stato è `checked_no_match`. Questo documenta il controllo compiuto e non dimostra che non esistano articoli pertinenti.
 
-### Contesto revisionato fino al 12 settembre 2026
+### Contesto revisionato fino al 14 settembre 2026
 
 | Pubblicazione / seduta                     | Articolo                                                                                                                                                                                                                                                                                                             | Relazione               | Limite del collegamento                                                                                                                           |
 | ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
