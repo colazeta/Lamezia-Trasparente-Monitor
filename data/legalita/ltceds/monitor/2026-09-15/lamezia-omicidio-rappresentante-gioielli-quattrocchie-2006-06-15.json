@@ -40,6 +40,7 @@
         "event_support",
         "classification_support",
         "location_support",
+        "procedural_context",
         "corroboration"
       ]
     },
@@ -69,8 +70,8 @@
       "legal_reference": null,
       "attempt_status": "completed",
       "situational_context": [
-        "le fonti contemporanee riferiscono che la vittima, un rappresentante di gioielli, fu raggiunta da almeno cinque colpi di pistola mentre si trovava a bordo della propria automobile nel cortile antistante una palazzina in località Quattrocchie e morì poco dopo il ricovero in ospedale",
-        "la prima ricostruzione investigativa riportata dalla stampa descrive l'episodio come un agguato e indica la fuga di due persone a bordo di una moto; il record non attribuisce una matrice o un movente non accertati",
+        "le fonti contemporanee riferiscono che la vittima, un rappresentante di gioielli, fu raggiunta da almeno cinque colpi di pistola mentre si trovava a bordo della propria automobile nel cortile antistante una palazzina in località Quattrocchie e morì per le ferite poco dopo l'agguato; una cronaca iniziale parlò di decesso dopo il ricovero, mentre un aggiornamento del giorno successivo precisò che il decesso avvenne durante il trasporto verso l'ospedale",
+        "la prima ricostruzione investigativa riportata dalla stampa descrive l'episodio come un agguato e indica la fuga di due persone a bordo di una moto; un aggiornamento del 16 giugno riferì che, in quella fase, gli investigatori tendevano a escludere la matrice della criminalità organizzata; il record non attribuisce comunque una matrice o un movente non accertati",
         "le fonti collocano il fatto intorno alle ore 21 del 15 giugno 2006, ma il record conserva prudenzialmente la sola data esatta perché i metadati temporali di una pagina d'archivio non sono coerenti con l'orario narrato nel testo"
       ],
       "cyber_related": null,
