@@ -550,6 +550,31 @@ describe("councilSessionV0", () => {
       /collegamenti di contesto non certificano svolgimento/i,
     );
 
+    const schoolTransportSession = commissionIv.find(
+      (session) => session.scheduledAt.value === "2026-09-14T11:00:00+02:00",
+    );
+    expect(schoolTransportSession?.contextResearch).toEqual(
+      expect.objectContaining({
+        status: "reviewed_matches",
+        checkedAt: "2026-09-14T10:13:39Z",
+        media: [],
+      }),
+    );
+    expect(schoolTransportSession?.contextResearch.articles).toEqual([
+      expect.objectContaining({
+        publisher: "City One",
+        publishedAt: "2026-09-11",
+        relationship: "agenda_item",
+        url: "https://www.cityonelamezia.it/lamezia-gianturco-assistenza-specialistica-si-parte-con-il-nuovo-anno-scolastico-piu-ore-per-gli-alunni-con-disabilita/",
+      }),
+    ]);
+    expect(schoolTransportSession?.lastCheckedAt.value).toBe(
+      "2026-09-14T10:13:39Z",
+    );
+    expect(schoolTransportSession?.dataLimits.value?.join(" ")).toMatch(
+      /collegamenti di contesto non certificano svolgimento/i,
+    );
+
     expect(guarantorSingle[0]?.provenance).toEqual(
       expect.objectContaining({
         documentUrl: expect.stringContaining("2026_2879_1_X"),
@@ -581,7 +606,9 @@ describe("councilSessionV0", () => {
     for (const session of [
       ...guarantorSingle,
       ...commissionIv.filter(
-        (entry) => entry.id !== municipalNurseriesSession?.id,
+        (entry) =>
+          entry.id !== municipalNurseriesSession?.id &&
+          entry.id !== schoolTransportSession?.id,
       ),
       ...guarantorCalendar,
     ]) {
