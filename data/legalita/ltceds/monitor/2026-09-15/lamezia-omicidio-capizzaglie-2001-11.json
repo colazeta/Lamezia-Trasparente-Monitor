@@ -1,0 +1,128 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-omicidio-capizzaglie-2001-11",
+  "discovered_at": "2026-09-15T21:51:03+02:00",
+  "updated_at": "2026-09-15T21:51:03+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Omicidio con arma da fuoco in contrada Capizzaglie tra il 6 e il 7 novembre 2001",
+  "temporal": {
+    "start": "2001-11-06",
+    "end": "2001-11-07",
+    "edtf": "2001-11-06/2001-11-07",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "press:lametino:2021-07-07:omicidio-2001-assoluzione",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Omicidio del 2001 a Lamezia: assoluzione nel procedimento giudiziario",
+      "url": "https://www.lametino.it/cronaca/omicidio-di-spena-nel-2001-a-lamezia-assolto-pasquale-torcasio.html",
+      "published_at": "2021-07-07T14:04:00+02:00",
+      "retrieved_at": "2026-09-15T21:51:03+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lametino:2021-10-27:omicidio-2001-assoluzioni",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Omicidio del 2001 a Lamezia: assoluzioni nel procedimento giudiziario",
+      "url": "https://www.lametino.it/cronaca/omicidio-di-spena-nel-2001-a-lamezia-assolti-vincenzo-torcasio-e-antonio-villella-dall-accusa-di-essere-mandante-ed-esecutore.html",
+      "published_at": "2021-10-27T00:00:00+02:00",
+      "retrieved_at": "2026-09-15T21:51:03+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lametino:2022-06-11:omicidio-2001-appello",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Omicidio del 2001 a Lamezia: conferma in appello di un'assoluzione",
+      "url": "https://www.lametino.it/cronaca/omicidio-di-spena-nel-2001-a-lamezia-confermata-in-appello-l-assoluzione-di-pasquale-torcasio.html",
+      "published_at": "2022-06-11T00:00:00+02:00",
+      "retrieved_at": "2026-09-15T21:51:03+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "other:resistere-lamezia:2010-03-29:ndrangheta-1998-2004",
+      "source_type": "other",
+      "provider": "Resistere a Lamezia",
+      "title": "Notizie di ‘Ndrangheta, anni 1998-2004",
+      "url": "https://resisterealamezia.wordpress.com/2010/03/29/notizie-di-ndrangheta-98-04/",
+      "published_at": "2010-03-29T00:00:00+02:00",
+      "retrieved_at": "2026-09-15T21:51:03+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "press:lametino:2022-06-11:omicidio-2001-appello",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le cronache giudiziarie consultate trattano il fatto come omicidio e riferiscono che la vittima fu raggiunta da più colpi d'arma da fuoco mentre rientrava a casa, morendo successivamente per le ferite riportate.",
+        "Le fonti divergono sulla data: una cronaca giudiziaria del 7 luglio 2021 indica il 6 novembre 2001, mentre le cronache del 27 ottobre 2021 e dell'11 giugno 2022 e la ricostruzione locale indicano il 7 novembre; il record conserva pertanto l'intervallo 6-7 novembre.",
+        "Le cronache giudiziarie riferiscono assoluzioni nei successivi procedimenti relativi all'attribuzione di responsabilità per il delitto; il record non attribuisce responsabilità individuali."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:contrada-capizzaglie:occurrence",
+      "basis_source_key": "other:resistere-lamezia:2010-03-29:ndrangheta-1998-2004",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Contrada Capizzaglie",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:contrada-capizzaglie:target",
+      "basis_source_key": "other:resistere-lamezia:2010-03-29:ndrangheta-1998-2004",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Contrada Capizzaglie",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
