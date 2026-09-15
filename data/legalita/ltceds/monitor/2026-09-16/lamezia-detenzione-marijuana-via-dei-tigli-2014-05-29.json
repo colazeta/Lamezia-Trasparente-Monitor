@@ -1,0 +1,131 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-detenzione-marijuana-via-dei-tigli-2014-05-29",
+  "discovered_at": "2026-09-16T01:20:58+02:00",
+  "updated_at": "2026-09-16T01:20:58+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Detenzione ai fini di spaccio di circa 32 kg di marijuana in un furgone in via dei Tigli il 29 maggio 2014",
+  "temporal": {
+    "start": "2014-05-29",
+    "end": "2014-05-29",
+    "edtf": "2014-05-29",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "law:polizia-stato-questura-catanzaro:2014-10-09:operazione-tenaglia",
+      "source_type": "law_enforcement_primary",
+      "provider": "Polizia di Stato — Questura di Catanzaro",
+      "title": "Operazione antidroga “Tenaglia”",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/5730df5c671c0531954009",
+      "published_at": null,
+      "retrieved_at": "2026-09-16T01:20:58+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2014-10-09:operazione-tenaglia",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Operazione Tenaglia: Arrestate 15 persone in Calabria e Puglia",
+      "url": "https://www.lametino.it/cronaca/operazione-tenaglia-arrestate-15-persone-in-calabria-e-puglia.html",
+      "published_at": "2014-10-09T07:44:00+02:00",
+      "retrieved_at": "2026-09-16T01:20:58+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2015-03-11:tenaglia-via-dei-tigli",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: operazione Tenaglia, polizia arresta nuovamente Pasquale Gullo",
+      "url": "https://www.lametino.it/cronaca/lamezia-operazione-tenaglia-polizia-arresta-nuovamente-pasquale-gullo.html",
+      "published_at": "2015-03-11T00:00:00+01:00",
+      "retrieved_at": "2026-09-16T01:20:58+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:cn24tv:2015-03-11:tenaglia-via-dei-tigli",
+      "source_type": "press_secondary",
+      "provider": "CN24TV",
+      "title": "Droga, Lamezia: operazione Tenaglia, indagato torna in carcere",
+      "url": "https://cn24tv.it/news/107831/droga-lamezia-operazione-tenaglia-indagato-torna-in-carcere.html",
+      "published_at": "2015-03-11T00:00:00+01:00",
+      "retrieved_at": "2026-09-16T01:20:58+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:detenzione-stupefacenti-fini-spaccio",
+      "classification_source_key": "law:polizia-stato-questura-catanzaro:2014-10-09:operazione-tenaglia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Il 29 maggio 2014 la Polizia sequestrò a Lamezia Terme circa 32–33 kg di marijuana nell'ambito delle indagini poi confluite nell'operazione Tenaglia.",
+        "Le ricostruzioni successive dell'indagine identificano il luogo di custodia dello stupefacente in un furgone parcheggiato a Capizzaglie, in via dei Tigli; questa formulazione è conservata senza inferire civico, tratto puntuale o coordinate.",
+        "La fonte primaria della Questura riferisce che i soggetti raggiunti dai provvedimenti cautelari dell'operazione erano ritenuti responsabili, a vario titolo, di detenzione, vendita e trasporto di marijuana con l'aggravante dell'ingente quantità; il record usa tale qualificazione come base legale senza attribuire responsabilità individuali.",
+        "Le fonti del marzo 2015 riportano ulteriori sviluppi cautelari relativi a una singola posizione processuale; sono conservati come contesto procedurale e non come accertamento definitivo di responsabilità."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-dei-tigli:occurrence",
+      "basis_source_key": "press:il-lametino:2015-03-11:tenaglia-via-dei-tigli",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Via dei Tigli",
+      "neighbourhood": "Capizzaglie",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-dei-tigli:recovery",
+      "basis_source_key": "press:il-lametino:2015-03-11:tenaglia-via-dei-tigli",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Via dei Tigli",
+      "neighbourhood": "Capizzaglie",
+      "iccs_location_type": null
+    }
+  ]
+}
