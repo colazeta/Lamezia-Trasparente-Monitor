@@ -2,10 +2,10 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-duplice-omicidio-netturbini-sambiase-1991-05-24",
   "discovered_at": "2026-09-09T15:28:30+02:00",
-  "updated_at": "2026-09-09T15:28:30+02:00",
+  "updated_at": "2026-09-15T23:24:01+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
-  "title": "Duplice omicidio di due operatori ecologici a Sambiase",
+  "title": "Duplice omicidio di due operatori ecologici in via Miraglia, Sambiase",
   "temporal": {
     "start": "1991-05-24",
     "end": "1991-05-24",
@@ -55,6 +55,21 @@
         "corroboration",
         "procedural_context"
       ]
+    },
+    {
+      "source_key": "press:lacnews24:2026-06-15:omicidio-netturbini-via-miraglia",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "L'omicidio dei netturbini a Lamezia e la gestione della raccolta rifiuti, la Dda riapre l'inchiesta sull'eccidio del 1991",
+      "url": "https://www.lacnews24.it/cronaca/lomicidio-dei-netturbini-a-lamezia-e-la-gestione-della-raccolta-rifiuti-la-dda-riapre-linchiesta-sulleccidio-del-1991-ab6zbk33",
+      "published_at": "2026-06-15T00:00:00+02:00",
+      "retrieved_at": "2026-09-15T23:24:01+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
     }
   ],
   "offences": [
@@ -70,9 +85,10 @@
       "attempt_status": "completed",
       "situational_context": [
         "le fonti qualificano espressamente il fatto come duplice omicidio e lo datano al 24 maggio 1991",
-        "la fonte più recente colloca il delitto a Sambiase e riferisce che nel giugno 2026 la Direzione distrettuale antimafia di Catanzaro ha riaperto le indagini a distanza di trentacinque anni",
+        "la fonte più recente colloca il delitto in via Miraglia, nell'area di Sambiase, e riferisce che nel giugno 2026 la Direzione distrettuale antimafia di Catanzaro ha riaperto le indagini a distanza di trentacinque anni",
         "la matrice mafiosa è riportata da fonti giornalistiche e memoriali ma non viene trasformata in una distinta qualificazione giuridica nel presente record",
-        "la riapertura dell'indagine mostra che l'attribuzione delle responsabilità resta non definita; il record censisce l'evento storico e non attribuisce responsabilità individuali"
+        "la riapertura dell'indagine mostra che l'attribuzione delle responsabilità resta non definita; il record censisce l'evento storico e non attribuisce responsabilità individuali",
+        "la ricerca geografica dedicata ha individuato la formulazione 'eccidio di via Miraglia'; il record conserva il livello di strada senza inferire civico, tratto più ristretto o coordinate"
       ],
       "cyber_related": null,
       "affected_object_count": 2
@@ -81,16 +97,16 @@
   "locations": [
     {
       "location_key": "location:lamezia-terme:sambiase:occurrence",
-      "basis_source_key": "press:gazzetta-sud:2026-06-15:duplice-omicidio-netturbini",
+      "basis_source_key": "press:lacnews24:2026-06-15:omicidio-netturbini-via-miraglia",
       "role": "occurrence",
       "municipality": "Lamezia Terme",
-      "evidence_basis": "source_stated_neighbourhood",
-      "evidence_precision": "neighbourhood",
-      "resolved_precision": "neighbourhood",
-      "sensitivity": "non_sensitive",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
       "publication_risk": "victim_linked",
       "geometry": null,
-      "place_name": "Sambiase",
+      "place_name": "Via Miraglia, Sambiase",
       "neighbourhood": "Sambiase",
       "iccs_location_type": null
     }
