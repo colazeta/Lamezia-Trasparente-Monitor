@@ -1,0 +1,99 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-tentata-rapina-ufficio-postale-centrale-2005-07-04",
+  "discovered_at": "2026-09-15T06:04:48+02:00",
+  "updated_at": "2026-09-15T06:04:48+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Tentata rapina armata all'ufficio postale centrale di Lamezia Terme il 4 luglio 2005",
+  "temporal": {
+    "start": "2005-07-04",
+    "end": "2005-07-04",
+    "edtf": "2005-07-04",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:uscatanzaro:2005-07-04:tentata-rapina-ufficio-postale-centrale",
+      "source_type": "press_secondary",
+      "provider": "UsCatanzaro.net",
+      "title": "CRONACA - Tentata rapina ufficio postale Lamezia Terme 2 arresti",
+      "url": "https://www.uscatanzaro.net/cronaca-tentata-rapina-ufficio-postale-lamezia-terme-2-arresti",
+      "published_at": null,
+      "retrieved_at": "2026-09-15T06:04:48+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "press:uscatanzaro:2005-07-04:tentata-rapina-ufficio-postale-centrale",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "la fonte contemporanea riferisce che due persone, notate dalla Polizia mentre indossavano passamontagna all'ingresso dell'ufficio postale centrale di Lamezia Terme, furono bloccate dopo un tentativo di fuga prima che la rapina venisse portata a compimento",
+        "una delle persone fermate aveva con sé una pistola con matricola abrasa; il record non inferisce ulteriori qualificazioni relative all'alterazione dell'arma oltre a quelle espressamente riportate dalla fonte"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:porto-detenzione-armi",
+      "classification_source_key": "press:uscatanzaro:2005-07-04:tentata-rapina-ufficio-postale-centrale",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "not_applicable",
+      "situational_context": [
+        "la fonte riferisce espressamente, insieme all'accusa di rapina, anche l'accusa di porto e detenzione di armi e documenta il rinvenimento di una pistola con matricola abrasa"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:ufficio-postale-centrale:occurrence",
+      "basis_source_key": "press:uscatanzaro:2005-07-04:tentata-rapina-ufficio-postale-centrale",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Ufficio postale centrale di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:ufficio-postale-centrale:target",
+      "basis_source_key": "press:uscatanzaro:2005-07-04:tentata-rapina-ufficio-postale-centrale",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Ufficio postale centrale di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
