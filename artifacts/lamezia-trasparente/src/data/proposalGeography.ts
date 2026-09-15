@@ -1,6 +1,7 @@
 import * as core from "./proposalGeographyCore";
 import { SCOUTED_PROPOSAL_GEOGRAPHY } from "./proposalGeographyScouting";
 import { SCOUTED_PROPOSAL_GEOGRAPHY_20260913 } from "./proposalGeographyScouting20260913";
+import { SCOUTED_PROPOSAL_GEOGRAPHY_20260915 } from "./proposalGeographyScouting20260915";
 
 export type {
   ProposalGeoArea,
@@ -23,6 +24,7 @@ export const PROPOSAL_GEOGRAPHY: Record<string, core.ProposalGeography> = {
   ...core.PROPOSAL_GEOGRAPHY,
   ...SCOUTED_PROPOSAL_GEOGRAPHY,
   ...SCOUTED_PROPOSAL_GEOGRAPHY_20260913,
+  ...SCOUTED_PROPOSAL_GEOGRAPHY_20260915,
 };
 
 export function getProposalGeography(
