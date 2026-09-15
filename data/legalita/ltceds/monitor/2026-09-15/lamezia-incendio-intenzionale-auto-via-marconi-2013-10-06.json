@@ -1,0 +1,112 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-incendio-intenzionale-auto-via-marconi-2013-10-06",
+  "discovered_at": "2026-09-15T23:49:51+02:00",
+  "updated_at": "2026-09-15T23:49:51+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Incendio intenzionale di un'autovettura in un cortile condominiale di via Marconi il 6 ottobre 2013",
+  "temporal": {
+    "start": "2013-10-06",
+    "end": "2013-10-06",
+    "edtf": "2013-10-06",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:il-lametino:2013-10-06:auto-fuoco-via-marconi",
+      "source_type": "press_secondary",
+      "provider": "il Lametino.it",
+      "title": "Lamezia: Auto a fuoco in via Marconi",
+      "url": "https://www.lametino.it/cronaca/lamezia-auto-a-fuoco-in-via-marconi.html",
+      "published_at": "2013-10-06T00:00:00+02:00",
+      "retrieved_at": "2026-09-15T23:49:51+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2013-10-07:auto-incendiata-via-marconi",
+      "source_type": "press_secondary",
+      "provider": "il Lametino.it",
+      "title": "Lamezia: Era del direttore Asp Mancuso l'auto in fiamme in via Marconi",
+      "url": "https://www.lametino.it/cronaca/lamezia-era-del-direttore-asp-mancuso-lauto-in-fiamme-in-via-marconi.html",
+      "published_at": "2013-10-07T00:00:00+02:00",
+      "retrieved_at": "2026-09-15T23:49:51+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "public:asp-catanzaro:2013-10-07:atto-criminoso-mancuso",
+      "source_type": "public_authority_primary",
+      "provider": "Azienda Sanitaria Provinciale di Catanzaro",
+      "title": "Messaggio di solidarieta' al Dottore Gerardo Mancuso per l'atto criminoso subito",
+      "url": "https://www.asp.cz.it/news/comunicati-stampa/2013/10/07/messaggio-di-solidarieta-al-dottore-gerardo-mancuso-per-latto-criminoso-subito-385/",
+      "published_at": "2013-10-07T00:00:00+02:00",
+      "retrieved_at": "2026-09-15T23:49:51+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:danneggiamento-incendiario",
+      "classification_source_key": "press:il-lametino:2013-10-07:auto-incendiata-via-marconi",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la fonte del 7 ottobre riferisce che ignoti cosparsero l'autovettura di liquido infiammabile e che polizia e vigili del fuoco rinvennero nelle vicinanze una tanica di benzina",
+        "le fonti qualificano l'episodio come atto intimidatorio o criminoso, ma non è stata reperita in questa iterazione una contestazione penale individuale o una qualificazione giudiziaria più specifica",
+        "le indagini risultavano affidate al Commissariato di Polizia di Lamezia Terme; le fonti contemporanee non riportano un esito giudiziario definitivo"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-marconi-cortile-condominiale:occurrence",
+      "basis_source_key": "press:il-lametino:2013-10-07:auto-incendiata-via-marconi",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Cortile condominiale di via Marconi",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-marconi-cortile-condominiale:target",
+      "basis_source_key": "press:il-lametino:2013-10-07:auto-incendiata-via-marconi",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Cortile condominiale di via Marconi",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
