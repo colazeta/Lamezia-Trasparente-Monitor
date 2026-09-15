@@ -1,0 +1,116 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-passaporto-contraffatto-aeroporto-2025-07-31",
+  "discovered_at": "2026-09-15T12:39:11+02:00",
+  "updated_at": "2026-09-15T12:39:11+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Possesso di passaporto contraffatto rilevato ai controlli di frontiera dell'Aeroporto di Lamezia Terme il 31 luglio 2025",
+  "temporal": {
+    "start": "2025-07-31",
+    "end": "2025-07-31",
+    "edtf": "2025-07-31",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "police:questura-catanzaro:2025-08-05:passaporto-contraffatto-aeroporto-lamezia",
+      "source_type": "law_enforcement_primary",
+      "provider": "Polizia di Stato — Questura di Catanzaro",
+      "title": "Arrestato dalla Polizia di Frontiera di Lamezia Terme un cittadino afghano in possesso di un passaporto contraffatto",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/18076891efa4d1cfa429548801",
+      "published_at": "2025-08-05T00:00:00+02:00",
+      "retrieved_at": "2026-09-15T12:39:11+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:calabriaok:2025-08-05:passaporto-canadese-contraffatto-aeroporto",
+      "source_type": "press_secondary",
+      "provider": "CalabriaOk",
+      "title": "Falso Passaporto Canadese: Arrestato all'aeroporto di Lamezia Terme un cittadino afghano",
+      "url": "https://www.calabriaok.it/falso-passaporto-canadese-arrestato-allaeroporto-di-lamezia-terme-un-cittadino-afghano",
+      "published_at": "2025-08-05T19:36:00+02:00",
+      "retrieved_at": "2026-09-15T12:39:11+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:possesso-fabbricazione-documenti-identificazione-falsi",
+      "classification_source_key": "police:questura-catanzaro:2025-08-05:passaporto-contraffatto-aeroporto-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La Questura di Catanzaro riferisce che il 31 luglio 2025 la Polizia di Frontiera Aerea di Lamezia Terme ha arrestato in flagranza un passeggero che, durante i controlli prima dell'imbarco su un volo diretto a Toronto, esibiva un passaporto apparentemente canadese risultato contraffatto.",
+        "La stessa fonte riferisce che il giorno successivo il GIP ha convalidato l'arresto per possesso e fabbricazione di documenti di identificazione falsi e ricettazione, pronunciando una condanna a dieci mesi e venti giorni con pena sospesa. Il record rappresenta quanto riportato dalla fonte istituzionale senza sostituirsi al testo del provvedimento giudiziario.",
+        "Non sono registrati dati identificativi della persona coinvolta nel primo tranche LTCEDS."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    },
+    {
+      "offence_key": "offence:ricettazione",
+      "classification_source_key": "police:questura-catanzaro:2025-08-05:passaporto-contraffatto-aeroporto-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La ricettazione è riportata espressamente dalla Questura di Catanzaro tra i reati per i quali il GIP ha convalidato l'arresto il giorno successivo ai controlli aeroportuali; non vengono inferiti articoli di legge ulteriori."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:aeroporto-controlli-frontiera:occurrence",
+      "basis_source_key": "police:questura-catanzaro:2025-08-05:passaporto-contraffatto-aeroporto-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Aeroporto di Lamezia Terme — area dei controlli di frontiera in partenza",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:aeroporto-controlli-frontiera:arrest",
+      "basis_source_key": "police:questura-catanzaro:2025-08-05:passaporto-contraffatto-aeroporto-lamezia",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Aeroporto di Lamezia Terme — area dei controlli di frontiera in partenza",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
