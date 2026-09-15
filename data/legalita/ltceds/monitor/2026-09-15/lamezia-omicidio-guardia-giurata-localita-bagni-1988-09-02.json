@@ -1,0 +1,115 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-omicidio-guardia-giurata-localita-bagni-1988-09-02",
+  "discovered_at": "2026-09-15T18:32:00+02:00",
+  "updated_at": "2026-09-15T18:32:00+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Omicidio di una guardia giurata presso un cantiere in località Bagni il 2 settembre 1988",
+  "temporal": {
+    "start": "1988-09-02",
+    "end": "1988-09-02",
+    "edtf": "1988-09-02",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:il-lametino:2016-07-02:talarico",
+      "source_type": "press_secondary",
+      "provider": "il Lametino.it",
+      "title": "Omicidio Talarico, il figlio: “Mio padre vittima della ‘ndrangheta 28 anni fa”",
+      "url": "https://www.lametino.it/cronaca/omicidio-talarico-il-figlio-mio-padre-vittima-della-ndrangheta-28-anni-fa.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-15T18:32:00+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2017-09-24:talarico",
+      "source_type": "press_secondary",
+      "provider": "il Lametino.it",
+      "title": "Lamezia: ucciso dalla ‘ndrangheta nell’88, familiari scrivono a Presidente Mattarella",
+      "url": "https://www.lametino.it/ultimora/lamezia-ucciso-dalla-ndrangheta-nell-88-familiari-scrivono-a-presidente-mattarella.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-15T18:32:00+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "other:trame:2024-06-03:talarico",
+      "source_type": "other",
+      "provider": "Fondazione Trame",
+      "title": "Memoria. Il manifesto del 24 maggio, Giornata della memoria lametina delle vittime innocenti di ndrangheta",
+      "url": "https://www.tramefestival.it/en/w/memoria.-il-manifesto-del-24-maggio-giornata-della-memoria-lametina-delle-vittime-innocenti-di-ndrangheta-",
+      "published_at": null,
+      "retrieved_at": "2026-09-15T18:32:00+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "press:il-lametino:2017-09-24:talarico",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Vittima raggiunta da colpi d'arma da fuoco mentre si apprestava ad accedere al cantiere in cui prestava servizio",
+        "Le fonti retrospettive collegano il delitto al controllo criminale delle guardianie nell'area di Sambiase",
+        "Le fonti riferiscono una condanna a trent'anni successivamente confermata in via definitiva"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:localita-bagni:cantiere:occurrence",
+      "basis_source_key": "press:il-lametino:2016-07-02:talarico",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Cantiere edile in località Bagni, nei pressi del cimitero di Sambiase",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:localita-bagni:cantiere:target",
+      "basis_source_key": "press:il-lametino:2016-07-02:talarico",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Cantiere edile in località Bagni, nei pressi del cimitero di Sambiase",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    }
+  ]
+}
