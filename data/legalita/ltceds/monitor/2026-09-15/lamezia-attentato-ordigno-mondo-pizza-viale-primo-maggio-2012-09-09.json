@@ -1,0 +1,129 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-attentato-ordigno-mondo-pizza-viale-primo-maggio-2012-09-09",
+  "discovered_at": "2026-09-15T12:18:45+02:00",
+  "updated_at": "2026-09-15T12:18:45+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Attentato con ordigno contro la pizzeria Mondo Pizza in viale I Maggio il 9 settembre 2012",
+  "temporal": {
+    "start": "2012-09-09",
+    "end": "2012-09-09",
+    "edtf": "2012-09-09",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:il-lametino:2012-09-10:bomba-mondo-pizza-arresti",
+      "source_type": "press_secondary",
+      "provider": "il Lametino.it",
+      "title": "Lamezia: Bomba pizzeria, attentatori inchiodati da telecamere",
+      "url": "https://www.lametino.it/cronaca/lamezia-bomba-pizzeria-attentatori-inchiodati-da-telecamere.html",
+      "published_at": "2012-09-10T13:27:00+02:00",
+      "retrieved_at": "2026-09-15T12:18:45+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2012-09-10:pentiti-bomba-mondo-pizza",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "A Lamezia pentiti sotto attacco Presi gli autori della bomba",
+      "url": "https://www.corrieredellacalabria.it/2012/09/10/8158_a_lamezia_pentiti_sotto_attacco_presi_gli_autori_della_bomba/",
+      "published_at": "2012-09-10T09:16:00+02:00",
+      "retrieved_at": "2026-09-15T12:18:45+02:00",
+      "support_roles": [
+        "event_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "news:ansa:2012-09-10:attentato-mondo-pizza-arresti",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Lamezia Terme, attentato contro sorella pentito, arresti",
+      "url": "https://www.ntacalabria.it/catanzaro/lamezia-terme-cz-attentato-contro-sorella-pentito-arresti.html",
+      "published_at": "2012-09-10T00:00:00+02:00",
+      "retrieved_at": "2026-09-15T12:18:45+02:00",
+      "support_roles": [
+        "event_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:danneggiamento-aggravato",
+      "classification_source_key": "press:il-lametino:2012-09-10:bomba-mondo-pizza-arresti",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti contemporanee documentano l'esplosione all'alba del 9 settembre 2012 di un ordigno davanti alla pizzeria Mondo Pizza a Lamezia Terme, con distruzione o grave danneggiamento dell'ingresso e danni collaterali ad almeno un'automobile parcheggiata.",
+        "Il giorno successivo i Carabinieri di Lamezia Terme eseguirono arresti nei confronti dei presunti esecutori materiali; la cronaca riferisce il coordinamento della Procura di Lamezia Terme e della Direzione distrettuale antimafia di Catanzaro.",
+        "Il Lametino riferisce espressamente la contestazione di danneggiamento aggravato; la qualificazione è registrata come contestazione investigativa e cautelare e non come accertamento definitivo di responsabilità.",
+        "La localizzazione segue le fonti contemporanee convergenti che collocano Mondo Pizza in viale I Maggio, indicato anche come viale Primo Maggio. Una diversa cronaca secondaria colloca l'attentato in piazza Mercato Vecchio; non viene utilizzata come base geografica perché confligge con le fonti più specifiche e con il sito commerciale nominato. Non vengono inferiti civico o coordinate."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:porto-illegale-arma",
+      "classification_source_key": "press:il-lametino:2012-09-10:bomba-mondo-pizza-arresti",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "not_applicable",
+      "situational_context": [
+        "Il Lametino include il porto illegale d'arma tra le contestazioni formulate dopo l'attentato con ordigno; il record conserva la qualificazione espressamente riportata senza aggiungere articoli di legge non attestati dalle fonti esaminate."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:mondo-pizza-viale-primo-maggio:occurrence",
+      "basis_source_key": "press:il-lametino:2012-09-10:bomba-mondo-pizza-arresti",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Pizzeria Mondo Pizza, viale I Maggio",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:mondo-pizza-viale-primo-maggio:target",
+      "basis_source_key": "press:il-lametino:2012-09-10:bomba-mondo-pizza-arresti",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Pizzeria Mondo Pizza, viale I Maggio",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
