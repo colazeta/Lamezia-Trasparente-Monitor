@@ -1,0 +1,160 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-omicidio-contrada-carra-capizzaglie-2008-11-13",
+  "discovered_at": "2026-09-15T10:10:20+02:00",
+  "updated_at": "2026-09-15T10:10:20+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Omicidio con arma da fuoco e successivo incendio del veicolo con recupero del corpo in contrada Carrà il 13 novembre 2008",
+  "temporal": {
+    "start": "2008-11-13",
+    "end": "2008-11-13",
+    "edtf": "2008-11-13",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:nuova-cosenza:2009-07-03:omicidio-13-novembre-2008",
+      "source_type": "press_secondary",
+      "provider": "Nuova Cosenza Quotidiano Digitale",
+      "title": "Amendola ucciso per l'acquisto di una pistola",
+      "url": "https://www.nuovacosenza.com/cs/09/agosto/omicAmendola.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-15T10:10:20+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:nuova-cosenza:2009-08-06:terzo-arresto-omicidio-2008",
+      "source_type": "press_secondary",
+      "provider": "Nuova Cosenza Quotidiano Digitale",
+      "title": "Omicidio Amendola, terzo arresto",
+      "url": "https://www.nuovacosenza.com/cs/09/agosto/omicAmendolaTre.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-15T10:10:20+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2012-06-21:omicidio-contrada-carra-2008",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Amendola ucciso e bruciato, due ergastoli e una assoluzione",
+      "url": "https://www.corrieredellacalabria.it/2012/06/21/6348_amendola_ucciso_e_bruciato_due_ergastoli_e_una_assoluzione/",
+      "published_at": null,
+      "retrieved_at": "2026-09-15T10:10:20+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2012-09-11:medusa-omicidio-13-novembre-2008",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: I retroscena che hanno portato al pentimento dei coniugi Angotti",
+      "url": "https://www.lametino.it/cronaca/lamezia-i-retroscena-che-hanno-portato-al-pentimento-dei-coniugi-angotti.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-15T10:10:20+02:00",
+      "support_roles": [
+        "event_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2014-01-17:appello-omicidio-2008",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: Omicidio Amendola, un'assoluzione e due condanne",
+      "url": "https://www.lametino.it/cronaca/lamezia-omicidio-amendola-unassoluzione-e-due-condanne.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-15T10:10:20+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "press:corriere-calabria:2012-06-21:omicidio-contrada-carra-2008",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti investigative e giudiziarie secondarie concordano sulla consumazione dell'omicidio mediante colpi d'arma da fuoco; il veicolo con il corpo fu successivamente dato alle fiamme e rinvenuto nelle campagne di contrada Carrà, nel quartiere Capizzaglie",
+        "la ricostruzione dell'operazione Quinto comandamento riferisce che la vittima fu accompagnata davanti a un'abitazione privata a Lamezia Terme con il pretesto dell'acquisto di una pistola e che in quel contesto furono esplosi i colpi; il record non tenta di geolocalizzare l'abitazione privata",
+        "la data canonica è il 13 novembre 2008: le fonti investigative contemporanee e la ricostruzione dell'ordinanza Medusa riportano il 13/11/2008, con intercettazione ambientale tra le 19:34 e le 19:48; alcune cronache successive del 2013-2014 riportano invece il 23 novembre, trattato come discrepanza documentale e non come nuova temporalità",
+        "nel giugno 2012 la Corte d'assise di Catanzaro pronunciò due condanne all'ergastolo e un'assoluzione; nel gennaio 2014 la Corte d'assise d'appello rideterminò due condanne a trenta anni e confermò l'assoluzione. Il record rappresenta tali sviluppi come contesto giudiziario e non come identificazione personale dei soggetti coinvolti"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata-non-identificata:occurrence",
+      "basis_source_key": "press:nuova-cosenza:2009-07-03:omicidio-13-novembre-2008",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Davanti a un'abitazione privata non identificata a Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata-non-identificata:target",
+      "basis_source_key": "press:nuova-cosenza:2009-07-03:omicidio-13-novembre-2008",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Davanti a un'abitazione privata non identificata a Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:contrada-carra-capizzaglie:recovery",
+      "basis_source_key": "press:corriere-calabria:2012-06-21:omicidio-contrada-carra-2008",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "non_sensitive",
+      "geometry": null,
+      "place_name": "Contrada Carrà",
+      "neighbourhood": "Capizzaglie",
+      "iccs_location_type": null
+    }
+  ]
+}
