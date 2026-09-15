@@ -1,0 +1,145 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-omicidio-fotografo-ex-carabiniere-1996-12-16",
+  "discovered_at": "2026-09-15T17:37:47+02:00",
+  "updated_at": "2026-09-15T17:37:47+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Omicidio di un fotografo ed ex carabiniere nelle campagne di Lamezia Terme il 16 dicembre 1996",
+  "temporal": {
+    "start": "1996-12-16",
+    "end": "1996-12-16",
+    "edtf": "1996-12-16",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "ansa:2016-06-23:omicidio-fotografo-lamezia",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Mafia boss arrested 20 years after cop murder",
+      "url": "https://www.ansa.it/english/news/2016/06/23/mafia-boss-arrested-20-years-after-cop-murder_35badca9-f34e-4007-8144-7f31ca61ec91.html",
+      "published_at": "2016-06-23T11:59:00+02:00",
+      "retrieved_at": "2026-09-15T17:37:47+02:00",
+      "support_roles": [
+        "event_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2016-12-20:processo-omicidio-fotografo",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Prima udienza del processo per l'omicidio del fotografo lametino del 1996",
+      "url": "https://www.corrieredellacalabria.it/2016/12/20/via-al-processo-per-lomicidio-di-gennaro-ventura/",
+      "published_at": "2016-12-20T12:29:00+01:00",
+      "retrieved_at": "2026-09-15T17:37:47+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2019-02-07:appello-omicidio-fotografo",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Appello conferma la condanna per il mandante dell'omicidio del fotografo lametino",
+      "url": "https://www.corrieredellacalabria.it/2019/02/07/fotografo-ucciso-a-lamezia-confermati-30-anni-per-il-mandante/",
+      "published_at": "2019-02-07T15:47:00+01:00",
+      "retrieved_at": "2026-09-15T17:37:47+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2021-01-08:cassazione-omicidio-fotografo",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Cassazione conferma la condanna a 30 anni per il mandante dell'omicidio del fotografo lametino",
+      "url": "https://www.lametino.it/cronaca/lamezia-omicidio-ventura-cassazione-conferma-condanna-a-30-anni-per-cannizzaro.html",
+      "published_at": "2021-01-08T00:00:00+01:00",
+      "retrieved_at": "2026-09-15T17:37:47+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-fatto-quotidiano:2016-06-23:omicidio-fotografo-carra",
+      "source_type": "press_secondary",
+      "provider": "Il Fatto Quotidiano",
+      "title": "Ricostruzione DDA dell'omicidio del fotografo lametino a vent'anni dai fatti",
+      "url": "https://www.ilfattoquotidiano.it/2016/06/23/ndrangheta-dopo-20-anni-scoperto-il-mandante-dellomicidio-ventura-e-il-boss-cannizzaro/2855270/",
+      "published_at": "2016-06-23T00:00:00+02:00",
+      "retrieved_at": "2026-09-15T17:37:47+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "press:il-lametino:2021-01-08:cassazione-omicidio-fotografo",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti processuali ricostruiscono che il 16 dicembre 1996 un fotografo ed ex carabiniere fu attirato con il pretesto di un incarico di lavoro, ucciso con arma da fuoco e successivamente occultato in una cavità utilizzata per la fermentazione del mosto all'interno di un casolare agricolo abbandonato",
+        "le fonti collocano il delitto nelle campagne di Lamezia Terme ma non consentono di stabilire senza inferenza che l'uccisione sia avvenuta nel medesimo casolare in cui il corpo fu occultato; il luogo di occurrence resta pertanto a precisione comunale e senza geometria",
+        "i resti furono rinvenuti casualmente nel 2008 in un casolare abbandonato nell'area Carrà; le fonti usano le denominazioni Carrà-Volpe e Carrà Cosentino, conservate come discrepanza toponomastica senza attribuire coordinate",
+        "nel gennaio 2021 la Cassazione ha confermato la condanna a 30 anni per il soggetto indicato come mandante dell'omicidio; il record descrive lo stato probatorio finale senza inserire identità personali strutturate"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:campagne:occurrence",
+      "basis_source_key": "press:il-lametino:2021-01-08:cassazione-omicidio-fotografo",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Campagne di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:area-carra-casolare:recovery",
+      "basis_source_key": "press:corriere-calabria:2019-02-07:appello-omicidio-fotografo",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Casolare abbandonato nell'area Carrà (fonti: Carrà-Volpe / Carrà Cosentino)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
