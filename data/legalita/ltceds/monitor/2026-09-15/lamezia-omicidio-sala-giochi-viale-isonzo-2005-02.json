@@ -1,0 +1,116 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-omicidio-sala-giochi-viale-isonzo-2005-02",
+  "discovered_at": "2026-09-15T19:55:01+02:00",
+  "updated_at": "2026-09-15T19:55:01+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Omicidio con arma da fuoco presso una sala giochi di viale Isonzo nel febbraio 2005",
+  "temporal": {
+    "start": "2005-02-06",
+    "end": "2005-02-08",
+    "edtf": "2005-02-06/2005-02-08",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "press:nuova-cosenza:2006-10:lamezia-emergenza-mafia",
+      "source_type": "press_secondary",
+      "provider": "Nuova Cosenza Quotidiano Digitale",
+      "title": "Emergenza mafia: Lamezia sotto assedio dalla 'ndrangheta",
+      "url": "https://www.nuovacosenza.com/cs/06/ottobre/lamezia.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-15T19:55:01+02:00",
+      "support_roles": [
+        "event_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2016-06-22:omicidio-deodato",
+      "source_type": "press_secondary",
+      "provider": "il Lametino.it",
+      "title": "Omicidio Deodato, agli atti anche le dichiarazioni di Pasquale Giampà",
+      "url": "https://www.lametino.it/cronaca/omicidio-deodato-agli-atti-anche-le-dichiarazioni-di-pasquale-giampa.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-15T19:55:01+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lacnews24:2019-01-11:omicidio-deodato-appello",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Lamezia, omicidio Deodato. Confermate in appello le condanne",
+      "url": "https://www.lacnews24.it/cronaca/omicidio-deodato-confermate-in-appello-le-condanne-t2iq0mx6",
+      "published_at": "2019-01-11T17:40:00+01:00",
+      "retrieved_at": "2026-09-15T19:55:01+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "press:lacnews24:2019-01-11:omicidio-deodato-appello",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Agguato con arma da fuoco presso una sala giochi di viale Isonzo; le ricostruzioni riferiscono che gli aggressori agirono con il volto coperto da maschere di carnevale",
+        "Le fonti riportano anche il ferimento di una seconda persona nello stesso episodio, senza una qualificazione legale sufficientemente stabile da materializzare una seconda fattispecie in questa tranche",
+        "La cronologia retrospettiva consultata colloca la sparatoria il 6 febbraio 2005 e riferisce il decesso il giorno successivo; una successiva cronaca processuale data invece l'omicidio all'8 febbraio 2005. La temporalità è pertanto conservata come intervallo documentale 6-8 febbraio 2005",
+        "Nel 2019 una fonte di cronaca giudiziaria riferisce la conferma in appello di cinque condanne per l'omicidio"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:viale-isonzo:sala-giochi:occurrence",
+      "basis_source_key": "press:il-lametino:2016-06-22:omicidio-deodato",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Sala giochi non identificata in viale Isonzo",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:viale-isonzo:sala-giochi:target",
+      "basis_source_key": "press:il-lametino:2016-06-22:omicidio-deodato",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Sala giochi non identificata in viale Isonzo",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
