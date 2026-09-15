@@ -1,0 +1,128 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-duplice-omicidio-via-dei-campioni-1992-01-04",
+  "discovered_at": "2026-09-15T14:12:53+02:00",
+  "updated_at": "2026-09-15T14:12:53+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Duplice omicidio in via dei Campioni a Lamezia Terme il 4 gennaio 1992",
+  "temporal": {
+    "start": "1992-01-04",
+    "end": "1992-01-04",
+    "edtf": "1992-01-04",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "police:questura-catanzaro:2019-01-05:commemorazione-duplice-omicidio-1992",
+      "source_type": "law_enforcement_primary",
+      "provider": "Polizia di Stato — Questura di Catanzaro",
+      "title": "Commemorazione istituzionale del duplice omicidio del 4 gennaio 1992",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/12365c30e0172a523260779265",
+      "published_at": "2019-01-05T00:00:00+01:00",
+      "retrieved_at": "2026-09-15T14:12:53+02:00",
+      "support_roles": [
+        "event_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "media:rai-cultura:2019:la-notte-di-lamezia-duplice-omicidio-1992",
+      "source_type": "other",
+      "provider": "Rai Cultura — Diario Civile",
+      "title": "La notte di Lamezia: ricostruzione del duplice omicidio del 4 gennaio 1992",
+      "url": "https://www.raicultura.it/storia/articoli/2019/01/La-notte-di-Lamezia-storia-di-Salvatore-Aversa-83227633-0264-45a9-98d6-339f757b08d4.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-15T14:12:53+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2017-01-04:duplice-omicidio-via-dei-campioni-1992",
+      "source_type": "press_secondary",
+      "provider": "il Lametino.it",
+      "title": "Venticinque anni dal duplice omicidio del 4 gennaio 1992",
+      "url": "https://www.lametino.it/cronaca/lamezia-25-anni-fa-l-omicidio-di-salvatore-aversa-e-lucia-precenzano.html",
+      "published_at": "2017-01-04T00:00:00+01:00",
+      "retrieved_at": "2026-09-15T14:12:53+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lacnews24:2026-06-20:ricostruzione-omicidi-lamezia-1991-1992",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Ricostruzione storica degli omicidi di mafia a Lamezia nei primi anni Novanta",
+      "url": "https://www.lacnews24.it/cronaca/leccidio-dei-netturbini-a-lamezia-uninterrogazione-parlamentare-puntava-il-dito-contro-le-amministrative-del-1991-i0gpo4zm",
+      "published_at": "2026-06-20T17:18:00+02:00",
+      "retrieved_at": "2026-09-15T14:12:53+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "press:il-lametino:2017-01-04:duplice-omicidio-via-dei-campioni-1992",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti concordano sul duplice omicidio avvenuto a Lamezia Terme la sera del 4 gennaio 1992; la fonte istituzionale della Questura descrive il fatto come un'uccisione con modalità tipicamente mafiose.",
+        "Rai Cultura e la cronaca locale collocano l'agguato in via dei Campioni, nel centro cittadino; non viene inferito un civico o un punto geometrico più preciso.",
+        "Fonti successive richiamano un lungo iter giudiziario e una ricostruzione con esecutori confessi; il record documenta il fatto storico e il relativo contesto probatorio senza registrare identità personali e senza inferire ulteriori qualificazioni o responsabilità individuali non necessarie al censimento geografico."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 2
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-dei-campioni:occurrence",
+      "basis_source_key": "press:il-lametino:2017-01-04:duplice-omicidio-via-dei-campioni-1992",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via dei Campioni",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-dei-campioni:target",
+      "basis_source_key": "press:il-lametino:2017-01-04:duplice-omicidio-via-dei-campioni-1992",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via dei Campioni",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
