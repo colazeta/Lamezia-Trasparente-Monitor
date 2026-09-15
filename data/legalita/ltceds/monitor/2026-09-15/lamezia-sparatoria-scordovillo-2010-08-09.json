@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-sparatoria-scordovillo-2010-08-09",
   "discovered_at": "2026-09-15T07:32:52+02:00",
-  "updated_at": "2026-09-15T07:32:52+02:00",
+  "updated_at": "2026-09-15T07:47:00+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Sparatoria nell'accampamento di Scordovillo con ferimento di una minore il 9 agosto 2010",
@@ -70,7 +70,8 @@
       "legal_reference": null,
       "attempt_status": "attempted",
       "situational_context": [
-        "il 9 agosto 2010 una minore di nove anni fu raggiunta da due colpi di arma da fuoco durante una sparatoria nell'accampamento di contrada Scordovillo a Lamezia Terme",
+        "il 9 agosto 2010 una minore fu raggiunta da due colpi di arma da fuoco durante una sparatoria nell'accampamento di contrada Scordovillo a Lamezia Terme",
+        "le cronache contemporanee discordano sull'età della minore: la Repubblica riferisce nove anni, mentre Nuova Cosenza ne riferisce otto; il record non risolve la discrepanza e non attribuisce un'età canonica",
         "le prime cronache non stabilivano se la minore fosse stata colpita intenzionalmente; la Repubblica riferiva che gli investigatori non escludevano il ferimento volontario",
         "il 25 settembre 2010 InfoOggi riferì l'arresto del presunto autore e la contestazione di tentato omicidio aggravato dai futili motivi; la qualificazione qui registrata rappresenta la contestazione riportata dalla fonte e non un accertamento definitivo di responsabilità",
         "non è stata reperita in questa iterazione una decisione giudiziaria finale relativa alla contestazione"
