@@ -1,0 +1,100 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-tentato-omicidio-capizzaglie-2007-03",
+  "discovered_at": "2026-09-15T09:16:59+02:00",
+  "updated_at": "2026-09-15T09:16:59+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Tentato omicidio con arma da fuoco nel quartiere Capizzaglie tra il 7 e l'8 marzo 2007",
+  "temporal": {
+    "start": "2007-03-07",
+    "end": "2007-03-08",
+    "edtf": "2007-03-07/2007-03-08",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "press:tgcom24:2007-03-07:agguato-capizzaglie",
+      "source_type": "press_secondary",
+      "provider": "Tgcom24",
+      "title": "Lamezia Terme, un ferito in agguato",
+      "url": "https://www.tgcom24.mediaset.it/cronaca/articoli/352211/lamezia-terme-un-ferito-in-agguato.shtml/",
+      "published_at": "2007-03-07T23:10:00+01:00",
+      "retrieved_at": "2026-09-15T09:16:59+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2012-06-28:medusa-la-grazia",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "OPERAZIONE MEDUSA | La lunga scia di sangue che ha bagnato Lamezia",
+      "url": "https://www.corrieredellacalabria.it/2012/06/28/6490_operazione_medusa_la_lunga_scia_di_sangue_che_ha_bagnato_lamezia/",
+      "published_at": "2012-06-28T00:00:00+02:00",
+      "retrieved_at": "2026-09-15T09:16:59+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:tentato-omicidio",
+      "classification_source_key": "press:corriere-calabria:2012-06-28:medusa-la-grazia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "una fonte contemporanea riferisce che un uomo di 37 anni fu raggiunto a una gamba dopo che una persona esplose cinque colpi con una pistola calibro 7,65 mentre stava rientrando nella propria abitazione nel quartiere Capizzaglie",
+        "la successiva ricostruzione dell'operazione Medusa qualifica l'episodio come tentato omicidio",
+        "le due fonti divergono di un giorno sulla data: Tgcom24 pubblicò la notizia il 7 marzo 2007 descrivendo l'agguato come già avvenuto, mentre la ricostruzione Medusa indica l'8 marzo 2007; il record conserva pertanto un intervallo 7-8 marzo senza risolvere arbitrariamente la discrepanza",
+        "la fonte contemporanea riferisce che le indagini erano condotte dai Carabinieri; la qualificazione registrata rappresenta la ricostruzione investigativa successiva e non un accertamento definitivo di responsabilità individuale"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:capizzaglie:abitazione-vittima:occurrence",
+      "basis_source_key": "press:tgcom24:2007-03-07:agguato-capizzaglie",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_neighbourhood",
+      "evidence_precision": "neighbourhood",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Quartiere Capizzaglie, nei pressi dell'abitazione privata della vittima",
+      "neighbourhood": "Capizzaglie",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:capizzaglie:abitazione-vittima:target",
+      "basis_source_key": "press:tgcom24:2007-03-07:agguato-capizzaglie",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_neighbourhood",
+      "evidence_precision": "neighbourhood",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Quartiere Capizzaglie, nei pressi dell'abitazione privata della vittima",
+      "neighbourhood": "Capizzaglie",
+      "iccs_location_type": null
+    }
+  ]
+}
