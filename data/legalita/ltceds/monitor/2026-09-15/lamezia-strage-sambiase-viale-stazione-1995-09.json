@@ -1,0 +1,126 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-strage-sambiase-viale-stazione-1995-09",
+  "discovered_at": "2026-09-15T16:47:27+02:00",
+  "updated_at": "2026-09-15T16:47:27+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Duplice omicidio e ferimento di tre persone noto come strage di Sambiase nel settembre 1995",
+  "temporal": {
+    "start": "1995-09-26",
+    "end": "1995-09-29",
+    "edtf": "1995-09-26/1995-09-29",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "polizia:questura-catanzaro:2016-09-08:strage-sambiase-1995",
+      "source_type": "law_enforcement_primary",
+      "provider": "Polizia di Stato — Questura di Catanzaro",
+      "title": "La Polizia arresta i cugini Gagliardi, ritenuti responsabili dell’omicidio, aggravato da metodologia mafiosa, di Curcio Gennaro, avvenuto nel 1995",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/123657d142d1a78dd608761095",
+      "published_at": "2016-09-08T00:00:00+02:00",
+      "retrieved_at": "2026-09-15T16:47:27+02:00",
+      "support_roles": [
+        "event_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2016-09-08:strage-sambiase",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Lo sbaglio dei killer a Nocera e la strage di Sambiase",
+      "url": "https://www.corrieredellacalabria.it/2016/09/08/lo-sbaglio-dei-killer-a-nocera-e-la-strage-di-sambiase/",
+      "published_at": "2016-09-08T21:21:00+02:00",
+      "retrieved_at": "2026-09-15T16:47:27+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2016-09-12:strage-sambiase",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, la strage di Sambiase nel settembre 1995",
+      "url": "https://www.lametino.it/cronaca/lamezia-la-strage-di-sambiase-nel-settembre-1995.html",
+      "published_at": "2016-09-12T00:00:00+02:00",
+      "retrieved_at": "2026-09-15T16:47:27+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2012-07-14:agguato-sambiase-1995",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "In manette la banda del villaggio Kennedy",
+      "url": "https://www.corrieredellacalabria.it/2012/07/14/6889_in_manette_la_banda_del_villaggio_kennedy/",
+      "published_at": "2012-07-14T09:08:00+02:00",
+      "retrieved_at": "2026-09-15T16:47:27+02:00",
+      "support_roles": [
+        "event_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": null,
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti convergono su un agguato armato a Sambiase nel quale due persone furono uccise e tre rimasero ferite; le ricostruzioni successive collocano il gruppo in Viale Stazione, presso un bar non identificato",
+        "la data presenta una discrepanza documentale non risolta: la Questura di Catanzaro e una ricostruzione del Corriere della Calabria indicano il 29 settembre 1995, mentre il Lametino e una precedente cronaca del Corriere della Calabria indicano il 26 settembre 1995; il record conserva pertanto l’intervallo 26–29 settembre senza scegliere arbitrariamente una delle due date",
+        "le fonti inquadrano l’agguato come risposta violenta nell’ambito di contrasti tra gruppi criminali, ma il record non inferisce aggravanti, responsabilità individuali o ulteriori fattispecie non direttamente sostenute dalle fonti"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:viale-stazione-sambiase:occurrence",
+      "basis_source_key": "press:corriere-calabria:2016-09-08:strage-sambiase",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Viale Stazione",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:viale-stazione-sambiase:target",
+      "basis_source_key": "press:corriere-calabria:2016-09-08:strage-sambiase",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Viale Stazione",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    }
+  ]
+}
