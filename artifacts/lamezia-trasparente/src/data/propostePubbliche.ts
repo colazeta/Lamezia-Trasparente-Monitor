@@ -6,6 +6,7 @@ import { applyScoutingUpdates20260906 } from "./proposalScoutingUpdates20260906"
 import { applyScoutingUpdates20260907 } from "./proposalScoutingUpdates20260907";
 import { applyScoutingUpdates20260909 } from "./proposalScoutingUpdates20260909";
 import { applyScoutingUpdates20260912 } from "./proposalScoutingUpdates20260912";
+import { applyScoutingUpdates20260916 } from "./proposalScoutingUpdates20260916";
 import { SCOUTED_PUBLIC_PROPOSALS } from "./propostePubblicheScouting";
 import { SCOUTED_PUBLIC_PROPOSALS_20260903 } from "./propostePubblicheScouting20260903";
 import { SCOUTED_PUBLIC_PROPOSALS_20260904 } from "./propostePubblicheScouting20260904";
@@ -15,6 +16,7 @@ import { SCOUTED_PUBLIC_PROPOSALS_20260909 } from "./propostePubblicheScouting20
 import { SCOUTED_PUBLIC_PROPOSALS_20260911 } from "./propostePubblicheScouting20260911";
 import { SCOUTED_PUBLIC_PROPOSALS_20260913 } from "./propostePubblicheScouting20260913";
 import { SCOUTED_PUBLIC_PROPOSALS_20260915 } from "./propostePubblicheScouting20260915";
+import { SCOUTED_PUBLIC_PROPOSALS_20260916 } from "./propostePubblicheScouting20260916";
 
 export type {
   ProposalPromoterType,
@@ -56,7 +58,7 @@ export {
   getCanonicalProposalPresentation,
   getCanonicalProposalPresentationIds,
   hasCanonicalProposalPresentation,
-} from "./proposalCanonicalPresentationArchive20260915";
+} from "./proposalCanonicalPresentationArchive20260916";
 
 export type {
   LtSemanticExtensionId,
@@ -172,9 +174,11 @@ const UPDATED_SCOUTED_PUBLIC_PROPOSALS_20260908 =
 
 const UPDATED_EXISTING_PUBLIC_PROPOSALS_20260912 =
   UPDATED_EXISTING_PUBLIC_PROPOSALS_20260909.map(applyScoutingUpdates20260912);
+const UPDATED_EXISTING_PUBLIC_PROPOSALS_20260916 =
+  UPDATED_EXISTING_PUBLIC_PROPOSALS_20260912.map(applyScoutingUpdates20260916);
 
 export const PUBLIC_PROPOSALS = [
-  ...UPDATED_EXISTING_PUBLIC_PROPOSALS_20260912,
+  ...UPDATED_EXISTING_PUBLIC_PROPOSALS_20260916,
   ...UPDATED_SCOUTED_PUBLIC_PROPOSALS_20260904_20260909,
   ...UPDATED_SCOUTED_PUBLIC_PROPOSALS_20260906_20260909,
   ...UPDATED_SCOUTED_PUBLIC_PROPOSALS_20260908,
@@ -182,6 +186,7 @@ export const PUBLIC_PROPOSALS = [
   ...SCOUTED_PUBLIC_PROPOSALS_20260911,
   ...SCOUTED_PUBLIC_PROPOSALS_20260913,
   ...SCOUTED_PUBLIC_PROPOSALS_20260915,
+  ...SCOUTED_PUBLIC_PROPOSALS_20260916,
 ] as const satisfies readonly core.PublicProposal[];
 
 export function getProposalThemes(
