@@ -1,0 +1,143 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-omicidio-nicastro-2004-08-14",
+  "discovered_at": "2026-09-16T09:29:09+02:00",
+  "updated_at": "2026-09-16T09:29:09+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Omicidio del 14 agosto 2004 nel centro di Nicastro",
+  "temporal": {
+    "start": "2004-08-14",
+    "end": "2004-08-14",
+    "edtf": "2004-08-14",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "judicial:tribunale-catanzaro:2013:ordinanza-1846-09",
+      "source_type": "judicial_primary",
+      "provider": "Tribunale ordinario di Catanzaro",
+      "title": "Ordinanza di applicazione di misure cautelari personali e reali, procedimento n. 1846/09 RGNR",
+      "url": "https://www.genovaweb.org/ordinanza-LT.pdf",
+      "published_at": null,
+      "retrieved_at": "2026-09-16T09:29:09+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:nuovacosenza:2004-08-14:agguato-nicastro",
+      "source_type": "press_secondary",
+      "provider": "Nuova Cosenza",
+      "title": "La mafia continua ad uccidere in Calabria. A Lamezia ucciso in un agguato un giovane di 26 anni",
+      "url": "https://www.nuovacosenza.com/cs/agosto1222.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-16T09:29:09+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:cn24tv:2012:medea-omicidio-2004-08-14",
+      "source_type": "press_secondary",
+      "provider": "CN24TV",
+      "title": "Operazione Medea: ricostruzione dell'omicidio del 14 agosto 2004",
+      "url": "https://cn24tv.it/news/50465/omicidio-domenico-zagami-arresti-cosca-giampa-di-lamezia-identificati-killer-e-mandanti.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-16T09:29:09+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2012-07-03:operazione-medea",
+      "source_type": "press_secondary",
+      "provider": "il Lametino.it",
+      "title": "Lamezia, Operazione Medea: Cinque arresti dopo operazione Medusa. L'accusa ora è di omicidio",
+      "url": "https://www.lametino.it/cronaca/lamezia-operazione-medea-cinque-arresti-dopo-operazione-medusa-laccusa-ora-e-di-omicidio.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-16T09:29:09+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2016-06-04:cassazione-omicidio-2004-08-14",
+      "source_type": "press_secondary",
+      "provider": "il Lametino.it",
+      "title": "Cassazione: annullamento senza rinvio di una condanna nel processo per l'omicidio del 14 agosto 2004",
+      "url": "https://www.lametino.it/cronaca/omicidio-domenico-zagami-cassazione-annulla-ergastolo-per-aldo-notarianni.html",
+      "published_at": "2016-06-04T11:42:00+02:00",
+      "retrieved_at": "2026-09-16T09:29:09+02:00",
+      "support_roles": [
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "judicial:tribunale-catanzaro:2013:ordinanza-1846-09",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "L'ordinanza del Tribunale ordinario di Catanzaro ricostruisce l'omicidio del 14 agosto 2004 nel quadro delle operazioni Medea e Medusa e della guerra di 'ndrangheta lametina.",
+        "La cronaca contemporanea colloca l'agguato nel centro di Nicastro e indica Via delle Vittorie; riferisce inoltre che il bersaglio, inizialmente su un ciclomotore, tentò di fuggire a piedi per circa 200 metri.",
+        "Una ricostruzione del 2012 collegata all'operazione Medea indica invece Via dei Bizantini. Le due indicazioni stradali non vengono arbitrariamente riconciliate: la precisione sorgente resta street_segment, mentre la localizzazione risolta è prudentemente limitata al quartiere/area di Nicastro e non vengono assegnate coordinate.",
+        "Nel 2016 la Cassazione ha annullato senza rinvio una condanna all'ergastolo con assoluzione per non avere commesso il fatto e ha confermato una condanna a trent'anni; il record non attribuisce responsabilità individuali."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:nicastro:occurrence",
+      "basis_source_key": "press:nuovacosenza:2004-08-14:agguato-nicastro",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via delle Vittorie",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:nicastro:target",
+      "basis_source_key": "press:nuovacosenza:2004-08-14:agguato-nicastro",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via delle Vittorie",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    }
+  ]
+}
