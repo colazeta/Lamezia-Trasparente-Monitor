@@ -104,13 +104,17 @@ export type ProposalImplementationEvidence = {
  * Implementation is never inferred from `recepimento` or from a generic update.
  * A proposal enters the implementation stage only when a dedicated, reviewed
  * evidence record is added here and points to an existing sourced event.
- *
- * The registry is intentionally empty until that stronger evidentiary threshold
- * is met for a proposal.
  */
 export const PROPOSAL_IMPLEMENTATION_EVIDENCE: Readonly<
   Partial<Record<string, ProposalImplementationEvidence>>
-> = {};
+> = {
+  "asili-nido-continuita-servizio-2026": {
+    state: "started",
+    sourceEventId: "asili-nido-avvio-effettivo-15-settembre",
+    note:
+      "Fonti del 15 settembre documentano l'avvio effettivo del servizio nei tre asili nido comunali già calendarizzato dal Comune. L'evidenza sostiene l'avvio operativo del servizio, non il completamento di tutte le ulteriori richieste formulate nell'interrogazione né un nesso causale con essa.",
+  },
+};
 
 export type ProposalInstitutionalState = {
   progressStage: ProposalInstitutionalProgressStage;
