@@ -1,0 +1,112 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-omicidio-2001-08-22",
+  "discovered_at": "2026-09-16T03:43:11+02:00",
+  "updated_at": "2026-09-16T03:43:11+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Omicidio a Lamezia Terme il 22 agosto 2001",
+  "temporal": {
+    "start": "2001-08-22",
+    "end": "2001-08-22",
+    "edtf": "2001-08-22",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:corriere-calabria:2012-06-28:medusa-omicidio-2001-08-22",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Operazione Medusa: cronologia degli episodi della guerra criminale lametina",
+      "url": "https://www.corrieredellacalabria.it/2012/06/28/6490_operazione_medusa_la_lunga_scia_di_sangue_che_ha_bagnato_lamezia/",
+      "published_at": "2012-06-28T00:00:00+02:00",
+      "retrieved_at": "2026-09-16T03:43:11+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:lacnews24:2018-03-21:ricostruzione-faida-omicidio-2001-08-22",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Ricostruzione giudiziaria della terza guerra di mafia lametina",
+      "url": "https://www.lacnews24.it/cronaca/ndrangheta-agguato-a-vincenzo-torcasio-chiesto-il-processo-per-6-esponenti-del-clan-giampa-a2fioymq",
+      "published_at": "2018-03-21T00:00:00+01:00",
+      "retrieved_at": "2026-09-16T03:43:11+02:00",
+      "support_roles": [
+        "corroboration",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:lametino:2019-06-11:ricostruzione-faida-omicidio-2001-08-22",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Ricostruzione processuale del contesto della terza guerra di mafia lametina",
+      "url": "https://www.lametino.it/cronaca/lamezia-processo-su-tentato-omicidio-vincenzo-torcasio-del-2002-al-via-discussioni-avvocati.html",
+      "published_at": "2019-06-11T00:00:00+02:00",
+      "retrieved_at": "2026-09-16T03:43:11+02:00",
+      "support_roles": [
+        "corroboration",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "press:corriere-calabria:2012-06-28:medusa-omicidio-2001-08-22",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La cronologia pubblicata nel contesto dell'operazione Medusa registra un omicidio avvenuto a Lamezia Terme il 22 agosto 2001.",
+        "Due successive cronache giudiziarie indipendenti richiamano lo stesso omicidio e la medesima data nel ricostruire la terza guerra di mafia lametina.",
+        "La ricerca geografica dedicata non ha individuato una fonte affidabile che attesti la strada, il quartiere, la località o un sito nominato del fatto; la localizzazione resta quindi al livello del Comune di Lamezia Terme e non vengono inferiti indirizzi o coordinate.",
+        "Materiale giudiziario indicizzato durante la ricerca riporta dati di residenza relativi alla persona uccisa, ma tali dati non attestano il luogo del delitto e non sono stati usati per localizzare l'evento.",
+        "Le fonti processuali utilizzate come corroborazione descrivono il contesto della guerra criminale; da esse non viene inferito in questo artefatto uno specifico esito definitivo di responsabilità individuale per l'omicidio."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:municipality:occurrence:2001-08-22",
+      "basis_source_key": "press:corriere-calabria:2012-06-28:medusa-omicidio-2001-08-22",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "unknown",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Lamezia Terme — luogo sub-comunale non identificato",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:municipality:target:2001-08-22",
+      "basis_source_key": "press:corriere-calabria:2012-06-28:medusa-omicidio-2001-08-22",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "unknown",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Lamezia Terme — luogo sub-comunale non identificato",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
