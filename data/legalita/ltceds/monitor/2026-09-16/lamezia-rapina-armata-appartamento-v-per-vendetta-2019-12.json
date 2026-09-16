@@ -1,0 +1,117 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-armata-appartamento-v-per-vendetta-2019-12",
+  "discovered_at": "2026-09-16T04:36:03+02:00",
+  "updated_at": "2026-09-16T04:36:03+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina armata in un appartamento privato a Lamezia Terme nella notte tra il 16 e il 17 dicembre 2019",
+  "temporal": {
+    "start": "2019-12-16",
+    "end": "2019-12-17",
+    "edtf": "2019-12-16/2019-12-17",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "press:la-nuova-calabria:2019-12-17:rapina-v-per-vendetta",
+      "source_type": "press_secondary",
+      "provider": "La Nuova Calabria",
+      "title": "Ispirato dal film “V per Vendetta” si maschera e rapina una giovane donna straniera: arrestato a Lamezia Terme",
+      "url": "https://lanuovacalabria.it/post/ispirato-dal-film-v-per-vendetta-si-maschera-e-rapina-una-giovane-donna-straniera-arrestato-a-lamezia-terme",
+      "published_at": "2019-12-17T09:35:00+01:00",
+      "retrieved_at": "2026-09-16T04:36:03+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:gazzetta-del-sud:2020-05-31:rapina-v-per-vendetta-complici",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Donna rapinata a Lamezia, individuati altri due complici",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2020/05/31/donna-rapinata-a-lamezia-individuati-altri-due-complici-d3d161c1-1593-4dae-b5af-cf5f6014e1c2/",
+      "published_at": "2020-05-31T00:00:00+02:00",
+      "retrieved_at": "2026-09-16T04:36:03+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-della-calabria:2020-05-31:rapina-v-per-vendetta-complici",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Lamezia, presi i complici del rapinatore mascherato da “V per Vendetta”",
+      "url": "https://www.corrieredellacalabria.it/2020/05/31/lamezia-presi-i-complici-del-rapinatore-mascherato-da-v-per-vendetta",
+      "published_at": "2020-05-31T00:00:00+02:00",
+      "retrieved_at": "2026-09-16T04:36:03+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "press:la-nuova-calabria:2019-12-17:rapina-v-per-vendetta",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La mattina del 17 dicembre 2019 una cronaca contemporanea riferì che, nella notte appena trascorsa, una persona con il volto coperto da una maschera e armata di pistola si era introdotta in un appartamento privato a Lamezia Terme e aveva sottratto denaro mediante minaccia.",
+        "La formulazione temporale della fonte contemporanea non consente di stabilire senza inferenza se il fatto sia avvenuto prima o dopo la mezzanotte; il record conserva quindi l'intervallo 16-17 dicembre 2019.",
+        "Le fonti riferiscono un arresto in flagranza nella stessa notte; nel maggio 2020 ulteriori accertamenti dei Carabinieri portarono a indicare altre due persone come presunti partecipi della pianificazione e della fuga. Tali sviluppi sono registrati come contesto procedurale e non come accertamento definitivo di responsabilità.",
+        "Una ricerca geografica dedicata non ha individuato una fonte affidabile che consenta di collocare l'appartamento a livello di strada, quartiere o località; non sono quindi inferiti indirizzi o coordinate."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:appartamento-privato-v-per-vendetta:occurrence",
+      "basis_source_key": "press:la-nuova-calabria:2019-12-17:rapina-v-per-vendetta",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Appartamento privato a Lamezia Terme; luogo sub-comunale non identificato",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:appartamento-privato-v-per-vendetta:target",
+      "basis_source_key": "press:la-nuova-calabria:2019-12-17:rapina-v-per-vendetta",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Appartamento privato a Lamezia Terme; luogo sub-comunale non identificato",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
