@@ -1,0 +1,127 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-piantagione-marijuana-caria-2021",
+  "discovered_at": "2026-09-16T17:54:31+02:00",
+  "updated_at": "2026-09-16T17:54:31+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Piantagione di marijuana in località Caria sequestrata nel 2021",
+  "temporal": {
+    "start": "2021",
+    "end": "2021",
+    "edtf": "2021",
+    "precision": "year"
+  },
+  "sources": [
+    {
+      "source_key": "poliziadistato-operazione-pullo-2026",
+      "source_type": "law_enforcement_primary",
+      "provider": "Polizia di Stato",
+      "title": "Operazione antidroga \"Pullo\", 21 indagati a Lamezia Terme",
+      "url": "https://www.poliziadistato.it/articolo/operazione-antidroga--pullo---21-indagati-a-lamezia-terme",
+      "published_at": null,
+      "retrieved_at": "2026-09-16T17:54:31+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "calabriamagnifica-operazione-pullo-2026-03-12",
+      "source_type": "press_secondary",
+      "provider": "CalabriaMagnifica.it",
+      "title": "Operazione Pullo: 21 indagati per traffico di droga a Lamezia Terme",
+      "url": "https://www.calabriamagnifica.it/cronaca-e-attualita/operazione-pullo-21-indagati-per-traffico-di-droga-a-lamezia-terme",
+      "published_at": "2026-03-12T00:00:00+01:00",
+      "retrieved_at": "2026-09-16T17:54:31+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "ildispaccio-operazione-pullo-2026-03-12",
+      "source_type": "press_secondary",
+      "provider": "IlDispaccio",
+      "title": "Operazione \"Pullo\" su traffico e spaccio di stupefacenti a Lamezia Terme: concluse le indagini per 21 persone",
+      "url": "https://ildispaccio.it/calabria/catanzaro/2026/03/12/operazione-pullo-su-traffico-e-spaccio-di-stupefacenti-a-lamezia-terme-concluse-le-indagini-per-21-persone",
+      "published_at": "2026-03-12T16:06:00+01:00",
+      "retrieved_at": "2026-09-16T17:54:31+02:00",
+      "support_roles": [
+        "event_support",
+        "corroboration",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:coltivazione-stupefacenti-marijuana",
+      "classification_source_key": "poliziadistato-operazione-pullo-2026",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La Polizia di Stato riferisce che nell'ambito delle indagini dell'operazione Pullo fu accertata l'esistenza di una piantagione di marijuana in località Caria, nel territorio di Lamezia Terme, e che la piantagione fu sequestrata nel 2021.",
+        "Le fonti disponibili non indicano il giorno o il mese del sequestro né una contestazione normativa riferita specificamente alla piantagione; la classificazione resta pertanto provvisoria e la temporalità è conservata al solo livello annuale.",
+        "L'evento è distinto dalla piantagione di contrada Fialà individuata dalla Guardia di Finanza l'8 giugno 2021: quest'ultima è documentata in altra località, da altra forza di polizia e con 2.190 piante, mentre la piantagione di Caria emerge dalle indagini della Polizia di Stato dell'operazione Pullo."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:occurrence:localita-caria",
+      "basis_source_key": "poliziadistato-operazione-pullo-2026",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "unknown",
+      "geometry": null,
+      "place_name": "Località Caria",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:discovery:localita-caria",
+      "basis_source_key": "poliziadistato-operazione-pullo-2026",
+      "role": "discovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "unknown",
+      "geometry": null,
+      "place_name": "Località Caria",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:recovery:localita-caria",
+      "basis_source_key": "poliziadistato-operazione-pullo-2026",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "unknown",
+      "geometry": null,
+      "place_name": "Località Caria",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
