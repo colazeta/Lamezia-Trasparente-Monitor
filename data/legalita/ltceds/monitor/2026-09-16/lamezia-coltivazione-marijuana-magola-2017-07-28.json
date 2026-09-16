@@ -1,0 +1,147 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-coltivazione-marijuana-magola-2017-07-28",
+  "discovered_at": "2026-09-16T09:56:39+02:00",
+  "updated_at": "2026-09-16T09:56:39+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Coltivazione di marijuana in località Magolà il 28 luglio 2017",
+  "temporal": {
+    "start": "2017-07-28",
+    "end": "2017-07-28",
+    "edtf": "2017-07-28",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:lacnews24:2017-07-29:piantagione-magola",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Lamezia, sorpreso ad irrigare una piantagione: arrestato 55enne",
+      "url": "https://www.lacnews24.it/cronaca/lamezia-sorpreso-ad-irrigare-una-piantagione-arrestato-55enne-jgqmuumw",
+      "published_at": "2017-07-29T11:37:00+02:00",
+      "retrieved_at": "2026-09-16T09:56:39+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:ltnews:2017-07-29:piantagione-magola",
+      "source_type": "press_secondary",
+      "provider": "LTNews Lamezia Terme",
+      "title": "Lamezia, sorpreso a irrigare piantagione canapa: arrestato 55enne",
+      "url": "https://www.lameziatermenews.it/component/tags/tag/arresto.html?start=100",
+      "published_at": "2017-07-29T00:00:00+02:00",
+      "retrieved_at": "2026-09-16T09:56:39+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:coltivazione-marijuana",
+      "classification_source_key": "press:lacnews24:2017-07-29:piantagione-magola",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La fonte colloca la coltivazione in località Magolà di Lamezia Terme e descrive circa cinquanta piante di marijuana, alte approssimativamente da uno a tre metri e nascoste nella vegetazione.",
+        "L'evento è datato al 28 luglio 2017 perché l'articolo, pubblicato il 29 luglio alle 11:37, riferisce esplicitamente che l'intervento avvenne 'ieri mattina'.",
+        "I Carabinieri di Lamezia Terme avevano svolto un appostamento e sorpresero sul posto la persona mentre irrigava la piantagione; l'arresto è conservato come stato procedurale contemporaneo e non come accertamento definitivo di responsabilità.",
+        "Non è stata rinvenuta in questa iterazione una pagina primaria dell'Arma direttamente accessibile relativa allo specifico intervento."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:furto-aggravato",
+      "classification_source_key": "press:lacnews24:2017-07-29:piantagione-magola",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La fonte riporta espressamente anche la contestazione di furto aggravato e descrive un allaccio artigianale a una tubatura idrica che riforniva la zona; non viene inferita una qualificazione più specifica né un riferimento normativo non riportato dalla fonte."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:violazione-sorveglianza-speciale",
+      "classification_source_key": "press:lacnews24:2017-07-29:piantagione-magola",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La fonte riporta espressamente anche la violazione della sorveglianza speciale tra le contestazioni contemporanee; non viene registrata alcuna identità personale nel record LTCEDS."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:magola:occurrence",
+      "basis_source_key": "press:lacnews24:2017-07-29:piantagione-magola",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Località Magolà",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:magola:discovery",
+      "basis_source_key": "press:lacnews24:2017-07-29:piantagione-magola",
+      "role": "discovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Località Magolà",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:magola:arrest",
+      "basis_source_key": "press:lacnews24:2017-07-29:piantagione-magola",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Località Magolà",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
