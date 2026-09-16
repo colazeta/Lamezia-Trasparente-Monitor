@@ -1,0 +1,131 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-detenzione-stupefacenti-marinella-2017-05",
+  "discovered_at": "2026-09-16T14:04:47+02:00",
+  "updated_at": "2026-09-16T14:04:47+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Detenzione di eroina e marijuana in un appartamento di località Marinella documentata entro il 21 maggio 2017",
+  "temporal": {
+    "start": null,
+    "end": "2017-05-21",
+    "edtf": "../2017-05-21",
+    "precision": "approximate"
+  },
+  "sources": [
+    {
+      "source_key": "press:ltnews:2017-05-21:marinella-droga",
+      "source_type": "press_secondary",
+      "provider": "LTNews Lamezia Terme",
+      "title": "Lamezia, spacciava in bici: 38enne finisce ai domiciliari",
+      "url": "https://lameziatermenews.it/citta/13759-lamezia-spacciava-in-bici-38enne-finisce-ai-domiciliari.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-16T14:04:47+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:approdocalabria:2017-05-21:marinella-droga",
+      "source_type": "press_secondary",
+      "provider": "Approdo Calabria",
+      "title": "Spacciava droga in sella alla sua bici: arrestato ciclista",
+      "url": "https://www.approdocalabria.it/spacciava-droga-in-sella-alla-sua-bici-arrestato-ciclista/",
+      "published_at": null,
+      "retrieved_at": "2026-09-16T14:04:47+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:telejonio:2017-06-29:marinella-droga",
+      "source_type": "press_secondary",
+      "provider": "Telejonio",
+      "title": "Lamezia, arrestato spacciatore in bicicletta",
+      "url": "https://www.telejonio.com/2017/06/29/lamezia-arrestato-spacciatore-in-bicicletta/",
+      "published_at": null,
+      "retrieved_at": "2026-09-16T14:04:47+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:detenzione-stupefacenti-fini-spaccio",
+      "classification_source_key": "press:ltnews:2017-05-21:marinella-droga",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti riferiscono che, dopo un controllo collegato a spostamenti in bicicletta, una chiave rinvenuta nel corso del controllo condusse i Carabinieri a un appartamento in località Marinella, dove una perquisizione portò al rinvenimento di circa 60 grammi di eroina, 20 grammi di marijuana, flaconi di metadone, materiale per il confezionamento delle dosi e circa 1.500 euro in contanti.",
+        "La qualificazione è mantenuta provvisoria: le fonti descrivono lo stupefacente come pronto per lo spaccio e riferiscono l'arresto, ma nelle pagine recuperate non è riportata una contestazione normativa puntuale né è disponibile il comunicato primario originario dei Carabinieri.",
+        "La data esatta del controllo, della perquisizione e del sequestro non è esplicitata nelle fonti recuperate. Il 21 maggio 2017 è usato soltanto come termine ante quem documentale, corrispondente alla data delle prime cronache reperite, e non viene trasformato in data esatta del fatto.",
+        "Una fonte successiva riferisce la convalida dell'arresto e l'applicazione degli arresti domiciliari; tali elementi sono conservati esclusivamente come contesto procedurale contemporaneo e non come accertamento definitivo di responsabilità."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:marinella:occurrence",
+      "basis_source_key": "press:ltnews:2017-05-21:marinella-droga",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Località Marinella",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:marinella:search",
+      "basis_source_key": "press:ltnews:2017-05-21:marinella-droga",
+      "role": "search",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Località Marinella",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:marinella:recovery",
+      "basis_source_key": "press:ltnews:2017-05-21:marinella-droga",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Località Marinella",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
