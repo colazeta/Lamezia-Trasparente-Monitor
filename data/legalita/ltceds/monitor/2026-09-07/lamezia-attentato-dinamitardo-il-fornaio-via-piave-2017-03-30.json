@@ -9,8 +9,8 @@
   "temporal": {
     "start": "2017-03-30T23:30:00+02:00",
     "end": "2017-03-30T23:30:00+02:00",
-    "edtf": "2017-03-30T23:30:00+02:00",
-    "precision": "exact_datetime"
+    "edtf": null,
+    "precision": "approximate"
   },
   "sources": [
     {
