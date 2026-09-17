@@ -1,0 +1,99 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-spari-negozio-abbigliamento-via-adda-2011-12-11",
+  "discovered_at": "2026-09-17T11:10:18+02:00",
+  "updated_at": "2026-09-17T11:10:18+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Sei colpi di pistola contro un negozio di abbigliamento in via Adda",
+  "temporal": {
+    "start": "2011-12-11",
+    "end": "2011-12-11",
+    "edtf": "2011-12-11",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:corriere-calabria:2011-12-11:spari-negozio-via-adda",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Spari contro un negozio a Lamezia Terme",
+      "url": "https://www.corrieredellacalabria.it/2011/12/11/2206_spari_contro_un_negozio_a_lamezia_terme/",
+      "published_at": "2011-12-11T15:54:00+01:00",
+      "retrieved_at": "2026-09-17T11:10:18+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:approdo-calabria:2011-12-11:attentato-negozio-via-adda",
+      "source_type": "press_secondary",
+      "provider": "Approdo Calabria",
+      "title": "Attentato a Lamezia Terme contro un negozio di abbigliamento",
+      "url": "https://www.approdocalabria.it/attentato-a-lamezia-terme-contro-un-negozio-di-abbigliamento/",
+      "published_at": null,
+      "retrieved_at": "2026-09-17T11:10:18+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:spari-contro-esercizio-commerciale",
+      "classification_source_key": "press:corriere-calabria:2011-12-11:spari-negozio-via-adda",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Nella notte dell'11 dicembre 2011, intorno alle 2, sei colpi di pistola furono esplosi contro la saracinesca metallica di un negozio di abbigliamento in via Adda a Lamezia Terme.",
+        "Le fonti contemporanee riferiscono l'intervento e le indagini dei Carabinieri, ma non consentono di stabilire con affidabilita un movente o una qualificazione giuridica piu specifica.",
+        "Il termine attentato o intimidazione presente nella cronaca non viene trasformato in una qualificazione legale autonoma in assenza di una fonte investigativa o giudiziaria che la sostenga."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:via-adda:negozio-abbigliamento:occurrence",
+      "basis_source_key": "press:corriere-calabria:2011-12-11:spari-negozio-via-adda",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Negozio di abbigliamento non identificato in via Adda",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:via-adda:negozio-abbigliamento:target",
+      "basis_source_key": "press:corriere-calabria:2011-12-11:spari-negozio-via-adda",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Negozio di abbigliamento non identificato in via Adda",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
