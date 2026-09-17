@@ -18,6 +18,7 @@ import { SCOUTED_PUBLIC_PROPOSALS_20260911 } from "./propostePubblicheScouting20
 import { SCOUTED_PUBLIC_PROPOSALS_20260913 } from "./propostePubblicheScouting20260913";
 import { SCOUTED_PUBLIC_PROPOSALS_20260915 } from "./propostePubblicheScouting20260915";
 import { SCOUTED_PUBLIC_PROPOSALS_20260916 } from "./propostePubblicheScouting20260916";
+import { SCOUTED_PUBLIC_PROPOSALS_20260917 } from "./propostePubblicheScouting20260917";
 
 export type {
   ProposalPromoterType,
@@ -59,7 +60,7 @@ export {
   getCanonicalProposalPresentation,
   getCanonicalProposalPresentationIds,
   hasCanonicalProposalPresentation,
-} from "./proposalCanonicalPresentationArchive20260916";
+} from "./proposalCanonicalPresentationArchive20260917";
 
 export type {
   LtSemanticExtensionId,
@@ -119,7 +120,7 @@ export type {
   ProposalCompetenceAssessmentStatus,
   ProposalCompetentAuthority,
   ProposalInstitutionalCompetence,
-} from "./proposalInstitutionalCompetence20260913";
+} from "./proposalInstitutionalCompetence20260917";
 export {
   PROPOSAL_AUTHORITY_LEVELS,
   PROPOSAL_COMPETENCE_ASSESSMENTS,
@@ -127,7 +128,7 @@ export {
   PROPOSAL_COMPETENCE_ASSESSMENT_STATUSES,
   getProposalInstitutionalCompetence,
   hasVerifiedProposalCompetence,
-} from "./proposalInstitutionalCompetence20260913";
+} from "./proposalInstitutionalCompetence20260917";
 
 const EXISTING_PUBLIC_PROPOSALS = [
   ...core.PUBLIC_PROPOSALS.map(applyScoutingUpdates),
@@ -192,6 +193,7 @@ export const PUBLIC_PROPOSALS = [
   ...SCOUTED_PUBLIC_PROPOSALS_20260913,
   ...SCOUTED_PUBLIC_PROPOSALS_20260915,
   ...SCOUTED_PUBLIC_PROPOSALS_20260916,
+  ...SCOUTED_PUBLIC_PROPOSALS_20260917,
 ] as const satisfies readonly core.PublicProposal[];
 
 export function getProposalThemes(
