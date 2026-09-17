@@ -76,7 +76,7 @@
       "sensitivity": "public_place",
       "publication_risk": "low_public_site",
       "geometry": null,
-      "place_name": "Negozio di abbigliamento non identificato in via Adda",
+      "place_name": "Via Adda",
       "neighbourhood": null,
       "iccs_location_type": null
     },
@@ -91,7 +91,7 @@
       "sensitivity": "public_place",
       "publication_risk": "victim_linked",
       "geometry": null,
-      "place_name": "Negozio di abbigliamento non identificato in via Adda",
+      "place_name": "Via Adda",
       "neighbourhood": null,
       "iccs_location_type": null
     }
