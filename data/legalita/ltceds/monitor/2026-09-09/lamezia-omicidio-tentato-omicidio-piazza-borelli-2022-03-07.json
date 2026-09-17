@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-omicidio-tentato-omicidio-piazza-borelli-2022-03-07",
   "discovered_at": "2026-09-09T02:24:38+02:00",
-  "updated_at": "2026-09-09T02:24:38+02:00",
+  "updated_at": "2026-09-17T10:13:38+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Omicidio volontario e tentato omicidio plurimo in piazza Borelli",
@@ -70,6 +70,36 @@
         "procedural_context",
         "corroboration"
       ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2022-03-14:torrente-piazza-ricerca-pistola",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Omicidio a Lamezia, non si trova la pistola di uno dei due aggressori - VIDEO",
+      "url": "https://www.corrieredellacalabria.it/2022/03/14/omicidio-a-lamezia-non-si-trova-la-pistola-di-uno-dei-due-aggressori-video/",
+      "published_at": "2022-03-14T11:23:00+01:00",
+      "retrieved_at": "2026-09-17T10:13:38+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lametino:2023-07-14:piazza-borelli-condanne-primo-grado",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, omicidio e sparatoria a piazza Borelli: due condanne in primo grado",
+      "url": "https://www.lametino.it/cronaca/lamezia-omicidio-e-sparatoria-a-piazza-borelli-due-condanne-in-primo-grado.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-17T10:13:38+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
     }
   ],
   "offences": [
@@ -86,7 +116,8 @@
       "situational_context": [
         "la ricostruzione del Gruppo Carabinieri ripresa dalla fonte qualifica espressamente il fatto come concorso in omicidio volontario",
         "il fatto è collocato nella serata del 7 marzo 2022 in piazza Borelli a Lamezia Terme",
-        "una fonte ANSA coeva usa la denominazione piazza Porcelli; il nodo geografico canonico resta piazza Borelli perché è la denominazione riportata dalla ricostruzione investigativa e dalle successive fonti locali e giudiziarie, senza attribuire coordinate"
+        "una fonte ANSA coeva usa la denominazione piazza Porcelli; il nodo geografico canonico resta piazza Borelli perché è la denominazione riportata dalla ricostruzione investigativa e dalle successive fonti locali e giudiziarie, senza attribuire coordinate",
+        "il 14 luglio 2023 il processo di primo grado celebrato con rito abbreviato si è concluso con due condanne per l'omicidio; il presente record conserva tale esito come contesto procedurale di primo grado e non come accertamento definitivo"
       ],
       "cyber_related": null,
       "affected_object_count": null
@@ -138,6 +169,36 @@
       "publication_risk": "low_public_site",
       "geometry": null,
       "place_name": "Caserma dei Carabinieri di via Marconi",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:piazza-borelli:target",
+      "basis_source_key": "press:lameziaterme:2022-03-08:agguato-piazza-borelli",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Piazza Borelli",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:torrente-piazza:search",
+      "basis_source_key": "press:corriere-calabria:2022-03-14:torrente-piazza-ricerca-pistola",
+      "role": "search",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Torrente Piazza, luogo indicato come punto di dispersione dell'arma e oggetto delle ricerche dei Carabinieri",
       "neighbourhood": null,
       "iccs_location_type": null
     }
