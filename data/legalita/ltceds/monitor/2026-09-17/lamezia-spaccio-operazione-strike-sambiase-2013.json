@@ -1,0 +1,131 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-spaccio-operazione-strike-sambiase-2013",
+  "discovered_at": "2026-09-17T05:28:27+02:00",
+  "updated_at": "2026-09-17T05:28:27+02:00",
+  "record_status": "verified_source",
+  "event_form": "course_of_conduct",
+  "title": "Spaccio al minuto di cocaina e canapa indiana nel quartiere Sambiase, prevalentemente in Piazza 5 Dicembre (già Piazza Diaz), documentato nell'operazione Strike",
+  "temporal": {
+    "start": null,
+    "end": "2013-11-05",
+    "edtf": "../2013-11-05",
+    "precision": "approximate"
+  },
+  "sources": [
+    {
+      "source_key": "polizia-stato-strike-sambiase-2013-11-05",
+      "source_type": "law_enforcement_primary",
+      "provider": "Polizia di Stato",
+      "title": "Droga: otto arresti a Lamezia Terme",
+      "url": "https://www.poliziadistato.it/articolo/droga--otto-arresti-a-lamezia-terme",
+      "published_at": null,
+      "retrieved_at": "2026-09-17T05:28:27+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "lametino-operazione-strike-2013-11-05",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: Operazione Strike, 8 arresti",
+      "url": "https://www.lametino.it/cronaca/lamezia-operazione-strike-8-arresti.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-17T05:28:27+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "cn24tv-operazione-strike-2013-11-05",
+      "source_type": "press_secondary",
+      "provider": "CN24TV",
+      "title": "Spaccio di coca e canapa indiana, blitz della polizia a Lamezia: otto arresti",
+      "url": "https://cn24tv.it/news/77881/spaccio-di-cocaina-e-canapa-indiana-a-lamezia-terme-sambiase-otto-arresti.html",
+      "published_at": "2013-11-05T08:03:00+01:00",
+      "retrieved_at": "2026-09-17T05:28:27+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "lametino-piazza-diaz-ridenominazione-2012-11-29",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: Piazza Diaz diventa Piazza 5 Dicembre in memoria otto ciclisti",
+      "url": "https://www.lametino.it/ultimora/lamezia-piazza-diaz-diventa-qpiazza-5-dicembreq-in-memoria-otto-ciclisti.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-17T05:28:27+02:00",
+      "support_roles": [
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:spaccio-stupefacenti",
+      "classification_source_key": "polizia-stato-strike-sambiase-2013-11-05",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La Polizia di Stato riferisce che l'operazione del 5 novembre 2013 riguardava numerosi episodi di spaccio al minuto di cocaina e canapa indiana nella zona del quartiere Sambiase e che l'attività investigativa utilizzata per documentare lo smercio era durata circa sei mesi.",
+        "La cronaca contemporanea dell'operazione Strike precisa che l'attività di spaccio documentata si svolgeva prevalentemente nell'allora Piazza Diaz e nelle vicinanze di un esercizio del quartiere. Il primo tranche LTCEDS non conserva il riferimento personale associato a tale esercizio.",
+        "La fonte primaria documenta gli arresti eseguiti il 5 novembre 2013; la cronaca contemporanea riferisce che i provvedimenti erano stati emessi dal GIP del Tribunale di Lamezia Terme. Il record censisce le condotte oggetto della ricostruzione investigativa senza rappresentare la misura cautelare come accertamento definitivo di responsabilità.",
+        "Poiché le fonti indicano la durata dell'indagine ma non stabiliscono con sufficiente precisione la data iniziale delle condotte, il record conserva soltanto il 5 novembre 2013 come terminus ante quem documentale e usa precisione temporale approssimativa."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:occurrence:piazza-5-dicembre-ex-piazza-diaz",
+      "basis_source_key": "lametino-operazione-strike-2013-11-05",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Piazza 5 Dicembre (già Piazza Diaz)",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:occurrence:quartiere-sambiase",
+      "basis_source_key": "polizia-stato-strike-sambiase-2013-11-05",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_neighbourhood",
+      "evidence_precision": "neighbourhood",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "public_place",
+      "publication_risk": "non_sensitive",
+      "geometry": null,
+      "place_name": "Zona del quartiere Sambiase",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    }
+  ]
+}
