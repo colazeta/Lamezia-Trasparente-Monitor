@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-duplice-omicidio-bar-via-del-progresso-2000-12-06",
   "discovered_at": "2026-09-15T10:46:14+02:00",
-  "updated_at": "2026-09-17T02:02:00+02:00",
+  "updated_at": "2026-09-17T02:12:00+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Duplice omicidio in un bar di via del Progresso il 6 dicembre 2000",
@@ -36,6 +36,21 @@
       "url": "https://www.ansa.it/sito/notizie/cronaca/2016/12/19/cinque-arresti-per-duplice-omicidio-2000_96005ca4-88cc-4631-881b-164bedbcbf34.html",
       "published_at": "2016-12-19T10:38:00+01:00",
       "retrieved_at": "2026-09-15T10:46:14+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "ansa:2018-03-23:duplice-omicidio-lamezia-cinque-ergastoli",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Duplice omicidio a Lamezia, cinque ergastoli",
+      "url": "https://www.ansa.it/calabria/notizie/2018/03/23/dulice-omicidio-a-lamezia-5-ergastoli_6a40313a-e69a-45a1-929a-3494a62b0e57.html",
+      "published_at": "2018-03-23T19:44:00+01:00",
+      "retrieved_at": "2026-09-17T02:12:00+02:00",
       "support_roles": [
         "event_support",
         "classification_support",
@@ -104,7 +119,8 @@
       "situational_context": [
         "la Polizia di Stato ricostruisce il fatto come duplice omicidio: le due vittime furono localizzate all’interno di un affollato bar di Lamezia Terme e raggiunte da numerosi colpi di revolver",
         "una successiva ricostruzione del processo colloca il fatto il 6 dicembre 2000 in un bar di via del Progresso; nel dicembre 2016 furono eseguite misure cautelari nell’ambito delle indagini coordinate dalla DDA di Catanzaro, senza che il record rappresenti la responsabilità individuale come definitivamente accertata",
-        "le ricostruzioni processuali riferiscono che la stessa sera, dopo la sparatoria, in contrada Lagani fu rinvenuta completamente bruciata una Fiat Uno utilizzata nella fuga; all’interno la Polizia scientifica rinvenne un revolver calibro 38, un fucile calibro 12 con matricola abrasa e cinque fondelli di proiettile, tutti danneggiati dal fuoco"
+        "le ricostruzioni processuali riferiscono che la stessa sera, dopo la sparatoria, in contrada Lagani fu rinvenuta completamente bruciata una Fiat Uno utilizzata nella fuga; all’interno la Polizia scientifica rinvenne un revolver calibro 38, un fucile calibro 12 con matricola abrasa e cinque fondelli di proiettile, tutti danneggiati dal fuoco",
+        "il 23 marzo 2018 il GUP di Catanzaro, all’esito del rito abbreviato, ha pronunciato in primo grado cinque condanne all’ergastolo per il duplice omicidio; il record tratta tale passaggio come esito giudiziario di primo grado e non come attestazione della definitività delle responsabilità individuali"
       ],
       "cyber_related": null,
       "affected_object_count": null
