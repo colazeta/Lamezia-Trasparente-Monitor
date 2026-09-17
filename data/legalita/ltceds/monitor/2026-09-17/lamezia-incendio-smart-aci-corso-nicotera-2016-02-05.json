@@ -74,6 +74,7 @@
       "attempt_status": "completed",
       "situational_context": [
         "La fonte investigativa successiva attribuisce intenzionalmente l'incendio dell'autovettura alla persona destinataria della misura cautelare; la cronaca contemporanea documenta la distruzione della Smart mediante le fiamme.",
+        "La cronaca contemporanea colloca il veicolo in una traversina di Corso Giovanni Nicotera, di fronte all'edificio scolastico Perri; il dato strutturato mantiene il livello strada senza trasformare tale riferimento relativo in un punto o in un indirizzo civico.",
         "In assenza, nelle fonti recuperate, di una qualificazione giuridica autonoma e specifica del danneggiamento relativo a questo singolo episodio, la categoria descrittiva incendio doloso di autovettura e registrata in via provvisoria."
       ],
       "cyber_related": null,
@@ -82,7 +83,7 @@
   ],
   "locations": [
     {
-      "location_key": "location:corso-giovanni-nicotera-traversina-perri:incendio-smart:occurrence",
+      "location_key": "location:corso-giovanni-nicotera:incendio-smart:occurrence",
       "basis_source_key": "press:corriere-calabria:2016-02-06:incendio-smart-aci-corso-nicotera",
       "role": "occurrence",
       "municipality": "Lamezia Terme",
@@ -92,12 +93,12 @@
       "sensitivity": "public_place",
       "publication_risk": "low_public_site",
       "geometry": null,
-      "place_name": "Traversina di Corso Giovanni Nicotera di fronte all'edificio scolastico Perri",
+      "place_name": "Corso Giovanni Nicotera",
       "neighbourhood": null,
       "iccs_location_type": null
     },
     {
-      "location_key": "location:corso-giovanni-nicotera-traversina-perri:smart-aci:target",
+      "location_key": "location:corso-giovanni-nicotera:smart-aci:target",
       "basis_source_key": "press:corriere-calabria:2016-02-06:incendio-smart-aci-corso-nicotera",
       "role": "target",
       "municipality": "Lamezia Terme",
@@ -107,7 +108,7 @@
       "sensitivity": "public_place",
       "publication_risk": "victim_linked",
       "geometry": null,
-      "place_name": "Traversina di Corso Giovanni Nicotera di fronte all'edificio scolastico Perri",
+      "place_name": "Corso Giovanni Nicotera",
       "neighbourhood": null,
       "iccs_location_type": null
     }
