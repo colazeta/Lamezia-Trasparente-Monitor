@@ -2,15 +2,15 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-attentato-dinamitardo-il-fornaio-via-piave-2017-03-30",
   "discovered_at": "2026-09-07T20:40:38+02:00",
-  "updated_at": "2026-09-16T21:05:36+02:00",
+  "updated_at": "2026-09-17T14:12:50+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Attentato dinamitardo al panificio Il Fornaio in via Piave",
   "temporal": {
-    "start": "2017-03-30T23:30:00+02:00",
-    "end": "2017-03-30T23:30:00+02:00",
+    "start": "2017-03-30T23:38:00+02:00",
+    "end": "2017-03-30T23:38:00+02:00",
     "edtf": null,
-    "precision": "approximate"
+    "precision": "exact_datetime"
   },
   "sources": [
     {
@@ -48,7 +48,7 @@
       "provider": "LaC News24",
       "title": "Paura a Lamezia Terme, bomba distrugge attività commerciale",
       "url": "https://www.lacnews24.it/cronaca/paura-a-lamezia-terme-bomba-distrugge-attivita-commerciale-b4dctdtv",
-      "published_at": null,
+      "published_at": "2017-03-31T00:04:00+02:00",
       "retrieved_at": "2026-09-07T20:40:38+02:00",
       "support_roles": [
         "event_support",
@@ -67,6 +67,49 @@
       "support_roles": [
         "event_support",
         "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "news-agency:ansa:2017-03-31:ordigno-panificio-lamezia",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Ordigno danneggia panificio a Lamezia",
+      "url": "https://www.ansa.it/calabria/notizie/2017/03/31/ordigno-danneggia-panificio-a-lamezia_a0bb22fd-3dc0-4d1d-be55-78bd33403cb1.html",
+      "published_at": "2017-03-31T09:48:00+02:00",
+      "retrieved_at": "2026-09-17T14:12:50+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lameziatermenews:2017-03-31:bomba-via-piave-il-fornaio",
+      "source_type": "press_secondary",
+      "provider": "LameziaTermeNews",
+      "title": "Lamezia, bomba contro negozio in via Piave",
+      "url": "https://www.lameziatermenews.it/citta/13512-lamezia-bomba-contro-negozio-in-via-piave.html",
+      "published_at": "2017-03-31",
+      "retrieved_at": "2026-09-17T14:12:50+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:catanzaroinforma:2017-04-07:bomba-panetteria-il-fornaio",
+      "source_type": "press_secondary",
+      "provider": "CatanzaroInforma",
+      "title": "Bomba alla panetteria a Lamezia, due arresti della Polizia",
+      "url": "https://www.catanzaroinforma.it/cronaca/2017/04/07/bomba-alla-panetteria-a-lameziadue-arresti-della-polizia-con-3-video/98587",
+      "published_at": "2017-04-07",
+      "retrieved_at": "2026-09-17T14:12:50+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
         "corroboration"
       ]
     }
@@ -126,7 +169,7 @@
   "locations": [
     {
       "location_key": "location:lamezia-terme:panificio-il-fornaio-via-piave",
-      "basis_source_key": "press:il-lametino:2017-03-31:bomba-il-fornaio-via-piave",
+      "basis_source_key": "press:catanzaroinforma:2017-04-07:bomba-panetteria-il-fornaio",
       "role": "target",
       "municipality": "Lamezia Terme",
       "evidence_basis": "source_stated_named_site",
@@ -135,13 +178,13 @@
       "sensitivity": "private_or_sensitive",
       "publication_risk": "victim_linked",
       "geometry": null,
-      "place_name": "Panificio Il Fornaio, Via Piave",
-      "neighbourhood": null,
+      "place_name": "Panificio Il Fornaio, tra Via Piave e Via Adige",
+      "neighbourhood": "Nicastro",
       "iccs_location_type": null
     },
     {
       "location_key": "location:lamezia-terme:panificio-il-fornaio-via-piave:occurrence",
-      "basis_source_key": "press:il-lametino:2017-03-31:bomba-il-fornaio-via-piave",
+      "basis_source_key": "press:catanzaroinforma:2017-04-07:bomba-panetteria-il-fornaio",
       "role": "occurrence",
       "municipality": "Lamezia Terme",
       "evidence_basis": "source_stated_named_site",
@@ -150,8 +193,8 @@
       "sensitivity": "private_or_sensitive",
       "publication_risk": "victim_linked",
       "geometry": null,
-      "place_name": "Panificio Il Fornaio, Via Piave",
-      "neighbourhood": null,
+      "place_name": "Panificio Il Fornaio, tra Via Piave e Via Adige",
+      "neighbourhood": "Nicastro",
       "iccs_location_type": null
     }
   ]
