@@ -1,0 +1,111 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-spari-pensieri-parole-via-bizantini-2012-04",
+  "discovered_at": "2026-09-17T22:33:01+02:00",
+  "updated_at": "2026-09-17T22:33:01+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Due colpi di pistola contro la sede Pensieri e Parole in via dei Bizantini, scoperti il 10 aprile 2012",
+  "temporal": {
+    "start": null,
+    "end": "2012-04-10",
+    "edtf": "../2012-04-10",
+    "precision": "approximate"
+  },
+  "sources": [
+    {
+      "source_key": "other:cnca:2012-04-11:solidarieta-don-panizza-progetto-sud",
+      "source_type": "other",
+      "provider": "Coordinamento Nazionale Comunità di Accoglienza (CNCA)",
+      "title": "Solidarietà a don Panizza e alla Comunità Progetto Sud",
+      "url": "https://www.cnca.it/solidarieta-a-don-panizza-e-alla-comunita-progetto-sud/",
+      "published_at": null,
+      "retrieved_at": "2026-09-17T22:33:01+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:paperblog:2012-04-10:don-panizza-sotto-tiro",
+      "source_type": "press_secondary",
+      "provider": "Paperblog",
+      "title": "Lamezia Terme: Don Panizza ancora sotto tiro",
+      "url": "https://it.paperblog.com/lamezia-terme-don-panizza-ancora-sotto-tiro-1018854/",
+      "published_at": null,
+      "retrieved_at": "2026-09-17T22:33:01+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:radio-vaticana:2012-04-11:spari-comunita-don-panizza",
+      "source_type": "press_secondary",
+      "provider": "Radio Vaticana",
+      "title": "Lamezia. Spari contro la comunità di don Panizza",
+      "url": "https://www.archivioradiovaticana.va/radiogiornale/ore14/2012/aprile/12_04_11.htm",
+      "published_at": null,
+      "retrieved_at": "2026-09-17T22:33:01+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:atto-intimidatorio-con-arma-da-fuoco",
+      "classification_source_key": "other:cnca:2012-04-11:solidarieta-don-panizza-progetto-sud",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti riferiscono che due colpi di pistola furono esplosi contro la saracinesca al piano terra dell'immobile confiscato che ospitava la comunità Pensieri e Parole della Comunità Progetto Sud in via dei Bizantini.",
+        "Il fatto fu scoperto alla riapertura della struttura e denunciato alla Polizia di Stato; una fonte contemporanea precisa che non fu possibile stabilire il giorno esatto in cui i colpi erano stati esplosi.",
+        "La qualificazione è mantenuta provvisoria: le fonti descrivono l'episodio come intimidazione e lo inseriscono nel contesto delle precedenti minacce contro la Comunità Progetto Sud, ma non è stata recuperata una fonte giudiziaria che sostenga una fattispecie penale più specifica o un'aggravante mafiosa per questo singolo episodio."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:pensieri-parole-via-dei-bizantini:occurrence",
+      "basis_source_key": "press:paperblog:2012-04-10:don-panizza-sotto-tiro",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Centro Pensieri e Parole (Comunità Progetto Sud), via dei Bizantini",
+      "neighbourhood": "Capizzaglie",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:pensieri-parole-via-dei-bizantini:target",
+      "basis_source_key": "press:paperblog:2012-04-10:don-panizza-sotto-tiro",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Centro Pensieri e Parole (Comunità Progetto Sud), via dei Bizantini",
+      "neighbourhood": "Capizzaglie",
+      "iccs_location_type": null
+    }
+  ]
+}
