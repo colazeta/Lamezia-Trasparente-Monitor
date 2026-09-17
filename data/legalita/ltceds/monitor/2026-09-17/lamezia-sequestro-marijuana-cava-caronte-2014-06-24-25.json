@@ -1,0 +1,143 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-sequestro-marijuana-cava-caronte-2014-06-24-25",
+  "discovered_at": "2026-09-17T03:21:25+02:00",
+  "updated_at": "2026-09-17T03:21:25+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Sequestro di circa 4 kg di marijuana occultata in una cava in località Caronte nell'operazione Spare Tyre",
+  "temporal": {
+    "start": "2014-06-24",
+    "end": "2014-06-25",
+    "edtf": "2014-06-24/2014-06-25",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "cn24tv-spare-tyre-caronte-2014-06-25",
+      "source_type": "press_secondary",
+      "provider": "CN24TV",
+      "title": "Droga: operazione ‘Spare Tyre’, sequestro Carabinieri Lamezia",
+      "url": "https://cn24tv.it/news/91409/droga-operazione-spare-tyre-sequestro-carabinieri-lamezia.html",
+      "published_at": "2014-06-25T11:24:00+02:00",
+      "retrieved_at": "2026-09-17T03:21:25+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "cn24tv-spare-tyre-operazione-2014-06-24",
+      "source_type": "press_secondary",
+      "provider": "CN24TV",
+      "title": "Spaccio di droga nel lametino, blitz dei Cc: in dodici finiscono in manette",
+      "url": "https://cn24tv.it/news/91314/operazione-spare-tyre-spaccio-di-droga-lamezia-terme-blitz-carabinieri-12-aresti.html",
+      "published_at": "2014-06-24T08:10:00+02:00",
+      "retrieved_at": "2026-09-17T03:21:25+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "lametino-spare-tyre-appello-rinvio-2019-03-06",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, operazione ‘Spare Tyre’ contro spaccio: ecco la sentenza in appello dopo rinvio da Cassazione",
+      "url": "https://www.lametino.it/Cronaca/lamezia-operazione-spare-tyre-contro-spaccio-ecco-la-sentenza-in-appello-dopo-rinvio-da-cassazione.html",
+      "published_at": "2019-03-06T17:50:00+01:00",
+      "retrieved_at": "2026-09-17T03:21:25+02:00",
+      "support_roles": [
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:detenzione-stupefacenti-ai-fini-di-spaccio",
+      "classification_source_key": "cn24tv-spare-tyre-caronte-2014-06-25",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La ricostruzione contemporanea della conferenza dei Carabinieri riferisce il rinvenimento, durante attività di perquisizione nell'ambito dell'operazione Spare Tyre, di circa 4 chilogrammi di marijuana confezionata e occultata in contenitori di plastica sotterrati e in confezioni plastificate nascoste in cumuli di terra in una cava in località Caronte.",
+        "Secondo quanto attribuito agli inquirenti dalla fonte, la cava era utilizzata come deposito dello stupefacente e come nodo di entrata e uscita dei traffici illeciti; il rinvenimento determinò arresti in flagranza. La fonte accessibile non espone però la specifica disposizione penale contestata per questo singolo rinvenimento, per cui la classificazione resta provvisoria.",
+        "Nel medesimo luogo furono rinvenuti materiale per il confezionamento e circa 32 proiettili calibro 38. Non viene codificata autonomamente una fattispecie relativa alle munizioni perché le fonti recuperate non sostengono una qualificazione legale specifica per tale reperto.",
+        "Le fonti collocano il blitz principale al 24 giugno 2014 e descrivono il sequestro e gli ulteriori arresti nella cronaca del 25 giugno; poiché il giorno esatto della perquisizione della cava non è espresso in modo inequivoco nelle fonti accessibili, la temporalità è conservata come intervallo 24–25 giugno 2014."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:occurrence:cava-localita-caronte",
+      "basis_source_key": "cn24tv-spare-tyre-caronte-2014-06-25",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "unknown",
+      "geometry": null,
+      "place_name": "Cava in località Caronte",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:search:cava-localita-caronte",
+      "basis_source_key": "cn24tv-spare-tyre-caronte-2014-06-25",
+      "role": "search",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "unknown",
+      "geometry": null,
+      "place_name": "Cava in località Caronte",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:discovery:cava-localita-caronte",
+      "basis_source_key": "cn24tv-spare-tyre-caronte-2014-06-25",
+      "role": "discovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "unknown",
+      "geometry": null,
+      "place_name": "Cava in località Caronte",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:recovery:cava-localita-caronte",
+      "basis_source_key": "cn24tv-spare-tyre-caronte-2014-06-25",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "unknown",
+      "geometry": null,
+      "place_name": "Cava in località Caronte",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
