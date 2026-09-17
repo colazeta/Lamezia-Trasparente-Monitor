@@ -5,7 +5,7 @@ import type {
   ProposalCompetenceAssessmentStatus,
   ProposalCompetentAuthority,
   ProposalInstitutionalCompetence,
-} from "./proposalInstitutionalCompetence20260913";
+} from "./proposalInstitutionalCompetence";
 
 export type {
   ProposalAuthorityLevel,
@@ -13,13 +13,13 @@ export type {
   ProposalCompetenceAssessmentStatus,
   ProposalCompetentAuthority,
   ProposalInstitutionalCompetence,
-} from "./proposalInstitutionalCompetence20260913";
+} from "./proposalInstitutionalCompetence";
 
 export {
   PROPOSAL_AUTHORITY_LEVELS,
   PROPOSAL_COMPETENCE_ASSESSMENT_LABELS,
   PROPOSAL_COMPETENCE_ASSESSMENT_STATUSES,
-} from "./proposalInstitutionalCompetence20260913";
+} from "./proposalInstitutionalCompetence";
 
 const ATS_LAMEZIA: ProposalCompetentAuthority = {
   id: "ats-lamezia-terme",
