@@ -1,0 +1,113 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-omicidio-campo-calcetto-carra-2011-06-07",
+  "discovered_at": "2026-09-17T21:57:27+02:00",
+  "updated_at": "2026-09-17T21:57:27+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Omicidio con arma da fuoco in un campo di calcetto in località Carrà il 7 giugno 2011",
+  "temporal": {
+    "start": "2011-06-07",
+    "end": "2011-06-07",
+    "edtf": "2011-06-07",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "agency:apcom:2011-06-08:omicidio-campo-calcetto-lamezia",
+      "source_type": "news_agency",
+      "provider": "TMNews (APCom)",
+      "title": "Calabria/ Pregiudicato ucciso all'interno di campo di calcio a 5",
+      "url": "https://www.laprovinciaunicatv.it/stories/apcom/calabria-pregiudicato-ucciso-allinterno-campo-calcio-5-o_210939_11/",
+      "published_at": null,
+      "retrieved_at": "2026-09-17T21:57:27+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:approdo-calabria:2011-06-08:ucciso-58enne-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Approdo Calabria",
+      "title": "Lamezia Terme, ucciso 58enne",
+      "url": "https://www.approdocalabria.it/lamezia-terme-ucciso-58enne/",
+      "published_at": null,
+      "retrieved_at": "2026-09-17T21:57:27+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2011-06-08:omicidio-campo-calcetto-carra",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, Lirio Abbate su omicidio campo calcetto: Ma dal 22 qui arriverà un esercito di antimafiosi",
+      "url": "https://www.lametino.it/ultimora/lamezia-lirio-abbate-su-omicidio-campo-calcetto-qma-dal-22-qui-arrivera-un-esercito-di-antimafiosiq.html",
+      "published_at": "2011-06-08T12:33:00+02:00",
+      "retrieved_at": "2026-09-17T21:57:27+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "press:il-lametino:2011-06-08:omicidio-campo-calcetto-carra",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti contemporanee collocano l'omicidio nella sera del 7 giugno 2011, mentre la vittima si trovava presso un campo di calcetto e assisteva alla partita della squadra che allenava.",
+        "Le cronache riferiscono undici colpi di pistola calibro 9 esplosi contro la vittima.",
+        "La fonte di agenzia colloca il campo all'interno di un appezzamento di terreno in località Carrà-Marzomiglio, all'estrema periferia sud-est di Lamezia Terme; altre fonti contemporanee indicano località o contrada Carrà.",
+        "Una successiva cronaca usa una diversa indicazione territoriale e un nome dell'impianto non corroborati dalle fonti contemporanee consultate; tali elementi non sono stati usati per aumentare artificialmente la precisione geografica."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:campo-calcetto-carra-marzomiglio:occurrence",
+      "basis_source_key": "agency:apcom:2011-06-08:omicidio-campo-calcetto-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Campo di calcetto in località Carrà-Marzomiglio",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:campo-calcetto-carra-marzomiglio:target",
+      "basis_source_key": "press:approdo-calabria:2011-06-08:ucciso-58enne-lamezia",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Campo di calcetto in località Carrà-Marzomiglio",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
