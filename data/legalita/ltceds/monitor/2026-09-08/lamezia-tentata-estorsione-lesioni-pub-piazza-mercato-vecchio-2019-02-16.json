@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-tentata-estorsione-lesioni-pub-piazza-mercato-vecchio-2019-02-16",
   "discovered_at": "2026-09-08T11:54:19+02:00",
-  "updated_at": "2026-09-17T09:12:00+02:00",
+  "updated_at": "2026-09-17T20:40:15+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Tentata estorsione con aggressione al titolare di un pub in Piazza Mercato Vecchio",
@@ -59,6 +59,20 @@
         "procedural_context",
         "corroboration"
       ]
+    },
+    {
+      "source_key": "press:gazzetta-del-sud:2019-03-08:movida-lametina-pub",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Movida violenta a Lamezia, altri 3 giovani nei guai per l'aggressione al proprietario di un pub",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2019/03/08/movida-violenta-a-lamezia-altri-3-giovani-nei-guai-per-laggressione-al-proprietario-di-un-pub-218b049d-cbbd-4836-a30a-f01d356f0069",
+      "published_at": null,
+      "retrieved_at": "2026-09-17T20:40:15+02:00",
+      "support_roles": [
+        "event_support",
+        "procedural_context",
+        "corroboration"
+      ]
     }
   ],
   "offences": [
@@ -92,7 +106,8 @@
       "attempt_status": "completed",
       "situational_context": [
         "il titolare dell'esercizio commerciale fu colpito più volte al volto",
-        "il titolo del comunicato della Questura qualifica le lesioni come gravi"
+        "il titolo del comunicato della Questura qualifica le lesioni come gravi",
+        "una successiva ricostruzione dell'8 marzo 2019 riferisce che il titolare fu percosso da più persone, anche mediante sedie, e che le indagini coinvolsero ulteriori partecipanti oltre alla persona arrestata in flagranza; il dato è registrato come sviluppo investigativo e non come accertamento definitivo di responsabilità"
       ],
       "cyber_related": null,
       "affected_object_count": null
