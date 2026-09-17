@@ -75,6 +75,20 @@
         "procedural_context",
         "corroboration"
       ]
+    },
+    {
+      "source_key": "press:gazzetta-sud:2019-03-08:movida-lametina-pub",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Movida violenta a Lamezia, altri 3 giovani nei guai per l'aggressione al proprietario di un pub",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2019/03/08/movida-violenta-a-lamezia-altri-3-giovani-nei-guai-per-laggressione-al-proprietario-di-un-pub-218b049d-cbbd-4836-a30a-f01d356f0069",
+      "published_at": null,
+      "retrieved_at": "2026-09-17T20:40:15+02:00",
+      "support_roles": [
+        "event_support",
+        "procedural_context",
+        "corroboration"
+      ]
     }
   ],
   "offences": [
@@ -124,7 +138,8 @@
       "attempt_status": "completed",
       "situational_context": [
         "Le fonti descrivono l'aggressione al titolare del pub e la fonte primaria della Polizia di Stato indica espressamente le lesioni gravi tra le accuse dell'arresto in flagranza.",
-        "La qualificazione e registrata come contestazione al momento dell'arresto e non come accertamento definitivo di responsabilita."
+        "Una successiva ricostruzione dell'8 marzo 2019 riferisce che il 16 febbraio il titolare fu percosso da piu persone, anche mediante sedie, e che gli sviluppi investigativi coinvolsero ulteriori partecipanti oltre alla persona gia arrestata in flagranza.",
+        "La qualificazione e registrata come contestazione investigativa e non come accertamento definitivo di responsabilita."
       ],
       "cyber_related": null,
       "affected_object_count": 1
