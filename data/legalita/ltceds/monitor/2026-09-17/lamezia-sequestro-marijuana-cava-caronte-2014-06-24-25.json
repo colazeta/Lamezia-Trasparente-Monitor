@@ -80,7 +80,7 @@
   ],
   "locations": [
     {
-      "location_key": "location:occurrence:cava-localita-caronte",
+      "location_key": "location:occurrence:localita-caronte",
       "basis_source_key": "cn24tv-spare-tyre-caronte-2014-06-25",
       "role": "occurrence",
       "municipality": "Lamezia Terme",
@@ -90,12 +90,12 @@
       "sensitivity": "private_or_sensitive",
       "publication_risk": "unknown",
       "geometry": null,
-      "place_name": "Cava in località Caronte",
+      "place_name": "Località Caronte",
       "neighbourhood": null,
       "iccs_location_type": null
     },
     {
-      "location_key": "location:search:cava-localita-caronte",
+      "location_key": "location:search:localita-caronte",
       "basis_source_key": "cn24tv-spare-tyre-caronte-2014-06-25",
       "role": "search",
       "municipality": "Lamezia Terme",
@@ -105,12 +105,12 @@
       "sensitivity": "private_or_sensitive",
       "publication_risk": "unknown",
       "geometry": null,
-      "place_name": "Cava in località Caronte",
+      "place_name": "Località Caronte",
       "neighbourhood": null,
       "iccs_location_type": null
     },
     {
-      "location_key": "location:discovery:cava-localita-caronte",
+      "location_key": "location:discovery:localita-caronte",
       "basis_source_key": "cn24tv-spare-tyre-caronte-2014-06-25",
       "role": "discovery",
       "municipality": "Lamezia Terme",
@@ -120,12 +120,12 @@
       "sensitivity": "private_or_sensitive",
       "publication_risk": "unknown",
       "geometry": null,
-      "place_name": "Cava in località Caronte",
+      "place_name": "Località Caronte",
       "neighbourhood": null,
       "iccs_location_type": null
     },
     {
-      "location_key": "location:recovery:cava-localita-caronte",
+      "location_key": "location:recovery:localita-caronte",
       "basis_source_key": "cn24tv-spare-tyre-caronte-2014-06-25",
       "role": "recovery",
       "municipality": "Lamezia Terme",
@@ -135,7 +135,7 @@
       "sensitivity": "private_or_sensitive",
       "publication_risk": "unknown",
       "geometry": null,
-      "place_name": "Cava in località Caronte",
+      "place_name": "Località Caronte",
       "neighbourhood": null,
       "iccs_location_type": null
     }
