@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-attentato-ordigno-circolo-ricreativo-centro-2023-03-11",
   "discovered_at": "2026-09-17T14:40:12+02:00",
-  "updated_at": "2026-09-17T14:40:12+02:00",
+  "updated_at": "2026-09-17T14:54:00+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Esplosione di un ordigno all'ingresso di un circolo ricreativo nel centro cittadino di Lamezia Terme",
@@ -77,7 +77,7 @@
         "La deflagrazione provocò ingenti danni all'ingresso del circolo e infranse vetri e infissi di abitazioni private ubicate nelle vicinanze; gli artificieri della Questura di Catanzaro descrissero l'ordigno come di elevata potenzialità offensiva.",
         "Nel luglio 2023 la Polizia eseguì un'ordinanza di custodia cautelare in carcere emessa dal GIP del Tribunale di Lamezia Terme su richiesta della locale Procura nei confronti del presunto mandante; il procedimento era nella fase delle indagini preliminari e il record non rappresenta la responsabilità come accertata in via definitiva.",
         "Le fonti descrivono il fatto come attentato dinamitardo o intimidazione, ma non è stata reperita una fonte primaria o giudiziaria accessibile che sostenga per il singolo episodio una qualificazione penale formale più specifica; la classificazione resta pertanto provvisoria.",
-        "La ricerca geografica dedicata ha confermato soltanto un circolo ricreativo nel centro cittadino: non sono stati reperiti in fonti affidabili nome del locale, strada, civico o coordinate e non vengono introdotte inferenze geografiche ulteriori."
+        "La ricerca geografica dedicata ha confermato soltanto un circolo ricreativo nel centro cittadino: non sono stati reperiti in fonti affidabili nome del locale, strada, civico o coordinate. L'evidenza testuale è conservata a livello locality, ma la localizzazione è risolta prudentemente a livello municipality per evitare che il generico riferimento al centro cittadino generi un hotspot sub-comunale artificiale."
       ],
       "cyber_related": null,
       "affected_object_count": null
@@ -91,7 +91,7 @@
       "municipality": "Lamezia Terme",
       "evidence_basis": "source_stated_locality",
       "evidence_precision": "locality",
-      "resolved_precision": "locality",
+      "resolved_precision": "municipality",
       "sensitivity": "public_place",
       "publication_risk": "low_public_site",
       "geometry": null,
@@ -106,7 +106,7 @@
       "municipality": "Lamezia Terme",
       "evidence_basis": "source_stated_locality",
       "evidence_precision": "locality",
-      "resolved_precision": "locality",
+      "resolved_precision": "municipality",
       "sensitivity": "public_place",
       "publication_risk": "victim_linked",
       "geometry": null,
