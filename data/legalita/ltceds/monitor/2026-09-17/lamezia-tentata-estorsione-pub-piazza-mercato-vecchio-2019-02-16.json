@@ -1,0 +1,180 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-tentata-estorsione-pub-piazza-mercato-vecchio-2019-02-16",
+  "discovered_at": "2026-09-17T20:40:15+02:00",
+  "updated_at": "2026-09-17T20:40:15+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Tentata estorsione, danneggiamento e lesioni gravi in un pub di Piazza Mercato Vecchio",
+  "temporal": {
+    "start": "2019-02-16",
+    "end": "2019-02-16",
+    "edtf": "2019-02-16",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "police:questura-catanzaro:15855c693400b3688266234850",
+      "source_type": "law_enforcement_primary",
+      "provider": "Questura di Catanzaro - Polizia di Stato",
+      "title": "Il Commissariato di Lamezia Terme arresta in flagranza un giovane per danneggiamento, tentata estorsione e lesioni gravi",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/15855c693400b3688266234850",
+      "published_at": null,
+      "retrieved_at": "2026-09-17T20:40:15+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:lameziaterme-it:2019-02-17:pub-piazza-mercato-vecchio",
+      "source_type": "press_secondary",
+      "provider": "LameziaTerme.it",
+      "title": "Lamezia. Arrestato giovane per danneggiamento, tentata estorsione e lesioni gravi",
+      "url": "https://www.lameziaterme.it/lamezia-giovane-danneggiamento-tentata-estorsione",
+      "published_at": null,
+      "retrieved_at": "2026-09-17T20:40:15+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lametino:2019-02-17:pub-piazza-mercato-vecchio",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, pretende di non pagare il conto e aggredisce titolare locale: arrestato 30enne",
+      "url": "https://www.lametino.it/cronaca/lamezia-rissa-in-pieno-centro-intervengono-ambulanza-e-polizia.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-17T20:40:15+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:gazzetta-sud:2019-02-17:pub-piazza-mercato-vecchio",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Lamezia Terme, non vuole pagare il conto e aggredisce il titolare: arrestato 30enne",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2019/02/17/lamezia-terme-non-vuole-pagare-il-conto-e-aggredisce-il-titolare-arrestato-30enne-e07d38ac-d5ca-409b-a159-2a4b49b3dea2",
+      "published_at": null,
+      "retrieved_at": "2026-09-17T20:40:15+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:tentata-estorsione",
+      "classification_source_key": "police:questura-catanzaro:15855c693400b3688266234850",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "La Polizia di Stato riferisce che l'avventore pretendeva, con comportamento minaccioso, di non pagare quanto consumato nel pub e che fu arrestato in flagranza anche per tentata estorsione.",
+        "La qualificazione e registrata come contestazione al momento dell'arresto e non come accertamento definitivo di responsabilita."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:danneggiamento",
+      "classification_source_key": "police:questura-catanzaro:15855c693400b3688266234850",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La fonte primaria della Polizia di Stato indica espressamente il danneggiamento tra le accuse per cui fu eseguito l'arresto in flagranza.",
+        "La qualificazione e registrata come contestazione al momento dell'arresto e non come accertamento definitivo di responsabilita."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:lesioni-gravi",
+      "classification_source_key": "police:questura-catanzaro:15855c693400b3688266234850",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti descrivono l'aggressione al titolare del pub e la fonte primaria della Polizia di Stato indica espressamente le lesioni gravi tra le accuse dell'arresto in flagranza.",
+        "La qualificazione e registrata come contestazione al momento dell'arresto e non come accertamento definitivo di responsabilita."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:piazza-mercato-vecchio:pub:occurrence",
+      "basis_source_key": "police:questura-catanzaro:15855c693400b3688266234850",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Piazza Mercato Vecchio (pub non identificato)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:piazza-mercato-vecchio:pub:target",
+      "basis_source_key": "police:questura-catanzaro:15855c693400b3688266234850",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Piazza Mercato Vecchio (pub non identificato)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:piazza-mercato-vecchio:arrest",
+      "basis_source_key": "police:questura-catanzaro:15855c693400b3688266234850",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Piazza Mercato Vecchio (presso il pub)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
