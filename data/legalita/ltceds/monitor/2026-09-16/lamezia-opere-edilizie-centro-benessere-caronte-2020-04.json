@@ -1,0 +1,114 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-opere-edilizie-centro-benessere-caronte-2020-04",
+  "discovered_at": "2026-09-16T23:31:23+02:00",
+  "updated_at": "2026-09-16T23:31:23+02:00",
+  "record_status": "verified_source",
+  "event_form": "continuous_episode",
+  "title": "Opere edilizie non autorizzate per un centro benessere in contrada Caronte accertate entro il 30 aprile 2020",
+  "temporal": {
+    "start": null,
+    "end": "2020-04-30",
+    "edtf": "../2020-04-30",
+    "precision": "approximate"
+  },
+  "sources": [
+    {
+      "source_key": "press:corriere-calabria:2020-04-30:centro-benessere-caronte-sequestro",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Lamezia, sequestrato un centro benessere abusivo",
+      "url": "https://www.corrieredellacalabria.it/2020/04/30/lamezia-sequestrato-un-centro-benessere-abusivo/",
+      "published_at": "2020-04-30T12:19:00+02:00",
+      "retrieved_at": "2026-09-16T23:31:23+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:preserre:2020-04-30:centro-benessere-caronte-sequestro",
+      "source_type": "press_secondary",
+      "provider": "PreSerre e Dintorni",
+      "title": "Centro benessere abusivo sequestrato a Lamezia",
+      "url": "https://www.preserreedintorni.it/centro-benessere-abusivo-sequestrato-a-lamezia/",
+      "published_at": "2020-04-30T00:00:00+02:00",
+      "retrieved_at": "2026-09-16T23:31:23+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lacnews24:2020-05-06:centro-benessere-caronte-convalida",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Gli interessi di famiglia dietro la battaglia di Furgiuele (Lega) per parrucchieri ed estetisti",
+      "url": "https://www.lacnews24.it/cronaca/gli-interessi-di-famiglia-dietro-la-battaglia-di-furgiuele-lega-per-parrucchieri-ed-estetisti-iwx7gysr",
+      "published_at": "2020-05-06T20:00:00+02:00",
+      "retrieved_at": "2026-09-16T23:31:23+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:opere-edilizie-senza-autorizzazione",
+      "classification_source_key": "press:lacnews24:2020-05-06:centro-benessere-caronte-convalida",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "not_applicable",
+      "situational_context": [
+        "i Carabinieri della Stazione di Lamezia Terme-Sambiase e della Stazione Forestale di Sambiase sottoposero a sequestro un immobile in contrada Caronte adibito a centro benessere; le fonti descrivono un fabbricato in vetro ancora in fase di ultimazione",
+        "le fonti contemporanee riferiscono che le opere erano state realizzate in assenza di autorizzazione edilizia su area demaniale sottoposta a vincolo paesaggistico e che i lavori sarebbero proseguiti mentre l'immobile era sottoposto a sequestro e custodia giudiziaria",
+        "il 6 maggio 2020 LaC News24 riferì che il giudice aveva convalidato il sequestro preventivo motivandolo con opere edilizie realizzate senza le autorizzazioni richieste in zona sottoposta a vincolo paesaggistico e con l'esigenza di impedire la prosecuzione della condotta",
+        "le fonti recuperate non riportano per questo episodio una specifica disposizione penale contestata; la qualificazione resta pertanto provvisoria e non implica un accertamento definitivo di responsabilità"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:contrada-caronte-centro-benessere:occurrence",
+      "basis_source_key": "press:preserre:2020-04-30:centro-benessere-caronte-sequestro",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "unknown",
+      "geometry": null,
+      "place_name": "Centro benessere in contrada Caronte, in prossimità delle Terme di Caronte",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:contrada-caronte-centro-benessere:discovery",
+      "basis_source_key": "press:preserre:2020-04-30:centro-benessere-caronte-sequestro",
+      "role": "discovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "unknown",
+      "geometry": null,
+      "place_name": "Centro benessere in contrada Caronte, in prossimità delle Terme di Caronte",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

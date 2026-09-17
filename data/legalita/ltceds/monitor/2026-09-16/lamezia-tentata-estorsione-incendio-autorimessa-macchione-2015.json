@@ -1,0 +1,130 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-tentata-estorsione-incendio-autorimessa-macchione-2015",
+  "discovered_at": "2026-09-16T20:15:18+02:00",
+  "updated_at": "2026-09-16T20:15:18+02:00",
+  "record_status": "verified_source",
+  "event_form": "course_of_conduct",
+  "title": "Tentata estorsione e danneggiamento mediante incendio contro un'autorimessa in contrada Macchione, documentati nel 2015",
+  "temporal": {
+    "start": null,
+    "end": "2015-07-29",
+    "edtf": "../2015-07-29",
+    "precision": "approximate"
+  },
+  "sources": [
+    {
+      "source_key": "press:il-lametino:2015-07-29:operazione-boomerang",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: Operazione Boomerang, 36 indagati - VIDEO",
+      "url": "https://www.lametino.it/cronaca/lamezia-operazione-boomerang-10-arresti.html",
+      "published_at": "2015-07-29T07:26:00+02:00",
+      "retrieved_at": "2026-09-16T20:15:18+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:lac-news24:2015-07-29:operazione-boomerang",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Operazione Boomerang, 10 arresti a Lamezia - NOMI E VIDEO",
+      "url": "https://www.lacnews24.it/cronaca/operazione-boomerang-10-arresti-a-lamezia-nomi-e-video-msg4jqx3",
+      "published_at": "2015-07-29T07:57:00+02:00",
+      "retrieved_at": "2026-09-16T20:15:18+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:stretto-web:2015-07-29:boomerang-lamezia",
+      "source_type": "press_secondary",
+      "provider": "StrettoWeb",
+      "title": "Lamezia Terme (CZ): scoperta rete di spaccio nel centro storico, anche minorenni tra i 10 arrestati",
+      "url": "https://www.strettoweb.com/2015/07/lamezia-terme-cz-scoperta-rete-spaccio-nel-centro-storico-minorenni-i-10-arrestati/306145/amp/",
+      "published_at": "2015-07-29T07:45:00+02:00",
+      "retrieved_at": "2026-09-16T20:15:18+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:tentata-estorsione",
+      "classification_source_key": "press:il-lametino:2015-07-29:operazione-boomerang",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "La ricostruzione dell'operazione Boomerang riferisce che, nei mesi precedenti l'incendio, il titolare dell'attività aveva ricevuto in tre occasioni biglietti manoscritti dal contenuto minatorio ed era stato avvicinato con una richiesta di «mettersi a posto».",
+        "Le fonti del 29 luglio 2015 qualificano espressamente la condotta come tentata estorsione; il record non attribuisce identità personali e non tratta le misure cautelari come accertamento definitivo di responsabilità.",
+        "Non è stato recuperato in questa iterazione un comunicato originario della Polizia di Stato o un atto giudiziario direttamente accessibile relativo allo specifico episodio; la qualificazione è conservata perché espressamente riportata da fonti convergenti che descrivono l'impianto investigativo accolto dalla Procura e dal GIP."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:danneggiamento-incendiario",
+      "classification_source_key": "press:il-lametino:2015-07-29:operazione-boomerang",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La stessa ricostruzione riferisce che, dopo le precedenti intimidazioni, l'attività di autorimessa e alcune auto parcheggiate subirono un incendio.",
+        "Le indagini vengono descritte come originate dal danneggiamento mediante incendio di un'autorimessa nella zona del cimitero di contrada Macchione.",
+        "La data esatta dell'incendio non è indicata nelle fonti recuperate: il 29 luglio 2015 è utilizzato esclusivamente come terminus ante quem documentale e non come data del fatto."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:contrada-macchione:occurrence",
+      "basis_source_key": "press:il-lametino:2015-07-29:operazione-boomerang",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "non_sensitive",
+      "geometry": null,
+      "place_name": "Contrada Macchione",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:contrada-macchione:target",
+      "basis_source_key": "press:il-lametino:2015-07-29:operazione-boomerang",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "non_sensitive",
+      "geometry": null,
+      "place_name": "Contrada Macchione",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
