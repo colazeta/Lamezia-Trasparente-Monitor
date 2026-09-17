@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-detenzione-hashish-spaccio-2026-03-13",
   "discovered_at": "2026-09-07T06:16:35+02:00",
-  "updated_at": "2026-09-07T06:16:35+02:00",
+  "updated_at": "2026-09-17T08:07:32+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Presunta detenzione di hashish ai fini di spaccio rilevata dai Carabinieri a Lamezia Terme",
@@ -59,6 +59,38 @@
         "procedural_context",
         "corroboration"
       ]
+    },
+    {
+      "source_key": "press:radioazzurra:2026-03-17:hashish-spaccio-lamezia-19enne",
+      "source_type": "press_secondary",
+      "provider": "Radio Azzurra News",
+      "title": "Lamezia Terme, 19enne arrestato con oltre 50 grammi di hashish: sequestrata droga pronta per lo spaccio",
+      "url": "https://www.radioazzurra.news/lamezia-terme-19enne-arrestato-con-oltre-50-grammi-di-hashish-sequestrata-droga-pronta-per-lo-spaccio",
+      "published_at": null,
+      "retrieved_at": "2026-09-17T08:07:32+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:calabria7:2026-03-17:hashish-spaccio-lamezia-19enne",
+      "source_type": "press_secondary",
+      "provider": "Calabria 7",
+      "title": "Cerca di disfarsi dell'hashish durante un controllo, a casa gliene trovano 53 grammi: 19enne arrestato a Lamezia",
+      "url": "https://calabria7.news/giudiziaria/cerca-di-disfarsi-dellhashish-durante-un-controllo-a-casa-gliene-trovano-53-grammi-19enne-arrestato-a-lamezia",
+      "published_at": null,
+      "retrieved_at": "2026-09-17T08:07:32+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
     }
   ],
   "offences": [
@@ -95,6 +127,51 @@
       "publication_risk": "residential",
       "geometry": null,
       "place_name": "Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:recovery:controllo-non-specificato-lamezia",
+      "basis_source_key": "press:radioazzurra:2026-03-17:hashish-spaccio-lamezia-19enne",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "unknown",
+      "publication_risk": "unknown",
+      "geometry": null,
+      "place_name": "Luogo del controllo non specificato dalle fonti recuperate",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:search:abitazione-privata-non-identificata",
+      "basis_source_key": "press:calabria7:2026-03-17:hashish-spaccio-lamezia-19enne",
+      "role": "search",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata non identificata dalle fonti recuperate",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:recovery:abitazione-privata-non-identificata",
+      "basis_source_key": "press:calabria7:2026-03-17:hashish-spaccio-lamezia-19enne",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata non identificata dalle fonti recuperate",
       "neighbourhood": null,
       "iccs_location_type": null
     }
