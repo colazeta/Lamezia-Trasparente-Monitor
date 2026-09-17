@@ -1,0 +1,150 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-via-telesio-2019-08-13",
+  "discovered_at": "2026-09-17T13:16:11+02:00",
+  "updated_at": "2026-09-17T13:16:11+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina con lesioni e violenza privata in via Telesio il 13 agosto 2019",
+  "temporal": {
+    "start": "2019-08-13",
+    "end": "2019-08-13",
+    "edtf": "2019-08-13",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "law:questura-catanzaro:2019-08-20:rapina-via-telesio",
+      "source_type": "law_enforcement_primary",
+      "provider": "Questura di Catanzaro - Polizia di Stato",
+      "title": "Arrestato cittadino marocchino resosi responsabile dei reati di rapina, lesioni personali e violenza privata",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/18085d5ba8a7a6606429466755",
+      "published_at": "2019-08-20",
+      "retrieved_at": "2026-09-17T13:16:11+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "news:ansa:2019-08-20:rapina-via-telesio",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Rapina e minaccia donna, arrestato",
+      "url": "https://www.ansa.it/calabria/notizie/2019/08/20/rapina-e-minaccia-donna-arrestato_ea04c1fa-e0e8-4740-b761-72f1287facc1.html",
+      "published_at": "2019-08-20",
+      "retrieved_at": "2026-09-17T13:16:11+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lameziaterme-it:2019-08-20:rapina-via-telesio",
+      "source_type": "press_secondary",
+      "provider": "LameziaTerme.it",
+      "title": "Lamezia. Un arresto per rapina, lesioni personali e violenza privata",
+      "url": "https://www.lameziaterme.it/lamezia-arresto-rapina-lesioni-personali-violenza-privata",
+      "published_at": "2019-08-20",
+      "retrieved_at": "2026-09-17T13:16:11+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "law:questura-catanzaro:2019-08-20:rapina-via-telesio",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Nella serata del 13 agosto 2019 la Squadra Volante del Commissariato di Lamezia Terme intervenne in via Telesio dopo la segnalazione di un'aggressione ai danni di una donna.",
+        "ANSA riferisce che la donna stava rientrando a casa dopo avere prelevato 150 euro a un bancomat; l'ubicazione del bancomat non è attestata dalle fonti recuperate e non viene quindi registrata come nodo geografico.",
+        "La fonte primaria della Polizia di Stato qualifica i fatti come rapina, lesioni personali e violenza privata.",
+        "Il GIP del Tribunale di Lamezia Terme dispose una misura cautelare agli arresti domiciliari, eseguita dalla Polizia il 19 agosto 2019; non è stata verificata in questa ricerca una decisione definitiva sulla responsabilità."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:lesioni-personali",
+      "classification_source_key": "law:questura-catanzaro:2019-08-20:rapina-via-telesio",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La fonte primaria della Polizia di Stato include espressamente le lesioni personali tra i reati contestati in relazione all'aggressione del 13 agosto 2019.",
+        "La qualificazione registra il quadro investigativo-cautelare documentato dalle fonti e non equivale a un accertamento definitivo di responsabilità."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:violenza-privata",
+      "classification_source_key": "law:questura-catanzaro:2019-08-20:rapina-via-telesio",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La fonte primaria della Polizia di Stato include espressamente la violenza privata tra i reati contestati per i fatti del 13 agosto 2019.",
+        "La qualificazione registra il quadro investigativo-cautelare documentato dalle fonti e non equivale a un accertamento definitivo di responsabilità."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:via-telesio:rapina-2019-08-13:occurrence",
+      "basis_source_key": "law:questura-catanzaro:2019-08-20:rapina-via-telesio",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Via Telesio",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:via-telesio:rapina-2019-08-13:target",
+      "basis_source_key": "law:questura-catanzaro:2019-08-20:rapina-via-telesio",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via Telesio",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
