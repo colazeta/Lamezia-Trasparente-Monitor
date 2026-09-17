@@ -32,6 +32,7 @@ import { EVIDENCE_INTERVENTIONS_2026_09_14 } from "./evidenceInterventions202609
 import { EVIDENCE_INTERVENTIONS_2026_09_14_EUROPE } from "./evidenceInterventions20260914Europe";
 import { EVIDENCE_INTERVENTIONS_2026_09_14_SUPPLEMENT } from "./evidenceInterventions20260914Supplement";
 import { EVIDENCE_INTERVENTIONS_2026_09_15 } from "./evidenceInterventions20260915";
+import { EVIDENCE_INTERVENTIONS_2026_09_16 } from "./evidenceInterventions20260916";
 import { EVIDENCE_INTERVENTIONS_2026_09_17 } from "./evidenceInterventions20260917";
 import { applyEvidenceInterventionUpdates20260914 } from "./evidenceInterventionUpdates20260914";
 
@@ -74,6 +75,7 @@ const EVIDENCE_INTERVENTIONS_BEFORE_2026_09_14_UPDATES: readonly EvidenceInterve
   ...EVIDENCE_INTERVENTIONS_2026_09_14_EUROPE,
   ...EVIDENCE_INTERVENTIONS_2026_09_14_SUPPLEMENT,
   ...EVIDENCE_INTERVENTIONS_2026_09_15,
+  ...EVIDENCE_INTERVENTIONS_2026_09_16,
   ...EVIDENCE_INTERVENTIONS_2026_09_17,
 ];
 
