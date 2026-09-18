@@ -14,10 +14,10 @@
   },
   "sources": [
     {
-      "source_key": "press:nuova-cosenza:2006-10-27:sala-regno-incendio",
+      "source_key": "press:nuova-cosenza:2006-10:lamezia-emergenza-mafia",
       "source_type": "press_secondary",
       "provider": "Nuova Cosenza Quotidiano Digitale",
-      "title": "Cresce l'allarme: la 'ndrangheta tiene sotto assedio Lamezia",
+      "title": "Emergenza mafia: Lamezia sotto assedio dalla 'ndrangheta",
       "url": "https://www.nuovacosenza.com/cs/06/ottobre/lamezia.html",
       "published_at": null,
       "retrieved_at": "2026-09-18T09:24:19+02:00",
@@ -29,12 +29,12 @@
       ]
     },
     {
-      "source_key": "press:gazzetta-sud-casa-legalita:2006-10-27:sala-regno-incendio",
+      "source_key": "press:gazzetta-sud:2006-10-27:duplice-omicidio-via-della-vittoria",
       "source_type": "press_secondary",
-      "provider": "Gazzetta del Sud (rassegna Casa della Legalità)",
+      "provider": "Gazzetta del Sud (rassegna Casa della Legalita)",
       "title": "Duplice omicidio, Lamezia sotto assedio",
       "url": "https://www.casadellalegalita.net/index.php/rassegna-2006/1018-duplice-omicidio-lamezia-sotto-assedio",
-      "published_at": null,
+      "published_at": "2006-10-27",
       "retrieved_at": "2026-09-18T09:24:19+02:00",
       "support_roles": [
         "event_support",
@@ -47,7 +47,7 @@
   "offences": [
     {
       "offence_key": "offence:atto-intimidatorio-con-incendio",
-      "classification_source_key": "press:nuova-cosenza:2006-10-27:sala-regno-incendio",
+      "classification_source_key": "press:nuova-cosenza:2006-10:lamezia-emergenza-mafia",
       "classification_basis": "provisional",
       "iccs_code": null,
       "istat_catalogue_id": null,
@@ -67,7 +67,7 @@
   "locations": [
     {
       "location_key": "location:lamezia-terme:sala-regno-testimoni-geova-2006-10-23:occurrence",
-      "basis_source_key": "press:nuova-cosenza:2006-10-27:sala-regno-incendio",
+      "basis_source_key": "press:nuova-cosenza:2006-10:lamezia-emergenza-mafia",
       "role": "occurrence",
       "municipality": "Lamezia Terme",
       "evidence_basis": "source_stated_named_site",
@@ -82,7 +82,7 @@
     },
     {
       "location_key": "location:lamezia-terme:sala-regno-testimoni-geova-2006-10-23:target",
-      "basis_source_key": "press:nuova-cosenza:2006-10-27:sala-regno-incendio",
+      "basis_source_key": "press:nuova-cosenza:2006-10:lamezia-emergenza-mafia",
       "role": "target",
       "municipality": "Lamezia Terme",
       "evidence_basis": "source_stated_named_site",
