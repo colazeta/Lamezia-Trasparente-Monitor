@@ -1,0 +1,89 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-spari-parrucchiere-via-bizantini-2011-12-13",
+  "discovered_at": "2026-09-18T10:21:46+02:00",
+  "updated_at": "2026-09-18T10:21:46+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Colpi di pistola contro un parrucchiere per uomo in via dei Bizantini il 13 dicembre 2011",
+  "temporal": {
+    "start": "2011-12-13",
+    "end": "2011-12-13",
+    "edtf": "2011-12-13",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:cn24tv:2011-12-13:spari-parrucchiere-bizantini",
+      "source_type": "press_secondary",
+      "provider": "CN24TV",
+      "title": "Intimidazioni a Lamezia, spari contro negozio parrucchiere",
+      "url": "https://cn24tv.it/news/37644/intimidazioni-a-lamezia-spari-contro-negozio-parrucchiere.html",
+      "published_at": "2011-12-13",
+      "retrieved_at": "2026-09-18T10:21:46+02:00",
+      "support_roles": ["event_support", "classification_support", "location_support", "corroboration"]
+    },
+    {
+      "source_key": "press:calabria-ora:2011-12-16:recenti-sparatorie-capizzaglie",
+      "source_type": "press_secondary",
+      "provider": "Calabria Ora (archive mirror)",
+      "title": "Giravano armati in auto nel quartiere 'far west' / Lo Stato c'e ma si continua a sparare",
+      "url": "https://manualzilla.com/doc/6139683/scarica-il-documento",
+      "published_at": "2011-12-16",
+      "retrieved_at": "2026-09-18T10:21:46+02:00",
+      "support_roles": ["event_support", "location_support", "corroboration", "procedural_context"]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:atto-intimidatorio-con-arma-da-fuoco",
+      "classification_source_key": "press:cn24tv:2011-12-13:spari-parrucchiere-bizantini",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti contemporanee collocano l'episodio nella mattina del 13 dicembre 2011, intorno alle 10:30, contro l'ingresso o la vetrina di un parrucchiere per uomo in via dei Bizantini; la ricostruzione del 16 dicembre riferisce quindici colpi di pistola calibro 9 e la presenza di clienti all'interno, rimasti illesi.",
+        "La fonte del 16 dicembre inserisce il fatto nella sequenza di sparatorie e intimidazioni registrate a Capizzaglie nei giorni precedenti e afferma che gli episodi risultavano allora impuniti. Nella stessa ricostruzione il procuratore prospettava soltanto come ipotesi investigativa un possibile collegamento tra due giovani arrestati separatamente per porto e detenzione di arma e i recenti attentati: tale collegamento non e trattato qui come attribuzione di responsabilita.",
+        "Non e stata reperita una fonte primaria giudiziaria o di polizia direttamente accessibile che sostenga per questo specifico episodio una qualificazione penale piu forte o una matrice estorsiva o mafiosa accertata; la classificazione resta pertanto provvisoria."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-dei-bizantini:parrucchiere:occurrence",
+      "basis_source_key": "press:calabria-ora:2011-12-16:recenti-sparatorie-capizzaglie",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Parrucchiere per uomo non identificato, Via dei Bizantini",
+      "neighbourhood": "Capizzaglie",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-dei-bizantini:parrucchiere:target",
+      "basis_source_key": "press:calabria-ora:2011-12-16:recenti-sparatorie-capizzaglie",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Parrucchiere per uomo non identificato, Via dei Bizantini",
+      "neighbourhood": "Capizzaglie",
+      "iccs_location_type": null
+    }
+  ]
+}
