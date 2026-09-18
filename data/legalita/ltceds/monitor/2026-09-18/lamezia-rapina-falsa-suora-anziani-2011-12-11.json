@@ -1,0 +1,99 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-falsa-suora-anziani-2011-12-11",
+  "discovered_at": "2026-09-18T07:34:58+02:00",
+  "updated_at": "2026-09-18T07:34:58+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina con violenza in abitazione ai danni di una coppia anziana a Lamezia Terme l'11 dicembre 2011",
+  "temporal": {
+    "start": "2011-12-11",
+    "end": "2011-12-11",
+    "edtf": "2011-12-11",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:cn24tv:2011-12-11:falsa-suora-rapina-anziani",
+      "source_type": "press_secondary",
+      "provider": "CN24TV",
+      "title": "Lamezia, travestita da suora picchia e rapina in casa due anziani",
+      "url": "https://cn24tv.it/news/37549/lamezia-travestita-da-suora-picchia-e-rapina-in-casa-due-anziani.html",
+      "published_at": "2011-12-11T21:15:00+01:00",
+      "retrieved_at": "2026-09-18T07:34:58+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:infooggi:2011-12-12:falsa-suora-rapina-anziani",
+      "source_type": "press_secondary",
+      "provider": "InfoOggi",
+      "title": "Lamezia Terme, falsa suora picchia e deruba due anziani",
+      "url": "https://www.infooggi.it/articolo/lamezia-terme-falsa-suora-picchia-e-deruba-due-anziani/21886/amp",
+      "published_at": null,
+      "retrieved_at": "2026-09-18T07:34:58+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "press:cn24tv:2011-12-11:falsa-suora-rapina-anziani",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "CN24TV riferisce l'11 dicembre 2011 che una donna, travestita da suora per non destare sospetti, si fece aprire la porta dell'abitazione di una coppia anziana a Lamezia Terme, colpì ripetutamente i coniugi con calci e pugni e si impossessò di gioielli e denaro contante.",
+        "InfoOggi corrobora il fatto il 12 dicembre 2011 e precisa che l'episodio era avvenuto la sera di domenica 11 dicembre, all'interno dell'abitazione della coppia a Lamezia Terme.",
+        "Entrambe le fonti descrivono espressamente il fatto come rapina o sottrazione mediante violenza; sul fatto indagavano i Carabinieri. Non è stata recuperata una fonte primaria di polizia o giudiziaria direttamente accessibile né una localizzazione sub-comunale affidabile."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata-non-identificata:falsa-suora-2011-12-11:occurrence",
+      "basis_source_key": "press:cn24tv:2011-12-11:falsa-suora-rapina-anziani",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata non identificata a Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata-non-identificata:falsa-suora-2011-12-11:target",
+      "basis_source_key": "press:cn24tv:2011-12-11:falsa-suora-rapina-anziani",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Abitazione privata non identificata a Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
