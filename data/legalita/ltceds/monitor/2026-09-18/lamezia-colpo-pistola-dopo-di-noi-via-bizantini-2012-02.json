@@ -1,0 +1,122 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-colpo-pistola-dopo-di-noi-via-bizantini-2012-02",
+  "discovered_at": "2026-09-18T01:56:43+02:00",
+  "updated_at": "2026-09-18T01:56:43+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Colpo di pistola contro una finestra del centro Dopo di Noi in via dei Bizantini nella notte tra 25 e 26 febbraio 2012",
+  "temporal": {
+    "start": "2012-02-25",
+    "end": "2012-02-26",
+    "edtf": "2012-02-25/2012-02-26",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "other:cnca:2012-02-27:solidarieta-progetto-sud",
+      "source_type": "other",
+      "provider": "Coordinamento Nazionale Comunità di Accoglienza (CNCA)",
+      "title": "La solidarietà del CNCA alla Comunità Progetto Sud",
+      "url": "https://www.cnca.it/la-solidarieta-del-cnca-alla-comunito-progetto-sud/",
+      "published_at": null,
+      "retrieved_at": "2026-09-18T01:56:43+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "other:anffas:2012-02-28:solidarieta-progetto-sud",
+      "source_type": "other",
+      "provider": "Anffas Nazionale",
+      "title": "Solidarietà alla Comunità Sud di Don Giacomo Panizza",
+      "url": "https://www.anffas.net/it/news/1889/solidarieta-alla-comunita-sud-di-don-giacomo-panizza/",
+      "published_at": null,
+      "retrieved_at": "2026-09-18T01:56:43+02:00",
+      "support_roles": [
+        "event_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "other:progetto-sud:dopo-di-noi",
+      "source_type": "other",
+      "provider": "Comunità Progetto Sud",
+      "title": "Dopo di Noi",
+      "url": "https://www.comunitaprogettosud.it/dopo-di-noi",
+      "published_at": null,
+      "retrieved_at": "2026-09-18T01:56:43+02:00",
+      "support_roles": [
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "other:progetto-sud:2019-04-17:cena-bene-confiscato",
+      "source_type": "other",
+      "provider": "Comunità Progetto Sud",
+      "title": "La cena del Signore in un bene confiscato alle mafie",
+      "url": "https://www.comunitaprogettosud.it/news/la-cena-del-signore-in-un-bene-confiscato-alle-mafie",
+      "published_at": null,
+      "retrieved_at": "2026-09-18T01:56:43+02:00",
+      "support_roles": [
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:atto-intimidatorio-con-arma-da-fuoco",
+      "classification_source_key": "other:cnca:2012-02-27:solidarieta-progetto-sud",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Il comunicato contemporaneo del CNCA riferisce che, nella notte tra sabato e domenica immediatamente precedente al 27 febbraio 2012, un colpo di pistola fu esploso contro una finestra del centro Dopo di Noi della Comunità Progetto Sud a Lamezia Terme.",
+        "Le fonti distinguono questo episodio dal precedente attentato con ordigno del 26 dicembre 2011 e dai successivi colpi esplosi contro la sede Pensieri e Parole scoperti nell'aprile 2012.",
+        "La qualificazione resta provvisoria: le fonti descrivono l'episodio come intimidazione, anche con riferimento al contesto mafioso, ma non è stata recuperata una fonte giudiziaria che sostenga per il singolo fatto una fattispecie penale o un'aggravante più specifica."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:dopo-di-noi-via-dei-bizantini-99:occurrence",
+      "basis_source_key": "other:progetto-sud:dopo-di-noi",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_exact",
+      "evidence_precision": "exact_address",
+      "resolved_precision": "exact_address",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Casa famiglia Dopo di Noi (Comunità Progetto Sud), Via dei Bizantini 99",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:dopo-di-noi-via-dei-bizantini-99:target",
+      "basis_source_key": "other:progetto-sud:dopo-di-noi",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_exact",
+      "evidence_precision": "exact_address",
+      "resolved_precision": "exact_address",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Casa famiglia Dopo di Noi (Comunità Progetto Sud), Via dei Bizantini 99",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
