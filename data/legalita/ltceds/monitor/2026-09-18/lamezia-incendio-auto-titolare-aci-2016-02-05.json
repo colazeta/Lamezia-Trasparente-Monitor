@@ -1,0 +1,100 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-incendio-auto-titolare-aci-2016-02-05",
+  "discovered_at": "2026-09-18T19:40:12+02:00",
+  "updated_at": "2026-09-18T19:40:12+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Incendio dell'autovettura del titolare della delegazione ACI a Lamezia Terme il 5 febbraio 2016",
+  "temporal": {
+    "start": "2016-02-05",
+    "end": "2016-02-05",
+    "edtf": "2016-02-05",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:gazzetta-sud:2016-06-27:tentata-estorsione",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Un arresto per tentata estorsione",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/archivio/2016/06/27/un-arresto-per-tentata-estorsione-7dbddb40-ced7-403c-b3e8-9013990e962f/",
+      "published_at": "2016-06-27T00:00:00+02:00",
+      "retrieved_at": "2026-09-18T19:40:12+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2016-06-27:intimidazioni-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Intimidazioni a Lamezia, arrestato un 20enne",
+      "url": "https://www.corrieredellacalabria.it/2016/06/27/intimidazioni-a-lamezia-arrestato-un-20enne",
+      "published_at": "2016-06-27T08:15:00+02:00",
+      "retrieved_at": "2026-09-18T19:40:12+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:atto-intimidatorio-incendiario",
+      "classification_source_key": "press:gazzetta-sud:2016-06-27:tentata-estorsione",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Il 5 febbraio 2016 fu incendiata l'autovettura del titolare della delegazione ACI di Lamezia Terme.",
+        "Le fonti del 27 giugno 2016, nel riferire l'esecuzione di un'ordinanza cautelare richiesta dalla DDA, collocano l'incendio nella stessa sequenza intimidatoria iniziata il 26 gennaio con cartucce e minacce all'esercizio ACI.",
+        "La classificazione del singolo incendio resta provvisoria: la più ampia contestazione cautelare riguardava tentata estorsione aggravata dalle modalità mafiose, ma il record non trasferisce automaticamente tale qualificazione al singolo episodio né la tratta come accertamento definitivo."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:aci-auto-incendiata:occurrence",
+      "basis_source_key": "press:gazzetta-sud:2016-06-27:tentata-estorsione",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Autovettura del titolare della delegazione ACI, luogo non precisato nel Comune di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:aci-auto-incendiata:target",
+      "basis_source_key": "press:gazzetta-sud:2016-06-27:tentata-estorsione",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Autovettura del titolare della delegazione ACI, luogo non precisato nel Comune di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
