@@ -1,0 +1,114 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-spray-urticante-piazza-mercato-vecchio-2019-09-21-22",
+  "discovered_at": "2026-09-18T19:49:11+02:00",
+  "updated_at": "2026-09-18T19:49:11+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Spray urticante spruzzato tra i presenti in Piazza Mercato Vecchio nella notte tra il 21 e il 22 settembre 2019",
+  "temporal": {
+    "start": "2019-09-21",
+    "end": "2019-09-22",
+    "edtf": "2019-09-21/2019-09-22",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "press:corriere-della-calabria:2019-09-22:spray-urticante-piazza-mercato-vecchio",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Lamezia, spruzzano spray urticante nella piazza della movida",
+      "url": "https://www.corrieredellacalabria.it/2019/09/22/lamezia-spruzzano-spray-urticante-nella-movida-dei-ragazzi",
+      "published_at": "2019-09-22T14:22:00+02:00",
+      "retrieved_at": "2026-09-18T19:49:11+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:ltnews:2019-09-22:spray-urticante-piazza-mercato-vecchio",
+      "source_type": "press_secondary",
+      "provider": "LTNews Lamezia Terme",
+      "title": "Lamezia, spruzzano spray urticante: un ferito e tanto panico in piazza Mercato Vecchio",
+      "url": "https://www.lameziatermenews.it/citta/17005-lamezia-spruzzano-spray-urticante-un-ferito-e-tanto-panico-in-piazza-mercato-vecchio.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-18T19:49:11+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:telejonio:2019-09-23:spray-urticante-piazza-mercato-vecchio",
+      "source_type": "press_secondary",
+      "provider": "Telejonio",
+      "title": "Lamezia, spruzzano spray urticante in piazza Mercato Vecchio: feriti",
+      "url": "https://www.telejonio.com/2019/09/23/lamezia-spruzzano-spray-urticante-in-piazza-mercato-vecchio-feriti",
+      "published_at": null,
+      "retrieved_at": "2026-09-18T19:49:11+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:uso-spray-urticante-su-persone",
+      "classification_source_key": "press:corriere-della-calabria:2019-09-22:spray-urticante-piazza-mercato-vecchio",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti contemporanee collocano il fatto nella notte di sabato 21 settembre 2019, protratta nelle prime ore del 22 settembre, in Piazza Mercato Vecchio a Lamezia Terme.",
+        "Il Corriere della Calabria riferisce che due persone avrebbero spruzzato spray urticante tra i giovani presenti nella piazza e sarebbero poi fuggite; la Polizia avviò accertamenti anche sulle immagini di videosorveglianza.",
+        "LTNews riferisce che alcuni presenti furono colpiti e che almeno una persona accusò bruciore agli occhi e un forte stato di ansia; non è stato reperito in questa acquisizione un successivo esito investigativo o giudiziario verificabile.",
+        "In assenza di una qualificazione penale esplicita nelle fonti recuperate, la classificazione resta descrittiva e provvisoria e non attribuisce una specifica fattispecie di reato."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:piazza-mercato-vecchio:occurrence",
+      "basis_source_key": "press:corriere-della-calabria:2019-09-22:spray-urticante-piazza-mercato-vecchio",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Piazza Mercato Vecchio",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:piazza-mercato-vecchio:target",
+      "basis_source_key": "press:ltnews:2019-09-22:spray-urticante-piazza-mercato-vecchio",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Piazza Mercato Vecchio",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
