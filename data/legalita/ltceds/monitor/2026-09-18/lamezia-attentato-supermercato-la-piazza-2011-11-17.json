@@ -1,0 +1,90 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-attentato-supermercato-la-piazza-2011-11-17",
+  "discovered_at": "2026-09-18T20:22:44+02:00",
+  "updated_at": "2026-09-18T20:22:44+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Attentato con ordigno al supermercato La Piazza il 17 novembre 2011",
+  "temporal": {
+    "start": "2011-11-17",
+    "end": "2011-11-17",
+    "edtf": "2011-11-17",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:il-lametino:2011-11-17:bomba-supermercato-la-piazza",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, bomba contro vetrata supermercato La Piazza",
+      "url": "https://www.lametino.it/cronaca/lamezia-bomba-contro-vetrata-supermercato-la-piazza.html",
+      "published_at": "2011-11-17",
+      "retrieved_at": "2026-09-18T20:22:44+02:00",
+      "support_roles": ["event_support", "classification_support", "location_support", "corroboration"]
+    },
+    {
+      "source_key": "press:ltnews:2011-11-17:bomba-supermercato-standa",
+      "source_type": "press_secondary",
+      "provider": "LTNews Lamezia Terme",
+      "title": "Lamezia, bomba contro supermercato Standa",
+      "url": "https://lameziatermenews.it/citta/7465-lamezia-bomba-contro-supermercato-standa.html",
+      "published_at": "2011-11-17",
+      "retrieved_at": "2026-09-18T20:22:44+02:00",
+      "support_roles": ["event_support", "classification_support", "location_support", "corroboration"]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:atto-intimidatorio-con-ordigno",
+      "classification_source_key": "press:il-lametino:2011-11-17:bomba-supermercato-la-piazza",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "il Lametino riferisce che nella notte del 17 novembre 2011 un ordigno rudimentale fu fatto esplodere davanti a una vetrina del supermercato La Piazza, affiliato al circuito Standa, a Lamezia Terme, provocando gravi danni alla vetrata.",
+        "LTNews Lamezia Terme corrobora contemporaneamente l'attentato dinamitardo contro il supermercato La Piazza e l'esplosione dell'ordigno davanti a una vetrina dell'esercizio.",
+        "Le fonti riferiscono che gli investigatori prendevano in considerazione una possibile matrice estorsiva; tale ipotesi non viene codificata come fatto accertato in assenza di una fonte primaria giudiziaria o di polizia recuperata per questo specifico episodio.",
+        "Una ricerca geografica dedicata ha confermato il sito nominato 'supermercato La Piazza' ma non ha fornito, per il 2011, una strada o un civico contemporaneamente attestati con sufficiente certezza; un elenco commerciale attuale associa un esercizio omonimo a via Cristoforo Colombo, ma la continuita temporale non e stata assunta e la localizzazione non e stata elevata a street-level."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:supermercato-la-piazza:occurrence",
+      "basis_source_key": "press:il-lametino:2011-11-17:bomba-supermercato-la-piazza",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Supermercato La Piazza (affiliato Standa)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:supermercato-la-piazza:target",
+      "basis_source_key": "press:ltnews:2011-11-17:bomba-supermercato-standa",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Supermercato La Piazza (affiliato Standa)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
