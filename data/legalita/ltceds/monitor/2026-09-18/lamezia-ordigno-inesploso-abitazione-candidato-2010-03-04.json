@@ -1,0 +1,114 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-ordigno-inesploso-abitazione-candidato-2010-03-04",
+  "discovered_at": "2026-09-18T10:52:00+02:00",
+  "updated_at": "2026-09-18T10:52:00+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Ordigno inesploso rinvenuto davanti all'abitazione privata di un candidato a sindaco il 4 marzo 2010",
+  "temporal": {
+    "start": "2010-03-04",
+    "end": "2010-03-04",
+    "edtf": "2010-03-04",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "camera:2010-03-09:allegato-b-lamezia-ordine-pubblico",
+      "source_type": "public_authority_primary",
+      "provider": "Camera dei Deputati",
+      "title": "Allegato B alla seduta del 9 marzo 2010 — interrogazione a risposta scritta sull'ordine pubblico a Lamezia Terme",
+      "url": "https://documenti.camera.it/_dati/leg16/lavori/stenografici/sed296/BINTERO.pdf",
+      "published_at": "2010-03-09T00:00:00+01:00",
+      "retrieved_at": "2026-09-18T10:52:00+02:00",
+      "support_roles": ["event_support", "location_support", "procedural_context", "corroboration"]
+    },
+    {
+      "source_key": "adnkronos:2010-03-04:lamezia-ordigno-casa-candidato",
+      "source_type": "news_agency",
+      "provider": "Adnkronos (via Il Secolo XIX)",
+      "title": "Lamezia Terme, ordigno di fronte alla casa di un candidato a sindaco",
+      "url": "https://www.ilsecoloxix.it/italia/2010/03/04/news/catanzaro_lamezia_terme_ordigno_di_fronte_casa_candidato_a_sindaco-8887995/amp/",
+      "published_at": "2010-03-04T11:10:00+01:00",
+      "retrieved_at": "2026-09-18T10:52:00+02:00",
+      "support_roles": ["event_support", "location_support", "corroboration"]
+    },
+    {
+      "source_key": "press:lametino:2010-03-04:ordigno-abitazione-candidato",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Bomba inesplosa davanti all'abitazione di un candidato a sindaco",
+      "url": "https://www.lametino.it/ultimora/lamezia-amministrative-2010-bomba-inesplosa-davanti-casa-del-candidato-salvatore-vescio.html",
+      "published_at": "2010-03-04T00:00:00+01:00",
+      "retrieved_at": "2026-09-18T10:52:00+02:00",
+      "support_roles": ["event_support", "location_support", "corroboration"]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:atto-intimidatorio-con-ordigno",
+      "classification_source_key": "camera:2010-03-09:allegato-b-lamezia-ordine-pubblico",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Nelle prime ore del 4 marzo 2010 fu rinvenuto un ordigno inesploso davanti all'abitazione privata di un candidato a sindaco di Lamezia Terme.",
+        "La cronaca di agenzia riferisce che il rinvenimento avvenne intorno alle 7:30; la documentazione parlamentare conferma data, luogo generale e contesto intimidatorio.",
+        "Il record qualifica provvisoriamente il fatto come atto intimidatorio con ordigno e non inferisce una specifica fattispecie penale, una matrice mafiosa o responsabilità individuali non stabilite dalle fonti."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata-non-identificata:occurrence",
+      "basis_source_key": "camera:2010-03-09:allegato-b-lamezia-ordine-pubblico",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata non identificata a Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata-non-identificata:target",
+      "basis_source_key": "camera:2010-03-09:allegato-b-lamezia-ordine-pubblico",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Abitazione privata non identificata a Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata-non-identificata:discovery",
+      "basis_source_key": "adnkronos:2010-03-04:lamezia-ordigno-casa-candidato",
+      "role": "discovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Davanti a un'abitazione privata non identificata a Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
