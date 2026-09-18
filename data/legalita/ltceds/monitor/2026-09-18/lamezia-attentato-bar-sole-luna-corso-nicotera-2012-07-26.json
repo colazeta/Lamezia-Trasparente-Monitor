@@ -1,0 +1,99 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-attentato-bar-sole-luna-corso-nicotera-2012-07-26",
+  "discovered_at": "2026-09-18T09:51:51+02:00",
+  "updated_at": "2026-09-18T09:51:51+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Attentato con ordigno al Bar Sole e Luna in Corso Giovanni Nicotera il 26 luglio 2012",
+  "temporal": {
+    "start": "2012-07-26",
+    "end": "2012-07-26",
+    "edtf": "2012-07-26",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:approdo:2012-07-26:bombe-due-bar-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Approdo Calabria",
+      "title": "Bombe in due bar a Lamezia, forse un avvertimento ai collaboratori di giustizia",
+      "url": "https://www.approdocalabria.it/bombe-in-due-bar-a-lamezia-forse-un-avvertimento-ai-collaboratori-di-giustizia/",
+      "published_at": "2012-07-26",
+      "retrieved_at": "2026-09-18T09:51:51+02:00",
+      "support_roles": ["event_support", "classification_support", "location_support", "corroboration"]
+    },
+    {
+      "source_key": "press:pupia:2012-07-26:bombe-bar-parenti-pentiti",
+      "source_type": "press_secondary",
+      "provider": "Pupia.tv",
+      "title": "'Ndrangheta: bombe al bar dei parenti di pentiti",
+      "url": "https://www.pupia.tv/2012/07/aree/italia/ndrangheta-bombe-al-bar-dei-parenti-di-pentiti/72039",
+      "published_at": "2012-07-26",
+      "retrieved_at": "2026-09-18T09:51:51+02:00",
+      "support_roles": ["event_support", "location_support", "corroboration"]
+    },
+    {
+      "source_key": "press:paperblog:2012-07-26:bombe-bar-mazzini-sole-luna",
+      "source_type": "press_secondary",
+      "provider": "Paperblog",
+      "title": "Lamezia Terme: bombe al bar Mazzini e al Bar Sole e Luna. Ritorsioni?",
+      "url": "https://it.paperblog.com/lamezia-terme-bombe-al-bar-mazzini-e-al-bar-sole-e-luna-ritorsioni-1297004/amp",
+      "published_at": "2012-07-26",
+      "retrieved_at": "2026-09-18T09:51:51+02:00",
+      "support_roles": ["event_support", "corroboration"]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:atto-intimidatorio-con-ordigno",
+      "classification_source_key": "press:approdo:2012-07-26:bombe-due-bar-lamezia",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti contemporanee riferiscono due esplosioni distinte, avvenute a pochi minuti l'una dall'altra intorno alle 02:30 del 26 luglio 2012 davanti a due bar di Lamezia Terme; questo record riguarda esclusivamente l'esplosione contro il bar identificato come Sole e Luna.",
+        "Pupia.tv e Paperblog identificano esplicitamente uno dei due esercizi come Bar Sole e Luna; Approdo Calabria descrive il secondo obiettivo come il bar di Corso Nicotera gestito dal medesimo rapporto familiare indicato da Pupia.tv per il Sole e Luna. La risoluzione del named site su Corso Giovanni Nicotera deriva quindi dall'incrocio delle due fonti, non da un indirizzo civico direttamente attestato.",
+        "Le fonti riferiscono notevoli danni e un'indagine della Polizia e prospettano un possibile contesto ritorsivo collegato a collaboratori di giustizia, ma non e stata reperita una fonte primaria giudiziaria o di polizia direttamente accessibile che consenta di attribuire a questo specifico episodio una qualificazione penale piu forte o una matrice mafiosa accertata; la classificazione resta pertanto provvisoria."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:bar-sole-luna-corso-nicotera:occurrence",
+      "basis_source_key": "press:approdo:2012-07-26:bombe-due-bar-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "editorial_inference",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Bar Sole e Luna, Corso Giovanni Nicotera",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:bar-sole-luna-corso-nicotera:target",
+      "basis_source_key": "press:approdo:2012-07-26:bombe-due-bar-lamezia",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "editorial_inference",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Bar Sole e Luna, Corso Giovanni Nicotera",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

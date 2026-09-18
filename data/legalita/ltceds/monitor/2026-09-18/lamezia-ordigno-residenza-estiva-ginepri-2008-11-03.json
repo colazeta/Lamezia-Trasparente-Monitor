@@ -1,0 +1,98 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-ordigno-residenza-estiva-ginepri-2008-11-03",
+  "discovered_at": "2026-09-18T12:50:50+02:00",
+  "updated_at": "2026-09-18T12:50:50+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Attentato con ordigno contro una residenza estiva in località Ginepri il 3 novembre 2008",
+  "temporal": {
+    "start": "2008-11-03",
+    "end": "2008-11-03",
+    "edtf": "2008-11-03",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "public:camera:xvi:seduta-080:atti-intimidatori-lamezia",
+      "source_type": "public_authority_primary",
+      "provider": "Camera dei Deputati",
+      "title": "Atti Parlamentari — XVI legislatura, Allegato B ai resoconti, seduta n. 80",
+      "url": "https://documenti.camera.it/_dati/leg16/lavori/stenografici/sed080/BINTERO.pdf",
+      "published_at": null,
+      "retrieved_at": "2026-09-18T12:50:50+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support"
+      ]
+    },
+    {
+      "source_key": "press:repubblica:2011-12-02:minacce-amministratori-locali",
+      "source_type": "press_secondary",
+      "provider": "la Repubblica",
+      "title": "Così la mafia minaccia gli amministratori locali",
+      "url": "https://www.repubblica.it/cronaca/2011/12/02/news/criminalit-25956101/",
+      "published_at": "2011-12-02T00:00:00+01:00",
+      "retrieved_at": "2026-09-18T12:50:50+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:atto-intimidatorio-con-ordigno",
+      "classification_source_key": "public:camera:xvi:seduta-080:atti-intimidatori-lamezia",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La sera del 3 novembre 2008 un ordigno fu fatto esplodere al piano terra, sotto un portico, di una residenza estiva privata in località Ginepri, nell'area di Lamezia Terme.",
+        "L'episodio fu descritto in sede parlamentare come un ulteriore atto intimidatorio a quattro giorni di distanza da colpi di pistola esplosi contro un'altra abitazione riferibile allo stesso bersaglio.",
+        "La qualificazione resta provvisoria: le fonti sostengono la natura intimidatoria dell'episodio e l'esplosione dell'ordigno, ma non viene inferita una specifica fattispecie penale, aggravante mafiosa o responsabilità individuale."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:ginepri:occurrence",
+      "basis_source_key": "public:camera:xvi:seduta-080:atti-intimidatori-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Località Ginepri",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:ginepri:target",
+      "basis_source_key": "public:camera:xvi:seduta-080:atti-intimidatori-lamezia",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Località Ginepri",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

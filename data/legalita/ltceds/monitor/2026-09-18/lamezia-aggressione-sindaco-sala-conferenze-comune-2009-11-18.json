@@ -1,0 +1,113 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-aggressione-sindaco-sala-conferenze-comune-2009-11-18",
+  "discovered_at": "2026-09-18T13:45:07+02:00",
+  "updated_at": "2026-09-18T13:45:07+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Aggressione al sindaco durante un incontro sugli abbattimenti di immobili abusivi nella sala conferenze del Comune il 18 novembre 2009",
+  "temporal": {
+    "start": "2009-11-18",
+    "end": "2009-11-18",
+    "edtf": "2009-11-18",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:unita:2009-11-20:abusivismo-lamezia",
+      "source_type": "press_secondary",
+      "provider": "l'Unità",
+      "title": "Abusivismo a Lamezia",
+      "url": "https://archivio.unita.news/assets/main/2009/11/20/page_021.pdf",
+      "published_at": "2009-11-20T00:00:00+01:00",
+      "retrieved_at": "2026-09-18T13:45:07+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:manifesto:2009-11-19:sindaco-aggredito-abusivismo",
+      "source_type": "press_secondary",
+      "provider": "il manifesto",
+      "title": "Il sindaco aggredito: «Contro di me le mafie dell'abusivismo edilizio»",
+      "url": "https://ilmanifesto.it/archivio/2003156788",
+      "published_at": "2009-11-19T00:00:00+01:00",
+      "retrieved_at": "2026-09-18T13:45:07+02:00",
+      "support_roles": [
+        "event_support",
+        "corroboration",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:repubblica:2011-12-02:minacce-amministratori-locali",
+      "source_type": "press_secondary",
+      "provider": "la Repubblica",
+      "title": "Così la mafia minaccia gli amministratori locali",
+      "url": "https://www.repubblica.it/cronaca/2011/12/02/news/criminalit-25956101/",
+      "published_at": "2011-12-02T00:00:00+01:00",
+      "retrieved_at": "2026-09-18T13:45:07+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:aggressione",
+      "classification_source_key": "press:unita:2009-11-20:abusivismo-lamezia",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Il 18 novembre 2009 il sindaco di Lamezia Terme fu aggredito nel corso di un incontro in Comune sugli abbattimenti di immobili abusivi.",
+        "Una fonte contemporanea riferisce che l'aggressore tentò di afferrare il sindaco al collo e che quest'ultimo riuscì a divincolarsi, informando poi le forze dell'ordine.",
+        "La ricostruzione successiva colloca l'episodio nella sala conferenze del Comune, presidiata da proprietari di immobili abusivi interessati dagli abbattimenti.",
+        "La qualificazione resta provvisoria: le fonti descrivono l'episodio come aggressione, ma non viene inferita una specifica fattispecie penale né una matrice mafiosa come accertamento giudiziario."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:sala-conferenze-comune:occurrence",
+      "basis_source_key": "press:repubblica:2011-12-02:minacce-amministratori-locali",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Sala conferenze del Comune di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:sala-conferenze-comune:target",
+      "basis_source_key": "press:repubblica:2011-12-02:minacce-amministratori-locali",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Sala conferenze del Comune di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
