@@ -1,0 +1,99 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-attentato-villa-contrada-annunziata-2013-01-10",
+  "discovered_at": "2026-09-18T12:07:56+02:00",
+  "updated_at": "2026-09-18T12:07:56+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Attentato con ordigno contro una villa privata in contrada Annunziata il 10 gennaio 2013",
+  "temporal": {
+    "start": "2013-01-10",
+    "end": "2013-01-10",
+    "edtf": "2013-01-10",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:lametino:2013-01-10:bomba-villa-annunziata",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: Bomba nella notte contro la villa di un parente di Angelo Torcasio",
+      "url": "https://www.lametino.it/cronaca/lamezia-bomba-nella-notte-contro-la-villa-di-un-parente-di-angelo-torcasio.html",
+      "published_at": "2013-01-10T00:00:00+01:00",
+      "retrieved_at": "2026-09-18T12:07:56+02:00",
+      "support_roles": ["event_support", "location_support", "classification_support"]
+    },
+    {
+      "source_key": "press:strettoweb:2013-01-10:bomba-casa-cognato-pentito",
+      "source_type": "press_secondary",
+      "provider": "StrettoWeb",
+      "title": "’Ndrangheta, bomba ad alto potenziale fatta esplodere a casa del cognato del pentito Torcasio",
+      "url": "https://www.strettoweb.com/2013/01/ndrangheta-bomba-ad-alto-potenziale-fatta-esplodere-a-casa-del-cognato-del-pentito-torcasio/59261/",
+      "published_at": "2013-01-10T11:50:00+01:00",
+      "retrieved_at": "2026-09-18T12:07:56+02:00",
+      "support_roles": ["event_support", "location_support", "corroboration"]
+    },
+    {
+      "source_key": "press:quicosenza:2013-01-10:ndrangheta-esplosa-bomba-lamezia",
+      "source_type": "press_secondary",
+      "provider": "QuiCosenza",
+      "title": "’Ndrangheta, esplosa bomba",
+      "url": "https://quicosenza.it/news/5143-ndrangheta-esplosa-bomba/",
+      "published_at": "2013-01-10T00:00:00+01:00",
+      "retrieved_at": "2026-09-18T12:07:56+02:00",
+      "support_roles": ["event_support", "location_support", "corroboration"]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:atto-intimidatorio-con-ordigno",
+      "classification_source_key": "press:lametino:2013-01-10:bomba-villa-annunziata",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Intorno alle 00:30 del 10 gennaio 2013 un ordigno esplose contro il cancelletto d'ingresso di una villa privata in contrada Annunziata, nell'area di Bella, danneggiandolo.",
+        "Le fonti contemporanee descrivono il bersaglio come un'abitazione riconducibile a un familiare di un collaboratore di giustizia e riferiscono che la Polizia di Stato avviò le indagini.",
+        "La qualificazione resta provvisoria: le fonti sostengono la natura intimidatoria dell'episodio, ma non è stata reperita per questo specifico fatto una fonte giudiziaria primaria che consenta una fattispecie penale o una matrice mafiosa più forte."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:contrada-annunziata-via-madonna-della-spina:occurrence",
+      "basis_source_key": "press:lametino:2013-01-10:bomba-villa-annunziata",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Villa privata non identificata in contrada Annunziata, area di via Madonna della Spina",
+      "neighbourhood": "Bella",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:contrada-annunziata-via-madonna-della-spina:target",
+      "basis_source_key": "press:lametino:2013-01-10:bomba-villa-annunziata",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Villa privata non identificata in contrada Annunziata, area di via Madonna della Spina",
+      "neighbourhood": "Bella",
+      "iccs_location_type": null
+    }
+  ]
+}
