@@ -1,0 +1,98 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-intimidazione-croce-abitazione-2014-12-24",
+  "discovered_at": "2026-09-18T15:41:09+02:00",
+  "updated_at": "2026-09-18T15:41:09+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Atto intimidatorio con croce tracciata presso un'abitazione privata a Lamezia Terme la sera del 24 dicembre 2014",
+  "temporal": {
+    "start": "2014-12-24",
+    "end": "2014-12-24",
+    "edtf": "2014-12-24",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:lacnews24:2015-01-04:intimidazione-croce-abitazione-lamezia",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Minacce a un imprenditore simbolo dell'antimafia",
+      "url": "https://www.lacnews24.it/cronaca/lamezia-terme-minacce-a-un-imprenditore-simbolo-dellantimafia-f5sutjmr",
+      "published_at": "2015-01-04T19:56:00+01:00",
+      "retrieved_at": "2026-09-18T15:41:09+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "classification_support"
+      ]
+    },
+    {
+      "source_key": "press:lacnews24:2015-01-06:dettagli-intimidazione-croce-lamezia",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Testimonianza diretta sui dettagli dell'intimidazione della vigilia di Natale",
+      "url": "https://www.lacnews24.it/cronaca/lamezia-rocco-mangiardi-non-mi-fermeranno-je4l8rj8",
+      "published_at": "2015-01-06T12:00:00+01:00",
+      "retrieved_at": "2026-09-18T15:41:09+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:atto-intimidatorio",
+      "classification_source_key": "press:lacnews24:2015-01-04:intimidazione-croce-abitazione-lamezia",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "not_applicable",
+      "situational_context": [
+        "Le fonti riferiscono che la sera della vigilia di Natale del 2014 fu tracciata con spray rosso una grande croce in prossimita dell'ingresso di un'abitazione privata a Lamezia Terme, in un contesto descritto come intimidatorio.",
+        "Una testimonianza successiva precisa che la croce, alta circa un metro, era stata disegnata su un bidone della raccolta differenziata collocato presso il cancello dell'abitazione; dopo la segnalazione fu presentata denuncia al Commissariato e intervenne la Polizia Scientifica per i rilievi.",
+        "La prima cronaca descriveva genericamente la croce come apposta sulla porta dell'abitazione; la ricostruzione diretta successiva localizza invece il segno sul bidone presso il cancello. Il record adotta quest'ultima descrizione senza inferire indirizzo, coordinate, specifica fattispecie penale o matrice mafiosa probatoriamente accertata."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata-non-identificata:croce-2014-12-24:occurrence",
+      "basis_source_key": "press:lacnews24:2015-01-06:dettagli-intimidazione-croce-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Pertinenza esterna di un'abitazione privata non identificata a Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata-non-identificata:croce-2014-12-24:target",
+      "basis_source_key": "press:lacnews24:2015-01-04:intimidazione-croce-abitazione-lamezia",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Abitazione privata non identificata a Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
