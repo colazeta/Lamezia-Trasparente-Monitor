@@ -1,0 +1,109 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-omicidio-capizzaglie-2008-04-30",
+  "discovered_at": "2026-09-18T12:50:50+02:00",
+  "updated_at": "2026-09-18T12:50:50+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Omicidio con arma da fuoco in contrada Capizzaglie il 30 aprile 2008",
+  "temporal": {
+    "start": "2008-04-30",
+    "end": "2008-04-30",
+    "edtf": "2008-04-30",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:lastampa:2008-04-30:ucciso-ex-consigliere-comunale",
+      "source_type": "press_secondary",
+      "provider": "La Stampa",
+      "title": "Ucciso ex consigliere comunale",
+      "url": "https://www.lastampa.it/cronaca/2008/04/30/news/ucciso-ex-consigliere-comunale-1.37109611",
+      "published_at": "2008-04-30T07:25:00+02:00",
+      "retrieved_at": "2026-09-18T12:50:50+02:00",
+      "support_roles": ["event_support", "location_support", "classification_support"]
+    },
+    {
+      "source_key": "press:corriere:2008-04-30:ndrangheta-agguato-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Sera",
+      "title": "'Ndrangheta, agguato a Lamezia Terme",
+      "url": "https://www.corriere.it/cronache/08_aprile_30/lamezia_agguato_918e6f94-1682-11dd-8b67-00144f02aabc.shtml",
+      "published_at": "2008-04-30T00:00:00+02:00",
+      "retrieved_at": "2026-09-18T12:50:50+02:00",
+      "support_roles": ["event_support", "location_support", "corroboration"]
+    },
+    {
+      "source_key": "press:tgcom24:2008-04-30:calabria-ucciso-imprenditore",
+      "source_type": "press_secondary",
+      "provider": "Tgcom24",
+      "title": "Calabria, ucciso un imprenditore",
+      "url": "https://www.tgcom24.mediaset.it/cronaca/articoli/411492/calabria-ucciso-un-imprenditore.shtml",
+      "published_at": "2008-04-30T09:20:00+02:00",
+      "retrieved_at": "2026-09-18T12:50:50+02:00",
+      "support_roles": ["event_support", "classification_support", "corroboration"]
+    },
+    {
+      "source_key": "press:corrierecalabria:2012-06-28:medusa-scia-sangue",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "OPERAZIONE MEDUSA | La lunga scia di sangue che ha bagnato Lamezia",
+      "url": "https://www.corrieredellacalabria.it/2012/06/28/6490_operazione_medusa_la_lunga_scia_di_sangue_che_ha_bagnato_lamezia/",
+      "published_at": "2012-06-28T00:00:00+02:00",
+      "retrieved_at": "2026-09-18T12:50:50+02:00",
+      "support_roles": ["event_support", "procedural_context", "corroboration"]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "press:lastampa:2008-04-30:ucciso-ex-consigliere-comunale",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Nella notte del 30 aprile 2008 una persona fu uccisa con numerosi colpi d'arma da fuoco mentre lasciava la propria abitazione privata in contrada Capizzaglie, alla periferia sud di Lamezia Terme, a bordo di un furgone.",
+        "Le cronache contemporanee collocano l'agguato all'esterno o immediatamente presso il cancello dell'abitazione e riferiscono l'impiego di più armi da fuoco.",
+        "Le fonti dell'epoca descrissero modalità ritenute dagli investigatori compatibili con un agguato di matrice mafiosa; questa indicazione resta contesto investigativo e non viene trasformata nel record in una specifica aggravante o attribuzione giudiziaria non direttamente verificata."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:contrada-capizzaglie:occurrence",
+      "basis_source_key": "press:lastampa:2008-04-30:ucciso-ex-consigliere-comunale",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Contrada Capizzaglie",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:contrada-capizzaglie:target",
+      "basis_source_key": "press:lastampa:2008-04-30:ucciso-ex-consigliere-comunale",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Contrada Capizzaglie",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
