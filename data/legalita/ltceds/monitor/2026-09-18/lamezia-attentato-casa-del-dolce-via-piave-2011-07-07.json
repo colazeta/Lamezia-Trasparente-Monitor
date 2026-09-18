@@ -1,0 +1,100 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-attentato-casa-del-dolce-via-piave-2011-07-07",
+  "discovered_at": "2026-09-18T07:08:03+02:00",
+  "updated_at": "2026-09-18T07:08:03+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Attentato con ordigno alla pasticceria Casa del Dolce in via Piave il 7 luglio 2011",
+  "temporal": {
+    "start": "2011-07-07",
+    "end": "2011-07-07",
+    "edtf": "2011-07-07",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:cn24tv:2011-07-07:bomba-pasticceria-via-piave",
+      "source_type": "press_secondary",
+      "provider": "CN24TV",
+      "title": "Bomba scoppia davanti pasticceria a Lamezia Terme",
+      "url": "https://cn24tv.it/news/28356/bomba-scoppia-davanti-pasticceria-a-lamezia-terme.html",
+      "published_at": "2011-07-07T11:40:00+02:00",
+      "retrieved_at": "2026-09-18T07:08:03+02:00",
+      "support_roles": ["event_support", "classification_support", "location_support", "corroboration"]
+    },
+    {
+      "source_key": "press:uscatanzaro:2011-07-07:bomba-pasticceria-via-piave",
+      "source_type": "press_secondary",
+      "provider": "UsCatanzaro.net",
+      "title": "Bomba contro una pasticceria a Lamezia Terme",
+      "url": "https://www.uscatanzaro.net/bomba-contro-una-pasticceria-a-lamezia-terme/",
+      "published_at": "2011-07-07",
+      "retrieved_at": "2026-09-18T07:08:03+02:00",
+      "support_roles": ["event_support", "location_support", "corroboration"]
+    },
+    {
+      "source_key": "press:tirrenonews:2017-03-31:richiamo-casa-del-dolce-2011",
+      "source_type": "press_secondary",
+      "provider": "TirrenoNews",
+      "title": "Bomba distrugge un negozio a Lamezia nella notte",
+      "url": "https://trn-news.it/portale/index.php/lameziaterme/item/7992-bomba-distrugge-un-negozio-a-lamezia-nella-notte",
+      "published_at": "2017-03-31T09:08:00+02:00",
+      "retrieved_at": "2026-09-18T07:08:03+02:00",
+      "support_roles": ["event_support", "location_support", "corroboration"]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:atto-intimidatorio-con-ordigno",
+      "classification_source_key": "press:cn24tv:2011-07-07:bomba-pasticceria-via-piave",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "CN24TV riferisce contemporaneamente che nella notte precedente al 7 luglio 2011 una bomba fu fatta esplodere contro una pasticceria situata in via Piave a Lamezia Terme, danneggiando la serranda e l'insegna dell'attivita e coinvolgendo alcune autovetture parcheggiate nelle vicinanze.",
+        "UsCatanzaro.net corrobora nella stessa data l'esplosione contro una pasticceria in via Piave e i danni alla serranda, all'insegna e ad autovetture in sosta.",
+        "TirrenoNews, descrivendo nel 2017 un successivo attentato nello stesso locale, identifica l'esercizio che occupava in precedenza quei locali come pasticceria Casa del Dolce e riferisce che fu distrutta da un ordigno ad alto potenziale fatto esplodere nella notte del 7 luglio 2011.",
+        "Le fonti descrivono il fatto come atto intimidatorio, ma non e stata reperita una fonte primaria giudiziaria o di polizia direttamente accessibile che sostenga per questo specifico episodio una qualificazione penale piu forte o una matrice estorsiva o mafiosa accertata; la classificazione resta pertanto provvisoria."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:casa-del-dolce-via-piave:occurrence",
+      "basis_source_key": "press:tirrenonews:2017-03-31:richiamo-casa-del-dolce-2011",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Pasticceria Casa del Dolce, Via Piave",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:casa-del-dolce-via-piave:target",
+      "basis_source_key": "press:tirrenonews:2017-03-31:richiamo-casa-del-dolce-2011",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Pasticceria Casa del Dolce, Via Piave",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
