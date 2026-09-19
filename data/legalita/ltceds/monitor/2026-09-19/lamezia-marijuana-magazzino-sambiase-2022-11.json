@@ -1,0 +1,101 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-marijuana-magazzino-sambiase-2022-11",
+  "discovered_at": "2026-09-19T15:42:48+02:00",
+  "updated_at": "2026-09-19T15:42:48+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Detenzione ai fini di spaccio di marijuana in un magazzino adibito a deposito attrezzi a Sambiase, accertata entro il 18 novembre 2022",
+  "temporal": {
+    "start": null,
+    "end": "2022-11-18",
+    "edtf": null,
+    "precision": "approximate"
+  },
+  "sources": [
+    {
+      "source_key": "press:corriere-calabria:2022-11-18:marijuana-magazzino-sambiase",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Lamezia Terme, detenzione e spaccio di droga. Arrestate due persone",
+      "url": "https://www.corrieredellacalabria.it/2022/11/18/lamezia-terme-detenzione-e-spaccio-di-droga-arrestate-due-persone",
+      "published_at": "2022-11-18",
+      "retrieved_at": "2026-09-19T15:42:48+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:gazzetta-sud:2022-11-18:marijuana-magazzino-sambiase",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Lamezia, spaccio di droga: arrestate due persone dai carabinieri",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2022/11/18/lamezia-spaccio-di-droga-arrestate-due-persone-dai-carabinieri-fba290b8-8ba3-4681-a2d8-eeb26baa9092",
+      "published_at": "2022-11-18",
+      "retrieved_at": "2026-09-19T15:42:48+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:detenzione-stupefacenti-ai-fini-di-spaccio",
+      "classification_source_key": "press:corriere-calabria:2022-11-18:marijuana-magazzino-sambiase",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti riferiscono l'arresto di un 33enne per detenzione ai fini di spaccio di sostanze stupefacenti, eseguito nei giorni precedenti il 18 novembre 2022 dai Carabinieri della Stazione di Lamezia Terme Sambiase",
+        "in un magazzino adibito a deposito attrezzi fu rinvenuto un contenitore di plastica con marijuana descritta come pronta per il confezionamento e lo spaccio",
+        "le stesse fonti descrivono separatamente un secondo controllo a Sambiase nei confronti di un 37enne con circa 9 kg di cannabis; tale fatto costituisce un evento distinto e non è incluso nel presente record",
+        "le fonti riportano la successiva convalida delle misure da parte del GIP; non è stata verificata in questa ricerca una decisione definitiva"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:sambiase-magazzino-deposito-attrezzi:occurrence",
+      "basis_source_key": "press:corriere-calabria:2022-11-18:marijuana-magazzino-sambiase",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_neighbourhood",
+      "evidence_precision": "neighbourhood",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "unknown",
+      "geometry": null,
+      "place_name": "Magazzino adibito a deposito attrezzi nel quartiere Sambiase (indirizzo non pubblicato)",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:sambiase-magazzino-deposito-attrezzi:recovery",
+      "basis_source_key": "press:gazzetta-sud:2022-11-18:marijuana-magazzino-sambiase",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_neighbourhood",
+      "evidence_precision": "neighbourhood",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "unknown",
+      "geometry": null,
+      "place_name": "Magazzino adibito a deposito attrezzi nel quartiere Sambiase; luogo del rinvenimento della marijuana",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    }
+  ]
+}
