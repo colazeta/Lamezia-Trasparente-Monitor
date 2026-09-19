@@ -1,7 +1,7 @@
+import { HOUSEHOLD_FIXTURE as LAMEZIA_HOUSEHOLD_COMPOSITION_2023_DATA } from "./fixtures/householdComposition";
 import { describe, expect, it } from "vitest";
 
 import {
-  LAMEZIA_HOUSEHOLD_COMPOSITION_2023_DATA,
   LAMEZIA_HOUSEHOLD_COMPOSITION_2023_DATA_URL,
   assertLameziaHouseholdCompositionDataset,
   type LameziaHouseholdCompositionDataset,

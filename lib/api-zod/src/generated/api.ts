@@ -57,6 +57,114 @@ export const GetMunicipalDemographicSnapshotResponse = zod.object({
 
 
 /**
+ * Six component classes at 2023-12-31, independent of annual P02 availability. No filesystem fallback. Original verification and source update dates remain distinct from import time.
+ * @summary Read the reconciled ISTAT 2023 household census from the common database
+ */
+export const getHouseholdComposition2023QueryReleaseRegExp = new RegExp('^[a-f0-9]{64}$');
+
+
+export const GetHouseholdComposition2023QueryParams = zod.object({
+  "release": zod.coerce.string().regex(getHouseholdComposition2023QueryReleaseRegExp).optional(),
+  "download": zod.enum(['1']).optional()
+})
+
+export const getHouseholdComposition2023ResponseOneMunicipalityIstatCodeRegExp = new RegExp('^[0-9]{6}$');
+export const getHouseholdComposition2023ResponseOneTotalHouseholdsMin = 0;
+
+export const getHouseholdComposition2023ResponseOneByComponentsItemHouseholdsMin = 0;
+
+export const getHouseholdComposition2023ResponseOneByComponentsItemShareMin = 0;
+export const getHouseholdComposition2023ResponseOneByComponentsItemShareMax = 100;
+
+export const getHouseholdComposition2023ResponseOneByComponentsMin = 6;
+export const getHouseholdComposition2023ResponseOneByComponentsMax = 6;
+
+export const getHouseholdComposition2023ResponseOneIndicatorsOnePersonHouseholdsMin = 0;
+
+export const getHouseholdComposition2023ResponseOneIndicatorsOnePersonShareMin = 0;
+export const getHouseholdComposition2023ResponseOneIndicatorsOnePersonShareMax = 100;
+
+export const getHouseholdComposition2023ResponseOneIndicatorsFivePlusHouseholdsMin = 0;
+
+export const getHouseholdComposition2023ResponseOneIndicatorsFivePlusShareMin = 0;
+export const getHouseholdComposition2023ResponseOneIndicatorsFivePlusShareMax = 100;
+
+export const getHouseholdComposition2023ResponseOneQualityIncludedRowsMin = 0;
+
+export const getHouseholdComposition2023ResponseOneQualitySkippedFictitiousRowsMin = 0;
+
+export const getHouseholdComposition2023ResponseOneQualityIncompleteRowsMin = 0;
+
+export const getHouseholdComposition2023ResponseOneQualityComponentSumMin = 0;
+
+export const getHouseholdComposition2023ResponseOneSourceArchiveSha256RegExp = new RegExp('^[a-f0-9]{64}$');
+export const getHouseholdComposition2023ResponseOneSourceWorkbookSha256RegExp = new RegExp('^[a-f0-9]{64}$');
+export const getHouseholdComposition2023ResponseTwoProvenanceReleaseHashRegExp = new RegExp('^[a-f0-9]{64}$');
+
+
+export const GetHouseholdComposition2023Response = zod.object({
+  "schemaVersion": zod.literal(1),
+  "referenceYear": zod.literal(2023),
+  "municipality": zod.object({
+  "name": zod.string(),
+  "istatCode": zod.string().regex(getHouseholdComposition2023ResponseOneMunicipalityIstatCodeRegExp)
+}),
+  "totalHouseholds": zod.number().min(getHouseholdComposition2023ResponseOneTotalHouseholdsMin),
+  "byComponents": zod.array(zod.object({
+  "key": zod.enum(['1', '2', '3', '4', '5', '6+']),
+  "sourceField": zod.enum(['PF3', 'PF4', 'PF5', 'PF6', 'PF7', 'PF8']),
+  "households": zod.number().min(getHouseholdComposition2023ResponseOneByComponentsItemHouseholdsMin),
+  "share": zod.number().min(getHouseholdComposition2023ResponseOneByComponentsItemShareMin).max(getHouseholdComposition2023ResponseOneByComponentsItemShareMax)
+})).min(getHouseholdComposition2023ResponseOneByComponentsMin).max(getHouseholdComposition2023ResponseOneByComponentsMax),
+  "indicators": zod.object({
+  "onePersonHouseholds": zod.number().min(getHouseholdComposition2023ResponseOneIndicatorsOnePersonHouseholdsMin),
+  "onePersonShare": zod.number().min(getHouseholdComposition2023ResponseOneIndicatorsOnePersonShareMin).max(getHouseholdComposition2023ResponseOneIndicatorsOnePersonShareMax),
+  "fivePlusHouseholds": zod.number().min(getHouseholdComposition2023ResponseOneIndicatorsFivePlusHouseholdsMin),
+  "fivePlusShare": zod.number().min(getHouseholdComposition2023ResponseOneIndicatorsFivePlusShareMin).max(getHouseholdComposition2023ResponseOneIndicatorsFivePlusShareMax)
+}),
+  "quality": zod.object({
+  "includedRows": zod.number().min(getHouseholdComposition2023ResponseOneQualityIncludedRowsMin),
+  "skippedFictitiousRows": zod.number().min(getHouseholdComposition2023ResponseOneQualitySkippedFictitiousRowsMin),
+  "incompleteRows": zod.number().min(getHouseholdComposition2023ResponseOneQualityIncompleteRowsMin),
+  "componentSum": zod.number().min(getHouseholdComposition2023ResponseOneQualityComponentSumMin),
+  "reconciliationDifference": zod.number(),
+  "exactReconciliation": zod.boolean()
+}),
+  "source": zod.object({
+  "institution": zod.string(),
+  "dataset": zod.string(),
+  "territorialLevel": zod.string(),
+  "referenceDate": zod.coerce.date(),
+  "sourceUpdateDate": zod.coerce.date(),
+  "pageUrl": zod.string().url(),
+  "downloadUrl": zod.string().url(),
+  "archiveFile": zod.string(),
+  "archiveMember": zod.string(),
+  "workbookFile": zod.string(),
+  "archiveSha256": zod.string().regex(getHouseholdComposition2023ResponseOneSourceArchiveSha256RegExp),
+  "workbookSha256": zod.string().regex(getHouseholdComposition2023ResponseOneSourceWorkbookSha256RegExp),
+  "licence": zod.string()
+})
+}).and(zod.object({
+  "verification": zod.object({
+  "verifiedAt": zod.coerce.date(),
+  "method": zod.enum(['sha256-and-exact-reconciliation'])
+}),
+  "provenance": zod.object({
+  "canonical": zod.literal(true),
+  "series_key": zod.enum(['istat-households-by-components-2023']),
+  "source_key": zod.enum(['istat.lamezia.household-composition-2023']),
+  "release_hash": zod.string().regex(getHouseholdComposition2023ResponseTwoProvenanceReleaseHashRegExp),
+  "acquired_at": zod.coerce.date(),
+  "source_status": zod.enum(['unknown']),
+  "source_records": zod.literal(6),
+  "canonical_observations": zod.literal(6),
+  "extractor_version": zod.enum(['istat-household-composition.v1'])
+})
+}))
+
+
+/**
  * Uses the database console pool and read-only repeatable-read transaction. Availability requires reconciliation. This does not certify the public deployment's database identity.
  * @summary Inspect municipal demographics in the authenticated database
  */
@@ -4887,37 +4995,38 @@ export const getDemographicHouseholdsResponseHistoryItemAverageHouseholdSizeMin 
 
 export const getDemographicHouseholdsResponseHistoryItemTotalPopulationMin = 0;
 
-export const getDemographicHouseholdsResponseCompositionMunicipalityIstatCodeRegExp = new RegExp('^[0-9]{6}$');
-export const getDemographicHouseholdsResponseCompositionTotalHouseholdsMin = 0;
+export const getDemographicHouseholdsResponseCompositionOneOneMunicipalityIstatCodeRegExp = new RegExp('^[0-9]{6}$');
+export const getDemographicHouseholdsResponseCompositionOneOneTotalHouseholdsMin = 0;
 
-export const getDemographicHouseholdsResponseCompositionByComponentsItemHouseholdsMin = 0;
+export const getDemographicHouseholdsResponseCompositionOneOneByComponentsItemHouseholdsMin = 0;
 
-export const getDemographicHouseholdsResponseCompositionByComponentsItemShareMin = 0;
-export const getDemographicHouseholdsResponseCompositionByComponentsItemShareMax = 100;
+export const getDemographicHouseholdsResponseCompositionOneOneByComponentsItemShareMin = 0;
+export const getDemographicHouseholdsResponseCompositionOneOneByComponentsItemShareMax = 100;
 
-export const getDemographicHouseholdsResponseCompositionByComponentsMin = 6;
-export const getDemographicHouseholdsResponseCompositionByComponentsMax = 6;
+export const getDemographicHouseholdsResponseCompositionOneOneByComponentsMin = 6;
+export const getDemographicHouseholdsResponseCompositionOneOneByComponentsMax = 6;
 
-export const getDemographicHouseholdsResponseCompositionIndicatorsOnePersonHouseholdsMin = 0;
+export const getDemographicHouseholdsResponseCompositionOneOneIndicatorsOnePersonHouseholdsMin = 0;
 
-export const getDemographicHouseholdsResponseCompositionIndicatorsOnePersonShareMin = 0;
-export const getDemographicHouseholdsResponseCompositionIndicatorsOnePersonShareMax = 100;
+export const getDemographicHouseholdsResponseCompositionOneOneIndicatorsOnePersonShareMin = 0;
+export const getDemographicHouseholdsResponseCompositionOneOneIndicatorsOnePersonShareMax = 100;
 
-export const getDemographicHouseholdsResponseCompositionIndicatorsFivePlusHouseholdsMin = 0;
+export const getDemographicHouseholdsResponseCompositionOneOneIndicatorsFivePlusHouseholdsMin = 0;
 
-export const getDemographicHouseholdsResponseCompositionIndicatorsFivePlusShareMin = 0;
-export const getDemographicHouseholdsResponseCompositionIndicatorsFivePlusShareMax = 100;
+export const getDemographicHouseholdsResponseCompositionOneOneIndicatorsFivePlusShareMin = 0;
+export const getDemographicHouseholdsResponseCompositionOneOneIndicatorsFivePlusShareMax = 100;
 
-export const getDemographicHouseholdsResponseCompositionQualityIncludedRowsMin = 0;
+export const getDemographicHouseholdsResponseCompositionOneOneQualityIncludedRowsMin = 0;
 
-export const getDemographicHouseholdsResponseCompositionQualitySkippedFictitiousRowsMin = 0;
+export const getDemographicHouseholdsResponseCompositionOneOneQualitySkippedFictitiousRowsMin = 0;
 
-export const getDemographicHouseholdsResponseCompositionQualityIncompleteRowsMin = 0;
+export const getDemographicHouseholdsResponseCompositionOneOneQualityIncompleteRowsMin = 0;
 
-export const getDemographicHouseholdsResponseCompositionQualityComponentSumMin = 0;
+export const getDemographicHouseholdsResponseCompositionOneOneQualityComponentSumMin = 0;
 
-export const getDemographicHouseholdsResponseCompositionSourceArchiveSha256RegExp = new RegExp('^[a-f0-9]{64}$');
-export const getDemographicHouseholdsResponseCompositionSourceWorkbookSha256RegExp = new RegExp('^[a-f0-9]{64}$');
+export const getDemographicHouseholdsResponseCompositionOneOneSourceArchiveSha256RegExp = new RegExp('^[a-f0-9]{64}$');
+export const getDemographicHouseholdsResponseCompositionOneOneSourceWorkbookSha256RegExp = new RegExp('^[a-f0-9]{64}$');
+export const getDemographicHouseholdsResponseCompositionOneTwoProvenanceReleaseHashRegExp = new RegExp('^[a-f0-9]{64}$');
 
 
 export const GetDemographicHouseholdsResponse = zod.object({
@@ -4962,31 +5071,31 @@ export const GetDemographicHouseholdsResponse = zod.object({
   "url": zod.string().url(),
   "projection": zod.string()
 }),
-  "composition": zod.object({
+  "composition": zod.union([zod.object({
   "schemaVersion": zod.literal(1),
   "referenceYear": zod.literal(2023),
   "municipality": zod.object({
   "name": zod.string(),
-  "istatCode": zod.string().regex(getDemographicHouseholdsResponseCompositionMunicipalityIstatCodeRegExp)
+  "istatCode": zod.string().regex(getDemographicHouseholdsResponseCompositionOneOneMunicipalityIstatCodeRegExp)
 }),
-  "totalHouseholds": zod.number().min(getDemographicHouseholdsResponseCompositionTotalHouseholdsMin),
+  "totalHouseholds": zod.number().min(getDemographicHouseholdsResponseCompositionOneOneTotalHouseholdsMin),
   "byComponents": zod.array(zod.object({
   "key": zod.enum(['1', '2', '3', '4', '5', '6+']),
   "sourceField": zod.enum(['PF3', 'PF4', 'PF5', 'PF6', 'PF7', 'PF8']),
-  "households": zod.number().min(getDemographicHouseholdsResponseCompositionByComponentsItemHouseholdsMin),
-  "share": zod.number().min(getDemographicHouseholdsResponseCompositionByComponentsItemShareMin).max(getDemographicHouseholdsResponseCompositionByComponentsItemShareMax)
-})).min(getDemographicHouseholdsResponseCompositionByComponentsMin).max(getDemographicHouseholdsResponseCompositionByComponentsMax),
+  "households": zod.number().min(getDemographicHouseholdsResponseCompositionOneOneByComponentsItemHouseholdsMin),
+  "share": zod.number().min(getDemographicHouseholdsResponseCompositionOneOneByComponentsItemShareMin).max(getDemographicHouseholdsResponseCompositionOneOneByComponentsItemShareMax)
+})).min(getDemographicHouseholdsResponseCompositionOneOneByComponentsMin).max(getDemographicHouseholdsResponseCompositionOneOneByComponentsMax),
   "indicators": zod.object({
-  "onePersonHouseholds": zod.number().min(getDemographicHouseholdsResponseCompositionIndicatorsOnePersonHouseholdsMin),
-  "onePersonShare": zod.number().min(getDemographicHouseholdsResponseCompositionIndicatorsOnePersonShareMin).max(getDemographicHouseholdsResponseCompositionIndicatorsOnePersonShareMax),
-  "fivePlusHouseholds": zod.number().min(getDemographicHouseholdsResponseCompositionIndicatorsFivePlusHouseholdsMin),
-  "fivePlusShare": zod.number().min(getDemographicHouseholdsResponseCompositionIndicatorsFivePlusShareMin).max(getDemographicHouseholdsResponseCompositionIndicatorsFivePlusShareMax)
+  "onePersonHouseholds": zod.number().min(getDemographicHouseholdsResponseCompositionOneOneIndicatorsOnePersonHouseholdsMin),
+  "onePersonShare": zod.number().min(getDemographicHouseholdsResponseCompositionOneOneIndicatorsOnePersonShareMin).max(getDemographicHouseholdsResponseCompositionOneOneIndicatorsOnePersonShareMax),
+  "fivePlusHouseholds": zod.number().min(getDemographicHouseholdsResponseCompositionOneOneIndicatorsFivePlusHouseholdsMin),
+  "fivePlusShare": zod.number().min(getDemographicHouseholdsResponseCompositionOneOneIndicatorsFivePlusShareMin).max(getDemographicHouseholdsResponseCompositionOneOneIndicatorsFivePlusShareMax)
 }),
   "quality": zod.object({
-  "includedRows": zod.number().min(getDemographicHouseholdsResponseCompositionQualityIncludedRowsMin),
-  "skippedFictitiousRows": zod.number().min(getDemographicHouseholdsResponseCompositionQualitySkippedFictitiousRowsMin),
-  "incompleteRows": zod.number().min(getDemographicHouseholdsResponseCompositionQualityIncompleteRowsMin),
-  "componentSum": zod.number().min(getDemographicHouseholdsResponseCompositionQualityComponentSumMin),
+  "includedRows": zod.number().min(getDemographicHouseholdsResponseCompositionOneOneQualityIncludedRowsMin),
+  "skippedFictitiousRows": zod.number().min(getDemographicHouseholdsResponseCompositionOneOneQualitySkippedFictitiousRowsMin),
+  "incompleteRows": zod.number().min(getDemographicHouseholdsResponseCompositionOneOneQualityIncompleteRowsMin),
+  "componentSum": zod.number().min(getDemographicHouseholdsResponseCompositionOneOneQualityComponentSumMin),
   "reconciliationDifference": zod.number(),
   "exactReconciliation": zod.boolean()
 }),
@@ -5001,11 +5110,27 @@ export const GetDemographicHouseholdsResponse = zod.object({
   "archiveFile": zod.string(),
   "archiveMember": zod.string(),
   "workbookFile": zod.string(),
-  "archiveSha256": zod.string().regex(getDemographicHouseholdsResponseCompositionSourceArchiveSha256RegExp),
-  "workbookSha256": zod.string().regex(getDemographicHouseholdsResponseCompositionSourceWorkbookSha256RegExp),
+  "archiveSha256": zod.string().regex(getDemographicHouseholdsResponseCompositionOneOneSourceArchiveSha256RegExp),
+  "workbookSha256": zod.string().regex(getDemographicHouseholdsResponseCompositionOneOneSourceWorkbookSha256RegExp),
   "licence": zod.string()
 })
+}).and(zod.object({
+  "verification": zod.object({
+  "verifiedAt": zod.coerce.date(),
+  "method": zod.enum(['sha256-and-exact-reconciliation'])
 }),
+  "provenance": zod.object({
+  "canonical": zod.literal(true),
+  "series_key": zod.enum(['istat-households-by-components-2023']),
+  "source_key": zod.enum(['istat.lamezia.household-composition-2023']),
+  "release_hash": zod.string().regex(getDemographicHouseholdsResponseCompositionOneTwoProvenanceReleaseHashRegExp),
+  "acquired_at": zod.coerce.date(),
+  "source_status": zod.enum(['unknown']),
+  "source_records": zod.literal(6),
+  "canonical_observations": zod.literal(6),
+  "extractor_version": zod.enum(['istat-household-composition.v1'])
+})
+})),zod.null()]).describe('Null when the separate canonical census cannot be reconciled; P02 remains available.'),
   "methodology": zod.object({
   "household": zod.string(),
   "referencePeriod": zod.string(),

@@ -1,3 +1,4 @@
+import { householdCompositionSource } from "./householdCompositionPlan";
 import { municipalDemographicSources } from "./municipalDemographicPlan";
 
 export type SnapshotSource = {
@@ -56,4 +57,5 @@ export const sourceSnapshotManifest: SnapshotSource[] = [
     collections: { records: "cig" },
   },
   ...municipalDemographicSources,
+  householdCompositionSource,
 ];

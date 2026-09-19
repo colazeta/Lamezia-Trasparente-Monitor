@@ -341,7 +341,7 @@ const openDataItems: SourceHealthItem[] = [
   buildOpenDataHealthItem({
     id: "opendata-famiglie-componenti-2023",
     datasetId: "lamezia-household-composition-2023",
-    name: "Open Data ISTAT — famiglie per numero di componenti 2023",
+    name: "Evidenza ISTAT — famiglie per numero di componenti 2023",
     checkedAt: householdComposition.verification.verifiedAt,
     updatedAt: householdComposition.source.sourceUpdateDate,
     sourceUrl: householdComposition.source.pageUrl,
@@ -351,7 +351,7 @@ const openDataItems: SourceHealthItem[] = [
     priority: "alta",
     metricLabel: `${householdComposition.totalHouseholds.toLocaleString("it-IT")} famiglie; ${householdComposition.quality.includedRows} sezioni reali; residuo ${householdComposition.quality.reconciliationDifference}`,
     cautionNote:
-      "Fotografia censuaria riferita al 2023, non serie storica. La dimensione della famiglia anagrafica non descrive relazioni di coppia, parentela o presenza di figli.",
+      "Verifica della fonte conservata per l’importazione; non certifica la disponibilità attuale dell’API. Fotografia censuaria riferita al 2023, non serie storica. La dimensione della famiglia anagrafica non descrive relazioni di coppia, parentela o presenza di figli.",
     evidenceValues: [
       householdComposition.source.pageUrl,
       householdComposition.source.sourceUpdateDate,

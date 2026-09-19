@@ -5,6 +5,8 @@ import {
   readMunicipalDemographicSnapshot,
 } from "@workspace/db/municipal-demographics";
 
+import { readHouseholdComposition } from "@workspace/db/household-composition";
+
 /** Public aggregate-only GET: no ingestion and no filesystem fallback. */
 export function createMunicipalDemographicsRouter(pool: Pick<Pool, "query">) {
   const router = Router();
@@ -35,6 +37,32 @@ export function createMunicipalDemographicsRouter(pool: Pick<Pool, "query">) {
         .status(
           code === "INVALID_KEY" ? 404 : code === "INVALID_RELEASE" ? 400 : 503,
         )
+        .json({ error: code });
+    }
+  });
+  router.get("/demographics/household-composition-2023", async (req, res) => {
+    const release = req.query.release;
+    if (release !== undefined && typeof release !== "string") {
+      res.status(400).json({ error: "INVALID_RELEASE" });
+      return;
+    }
+    try {
+      const snapshot = await readHouseholdComposition(pool, release);
+      res.set("Cache-Control", "no-cache");
+      if (req.query.download === "1")
+        res.set(
+          "Content-Disposition",
+          'attachment; filename="lamezia-famiglie-componenti-2023.json"',
+        );
+      res.json(snapshot);
+    } catch (error) {
+      const code =
+        error instanceof MunicipalReadModelError
+          ? error.code
+          : "CANONICAL_DATA_UNAVAILABLE";
+      res
+        .set("Cache-Control", "no-store")
+        .status(code === "INVALID_RELEASE" ? 400 : 503)
         .json({ error: code });
     }
   });

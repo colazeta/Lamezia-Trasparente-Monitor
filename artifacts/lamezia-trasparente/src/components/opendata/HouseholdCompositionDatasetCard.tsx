@@ -1,3 +1,5 @@
+import { useHouseholdComposition } from "@/hooks/useHouseholdComposition";
+import { MunicipalDatasetStatus } from "./MunicipalDatasetStatus";
 import { type ReactNode } from "react";
 import {
   ArrowRight,
@@ -13,8 +15,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import {
-  LAMEZIA_HOUSEHOLD_COMPOSITION_2023_DATA,
-  LAMEZIA_HOUSEHOLD_COMPOSITION_2023_DATA_URL,
+  householdCompositionUrl,
   type LameziaHouseholdCompositionRecord,
 } from "@/data/lameziaHouseholdComposition2023";
 import { withPublicBasePath } from "@/lib/publicBasePath";
@@ -35,7 +36,19 @@ const percentFormat = new Intl.NumberFormat("it-IT", {
 });
 
 export function HouseholdCompositionDatasetCard() {
-  const data = LAMEZIA_HOUSEHOLD_COMPOSITION_2023_DATA;
+  const query = useHouseholdComposition();
+  const data = query.data;
+  if (!data)
+    return (
+      <MunicipalDatasetStatus
+        id="famiglie-componenti-2023-lamezia"
+        title="Distribuzione 2023 per numero di componenti"
+        loading={query.isLoading}
+        retry={() => {
+          void query.refetch();
+        }}
+      />
+    );
 
   return (
     <section
@@ -58,8 +71,8 @@ export function HouseholdCompositionDatasetCard() {
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
               Fotografia censuaria delle famiglie anagrafiche di Lamezia Terme,
-              aggregata dalle sezioni ISTAT e pubblicata come dato statico
-              verificabile anche senza il backend demografico.
+              aggregata dalle sezioni ISTAT. Fonte, periodo di riferimento e
+              controlli di quadratura accompagnano i conteggi.
             </p>
           </div>
           <Button
@@ -70,7 +83,7 @@ export function HouseholdCompositionDatasetCard() {
           >
             <a
               download="lamezia-famiglie-componenti-2023.json"
-              href={LAMEZIA_HOUSEHOLD_COMPOSITION_2023_DATA_URL}
+              href={householdCompositionUrl(data.provenance.release_hash, true)}
             >
               <FileJson className="h-4 w-4" />
               Scarica JSON
@@ -81,6 +94,12 @@ export function HouseholdCompositionDatasetCard() {
       </div>
 
       <div className="p-5 md:p-6">
+        {query.isError && (
+          <p role="status" className="mb-3 text-sm text-muted-foreground">
+            Aggiornamento non riuscito: sono mostrati gli ultimi dati ricevuti.
+            La fonte non è stata verificata nuovamente.
+          </p>
+        )}
         <div className="grid gap-3 sm:grid-cols-3">
           <InsightItem
             detail="PF1 · totale censuario"
@@ -110,8 +129,9 @@ export function HouseholdCompositionDatasetCard() {
         <div className="mt-4 grid gap-3 lg:grid-cols-[1fr_auto] lg:items-center">
           <p className="text-sm leading-6 text-muted-foreground">
             Le quote sono arrotondate a un decimale e sommano visivamente a
-            100,1%. Il controllo di pubblicazione usa invece i conteggi interi:
-            PF3 + PF4 + PF5 + PF6 + PF7 + PF8 = PF1, con residuo zero.
+            {formatPercent(data.byComponents.reduce((n, r) => n + r.share, 0))}.
+            Il controllo di pubblicazione usa invece i conteggi interi: PF3 +
+            PF4 + PF5 + PF6 + PF7 + PF8 = PF1, con residuo zero.
           </p>
           <span className="inline-flex w-fit items-center gap-1.5 rounded-full border border-primary/25 bg-primary/5 px-3 py-1.5 text-xs font-semibold text-primary">
             <CheckCircle2 className="h-3.5 w-3.5" />
@@ -237,8 +257,9 @@ function HouseholdCompositionChart({
           Famiglie di Lamezia Terme per numero di componenti nel 2023
         </title>
         <desc id="household-composition-chart-desc">
-          Distribuzione ISTAT delle 27.591 famiglie anagrafiche nelle classi da
-          uno a sei o più componenti.
+          Distribuzione ISTAT delle{" "}
+          {formatInteger(records.reduce((n, r) => n + r.households, 0))}{" "}
+          famiglie anagrafiche nelle classi da uno a sei o più componenti.
         </desc>
         <rect
           fill="hsl(var(--background))"

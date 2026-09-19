@@ -51,7 +51,8 @@ export function validateSnapshotPlan(plan) {
       throw new Error("INVALID_LOCAL_PLAN");
     if (
       source.demographics !== undefined ||
-      source.source.startsWith("lamezia.demographics.")
+      source.source.startsWith("lamezia.demographics.") ||
+      source.source === "istat.lamezia.household-composition-2023"
     ) {
       if (
         !record(source.demographics) ||

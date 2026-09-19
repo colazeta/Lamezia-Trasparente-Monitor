@@ -9,35 +9,54 @@ import {
   planMunicipalDemographicSource,
 } from "./municipalDemographicPlan";
 
+import {
+  HOUSEHOLD_COMPOSITION_KEY,
+  planHouseholdComposition,
+  householdCompositionReleaseMetadata,
+  householdCompositionSource,
+} from "./householdCompositionPlan";
+
 /** The caller owns the source-import transaction and its source-specific advisory lock. */
-export function municipalDemographicStatements(
+export function demographicSnapshotStatements(
   p: SnapshotPlan,
   sourceReleaseId: string,
 ) {
-  const plan = planMunicipalDemographicSource(
-    p.source.key,
-    JSON.parse(p.contentText),
-  );
-  const { definition, metadata } = plan;
-  const description =
-    "Fonte comunale autonoma. Definizioni e limiti originali sono conservati nelle release collegate. Le date di acquisizione e generazione non sostituiscono il periodo di riferimento.";
-  const upstream = p.source.upstreamUrls[1];
-  const externalKey = `comune:c_m208:${definition.datasetId}:${definition.resourceId}`;
-  const releaseMetadata = {
-    extractor_version: MUNICIPAL_DEMOGRAPHIC_EXTRACTOR,
-    source_registry_release_id: sourceReleaseId,
-    source_collection: definition.collection,
-    source_native_key_field: "_native_key",
-    source_csv_url: metadata.source_csv_url,
-    source_generated_at: metadata.generated_at,
-    source_metadata_modified: metadata.metadata_modified ?? null,
-    source_resource_last_modified: metadata.resource_last_modified ?? null,
-    source_caveat: metadata.caveat,
-    evidence_kind: "repository_derived_dataset",
-    reference_day: null,
-    reference_period_unspecified:
-      definition.collection === "family_children_rows",
-  };
+  const household = p.source.key === HOUSEHOLD_COMPOSITION_KEY;
+  const input = JSON.parse(p.contentText);
+  const municipalPlan = household
+    ? null
+    : planMunicipalDemographicSource(p.source.key, input);
+  const plan = municipalPlan ?? planHouseholdComposition(input);
+  const { definition } = plan;
+  const metadata = input.metadata ?? {};
+
+  const description = household
+    ? "Fotografia censuaria ISTAT al 31 dicembre 2023, aggregata dalle sezioni reali complete. Componenti, figli e nuclei familiari restano concetti distinti."
+    : "Fonte comunale autonoma. Definizioni e limiti originali sono conservati nelle release collegate. Le date di acquisizione e generazione non sostituiscono il periodo di riferimento.";
+  const upstream = household
+    ? householdCompositionSource.upstreamUrls[0]
+    : p.source.upstreamUrls[1];
+  const publisher = household ? "ISTAT" : "Comune di Lamezia Terme";
+  const externalKey = household
+    ? "istat:PERMPOP:SUBCOM:2023:079160:PF3-PF8"
+    : `comune:c_m208:${definition.datasetId}:${municipalPlan!.definition.resourceId}`;
+  const releaseMetadata = household
+    ? householdCompositionReleaseMetadata(input, sourceReleaseId)
+    : {
+        extractor_version: MUNICIPAL_DEMOGRAPHIC_EXTRACTOR,
+        source_registry_release_id: sourceReleaseId,
+        source_collection: definition.collection,
+        source_native_key_field: "_native_key",
+        source_csv_url: metadata.source_csv_url,
+        source_generated_at: metadata.generated_at,
+        source_metadata_modified: metadata.metadata_modified ?? null,
+        source_resource_last_modified: metadata.resource_last_modified ?? null,
+        source_caveat: metadata.caveat,
+        evidence_kind: "repository_derived_dataset",
+        reference_day: null,
+        reference_period_unspecified:
+          definition.collection === "family_children_rows",
+      };
   const series = [
     definition.seriesKey,
     definition.title,
@@ -51,9 +70,9 @@ export function municipalDemographicStatements(
   const seriesInsert: SnapshotStatement = {
     text: `INSERT INTO public.demographic_series
       (series_key,title,description,unit,geography_level,reference_type,source,source_dataset,source_url,external_key)
-      VALUES ($1,$2,$3,$4,'municipality','stock','Comune di Lamezia Terme',$5,$6,$7)
+      VALUES ($1,$2,$3,$4,'municipality','stock',$8,$5,$6,$7)
       ON CONFLICT(series_key) DO NOTHING`,
-    values: series,
+    values: [...series, publisher],
   };
   const releaseInsert: SnapshotStatement = {
     text: `INSERT INTO public.demographic_releases
@@ -98,7 +117,7 @@ export function municipalDemographicStatements(
       SELECT s.id AS series_id,r.id AS release_id,
         (SELECT count(*)::integer FROM public.demographic_observations WHERE release_id=r.id) AS observations,
         (s.title=$2 AND s.description=$3 AND s.unit=$4 AND s.geography_level='municipality'
-        AND s.reference_type='stock' AND s.source='Comune di Lamezia Terme' AND s.source_dataset=$5
+        AND s.reference_type='stock' AND s.source=$14 AND s.source_dataset=$5
         AND s.source_url=$6 AND s.external_key=$7
         AND r.source_dataset=$5 AND r.source_url=a.locator AND r.source_version='repository:'||a.repository_commit
         AND r.release_date IS NULL AND r.raw_payload IS NULL AND r.metadata=$10::jsonb
@@ -131,6 +150,7 @@ export function municipalDemographicStatements(
       MUNICIPAL_GEOGRAPHY_CODE,
       observations,
       definition.collection,
+      publisher,
     ],
   };
   return {
@@ -143,12 +163,12 @@ export function municipalDemographicStatements(
   };
 }
 
-export async function reconcileMunicipalDemographicSnapshot(
+export async function reconcileDemographicSnapshot(
   client: SnapshotQueryClient,
   p: SnapshotPlan,
   sourceReleaseId: string,
 ) {
-  const statements = municipalDemographicStatements(p, sourceReleaseId);
+  const statements = demographicSnapshotStatements(p, sourceReleaseId);
   for (const statement of [statements.seriesInsert, statements.releaseInsert])
     await client.query(statement.text, statement.values);
   const insert = statements.observationInsert;
@@ -161,7 +181,11 @@ export async function reconcileMunicipalDemographicSnapshot(
     result?.verified !== true ||
     Number(result.observations) !== statements.expected
   )
-    throw new Error("MUNICIPAL_DEMOGRAPHIC_RECONCILIATION_FAILED");
+    throw new Error(
+      p.source.key === HOUSEHOLD_COMPOSITION_KEY
+        ? "HOUSEHOLD_COMPOSITION_RECONCILIATION_FAILED"
+        : "MUNICIPAL_DEMOGRAPHIC_RECONCILIATION_FAILED",
+    );
   return {
     seriesKey: statements.seriesKey,
     observations: statements.expected,
@@ -169,3 +193,8 @@ export async function reconcileMunicipalDemographicSnapshot(
     verified: statements.expected,
   };
 }
+
+// Compatibility exports for the three existing municipal adapters.
+export const municipalDemographicStatements = demographicSnapshotStatements;
+export const reconcileMunicipalDemographicSnapshot =
+  reconcileDemographicSnapshot;

@@ -1,4 +1,8 @@
 import {
+  HOUSEHOLD_COMPOSITION_KEY,
+  planHouseholdComposition,
+} from "./householdCompositionPlan";
+import {
   isMunicipalDemographicSource,
   planMunicipalDemographicSource,
 } from "./municipalDemographicPlan";
@@ -91,7 +95,9 @@ export function planSourceSnapshot(
   const raw: unknown = JSON.parse(contentText);
   const demographicPlan = isMunicipalDemographicSource(source.key)
     ? planMunicipalDemographicSource(source.key, raw)
-    : undefined;
+    : source.key === HOUSEHOLD_COMPOSITION_KEY
+      ? planHouseholdComposition(raw)
+      : undefined;
   const input: unknown = demographicPlan ? demographicPlan.expanded : raw;
   if (!object(input)) throw new Error("SNAPSHOT_OBJECT_REQUIRED");
   canonicalSnapshotJson(input);
@@ -343,10 +349,13 @@ export async function persistSourceSnapshot(
           verified: number;
         }
       | undefined;
-    if (isMunicipalDemographicSource(p.source.key)) {
-      const { reconcileMunicipalDemographicSnapshot } =
+    if (
+      isMunicipalDemographicSource(p.source.key) ||
+      p.source.key === HOUSEHOLD_COMPOSITION_KEY
+    ) {
+      const { reconcileDemographicSnapshot } =
         await import("./municipalDemographicPersistence");
-      demographics = await reconcileMunicipalDemographicSnapshot(
+      demographics = await reconcileDemographicSnapshot(
         client,
         p,
         String(verified.release_id),

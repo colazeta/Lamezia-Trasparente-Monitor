@@ -1,3 +1,12 @@
+import { HOUSEHOLD_FIXTURE } from "./fixtures/householdComposition";
+vi.mock("@/hooks/useHouseholdComposition", () => ({
+  useHouseholdComposition: () => ({
+    data: HOUSEHOLD_FIXTURE,
+    isLoading: false,
+    isError: false,
+    refetch: vi.fn(),
+  }),
+}));
 import {
   fireEvent,
   render,
@@ -51,50 +60,7 @@ const payload: DemographicHouseholdsResponse = {
     averageDifference: -0.004,
     flags: ["derived_from_p02_release"],
   },
-  composition: {
-    schemaVersion: 1,
-    referenceYear: 2023,
-    municipality: { name: "Lamezia Terme", istatCode: "079160" },
-    totalHouseholds: 27591,
-    byComponents: [
-      { key: "1", sourceField: "PF3", households: 8713, share: 31.6 },
-      { key: "2", sourceField: "PF4", households: 7197, share: 26.1 },
-      { key: "3", sourceField: "PF5", households: 5369, share: 19.5 },
-      { key: "4", sourceField: "PF6", households: 4709, share: 17.1 },
-      { key: "5", sourceField: "PF7", households: 1263, share: 4.6 },
-      { key: "6+", sourceField: "PF8", households: 340, share: 1.2 },
-    ],
-    indicators: {
-      onePersonHouseholds: 8713,
-      onePersonShare: 31.6,
-      fivePlusHouseholds: 1603,
-      fivePlusShare: 5.8,
-    },
-    quality: {
-      includedRows: 246,
-      skippedFictitiousRows: 1,
-      incompleteRows: 0,
-      componentSum: 27591,
-      reconciliationDifference: 0,
-      exactReconciliation: true,
-    },
-    source: {
-      institution: "ISTAT",
-      dataset: "Dati per sezioni di censimento 2023",
-      territorialLevel: "sezione di censimento",
-      referenceDate: "2023-12-31",
-      sourceUpdateDate: "2026-06-09",
-      pageUrl: "https://www.istat.it/notizia/dati-per-sezioni-di-censimento/",
-      downloadUrl:
-        "https://esploradati.istat.it/databrowser/DWL/PERMPOP/SUBCOM/Dati_regionali_2023.zip",
-      archiveFile: "Dati_regionali_2023.zip",
-      archiveMember: "Dati_regionali_2023/R18_Calabria_2023_sezioni.xlsx",
-      workbookFile: "R18_Calabria_2023_sezioni.xlsx",
-      archiveSha256: "a".repeat(64),
-      workbookSha256: "b".repeat(64),
-      licence: "CC BY 4.0",
-    },
-  },
+  composition: HOUSEHOLD_FIXTURE,
   source: {
     name: "ISTAT",
     dataset: "P02",

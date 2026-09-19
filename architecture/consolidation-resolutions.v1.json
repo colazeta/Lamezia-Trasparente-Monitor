@@ -3,6 +3,18 @@
   "scope": "candidate implementation, not production certification",
   "issues": [
     {
+      "id": "istat-household-canonical-snapshot",
+      "disposition": "REMODELLED",
+      "before": "Separate runtime file reads in the API, household card, family benchmark and downloads.",
+      "after": "One common-registry source and six dated typed observations; independent reconciled API, pinned downloads and explicit unavailable/cached states. Source-health retains an explicitly labelled repository-evidence view. Deployment and writer retirement remain pending.",
+      "evidence": [
+        "lib/db/src/householdCompositionPlan.ts",
+        "lib/db/src/householdCompositionReadModel.ts",
+        "lib/db/src/municipalDemographicIntegration.ts",
+        "artifacts/lamezia-trasparente/src/hooks/useHouseholdComposition.ts"
+      ]
+    },
+    {
       "id": "expanded-manifest-checkpoint-verification",
       "disposition": "RESOLVED",
       "before": "Production verifier required exactly five sources and did not check typed demographic reconciliation; the candidate imports eight sources.",

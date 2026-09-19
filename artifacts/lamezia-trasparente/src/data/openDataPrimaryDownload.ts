@@ -1,7 +1,7 @@
 import { municipalDemographicUrl } from "./municipalDemographics";
 import airTrafficDataUrl from "./generated/lameziaAirTrafficMonthly.json?url";
 import climateDataUrl from "./generated/lameziaClimateDaily.json?url";
-import householdCompositionDataUrl from "../../../api-server/src/data/lameziaHouseholdComposition2023.json?url";
+import { householdCompositionUrl } from "./lameziaHouseholdComposition2023";
 import type {
   OpenDataDatasetFormat,
   OpenDataThemeDataset,
@@ -30,7 +30,7 @@ const SPECIALIST_DOWNLOADS: Record<string, OpenDataPrimaryDownload> = {
     format: "API",
   },
   "lamezia-household-composition-2023": {
-    url: householdCompositionDataUrl,
+    url: householdCompositionUrl(undefined, true),
     downloadName: "lamezia-famiglie-componenti-2023.json",
     format: "JSON",
   },

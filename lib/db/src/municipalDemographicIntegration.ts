@@ -1,3 +1,8 @@
+import { readHouseholdComposition } from "./householdCompositionReadModel";
+import {
+  HOUSEHOLD_COMPOSITION_KEY,
+  HOUSEHOLD_COMPOSITION_SERIES,
+} from "./householdCompositionPlan";
 import {
   readMunicipalDemographicSnapshot,
   MUNICIPAL_PUBLIC_KEYS,
@@ -63,14 +68,10 @@ try {
   const prepared = await prepareSourceSnapshotImport(root);
   const previous = {
     ...prepared,
-    sources: prepared.sources.filter(
-      (p) => !isMunicipalDemographicSource(p.source.key),
-    ),
+    sources: prepared.sources.filter((p) => !p.demographics),
     report: {
       ...prepared.report,
-      sources: prepared.report.sources.filter(
-        (p) => !isMunicipalDemographicSource(p.source),
-      ),
+      sources: prepared.report.sources.filter((p) => !p.demographics),
     },
   };
   const baseline = await executeSourceSnapshotImport(pool, previous);
@@ -95,14 +96,14 @@ try {
   report.firstImport = publicSnapshotImportReport(first);
   const after = await counts();
   report.after = after;
-  assert.equal(after.sources, 8);
+  assert.equal(after.sources, 9);
   assert.equal(
     after.records - (report.baseline as { records: number }).records,
-    50,
+    56,
   );
-  assert.equal(after.series, 3);
-  assert.equal(after.releases, 3);
-  assert.equal(after.observations, 69);
+  assert.equal(after.series, 4);
+  assert.equal(after.releases, 4);
+  assert.equal(after.observations, 75);
 
   const repeated = await executeSourceSnapshotImport(
     pool,
@@ -302,6 +303,118 @@ try {
     corruptionRejected: true,
     originalRestored: true,
     completeSnapshotSelection: true,
+    pinnedReleaseReproduced: true,
+    brokenNewestReleaseRejected: true,
+  };
+  const household = prepared.sources.find(
+    (p) => p.source.key === HOUSEHOLD_COMPOSITION_KEY,
+  )!;
+  const census = await readHouseholdComposition(pool);
+  assert.equal(census.totalHouseholds, 27591);
+  assert.equal(census.provenance.source_records, 6);
+  assert.equal(census.provenance.canonical_observations, 6);
+  assert.equal(census.source.referenceDate, "2023-12-31");
+  const householdPath = path.join(root, household.source.path);
+  const householdBytes = await readFile(householdPath);
+  try {
+    await writeFile(householdPath, "unavailable source during test");
+    assert.deepEqual(await readHouseholdComposition(pool), census);
+  } finally {
+    await writeFile(householdPath, householdBytes);
+  }
+  const householdBeforeFailure = await counts();
+  const revisedCensus = JSON.parse(householdBytes.toString());
+  revisedCensus.verification.verifiedAt = new Date(
+    Date.parse(revisedCensus.verification.verifiedAt) + 1000,
+  ).toISOString();
+  const censusRevision = planSourceSnapshot(
+    household.source,
+    Buffer.from(JSON.stringify(revisedCensus)),
+    prepared.report.repositoryCommit,
+  );
+  const censusClient = await pool.connect();
+  try {
+    await assert.rejects(
+      persistSourceSnapshot(
+        {
+          query: async (text, values) => {
+            if (
+              text.includes("INSERT INTO public.demographic_observations") &&
+              values
+            ) {
+              const changed = [...values];
+              const points = JSON.parse(String(changed[4]));
+              points[0].value = "0";
+              changed[4] = JSON.stringify(points);
+              return censusClient.query(text, changed);
+            }
+            return censusClient.query(text, values);
+          },
+        },
+        censusRevision,
+      ),
+      /HOUSEHOLD_COMPOSITION_RECONCILIATION_FAILED/,
+    );
+    assert.deepEqual(await counts(), householdBeforeFailure);
+    const failedCensusAttempt = await censusClient.query(
+      "SELECT status,error_code FROM source_acquisition_runs WHERE id=$1",
+      [censusRevision.runId],
+    );
+    assert.equal(failedCensusAttempt.rows[0].status, "failed");
+    assert.equal(
+      failedCensusAttempt.rows[0].error_code,
+      "HOUSEHOLD_COMPOSITION_RECONCILIATION_FAILED",
+    );
+    // Same source bytes, new acquisition attempt; failed run history is immutable.
+    await persistSourceSnapshot(
+      censusClient,
+      planSourceSnapshot(
+        household.source,
+        Buffer.from(JSON.stringify(revisedCensus)),
+        prepared.report.repositoryCommit,
+      ),
+    );
+    assert.equal(
+      (await readHouseholdComposition(pool)).provenance.release_hash,
+      censusRevision.byteHash,
+    );
+    assert.deepEqual(
+      await readHouseholdComposition(pool, household.byteHash),
+      census,
+    );
+    await censusClient.query("BEGIN");
+    await censusClient.query(
+      "UPDATE demographic_releases SET metadata=metadata-'source_registry_release_id' WHERE source_hash=$1",
+      [censusRevision.byteHash],
+    );
+    await assert.rejects(
+      readHouseholdComposition(censusClient),
+      /CANONICAL_RECONCILIATION_FAILED/,
+    );
+    await censusClient.query("ROLLBACK");
+    await censusClient.query("BEGIN");
+    await censusClient.query(
+      "UPDATE demographic_observations SET value=value+1 WHERE series_id=(SELECT id FROM demographic_series WHERE series_key=$1)",
+      [HOUSEHOLD_COMPOSITION_SERIES],
+    );
+    await assert.rejects(
+      readHouseholdComposition(censusClient),
+      /CANONICAL_RECONCILIATION_FAILED/,
+    );
+  } finally {
+    await censusClient.query("ROLLBACK");
+    censusClient.release();
+  }
+  report.householdComposition = {
+    provenance: census.provenance,
+    totalHouseholds: census.totalHouseholds,
+    referenceDate: census.source.referenceDate,
+    sourceUpdateDate: census.source.sourceUpdateDate,
+    verifiedAt: census.verification.verifiedAt,
+    filesystemIndependent: true,
+    failureRolledBack: true,
+    corruptionRejected: true,
+    newestReleaseSelected: true,
     pinnedReleaseReproduced: true,
     brokenNewestReleaseRejected: true,
   };

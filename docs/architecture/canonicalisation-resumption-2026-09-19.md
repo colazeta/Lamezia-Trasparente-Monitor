@@ -154,7 +154,7 @@ required to execute it before this repair is considered validated end to end.
 
 ## Remaining scope
 
-- The distinct ISTAT household-composition benchmark for 2023 is still queued.
+- The distinct ISTAT household-composition benchmark for 2023 now has a [candidate common-schema adapter and primary consumer cutover](household-composition-canonicalisation.md). Its production gates and source materializer remain pending. Earlier eight-source receipts above are historical; the expanded candidate plans nine sources, 316 records and 75 typed observations.
 - PNRR retains a file-backed frontend consumer alongside canonical projects.
 - Albo, procurement, institutions, parties, geography, assets, remaining series,
   taxonomy and editorial-research collections retain their domain queues.

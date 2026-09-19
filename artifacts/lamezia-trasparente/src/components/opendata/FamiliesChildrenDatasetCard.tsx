@@ -22,7 +22,7 @@ import {
   type RawLameziaFamiliesChildrenDataset,
   type LameziaFamiliesChildrenRecord,
 } from "@/data/lameziaFamiliesChildren";
-import { LAMEZIA_HOUSEHOLD_COMPOSITION_2023_DATA } from "@/data/lameziaHouseholdComposition2023";
+import { useHouseholdComposition } from "@/hooks/useHouseholdComposition";
 import { withPublicBasePath } from "@/lib/publicBasePath";
 
 const CHART_WIDTH = 1040;
@@ -40,6 +40,7 @@ const percentFormat = new Intl.NumberFormat("it-IT", {
 
 export function FamiliesChildrenDatasetCard() {
   const query = useMunicipalDemographicSnapshot("families-children");
+  const benchmarkQuery = useHouseholdComposition();
   if (!query.data)
     return (
       <MunicipalDatasetStatus
@@ -57,7 +58,7 @@ export function FamiliesChildrenDatasetCard() {
   const records = dataset.family_children;
   const metadata = dataset.metadata;
   const summary = buildFamiliesChildrenSummary(records);
-  const householdBenchmark = LAMEZIA_HOUSEHOLD_COMPOSITION_2023_DATA;
+  const householdBenchmark = benchmarkQuery.data;
 
   return (
     <section
@@ -156,19 +157,30 @@ export function FamiliesChildrenDatasetCard() {
               detail="Tutte le famiglie anagrafiche · 31 dicembre 2023"
               icon={<Home className="h-4 w-4" />}
               label="Benchmark ISTAT 2023"
-              value={`${formatInteger(
-                householdBenchmark.totalHouseholds,
-              )} famiglie totali`}
+              value={
+                householdBenchmark
+                  ? `${formatInteger(householdBenchmark.totalHouseholds)} famiglie totali`
+                  : benchmarkQuery.isLoading
+                    ? "Caricamento…"
+                    : "Dato non disponibile"
+              }
             />
           </div>
 
+          {benchmarkQuery.isError && (
+            <p role="status" className="mt-3 text-xs">
+              {householdBenchmark
+                ? "Benchmark ISTAT: ultimi dati ricevuti, aggiornamento non riuscito."
+                : "Benchmark ISTAT non disponibile: l’assenza del dato non indica zero famiglie."}
+            </p>
+          )}
           <p className="mt-4 border-t border-primary/15 pt-3 text-xs leading-5 text-muted-foreground">
             I due conteggi non vengono rapportati tra loro: “figli” e
             “componenti” non sono la stessa variabile e, finché periodo e
             copertura della fonte comunale non sono certificati, le{" "}
             {formatInteger(summary.total)} famiglie non possono essere trattate
-            come un sottoinsieme direttamente confrontabile delle{" "}
-            {formatInteger(householdBenchmark.totalHouseholds)} famiglie ISTAT.
+            come un sottoinsieme direttamente confrontabile delle famiglie
+            ISTAT.
           </p>
         </section>
 

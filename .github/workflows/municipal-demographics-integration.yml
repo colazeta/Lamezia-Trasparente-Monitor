@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "lib/db/**"
+      - "artifacts/api-server/src/data/lameziaHouseholdComposition2023.json"
       - ".github/workflows/municipal-demographics-integration.yml"
       - "artifacts/lamezia-trasparente/src/data/generated/lameziaDemographicTrend.json"
       - "artifacts/lamezia-trasparente/src/data/generated/lameziaForeignResidentsAgeSex.json"
@@ -18,6 +19,7 @@ on:
       ]
     paths:
       - "lib/db/**"
+      - "artifacts/api-server/src/data/lameziaHouseholdComposition2023.json"
       - ".github/workflows/municipal-demographics-integration.yml"
 
 permissions:

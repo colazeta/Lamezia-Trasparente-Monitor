@@ -35,6 +35,7 @@ import type {
   BandoUpdateInput,
   BriefBatchResult,
   BriefBatchStatus,
+  CanonicalHouseholdComposition2023,
   Category,
   ConfiscatedAsset,
   ConfiscatedAssetAdmin,
@@ -59,6 +60,7 @@ import type {
   GetDatabaseInspectionRecordParams,
   GetDatabaseInspectionRowsParams,
   GetDemographicHouseholdsParams,
+  GetHouseholdComposition2023Params,
   GetMunicipalDemographicSnapshotParams,
   GetPublicationsMacrotemiParams,
   GetPublicationsTimelineParams,
@@ -238,6 +240,91 @@ export function useGetMunicipalDemographicSnapshot<TData = Awaited<ReturnType<ty
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetMunicipalDemographicSnapshotQueryOptions(key,params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetHouseholdComposition2023Url = (params?: GetHouseholdComposition2023Params,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/demographics/household-composition-2023?${stringifiedParams}` : `/api/demographics/household-composition-2023`
+}
+
+/**
+ * Six component classes at 2023-12-31, independent of annual P02 availability. No filesystem fallback. Original verification and source update dates remain distinct from import time.
+ * @summary Read the reconciled ISTAT 2023 household census from the common database
+ */
+export const getHouseholdComposition2023 = async (params?: GetHouseholdComposition2023Params, options?: RequestInit): Promise<CanonicalHouseholdComposition2023> => {
+
+  return customFetch<CanonicalHouseholdComposition2023>(getGetHouseholdComposition2023Url(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetHouseholdComposition2023QueryKey = (params?: GetHouseholdComposition2023Params,) => {
+    return [
+    `/api/demographics/household-composition-2023`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetHouseholdComposition2023QueryOptions = <TData = Awaited<ReturnType<typeof getHouseholdComposition2023>>, TError = ErrorType<Error>>(params?: GetHouseholdComposition2023Params, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getHouseholdComposition2023>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetHouseholdComposition2023QueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getHouseholdComposition2023>>> = ({ signal }) => getHouseholdComposition2023(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getHouseholdComposition2023>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetHouseholdComposition2023QueryResult = NonNullable<Awaited<ReturnType<typeof getHouseholdComposition2023>>>
+export type GetHouseholdComposition2023QueryError = ErrorType<Error>
+
+
+/**
+ * @summary Read the reconciled ISTAT 2023 household census from the common database
+ */
+
+export function useGetHouseholdComposition2023<TData = Awaited<ReturnType<typeof getHouseholdComposition2023>>, TError = ErrorType<Error>>(
+ params?: GetHouseholdComposition2023Params, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getHouseholdComposition2023>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetHouseholdComposition2023QueryOptions(params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

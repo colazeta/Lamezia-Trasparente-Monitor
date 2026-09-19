@@ -171,19 +171,19 @@ test("malformed or incomplete checkpoints never become successful empty imports"
   );
 });
 
-test("accepts the committed eight-source plan with decoded typed expectations", async () => {
+test("accepts the committed nine-source plan with decoded typed expectations", async () => {
   const { plan, checkpoint } = await expandedFixture();
-  assert.equal(validateSnapshotPlan(plan).size, 8);
+  assert.equal(validateSnapshotPlan(plan).size, 9);
   assert.equal(
     plan.sources.reduce((n, source) => n + source.records, 0),
-    310,
+    316,
   );
   assert.equal(
     plan.sources.reduce(
       (n, source) => n + (source.demographics?.observations ?? 0),
       0,
     ),
-    69,
+    75,
   );
   checkpoint.report.sources.reverse();
   checkpoint.report.results.reverse();

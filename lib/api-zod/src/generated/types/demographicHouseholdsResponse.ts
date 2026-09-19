@@ -5,9 +5,9 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { CanonicalHouseholdComposition2023 } from './canonicalHouseholdComposition2023';
 import type { HouseholdAnnualSource } from './householdAnnualSource';
 import type { HouseholdChangeFromFirst } from './householdChangeFromFirst';
-import type { HouseholdComposition2023 } from './householdComposition2023';
 import type { HouseholdCounts } from './householdCounts';
 import type { HouseholdGeography } from './householdGeography';
 import type { HouseholdHistoryPoint } from './householdHistoryPoint';
@@ -25,6 +25,7 @@ export interface DemographicHouseholdsResponse {
   history: HouseholdHistoryPoint[];
   quality: HouseholdQuality;
   source: HouseholdAnnualSource;
-  composition: HouseholdComposition2023;
+  /** Null when the separate canonical census cannot be reconciled; P02 remains available. */
+  composition: CanonicalHouseholdComposition2023 | null;
   methodology: HouseholdMethodology;
 }

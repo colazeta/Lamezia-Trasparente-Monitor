@@ -1,3 +1,12 @@
+import { HOUSEHOLD_FIXTURE } from "./fixtures/householdComposition";
+vi.mock("@/hooks/useHouseholdComposition", () => ({
+  useHouseholdComposition: () => ({
+    data: HOUSEHOLD_FIXTURE,
+    isLoading: false,
+    isError: false,
+    refetch: vi.fn(),
+  }),
+}));
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useListOpendataDatasets } from "@workspace/api-client-react";

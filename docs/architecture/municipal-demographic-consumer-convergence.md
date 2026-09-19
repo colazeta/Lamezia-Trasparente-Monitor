@@ -8,7 +8,7 @@ The three municipal datasets imported by #1211 now have a shared database-only r
 
 The original municipal files remain source evidence and inputs to the existing importer. They have not been removed or rewritten. The repository acquisition generators are still migration inputs: this tranche does not claim database-first authoring or retirement of those writers.
 
-The family card also displays a **separate ISTAT household-composition benchmark for 2023**. That benchmark remains file-backed and is explicitly listed in the migration queue. Migrating the three municipal datasets does not complete the entire demographic domain.
+The family card also displays a **separate ISTAT household-composition benchmark for 2023**. The follow-up adapter now imports its six classes into the same source/typed tables and serves them through an independent, reconciled API. The original JSON remains import evidence; its materializer and repository-evidence health/freshness views remain. See [the bounded census mapping](household-composition-canonicalisation.md). Migrating the three municipal datasets does not complete the entire demographic domain.
 
 ## Public and administrative contracts
 

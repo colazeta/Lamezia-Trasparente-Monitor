@@ -83,7 +83,7 @@
     },
     {
       "id": "demographic-production-reconciliation",
-      "reason": "The correlated runtime database still has zero demographic series, releases and observations; the reviewed eight-source manifest and typed reads have not been deployed.",
+      "reason": "The correlated runtime database still has zero demographic series, releases and observations; the reviewed nine-source manifest and typed reads have not been deployed.",
       "affectedActions": [
         "certify demographic canonicalisation and production consumption"
       ],
@@ -117,7 +117,12 @@
         "typedObservations": 25,
         "basis": "candidate importer expectations; observed Neon demographic count is zero"
       },
-      "dependencies": ["PR #1211", "render-build-capacity", "public-api-origin", "demographic-production-reconciliation"],
+      "dependencies": [
+        "PR #1211",
+        "render-build-capacity",
+        "public-api-origin",
+        "demographic-production-reconciliation"
+      ],
       "provenanceQuality": "Source-specific evidence inspected; universal provenance coverage not certified.",
       "duplicationRisk": "Independent source, canonical and consumer representations require reconciliation.",
       "migrationComplexity": "bounded",
@@ -161,7 +166,12 @@
         "typedObservations": 38,
         "basis": "candidate importer expectations; observed Neon demographic count is zero"
       },
-      "dependencies": ["PR #1211", "render-build-capacity", "public-api-origin", "demographic-production-reconciliation"],
+      "dependencies": [
+        "PR #1211",
+        "render-build-capacity",
+        "public-api-origin",
+        "demographic-production-reconciliation"
+      ],
       "provenanceQuality": "Source-specific evidence inspected; universal provenance coverage not certified.",
       "duplicationRisk": "Independent source, canonical and consumer representations require reconciliation.",
       "migrationComplexity": "bounded",
@@ -205,7 +215,12 @@
         "typedObservations": 6,
         "basis": "candidate importer expectations; observed Neon demographic count is zero"
       },
-      "dependencies": ["PR #1211", "render-build-capacity", "public-api-origin", "demographic-production-reconciliation"],
+      "dependencies": [
+        "PR #1211",
+        "render-build-capacity",
+        "public-api-origin",
+        "demographic-production-reconciliation"
+      ],
       "provenanceQuality": "Source-specific evidence inspected; universal provenance coverage not certified.",
       "duplicationRisk": "Independent source, canonical and consumer representations require reconciliation.",
       "migrationComplexity": "bounded",
@@ -229,35 +244,52 @@
       ],
       "consumers": [
         "artifacts/lamezia-trasparente/src/data/lameziaHouseholdComposition2023.ts",
-        "artifacts/lamezia-trasparente/src/components/opendata/FamiliesChildrenDatasetCard.tsx"
+        "artifacts/lamezia-trasparente/src/components/opendata/FamiliesChildrenDatasetCard.tsx",
+        "artifacts/api-server/src/routes/demographicHouseholds.ts",
+        "artifacts/lamezia-trasparente/src/components/opendata/HouseholdCompositionDatasetCard.tsx",
+        "artifacts/lamezia-trasparente/src/data/openDataPrimaryDownload.ts",
+        "artifacts/lamezia-trasparente/src/data/sourceHealth.ts"
       ],
       "canonicalDestination": [
+        "source_sources",
+        "source_endpoints",
+        "source_artifacts",
+        "source_releases",
+        "source_records",
+        "source_acquisition_runs",
         "demographic_series",
         "demographic_releases",
         "demographic_observations"
       ],
       "status": "STRUCTURED_INFORMATION_OUTSIDE_DATABASE",
       "priority": "P0",
-      "substantiveContent": "Distinct six-class ISTAT household benchmark. It remains static inside the family card: that card is not an entirely migrated demographic domain.",
+      "substantiveContent": "Distinct six-class ISTAT 2023 household-size benchmark; common source registry and typed demographic adapter implemented in the candidate, separate from municipal children counts and P02.",
       "recordCounts": {
         "sourceRows": 6,
-        "sourceTotalHouseholds": 27591
+        "typedObservations": 6,
+        "sourceTotalHouseholds": 27591,
+        "upstreamIncludedSections": 246,
+        "basis": "candidate importer expectations; the recorded production demographic count remains zero"
       },
-      "dependencies": ["statistics-source-adapter"],
+      "dependencies": [
+        "render-build-capacity",
+        "public-api-origin",
+        "demographic-production-reconciliation"
+      ],
       "provenanceQuality": "Source-specific evidence inspected; universal provenance coverage not certified.",
       "duplicationRisk": "Independent source, canonical and consumer representations require reconciliation.",
-      "migrationComplexity": "requires-domain-review",
+      "migrationComplexity": "bounded-adapter-implemented",
       "publicImpact": "Preserve source meaning, uncertainty, coverage and publication restrictions.",
       "statusBasis": "Bounded repository/consumer review and identified Neon count, not evidence of public deployment.",
-      "sourceRegistration": "not-certified-for-entire-domain",
-      "typedCanonicalisation": "not-certified-for-entire-domain",
-      "consumerCutover": "pending",
-      "legacyWriteStatus": "requires-review",
-      "legacyReadStatus": "active-or-requires-review",
-      "provenanceStatus": "domain-specific",
+      "sourceRegistration": "implemented-in-candidate",
+      "typedCanonicalisation": "implemented-in-candidate",
+      "consumerCutover": "primary-cards-api-and-downloads-implemented-in-candidate",
+      "legacyWriteStatus": "repository-materializer-retained-as-ingestion-input",
+      "legacyReadStatus": "primary-runtime-count-reads-removed; source-health-and-freshness-evidence-remain-repository-based",
+      "provenanceStatus": "exact-source-and-typed-reconciliation; reference-source-update-verification-and-import-dates-separated",
       "validationStatus": "See executable tests and separate run receipts; no deployment inferred.",
       "productionStatus": "unverified-not-deployed",
-      "residualIssue": "Domain migration and consumer convergence remain pending."
+      "residualIssue": "Production deployment/import remains blocked by Render build capacity. Source-health/freshness describe retained repository evidence, not live API availability. Materializer and upstream section-workbook acquisition are retained; no database-first writer or whole-domain completion claimed."
     },
     {
       "id": "pnrr-projects",

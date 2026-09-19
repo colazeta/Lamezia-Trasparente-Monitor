@@ -68,3 +68,64 @@ describe("municipal read-only public route", () => {
     expect(readMunicipalDemographicSnapshot).not.toHaveBeenCalled();
   });
 });
+
+vi.mock("@workspace/db/household-composition", () => ({
+  readHouseholdComposition: vi.fn(),
+}));
+import { readHouseholdComposition } from "@workspace/db/household-composition";
+describe("independent canonical ISTAT household route", () => {
+  it("serves and pins a census without requiring annual P02 data", async () => {
+    vi.mocked(readHouseholdComposition).mockResolvedValue({
+      provenance: { canonical: true, release_hash: "b".repeat(64) },
+    } as any);
+    const result = await request(app()).get(
+      `/api/demographics/household-composition-2023?release=${"b".repeat(64)}&download=1`,
+    );
+    expect(result.status).toBe(200);
+    expect(result.headers["cache-control"]).toBe("no-cache");
+    expect(result.headers["content-disposition"]).toContain(
+      "lamezia-famiglie-componenti-2023.json",
+    );
+    expect(vi.mocked(readHouseholdComposition).mock.lastCall?.slice(1)).toEqual(
+      ["b".repeat(64)],
+    );
+  });
+  for (const code of [
+    "CANONICAL_DATA_UNAVAILABLE",
+    "CANONICAL_RECONCILIATION_FAILED",
+    "INVALID_RELEASE",
+  ] as const) {
+    it(`returns ${code} without a bundled substitute`, async () => {
+      vi.mocked(readHouseholdComposition).mockRejectedValue(
+        new MunicipalReadModelError(code),
+      );
+      const result = await request(app()).get(
+        "/api/demographics/household-composition-2023",
+      );
+      expect(result.status).toBe(code === "INVALID_RELEASE" ? 400 : 503);
+      expect(result.body).toEqual({ error: code });
+      expect(result.headers["cache-control"]).toBe("no-store");
+    });
+  }
+  it("rejects ambiguous query parameters without querying", async () => {
+    vi.mocked(readHouseholdComposition).mockClear();
+    expect(
+      (
+        await request(app()).get(
+          "/api/demographics/household-composition-2023?release=a&release=b",
+        )
+      ).status,
+    ).toBe(400);
+    expect(readHouseholdComposition).not.toHaveBeenCalled();
+  });
+  it("redacts unexpected database errors", async () => {
+    vi.mocked(readHouseholdComposition).mockRejectedValue(
+      new Error("postgres://password@private"),
+    );
+    const result = await request(app()).get(
+      "/api/demographics/household-composition-2023",
+    );
+    expect(result.status).toBe(503);
+    expect(result.text).not.toMatch(/password|postgres|private/);
+  });
+});

@@ -414,6 +414,78 @@ export interface HouseholdComposition2023 {
   source: HouseholdCompositionSource;
 }
 
+export type CanonicalHouseholdComposition2023VerificationMethod = typeof CanonicalHouseholdComposition2023VerificationMethod[keyof typeof CanonicalHouseholdComposition2023VerificationMethod];
+
+
+export const CanonicalHouseholdComposition2023VerificationMethod = {
+  'sha256-and-exact-reconciliation': 'sha256-and-exact-reconciliation',
+} as const;
+
+export type CanonicalHouseholdComposition2023Verification = {
+  verifiedAt: string;
+  method: CanonicalHouseholdComposition2023VerificationMethod;
+};
+
+export type CanonicalHouseholdComposition2023ProvenanceSeriesKey = typeof CanonicalHouseholdComposition2023ProvenanceSeriesKey[keyof typeof CanonicalHouseholdComposition2023ProvenanceSeriesKey];
+
+
+export const CanonicalHouseholdComposition2023ProvenanceSeriesKey = {
+  'istat-households-by-components-2023': 'istat-households-by-components-2023',
+} as const;
+
+export type CanonicalHouseholdComposition2023ProvenanceSourceKey = typeof CanonicalHouseholdComposition2023ProvenanceSourceKey[keyof typeof CanonicalHouseholdComposition2023ProvenanceSourceKey];
+
+
+export const CanonicalHouseholdComposition2023ProvenanceSourceKey = {
+  'istatlameziahousehold-composition-2023': 'istat.lamezia.household-composition-2023',
+} as const;
+
+export type CanonicalHouseholdComposition2023ProvenanceSourceStatus = typeof CanonicalHouseholdComposition2023ProvenanceSourceStatus[keyof typeof CanonicalHouseholdComposition2023ProvenanceSourceStatus];
+
+
+export const CanonicalHouseholdComposition2023ProvenanceSourceStatus = {
+  unknown: 'unknown',
+} as const;
+
+export type CanonicalHouseholdComposition2023ProvenanceSourceRecords = typeof CanonicalHouseholdComposition2023ProvenanceSourceRecords[keyof typeof CanonicalHouseholdComposition2023ProvenanceSourceRecords];
+
+
+export const CanonicalHouseholdComposition2023ProvenanceSourceRecords = {
+  NUMBER_6: 6,
+} as const;
+
+export type CanonicalHouseholdComposition2023ProvenanceCanonicalObservations = typeof CanonicalHouseholdComposition2023ProvenanceCanonicalObservations[keyof typeof CanonicalHouseholdComposition2023ProvenanceCanonicalObservations];
+
+
+export const CanonicalHouseholdComposition2023ProvenanceCanonicalObservations = {
+  NUMBER_6: 6,
+} as const;
+
+export type CanonicalHouseholdComposition2023ProvenanceExtractorVersion = typeof CanonicalHouseholdComposition2023ProvenanceExtractorVersion[keyof typeof CanonicalHouseholdComposition2023ProvenanceExtractorVersion];
+
+
+export const CanonicalHouseholdComposition2023ProvenanceExtractorVersion = {
+  'istat-household-compositionv1': 'istat-household-composition.v1',
+} as const;
+
+export type CanonicalHouseholdComposition2023Provenance = {
+  canonical: true;
+  series_key: CanonicalHouseholdComposition2023ProvenanceSeriesKey;
+  source_key: CanonicalHouseholdComposition2023ProvenanceSourceKey;
+  /** @pattern ^[a-f0-9]{64}$ */
+  release_hash: string;
+  acquired_at: string;
+  source_status: CanonicalHouseholdComposition2023ProvenanceSourceStatus;
+  source_records: CanonicalHouseholdComposition2023ProvenanceSourceRecords;
+  canonical_observations: CanonicalHouseholdComposition2023ProvenanceCanonicalObservations;
+  extractor_version: CanonicalHouseholdComposition2023ProvenanceExtractorVersion;
+};
+
+export type CanonicalHouseholdComposition2023 = HouseholdComposition2023 & {
+  verification: CanonicalHouseholdComposition2023Verification;
+  provenance: CanonicalHouseholdComposition2023Provenance;
+};
+
 export interface HouseholdMethodology {
   household: string;
   referencePeriod: string;
@@ -437,7 +509,8 @@ export interface DemographicHouseholdsResponse {
   history: HouseholdHistoryPoint[];
   quality: HouseholdQuality;
   source: HouseholdAnnualSource;
-  composition: HouseholdComposition2023;
+  /** Null when the separate canonical census cannot be reconciled; P02 remains available. */
+  composition: CanonicalHouseholdComposition2023 | null;
   methodology: HouseholdMethodology;
 }
 
@@ -3279,6 +3352,21 @@ export type GetMunicipalDemographicSnapshotDownload = typeof GetMunicipalDemogra
 
 
 export const GetMunicipalDemographicSnapshotDownload = {
+  NUMBER_1: '1',
+} as const;
+
+export type GetHouseholdComposition2023Params = {
+/**
+ * @pattern ^[a-f0-9]{64}$
+ */
+release?: string;
+download?: GetHouseholdComposition2023Download;
+};
+
+export type GetHouseholdComposition2023Download = typeof GetHouseholdComposition2023Download[keyof typeof GetHouseholdComposition2023Download];
+
+
+export const GetHouseholdComposition2023Download = {
   NUMBER_1: '1',
 } as const;
 
