@@ -1,0 +1,125 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-seconda-intimidazione-conad-via-piave-2016-01-26",
+  "discovered_at": "2026-09-19T00:51:23+02:00",
+  "updated_at": "2026-09-19T00:51:23+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Seconda intimidazione con cartucce e biglietto minatorio al supermercato Conad di via Piave il 26 gennaio 2016",
+  "temporal": {
+    "start": "2016-01-26",
+    "end": "2016-01-26",
+    "edtf": "2016-01-26",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:corriere-calabria:2016-06-27:intimidazioni-conad-26-gennaio",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Intimidazioni a Lamezia, arrestato un 20enne",
+      "url": "https://www.corrieredellacalabria.it/2016/06/27/intimidazioni-a-lamezia-arrestato-un-20enne/",
+      "published_at": "2016-06-27T08:15:00+02:00",
+      "retrieved_at": "2026-09-19T00:51:23+02:00",
+      "support_roles": ["event_support", "classification_support", "location_support", "procedural_context"]
+    },
+    {
+      "source_key": "press:il-lametino:2016-06-27:atti-intimidatori-nuovo-arresto",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: atti intimidatori, nuovo arresto per Giuseppe Galluzzi",
+      "url": "https://www.lametino.it/cronaca/lamezia-atti-intimidatori-nuovo-arresto-per-giuseppe-galluzzi.html",
+      "published_at": "2016-06-27T09:31:00+02:00",
+      "retrieved_at": "2026-09-19T00:51:23+02:00",
+      "support_roles": ["event_support", "classification_support", "location_support", "procedural_context", "corroboration"]
+    },
+    {
+      "source_key": "press:il-lametino:2016-01-28:intimidazione-conad-via-piave",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, intimidazione a Conad di via Piave. Rettura ‘Non ci piegheranno’ - REAZIONI",
+      "url": "https://www.lametino.it/cronaca/lamezia-intimidazione-a-conad-di-via-piave-rettura-non-ci-piegheranno.html",
+      "published_at": "2016-01-28T00:00:00+01:00",
+      "retrieved_at": "2026-09-19T00:51:23+02:00",
+      "support_roles": ["event_support", "location_support", "corroboration"]
+    },
+    {
+      "source_key": "press:corriere-calabria:2016-01-28:banda-mettiti-a-posto",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Lamezia, commercianti di nuovo nel mirino dei clan",
+      "url": "https://www.corrieredellacalabria.it/2016/01/28/a-lamezia-la-banda-del-mettiti-a-posto/",
+      "published_at": "2016-01-28T16:56:00+01:00",
+      "retrieved_at": "2026-09-19T00:51:23+02:00",
+      "support_roles": ["event_support", "location_support", "corroboration"]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:tentata-estorsione",
+      "classification_source_key": "press:corriere-calabria:2016-06-27:intimidazioni-conad-26-gennaio",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "Le ricostruzioni investigative pubblicate il 27 giugno 2016 distinguono una prima intimidazione al Conad di via Piave il 20 gennaio da un secondo episodio il 26 gennaio, nel quale furono nuovamente collocate cartucce da caccia accompagnate da un biglietto minatorio.",
+        "La cronaca contemporanea del 28 gennaio riferisce che le cartucce e il biglietto furono lasciati davanti all'ingresso del supermercato da una persona incappucciata nella serata di martedì, intorno alle 22; il 26 gennaio 2016 era martedì.",
+        "Questo evento è distinto sia dall'episodio del 20 gennaio già censito sia dall'esplosione dell'ordigno davanti allo stesso supermercato del 2 marzo 2016.",
+        "Le fonti del 27 giugno riportano per gli episodi contestati la qualificazione di tentata estorsione aggravata dalle modalità mafiose nell'ambito di un'ordinanza cautelare; il record rappresenta tale stato accusatorio e non un accertamento definitivo di responsabilità individuale."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:conad-via-piave-2016-01-26:occurrence",
+      "basis_source_key": "press:il-lametino:2016-01-28:intimidazione-conad-via-piave",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Ingresso del supermercato Conad di via Piave",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:conad-via-piave-2016-01-26:target",
+      "basis_source_key": "press:corriere-calabria:2016-01-28:banda-mettiti-a-posto",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Supermercato Conad di via Piave",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:conad-via-piave-2016-01-26:discovery",
+      "basis_source_key": "press:il-lametino:2016-01-28:intimidazione-conad-via-piave",
+      "role": "discovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Ingresso del supermercato Conad di via Piave",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    }
+  ]
+}

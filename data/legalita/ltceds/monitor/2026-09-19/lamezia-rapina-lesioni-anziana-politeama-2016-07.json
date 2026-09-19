@@ -1,0 +1,132 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-lesioni-anziana-politeama-2016-07",
+  "discovered_at": "2026-09-19T05:39:36+02:00",
+  "updated_at": "2026-09-19T05:39:36+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina con lesioni ai danni di una donna anziana nei pressi del Politeama nel luglio 2016",
+  "temporal": {
+    "start": null,
+    "end": "2016-07-29",
+    "edtf": null,
+    "precision": "approximate"
+  },
+  "sources": [
+    {
+      "source_key": "press:il-lametino:2016-07-29:rapina-lesioni-anziana-politeama",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: rapina e lesioni ad anziana, arrestato 39enne",
+      "url": "https://www.lametino.it/cronaca/lamezia-rapina-e-lesioni-ad-anziana-arrestato-39enne.html",
+      "published_at": "2016-07-29",
+      "retrieved_at": "2026-09-19T05:39:36+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:lacnews24:2016-07-29:rapina-lesioni-personali-lamezia",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Rapina e lesioni personali: un arresto a Lamezia",
+      "url": "https://www.lacnews24.it/cronaca/rapina-e-lesioni-personali-un-arresto-a-lamezia-wuwnfdme",
+      "published_at": "2016-07-29",
+      "retrieved_at": "2026-09-19T05:39:36+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "press:il-lametino:2016-07-29:rapina-lesioni-anziana-politeama",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti del 29 luglio 2016 riferiscono che una donna anziana, dopo essere stata brevemente pedinata, fu aggredita e privata con violenza di una collana d'oro del valore indicato in circa mille euro.",
+        "il Lametino colloca l'aggressione nei pressi del Politeama e riferisce che immagini di videosorveglianza di Piazza Fiorentino ripresero la fuga dopo la rapina.",
+        "Le fonti riferiscono l'arresto disposto dopo una breve attività investigativa e qualificano il fatto come rapina; la qualificazione è registrata come contestazione/procedimento riportato dalle fonti e non come accertamento giudiziario definitivo.",
+        "Le fonti non indicano il giorno di calendario dell'aggressione; il 29 luglio 2016 è il termine ante quem dato dalla pubblicazione e dall'arresto, non la data attribuita al fatto."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:lesioni-personali",
+      "classification_source_key": "press:il-lametino:2016-07-29:rapina-lesioni-anziana-politeama",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti qualificano espressamente anche le lesioni personali e riferiscono ferite al volto e in altre parti del corpo, con successivo ricorso alle cure dell'ospedale di Lamezia Terme.",
+        "L'ospedale è un luogo di cura successivo al fatto e non viene registrato come luogo di commissione dell'evento."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:area-politeama:occurrence",
+      "basis_source_key": "press:il-lametino:2016-07-29:rapina-lesioni-anziana-politeama",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Area nei pressi del Teatro Politeama-Costabile",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:area-politeama:target",
+      "basis_source_key": "press:il-lametino:2016-07-29:rapina-lesioni-anziana-politeama",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Area nei pressi del Teatro Politeama-Costabile",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:piazza-fiorentino:fuga",
+      "basis_source_key": "press:il-lametino:2016-07-29:rapina-lesioni-anziana-politeama",
+      "role": "other",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Piazza Fiorentino",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

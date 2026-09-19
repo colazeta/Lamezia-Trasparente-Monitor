@@ -1,0 +1,110 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-spari-agenzia-mediaexpress-2016-02-10",
+  "discovered_at": "2026-09-19T02:05:45+02:00",
+  "updated_at": "2026-09-19T02:05:45+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Tentata estorsione con colpi di pistola contro l'Agenzia Mediaexpress il 10 febbraio 2016",
+  "temporal": {
+    "start": "2016-02-10",
+    "end": "2016-02-10",
+    "edtf": "2016-02-10",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:quotidiano-sud:2016-02-10:spari-poste-private",
+      "source_type": "press_secondary",
+      "provider": "Il Quotidiano del Sud",
+      "title": "Spari contro le poste private di Lamezia Terme",
+      "url": "https://www.quotidianodelsud.it/calabria/catanzaro/cronache/cronaca/2016/02/10/spari-contro-le-poste-private-di-lamezia-terme",
+      "published_at": "2016-02-10T08:04:00+01:00",
+      "retrieved_at": "2026-09-19T02:05:45+02:00",
+      "support_roles": ["event_support", "location_support", "corroboration"]
+    },
+    {
+      "source_key": "press:corriere-calabria:2016-02-13:carcere-intimidazione-posta-privata",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Intimidazioni a Lamezia, va in carcere il giovane fermato",
+      "url": "https://www.corrieredellacalabria.it/2016/02/13/intimidazioni-a-lamezia-va-in-carcere-il-giovane-fermato",
+      "published_at": "2016-02-13T10:58:00+01:00",
+      "retrieved_at": "2026-09-19T02:05:45+02:00",
+      "support_roles": ["event_support", "procedural_context", "corroboration"]
+    },
+    {
+      "source_key": "press:il-lametino:2016-02-15:video-intimidazioni-galluzzi-mediaexpress",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, i video delle intimidazioni che hanno incastrato Galluzzi",
+      "url": "https://www.lametino.it/cronaca/lamezia-atti-intimidatori-il-video-che-ha-incastrato-giuseppe-galluzzi.html",
+      "published_at": "2016-02-15T00:00:00+01:00",
+      "retrieved_at": "2026-09-19T02:05:45+02:00",
+      "support_roles": ["event_support", "classification_support", "location_support", "procedural_context", "corroboration"]
+    },
+    {
+      "source_key": "press:lamezia-oggi:2016-03-03:ordinanza-galluzzi-mediaexpress",
+      "source_type": "press_secondary",
+      "provider": "Lamezia Oggi",
+      "title": "Lamezia: rinnovata ordinanza in carcere per Galluzzi",
+      "url": "https://www.lameziaoggi.it/giudiziaria/2016/03/03/lamezia-rinnovata-ordinanza-in-carcere-per-galluzzi/",
+      "published_at": "2016-03-03T00:00:00+01:00",
+      "retrieved_at": "2026-09-19T02:05:45+02:00",
+      "support_roles": ["classification_support", "location_support", "procedural_context", "corroboration"]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:tentata-estorsione",
+      "classification_source_key": "press:lamezia-oggi:2016-03-03:ordinanza-galluzzi-mediaexpress",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "La cronaca contemporanea del 10 febbraio 2016 riferisce che nel corso della notte furono esplosi colpi di pistola contro la saracinesca di un'agenzia di poste private di Lamezia Terme, già colpita più volte nelle settimane precedenti.",
+        "Le successive ricostruzioni investigative identificano l'esercizio come Agenzia Mediaexpress e collegano l'episodio al procedimento avviato dopo il fermo del 10 febbraio.",
+        "La copertura dell'ordinanza cautelare riporta tra le contestazioni la tentata estorsione aggravata, insieme a porto e detenzione illegale di arma clandestina e spari in luogo pubblico, in relazione agli atti ai danni del titolare dell'Agenzia Mediaexpress; il record rappresenta tale qualificazione allo stato accusatorio e non un accertamento definitivo di responsabilità individuale.",
+        "L'episodio degli spari contro la saracinesca è trattato come evento distinto dai separati danneggiamenti mediante incendio a veicoli riconducibili allo stesso titolare e dall'incendio alla concessionaria Autolife Toyota già censito."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:mediaexpress-2016-02-10:occurrence",
+      "basis_source_key": "press:il-lametino:2016-02-15:video-intimidazioni-galluzzi-mediaexpress",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Saracinesca dell'Agenzia Mediaexpress di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:mediaexpress-2016-02-10:target",
+      "basis_source_key": "press:lamezia-oggi:2016-03-03:ordinanza-galluzzi-mediaexpress",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Agenzia Mediaexpress di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
