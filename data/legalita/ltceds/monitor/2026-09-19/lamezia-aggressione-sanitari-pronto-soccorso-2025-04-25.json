@@ -1,0 +1,124 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-aggressione-sanitari-pronto-soccorso-2025-04-25",
+  "discovered_at": "2026-09-19T11:44:09+02:00",
+  "updated_at": "2026-09-19T11:44:09+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Lesioni a personale sanitario nel Pronto Soccorso dell'ospedale Giovanni Paolo II il 25 aprile 2025",
+  "temporal": {
+    "start": "2025-04-25",
+    "end": "2025-04-25",
+    "edtf": null,
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "agency:ansa:2025-04-25:aggressione-pronto-soccorso-lamezia",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Aggredisce medici e infermieri in pronto soccorso, arrestato",
+      "url": "https://www.ansa.it/sito/notizie/cronaca/2025/04/25/aggredisce-medici-e-infermieri-in-pronto-soccorso-arrestato_7d178075-aef2-4c14-ba12-610c1356aa38.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-19T11:44:09+02:00",
+      "support_roles": [
+        "event_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:calabriainchieste:2025-04-26:aggressione-pronto-soccorso-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Calabria Inchieste",
+      "title": "Danneggia le porte del pronto soccorso e aggredisce medici e infermieri: 24enne gambiano arrestato dai carabinieri",
+      "url": "https://www.calabriainchieste.it/2025/04/26/danneggia-le-porte-del-pronto-soccorso-e-aggredisce-medici-e-infermieri-24enne-gambiano-arrestato-dai-carabinieri/?noamp=mobile",
+      "published_at": null,
+      "retrieved_at": "2026-09-19T11:44:09+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "authority:asp-catanzaro:presidio-ospedaliero-lamezia-via-perugini",
+      "source_type": "public_authority_primary",
+      "provider": "ASP Catanzaro",
+      "title": "Broncopneumologia - Presidio Ospedaliero Lamezia Terme",
+      "url": "https://www.asp.cz.it/broncopneumologia",
+      "published_at": null,
+      "retrieved_at": "2026-09-19T11:44:09+02:00",
+      "support_roles": [
+        "location_support"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:lesioni-personali",
+      "classification_source_key": "press:calabriainchieste:2025-04-26:aggressione-pronto-soccorso-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La sera del 25 aprile 2025, intorno alle 19:15, i Carabinieri intervennero nel Pronto Soccorso del Presidio Ospedaliero Giovanni Paolo II di Lamezia Terme per una violenta aggressione ai danni di personale sanitario.",
+        "Le fonti riferiscono che furono aggrediti due medici e due infermieri e che i sanitari riportarono lesioni con prognosi comprese tra tre e quindici giorni.",
+        "La fonte che ricostruisce l'intervento dei Carabinieri riferisce un arresto in flagranza per lesioni in danno di esercenti le professioni sanitarie e la convalida dell'arresto da parte del giudice del Tribunale di Lamezia Terme nella mattinata del 26 aprile 2025; non viene rappresentata come definitiva alcuna responsabilità penale."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:pronto-soccorso-giovanni-paolo-ii:occurrence",
+      "basis_source_key": "press:calabriainchieste:2025-04-26:aggressione-pronto-soccorso-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Pronto Soccorso, Presidio Ospedaliero Giovanni Paolo II",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:pronto-soccorso-giovanni-paolo-ii:target",
+      "basis_source_key": "press:calabriainchieste:2025-04-26:aggressione-pronto-soccorso-lamezia",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Pronto Soccorso, Presidio Ospedaliero Giovanni Paolo II",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:pronto-soccorso-giovanni-paolo-ii:arrest",
+      "basis_source_key": "press:calabriainchieste:2025-04-26:aggressione-pronto-soccorso-lamezia",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Pronto Soccorso, Presidio Ospedaliero Giovanni Paolo II",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
