@@ -1,0 +1,126 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-tentata-estorsione-nuntius-capizzaglie-2009",
+  "discovered_at": "2026-09-19T08:05:46+02:00",
+  "updated_at": "2026-09-19T08:05:46+02:00",
+  "record_status": "verified_source",
+  "event_form": "course_of_conduct",
+  "title": "Tentata estorsione ai danni di un commerciante di Capizzaglie documentata dall'operazione Nuntius",
+  "temporal": {
+    "start": null,
+    "end": "2009-01-09",
+    "edtf": null,
+    "precision": "approximate"
+  },
+  "sources": [
+    {
+      "source_key": "polizia-stato:2009-01-09:operazione-nuntius-lamezia",
+      "source_type": "law_enforcement_primary",
+      "provider": "Polizia di Stato",
+      "title": "Operazione Nuntius: quattro arresti a Lamezia Terme",
+      "url": "https://www.poliziadistato.it/articolo/operazione-nuntius---quattro-arresti-a-lamezia-terme",
+      "published_at": "2009-01-09",
+      "retrieved_at": "2026-09-19T08:05:46+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "dia:2009-1sem:operazione-nuntius-lamezia",
+      "source_type": "law_enforcement_primary",
+      "provider": "Direzione Investigativa Antimafia",
+      "title": "Relazione del Ministro dell'Interno al Parlamento sull'attività svolta e i risultati conseguiti dalla DIA - 1° semestre 2009",
+      "url": "https://direzioneinvestigativaantimafia.interno.gov.it/semestrali/sem/2009/1sem2009.pdf",
+      "published_at": null,
+      "retrieved_at": "2026-09-19T08:05:46+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "report:sos-impresa:xii-rapporto-2009:nuntius-capizzaglie",
+      "source_type": "other",
+      "provider": "Sos Impresa",
+      "title": "Le mani della criminalità sulle imprese - XII Rapporto 2009",
+      "url": "https://cobire.sebina.it/sebina/repository/catalogazione/immagini/pdf/00148_Rapporto%202009.pdf",
+      "published_at": null,
+      "retrieved_at": "2026-09-19T08:05:46+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:cn24tv:2010-06-15:nuntius-condanne-appello",
+      "source_type": "press_secondary",
+      "provider": "CN24TV",
+      "title": "Confermate due condanne a presunti esponenti clan Torcasio",
+      "url": "https://cn24tv.it/news/confermate-due-condanne-a-presunti-esponenti-clan-torcasio/",
+      "published_at": "2010-06-15",
+      "retrieved_at": "2026-09-19T08:05:46+02:00",
+      "support_roles": [
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:tentata-estorsione",
+      "classification_source_key": "polizia-stato:2009-01-09:operazione-nuntius-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "La Polizia di Stato riferisce che l'operazione Nuntius del 9 gennaio 2009 portò all'esecuzione di quattro ordinanze cautelari per tentata estorsione ai danni di un imprenditore della zona; la data dell'operazione costituisce un termine ante quem e non viene trasformata nella data delle condotte estorsive.",
+        "Il XII Rapporto 2009 di Sos Impresa colloca il commerciante a Capizzaglie, zona sud di Lamezia Terme, e descrive più richieste estorsive veicolate da diversi soggetti, senza indicare una somma predeterminata; per questo il fatto è rappresentato come course_of_conduct con temporalità approssimativa.",
+        "La stessa fonte riferisce un precedente e distinto atto intimidatorio con una bottiglia incendiaria davanti all'ingresso dell'attività commerciale. In assenza di una data verificabile, quel fatto non viene fuso con la tentata estorsione né materializzato in questo record come evento autonomo.",
+        "Una fonte del 15 giugno 2010 riferisce la conferma in appello di due condanne per tentata estorsione mafiosa nell'ambito di Nuntius e ricorda che altre due posizioni erano state assolte in primo grado; il record conserva quindi separati il fatto censito e gli esiti processuali individuali."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:municipality:occurrence",
+      "basis_source_key": "polizia-stato:2009-01-09:operazione-nuntius-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:capizzaglie:target",
+      "basis_source_key": "report:sos-impresa:xii-rapporto-2009:nuntius-capizzaglie",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Capizzaglie, zona sud di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

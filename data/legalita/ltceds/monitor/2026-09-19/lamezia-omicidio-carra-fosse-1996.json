@@ -1,0 +1,98 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-omicidio-occultamento-carra-fosse-1996",
+  "discovered_at": "2026-09-19T11:16:36+02:00",
+  "updated_at": "2026-09-19T11:16:36+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Omicidio di un giovane scomparso il 12 maggio 1996 con successivo rinvenimento dei resti in contrada Carrà-Fosse",
+  "temporal": {
+    "start": "1996-05-12",
+    "end": null,
+    "edtf": null,
+    "precision": "approximate"
+  },
+  "sources": [
+    {
+      "source_key": "press:lametino:2015-09-23:caso-scomparsa-1996",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Aggiornamento investigativo sul caso di scomparsa del 1996",
+      "url": "https://www.lametino.it/cronaca/lamezia-forse-ad-una-svolta-i-due-casi-irrisolti-di-dattilo-e-ventura.html",
+      "published_at": "2015-09-23",
+      "retrieved_at": "2026-09-19T11:16:36+02:00",
+      "support_roles": [
+        "event_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lametino:2015-11-10:identificazione-resti-carra-fosse",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Identificazione tramite DNA dei resti rinvenuti in contrada Carrà-Fosse",
+      "url": "https://www.lametino.it/cronaca/lamezia-i-funerali-di-dattilo-e-le-tante-analogie-con-il-caso-ventura.html",
+      "published_at": "2015-11-10",
+      "retrieved_at": "2026-09-19T11:16:36+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "press:lametino:2015-11-10:identificazione-resti-carra-fosse",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Il 12 maggio 1996 è la data documentata della scomparsa. Una fonte del novembre 2015, dopo l'identificazione dei resti mediante comparazione del DNA con quello dei familiari, riferisce che il giovane era stato ucciso con un colpo alla testa. La data della scomparsa non viene quindi trasformata in una data certa dell'omicidio e la temporalità resta approximate.",
+        "I resti furono rinvenuti in contrada Carrà-Fosse, all'interno di un casolare abbandonato e di una cisterna usata per il deposito del mosto; il ritrovamento viene ricondotto dalle fonti alle indicazioni di un collaboratore di giustizia.",
+        "Non è stata recuperata in questa iterazione una fonte giudiziaria o di polizia originaria che formalizzi la qualificazione penale o individui con precisione il luogo della commissione; per questo la classificazione resta provisional e l'occurrence non viene precisata oltre il Comune."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:municipality:occurrence",
+      "basis_source_key": "press:lametino:2015-11-10:identificazione-resti-carra-fosse",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "unknown",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Lamezia Terme — luogo di commissione non precisato dalle fonti",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:carra-fosse:recovery",
+      "basis_source_key": "press:lametino:2015-11-10:identificazione-resti-carra-fosse",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Contrada Carrà-Fosse",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
