@@ -1,0 +1,100 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-omicidio-pic-clock-1991-01-25",
+  "discovered_at": "2026-09-19T18:14:50+02:00",
+  "updated_at": "2026-09-19T18:14:50+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina e omicidio negli uffici Pic-Clock a Lamezia Terme il 25 gennaio 1991",
+  "temporal": {
+    "start": "1991-01-25",
+    "end": "1991-01-25",
+    "edtf": null,
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:unita:1991-01-26:rapina-omicidio-pic-clock-lamezia",
+      "source_type": "press_secondary",
+      "provider": "l'Unità",
+      "title": "Omicidio a Lamezia Terme. Rapina in gioielleria: tre colpi alla testa a un'impiegata di 22 anni",
+      "url": "https://archivio.unita.news/assets/derived/1991/01/26/issue_full.pdf",
+      "published_at": "1991-01-26",
+      "retrieved_at": "2026-09-19T18:14:50+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "press:unita:1991-01-26:rapina-omicidio-pic-clock-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La fonte contemporanea del 26 gennaio 1991 riferisce che il fatto era avvenuto il giorno precedente, intorno alle 10, negli uffici del Pic-Clock, grande magazzino di argenteria e orologi nel centro di Lamezia Terme.",
+        "Secondo la ricostruzione pubblicata, durante la rapina un'impiegata fu uccisa con tre colpi di pistola alla testa e gli autori si allontanarono portando con sé sacchi contenenti gioielli.",
+        "La fonte riferisce che la Polizia di Lamezia Terme aveva aperto indagini per omicidio e rapina. In questa iterazione non è stata reperita una successiva decisione giudiziaria definitiva relativa allo specifico episodio."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "press:unita:1991-01-26:rapina-omicidio-pic-clock-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La fonte contemporanea descrive l'asportazione di gioielli dagli uffici del Pic-Clock dopo l'uccisione dell'impiegata e riferisce espressamente l'apertura di indagini per rapina.",
+        "Non sono stati attribuiti indirizzi, coordinate o ulteriori qualificazioni penali non espressamente sostenute dalla fonte."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:pic-clock:occurrence",
+      "basis_source_key": "press:unita:1991-01-26:rapina-omicidio-pic-clock-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Pic-Clock, grande magazzino di argenteria e orologi",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:pic-clock:target",
+      "basis_source_key": "press:unita:1991-01-26:rapina-omicidio-pic-clock-lamezia",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Pic-Clock, grande magazzino di argenteria e orologi",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
