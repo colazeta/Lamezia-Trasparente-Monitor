@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-coltivazione-marijuana-orto-armi-2017-09",
   "discovered_at": "2026-09-19T17:46:43+02:00",
-  "updated_at": "2026-09-19T17:46:43+02:00",
+  "updated_at": "2026-09-19T18:05:30+02:00",
   "record_status": "verified_source",
   "event_form": "continuous_episode",
   "title": "Coltivazione e detenzione di marijuana con rinvenimento di due fucili nei terreni adiacenti a un'abitazione di Lamezia Terme, accertate entro il 30 settembre 2017",
@@ -21,12 +21,7 @@
       "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/123659cf55305399f230241026",
       "published_at": "2017-09-30",
       "retrieved_at": "2026-09-19T17:46:43+02:00",
-      "support_roles": [
-        "event_support",
-        "classification_support",
-        "location_support",
-        "procedural_context"
-      ]
+      "support_roles": ["event_support", "classification_support", "location_support", "procedural_context"]
     },
     {
       "source_key": "press:lacnews24:2017-09-30:droga-armi-casa-lamezia",
@@ -36,13 +31,7 @@
       "url": "https://www.lacnews24.it/cronaca/lamezia-droga-e-armi-in-casa-arrestati-zio-e-nipote-gw2ayk9e",
       "published_at": "2017-09-30",
       "retrieved_at": "2026-09-19T17:46:43+02:00",
-      "support_roles": [
-        "event_support",
-        "classification_support",
-        "location_support",
-        "procedural_context",
-        "corroboration"
-      ]
+      "support_roles": ["event_support", "classification_support", "location_support", "procedural_context", "corroboration"]
     }
   ],
   "offences": [
