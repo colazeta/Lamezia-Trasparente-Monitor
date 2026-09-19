@@ -7,10 +7,10 @@
   "event_form": "discrete",
   "title": "Rissa con bottiglie in Piazza Bovio (Piazza Mercato Vecchio) il 4 gennaio 2025",
   "temporal": {
-    "start": "2025-01-04T19:00:00+01:00",
-    "end": "2025-01-04T19:00:00+01:00",
+    "start": "2025-01-04",
+    "end": "2025-01-04",
     "edtf": null,
-    "precision": "exact_datetime"
+    "precision": "exact_date"
   },
   "sources": [
     {
