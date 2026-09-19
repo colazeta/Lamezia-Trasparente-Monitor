@@ -119,7 +119,7 @@
       "sensitivity": "public_place",
       "publication_risk": "low_public_site",
       "geometry": null,
-      "place_name": "Via XX Settembre, nei pressi di un esercizio commerciale cinese",
+      "place_name": "Via XX Settembre",
       "neighbourhood": null,
       "iccs_location_type": null
     },
@@ -134,7 +134,7 @@
       "sensitivity": "public_place",
       "publication_risk": "victim_linked",
       "geometry": null,
-      "place_name": "Esercizio commerciale in via XX Settembre; denominazione e civico non attestati dalle fonti recuperate",
+      "place_name": "Via XX Settembre",
       "neighbourhood": null,
       "iccs_location_type": null
     }
