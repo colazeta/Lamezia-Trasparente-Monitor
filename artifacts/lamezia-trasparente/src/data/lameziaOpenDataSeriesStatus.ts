@@ -6,7 +6,7 @@ export type OpenDataSeriesSourceCadence =
   | "monthly"
   | "release-driven";
 export type OpenDataSeriesMonitoringCadence = "daily" | "release-driven";
-export type OpenDataSeriesAutomationStatus = "active" | "manual";
+export type OpenDataSeriesAutomationStatus = "active" | "manual" | "unverified";
 
 export interface LameziaOpenDataSeriesStatusItem {
   id: string;
@@ -38,8 +38,7 @@ export interface LameziaOpenDataSeriesStatusManifest {
 export const LAMEZIA_OPEN_DATA_SERIES_STATUS =
   openDataSeriesStatus as LameziaOpenDataSeriesStatusManifest;
 
-export const LAMEZIA_OPEN_DATA_SERIES =
-  LAMEZIA_OPEN_DATA_SERIES_STATUS.series;
+export const LAMEZIA_OPEN_DATA_SERIES = LAMEZIA_OPEN_DATA_SERIES_STATUS.series;
 
 export const LAMEZIA_OPEN_DATA_SERIES_BY_ID = new Map(
   LAMEZIA_OPEN_DATA_SERIES.map((series) => [series.id, series]),

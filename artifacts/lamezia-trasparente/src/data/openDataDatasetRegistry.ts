@@ -170,7 +170,7 @@ export const OPEN_DATA_DATASET_REGISTRY: readonly OpenDataThemeDataset[] = [
     statusLabel: "Disponibile",
     dataType: "Benchmark strutturale censuario 2023",
     description:
-      "Benchmark strutturale delle famiglie anagrafiche per 1, 2, 3, 4, 5 e 6 o più componenti, aggregato dalle sezioni ISTAT 2023 e pubblicato come JSON statico con quadratura esatta sul totale comunale.",
+      "Benchmark strutturale delle famiglie anagrafiche per 1, 2, 3, 4, 5 e 6 o più componenti, aggregato dalle sezioni ISTAT 2023 e consultabile con fonte e controlli di quadratura sul totale comunale.",
     updateCadence:
       "Rigenerazione verificata quando ISTAT pubblica una nuova edizione compatibile dei dati per sezione di censimento.",
     sourceLabel: "ISTAT - Censimento permanente 2023",

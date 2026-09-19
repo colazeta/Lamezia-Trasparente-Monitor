@@ -108,7 +108,7 @@ export function PopulationHouseholdsPanel() {
     () =>
       Math.max(
         1,
-        ...(data?.composition.byComponents.map((item) => item.share) ?? [1]),
+        ...(data?.composition?.byComponents.map((item) => item.share) ?? [1]),
       ),
     [data],
   );
@@ -126,7 +126,7 @@ export function PopulationHouseholdsPanel() {
   }
 
   if (isError || !data) {
-    return <StaticHouseholdCompositionFallback />;
+    return <IndependentHouseholdComposition />;
   }
 
   return (
@@ -285,116 +285,120 @@ export function PopulationHouseholdsPanel() {
         </Card>
       </div>
 
-      <section aria-labelledby="household-composition-title">
-        <Card>
-          <CardHeader>
-            <div className="mb-2 flex flex-wrap items-center gap-2">
-              <Badge variant="outline" className="shadow-none">
-                Censimento {data.composition.referenceYear}
-              </Badge>
-              <Badge variant="outline" className="shadow-none">
-                fotografia distinta dallo storico P02
-              </Badge>
-            </div>
-            <CardTitle id="household-composition-title">
-              Composizione delle famiglie nel 2023
-            </CardTitle>
-            <CardDescription>
-              Famiglie anagrafiche per numero di componenti, aggregate dalle
-              sezioni censuarie di Lamezia Terme. Questa fotografia resta fissa
-              anche quando si cambia l'anno nel selettore dello storico.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-            <div className="space-y-3">
-              <div
-                role="list"
-                aria-label="Distribuzione delle famiglie di Lamezia Terme per numero di componenti nel 2023"
-                className="space-y-3"
-              >
-                {data.composition.byComponents.map((item) => {
-                  const label =
-                    item.key === "1"
-                      ? "1 componente"
-                      : item.key === "6+"
-                        ? "6 o più componenti"
-                        : `${item.key} componenti`;
-                  return (
-                    <div
-                      key={item.key}
-                      role="listitem"
-                      aria-label={`${label}: ${formatInteger(item.households)} famiglie, ${formatPercent(item.share)}`}
-                      className="grid grid-cols-[7rem_1fr_auto] items-center gap-2 sm:grid-cols-[8.5rem_1fr_auto] sm:gap-3"
-                    >
-                      <span className="text-sm font-medium text-foreground">
-                        {label}
-                      </span>
-                      <div
-                        aria-hidden="true"
-                        className="h-3 overflow-hidden rounded-full bg-muted"
-                      >
-                        <div
-                          className="h-full rounded-full bg-primary/75"
-                          style={{
-                            width: `${(item.share / maxCompositionShare) * 100}%`,
-                          }}
-                        />
-                      </div>
-                      <span className="min-w-20 text-right text-sm tabular-nums text-muted-foreground sm:min-w-24">
-                        {formatInteger(item.households)} ·{" "}
-                        {formatPercent(item.share)}
-                      </span>
-                    </div>
-                  );
-                })}
+      {data.composition ? (
+        <section aria-labelledby="household-composition-title">
+          <Card>
+            <CardHeader>
+              <div className="mb-2 flex flex-wrap items-center gap-2">
+                <Badge variant="outline" className="shadow-none">
+                  Censimento {data.composition.referenceYear}
+                </Badge>
+                <Badge variant="outline" className="shadow-none">
+                  fotografia distinta dallo storico P02
+                </Badge>
               </div>
-              <p className="pt-1 text-xs leading-5 text-muted-foreground">
-                Quote arrotondate a un decimale; la quadratura è verificata sui
-                conteggi interi.
-              </p>
-            </div>
-
-            <div className="space-y-3">
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-                <MetricCard
-                  label="Famiglie unipersonali"
-                  value={formatInteger(
-                    data.composition.indicators.onePersonHouseholds,
-                  )}
-                  detail={`${formatPercent(data.composition.indicators.onePersonShare)} del totale censuario`}
-                />
-                <MetricCard
-                  label="Famiglie con almeno 5 componenti"
-                  value={formatInteger(
-                    data.composition.indicators.fivePlusHouseholds,
-                  )}
-                  detail={`${formatPercent(data.composition.indicators.fivePlusShare)} del totale censuario`}
-                />
-              </div>
-              <div className="rounded-lg border border-border bg-muted/20 p-4 text-sm leading-6 text-muted-foreground">
-                <p>
-                  Totale di controllo:{" "}
-                  {formatInteger(data.composition.totalHouseholds)} famiglie;
-                  PF3–PF8 = PF1, senza residui.
-                </p>
-                <p className="mt-2">{data.methodology.familyRelationships}</p>
-                <a
-                  className="mt-2 inline-block font-medium text-primary hover:underline"
-                  href={data.composition.source.pageUrl}
-                  rel="noreferrer"
-                  target="_blank"
+              <CardTitle id="household-composition-title">
+                Composizione delle famiglie nel 2023
+              </CardTitle>
+              <CardDescription>
+                Famiglie anagrafiche per numero di componenti, aggregate dalle
+                sezioni censuarie di Lamezia Terme. Questa fotografia resta
+                fissa anche quando si cambia l'anno nel selettore dello storico.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+              <div className="space-y-3">
+                <div
+                  role="list"
+                  aria-label="Distribuzione delle famiglie di Lamezia Terme per numero di componenti nel 2023"
+                  className="space-y-3"
                 >
-                  Fonte ISTAT
-                </a>
-                <span className="ml-2 text-xs">
-                  edizione aggiornata il{" "}
-                  {formatSourceDate(data.composition.source.sourceUpdateDate)}
-                </span>
+                  {data.composition.byComponents.map((item) => {
+                    const label =
+                      item.key === "1"
+                        ? "1 componente"
+                        : item.key === "6+"
+                          ? "6 o più componenti"
+                          : `${item.key} componenti`;
+                    return (
+                      <div
+                        key={item.key}
+                        role="listitem"
+                        aria-label={`${label}: ${formatInteger(item.households)} famiglie, ${formatPercent(item.share)}`}
+                        className="grid grid-cols-[7rem_1fr_auto] items-center gap-2 sm:grid-cols-[8.5rem_1fr_auto] sm:gap-3"
+                      >
+                        <span className="text-sm font-medium text-foreground">
+                          {label}
+                        </span>
+                        <div
+                          aria-hidden="true"
+                          className="h-3 overflow-hidden rounded-full bg-muted"
+                        >
+                          <div
+                            className="h-full rounded-full bg-primary/75"
+                            style={{
+                              width: `${(item.share / maxCompositionShare) * 100}%`,
+                            }}
+                          />
+                        </div>
+                        <span className="min-w-20 text-right text-sm tabular-nums text-muted-foreground sm:min-w-24">
+                          {formatInteger(item.households)} ·{" "}
+                          {formatPercent(item.share)}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+                <p className="pt-1 text-xs leading-5 text-muted-foreground">
+                  Quote arrotondate a un decimale; la quadratura è verificata
+                  sui conteggi interi.
+                </p>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-      </section>
+
+              <div className="space-y-3">
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+                  <MetricCard
+                    label="Famiglie unipersonali"
+                    value={formatInteger(
+                      data.composition.indicators.onePersonHouseholds,
+                    )}
+                    detail={`${formatPercent(data.composition.indicators.onePersonShare)} del totale censuario`}
+                  />
+                  <MetricCard
+                    label="Famiglie con almeno 5 componenti"
+                    value={formatInteger(
+                      data.composition.indicators.fivePlusHouseholds,
+                    )}
+                    detail={`${formatPercent(data.composition.indicators.fivePlusShare)} del totale censuario`}
+                  />
+                </div>
+                <div className="rounded-lg border border-border bg-muted/20 p-4 text-sm leading-6 text-muted-foreground">
+                  <p>
+                    Totale di controllo:{" "}
+                    {formatInteger(data.composition.totalHouseholds)} famiglie;
+                    PF3–PF8 = PF1, senza residui.
+                  </p>
+                  <p className="mt-2">{data.methodology.familyRelationships}</p>
+                  <a
+                    className="mt-2 inline-block font-medium text-primary hover:underline"
+                    href={data.composition.source.pageUrl}
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    Fonte ISTAT
+                  </a>
+                  <span className="ml-2 text-xs">
+                    edizione aggiornata il{" "}
+                    {formatSourceDate(data.composition.source.sourceUpdateDate)}
+                  </span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+      ) : (
+        <HouseholdCompositionDatasetCard />
+      )}
 
       <Card className="border-dashed">
         <CardContent className="space-y-3 p-5 text-sm leading-6 text-muted-foreground">
@@ -435,7 +439,7 @@ export function PopulationHouseholdsPanel() {
   );
 }
 
-function StaticHouseholdCompositionFallback() {
+function IndependentHouseholdComposition() {
   return (
     <section
       id="famiglie-lamezia"
@@ -456,8 +460,7 @@ function StaticHouseholdCompositionFallback() {
         <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
           La serie annuale P02 e la fotografia censuaria 2023 hanno periodi e
           funzioni distinti. Quando il servizio annuale non risponde, il profilo
-          strutturale ISTAT resta disponibile dal JSON canonico incluso nella
-          pubblicazione.
+          strutturale ISTAT viene richiesto separatamente dal suo archivio.
         </p>
       </div>
 
@@ -472,7 +475,8 @@ function StaticHouseholdCompositionFallback() {
               <p>
                 L'endpoint demografico non ha restituito un profilo P02
                 utilizzabile, quindi qui non vengono mostrati conteggi annuali.
-                La fotografia ISTAT 2023 verificata è consultabile qui sotto.
+                La disponibilità della fotografia ISTAT 2023 è verificata
+                separatamente qui sotto.
               </p>
             </div>
           </div>

@@ -5,6 +5,99 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+export type MunicipalDemographicAdminStatusKey = typeof MunicipalDemographicAdminStatusKey[keyof typeof MunicipalDemographicAdminStatusKey];
+
+
+export const MunicipalDemographicAdminStatusKey = {
+  population: 'population',
+  'foreign-age-sex': 'foreign-age-sex',
+  'families-children': 'families-children',
+} as const;
+
+export type MunicipalDemographicAdminStatusStatus = typeof MunicipalDemographicAdminStatusStatus[keyof typeof MunicipalDemographicAdminStatusStatus];
+
+
+export const MunicipalDemographicAdminStatusStatus = {
+  available: 'available',
+  unavailable: 'unavailable',
+} as const;
+
+export type MunicipalDemographicAdminStatusError = typeof MunicipalDemographicAdminStatusError[keyof typeof MunicipalDemographicAdminStatusError];
+
+
+export const MunicipalDemographicAdminStatusError = {
+  CANONICAL_DATA_UNAVAILABLE: 'CANONICAL_DATA_UNAVAILABLE',
+  CANONICAL_RECONCILIATION_FAILED: 'CANONICAL_RECONCILIATION_FAILED',
+} as const;
+
+export type MunicipalDemographicSnapshotSchemaVersion = typeof MunicipalDemographicSnapshotSchemaVersion[keyof typeof MunicipalDemographicSnapshotSchemaVersion];
+
+
+export const MunicipalDemographicSnapshotSchemaVersion = {
+  NUMBER_1: 1,
+} as const;
+
+export type MunicipalDemographicSnapshotProvenanceSchemaVersion = typeof MunicipalDemographicSnapshotProvenanceSchemaVersion[keyof typeof MunicipalDemographicSnapshotProvenanceSchemaVersion];
+
+
+export const MunicipalDemographicSnapshotProvenanceSchemaVersion = {
+  'lt-municipal-demographic-publicv1': 'lt-municipal-demographic-public.v1',
+} as const;
+
+export type MunicipalDemographicSnapshotProvenanceSourceStatus = typeof MunicipalDemographicSnapshotProvenanceSourceStatus[keyof typeof MunicipalDemographicSnapshotProvenanceSourceStatus];
+
+
+export const MunicipalDemographicSnapshotProvenanceSourceStatus = {
+  unknown: 'unknown',
+} as const;
+
+/**
+ * Allowlisted source metadata checked against canonical observations. Arbitrary source fields are not exposed.
+ */
+export type MunicipalDemographicSnapshotMetadata = { [key: string]: unknown };
+
+export type MunicipalDemographicSnapshotProvenance = {
+  schema_version: MunicipalDemographicSnapshotProvenanceSchemaVersion;
+  canonical: true;
+  series_key: string;
+  source_key: string;
+  /** @pattern ^[a-f0-9]{64}$ */
+  release_hash: string;
+  acquired_at: string;
+  source_generated_at: string;
+  source_status: MunicipalDemographicSnapshotProvenanceSourceStatus;
+  reference_period_unspecified: boolean;
+  reference_day_unspecified: true;
+  /** @minimum 1 */
+  source_records: number;
+  /** @minimum 1 */
+  canonical_observations: number;
+  extractor_version: string;
+};
+
+export interface MunicipalDemographicSnapshot {
+  schema_version: MunicipalDemographicSnapshotSchemaVersion;
+  /** Allowlisted source metadata checked against canonical observations. Arbitrary source fields are not exposed. */
+  metadata: MunicipalDemographicSnapshotMetadata;
+  annual_columns?: string[];
+  /** Population and reproduced differences, in the declared column order. */
+  annual_rows?: string;
+  age_columns?: string[];
+  /** Canonical sex counts and reproduced totals and shares. */
+  age_rows?: string;
+  family_children_columns?: string[];
+  /** Family counts and reproduced shares; reference period is unknown. */
+  family_children_rows?: string;
+  provenance: MunicipalDemographicSnapshotProvenance;
+}
+
+export interface MunicipalDemographicAdminStatus {
+  key: MunicipalDemographicAdminStatusKey;
+  status: MunicipalDemographicAdminStatusStatus;
+  snapshot?: MunicipalDemographicSnapshot;
+  error?: MunicipalDemographicAdminStatusError;
+}
+
 export interface DatabaseInspectionColumn {
   name: string;
   type: string;
@@ -321,6 +414,78 @@ export interface HouseholdComposition2023 {
   source: HouseholdCompositionSource;
 }
 
+export type CanonicalHouseholdComposition2023VerificationMethod = typeof CanonicalHouseholdComposition2023VerificationMethod[keyof typeof CanonicalHouseholdComposition2023VerificationMethod];
+
+
+export const CanonicalHouseholdComposition2023VerificationMethod = {
+  'sha256-and-exact-reconciliation': 'sha256-and-exact-reconciliation',
+} as const;
+
+export type CanonicalHouseholdComposition2023Verification = {
+  verifiedAt: string;
+  method: CanonicalHouseholdComposition2023VerificationMethod;
+};
+
+export type CanonicalHouseholdComposition2023ProvenanceSeriesKey = typeof CanonicalHouseholdComposition2023ProvenanceSeriesKey[keyof typeof CanonicalHouseholdComposition2023ProvenanceSeriesKey];
+
+
+export const CanonicalHouseholdComposition2023ProvenanceSeriesKey = {
+  'istat-households-by-components-2023': 'istat-households-by-components-2023',
+} as const;
+
+export type CanonicalHouseholdComposition2023ProvenanceSourceKey = typeof CanonicalHouseholdComposition2023ProvenanceSourceKey[keyof typeof CanonicalHouseholdComposition2023ProvenanceSourceKey];
+
+
+export const CanonicalHouseholdComposition2023ProvenanceSourceKey = {
+  'istatlameziahousehold-composition-2023': 'istat.lamezia.household-composition-2023',
+} as const;
+
+export type CanonicalHouseholdComposition2023ProvenanceSourceStatus = typeof CanonicalHouseholdComposition2023ProvenanceSourceStatus[keyof typeof CanonicalHouseholdComposition2023ProvenanceSourceStatus];
+
+
+export const CanonicalHouseholdComposition2023ProvenanceSourceStatus = {
+  unknown: 'unknown',
+} as const;
+
+export type CanonicalHouseholdComposition2023ProvenanceSourceRecords = typeof CanonicalHouseholdComposition2023ProvenanceSourceRecords[keyof typeof CanonicalHouseholdComposition2023ProvenanceSourceRecords];
+
+
+export const CanonicalHouseholdComposition2023ProvenanceSourceRecords = {
+  NUMBER_6: 6,
+} as const;
+
+export type CanonicalHouseholdComposition2023ProvenanceCanonicalObservations = typeof CanonicalHouseholdComposition2023ProvenanceCanonicalObservations[keyof typeof CanonicalHouseholdComposition2023ProvenanceCanonicalObservations];
+
+
+export const CanonicalHouseholdComposition2023ProvenanceCanonicalObservations = {
+  NUMBER_6: 6,
+} as const;
+
+export type CanonicalHouseholdComposition2023ProvenanceExtractorVersion = typeof CanonicalHouseholdComposition2023ProvenanceExtractorVersion[keyof typeof CanonicalHouseholdComposition2023ProvenanceExtractorVersion];
+
+
+export const CanonicalHouseholdComposition2023ProvenanceExtractorVersion = {
+  'istat-household-compositionv1': 'istat-household-composition.v1',
+} as const;
+
+export type CanonicalHouseholdComposition2023Provenance = {
+  canonical: true;
+  series_key: CanonicalHouseholdComposition2023ProvenanceSeriesKey;
+  source_key: CanonicalHouseholdComposition2023ProvenanceSourceKey;
+  /** @pattern ^[a-f0-9]{64}$ */
+  release_hash: string;
+  acquired_at: string;
+  source_status: CanonicalHouseholdComposition2023ProvenanceSourceStatus;
+  source_records: CanonicalHouseholdComposition2023ProvenanceSourceRecords;
+  canonical_observations: CanonicalHouseholdComposition2023ProvenanceCanonicalObservations;
+  extractor_version: CanonicalHouseholdComposition2023ProvenanceExtractorVersion;
+};
+
+export type CanonicalHouseholdComposition2023 = HouseholdComposition2023 & {
+  verification: CanonicalHouseholdComposition2023Verification;
+  provenance: CanonicalHouseholdComposition2023Provenance;
+};
+
 export interface HouseholdMethodology {
   household: string;
   referencePeriod: string;
@@ -344,7 +509,8 @@ export interface DemographicHouseholdsResponse {
   history: HouseholdHistoryPoint[];
   quality: HouseholdQuality;
   source: HouseholdAnnualSource;
-  composition: HouseholdComposition2023;
+  /** Null when the separate canonical census cannot be reconciled; P02 remains available. */
+  composition: CanonicalHouseholdComposition2023 | null;
   methodology: HouseholdMethodology;
 }
 
@@ -3169,6 +3335,40 @@ export interface AccessoCivicoImportResult {
   /** Rows skipped due to validation errors. */
   scartate: AccessoCivicoImportResultScartateItem[];
 }
+
+export type GetMunicipalDemographicSnapshotParams = {
+/**
+ * Pin the source SHA-256 of an imported release for reproducible downloads.
+ * @pattern ^[a-f0-9]{64}$
+ */
+release?: string;
+/**
+ * Return a download disposition when set to 1.
+ */
+download?: GetMunicipalDemographicSnapshotDownload;
+};
+
+export type GetMunicipalDemographicSnapshotDownload = typeof GetMunicipalDemographicSnapshotDownload[keyof typeof GetMunicipalDemographicSnapshotDownload];
+
+
+export const GetMunicipalDemographicSnapshotDownload = {
+  NUMBER_1: '1',
+} as const;
+
+export type GetHouseholdComposition2023Params = {
+/**
+ * @pattern ^[a-f0-9]{64}$
+ */
+release?: string;
+download?: GetHouseholdComposition2023Download;
+};
+
+export type GetHouseholdComposition2023Download = typeof GetHouseholdComposition2023Download[keyof typeof GetHouseholdComposition2023Download];
+
+
+export const GetHouseholdComposition2023Download = {
+  NUMBER_1: '1',
+} as const;
 
 export type GetDatabaseInspectionRowsParams = {
 /**

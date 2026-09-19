@@ -92,17 +92,19 @@ describe("OpenData canonical dataset registry", () => {
     expect(stats.totalSources).toBe(6);
     expect(stats.totalFormats).toBe(3);
     expect(stats.documentedStatusDatasets).toBe(6);
-    expect(stats.automatedDatasets).toBe(5);
+    expect(stats.automatedDatasets).toBe(3);
     expect(stats.temporalCoverage).toMatchObject({
       from: "1991",
       to: "2026",
       label: "1991–2026",
     });
-    expect(stats.recentlyUpdated).toHaveLength(5);
-    expect(stats.byTheme.find((item) => item.id === "population-society"))
-      .toMatchObject({ count: 5 });
-    expect(stats.byTheme.find((item) => item.id === "investments-pnrr"))
-      .toMatchObject({ count: 1 });
+    expect(stats.recentlyUpdated).toHaveLength(3);
+    expect(
+      stats.byTheme.find((item) => item.id === "population-society"),
+    ).toMatchObject({ count: 5 });
+    expect(
+      stats.byTheme.find((item) => item.id === "investments-pnrr"),
+    ).toMatchObject({ count: 1 });
     expect(
       stats.byTheme.find((item) => item.id === "assets-confiscated-property"),
     ).toMatchObject({ count: 1 });

@@ -1,10 +1,42 @@
+import { MUNICIPAL_FIXTURES } from "./fixtures/municipalDemographics";
+import { validateMunicipalSnapshot } from "@/data/municipalDemographics";
 import { describe, expect, it } from "vitest";
 
-import { assessSourceHealth, SOURCE_HEALTH } from "@/data/sourceHealth";
+import {
+  assessSourceHealth,
+  buildSourceHealth,
+  SOURCE_HEALTH,
+} from "@/data/sourceHealth";
+
+const hydrated = buildSourceHealth(
+  {
+    population: validateMunicipalSnapshot(
+      MUNICIPAL_FIXTURES.population,
+      "population",
+    ),
+    "foreign-age-sex": validateMunicipalSnapshot(
+      MUNICIPAL_FIXTURES["foreign-age-sex"],
+      "foreign-age-sex",
+    ),
+    "families-children": validateMunicipalSnapshot(
+      MUNICIPAL_FIXTURES["families-children"],
+      "families-children",
+    ),
+  },
+  {
+    series: {
+      seriesKey: "population-resident-jan1",
+      source: "ISTAT",
+      sourceUrl: "https://esploradati.istat.it",
+    },
+    current: [{ period: "2025", acquiredAt: "2026-09-01T00:00:00Z" }],
+    releases: [{ acquiredAt: "2026-09-01T00:00:00Z", releaseDate: null }],
+  },
+);
 
 describe("SOURCE_HEALTH", () => {
   it("derives the public register from versioned evidence", () => {
-    expect(SOURCE_HEALTH.sources).toHaveLength(10);
+    expect(SOURCE_HEALTH.sources).toHaveLength(11);
     expect(SOURCE_HEALTH.generatedAt).toBeTruthy();
     expect(SOURCE_HEALTH.traceabilityScore).toBeGreaterThan(0);
     expect(SOURCE_HEALTH.freshnessScore).toBeGreaterThanOrEqual(0);
@@ -15,7 +47,7 @@ describe("SOURCE_HEALTH", () => {
     const ids = new Set(SOURCE_HEALTH.sources.map((source) => source.id));
 
     expect(ids.size).toBe(SOURCE_HEALTH.sources.length);
-    for (const source of SOURCE_HEALTH.sources) {
+    for (const source of hydrated.sources) {
       expect(source.name).toBeTruthy();
       expect(source.evidenceLabel).toBeTruthy();
       expect(source.metricLabel).toBeTruthy();
@@ -90,6 +122,36 @@ describe("SOURCE_HEALTH", () => {
     });
   });
 
+  it("does not substitute static counts when the canonical data is unavailable", () => {
+    for (const id of [
+      "opendata-popolazione-comunale",
+      "opendata-residenti-stranieri",
+      "opendata-famiglie-figli",
+      "opendata-trend-demografico",
+    ]) {
+      const row = SOURCE_HEALTH.sources.find((s) => s.id === id)!;
+      expect(row.status).toBe("missing");
+      expect(row.lastCheckedAt).toBeNull();
+      expect(row.metricLabel).not.toMatch(/\b(25|19|6|6616|13358)\b/);
+    }
+  });
+  it("keeps municipal and ISTAT identity and source/import timestamps separate", () => {
+    const municipal = hydrated.sources.find(
+      (s) => s.id === "opendata-popolazione-comunale",
+    )!;
+    const istat = hydrated.sources.find(
+      (s) => s.id === "opendata-trend-demografico",
+    )!;
+    expect(municipal.lastCheckedAt).toBe(
+      MUNICIPAL_FIXTURES.population.provenance.source_generated_at,
+    );
+    expect(municipal.lastCheckedAt).not.toBe(
+      MUNICIPAL_FIXTURES.population.provenance.acquired_at,
+    );
+    expect(municipal.openDataDatasetId).toBeUndefined();
+    expect(istat.openDataDatasetId).toBe("lamezia-demographic-trend");
+    expect(istat.sourceUrl).toContain("istat.it");
+  });
   it("does not expose synthetic runtime sources", () => {
     const serialized = JSON.stringify(SOURCE_HEALTH).toLowerCase();
 

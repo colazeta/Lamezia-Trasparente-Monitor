@@ -1,6 +1,3 @@
-import familiesChildrenData from "./generated/lameziaFamiliesChildren.json";
-import familiesChildrenDataUrl from "./generated/lameziaFamiliesChildren.json?url";
-
 type LameziaFamiliesChildrenRow = [
   childrenCountLabel: string,
   childrenCountMin: number,
@@ -59,33 +56,27 @@ export interface LameziaFamiliesChildrenDataset {
   family_children: LameziaFamiliesChildrenRecord[];
 }
 
-interface RawLameziaFamiliesChildrenDataset extends Omit<
+export interface RawLameziaFamiliesChildrenDataset extends Omit<
   LameziaFamiliesChildrenDataset,
   "family_children"
 > {
   family_children_rows: string;
 }
 
-const rawFamiliesChildrenData =
-  familiesChildrenData as RawLameziaFamiliesChildrenDataset;
-const familyChildrenRecords = parseFamilyChildrenRows(
-  rawFamiliesChildrenData.family_children_rows,
-);
-
-export const LAMEZIA_FAMILIES_CHILDREN_DATA: LameziaFamiliesChildrenDataset = {
-  ...rawFamiliesChildrenData,
-  family_children: familyChildrenRecords,
-};
-
-export const LAMEZIA_FAMILIES_CHILDREN_DATA_URL = familiesChildrenDataUrl;
-
-export const LAMEZIA_FAMILIES_CHILDREN_SUMMARY = buildFamiliesChildrenSummary(
-  familyChildrenRecords,
-);
-
-export function getLameziaFamiliesChildrenRecord(childrenCountMin: number) {
+export function createFamiliesChildrenDataset(
+  input: RawLameziaFamiliesChildrenDataset,
+): LameziaFamiliesChildrenDataset {
+  return {
+    ...input,
+    family_children: parseFamilyChildrenRows(input.family_children_rows),
+  };
+}
+export function getLameziaFamiliesChildrenRecord(
+  dataset: LameziaFamiliesChildrenDataset,
+  childrenCountMin: number,
+) {
   return (
-    LAMEZIA_FAMILIES_CHILDREN_DATA.family_children.find(
+    dataset.family_children.find(
       (record) => record.children_count_min === childrenCountMin,
     ) ?? null
   );
@@ -132,13 +123,13 @@ function toRequiredString(value: string | undefined) {
 
 function toRequiredNumber(value: string | undefined) {
   const number = Number(value);
-  if (!Number.isFinite(number)) {
+  if (value === undefined || value.trim() === "" || !Number.isFinite(number)) {
     throw new Error(`Invalid numeric value in families row: ${value}`);
   }
   return number;
 }
 
-function buildFamiliesChildrenSummary(
+export function buildFamiliesChildrenSummary(
   records: LameziaFamiliesChildrenRecord[],
 ) {
   const total = records.reduce((sum, record) => sum + record.families, 0);

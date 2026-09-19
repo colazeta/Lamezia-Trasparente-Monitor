@@ -48,7 +48,7 @@
       "prerequisites": [2],
       "deliverables": ["source.sources", "source.endpoints", "source.acquisition_runs", "source.releases", "source.records"],
       "acceptance": ["Every recurring external ingestion has a source_id", "Runs expose coverage/failure metrics", "Existing source-specific provenance can be mapped without data loss"],
-      "implementationNote": "Five repository sources are registered; other external acquisition adapters remain outside this tranche."
+      "implementationNote": "Eight sources are supported in the candidate importer; five were observed in the inspected Neon branch. See architecture/canonicalisation-ledger.v1.json and execution receipts. Other adapters and production convergence remain pending."
     },
     {
       "id": 4,

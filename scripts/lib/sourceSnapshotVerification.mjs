@@ -9,12 +9,13 @@ const date = (value) =>
   typeof value === "string" && Number.isFinite(Date.parse(value));
 
 function sourceMap(sources) {
-  if (!Array.isArray(sources) || sources.length !== 5) return null;
+  if (!Array.isArray(sources) || sources.length === 0) return null;
   const result = new Map();
   for (const source of sources) {
     if (
       !record(source) ||
       typeof source.source !== "string" ||
+      source.source.length === 0 ||
       result.has(source.source)
     )
       return null;
@@ -48,6 +49,19 @@ export function validateSnapshotPlan(plan) {
         source.records
     )
       throw new Error("INVALID_LOCAL_PLAN");
+    if (
+      source.demographics !== undefined ||
+      source.source.startsWith("lamezia.demographics.") ||
+      source.source === "istat.lamezia.household-composition-2023"
+    ) {
+      if (
+        !record(source.demographics) ||
+        typeof source.demographics.seriesKey !== "string" ||
+        source.demographics.seriesKey.length === 0 ||
+        !count(source.demographics.observations)
+      )
+        throw new Error("INVALID_LOCAL_PLAN");
+    }
   }
   return sources;
 }
@@ -86,7 +100,12 @@ export function compareSnapshotCheckpoint(plan, checkpoint) {
     errors.add("PNRR_COUNT_MISMATCH");
   const actual = sourceMap(report.sources);
   const results = sourceMap(report.results);
-  if (!actual || !results)
+  if (
+    !actual ||
+    !results ||
+    actual.size !== expected.size ||
+    results.size !== expected.size
+  )
     return { ok: false, errors: [...errors, "MISSING_OR_DUPLICATE_SOURCES"] };
   for (const [key, source] of expected) {
     const remote = actual.get(key);
@@ -102,6 +121,7 @@ export function compareSnapshotCheckpoint(plan, checkpoint) {
       "sourceStatus",
       "sourceTimestampRaw",
       "collections",
+      "demographics",
     ])
       if (!isDeepStrictEqual(remote[field], source[field]))
         errors.add("SOURCE_METADATA_MISMATCH");
@@ -114,6 +134,20 @@ export function compareSnapshotCheckpoint(plan, checkpoint) {
       result.inserted > source.records
     )
       errors.add("SOURCE_RECONCILIATION_MISMATCH");
+    if (source.demographics) {
+      const typed = result.demographics;
+      if (
+        !record(typed) ||
+        typed.seriesKey !== source.demographics.seriesKey ||
+        typed.observations !== source.demographics.observations ||
+        typed.verified !== source.demographics.observations ||
+        !count(typed.inserted) ||
+        typed.inserted > source.demographics.observations
+      )
+        errors.add("DEMOGRAPHIC_RECONCILIATION_MISMATCH");
+    } else if (result.demographics !== undefined) {
+      errors.add("DEMOGRAPHIC_RECONCILIATION_MISMATCH");
+    }
     if (
       key === "lamezia.pnrr.municipal" &&
       (!record(result.legacy) ||

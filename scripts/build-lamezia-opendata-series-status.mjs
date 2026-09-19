@@ -8,19 +8,19 @@ const GENERATED_DIR = path.join(
   REPO_ROOT,
   "artifacts/lamezia-trasparente/src/data/generated",
 );
-const OUTPUT_PATH = path.join(GENERATED_DIR, "lameziaOpenDataSeriesStatus.json");
+const OUTPUT_PATH = path.join(
+  GENERATED_DIR,
+  "lameziaOpenDataSeriesStatus.json",
+);
 
 async function main() {
-  const [climate, airport, foreignResidents, families, householdComposition] =
-    await Promise.all([
-      readJson("lameziaClimateDaily.metadata.json"),
-      readJson("lameziaAirTrafficMonthly.metadata.json"),
-      readJson("lameziaForeignResidentsAgeSex.json"),
-      readJson("lameziaFamiliesChildren.json"),
-      readRepoJson(
-        "artifacts/api-server/src/data/lameziaHouseholdComposition2023.json",
-      ),
-    ]);
+  const [climate, airport, householdComposition] = await Promise.all([
+    readJson("lameziaClimateDaily.metadata.json"),
+    readJson("lameziaAirTrafficMonthly.metadata.json"),
+    readRepoJson(
+      "artifacts/api-server/src/data/lameziaHouseholdComposition2023.json",
+    ),
+  ]);
 
   const manifest = {
     schema_version: 1,
@@ -95,36 +95,52 @@ async function main() {
         id: "lamezia-foreign-residents-age-sex",
         themeId: "population-society",
         label: "Stranieri per sesso ed eta - Lamezia Terme",
-        source: foreignResidents.metadata.source,
-        sourceUrl: foreignResidents.metadata.source_url,
-        latestObservation: String(foreignResidents.metadata.latest_year),
-        latestObservationLabel: String(foreignResidents.metadata.latest_year),
-        sourceModifiedAt: foreignResidents.metadata.resource_last_modified,
-        materialisedAt: foreignResidents.metadata.generated_at,
+        source: "Comune di Lamezia Terme — proiezione canonica",
+        sourceUrl: "https://opendata.comune.lamezia-terme.cz.it/it",
+        latestObservation: null,
+        latestObservationLabel: "Periodo corrente via API canonica",
+        sourceModifiedAt: null,
+        materialisedAt: null,
         sourceCadence: "weekly",
         sourceCadenceLabel: "Fonte settimanale",
-        updatePolicy: foreignResidents.metadata.update_policy,
+        automationStatus: "unverified",
+        automationStatusLabel:
+          "Stato dati via API; automazione non certificata",
+        monitoringCadence: "unverified",
+        monitoringCadenceLabel: "Frequenza da verificare",
+        updatePolicy:
+          "Lettura del database canonico; date della fonte e di importazione distinte.",
       }),
       buildSeries({
         id: "lamezia-families-children",
         themeId: "population-society",
         label: "Famiglie per numero di figli - Lamezia Terme",
-        source: families.metadata.source,
-        sourceUrl: families.metadata.source_url,
+        source: "Comune di Lamezia Terme — proiezione canonica",
+        sourceUrl: "https://opendata.comune.lamezia-terme.cz.it/it",
         latestObservation: null,
-        latestObservationLabel: "Risorsa corrente",
+        latestObservationLabel: "Periodo non dichiarato; dati via API canonica",
         latestObservationNote:
           "La fonte non espone un anno di riferimento per questa distribuzione.",
-        sourceModifiedAt: families.metadata.resource_last_modified,
-        materialisedAt: families.metadata.generated_at,
+        sourceModifiedAt: null,
+        materialisedAt: null,
         sourceCadence: "weekly",
         sourceCadenceLabel: "Fonte settimanale",
-        updatePolicy: families.metadata.update_policy,
+        automationStatus: "unverified",
+        automationStatusLabel:
+          "Stato dati via API; automazione non certificata",
+        monitoringCadence: "unverified",
+        monitoringCadenceLabel: "Frequenza da verificare",
+        updatePolicy:
+          "Lettura del database canonico; date della fonte e di importazione distinte.",
       }),
     ],
   };
 
-  await writeFile(OUTPUT_PATH, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
+  await writeFile(
+    OUTPUT_PATH,
+    `${JSON.stringify(manifest, null, 2)}\n`,
+    "utf8",
+  );
   console.log(`Wrote ${manifest.series.length} Open Data series states.`);
 }
 

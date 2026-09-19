@@ -1,6 +1,7 @@
 import { Router, type IRouter } from "express";
 import { GetDemographicHouseholdsResponse } from "@workspace/api-zod";
-import householdComposition2023 from "../data/lameziaHouseholdComposition2023.json";
+import { pool } from "@workspace/db";
+import { readHouseholdComposition } from "@workspace/db/household-composition";
 import { LAMEZIA_ISTAT_CODE } from "../lib/demographics";
 import { getPopulationHouseholdSnapshot } from "../lib/populationHouseholds";
 
@@ -20,6 +21,8 @@ router.get("/demographics/households", async (req, res) => {
     return;
   }
 
+  // Independent census evidence must not take down the annual P02 series.
+  const composition = await readHouseholdComposition(pool).catch(() => null);
   const payload = {
     geography: {
       code: LAMEZIA_ISTAT_CODE,
@@ -27,7 +30,7 @@ router.get("/demographics/households", async (req, res) => {
       level: "municipality",
     },
     ...snapshot,
-    composition: householdComposition2023,
+    composition,
     methodology: {
       household:
         "Famiglia è l'unità anagrafica di persone coabitanti legate da matrimonio, parentela, affinità, adozione, tutela o vincoli affettivi; può essere costituita anche da una sola persona.",

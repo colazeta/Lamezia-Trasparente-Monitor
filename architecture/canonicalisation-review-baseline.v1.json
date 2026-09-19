@@ -1,0 +1,609 @@
+{
+  "schemaVersion": "lt-canonicalisation-review-baseline.v1",
+  "sourceCommit": "1bb355a1c4d91d03b04d61bb4d55592fd09f30b8",
+  "sourceAuditFilename": "LameziaTrasparente_canonicalisation_audit_1214.json",
+  "sourceAuditSha256": "db88ea072fe2f55daa8309463dd058eb5a240660866c8325c463fd78eb4e9450",
+  "scope": "Unchanged bytes linked to the bounded 10 September asset review; not proof of completed canonicalisation or production use.",
+  "files": [
+    {
+      "path": "artifacts/api-server/src/data/lameziaHouseholdComposition2023.json",
+      "sha256": "11f915b891914b46e5e5a3ccb0fb1526137c50501ae16f8fecd19f23804983a2",
+      "assetIds": ["household-composition-2023"]
+    },
+    {
+      "path": "artifacts/lamezia-trasparente/src/data/evidenceInterventions20260910.ts",
+      "sha256": "ee3f9fd15b59316db256e2f5657a163f6c185ee7afd65366e8188ef8f3c7f0a5",
+      "assetIds": ["policy-evidence"]
+    },
+    {
+      "path": "artifacts/lamezia-trasparente/src/data/evidenceInterventionsArchive.ts",
+      "sha256": "0d0eb06d11b69645d9f032c2ee3b20798df07b51f1ade012e82219b6e7a12cff",
+      "assetIds": ["policy-evidence"]
+    },
+    {
+      "path": "artifacts/lamezia-trasparente/src/data/generated/lameziaAirTrafficMonthly.json",
+      "sha256": "01e3c7b8182dd67fed964e9286259b35024719c13aab6c729fd4dcdf28e59f7a",
+      "assetIds": ["airport-series"]
+    },
+    {
+      "path": "artifacts/lamezia-trasparente/src/data/generated/lameziaClimateDaily.json",
+      "sha256": "7ea3b40d2add3dc8f85b437321166e1a30911bf27a7dd60964c87cfcf4368a46",
+      "assetIds": ["climate-series"]
+    },
+    {
+      "path": "artifacts/lamezia-trasparente/src/data/generated/lameziaDemographicTrend.json",
+      "sha256": "cd7b9e6a8380c998563bc4ecf8a82e6011337a3d1c7083e3334d4b4c1eb3dabd",
+      "assetIds": ["municipal-population"]
+    },
+    {
+      "path": "artifacts/lamezia-trasparente/src/data/generated/lameziaFamiliesChildren.json",
+      "sha256": "52d87ed141b0421fb5f3733c7653859959a0dbf56f99e456fd9211dc8a8bf0ac",
+      "assetIds": ["municipal-families-children"]
+    },
+    {
+      "path": "artifacts/lamezia-trasparente/src/data/generated/lameziaForeignResidentsAgeSex.json",
+      "sha256": "347d05e084186d197a361d1ed7bedf3223d618bba95f805fcfee2ff3c655ce8c",
+      "assetIds": ["municipal-foreign-age-sex"]
+    },
+    {
+      "path": "artifacts/lamezia-trasparente/src/data/generated/lameziaOpenDataSeriesStatus.json",
+      "sha256": "2a7935bf1a957001bfb006b0c831f514015e8ea1d061948cb2e9f805ae0d51ae",
+      "assetIds": ["opendata-catalogue-status"]
+    },
+    {
+      "path": "artifacts/lamezia-trasparente/src/data/generated/lameziaPnrrProjects.json",
+      "sha256": "78de948bd85ae3cc60a18d876057605840a152a48f6a1cb551dd83f440d2a629",
+      "assetIds": ["pnrr-projects"]
+    },
+    {
+      "path": "data/curated/territorio/beni_confiscati_lamezia_pilot.json",
+      "sha256": "3a7a2db1fd1609ad919cfd21702cf8be3e99425ba2a38463028b7e5e234930f3",
+      "assetIds": ["documented-reuse-sites"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-07/lamezia-aggressione-coltello-aeroporto-canadair-2026-05-20.json",
+      "sha256": "4660202fd41bc31de624d351fdf2b3dd9910b7cb10685cb049ef2b67c52160e3",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-07/lamezia-aggressione-manganello-pronto-soccorso-2024-11-11.json",
+      "sha256": "312171ce78cea8b2e8f1b9d4a8f4dc9c1e112ce405890477a6350b1f74258582",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-07/lamezia-attentato-dinamitardo-il-fornaio-via-piave-2017-03-30.json",
+      "sha256": "fad72e5849ae154a9645fce820575be2f9361e551185d4e9b8ba4110dcd72c80",
+      "assetIds": ["crime-event-bundles", "company-measure-scope"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-07/lamezia-colpi-pistola-polo-rambaldi-2026-01.json",
+      "sha256": "4ed61beeb2ce8caf9739e5c7e342d5a3b9d39f83fe67dba77f48dbe70e0f9de4",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-07/lamezia-detenzione-cocaina-eroina-spaccio-2026-01-26.json",
+      "sha256": "e578934f685b76e45f0c72a2b9d90fd88dbe63d20c39de5a165a0d61418f2ea0",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-07/lamezia-detenzione-hashish-spaccio-2026-02-21.json",
+      "sha256": "2e3a7ccb213b66876e5b3b4f60fe7e405f173bc1e24a72025c32e4bb9e5f6249",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-07/lamezia-detenzione-hashish-spaccio-2026-03-13.json",
+      "sha256": "86a81f65789670ed1f88c111434a98c4025ad7c9f0f02e7d734e8e9a333cab8d",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-07/lamezia-evasione-domiciliari-cerasolo-2026-03-06.json",
+      "sha256": "51ca63981c050d3d74f18b6b1f9f04261656ff0abd9851c3ce24bbb5aaf96913",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-07/lamezia-furti-cantine-lento-splendidi-splendenti-2026-01-11.json",
+      "sha256": "464d7e2c7a3ee1ddf143726da29f33fd5cca704d8f655c20e94afec82472bb8e",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-07/lamezia-furti-danneggiamenti-auto-centro-storico-2025-02-28-03-01.json",
+      "sha256": "de5d7c99ac01507cc90584594249ae59777d7deb6bae8b201a4e34e8d97d06d4",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-07/lamezia-furto-cassa-parafarmacia-via-piave-2025-09-22.json",
+      "sha256": "f4f0d09a096ddf98657f20e68ffd1aeddafd7f0679dd1df1e8b618f317e0bfe8",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-07/lamezia-furto-corona-cattedrale-2026-01-29.json",
+      "sha256": "a115596842ae091747c90aeb848aef6ded8a1102e682122c7b22695d1e823731",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-07/lamezia-furto-offerte-san-giovanni-calabria-2025-10-09.json",
+      "sha256": "83326c9dc4657c2311eb73028dd37ac1b6f735efceb5936824ea2f5abe2c0aa9",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-07/lamezia-incendi-furto-danneggiamenti-centro-2025-07-06.json",
+      "sha256": "6a3105c878a316ed7131fc792b846d089e9b6711af96493119fea6596d9a68e5",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-07/lamezia-incendio-auto-concessionaria-via-del-progresso-2026-08-31-09-01.json",
+      "sha256": "a91e7fa8dd60cd20aa5bc960d0232309cdf2df89a66a4d995d3eb653fb185bb7",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-07/lamezia-incendio-auto-via-trento-2022-11-03.json",
+      "sha256": "40e92fbb91774a77645c11644b983f0022d2e0d4aa051dea6aeb08758d3e1298",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-07/lamezia-intimidazione-tanica-benzina-emporio-shopping-2025-12-09.json",
+      "sha256": "05c1163bb5e2d2995e84e5f544bfd3efdaa5c72cb9199fc9703b0ee2f6447764",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-07/lamezia-pullo-traffico-spaccio-armi-2021.json",
+      "sha256": "956a0274495522b988b4621aa03a6ca6a013e3254eceaea7eb926881575b0d9c",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-07/lamezia-rapina-piazza-mercato-vecchio-2025-01-19.json",
+      "sha256": "db0f303c9b9379b4b138b69d1750408d105556ed584fe444b50831253eac3322",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-07/lamezia-rapina-ristorante-fascia-costiera-2024-11-10.json",
+      "sha256": "a7f26bbcc3c20011a0e48d32b800a24a96ddd072a09375c39f487ec4955b6f29",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-07/lamezia-redemptio-furti-estorsioni-veicoli-2024-04-07.json",
+      "sha256": "891dc3c25afdf8bb3598a2021da6b7f8307776b8ddde53f2645f1936cdfab8d6",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-07/lamezia-rissa-accoltellamento-condominio-sambiase-2025-05-22.json",
+      "sha256": "6137cf69889430f9a077284686e44cb1df5c457e05121261f6442fb6621294f6",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-07/lamezia-rissa-servizi-sociali-2026-06-04.json",
+      "sha256": "c5d6981cb03421dbe91a95205db1f4d2c5cfde3ddec86cf8a04f7fbb11117865",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-07/lamezia-tentato-furto-sud-lavaggio-2025-02-10.json",
+      "sha256": "c7c7990149c1dd6268145a6e59754e6f37ed764b58ffc6d723d686fbc021227e",
+      "assetIds": ["crime-event-bundles", "company-measure-scope"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-07/lamezia-usura-estorsione-2024-12-2025-12.json",
+      "sha256": "5808e3397010ebd89269a4acc8f1ae2266d1079b2d99bb29bf69d2201d818d3f",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-08/lamezia-accoltellamento-lite-via-delle-terme-2025-08-05.json",
+      "sha256": "32670cf5e40e34c5991101490e799be030a070fe8de42a349c7a7bc211103efc",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-08/lamezia-aggressione-minacce-locale-centro-2025-07-25.json",
+      "sha256": "b1e86430d6b846abffed132e398440f6dbc38afb39304eda62d4808b18c0d406",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-08/lamezia-detenzione-cocaina-spaccio-svincolo-autostradale-2023-08-18.json",
+      "sha256": "3a1ed27cb956daf00a11b527d83c7419fe91f86f01888fc8fd84874dfa859d60",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-08/lamezia-detenzione-spaccio-zona-piazza-mercato-vecchio-2025-02.json",
+      "sha256": "a7ab62fcdb77759e3523d7d73ce2647577622a757d4c98ad3f50ade25d8f5b02",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-08/lamezia-incendio-doloso-abitazione-via-timpone-2025-12-09.json",
+      "sha256": "dbf349e066d9af43267835941b48dad51dbd62349aa8553b31acd2ed6ec67761",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-08/lamezia-incendio-furgone-masseria-i-risi-2019-03-25.json",
+      "sha256": "66d415265fba5407d4cea491eef179eff8487d8157e8edb4d0e74da7c5f03690",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-08/lamezia-incendio-parrucchieria-piazza-5-dicembre-2025-05-17.json",
+      "sha256": "5153f0d30418aecafe156d4969cca09e50a35e726eea4245e1552d582673d232",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-08/lamezia-incendio-pasticceria-piazza-fiorentino-2025-05-17.json",
+      "sha256": "300c4423d19bfb17cc7b8651d74f641fe1f9d96c9174191e034db0c153948f0e",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-08/lamezia-lesioni-aggravate-proud-mary-corso-numistrano-2019-02-22.json",
+      "sha256": "e06faec581566151281eac278fc7a2f3af885e739ca66fac20e2b9749a7b8c65",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-08/lamezia-lesioni-gravi-piazza-5-dicembre-2021-05-09.json",
+      "sha256": "7b765272b6c1c3a8c177442ba5133ea7714dd8b71911e6f309e3244924127121",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-08/lamezia-rapina-aggravata-tifoso-paolana-rocco-riga-2023-02-11.json",
+      "sha256": "d966909a3780d17659bff4d4b2f4055e182f79cfeea009979f09130fa6b54a67",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-08/lamezia-rapina-donna-stazione-centrale-2017-07-11.json",
+      "sha256": "4ab433a11be9f91a5ff68902812e4e8dd961c4622865ac8f5e5da8c9b3738c71",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-08/lamezia-rapina-lesioni-via-dei-mille-2018-02-28.json",
+      "sha256": "66683548dc030a59d8d00f4018ccb29e4758b91cfb2643f18ef4da6ededca6d7",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-08/lamezia-rapina-lesioni-violenza-privata-centro-2019-12-20.json",
+      "sha256": "384983f716b1a87c5ef98f6bd6b32150cb3fe69864857399cb661760801de262",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-08/lamezia-rapina-lesioni-violenza-privata-via-telesio-2019-08-13.json",
+      "sha256": "343664ee7c075113efd7318d6edfee0fdd0eb8704986fae9c8189f87d53bd13a",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-08/lamezia-rapina-tentato-omicidio-tabaccheria-mirarchi-2016-05-12.json",
+      "sha256": "4602ce45e4bd65f44010c13c84db07ff6fd8d0bfd6be1ad530a85abd7c38cb99",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-08/lamezia-rapina-ufficio-postale-sambiase-2019-02-08.json",
+      "sha256": "a6caffb4d98d2afc8014e10c6064f3680fffa31dfad1ba6e19af7c0f9faba2e2",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-08/lamezia-rapina-ufficio-postale-via-aldo-moro-2018-04-21.json",
+      "sha256": "61018aeae21350f5624ea31ceba8b5d4c26173aa5bc042c45d451d4bc879df00",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-08/lamezia-rapina-ufficio-postale-via-aldo-moro-2018-09-15.json",
+      "sha256": "cd1caca236e3ebec2d6f9c341d41b610a9dfb02a507dbe5486635e3315ed6bc5",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-08/lamezia-rapina-via-colombo-2016-10-09.json",
+      "sha256": "34a76bc437e2f8fba90a48a78dc8034937e20188fb85d38641fbc5567bfff89c",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-08/lamezia-rissa-tutankamon-2024-08-24.json",
+      "sha256": "a94327ac365278fc064ca2426b0c2bbf69677f47dc498441c098578c59f57707",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-08/lamezia-sparatoria-via-cilea-2025-10-23.json",
+      "sha256": "568342beb52d5ed50652b409e95220eb807acd7d880f73c137cff0305c296899",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-08/lamezia-tentata-estorsione-conad-via-piave-2016-01-20.json",
+      "sha256": "87265362e394a8e3f6f106fcae2d4b801c2fa594a7b1343b53ef1c8d1e2abf79",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-08/lamezia-tentata-estorsione-lesioni-pub-piazza-mercato-vecchio-2019-02-16.json",
+      "sha256": "c2abbfa3eadf1bf12be24b5a5e50551508746c143eee47a0cfab6494504534c4",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-08/lamezia-tentata-rapina-accoltellamento-piazza-mazzini-2021-09-16.json",
+      "sha256": "6f599f498e326350f17450c8fc6a2c62d06070c1d8a87a74dacea6d2c1875f6c",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-08/lamezia-tentata-rapina-sparatoria-via-torre-2016-11-26.json",
+      "sha256": "a3980af726987f9612c590d871472b0978653b0b6aea43647a957ab115b0fbd5",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-08/lamezia-tentato-omicidio-corso-numistrano-2024-03-30.json",
+      "sha256": "f221b9f7f39345c0a85781c0f71713c0fd12300313ade28cd654be8b2fd51223",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-08/lamezia-tentato-omicidio-investimento-corso-numistrano-2024-03-30.json",
+      "sha256": "a5ad54bf43d227a20bfd53d2d622398175e88407921937150acb4d906ed55c16",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-08/lamezia-tentato-omicidio-villa-comunale-corso-numistrano-2020-06-29.json",
+      "sha256": "cc82850566f45c937ce6cdadcecdf857d41809c33f76efb55b8b8e5ee9c94d79",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-09/lamezia-aggressione-ultras-stazione-santeufemia-2018-04-29.json",
+      "sha256": "f3cd949bf07e2f3b5e08e481bc4d19e09c51208b8b718c272757c07d8d5070cc",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-09/lamezia-attentato-ordigno-eurospar-i-pini-2012-12-05.json",
+      "sha256": "cac16c0a77697931227411f0f6f031d3d57bd27b5d3ddbdff313b6d5c22fe009",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-09/lamezia-attentato-ordigno-progetto-sud-2011-12-26.json",
+      "sha256": "6f97db49ac5bf8b8d90d70d681add3cdb3017eab4c70566ca381a85412a7a571",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-09/lamezia-attentato-ordigno-via-miceli-2025-10-29.json",
+      "sha256": "fb280667ffadc9d2062b8ec514de3a9a840f0f2ad9059f01dbb1dc93aa79ac78",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-09/lamezia-detenzione-spaccio-marijuana-hashish-nicastro-2023-08-27.json",
+      "sha256": "d4081ad35d600feef44e31f5350241089d5bdec37f17f4206cfea81aa6d7bfa6",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-09/lamezia-duplice-omicidio-capizzaglie-2000-09-29.json",
+      "sha256": "0dd2a225990ecda5ca711c820d3de806cdf8e0632752fd0b665718cec492e95c",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-09/lamezia-duplice-omicidio-netturbini-sambiase-1991-05-24.json",
+      "sha256": "e822c50449fbaa5d51e4b0dca5bbaac8755e01d8b0f88b223d0a3155924132a7",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-09/lamezia-furto-farmacia-internazionale-via-dei-mille-2018-12-01-02.json",
+      "sha256": "81409989e564340db6dd186fa06790e2d34077de53c345ea21abc310b6a3966f",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-09/lamezia-furto-gioielli-via-xx-settembre-2010-06-08.json",
+      "sha256": "468156d6a96a55b56e579b874626709662a97d879b0602e212052f3c651040be",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-09/lamezia-furto-reliquia-santa-chiara-via-felice-scalzo-2023-09-06.json",
+      "sha256": "8fd425114479b71c241115e3cf926d83347b8f0d2d47b349798c6065f859bb68",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-09/lamezia-incendio-escavatore-ferraro-san-teodoro-2025-12-07.json",
+      "sha256": "4cf48c07e16d365a018db0e88f459f480a87374db0b0b8f225ef359e943c8c3d",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-09/lamezia-omicidio-commissariato-2003-05-23.json",
+      "sha256": "a9aeaa4578b5a4b06771cbb1b882baceb178b47e81b8717dc551c2a3887b0101",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-09/lamezia-omicidio-ginepri-2025-10-24.json",
+      "sha256": "1b0588313fe09ad59558f6c0033c01d89b9d19ed5323b4a387d32780c1ba4b9a",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-09/lamezia-omicidio-tentato-omicidio-piazza-borelli-2022-03-07.json",
+      "sha256": "f7db3b03d227263c1617778f480cd5e0ac9c990d5e493dffa44369efac9740ee",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-09/lamezia-omicidio-via-dei-bizantini-capizzaglie-2013-01-13.json",
+      "sha256": "de4d942a90eadf5fb91f4782065bd2ebcbaae47cdd5a1af0c38b1fed07a3009f",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-09/lamezia-omicidio-via-mario-ferlaino-2007-03-27.json",
+      "sha256": "217dfc12fbadf3fb8a4cd9ee5056fbb71bf550def58a9ed24beb9151445632ba",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-09/lamezia-possesso-passaporti-falsi-aeroporto-2023-04-29.json",
+      "sha256": "6ee6175a48cc208177fca5dabbfe84f50b311ef751358a85d4d94ae7ae3eb8e7",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-09/lamezia-rapina-impropria-carrefour-via-del-mare-2014-12.json",
+      "sha256": "cd7bda586c8eef2ef599343c3c64e1a6f28a58cae395c2272b95512d4659787a",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-09/lamezia-rapina-lesioni-san-pietro-lametino-2018-04.json",
+      "sha256": "43d2c14a41eaf2fc3825d15105f2683db7ae64db580b331bbb568def2083dfe2",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-09/lamezia-rapina-supermercato-2020-10-02.json",
+      "sha256": "2d8edc0808633b18b76aa7e98bfc8493512909b1bde4c72ee179fef11ae4e463",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-09/lamezia-rapina-ufficio-postale-sambiase-2015-12-03.json",
+      "sha256": "b27b5a13a1d0adde7eca574d018d94bf3b7029b76b5bf3289d89695ebfad89a6",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-09/lamezia-rapina-ufficio-postale-via-aldo-moro-2017-02-10.json",
+      "sha256": "67b62f201cd7c2d1f261aea322b1ffb3af34405de802b1a8b4c485ad80c0a669",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-09/lamezia-spaccio-cocaina-canapa-indiana-sambiase-2013.json",
+      "sha256": "f809cc59d80424206ecce7fd1245bfb779a8f3582af87e3b284d44e187edfdbe",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-09/lamezia-tentata-rapina-conad-2014-05-17.json",
+      "sha256": "5533a0d2a92f09b20e03afe784b576af00a160bd3c1b8321dc102094f4e364c1",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-09/lamezia-tentato-omicidio-sala-giochi-centro-2008-12-05.json",
+      "sha256": "4c2827d87e451f1d91f6ba30e48891d83dfd6f7ca94e15b28fb7b112ad341602",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-10/lamezia-attentato-ordigno-farmacia-feroleto-corso-numistrano-2015-04-17.json",
+      "sha256": "c25c0d2b9e4da444152d1abf9f5cbf41d1268db4e5b2b7b8478af28241d1f74e",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-10/lamezia-danneggiamento-aggravato-auto-sambiase-2025-04-03.json",
+      "sha256": "2719852be17d2da639b5c3be6f0411a2a6c66cd09815f622eac9b9f20e98710e",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-10/lamezia-detenzione-cocaina-abitazione-2025-03-31.json",
+      "sha256": "b1c052a592262df0f4b42098b422fde5e2e7af07783b5e15c5c7493493cdeb81",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-10/lamezia-detenzione-hashish-corso-nicotera-2025-01-24.json",
+      "sha256": "45978f910c4bb0fde3aa8769a700d8efb6f36f7199be7670b9e7ed0b1fa38547",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-10/lamezia-detenzione-hashish-piazza-5-dicembre-2025-08-12-13.json",
+      "sha256": "da9c822dc6fee99244c5593a633628ac818d6e01a9c9f4405ce6b3a83ae6ca26",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-10/lamezia-detenzione-hashish-stazione-centrale-2013-09-18.json",
+      "sha256": "59ebd8d745c14f253ea12997914a75a06fd819fd6777317a96b4ceb7102d040c",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-10/lamezia-detenzione-porto-revolver-clandestino-centro-2022-12-28.json",
+      "sha256": "6c1af08e9bbbf7a4bd2840fc84998d16e303066d506d680e058a776a6eaa35fb",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-10/lamezia-detenzione-stupefacenti-via-del-progresso-2020-06-25.json",
+      "sha256": "0579a28d92f2daa16d1cbc0de583e9f4a3be58ba730b895423dee7555b04127b",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-10/lamezia-duplice-omicidio-via-della-vittoria-2006-10-26.json",
+      "sha256": "02fd8841b2e64e535c03488ea10e3e1bb3f822fc0a0c0e951370c9cdbe1ffc99",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-10/lamezia-estorsione-sequestro-lesioni-via-marsala-2013-04-08.json",
+      "sha256": "1e00fb1d50896fd08f6d0c3df643b53872c2333c631d9607d9d37f78781443e2",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-10/lamezia-estrazione-inerti-cava-mazzei-san-sidero-mendicino-2009-11-24.json",
+      "sha256": "5560bb566807a02ab7fc247e11d97e5221fb29dafad040fbfaffea08bac48fc5",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-10/lamezia-estrazione-inerti-cava-mazzei-san-sidero-mendicino-2011-06-03.json",
+      "sha256": "b2658b4a61a4d052198ce10628257c00062d5e2404cd66a8fc562803636b13af",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-10/lamezia-furto-fili-elettrici-ex-scuola-resistenza-2019-09-13.json",
+      "sha256": "780b495cacc09e0ec3d3e09adc25991bf39e2451a6fff388a361e21f4ebbb403",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-10/lamezia-omicidio-piazzale-san-raffaele-2005-01-24.json",
+      "sha256": "268f84b3db15b8fc9621706ee4b80f9fe97a987c7543488f1ffdcebe62eec250",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-10/lamezia-omicidio-via-misiani-2011-07-07.json",
+      "sha256": "3d1425e26745aee805abc2097d8b53b798065eed98c7081c8af60faf67718db6",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-10/lamezia-rapina-commerciante-banco-napoli-via-turati-2010-04-29.json",
+      "sha256": "c189b44f38d2763691fef74907a1106602ccd0e35b99e54006c05e6e74961ff4",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-10/lamezia-rapina-lesioni-abitazione-2018-12-15.json",
+      "sha256": "1ec2fd1a18697032b2f8248fe5ae4f6cb13753cc27129d7c1f71e27a71880a04",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-10/lamezia-rapina-pressi-chiesa-pieta-via-miceli-2015-02-14.json",
+      "sha256": "bbc6deebd9e4ee78332e08eec27d9ba9156a822fd15f34b8356f62426d2b1f5f",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-10/lamezia-rapina-ufficio-postale-via-aldo-moro-2012-08-10.json",
+      "sha256": "68c7eca04579507293d42694a3502beacd7502fb32f92596a83fccf62d6ba9ca",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-10/lamezia-resistenza-minacce-oltraggio-carabinieri-centro-2020-04-18.json",
+      "sha256": "a6ab6e0ff9cbbac9392f84f1bc197002964c6db0316da02bc96a5a130fd748bd",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-10/lamezia-tentata-rapina-abitazione-anziana-2017-03-10.json",
+      "sha256": "cc698a390410040ce908c8feb628c4242fe777d24c0a60c852c4afe68561405b",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/2026-09-10/lamezia-tentato-omicidio-agguato-2002-07-08.json",
+      "sha256": "1800a8b94339ac068fe4328d76cdb1984eecf8cf03ed9a37aa54988091e5ae6d",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/legalita/ltceds/monitor/README.md",
+      "sha256": "056909d6da42299b18fcc55cef7db4cfeaf17c6f7a7ed1dc72379134f277af57",
+      "assetIds": ["crime-event-bundles"]
+    },
+    {
+      "path": "data/processed/territorio/istat_indicator_dictionary.json",
+      "sha256": "b625fc8c0a7ce7b589080b7aece5c93142ab7fa7536a9f4d41ac19aa3a414c1f",
+      "assetIds": ["territorial-atlas"]
+    },
+    {
+      "path": "data/processed/territorio/istat_sezioni_censimento_lamezia.geojson",
+      "sha256": "9f236f542d803f9c9e900e19b285fa2c7e20ea565c78163f40c17d7101b35476",
+      "assetIds": ["territorial-atlas"]
+    },
+    {
+      "path": "data/public/albo/delibere-archive.json",
+      "sha256": "55ea9d886f549b576f781268d845d8378384c49416ee0ae1ff2ae98ba48f0ffd",
+      "assetIds": ["albo-archive"]
+    },
+    {
+      "path": "data/public/albo/latest.json",
+      "sha256": "08b0b53b649353a3a48407c38fdbfe3676e66511d2676ad57bdd07fee0a7858d",
+      "assetIds": ["albo-current"]
+    },
+    {
+      "path": "data/public/contracts/anac-authority/latest.json",
+      "sha256": "b8118e626a7411a94014e9972f10b68855ebb43c93f0d321cfbffb5c00bc1a14",
+      "assetIds": ["anac-authority"]
+    },
+    {
+      "path": "data/public/contracts/anac-bdncp/latest.json",
+      "sha256": "f08c1a0a1613447756a6136feb8c62cb40151b6ed6fa61ae7641852fcbe463f3",
+      "assetIds": ["anac-cig"]
+    },
+    {
+      "path": "data/sources/organi-istituzionali-source-snapshot.json",
+      "sha256": "84855205974be81ab60abb8315c79f96c219637d581482b4a6567173a4f7f289",
+      "assetIds": ["institutional-rosters"]
+    }
+  ]
+}

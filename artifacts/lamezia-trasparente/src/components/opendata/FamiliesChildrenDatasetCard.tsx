@@ -1,3 +1,6 @@
+import { useMunicipalDemographicSnapshot } from "@/hooks/useMunicipalDemographics";
+import { municipalDemographicUrl } from "@/data/municipalDemographics";
+import { MunicipalDatasetStatus } from "./MunicipalDatasetStatus";
 import { type ReactNode } from "react";
 import {
   ArrowRight,
@@ -14,12 +17,12 @@ import {
 
 import { Button } from "@/components/ui/button";
 import {
-  LAMEZIA_FAMILIES_CHILDREN_DATA,
-  LAMEZIA_FAMILIES_CHILDREN_DATA_URL,
-  LAMEZIA_FAMILIES_CHILDREN_SUMMARY,
+  createFamiliesChildrenDataset,
+  buildFamiliesChildrenSummary,
+  type RawLameziaFamiliesChildrenDataset,
   type LameziaFamiliesChildrenRecord,
 } from "@/data/lameziaFamiliesChildren";
-import { LAMEZIA_HOUSEHOLD_COMPOSITION_2023_DATA } from "@/data/lameziaHouseholdComposition2023";
+import { useHouseholdComposition } from "@/hooks/useHouseholdComposition";
 import { withPublicBasePath } from "@/lib/publicBasePath";
 
 const CHART_WIDTH = 1040;
@@ -36,10 +39,26 @@ const percentFormat = new Intl.NumberFormat("it-IT", {
 });
 
 export function FamiliesChildrenDatasetCard() {
-  const records = LAMEZIA_FAMILIES_CHILDREN_DATA.family_children;
-  const metadata = LAMEZIA_FAMILIES_CHILDREN_DATA.metadata;
-  const summary = LAMEZIA_FAMILIES_CHILDREN_SUMMARY;
-  const householdBenchmark = LAMEZIA_HOUSEHOLD_COMPOSITION_2023_DATA;
+  const query = useMunicipalDemographicSnapshot("families-children");
+  const benchmarkQuery = useHouseholdComposition();
+  if (!query.data)
+    return (
+      <MunicipalDatasetStatus
+        id="famiglie-figli-lamezia"
+        title="Famiglie per numero di figli - Lamezia Terme"
+        loading={query.isLoading}
+        retry={() => {
+          void query.refetch();
+        }}
+      />
+    );
+  const dataset = createFamiliesChildrenDataset(
+    query.data as unknown as RawLameziaFamiliesChildrenDataset,
+  );
+  const records = dataset.family_children;
+  const metadata = dataset.metadata;
+  const summary = buildFamiliesChildrenSummary(records);
+  const householdBenchmark = benchmarkQuery.data;
 
   return (
     <section
@@ -66,7 +85,14 @@ export function FamiliesChildrenDatasetCard() {
               distinto dal profilo ISTAT per numero di componenti.
             </p>
           </div>
-          <a href={LAMEZIA_FAMILIES_CHILDREN_DATA_URL} download>
+          <a
+            href={municipalDemographicUrl(
+              "families-children",
+              query.data.provenance.release_hash,
+              true,
+            )}
+            download
+          >
             <Button variant="outline" size="sm" className="w-full md:w-auto">
               <FileJson className="h-4 w-4" />
               Scarica JSON
@@ -77,6 +103,11 @@ export function FamiliesChildrenDatasetCard() {
       </div>
 
       <div className="p-5 md:p-6">
+        <p className="mb-3 text-xs text-muted-foreground">
+          {query.isError
+            ? "Aggiornamento non riuscito: sono mostrati gli ultimi dati ricevuti. La fonte non è stata verificata nuovamente."
+            : "La data di acquisizione non modifica il periodo a cui si riferiscono i dati."}
+        </p>
         <FamiliesChildrenChart records={records} />
 
         <p className="mt-3 text-sm leading-6 text-muted-foreground">
@@ -126,19 +157,30 @@ export function FamiliesChildrenDatasetCard() {
               detail="Tutte le famiglie anagrafiche · 31 dicembre 2023"
               icon={<Home className="h-4 w-4" />}
               label="Benchmark ISTAT 2023"
-              value={`${formatInteger(
-                householdBenchmark.totalHouseholds,
-              )} famiglie totali`}
+              value={
+                householdBenchmark
+                  ? `${formatInteger(householdBenchmark.totalHouseholds)} famiglie totali`
+                  : benchmarkQuery.isLoading
+                    ? "Caricamento…"
+                    : "Dato non disponibile"
+              }
             />
           </div>
 
+          {benchmarkQuery.isError && (
+            <p role="status" className="mt-3 text-xs">
+              {householdBenchmark
+                ? "Benchmark ISTAT: ultimi dati ricevuti, aggiornamento non riuscito."
+                : "Benchmark ISTAT non disponibile: l’assenza del dato non indica zero famiglie."}
+            </p>
+          )}
           <p className="mt-4 border-t border-primary/15 pt-3 text-xs leading-5 text-muted-foreground">
             I due conteggi non vengono rapportati tra loro: “figli” e
             “componenti” non sono la stessa variabile e, finché periodo e
             copertura della fonte comunale non sono certificati, le{" "}
             {formatInteger(summary.total)} famiglie non possono essere trattate
-            come un sottoinsieme direttamente confrontabile delle{" "}
-            {formatInteger(householdBenchmark.totalHouseholds)} famiglie ISTAT.
+            come un sottoinsieme direttamente confrontabile delle famiglie
+            ISTAT.
           </p>
         </section>
 

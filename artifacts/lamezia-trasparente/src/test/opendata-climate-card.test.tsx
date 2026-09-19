@@ -1,10 +1,19 @@
+import { HOUSEHOLD_FIXTURE } from "./fixtures/householdComposition";
+vi.mock("@/hooks/useHouseholdComposition", () => ({
+  useHouseholdComposition: () => ({
+    data: HOUSEHOLD_FIXTURE,
+    isLoading: false,
+    isError: false,
+    refetch: vi.fn(),
+  }),
+}));
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useListOpendataDatasets } from "@workspace/api-client-react";
 import { Opendata } from "../pages/Opendata";
 import { LAMEZIA_CLIMATE_LATEST_YEAR } from "../data/lameziaClimate";
 import { LAMEZIA_AIR_TRAFFIC_LATEST_YEAR } from "../data/lameziaAirTraffic";
-import { LAMEZIA_FOREIGN_RESIDENTS_LATEST_YEAR } from "../data/lameziaForeignResidents";
+import { LAMEZIA_FOREIGN_RESIDENTS_LATEST_YEAR } from "./fixtures/municipalDemographics";
 
 vi.mock("@workspace/api-client-react", () => ({
   useListOpendataDatasets: vi.fn(() => ({
@@ -40,6 +49,21 @@ vi.mock("@/components/demographics/ChangeDriversPanel", () => ({
     </section>
   ),
 }));
+
+vi.mock("@/hooks/useMunicipalDemographics", async () => {
+  const { MUNICIPAL_FIXTURES } =
+    await import("./fixtures/municipalDemographics");
+  return {
+    useMunicipalDemographicSnapshot: (
+      key: keyof typeof MUNICIPAL_FIXTURES,
+    ) => ({
+      data: MUNICIPAL_FIXTURES[key],
+      isLoading: false,
+      isError: false,
+      refetch: vi.fn(),
+    }),
+  };
+});
 
 describe("OpenData climate territory card", () => {
   beforeEach(() => {

@@ -163,6 +163,7 @@ describe("single-owner database boundary", () => {
     const db = database();
     for (const path of [
       "catalog",
+      "municipal-demographics",
       "tables/categories",
       "tables/categories/record?key=%7B%7D",
     ]) {
@@ -173,6 +174,30 @@ describe("single-owner database boundary", () => {
       expect(result.headers["cache-control"]).toBe("private, no-store");
     }
     expect(db.connect).not.toHaveBeenCalled();
+  });
+  it("serves unavailable demographic states through a read-only authenticated transaction", async () => {
+    owner();
+    const db = database();
+    const response = await request(db.app).get(
+      "/api/admin/database/municipal-demographics",
+    );
+    expect(response.status).toBe(200);
+    expect(response.headers["cache-control"]).toBe("private, no-store");
+    expect(response.body).toHaveLength(3);
+    expect(
+      response.body.every(
+        (row: { status: string; snapshot?: unknown }) =>
+          row.status === "unavailable" && !row.snapshot,
+      ),
+    ).toBe(true);
+    expect(db.query.mock.calls[0][0]).toBe(
+      "BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY",
+    );
+    expect(db.query).toHaveBeenCalledWith("COMMIT");
+    const invalid = await request(db.app).get(
+      "/api/admin/database/municipal-demographics?sql=SELECT%201",
+    );
+    expect(invalid.status).toBe(400);
   });
   it("does not inherit editorial authority", async () => {
     owner();

@@ -1535,7 +1535,7 @@
           "artifacts/lamezia-trasparente/src/data/openDataDatasetRegistry.ts",
           "artifacts/lamezia-trasparente/src/data/generated"
         ],
-        "note": "Traffico aereo, clima, demografia, famiglie e residenti stranieri sono distribuiti da file; lo schema DB non prova l'importazione dei valori.",
+        "note": "La candidata usa proiezioni DB per le tre serie comunali e letture separate per ISTAT. Traffico, clima e benchmark famiglie 2023 restano file. Codice e schema non certificano importazione o deployment: consultare il ledger e il database autenticato.",
         "staticPaths": []
       },
       {
@@ -1908,8 +1908,7 @@
         "evidence": [
           "artifacts/lamezia-trasparente/public/semantic/ontology.ttl",
           "artifacts/api-server/src/lib/semanticProfile.ts",
-          "artifacts/lamezia-trasparente/public/semantic/index.html",
-          "artifacts/lamezia-trasparente/public/semantic/ontology.ttl"
+          "artifacts/lamezia-trasparente/public/semantic/index.html"
         ],
         "note": "Documentazione tecnica e profilo RDF 1.2.0: le classi dichiarate coprono un sottoinsieme dei concetti, non certificano la persistenza o esportazione di tutti i record.",
         "staticPaths": [

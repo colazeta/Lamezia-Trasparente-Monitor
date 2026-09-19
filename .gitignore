@@ -78,3 +78,6 @@ data/raw/comune-lamezia-opendata/*.json
 data/snapshots/albo/
 data/processed/albo/
 data/.albo-publication-transaction/
+
+# Reproducible consolidation receipts published as CI artefacts.
+reports/canonicalisation/

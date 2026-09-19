@@ -4,7 +4,7 @@ import {
   LAMEZIA_FOREIGN_RESIDENTS_LATEST_YEAR,
   LAMEZIA_FOREIGN_RESIDENTS_SUMMARY,
   getLameziaForeignResidentsAgeRecord,
-} from "../data/lameziaForeignResidents";
+} from "./fixtures/municipalDemographics";
 
 describe("Lamezia foreign residents OpenData dataset", () => {
   it("keeps the generated age-sex distribution source traceable", () => {

@@ -1,8 +1,17 @@
+import { HOUSEHOLD_FIXTURE } from "./fixtures/householdComposition";
+vi.mock("@/hooks/useHouseholdComposition", () => ({
+  useHouseholdComposition: () => ({
+    data: HOUSEHOLD_FIXTURE,
+    isLoading: false,
+    isError: false,
+    refetch: vi.fn(),
+  }),
+}));
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { HouseholdCompositionDatasetCard } from "@/components/opendata/HouseholdCompositionDatasetCard";
-import { LAMEZIA_HOUSEHOLD_COMPOSITION_2023_DATA_URL } from "@/data/lameziaHouseholdComposition2023";
+import { householdCompositionUrl } from "@/data/lameziaHouseholdComposition2023";
 import { Opendata } from "@/pages/Opendata";
 
 vi.mock("@workspace/api-client-react", () => ({
@@ -57,7 +66,7 @@ describe("HouseholdCompositionDatasetCard", () => {
     const download = screen.getByRole("link", { name: /Scarica JSON/i });
     expect(download).toHaveAttribute(
       "href",
-      LAMEZIA_HOUSEHOLD_COMPOSITION_2023_DATA_URL,
+      householdCompositionUrl(HOUSEHOLD_FIXTURE.provenance.release_hash, true),
     );
     expect(download).toHaveAttribute(
       "download",
@@ -88,7 +97,7 @@ describe("Open Data household-composition deep-link", () => {
     );
   });
 
-  it("opens the static 2023 dataset without requesting the demographic API", async () => {
+  it("opens the separately loaded canonical 2023 dataset", async () => {
     const fetchSpy = vi.spyOn(globalThis, "fetch");
     render(<Opendata />);
 

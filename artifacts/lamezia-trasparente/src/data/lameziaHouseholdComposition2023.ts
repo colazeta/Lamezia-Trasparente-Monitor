@@ -1,76 +1,66 @@
-import householdCompositionData from "../../../api-server/src/data/lameziaHouseholdComposition2023.json";
-import householdCompositionDataUrl from "../../../api-server/src/data/lameziaHouseholdComposition2023.json?url";
+import { apiUrl } from "@/lib/apiBaseUrl";
 
-export type HouseholdComponentKey = "1" | "2" | "3" | "4" | "5" | "6+";
+import type {
+  CanonicalHouseholdComposition2023,
+  HouseholdComponentBucket,
+} from "@workspace/api-client-react";
+export type HouseholdComponentKey = HouseholdComponentBucket["key"];
 export type HouseholdComponentSourceField =
-  | "PF3"
-  | "PF4"
-  | "PF5"
-  | "PF6"
-  | "PF7"
-  | "PF8";
+  HouseholdComponentBucket["sourceField"];
+export type LameziaHouseholdCompositionRecord = HouseholdComponentBucket;
+export type CanonicalHouseholdComposition = CanonicalHouseholdComposition2023;
+export type LameziaHouseholdCompositionDataset = Omit<
+  CanonicalHouseholdComposition2023,
+  "provenance"
+>;
 
-export interface LameziaHouseholdCompositionRecord {
-  key: HouseholdComponentKey;
-  sourceField: HouseholdComponentSourceField;
-  households: number;
-  share: number;
+export function householdCompositionUrl(release?: string, download = false) {
+  const query = new URLSearchParams();
+  if (release) query.set("release", release);
+  if (download) query.set("download", "1");
+  return apiUrl(
+    `/api/demographics/household-composition-2023${query.size ? `?${query}` : ""}`,
+  );
 }
-
-/** Canonical source metadata, quality gates and methodological limitations. */
-export interface LameziaHouseholdCompositionDataset {
-  schemaVersion: 1;
-  referenceYear: number;
-  municipality: {
-    name: string;
-    istatCode: string;
-  };
-  totalHouseholds: number;
-  byComponents: LameziaHouseholdCompositionRecord[];
-  indicators: {
-    onePersonHouseholds: number;
-    onePersonShare: number;
-    fivePlusHouseholds: number;
-    fivePlusShare: number;
-  };
-  quality: {
-    includedRows: number;
-    skippedFictitiousRows: number;
-    incompleteRows: number;
-    componentSum: number;
-    reconciliationDifference: number;
-    exactReconciliation: boolean;
-  };
-  verification: {
-    verifiedAt: string;
-    method: "sha256-and-exact-reconciliation";
-  };
-  source: {
-    institution: string;
-    dataset: string;
-    territorialLevel: string;
-    referenceDate: string;
-    sourceUpdateDate: string;
-    pageUrl: string;
-    downloadUrl: string;
-    archiveFile: string;
-    archiveMember: string;
-    workbookFile: string;
-    archiveSha256: string;
-    workbookSha256: string;
-    licence: string;
-  };
-}
-
-export const LAMEZIA_HOUSEHOLD_COMPOSITION_2023_DATA =
-  householdCompositionData as LameziaHouseholdCompositionDataset;
-
 export const LAMEZIA_HOUSEHOLD_COMPOSITION_2023_DATA_URL =
-  householdCompositionDataUrl;
+  householdCompositionUrl(undefined, true);
+export function validateHouseholdComposition(
+  input: unknown,
+): CanonicalHouseholdComposition {
+  const data = input as CanonicalHouseholdComposition;
+  assertLameziaHouseholdCompositionDataset(data);
+  const p = data.provenance;
+  if (
+    !p ||
+    p.canonical !== true ||
+    p.series_key !== "istat-households-by-components-2023" ||
+    p.source_key !== "istat.lamezia.household-composition-2023" ||
+    !/^[a-f0-9]{64}$/.test(p.release_hash) ||
+    !Number.isFinite(Date.parse(p.acquired_at)) ||
+    p.source_status !== "unknown" ||
+    p.source_records !== 6 ||
+    p.canonical_observations !== 6 ||
+    p.extractor_version !== "istat-household-composition.v1"
+  )
+    throw new Error("Invalid canonical household provenance");
+  return data;
+}
 
 export function assertLameziaHouseholdCompositionDataset(
   data: LameziaHouseholdCompositionDataset,
 ) {
+  if (
+    !data ||
+    !data.verification ||
+    !data.source ||
+    !data.quality ||
+    !data.indicators ||
+    !data.municipality ||
+    !Array.isArray(data.byComponents) ||
+    !Number.isSafeInteger(data.totalHouseholds) ||
+    data.totalHouseholds <= 0
+  )
+    throw new Error("Invalid household composition");
   const expectedKeys: HouseholdComponentKey[] = ["1", "2", "3", "4", "5", "6+"];
   const actualKeys = data.byComponents.map((record) => record.key);
   const verifiedAt = Date.parse(data.verification.verifiedAt);
@@ -78,6 +68,14 @@ export function assertLameziaHouseholdCompositionDataset(
   if (
     data.schemaVersion !== 1 ||
     data.referenceYear !== 2023 ||
+    data.source.institution !== "ISTAT" ||
+    data.source.pageUrl !==
+      "https://www.istat.it/notizia/dati-per-sezioni-di-censimento/" ||
+    data.source.downloadUrl !==
+      "https://esploradati.istat.it/databrowser/DWL/PERMPOP/SUBCOM/Dati_regionali_2023.zip" ||
+    data.source.referenceDate !== "2023-12-31" ||
+    !/^[a-f0-9]{64}$/.test(data.source.archiveSha256) ||
+    !/^[a-f0-9]{64}$/.test(data.source.workbookSha256) ||
     data.municipality.istatCode !== "079160" ||
     actualKeys.join("|") !== expectedKeys.join("|") ||
     data.verification.method !== "sha256-and-exact-reconciliation" ||
@@ -90,8 +88,12 @@ export function assertLameziaHouseholdCompositionDataset(
     );
   }
 
-  const componentSum = data.byComponents.reduce((sum, record) => {
-    if (!Number.isInteger(record.households) || record.households < 0) {
+  const componentSum = data.byComponents.reduce((sum, record, index) => {
+    if (
+      record.sourceField !== `PF${index + 3}` ||
+      !Number.isSafeInteger(record.households) ||
+      record.households < 0
+    ) {
       throw new Error(`Invalid household count for class ${record.key}`);
     }
     const expectedShare = roundOne(
@@ -128,7 +130,3 @@ export function assertLameziaHouseholdCompositionDataset(
 function roundOne(value: number) {
   return Number(value.toFixed(1));
 }
-
-assertLameziaHouseholdCompositionDataset(
-  LAMEZIA_HOUSEHOLD_COMPOSITION_2023_DATA,
-);

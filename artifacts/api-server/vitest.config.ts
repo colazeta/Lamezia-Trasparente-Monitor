@@ -13,6 +13,7 @@ const databaseConfig = hasTestDatabaseConfig()
 // URL (for example the lightweight CI validation workflow), still run the
 // database-free unit tests instead of failing while loading the config.
 const databaseFreeTests = [
+  "src/routes/municipalDemographics.test.ts",
   "src/lib/databaseBundle.test.ts",
   "src/lib/databaseAdmin.test.ts",
   "src/lib/operationalHealth.test.ts",

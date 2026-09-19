@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import airTrafficMetadata from "../data/generated/lameziaAirTrafficMonthly.metadata.json";
 import climateMetadata from "../data/generated/lameziaClimateDaily.metadata.json";
-import foreignResidentsData from "../data/generated/lameziaForeignResidentsAgeSex.json";
 import {
   LAMEZIA_OPEN_DATA_SERIES,
   LAMEZIA_OPEN_DATA_SERIES_BY_ID,
@@ -14,21 +13,31 @@ describe("Lamezia Open Data monitored series freshness", () => {
 
     expect(LAMEZIA_OPEN_DATA_SERIES_STATUS_SUMMARY).toEqual({
       total: 6,
-      automated: 5,
-      monitoredDaily: 5,
+      automated: 3,
+      monitoredDaily: 3,
     });
     expect(new Set(ids).size).toBe(6);
 
     for (const series of LAMEZIA_OPEN_DATA_SERIES) {
       expect(series.source_url.startsWith("https://")).toBe(true);
-      expect(["active", "manual"]).toContain(series.automation_status);
-      expect(["daily", "release-driven"]).toContain(series.monitoring_cadence);
+      expect(["active", "manual", "unverified"]).toContain(
+        series.automation_status,
+      );
+      expect(["daily", "release-driven", "unverified"]).toContain(
+        series.monitoring_cadence,
+      );
       expect(["daily", "weekly", "monthly", "release-driven"]).toContain(
         series.source_cadence,
       );
       expect(series.latest_observation_label).toBeTruthy();
 
-      if (series.id === "lamezia-demographic-trend") {
+      if (
+        [
+          "lamezia-demographic-trend",
+          "lamezia-foreign-residents-age-sex",
+          "lamezia-families-children",
+        ].includes(series.id)
+      ) {
         expect(series.materialised_at).toBeNull();
       } else {
         expect(series.materialised_at).toBeTruthy();
@@ -76,13 +85,15 @@ describe("Lamezia Open Data monitored series freshness", () => {
     expect(
       LAMEZIA_OPEN_DATA_SERIES_BY_ID.get("lamezia-foreign-residents-age-sex")
         ?.latest_observation,
-    ).toBe(String(foreignResidentsData.metadata.latest_year));
+    ).toBeNull();
 
     const families = LAMEZIA_OPEN_DATA_SERIES_BY_ID.get(
       "lamezia-families-children",
     );
     expect(families?.latest_observation).toBeNull();
-    expect(families?.latest_observation_label).toBe("Risorsa corrente");
+    expect(families?.latest_observation_label).toBe(
+      "Periodo non dichiarato; dati via API canonica",
+    );
     expect(families?.latest_observation_note).toContain(
       "non espone un anno di riferimento",
     );
