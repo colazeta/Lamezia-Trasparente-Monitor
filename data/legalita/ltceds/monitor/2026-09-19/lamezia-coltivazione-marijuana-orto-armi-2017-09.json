@@ -1,0 +1,257 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-coltivazione-marijuana-orto-armi-2017-09",
+  "discovered_at": "2026-09-19T17:46:43+02:00",
+  "updated_at": "2026-09-19T17:46:43+02:00",
+  "record_status": "verified_source",
+  "event_form": "continuous_episode",
+  "title": "Coltivazione e detenzione di marijuana con rinvenimento di due fucili nei terreni adiacenti a un'abitazione di Lamezia Terme, accertate entro il 30 settembre 2017",
+  "temporal": {
+    "start": null,
+    "end": "2017-09-30",
+    "edtf": null,
+    "precision": "approximate"
+  },
+  "sources": [
+    {
+      "source_key": "polizia:questura-catanzaro:2017-09-30:marijuana-orto-armi-lamezia",
+      "source_type": "law_enforcement_primary",
+      "provider": "Polizia di Stato — Questura di Catanzaro",
+      "title": "La Polizia arresta due lametini che coltivavano marijuana nell'orto.",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/123659cf55305399f230241026",
+      "published_at": "2017-09-30",
+      "retrieved_at": "2026-09-19T17:46:43+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:lacnews24:2017-09-30:droga-armi-casa-lamezia",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Lamezia, droga e armi in casa: arrestati zio e nipote",
+      "url": "https://www.lacnews24.it/cronaca/lamezia-droga-e-armi-in-casa-arrestati-zio-e-nipote-gw2ayk9e",
+      "published_at": "2017-09-30",
+      "retrieved_at": "2026-09-19T17:46:43+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:coltivazione-stupefacenti",
+      "classification_source_key": "polizia:questura-catanzaro:2017-09-30:marijuana-orto-armi-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La fonte primaria della Polizia di Stato riferisce il rinvenimento, nei terreni circostanti un'abitazione di Lamezia Terme, di tre terrazzamenti collegati tra loro e dotati di impianto di irrigazione, con 35 piante di marijuana in maturazione alte circa 2,5 metri.",
+        "La perquisizione fu estesa dall'abitazione e dalle sue pertinenze all'orto adiacente, ai terreni circostanti e a un'area boscata; la data del 30 settembre 2017 è conservata come terminus ante quem perché il comunicato non esplicita il giorno di inizio della coltivazione né distingue con certezza il giorno dell'accertamento dalla pubblicazione."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 35
+    },
+    {
+      "offence_key": "offence:detenzione-stupefacenti",
+      "classification_source_key": "polizia:questura-catanzaro:2017-09-30:marijuana-orto-armi-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La fonte primaria qualifica espressamente una delle condotte come detenzione di sostanze stupefacenti e documenta marijuana già essiccata rinvenuta in più punti dei terreni adiacenti all'abitazione.",
+        "La sostanza stupefacente e le piante furono poste sotto sequestro."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:detenzione-stupefacenti-ai-fini-di-spaccio",
+      "classification_source_key": "polizia:questura-catanzaro:2017-09-30:marijuana-orto-armi-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "In una seconda abitazione la Polizia rinvenne 28,6 grammi di marijuana, occultati all'interno di una cassa acustica e descritti dalla fonte come già confezionati e pronti per lo spaccio.",
+        "La fonte primaria riferisce, per questa condotta, il reato di detenzione di sostanza stupefacente al fine di spaccio."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:detenzione-illegale-armi-da-fuoco",
+      "classification_source_key": "polizia:questura-catanzaro:2017-09-30:marijuana-orto-armi-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "A margine di un appezzamento coltivato ad ortaggi, occultati tra rovi e sterpaglie dentro due tubi di plastica, furono rinvenuti due fucili calibro 12 e relativo munizionamento.",
+        "La fonte primaria qualifica espressamente la condotta come detenzione illegale di armi da fuoco; armi e cartucce furono sequestrate."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 2
+    },
+    {
+      "offence_key": "offence:ricettazione-armi-da-fuoco",
+      "classification_source_key": "polizia:questura-catanzaro:2017-09-30:marijuana-orto-armi-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La Polizia riferisce che i due fucili rinvenuti nei terreni erano provento di precedenti furti e qualifica espressamente la condotta anche come ricettazione di armi da fuoco.",
+        "Non è stata verificata in questa iterazione una decisione giudiziaria definitiva; il comunicato riferisce l'applicazione della custodia cautelare in carcere per una posizione e dell'obbligo di firma per l'altra."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 2
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:terreni-adiacenti-abitazione-orto-terrazzamenti:occurrence",
+      "basis_source_key": "polizia:questura-catanzaro:2017-09-30:marijuana-orto-armi-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Terreni circostanti un'abitazione privata a Lamezia Terme, comprendenti un orto adiacente e tre terrazzamenti coltivati a marijuana",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:prima-abitazione-privata:search",
+      "basis_source_key": "polizia:questura-catanzaro:2017-09-30:marijuana-orto-armi-lamezia",
+      "role": "search",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Prima abitazione privata perquisita a Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:magazzino-adiacente-prima-abitazione:search",
+      "basis_source_key": "polizia:questura-catanzaro:2017-09-30:marijuana-orto-armi-lamezia",
+      "role": "search",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Magazzino adiacente alla prima abitazione privata perquisita a Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:orto-adiacente-sentiero-rovi:recovery",
+      "basis_source_key": "polizia:questura-catanzaro:2017-09-30:marijuana-orto-armi-lamezia",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Sentiero nell'orto adiacente alla prima abitazione, tra i rovi, dove fu rinvenuto un sacco con marijuana essiccata",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:appezzamento-ortaggi-rovi-armi:recovery",
+      "basis_source_key": "polizia:questura-catanzaro:2017-09-30:marijuana-orto-armi-lamezia",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Margine di un appezzamento coltivato ad ortaggi nei terreni circostanti la prima abitazione, tra rovi e sterpaglie, dove furono rinvenuti due fucili e munizioni",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:bosco-castagni-faggi-essiccatoio:recovery",
+      "basis_source_key": "polizia:questura-catanzaro:2017-09-30:marijuana-orto-armi-lamezia",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Bosco di castagni e faggi circa 20 metri a monte del punto di rinvenimento dei fucili, con essiccatoio artigianale e marijuana",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:seconda-abitazione-privata:search",
+      "basis_source_key": "polizia:questura-catanzaro:2017-09-30:marijuana-orto-armi-lamezia",
+      "role": "search",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Seconda abitazione privata perquisita a Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:seconda-abitazione-cassa-acustica:recovery",
+      "basis_source_key": "polizia:questura-catanzaro:2017-09-30:marijuana-orto-armi-lamezia",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Seconda abitazione privata a Lamezia Terme, all'interno di una cassa acustica, dove furono rinvenuti 28,6 grammi di marijuana confezionata",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
