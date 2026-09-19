@@ -1,0 +1,98 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-ufficio-postale-san-teodoro-2004-03-30",
+  "discovered_at": "2026-09-19T16:56:21+02:00",
+  "updated_at": "2026-09-19T16:56:21+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina armata all'ufficio postale di San Teodoro a Lamezia Terme il 30 marzo 2004",
+  "temporal": {
+    "start": "2004-03-30",
+    "end": "2004-03-30",
+    "edtf": null,
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:uscatanzaro:2004-03-30:rapina-poste-san-teodoro",
+      "source_type": "press_secondary",
+      "provider": "UsCatanzaro.net",
+      "title": "RAPINA: Svaligiato un ufficio postale, quasi 10.000 euro il bottino",
+      "url": "https://www.uscatanzaro.net/rapina-svaligiato-un-ufficio-postale-quasi-10000-euro-il-bottino/",
+      "published_at": "2004-03-30",
+      "retrieved_at": "2026-09-19T16:56:21+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "press:uscatanzaro:2004-03-30:rapina-poste-san-teodoro",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La fonte contemporanea riferisce una rapina compiuta il 30 marzo 2004 intorno alle 13:30 da tre persone con il volto coperto nell'ufficio postale periferico di San Teodoro, nella zona alta di Nicastro.",
+        "Secondo la ricostruzione pubblicata, una mazza di ferro fu usata per sfondare la porta blindata che separava l'area del pubblico dagli uffici e furono sottratti 9.700 euro in contanti.",
+        "La Polizia di Stato del Commissariato di Lamezia Terme avviò le indagini; a circa 300 metri dall'ufficio furono rinvenuti tre passamontagna, un fucile a canne mozze e una pistola scacciacani. Non è stata reperita in questa iterazione una fonte primaria o una successiva decisione giudiziaria relativa allo specifico episodio."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:ufficio-postale-san-teodoro:occurrence",
+      "basis_source_key": "press:uscatanzaro:2004-03-30:rapina-poste-san-teodoro",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Ufficio postale di San Teodoro",
+      "neighbourhood": "San Teodoro",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:ufficio-postale-san-teodoro:target",
+      "basis_source_key": "press:uscatanzaro:2004-03-30:rapina-poste-san-teodoro",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Ufficio postale di San Teodoro",
+      "neighbourhood": "San Teodoro",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:circa-300m-ufficio-postale-san-teodoro:recovery",
+      "basis_source_key": "press:uscatanzaro:2004-03-30:rapina-poste-san-teodoro",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "unknown",
+      "resolved_precision": "unknown",
+      "sensitivity": "unknown",
+      "publication_risk": "unknown",
+      "geometry": null,
+      "place_name": "Circa 300 metri dall'ufficio postale di San Teodoro",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
