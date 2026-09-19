@@ -95,15 +95,62 @@ session: the web read was unavailable and an independent HTTP request timed
 out. This does not establish that the service is down. It also provides no
 evidence of a completed production import.
 
-The Render connector lists Giovanni's workspace
-`tea-d7kjsh3eo5us73dhcjrg` and requires a user-confirmed workspace before scoped
-operations. No confirmation is recorded in this continuation. The earlier
-Neon observation remains explicitly dated 10 September; its counts have not
-been relabelled as current or as proof of the public site's connection.
+The user subsequently confirmed Giovanni's Render workspace
+`tea-d7kjsh3eo5us73dhcjrg`. The API is service `srv-d8mmv6urnols73cr5qa0`,
+linked to this repository's main branch. Active deployment
+`dep-damfk6ss728c73c12n5g` runs commit
+`0dc752b28fb691cc2cc06afacbecab8fe7adefbd` from 18 September.
 
-Production verification must identify the real API and ingestion database,
-reconcile the importer there, then verify the API before switching public
-consumers. Successful build or preview checks alone do not satisfy those gates.
+Read-only Neon verification at `2026-09-19T12:07:12.413Z` observed 23 applied
+migrations, 75 public tables, five registered sources, 260 source records and
+zero demographic series, releases or observations in project
+`empty-cherry-93566793`, branch `br-morning-fire-as9l08lf`, database `neondb`.
+Five successful acquisition records match the active Render process's commit,
+source identities, counts and execution window
+`2026-09-19T11:11:41.610Z`–`11:11:45.242Z`. This correlates the API process and
+its ingestion database without exposing connection credentials. The original
+10 September observation is retained separately in the ledger.
+
+Two operational boundaries remain:
+
+- Render reports that the workspace's build pipeline minutes are exhausted.
+  Subsequent main deployments are cancelled, including
+  `dep-dan753ff3r2c73dosf1g`. The scheduled [18 September source-sync check](https://github.com/colazeta/Lamezia-Trasparente-Monitor/actions/runs/35402896849)
+  failed after 45 attempts with `DEPLOY_COMMIT_MISMATCH`, consistent with the
+  older active deployment. Retrying a build does not resolve that capacity limit.
+- The inspected public bundle `/assets/index-BBpZMfAe.js` compiles the public
+  API-base resolver to null. The public same-origin readiness URL returns
+  HTTP 503 with `scope: static-frontend` and `status: source-unavailable`.
+  The owner-console's explicit Render-origin fallback does not configure public
+  consumers. Configure the production build's `VITE_API_BASE_URL` and verify
+  cross-origin public reads only after the new API/import is ready; no frontend
+  endpoint switch is certified here.
+
+No production import, deployment, spending-limit change or credential change
+was performed. Successful build or preview checks alone do not satisfy these
+remaining gates.
+
+## Expanded-manifest verification repair
+
+The production comparator still required exactly five sources, so it would
+reject the reviewed eight-source plan before checking Render. Its existing
+tests exercised only a synthetic five-source fixture. It now derives the exact
+source set from the prepared plan, rejects missing/extra/duplicate sources, and
+compares demographic series identity and expected, verified and inserted
+observation counts. Expectations come from the existing source decoder, not a
+second hard-coded mapping. The public report explicitly allows only those
+aggregate expectation fields.
+
+Regression tests use the actual committed eight-source plan. The PostgreSQL
+integration workflow also feeds its real initial-import and rerun reports
+through the production comparator, so database success and operational
+verification are checked together. The strict deployed-commit check remains.
+
+The repair passed whole-workspace typecheck/build, 88 database tests, seven
+checkpoint tests, six ledger tests, migration safety and both architecture
+audits locally. The real PostgreSQL report test is intentionally skipped
+without its integration report; the updated remote integration workflow is
+required to execute it before this repair is considered validated end to end.
 
 ## Remaining scope
 

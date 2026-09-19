@@ -3,6 +3,17 @@
   "scope": "candidate implementation, not production certification",
   "issues": [
     {
+      "id": "expanded-manifest-checkpoint-verification",
+      "disposition": "RESOLVED",
+      "before": "Production verifier required exactly five sources and did not check typed demographic reconciliation; the candidate imports eight sources.",
+      "after": "Use the exact source set and decoded typed expectations from the committed plan; verify real PostgreSQL import and rerun reports through the same comparator.",
+      "evidence": [
+        "scripts/lib/sourceSnapshotVerification.mjs",
+        "scripts/database-source-sync.test.mjs",
+        ".github/workflows/municipal-demographics-integration.yml"
+      ]
+    },
+    {
       "id": "static-municipal-consumers",
       "disposition": "REMODELLED",
       "before": "Independent frontend JSON reads/downloads",

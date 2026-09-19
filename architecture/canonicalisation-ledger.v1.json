@@ -15,7 +15,7 @@
     "countingPolicy": "Files, asset groups, source rows and typed observations have distinct denominators; no overall completion percentage.",
     "reviewValidity": "File bytes and asset ownership must still match the bounded review baseline. New or changed files are unreviewed even within registered directories."
   },
-  "runtimeObservation": {
+  "previousRuntimeObservation": {
     "observedAt": "2026-09-10T20:21:15.818Z",
     "projectId": "empty-cherry-93566793",
     "branchId": "br-morning-fire-as9l08lf",
@@ -37,14 +37,55 @@
     "publicDeploymentConnectionVerified": false,
     "writesPerformed": false
   },
+  "runtimeObservation": {
+    "observedAt": "2026-09-19T12:07:12.413Z",
+    "projectId": "empty-cherry-93566793",
+    "branchId": "br-morning-fire-as9l08lf",
+    "database": "neondb",
+    "queryMode": "read-only SELECT counts and acquisition-run correlation",
+    "confirmedRenderWorkspace": "tea-d7kjsh3eo5us73dhcjrg",
+    "renderServiceId": "srv-d8mmv6urnols73cr5qa0",
+    "activeDeployId": "dep-damfk6ss728c73c12n5g",
+    "activeCommit": "0dc752b28fb691cc2cc06afacbecab8fe7adefbd",
+    "counts": {
+      "demographic_series": 0,
+      "demographic_releases": 0,
+      "demographic_observations": 0,
+      "source_sources": 5,
+      "source_records": 260,
+      "applied_migrations": 23,
+      "public_tables": 75
+    },
+    "apiDatabaseConnectionCorrelated": true,
+    "correlationBasis": "All five successful acquisition runs in Neon match the Render process checkpoint commit, source keys, counts and 2026-09-19T11:11:41.610Z–11:11:45.242Z execution window.",
+    "publicDeploymentConnectionVerified": false,
+    "publicFrontendStatus": "Observed compiled API base is null; same-origin readiness returns HTTP 503 source-unavailable from the static worker. Admin origin fallback is separate.",
+    "writesPerformed": false
+  },
   "productionBlockers": [
     {
-      "id": "runtime-target",
-      "reason": "Render requires user-confirmed workspace selection. Current session has none; names cannot be used as implicit consent.",
+      "id": "render-build-capacity",
+      "reason": "Confirmed Render workspace has exhausted build pipeline minutes; new deployments are cancelled. Latest observed failed deploy: dep-dan753ff3r2c73dosf1g.",
       "affectedActions": [
-        "identify actual public runtime database",
-        "production import",
-        "production deployment"
+        "production API deployment",
+        "startup import of the expanded source manifest"
+      ],
+      "independentWorkAllowed": true
+    },
+    {
+      "id": "public-api-origin",
+      "reason": "Public frontend uses same-origin API requests and its static worker returns source-unavailable. Configure and test the public API origin after the demographic API is ready.",
+      "affectedActions": [
+        "public demographic consumer cutover",
+        "production source-health verification"
+      ],
+      "independentWorkAllowed": true
+    },
+    {
+      "id": "demographic-production-reconciliation",
+      "reason": "The correlated runtime database still has zero demographic series, releases and observations; the reviewed eight-source manifest and typed reads have not been deployed.",
+      "affectedActions": [
+        "certify demographic canonicalisation and production consumption"
       ],
       "independentWorkAllowed": true
     }
@@ -76,7 +117,7 @@
         "typedObservations": 25,
         "basis": "candidate importer expectations; observed Neon demographic count is zero"
       },
-      "dependencies": ["PR #1211", "verified-runtime-target"],
+      "dependencies": ["PR #1211", "render-build-capacity", "public-api-origin", "demographic-production-reconciliation"],
       "provenanceQuality": "Source-specific evidence inspected; universal provenance coverage not certified.",
       "duplicationRisk": "Independent source, canonical and consumer representations require reconciliation.",
       "migrationComplexity": "bounded",
@@ -90,7 +131,7 @@
       "provenanceStatus": "exact-source-and-typed-reconciliation",
       "validationStatus": "See executable tests and separate run receipts; no deployment inferred.",
       "productionStatus": "unverified-not-deployed",
-      "residualIssue": "Identify runtime target; reconcile importer and deploy consumer together; retain source writers as documented migration input."
+      "residualIssue": "API/database target correlated on 19 September. Restore build capacity, import and verify the API before configuring the public consumer origin; retain source writers as documented migration input."
     },
     {
       "id": "municipal-foreign-age-sex",
@@ -120,7 +161,7 @@
         "typedObservations": 38,
         "basis": "candidate importer expectations; observed Neon demographic count is zero"
       },
-      "dependencies": ["PR #1211", "verified-runtime-target"],
+      "dependencies": ["PR #1211", "render-build-capacity", "public-api-origin", "demographic-production-reconciliation"],
       "provenanceQuality": "Source-specific evidence inspected; universal provenance coverage not certified.",
       "duplicationRisk": "Independent source, canonical and consumer representations require reconciliation.",
       "migrationComplexity": "bounded",
@@ -134,7 +175,7 @@
       "provenanceStatus": "exact-source-and-typed-reconciliation",
       "validationStatus": "See executable tests and separate run receipts; no deployment inferred.",
       "productionStatus": "unverified-not-deployed",
-      "residualIssue": "Identify runtime target; reconcile importer and deploy consumer together; retain source writers as documented migration input."
+      "residualIssue": "API/database target correlated on 19 September. Restore build capacity, import and verify the API before configuring the public consumer origin; retain source writers as documented migration input."
     },
     {
       "id": "municipal-families-children",
@@ -164,7 +205,7 @@
         "typedObservations": 6,
         "basis": "candidate importer expectations; observed Neon demographic count is zero"
       },
-      "dependencies": ["PR #1211", "verified-runtime-target"],
+      "dependencies": ["PR #1211", "render-build-capacity", "public-api-origin", "demographic-production-reconciliation"],
       "provenanceQuality": "Source-specific evidence inspected; universal provenance coverage not certified.",
       "duplicationRisk": "Independent source, canonical and consumer representations require reconciliation.",
       "migrationComplexity": "bounded",
@@ -178,7 +219,7 @@
       "provenanceStatus": "exact-source-and-typed-reconciliation",
       "validationStatus": "See executable tests and separate run receipts; no deployment inferred.",
       "productionStatus": "unverified-not-deployed",
-      "residualIssue": "Identify runtime target; reconcile importer and deploy consumer together; retain source writers as documented migration input."
+      "residualIssue": "API/database target correlated on 19 September. Restore build capacity, import and verify the API before configuring the public consumer origin; retain source writers as documented migration input."
     },
     {
       "id": "household-composition-2023",

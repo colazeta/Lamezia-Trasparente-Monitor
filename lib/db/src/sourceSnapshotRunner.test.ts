@@ -88,6 +88,11 @@ test("public report omits original bytes, private paths, IDs and unexpected nest
         sourceStatus: null,
         sourceTimestampRaw: null,
         content: privateMarker,
+        demographics: {
+          seriesKey: "example-series",
+          observations: 1,
+          secret: privateMarker,
+        },
       },
     ],
     results: [
@@ -108,4 +113,8 @@ test("public report omits original bytes, private paths, IDs and unexpected nest
   const projected = publicSnapshotImportReport(report);
   assert.ok(!JSON.stringify(projected).includes(privateMarker));
   assert.equal(projected.results[0].status, "succeeded");
+  assert.deepEqual(projected.sources[0].demographics, {
+    seriesKey: "example-series",
+    observations: 1,
+  });
 });

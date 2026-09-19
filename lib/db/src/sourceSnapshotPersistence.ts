@@ -32,6 +32,7 @@ export type SnapshotPlan = {
   sourceStatus: string | null;
   sourceTimestampRaw: string | null;
   records: SnapshotRecord[];
+  demographics?: { seriesKey: string; observations: number };
 };
 export type SnapshotStatement = { text: string; values: unknown[] };
 export type SnapshotQueryClient = {
@@ -88,9 +89,10 @@ export function planSourceSnapshot(
     ignoreBOM: true,
   }).decode(bytes);
   const raw: unknown = JSON.parse(contentText);
-  const input: unknown = isMunicipalDemographicSource(source.key)
-    ? planMunicipalDemographicSource(source.key, raw).expanded
-    : raw;
+  const demographicPlan = isMunicipalDemographicSource(source.key)
+    ? planMunicipalDemographicSource(source.key, raw)
+    : undefined;
+  const input: unknown = demographicPlan ? demographicPlan.expanded : raw;
   if (!object(input)) throw new Error("SNAPSHOT_OBJECT_REQUIRED");
   canonicalSnapshotJson(input);
   const metadata = { ...input },
@@ -143,6 +145,14 @@ export function planSourceSnapshot(
     records,
     sourceStatus: typeof state === "string" ? state : null,
     sourceTimestampRaw: typeof date === "string" ? date : null,
+    ...(demographicPlan
+      ? {
+          demographics: {
+            seriesKey: demographicPlan.definition.seriesKey,
+            observations: demographicPlan.observations.length,
+          },
+        }
+      : {}),
   };
 }
 

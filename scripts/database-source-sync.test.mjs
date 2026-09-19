@@ -1,6 +1,56 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { compareSnapshotCheckpoint } from "./lib/sourceSnapshotVerification.mjs";
+import { readFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
+import {
+  compareSnapshotCheckpoint,
+  validateSnapshotPlan,
+} from "./lib/sourceSnapshotVerification.mjs";
+import {
+  prepareSourceSnapshotImport,
+  publicSnapshotImportReport,
+} from "../lib/db/src/sourceSnapshotRunner.ts";
+
+const root = fileURLToPath(new URL("../", import.meta.url));
+
+async function expandedFixture() {
+  const { report: plan } = await prepareSourceSnapshotImport(root);
+  const report = {
+    ...structuredClone(plan),
+    mode: "execute",
+    status: "verified",
+    completedAt: new Date().toISOString(),
+    results: plan.sources.map((source) => ({
+      source: source.source,
+      status: "succeeded",
+      byteHash: source.byteHash,
+      records: source.records,
+      verified: source.records,
+      inserted: 0,
+      ...(source.demographics
+        ? {
+            demographics: {
+              ...source.demographics,
+              verified: source.demographics.observations,
+              inserted: 0,
+            },
+          }
+        : {}),
+      legacy:
+        source.source === "lamezia.pnrr.municipal"
+          ? { inserted: 0, matched: plan.pnrrExpected }
+          : null,
+    })),
+  };
+  return {
+    plan,
+    checkpoint: {
+      status: "verified",
+      verificationBasis: "process_startup",
+      report: publicSnapshotImportReport(report),
+    },
+  };
+}
 
 function fixture() {
   const plan = {
@@ -120,3 +170,124 @@ test("malformed or incomplete checkpoints never become successful empty imports"
     /INVALID_LOCAL_PLAN/,
   );
 });
+
+test("accepts the committed eight-source plan with decoded typed expectations", async () => {
+  const { plan, checkpoint } = await expandedFixture();
+  assert.equal(validateSnapshotPlan(plan).size, 8);
+  assert.equal(
+    plan.sources.reduce((n, source) => n + source.records, 0),
+    310,
+  );
+  assert.equal(
+    plan.sources.reduce(
+      (n, source) => n + (source.demographics?.observations ?? 0),
+      0,
+    ),
+    69,
+  );
+  checkpoint.report.sources.reverse();
+  checkpoint.report.results.reverse();
+  assert.deepEqual(compareSnapshotCheckpoint(plan, checkpoint), {
+    ok: true,
+    errors: [],
+  });
+});
+
+test("rejects missing, extra and substituted sources against the expanded plan", async () => {
+  const { plan, checkpoint } = await expandedFixture();
+  for (const field of ["sources", "results"]) {
+    for (const mutate of [
+      (rows) => rows.pop(),
+      (rows) => rows.push({ ...rows[0], source: "unplanned" }),
+      (rows) => {
+        rows[0].source = "unplanned";
+      },
+      (rows) => {
+        rows[0] = rows[1];
+      },
+    ]) {
+      const changed = structuredClone(checkpoint);
+      mutate(changed.report[field]);
+      assert.equal(compareSnapshotCheckpoint(plan, changed).ok, false);
+    }
+  }
+});
+
+test("source-row success cannot mask absent or inconsistent typed observations", async () => {
+  const { plan, checkpoint } = await expandedFixture();
+  const mutations = [
+    (result) => {
+      delete result.demographics;
+    },
+    (result) => {
+      result.demographics.seriesKey = "different-series";
+    },
+    (result) => {
+      result.demographics.observations--;
+    },
+    (result) => {
+      result.demographics.verified--;
+    },
+    (result) => {
+      result.demographics.inserted = -1;
+    },
+    (result) => {
+      result.demographics.inserted = result.demographics.observations + 1;
+    },
+  ];
+  for (const mutate of mutations) {
+    const changed = structuredClone(checkpoint);
+    mutate(changed.report.results.find((source) => source.demographics));
+    assert.ok(
+      compareSnapshotCheckpoint(plan, changed).errors.includes(
+        "DEMOGRAPHIC_RECONCILIATION_MISMATCH",
+      ),
+    );
+  }
+  const changed = structuredClone(checkpoint);
+  delete changed.report.sources.find((source) => source.demographics)
+    .demographics;
+  assert.equal(compareSnapshotCheckpoint(plan, changed).ok, false);
+});
+
+test("rejects local municipal plans without valid typed expectations", async () => {
+  const { plan } = await expandedFixture();
+  for (const value of [
+    undefined,
+    null,
+    {},
+    { seriesKey: "", observations: 1 },
+    { seriesKey: "example", observations: -1 },
+  ]) {
+    const changed = structuredClone(plan);
+    changed.sources.find((source) => source.demographics).demographics = value;
+    assert.throws(() => validateSnapshotPlan(changed), /INVALID_LOCAL_PLAN/);
+  }
+});
+
+test(
+  "verifies the real PostgreSQL import and rerun through the public checkpoint contract",
+  {
+    skip: !process.env.SOURCE_SNAPSHOT_INTEGRATION_REPORT,
+  },
+  async () => {
+    const integration = JSON.parse(
+      await readFile(process.env.SOURCE_SNAPSHOT_INTEGRATION_REPORT, "utf8"),
+    );
+    const { report: plan } = await prepareSourceSnapshotImport(root);
+    assert.equal(integration.status, "passed");
+    for (const report of [
+      integration.firstImport,
+      integration.repeatedImport,
+    ]) {
+      assert.deepEqual(
+        compareSnapshotCheckpoint(plan, {
+          status: "verified",
+          verificationBasis: "process_startup",
+          report: publicSnapshotImportReport(report),
+        }),
+        { ok: true, errors: [] },
+      );
+    }
+  },
+);

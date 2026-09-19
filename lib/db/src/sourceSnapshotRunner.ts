@@ -38,6 +38,7 @@ export type SnapshotImportReport = {
     records: number;
     sourceStatus: string | null;
     sourceTimestampRaw: string | null;
+    demographics?: { seriesKey: string; observations: number };
   }>;
   pnrrExpected: number;
   results: Array<ImportSuccess | ImportFailure>;
@@ -89,6 +90,7 @@ export async function prepareSourceSnapshotImport(root: string) {
       records: p.records.length,
       sourceStatus: p.sourceStatus,
       sourceTimestampRaw: p.sourceTimestampRaw,
+      ...(p.demographics ? { demographics: { ...p.demographics } } : {}),
     })),
     pnrrExpected: pnrrCompatibilityRows(
       sources.find((p) => p.source.key === "lamezia.pnrr.municipal")!,
@@ -198,6 +200,14 @@ export function publicSnapshotImportReport(report: SnapshotImportReport) {
       records: s.records,
       sourceStatus: s.sourceStatus,
       sourceTimestampRaw: s.sourceTimestampRaw,
+      ...(s.demographics
+        ? {
+            demographics: {
+              seriesKey: s.demographics.seriesKey,
+              observations: s.demographics.observations,
+            },
+          }
+        : {}),
     })),
     pnrrExpected: report.pnrrExpected,
     results: report.results.map((r) =>

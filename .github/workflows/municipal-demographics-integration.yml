@@ -58,6 +58,10 @@ jobs:
           MUNICIPAL_DEMOGRAPHIC_TEST_URL: postgresql://test:disposable-test-only@127.0.0.1:5432/municipal_demographic_test
       - name: Audit canonicalisation queue and source ownership
         run: node scripts/architecture/canonicalisationLedger.mjs --write
+      - name: Verify real import reports with the production checkpoint comparator
+        run: pnpm --filter @workspace/scripts exec node --import tsx --test database-source-sync.test.mjs
+        env:
+          SOURCE_SNAPSHOT_INTEGRATION_REPORT: ${{ github.workspace }}/reports/municipal-demographic-integration/report.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
