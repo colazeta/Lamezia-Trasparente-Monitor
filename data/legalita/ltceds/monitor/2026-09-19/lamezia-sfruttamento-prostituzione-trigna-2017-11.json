@@ -1,0 +1,131 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-sfruttamento-prostituzione-trigna-2017-11",
+  "discovered_at": "2026-09-19T14:20:49+02:00",
+  "updated_at": "2026-09-19T14:20:49+02:00",
+  "record_status": "verified_source",
+  "event_form": "course_of_conduct",
+  "title": "Sfruttamento della prostituzione con coercizione documentata in località Trigna entro il 18 novembre 2017",
+  "temporal": {
+    "start": null,
+    "end": "2017-11-18",
+    "edtf": null,
+    "precision": "approximate"
+  },
+  "sources": [
+    {
+      "source_key": "press:nuovosud:2017-11-18:trigna-sfruttamento-prostituzione",
+      "source_type": "press_secondary",
+      "provider": "Nuovo Sud",
+      "title": "Minaccia le prostitute per avere i soldi, arrestato a Lamezia Terme",
+      "url": "https://www.nuovosud.it/66154-altro-sud/minaccia-le-prostitute-avere-i-soldi-arrestato-lamezia-terme",
+      "published_at": "2017-11-18",
+      "retrieved_at": "2026-09-19T14:20:49+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:calabriawebtv:2017-11-18:trigna-sfruttamento-prostituzione",
+      "source_type": "press_secondary",
+      "provider": "CalabriaWebTV",
+      "title": "Lamezia Terme, sfruttamento della prostituzione e rapina aggravata. Tre arresti dei carabinieri",
+      "url": "https://calabriawebtv.it/lamezia-terme-sfruttamento-della-prostituzione-e-rapina-aggravata-tre-arresti-dei-carabinieri",
+      "published_at": "2017-11-18",
+      "retrieved_at": "2026-09-19T14:20:49+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:pillamaro:2017-11-18:trigna-sfruttamento-prostituzione",
+      "source_type": "press_secondary",
+      "provider": "PillaMaro.it",
+      "title": "Prostitute costrette a dargli denaro: uno straniero arrestato",
+      "url": "https://www.pillamaro.it/?p=5084",
+      "published_at": "2017-11-18",
+      "retrieved_at": "2026-09-19T14:20:49+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:sfruttamento-prostituzione",
+      "classification_source_key": "press:nuovosud:2017-11-18:trigna-sfruttamento-prostituzione",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti contemporanee riferiscono un arresto con l'accusa di sfruttamento della prostituzione ai danni di due donne.",
+        "Le fonti riportano che le donne dichiararono di essere costrette, mediante minacce e percosse e in cambio di un'asserita protezione, a consegnare quotidianamente i proventi della loro attività.",
+        "Una pattuglia dei Carabinieri osservò direttamente un episodio di comportamento minaccioso sul ciglio della strada in località Trigna; alla vista dei militari la persona poi arrestata cercò di nascondersi nella sterpaglia a margine della strada e fu immediatamente bloccata.",
+        "Le fonti disponibili sono pubblicate il 18 novembre 2017 ma non indicano in modo esplicito quando sia iniziata la condotta continuativa; la data è quindi registrata come terminus ante quem e non come data iniziale del corso di condotta.",
+        "Non è stata recuperata in questa iterazione la fonte originaria dei Carabinieri né una decisione giudiziaria definitiva; il record conserva pertanto lo stato accusatorio/procedurale documentato dalle fonti contemporanee."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:trigna-ciglio-strada:occurrence",
+      "basis_source_key": "press:nuovosud:2017-11-18:trigna-sfruttamento-prostituzione",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "sexual_offence_context",
+      "geometry": null,
+      "place_name": "Ciglio della strada in località Trigna",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:trigna-ciglio-strada:target",
+      "basis_source_key": "press:nuovosud:2017-11-18:trigna-sfruttamento-prostituzione",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "sexual_offence_context",
+      "geometry": null,
+      "place_name": "Ciglio della strada in località Trigna",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:trigna-margine-strada:arrest",
+      "basis_source_key": "press:calabriawebtv:2017-11-18:trigna-sfruttamento-prostituzione",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Sterpaglia a margine della strada in località Trigna, presso il torrente",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
