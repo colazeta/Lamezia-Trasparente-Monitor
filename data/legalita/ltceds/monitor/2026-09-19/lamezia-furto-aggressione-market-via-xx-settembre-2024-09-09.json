@@ -1,0 +1,142 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-furto-aggressione-market-via-xx-settembre-2024-09-09",
+  "discovered_at": "2026-09-19T21:25:33+02:00",
+  "updated_at": "2026-09-19T21:25:33+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Furto seguito da aggressione nei pressi di un market in via XX Settembre il 9 settembre 2024",
+  "temporal": {
+    "start": "2024-09-09",
+    "end": "2024-09-09",
+    "edtf": "2024-09-09",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:lametino:2024-09-09:rissa-via-xx-settembre",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, rissa in pieno centro: un ferito in via XX Settembre",
+      "url": "https://www.lametino.it/cronaca/lamezia-rissa-in-pieno-centro-un-ferito-in-via-xx-settembre.html",
+      "published_at": "2024-09-09T19:49:00+02:00",
+      "retrieved_at": "2026-09-19T21:25:33+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "agency:ansa:2024-09-09:rissa-centro-lamezia",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Rissa in pieno centro a Lamezia Terme, un ferito",
+      "url": "https://www.ansa.it/calabria/notizie/2024/09/09/rissa-in-pieno-centro-a-lamezia-terme-un-ferito_5cacf6fa-ba66-4ac1-9c1d-3550d2bc7f3d.html",
+      "published_at": "2024-09-09T20:33:00+02:00",
+      "retrieved_at": "2026-09-19T21:25:33+02:00",
+      "support_roles": [
+        "event_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "agency:ansa:2024-12-23:aggressione-commercianti-market-lamezia",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Aggressione commercianti dopo furto in market, individuati autori",
+      "url": "https://www.ansa.it/calabria/notizie/2024/12/23/aggressione-commercianti-dopo-furto-in-marketindividuati-autori_bfefb8be-215a-49c5-bc99-6712936ece04.html",
+      "published_at": "2024-12-23T12:20:00+01:00",
+      "retrieved_at": "2026-09-19T21:25:33+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:calabriamagnifica:2024-12-23:aggressione-commercianti-cinesi",
+      "source_type": "press_secondary",
+      "provider": "CalabriaMagnifica.it",
+      "title": "Lamezia Terme (Cz): aggressione a commercianti cinesi",
+      "url": "https://www.calabriamagnifica.it/cronaca-e-attualita/lamezia-terme-cz-aggressione-a-commercianti-cinesi/",
+      "retrieved_at": "2026-09-19T21:25:33+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:furto",
+      "classification_source_key": "agency:ansa:2024-12-23:aggressione-commercianti-market-lamezia",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la ricostruzione successiva riferita da ANSA colloca all'origine dell'episodio il furto di alcuni beni di consumo dal market",
+        "non è stata recuperata la qualificazione formale contenuta nell'ordinanza cautelare; la classificazione resta pertanto provvisoria"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:aggressione",
+      "classification_source_key": "agency:ansa:2024-12-23:aggressione-commercianti-market-lamezia",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le cronache coeve descrissero inizialmente l'episodio come rissa e documentarono almeno una persona ferita",
+        "la successiva ricostruzione investigativa riferita dalle fonti descrive minacce e aggressioni fisiche ai danni di tre commercianti, anche mediante un martello",
+        "il 23 dicembre 2024 è stata riferita l'esecuzione di una misura cautelare dell'obbligo di firma disposta dal GIP su richiesta della Procura; il procedimento era quindi in fase cautelare e non costituisce accertamento definitivo di responsabilità"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-xx-settembre:esercizio-commerciale:occurrence",
+      "basis_source_key": "press:lametino:2024-09-09:rissa-via-xx-settembre",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Via XX Settembre, nei pressi di un esercizio commerciale cinese",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-xx-settembre:esercizio-commerciale:target",
+      "basis_source_key": "press:lametino:2024-09-09:rissa-via-xx-settembre",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Esercizio commerciale in via XX Settembre; denominazione e civico non attestati dalle fonti recuperate",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
