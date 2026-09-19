@@ -1,0 +1,133 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-omicidio-contrada-quattrocchi-2015-01-25",
+  "discovered_at": "2026-09-18T21:55:46+02:00",
+  "updated_at": "2026-09-18T21:55:46+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Omicidio con arma da fuoco e incendio dell'autovettura in contrada Quattrocchi il 25 gennaio 2015",
+  "temporal": {
+    "start": "2015-01-25",
+    "end": "2015-01-25",
+    "edtf": "2015-01-25",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "agency:ansa:2015-01-25:agguato-ucciso-bruciato",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Agguato a Lamezia Terme: imprenditore ucciso e autovettura incendiata",
+      "url": "https://www.ansa.it/sito/notizie/cronaca/2015/01/25/agguato-in-calabria-ucciso-e-bruciato_fd9c9854-0adc-43d2-bd21-02561ede63a7.html",
+      "published_at": "2015-01-25T09:47:00+01:00",
+      "retrieved_at": "2026-09-18T21:55:46+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:cn24tv:2015-01-25:agguato-contrada-quattrocchi",
+      "source_type": "press_secondary",
+      "provider": "CN24TV",
+      "title": "Agguato a Lamezia Terme: imprenditore ucciso in contrada Quattrocchi",
+      "url": "https://cn24tv.it/news/104875/omicidio-a-lamezia-contrada-quattrocchi-ucciso-imprenditore-domenico-gigliotti.html",
+      "published_at": "2015-01-25T09:48:00+01:00",
+      "retrieved_at": "2026-09-18T21:55:46+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lametino:2021-06-11:delitto-2015-custodia-cautelare",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Delitto del 2015: eseguita ordinanza di custodia cautelare",
+      "url": "https://www.lametino.it/cronaca/lamezia-omicidio-di-gigliotti-nel-2015-ordinanza-di-custodia-cautelare-in-carcere-per-marco-gallo.html",
+      "published_at": "2021-06-11",
+      "retrieved_at": "2026-09-18T21:55:46+02:00",
+      "support_roles": [
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2021-06-11:omicidio-2015-ricostruzione",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Omicidio del 2015: ricostruzione investigativa e contesto del delitto",
+      "url": "https://www.corrieredellacalabria.it/2021/06/11/omicidio-gigliotti-la-truffa-e-questioni-donore-dietro-al-delitto-dellimprenditore/",
+      "published_at": "2021-06-11",
+      "retrieved_at": "2026-09-18T21:55:46+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lametino:2024-07-09:omicidio-2015-appello",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Omicidio del 2015: confermata in appello la condanna a 30 anni",
+      "url": "https://www.lametino.it/cronaca/lamezia-omicidio-gigliotti-confermata-in-appello-condanna-a-30-anni-marco-gallo.html",
+      "published_at": "2024-07-09",
+      "retrieved_at": "2026-09-18T21:55:46+02:00",
+      "support_roles": [
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "press:lametino:2024-07-09:omicidio-2015-appello",
+      "classification_basis": "source_stated_legal",
+      "attempt_status": "completed",
+      "situational_context": [
+        "Nella prima mattina del 25 gennaio 2015, intorno alle 04:00, la vittima fu raggiunta da più colpi di arma da fuoco all'ingresso della propria abitazione in contrada Quattrocchi; l'autovettura sulla quale si trovava fu poi incendiata.",
+        "La ricostruzione investigativa resa pubblica nel 2021 riferisce che l'esame autoptico accertò la presenza di fumo nei polmoni e che la vittima era ancora in vita quando si svilupparono le fiamme.",
+        "Una condanna di primo grado a 30 anni per l'omicidio fu pronunciata nel 2022; il 9 luglio 2024 la Corte d'appello confermò la condanna per l'omicidio, dichiarando prescritta la separata contestazione di distruzione di cadavere.",
+        "In questa ricerca non è stata individuata una successiva decisione di Cassazione relativa al procedimento; il record rappresenta quindi il quadro giudiziario documentato senza qualificarlo come definitivo.",
+        "Le prime cronache prospettavano diversi contesti possibili, mentre la ricostruzione investigativa successiva riportata dalla stampa indica motivi personali ed economici; il record non attribuisce una matrice mafiosa non accertata."
+      ],
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:contrada-quattrocchi:occurrence",
+      "basis_source_key": "press:cn24tv:2015-01-25:agguato-contrada-quattrocchi",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Contrada Quattrocchi"
+    },
+    {
+      "location_key": "location:lamezia-terme:contrada-quattrocchi:target",
+      "basis_source_key": "press:cn24tv:2015-01-25:agguato-contrada-quattrocchi",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Contrada Quattrocchi"
+    }
+  ]
+}
