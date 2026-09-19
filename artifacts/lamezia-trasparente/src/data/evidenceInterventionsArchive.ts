@@ -37,6 +37,7 @@ import { EVIDENCE_INTERVENTIONS_2026_09_17 } from "./evidenceInterventions202609
 import { EVIDENCE_INTERVENTIONS_2026_09_18 } from "./evidenceInterventions20260918";
 import { EVIDENCE_INTERVENTIONS_2026_09_19 } from "./evidenceInterventions20260919";
 import { applyEvidenceInterventionUpdates20260914 } from "./evidenceInterventionUpdates20260914";
+import { applyEvidenceInterventionUpdates20260919 } from "./evidenceInterventionUpdates20260919";
 
 export {
   EVIDENCE_AREA_LABELS,
@@ -84,7 +85,9 @@ const EVIDENCE_INTERVENTIONS_BEFORE_2026_09_14_UPDATES: readonly EvidenceInterve
 ];
 
 export const EVIDENCE_INTERVENTIONS: readonly EvidenceIntervention[] =
-  EVIDENCE_INTERVENTIONS_BEFORE_2026_09_14_UPDATES.map(applyEvidenceInterventionUpdates20260914);
+  EVIDENCE_INTERVENTIONS_BEFORE_2026_09_14_UPDATES
+    .map(applyEvidenceInterventionUpdates20260914)
+    .map(applyEvidenceInterventionUpdates20260919);
 
 export function getEvidenceCountries() {
   return Array.from(new Set(EVIDENCE_INTERVENTIONS.map((item) => item.country))).sort((a, b) =>
