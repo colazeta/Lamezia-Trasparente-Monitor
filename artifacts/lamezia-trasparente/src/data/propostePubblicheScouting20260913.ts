@@ -1,12 +1,14 @@
 import type { PublicProposal } from "./propostePubblicheCore";
 
 /**
- * Scouting del 13 settembre 2026.
+ * Scouting del 13 settembre 2026, con aggiornamento della timeline Scordovillo
+ * verificato il 19 settembre su fonti pubblicate il 18 settembre.
  *
- * Parallel Search è stato usato per discovery ed espansione. Ogni record è stato
- * poi verificato direttamente sulle pagine originarie che pubblicano le note
- * attribuite ai promotori. Le affermazioni fattuali non autonomamente confermate
- * restano attribuite ai promotori e non vengono trasformate in fatti LT.
+ * Parallel Search è stato usato per discovery ed espansione. Ogni record e ogni
+ * sviluppo materializzato sono stati poi verificati direttamente sulle pagine
+ * originarie che pubblicano le note attribuite ai promotori. Le affermazioni
+ * fattuali non autonomamente confermate restano attribuite ai promotori e non
+ * vengono trasformate in fatti LT.
  */
 export const SCOUTED_PUBLIC_PROPOSALS_20260913 = [
   {
@@ -14,12 +16,12 @@ export const SCOUTED_PUBLIC_PROPOSALS_20260913 = [
     title:
       "Scordovillo, Cristiano e Villella: ‘Basta decisioni calate dall’alto. Si convochi il Consiglio comunale aperto’",
     summary:
-      "Richiesta del gruppo consiliare Futuro Nazionale di convocare un Consiglio comunale aperto sulla vicenda Scordovillo e di rendere pubblicamente conoscibili criteri, responsabilità e modalità delle decisioni relative al percorso abitativo e agli alloggi collegati al superamento del campo.",
+      "Richiesta del gruppo consiliare Futuro Nazionale di convocare un Consiglio comunale aperto sulla vicenda Scordovillo e rendere pubblicamente conoscibili criteri, responsabilità e modalità delle decisioni relative al percorso abitativo; il 18 settembre il gruppo ha inoltre chiesto di sospendere ulteriori procedure di acquisto di immobili finché criteri, requisiti, modalità e conseguenze dell'operazione non siano illustrati pubblicamente e di aprire un confronto con i residenti dei quartieri interessati.",
     promoterId: "futuro-nazionale-lamezia",
     promoter: "Gruppo consiliare Futuro Nazionale — Lamezia Terme",
     promoterType: "forza_politica",
     coPromoters: ["Massimo Cristiano", "Carmine Villella"],
-    periodLabel: "12 settembre 2026",
+    periodLabel: "12–18 settembre 2026",
     year: "2026",
     theme: "Trasparenza e partecipazione democratica",
     threadId: "scordovillo-consiglio-aperto-trasparenza-percorso-abitativo",
@@ -28,7 +30,7 @@ export const SCOUTED_PUBLIC_PROPOSALS_20260913 = [
     territorialArea:
       "Scordovillo e, per gli effetti delle scelte abitative richiamate, territorio comunale di Lamezia Terme",
     institutionalRecipient:
-      "Comune di Lamezia Terme — Presidente del Consiglio comunale",
+      "Comune di Lamezia Terme — Presidente del Consiglio comunale e Sindaco; ATERP Calabria; Regione Calabria; Cabina di regia governativa; Struttura commissariale",
     channel: "comunicato",
     sourceLabel:
       "City One Lamezia, 12 settembre 2026 — nota firmata da Massimo Cristiano e Carmine Villella",
@@ -39,10 +41,10 @@ export const SCOUTED_PUBLIC_PROPOSALS_20260913 = [
       "https://www.comune.lamezia-terme.cz.it/it/documenti_pubblici/regolamento-di-funzionamento-del-consiglio-comunale-modificato-con-deliberazione-di-consiglio-comunale-n-1-del-31-01-2025",
     ],
     verificationNote:
-      "La pagina originaria di City One pubblica integralmente una nota sottoscritta dai consiglieri Massimo Cristiano e Carmine Villella per Futuro Nazionale. La richiesta concreta e attuale è rivolta alla Presidente del Consiglio comunale affinché definisca la convocazione di un Consiglio comunale aperto su Scordovillo; la stessa nota chiede che criteri di individuazione dei beneficiari, modalità di assegnazione, requisiti, responsabilità e valutazioni sull'impatto sociale delle scelte abitative siano conoscibili e discussi pubblicamente. I promotori affermano che una richiesta delle opposizioni sarebbe stata già condivisa favorevolmente in Conferenza dei Capigruppo prima di Ferragosto e che la seduta sarebbe stata prevista entro metà settembre, ma lo scouting non ha reperito un verbale, una convocazione o un altro atto comunale che verifichi autonomamente questo passaggio: non viene quindi registrato alcun deposito, recepimento o calendarizzazione pregressa. Il Regolamento comunale vigente documenta invece autonomamente che il Presidente del Consiglio convoca il Consiglio e presiede la Conferenza dei Capigruppo; tale base sostiene soltanto l'assessment di competenza sulla misura di convocazione e non attribuisce al Presidente le competenze sostanziali sulle politiche abitative o sugli interventi relativi a Scordovillo.",
+      "La pagina originaria di City One pubblica integralmente una nota sottoscritta dai consiglieri Massimo Cristiano e Carmine Villella per Futuro Nazionale. La richiesta concreta e attuale è rivolta alla Presidente del Consiglio comunale affinché definisca la convocazione di un Consiglio comunale aperto su Scordovillo; la stessa nota chiede che criteri di individuazione dei beneficiari, modalità di assegnazione, requisiti, responsabilità e valutazioni sull'impatto sociale delle scelte abitative siano conoscibili e discussi pubblicamente. I promotori affermano che una richiesta delle opposizioni sarebbe stata già condivisa favorevolmente in Conferenza dei Capigruppo prima di Ferragosto e che la seduta sarebbe stata prevista entro metà settembre, ma lo scouting non ha reperito un verbale, una convocazione o un altro atto comunale che verifichi autonomamente questo passaggio: non viene quindi registrato alcun deposito, recepimento o calendarizzazione pregressa. Il Regolamento comunale vigente documenta invece autonomamente che il Presidente del Consiglio convoca il Consiglio e presiede la Conferenza dei Capigruppo; tale base sostiene soltanto l'assessment di competenza sulla misura di convocazione e non attribuisce al Presidente le competenze sostanziali sulle politiche abitative o sugli interventi relativi a Scordovillo. Il 18 settembre City One e il Lametino pubblicano una nuova nota attribuita a Futuro Nazionale Lamezia Terme: il gruppo chiede ad ATERP e Regione Calabria di sospendere le ulteriori procedure di acquisto di immobili nel territorio lametino finché criteri, requisiti, modalità e conseguenze dell'operazione non siano illustrati pubblicamente e annuncia che nelle ore successive il gruppo consiliare presenterà formalmente un'istanza al Sindaco perché incontri e ascolti anche i cittadini dei quartieri interessati. Poiché la fonte usa il futuro per l'istanza al Sindaco e non è stato reperito un protocollo o l'atto depositato, l'evento del 18 settembre resta un aggiornamento della medesima proposta e non viene qualificato come deposito formale. I nuovi destinatari sono registrati come destinatari documentati delle richieste e non vengono trasformati automaticamente in enti competenti; l'assessment di competenza esistente resta limitato alla misura di convocazione del Consiglio comunale.",
     evidenceLevel: "ricostruzione_multi_fonte",
     firstSeen: "2026-09-12",
-    lastUpdated: "2026-09-12",
+    lastUpdated: "2026-09-18",
     events: [
       {
         id: "scordovillo-fn-richiesta-consiglio-aperto-12-settembre",
@@ -56,6 +58,20 @@ export const SCOUTED_PUBLIC_PROPOSALS_20260913 = [
         sourceUrl:
           "https://www.cityonelamezia.it/scordovillo-cristiano-e-villella-basta-decisioni-calate-dallalto-si-convochi-il-consiglio-comunale-aperto/",
         evidenceLevel: "fonte_stampa",
+      },
+      {
+        id: "scordovillo-fn-sospensione-acquisti-confronto-18-settembre",
+        date: "2026-09-18",
+        type: "aggiornamento",
+        title:
+          "Futuro Nazionale chiede di sospendere ulteriori acquisti e aprire il confronto con i quartieri",
+        summary:
+          "Futuro Nazionale chiede ad ATERP e Regione Calabria di sospendere ulteriori procedure di acquisto di immobili nel territorio lametino finché criteri, requisiti, modalità e conseguenze dell'operazione non siano illustrati pubblicamente. Il gruppo annuncia inoltre una successiva istanza formale al Sindaco per l'ascolto dei residenti dei quartieri interessati: in assenza dell'atto o di un protocollo, il dataset non registra un deposito formale.",
+        sourceLabel:
+          "City One e il Lametino — nota di Futuro Nazionale Lamezia Terme",
+        sourceUrl:
+          "https://www.cityonelamezia.it/futuro-nazionale-trasferimento-rom-fermatevi-e-ascoltate-la-citta/",
+        evidenceLevel: "ricostruzione_multi_fonte",
       },
     ],
   },
