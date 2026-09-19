@@ -62,6 +62,8 @@ const MUNICIPAL_NURSERIES_LAMEZIAINFORMA_URL =
   "https://www.lameziainforma.it/scuola-e-universita/2026/09/11/asili-nido-comunali-aperti-dal-15-settembre/69226/";
 const SCHOOL_TRANSPORT_CITY_ONE_URL =
   "https://www.cityonelamezia.it/lamezia-gianturco-assistenza-specialistica-si-parte-con-il-nuovo-anno-scolastico-piu-ore-per-gli-alunni-con-disabilita/";
+const SERRA_ANNUNZIATA_LAMETINO_URL =
+  "https://www.lametino.it/ultime/lamezia-consigliera-serratore-presenta-mozione-su-rifiuti-e-sicurezza-in-localita-serra-e-annunziata.html";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
 const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
 const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-27T21:49:11Z";
@@ -69,6 +71,7 @@ const COMMISSION_VI_RESEARCHED_AT = "2026-08-31T22:02:47Z";
 const SEPTEMBER_COMMISSION_RESEARCHED_AT = "2026-09-07T04:19:06Z";
 const MID_SEPTEMBER_COMMISSION_RESEARCHED_AT = "2026-09-12T10:18:08Z";
 const LATE_SEPTEMBER_COMMISSION_RESEARCHED_AT = "2026-09-19T09:34:42Z";
+const SERRA_ANNUNZIATA_CONTEXT_RESEARCHED_AT = "2026-09-19T15:49:21Z";
 const MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT = "2026-09-12T21:51:17Z";
 const SCHOOL_TRANSPORT_CONTEXT_RESEARCHED_AT = "2026-09-14T10:13:39Z";
 
@@ -408,6 +411,28 @@ const lateSeptemberCommissionContextResearch: CouncilSessionV0ContextResearch =
     searchNote:
       "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, il Lametino e risultati indicizzati per le sedute di I, II, III, IV e V Commissione dal 16 al 21 settembre 2026. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alle singole sedute. Gli ordini del giorno ufficiali sono disponibili e non viene ricostruita un'agenda editoriale.",
     articles: [],
+    media: [],
+  };
+
+const commissionIiiWasteMotionContextResearch: CouncilSessionV0ContextResearch =
+  {
+    status: "reviewed_matches",
+    checkedAt: SERRA_ANNUNZIATA_CONTEXT_RESEARCHED_AT,
+    searchNote:
+      "Ricerca eseguita con Parallel Search per discovery e verifica diretta dell'articolo originale de il Lametino e della convocazione Albo 2026/3001 per la III Commissione del 21 settembre 2026. L'articolo del 14 settembre descrive la stessa mozione della consigliera Bernadette Serratore su bonifica, sicurezza, controllo e contrasto all'abbandono dei rifiuti nelle località Serra e Annunziata. Il collegamento è registrato come contesto del punto in agenda: la fonte non attesta convocazione, svolgimento, votazioni o risultati della seduta. Non sono emerse dirette, registrazioni, clip o interviste collegabili con sufficiente precisione.",
+    articles: [
+      {
+        title:
+          "Lamezia, consigliera Serratore presenta mozione su rifiuti e sicurezza in località Serra e Annunziata",
+        url: SERRA_ANNUNZIATA_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-09-14",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo attribuisce a Bernadette Serratore una mozione su rifiuti, bonifica, sicurezza e controlli nelle località Serra e Annunziata, elementi coincidenti con il punto ufficiale della III Commissione del 21 settembre. Pubblicato prima della convocazione, documenta il tema della mozione ma non la seduta, la sua trattazione o eventuali esiti.",
+        reviewedAt: SERRA_ANNUNZIATA_CONTEXT_RESEARCHED_AT,
+      },
+    ],
     media: [],
   };
 
@@ -1477,7 +1502,7 @@ export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
     agenda: wasteAbandonmentMotionAgenda,
     candidate: commissionIiiSeptember21Notice.candidate,
     provenance: commissionIiiSeptember21Notice.provenance,
-    contextResearch: lateSeptemberCommissionContextResearch,
+    contextResearch: commissionIiiWasteMotionContextResearch,
     sourceLinkLabel: "Apri la convocazione ufficiale della III Commissione",
     calendarSummary:
       "La convocazione programma una seduta della III Commissione il 21 settembre 2026 alle 10:30.",
