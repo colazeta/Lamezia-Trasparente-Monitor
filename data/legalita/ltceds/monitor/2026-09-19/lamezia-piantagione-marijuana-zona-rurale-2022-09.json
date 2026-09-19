@@ -1,0 +1,133 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-piantagione-marijuana-zona-rurale-2022-09",
+  "discovered_at": "2026-09-19T15:17:57+02:00",
+  "updated_at": "2026-09-19T15:17:57+02:00",
+  "record_status": "verified_source",
+  "event_form": "continuous_episode",
+  "title": "Coltivazione e detenzione ai fini di spaccio di 35 piante di marijuana in una zona rurale di Lamezia Terme, accertata entro il 16 settembre 2022",
+  "temporal": {
+    "start": null,
+    "end": "2022-09-16",
+    "edtf": null,
+    "precision": "approximate"
+  },
+  "sources": [
+    {
+      "source_key": "press:corriere-lamezia:2022-09-16:piantagione-marijuana",
+      "source_type": "press_secondary",
+      "provider": "Corriere di Lamezia",
+      "title": "Lamezia, sequestrata piantagione di marijuana, due arresti",
+      "url": "https://www.corrieredilamezia.it/cronaca/2022_09_16/lamezia-sequestrata-piantagione-di-marijuana-due-arresti_24961",
+      "published_at": "2022-09-16",
+      "retrieved_at": "2026-09-19T15:17:57+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:preserre:2022-09-17:piantagione-marijuana-lamezia",
+      "source_type": "press_secondary",
+      "provider": "PreSerre e Dintorni",
+      "title": "Droga, piantagione di cannabis indica scoperta nel Lametino: due arresti",
+      "url": "https://www.preserreedintorni.it/droga-piantagione-di-cannabis-indica-scoperta-nel-lametino-due-arresti/",
+      "published_at": "2022-09-17",
+      "retrieved_at": "2026-09-19T15:17:57+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:coltivazione-stupefacenti",
+      "classification_source_key": "press:corriere-lamezia:2022-09-16:piantagione-marijuana",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti riferiscono che i Carabinieri hanno sorpreso due persone mentre si prendevano cura di una coltivazione di marijuana in una zona rurale di Lamezia Terme",
+        "la coltivazione comprendeva 35 piante di marijuana, di altezza variabile tra 185 e 250 centimetri, occultate da un canneto",
+        "sul posto era presente un sistema di irrigazione artigianale collegato a una sorgente vicina posta a monte della piantagione"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 35
+    },
+    {
+      "offence_key": "offence:detenzione-stupefacenti-ai-fini-di-spaccio",
+      "classification_source_key": "press:corriere-lamezia:2022-09-16:piantagione-marijuana",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "entrambe le fonti qualificano la condotta come coltivazione e detenzione ai fini di spaccio di sostanze stupefacenti",
+        "la sostanza stupefacente è stata sequestrata per campionatura e successive analisi chimico-tossicologiche",
+        "le fonti riferiscono arresto in flagranza e successiva convalida del GIP con applicazione degli arresti domiciliari; non è stata verificata in questa ricerca una decisione definitiva"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:zona-rurale-piantagione-marijuana:occurrence",
+      "basis_source_key": "press:corriere-lamezia:2022-09-16:piantagione-marijuana",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "unknown",
+      "geometry": null,
+      "place_name": "Zona rurale di Lamezia Terme; piantagione occultata in un canneto",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:zona-rurale-piantagione-marijuana:recovery",
+      "basis_source_key": "press:corriere-lamezia:2022-09-16:piantagione-marijuana",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "unknown",
+      "geometry": null,
+      "place_name": "Zona rurale di Lamezia Terme; piantagione occultata in un canneto con sorgente nelle vicinanze",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:zona-rurale-piantagione-marijuana:arrest",
+      "basis_source_key": "press:preserre:2022-09-17:piantagione-marijuana-lamezia",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "unknown",
+      "geometry": null,
+      "place_name": "Zona rurale di Lamezia Terme, presso la piantagione",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
