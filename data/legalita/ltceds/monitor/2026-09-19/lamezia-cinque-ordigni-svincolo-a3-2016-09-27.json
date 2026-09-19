@@ -44,15 +44,14 @@
       ]
     },
     {
-      "source_key": "press:lanuovacalabria:2020-02-28:cinque-ordigni-processo",
+      "source_key": "press:soveratoweb:2020-02-28:cinque-ordigni-processo",
       "source_type": "press_secondary",
-      "provider": "La Nuova Calabria",
-      "title": "Aggiornamento processuale sul rinvenimento dei cinque ordigni a Lamezia Terme",
-      "url": "https://www.lanuovacalabria.it/trovati-in-auto-con-5-ordigni-esplosivi-a-lamezia-terme-la-procura-chiede-8-anni-di-reclusione-per-vincenzini-e-de-sarro",
+      "provider": "Soverato Web",
+      "title": "Beccati con in auto 5 ordigni altamente esplosivi, chiesti 8 anni di reclusione",
+      "url": "https://www.soveratoweb.com/beccati-con-in-auto-5-ordigni-altamente-esplosivi-chiesti-8-anni-di-reclusione/",
       "published_at": "2020-02-28",
       "retrieved_at": "2026-09-19T03:00:45+02:00",
       "support_roles": [
-        "event_support",
         "classification_support",
         "location_support",
         "procedural_context",
