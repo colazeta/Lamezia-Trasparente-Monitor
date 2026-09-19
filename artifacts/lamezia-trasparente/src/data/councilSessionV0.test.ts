@@ -657,15 +657,37 @@ describe("councilSessionV0", () => {
   });
 
   it("materializes the 16–21 September Commission notices with official dates and agendas", () => {
-    const publications = [
-      "2026/2953",
-      "2026/2959",
-      "2026/2960",
-      "2026/2971",
-      "2026/2981",
-      "2026/2986",
-      "2026/3001",
-    ];
+    const publicationContentHashes = new Map([
+      [
+        "2026/2953",
+        "a0847f430a5d647392679397388a437ab59552a0c8703b1b53c7b1d7ad43e451",
+      ],
+      [
+        "2026/2959",
+        "91111c510f5fd5aa973bd579d24a595d3cf54e0ebb4a66fee237c167b599c237",
+      ],
+      [
+        "2026/2960",
+        "30980bcc9f5acb9173fe1bab42601c7999edfa30e72e0341ac8143c11fb59317",
+      ],
+      [
+        "2026/2971",
+        "6db758ff5ddab2f37c7db4442641b0e75481ddfd9b201d9738a7579cd414c1f5",
+      ],
+      [
+        "2026/2981",
+        "a6a45d08d063c993b69995557a4a82417c4fba918de3315260a189bb2a78c38f",
+      ],
+      [
+        "2026/2986",
+        "6b5898f02ec82e8f3a587c49491033d0945396b9589c5d1584da4d2002205ca6",
+      ],
+      [
+        "2026/3001",
+        "7d6e5cc50baeb9e9d79c2b668de35004a3134587fd714964170828c2228adee3",
+      ],
+    ]);
+    const publications = [...publicationContentHashes.keys()];
     const sessions = councilSessionV0ReviewedRecords.filter((session) =>
       publications.includes(session.provenance?.publicationNumber ?? ""),
     );
@@ -689,6 +711,14 @@ describe("councilSessionV0", () => {
         /2026_(2953|2959|2960|2971|2981|2986|3001)_1_X/,
       );
       expect(session.provenance?.documentSha256).toMatch(/^[a-f0-9]{64}$/);
+      expect(session.provenance?.sourceContentHash).toBe(
+        publicationContentHashes.get(
+          session.provenance?.publicationNumber ?? "",
+        ),
+      );
+      expect(session.provenance?.sourceContentHash).not.toBe(
+        session.provenance?.documentSha256,
+      );
       expect(session.provenance?.archivedDocumentUrl).toContain(
         session.provenance?.documentSha256,
       );
