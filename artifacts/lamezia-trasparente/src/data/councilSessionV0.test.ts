@@ -197,7 +197,7 @@ describe("councilSessionV0", () => {
   });
 
   it("publishes source-traceable records for both council and commission notices", () => {
-    expect(councilSessionV0ReviewedRecords).toHaveLength(19);
+    expect(councilSessionV0ReviewedRecords).toHaveLength(29);
     expect(
       new Set(councilSessionV0ReviewedRecords.map((item) => item.kind)),
     ).toEqual(new Set(["council", "commission"]));
@@ -652,6 +652,94 @@ describe("councilSessionV0", () => {
       ).toBe(true);
       expect(session.contextResearch.searchNote).toMatch(
         /non ha restituito contenuti.*sedute della II Commissione/i,
+      );
+    }
+  });
+
+  it("materializes the 16–21 September Commission notices with official dates and agendas", () => {
+    const publicationContentHashes = new Map([
+      [
+        "2026/2953",
+        "a0847f430a5d647392679397388a437ab59552a0c8703b1b53c7b1d7ad43e451",
+      ],
+      [
+        "2026/2959",
+        "91111c510f5fd5aa973bd579d24a595d3cf54e0ebb4a66fee237c167b599c237",
+      ],
+      [
+        "2026/2960",
+        "30980bcc9f5acb9173fe1bab42601c7999edfa30e72e0341ac8143c11fb59317",
+      ],
+      [
+        "2026/2971",
+        "6db758ff5ddab2f37c7db4442641b0e75481ddfd9b201d9738a7579cd414c1f5",
+      ],
+      [
+        "2026/2981",
+        "a6a45d08d063c993b69995557a4a82417c4fba918de3315260a189bb2a78c38f",
+      ],
+      [
+        "2026/2986",
+        "6b5898f02ec82e8f3a587c49491033d0945396b9589c5d1584da4d2002205ca6",
+      ],
+      [
+        "2026/3001",
+        "7d6e5cc50baeb9e9d79c2b668de35004a3134587fd714964170828c2228adee3",
+      ],
+    ]);
+    const publications = [...publicationContentHashes.keys()];
+    const sessions = councilSessionV0ReviewedRecords.filter((session) =>
+      publications.includes(session.provenance?.publicationNumber ?? ""),
+    );
+
+    expect(sessions).toHaveLength(10);
+    expect(sessions.map((session) => session.scheduledAt.value)).toEqual([
+      "2026-09-21T10:30:00+02:00",
+      "2026-09-21T09:30:00+02:00",
+      "2026-09-18T12:00:00+02:00",
+      "2026-09-18T11:00:00+02:00",
+      "2026-09-18T10:00:00+02:00",
+      "2026-09-17T16:30:00+02:00",
+      "2026-09-17T15:30:00+02:00",
+      "2026-09-17T12:00:00+02:00",
+      "2026-09-17T11:00:00+02:00",
+      "2026-09-16T12:00:00+02:00",
+    ]);
+
+    for (const session of sessions) {
+      expect(session.provenance?.documentUrl).toMatch(
+        /2026_(2953|2959|2960|2971|2981|2986|3001)_1_X/,
+      );
+      expect(session.provenance?.documentSha256).toMatch(/^[a-f0-9]{64}$/);
+      expect(session.provenance?.sourceContentHash).toBe(
+        publicationContentHashes.get(
+          session.provenance?.publicationNumber ?? "",
+        ),
+      );
+      expect(session.provenance?.sourceContentHash).not.toBe(
+        session.provenance?.documentSha256,
+      );
+      expect(session.provenance?.archivedDocumentUrl).toContain(
+        session.provenance?.documentSha256,
+      );
+      expect(session.provenance?.sourceReviewStatus).toBe(
+        "reviewed_against_official_attachment",
+      );
+      expect(session.scheduledAt.sourceStatus).toBe("verificato");
+      expect(session.agenda.sourceStatus).toBe("verificato");
+      expect(session.agenda.value?.length).toBeGreaterThan(0);
+      expect(session.sessionStatus.value).toBe("non_verificata");
+      expect(session.contextResearch).toEqual(
+        expect.objectContaining({
+          status: "checked_no_match",
+          checkedAt: "2026-09-19T09:34:42Z",
+          articles: [],
+          media: [],
+        }),
+      );
+      expect(session.contextResearch.searchNote).toMatch(/Parallel Search/i);
+      expect(session.dataLimits.value?.join(" ")).toMatch(
+        /sede non è indicata.*non viene inferita/i,
       );
     }
   });
