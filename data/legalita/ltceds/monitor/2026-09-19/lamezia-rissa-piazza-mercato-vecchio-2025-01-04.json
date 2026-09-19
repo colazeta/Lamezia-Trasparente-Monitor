@@ -1,0 +1,82 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rissa-piazza-mercato-vecchio-2025-01-04",
+  "discovered_at": "2026-09-19T09:51:52+02:00",
+  "updated_at": "2026-09-19T09:51:52+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rissa con bottiglie in Piazza Bovio (Piazza Mercato Vecchio) il 4 gennaio 2025",
+  "temporal": {
+    "start": "2025-01-04T19:00:00+01:00",
+    "end": "2025-01-04T19:00:00+01:00",
+    "edtf": null,
+    "precision": "exact_datetime"
+  },
+  "sources": [
+    {
+      "source_key": "press:lacnews24:2025-01-05:rissa-piazza-mercato-vecchio",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Lamezia, bottiglie usate come lame: rissa per il controllo della piazza a due passi dal salotto buono della città",
+      "url": "https://www.lacnews24.it/cronaca/lamezia-bottiglie-usate-come-lame-rissa-per-il-controllo-della-piazza-a-due-passi-dal-salotto-buono-della-citta-sljzukn1",
+      "published_at": "2025-01-05T12:31:00+01:00",
+      "retrieved_at": "2026-09-19T09:51:52+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "classification_support"
+      ]
+    },
+    {
+      "source_key": "press:noidicalabria:2025-01-05:rissa-piazza-mercato-vecchio",
+      "source_type": "press_secondary",
+      "provider": "NoiDiCalabria",
+      "title": "Rissa a Piazza Mercato Vecchio di Lamezia: torna la paura nel cuore della città",
+      "url": "https://noidicalabria.it/rissa-a-piazza-mercato-vecchio-di-lamezia-torna-la-paura-nel-cuore-della-citta/",
+      "published_at": "2025-01-05T15:30:00+01:00",
+      "retrieved_at": "2026-09-19T09:51:52+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rissa",
+      "classification_source_key": "press:lacnews24:2025-01-05:rissa-piazza-mercato-vecchio",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti coeve collocano la colluttazione nella serata di sabato 4 gennaio 2025, intorno alle 19, in Piazza Bovio, comunemente indicata come Piazza Mercato Vecchio, nel centro di Lamezia Terme.",
+        "Le cronache descrivono una lite degenerata in violenza con lancio e uso di bottiglie di vetro come oggetti contundenti; una delle persone coinvolte avrebbe riportato lesioni con prognosi di pochi giorni.",
+        "La Polizia intervenne sul posto e identificò i soggetti coinvolti. Non è stata reperita in questa iterazione una fonte primaria di polizia o giudiziaria che consenta una qualificazione legale più forte, per cui la classificazione resta provisional."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:piazza-bovio-mercato-vecchio:occurrence",
+      "basis_source_key": "press:lacnews24:2025-01-05:rissa-piazza-mercato-vecchio",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Piazza Bovio (Piazza Mercato Vecchio)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
