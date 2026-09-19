@@ -158,6 +158,13 @@ test("serves the reviewed September commission attachments", () => {
     "data/public/albo/documents/2026/a1dad36522921833ac71b994a73032d3454227d0a2c00f57156a8d7059d94baf.pdf",
     "data/public/albo/documents/2026/dee314eb1f7e9133848be4b48c1c0b5e06ddd60371a92acc40ef9e290a62e411.pdf",
     "data/public/albo/documents/2026/feb500c847880bf03ab1cd09190b961828f5b3873d60bea800e93367a3c74468.pdf",
+    "data/public/albo/documents/2026/57731fbea7c4cdd31d8ff82175a0f84fc4fb053c0d71cb073d00ce38b33c74b5.pdf",
+    "data/public/albo/documents/2026/674f8c685f04e85674e4530e180cc45bca76b0256d06397040c2a024afb8f440.pdf",
+    "data/public/albo/documents/2026/f311abbc9e4c6e3d0b9cfe4d4d0225548be713cef74686ec2556148e8c1901e5.pdf",
+    "data/public/albo/documents/2026/08f1075950b3e90994c2c5353cb0b1dc0992a4c6f4d55b27ba2e5ddcb99f5c40.pdf",
+    "data/public/albo/documents/2026/588fe94ce804d0f1699cb42f41eee4390e4ecb3f3fab21379b100b5c84e3e4eb.pdf",
+    "data/public/albo/documents/2026/b23e5a278fa5550657c3804e2a60a37ad09a1bdad2efcff6a7ece4f68a6b15e1.pdf",
+    "data/public/albo/documents/2026/8eebc4e71f5def4118e620b94ea9855319f39f9c548aedb7d4860d19a42b6f7f.pdf",
   ];
 
   const served = alboDocumentServingFiles(repoRoot);
