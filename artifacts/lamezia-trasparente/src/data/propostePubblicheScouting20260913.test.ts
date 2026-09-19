@@ -75,7 +75,7 @@ describe("scouted public proposals 13 September 2026 and Scordovillo timeline up
     expect(scordovilloCanonical.title).toBe(
       "Trasparenza e confronto pubblico sul percorso abitativo di Scordovillo",
     );
-    expect(scordovilloCanonical.version).toBe("1.1");
+    expect(scordovilloCanonical.version).toBe("1.0");
     expect(scordovilloCanonical.measures).toHaveLength(6);
     expect(scordovilloCanonical.actionTypes).toEqual([
       "organizzazione",
