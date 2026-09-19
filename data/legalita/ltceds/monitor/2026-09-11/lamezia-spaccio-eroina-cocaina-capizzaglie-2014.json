@@ -1,0 +1,118 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-spaccio-eroina-cocaina-capizzaglie-2014",
+  "discovered_at": "2026-09-11T00:21:27+02:00",
+  "updated_at": "2026-09-11T00:21:27+02:00",
+  "record_status": "verified_source",
+  "event_form": "course_of_conduct",
+  "title": "Spaccio sistematico di eroina e cocaina nel quartiere Capizzaglie documentato tra giugno e ottobre 2014",
+  "temporal": {
+    "start": "2014-06",
+    "end": "2014-10",
+    "edtf": "2014-06/2014-10",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "law-enforcement:questura-catanzaro:2015-04-24:drug-family-spaccio",
+      "source_type": "law_enforcement_primary",
+      "provider": "Questura di Catanzaro - Polizia di Stato",
+      "title": "La Polizia arresta sette persone per spaccio di droga",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/5730dfc4551d9279572059",
+      "published_at": null,
+      "retrieved_at": "2026-09-11T00:21:27+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2015-04-24:drug-family-spaccio",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: giro di spaccio a gestione familiare, sette arresti",
+      "url": "https://www.lametino.it/cronaca/lamezia-giro-di-spaccio-a-gestione-familiare-sette-arresti.html",
+      "published_at": "2015-04-24T08:06:00+02:00",
+      "retrieved_at": "2026-09-11T00:21:27+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:cn24tv:2015-04-24:drug-family-spaccio",
+      "source_type": "press_secondary",
+      "provider": "CN24TV",
+      "title": "Spaccio a conduzione familiare, sette arresti nel lametino",
+      "url": "https://cn24tv.it/news/110724/spaccio-a-conduzione-familiare-sette-arresti-nel-lametino.html",
+      "published_at": "2015-04-24T08:51:00+02:00",
+      "retrieved_at": "2026-09-11T00:21:27+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:spaccio-stupefacenti",
+      "classification_source_key": "law-enforcement:questura-catanzaro:2015-04-24:drug-family-spaccio",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la Questura riferisce che sette persone erano ritenute responsabili a vario titolo di spaccio in concorso di eroina e cocaina",
+        "le indagini avviate nel giugno 2014 e protratte per quattro mesi sino a ottobre documentarono una gestione sistematica dello spaccio; l'intervallo temporale rappresenta la finestra investigativa documentata e non viene interpretato come data certa di inizio o cessazione della condotta",
+        "CN24TV riferisce espressamente che lo spaccio sistematico di eroina e cocaina era gestito nel quartiere Capizzaglie; non viene inferita alcuna via, abitazione o coordinata"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:tentata-estorsione",
+      "classification_source_key": "law-enforcement:questura-catanzaro:2015-04-24:drug-family-spaccio",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "la fonte primaria attribuisce a uno dei soggetti anche una tentata estorsione ai danni di alcuni acquirenti di droga, ai quali sarebbero state richieste somme non dovute per dosi precedentemente non pagate con minacce di gravi ritorsioni",
+        "la localizzazione della condotta estorsiva non è specificata e non viene inferita dal luogo documentato per lo spaccio"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:capizzaglie:occurrence",
+      "basis_source_key": "press:cn24tv:2015-04-24:drug-family-spaccio",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_neighbourhood",
+      "evidence_precision": "neighbourhood",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "non_sensitive",
+      "geometry": null,
+      "place_name": "Quartiere Capizzaglie",
+      "neighbourhood": "Capizzaglie",
+      "iccs_location_type": null
+    }
+  ]
+}

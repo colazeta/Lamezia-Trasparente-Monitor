@@ -1,0 +1,116 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-intimidazione-benzina-proiettili-via-pietro-nenni-2025-11-10",
+  "discovered_at": "2026-09-11T03:09:17+02:00",
+  "updated_at": "2026-09-11T03:09:17+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Presunto atto intimidatorio con benzina e proiettili davanti a un'abitazione in via Pietro Nenni",
+  "temporal": {
+    "start": "2025-11-10",
+    "end": "2025-11-10",
+    "edtf": "2025-11-10",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "agency:ansa:2025-11-14:intimidazione-benzina-proiettili-abitazione-lamezia",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Nuova intimidazione a Lamezia Terme, vittima è un imprenditore",
+      "url": "https://www.ansa.it/calabria/notizie/2025/11/14/nuova-intimidazione-a-lamezia-terme-vittima-e-un-imprenditore_824e6ba0-5d42-4e35-b5aa-edb090e646ac.html",
+      "published_at": "2025-11-14T14:35:00+01:00",
+      "retrieved_at": "2026-09-11T03:09:17+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lacnews24:2025-11-14:intimidazione-via-pietro-nenni",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Benzina e proiettili, paura a Lamezia per l'intimidazione all'imprenditore dei Due Mari: la verità nelle telecamere di sicurezza",
+      "url": "https://www.lacnews24.it/cronaca/benzina-e-proiettili-paura-a-lamezia-per-lintimidazione-allimprenditore-dei-due-mari-la-verita-nelle-telecamere-di-sicurezza-g3eefs7v",
+      "published_at": "2025-11-14T19:11:00+01:00",
+      "retrieved_at": "2026-09-11T03:09:17+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:intimidazione",
+      "classification_source_key": "agency:ansa:2025-11-14:intimidazione-benzina-proiettili-abitazione-lamezia",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "not_applicable",
+      "situational_context": [
+        "ANSA e LaC News24 descrivono come intimidazione il rinvenimento davanti all'ingresso di un'abitazione privata di una bottiglia contenente liquido infiammabile o benzina e di due proiettili; non viene inferita una qualificazione penale più specifica.",
+        "LaC News24 colloca il rinvenimento a lunedì 10 novembre 2025 e identifica via Pietro Nenni; la data canonica rappresenta il giorno documentato del rinvenimento, mentre le fonti non consentono di stabilire con maggiore precisione quando gli oggetti siano stati materialmente collocati.",
+        "Le fonti riferiscono una denuncia ai Carabinieri e l'esame delle immagini di videosorveglianza della zona; tali elementi sono conservati come contesto investigativo e non come accertamento definitivo di responsabilità.",
+        "Le fonti consultate non attestano esplosione, incendio, lesioni o una formale contestazione di estorsione, minaccia o associazione mafiosa; tali qualificazioni non vengono inferite."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-pietro-nenni:occurrence",
+      "basis_source_key": "press:lacnews24:2025-11-14:intimidazione-via-pietro-nenni",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Via Pietro Nenni",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-pietro-nenni:target",
+      "basis_source_key": "press:lacnews24:2025-11-14:intimidazione-via-pietro-nenni",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Via Pietro Nenni",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-pietro-nenni:discovery",
+      "basis_source_key": "press:lacnews24:2025-11-14:intimidazione-via-pietro-nenni",
+      "role": "discovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Via Pietro Nenni",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    }
+  ]
+}

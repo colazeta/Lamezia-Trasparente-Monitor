@@ -1,0 +1,179 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-maltrattamenti-scuola-infanzia-donnamazza-2019",
+  "discovered_at": "2026-09-17T16:21:35+02:00",
+  "updated_at": "2026-09-17T16:21:35+02:00",
+  "record_status": "verified_source",
+  "event_form": "course_of_conduct",
+  "title": "Maltrattamenti sistematici nella scuola dell'infanzia S. Gatti, plesso Donnamazza, nel 2019",
+  "temporal": {
+    "start": "2019",
+    "end": "2019",
+    "edtf": "2019",
+    "precision": "year"
+  },
+  "sources": [
+    {
+      "source_key": "press:repubblica:2019-03-30:maltrattamenti-asilo-lamezia",
+      "source_type": "press_secondary",
+      "provider": "la Repubblica",
+      "title": "Lamezia Terme. Maltrattamenti, arrestate una maestra e una bidella",
+      "url": "https://www.repubblica.it/cronaca/2019/03/30/news/catanzaro_maestre_maltrattamenti-222861538/",
+      "published_at": "2019-03-30",
+      "retrieved_at": "2026-09-17T16:21:35+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-sera:2019-03-30:clima-terrore-asilo-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Sera",
+      "title": "Lamezia Terme, «clima di terrore all’asilo»: due arresti per maltrattamenti",
+      "url": "https://www.corriere.it/cronache/19_marzo_30/clima-terrore-lamezia-asilo-calabria-arresti-maltrattamenti-63a65284-52f0-11e9-9968-8e956cb2939f.shtml",
+      "published_at": "2019-03-30",
+      "retrieved_at": "2026-09-17T16:21:35+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lacnews24:2020-09-29:maltrattamenti-asilo-donnamazza-processo",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Lamezia, maltrattamenti all’asilo: a processo due insegnanti e una bidella",
+      "url": "https://www.lacnews24.it/cronaca/lamezia-maltrattamenti-allasilo-a-processo-due-insegnanti-e-una-bidella-ne11w784",
+      "published_at": "2020-09-29",
+      "retrieved_at": "2026-09-17T16:21:35+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2026-01-20:condanne-maltrattamenti-s-gatti-donnamazza",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Maltrattamenti all’asilo “S. Gatti” di Lamezia: tre condanne in primo grado",
+      "url": "https://www.corrieredellacalabria.it/2026/01/20/maltrattamenti-allasilo-s-gatti-di-lamezia-tre-condanne-in-primo-grado/",
+      "published_at": "2026-01-20",
+      "retrieved_at": "2026-09-17T16:21:35+02:00",
+      "support_roles": [
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2026-02-04:motivazioni-maltrattamenti-s-gatti-donnamazza",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Asilo degli orrori a Lamezia, bambini senza difese e sopraffatti in un «sistema educativo fondato sulla paura»",
+      "url": "https://www.corrieredellacalabria.it/2026/02/04/asilo-degli-orrori-a-lamezia-bambini-senza-difese-e-sopraffatti-in-un-sistema-educativo-fondato-sulla-paura/",
+      "published_at": "2026-02-04",
+      "retrieved_at": "2026-09-17T16:21:35+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:maltrattamenti-aggravati",
+      "classification_source_key": "press:corriere-sera:2019-03-30:clima-terrore-asilo-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le cronache contemporanee del marzo 2019 riferiscono la contestazione di maltrattamenti aggravati ai danni di bambini della scuola dell'infanzia e l'applicazione di misure cautelari domiciliari.",
+        "Le indagini, avviate dopo le segnalazioni di due madri e svolte anche con videoriprese e intercettazioni ambientali, documentarono condotte ripetute per un periodo prolungato; le fonti non consentono tuttavia di fissare con rigore il primo e l'ultimo giorno delle condotte, per cui la temporalità resta annuale.",
+        "Nel gennaio 2026 il Tribunale di Lamezia Terme ha pronunciato condanne di primo grado per maltrattamenti; le motivazioni pubblicate nel febbraio 2026 descrivono una continuità di comportamenti e una prassi sistematica, non episodi isolati.",
+        "La classificazione registra contestazioni e un esito di primo grado e non implica definitività della responsabilità."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:lesioni-personali",
+      "classification_source_key": "press:corriere-calabria:2026-01-20:condanne-maltrattamenti-s-gatti-donnamazza",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La sentenza di primo grado del 20 gennaio 2026 comprende, per una delle posizioni, alcune lesioni arrecate a un bambino nel medesimo contesto scolastico.",
+        "Il dato è registrato come esito di primo grado, non come accertamento definitivo."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:falso-ideologico-in-atto-pubblico",
+      "classification_source_key": "press:lacnews24:2020-09-29:maltrattamenti-asilo-donnamazza-processo",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Il procedimento comprendeva la contestazione di falso ideologico in atto pubblico per attestazioni non veritiere di presenze o assenze nel registro di classe.",
+        "La sentenza di primo grado del 20 gennaio 2026 ha pronunciato condanne per falso ideologico e assoluzioni limitate ad alcune specifiche giornate in cui i registri sono risultati corrispondenti al vero."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:donnamazza:scuola-infanzia:occurrence",
+      "basis_source_key": "press:lacnews24:2020-09-29:maltrattamenti-asilo-donnamazza-processo",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "minor_or_vulnerable",
+      "geometry": null,
+      "place_name": "Scuola dell'infanzia S. Gatti, plesso Donnamazza",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:donnamazza:scuola-infanzia:target",
+      "basis_source_key": "press:lacnews24:2020-09-29:maltrattamenti-asilo-donnamazza-processo",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "minor_or_vulnerable",
+      "geometry": null,
+      "place_name": "Scuola dell'infanzia S. Gatti, plesso Donnamazza",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

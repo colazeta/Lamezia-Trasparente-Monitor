@@ -1,0 +1,116 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-omicidio-sala-giochi-razionale-2004-11-13",
+  "discovered_at": "2026-09-12T04:21:27+02:00",
+  "updated_at": "2026-09-12T04:21:27+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Omicidio a colpi d'arma da fuoco in una sala giochi del quartiere Razionale il 13 novembre 2004",
+  "temporal": {
+    "start": "2004-11-13",
+    "end": "2004-11-13",
+    "edtf": "2004-11-13",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:nuova-cosenza:2004-11-13:omicidio-sala-giochi-razionale",
+      "source_type": "press_secondary",
+      "provider": "Nuova Cosenza",
+      "title": "Delitto di mafia a Lamezia, pregiudicato ucciso in una sala giochi",
+      "url": "https://www.nuovacosenza.com/cs/novembre1017.html",
+      "published_at": "2004-11-13",
+      "retrieved_at": "2026-09-12T04:21:27+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lacnews24:2017-06-09:omicidio-2004-razionale-sette-condanne",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "’Ndrangheta: omicidio a Lamezia, 7 condanne",
+      "url": "https://www.lacnews24.it/cronaca/ndrangheta-omicidio-gualtieri-a-lamezia-7-condanne-qnd1qf1m",
+      "published_at": "2017-06-09T16:13:00+02:00",
+      "retrieved_at": "2026-09-12T04:21:27+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2018-02-08:omicidio-2004-razionale-misure-cautelari",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: omicidio del 2004, dopo la sentenza di condanna notificate ordinanze cautelari",
+      "url": "https://www.lametino.it/cronaca/lamezia-omicidio-giovanni-gualtieri-dopo-sentenza-di-condanna-applicata-misura-cautelare-a-vincenzo-arcieri-e-giovanni-notarianni.html",
+      "published_at": "2018-02-08",
+      "retrieved_at": "2026-09-12T04:21:27+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "press:lacnews24:2017-06-09:omicidio-2004-razionale-sette-condanne",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti collocano l'omicidio il 13 novembre 2004 all'interno di una sala giochi del quartiere Razionale di Lamezia Terme, dove la vittima fu raggiunta da più colpi d'arma da fuoco",
+        "la ricostruzione processuale riportata nel 2018 riferisce che due persone con il volto coperto entrarono nel locale, esplosero diversi colpi di pistola calibro 9 e si allontanarono con un'autovettura rubata, successivamente rinvenuta nelle strade del centro cittadino con all'interno una delle armi utilizzate",
+        "nel giugno 2017 il processo celebrato con rito abbreviato davanti al GUP distrettuale di Catanzaro si concluse con sette condanne e un'assoluzione; il dato è conservato come contesto procedurale e non come attribuzione di responsabilità oltre quanto sostenuto dalle fonti"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:quartiere-razionale-sala-giochi:occurrence",
+      "basis_source_key": "press:lacnews24:2017-06-09:omicidio-2004-razionale-sette-condanne",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_neighbourhood",
+      "evidence_precision": "neighbourhood",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Sala giochi nel quartiere Razionale (nome e via non specificati)",
+      "neighbourhood": "Razionale",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:centro-cittadino-auto-fuga:recovery",
+      "basis_source_key": "press:il-lametino:2018-02-08:omicidio-2004-razionale-misure-cautelari",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "non_sensitive",
+      "geometry": null,
+      "place_name": "Centro cittadino di Lamezia Terme (strada non specificata)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

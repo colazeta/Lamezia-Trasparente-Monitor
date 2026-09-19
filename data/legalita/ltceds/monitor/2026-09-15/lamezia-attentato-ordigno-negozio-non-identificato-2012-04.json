@@ -1,0 +1,115 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-attentato-ordigno-negozio-non-identificato-2012-04",
+  "discovered_at": "2026-09-15T00:55:30+02:00",
+  "updated_at": "2026-09-15T00:55:30+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Attentato con ordigno rudimentale contro un negozio non identificato a Lamezia Terme nell'aprile 2012",
+  "temporal": {
+    "start": "2012-04",
+    "end": "2012-04",
+    "edtf": "2012-04",
+    "precision": "month"
+  },
+  "sources": [
+    {
+      "source_key": "news:ansa:2012-04-14:ordigno-negozio-lamezia",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Racket: bomba contro negozio a Lamezia Terme",
+      "url": "https://www.ntacalabria.it/catanzaro/racket-bomba-contro-negozio-a-lamezia-terme.html",
+      "published_at": "2012-04-14T00:00:00+02:00",
+      "retrieved_at": "2026-09-15T00:55:30+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:nuova-cosenza:2012-04-14:ordigno-negozio-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Nuova Cosenza",
+      "title": "Racket in azione a Lamezia, bomba esplode davanti negozio",
+      "url": "https://www.nuovacosenza.com/cs/12/apr/14/racketinazione.html",
+      "published_at": "2012-04-14T00:00:00+02:00",
+      "retrieved_at": "2026-09-15T00:55:30+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:blitz-quotidiano:2012-04-14:ordigno-negozio-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Blitz Quotidiano",
+      "title": "Bomba rudimentale contro un negozio a Lamezia Terme",
+      "url": "https://archivio.blitzquotidiano.it/cronaca-italia/bomba-rudimentale-contro-un-negozio-a-lamezia-terme-1193605/",
+      "published_at": "2012-04-14T00:00:00+02:00",
+      "retrieved_at": "2026-09-15T00:55:30+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:intimidazione",
+      "classification_source_key": "news:ansa:2012-04-14:ordigno-negozio-lamezia",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "not_applicable",
+      "situational_context": [
+        "Il lancio ANSA, conservato in una ripresa d'archivio, riferisce che un ordigno rudimentale confezionato artigianalmente con circa mezzo chilo di polvere pirica fu fatto esplodere davanti a un negozio a Lamezia Terme.",
+        "Lo scoppio provocò danni alla serranda e alla porta d'ingresso dell'esercizio commerciale e ad alcune automobili parcheggiate nelle vicinanze; l'episodio fu denunciato ai Carabinieri, che avviarono le indagini.",
+        "Le testate che riprendono il lancio inquadrano il fatto nel contesto del racket, ma non è stata reperita una fonte primaria, giudiziaria o di polizia accessibile che documenti per il singolo episodio una contestazione di estorsione o una qualificazione penale più specifica. La classificazione resta pertanto provvisoria come intimidazione e non viene inferito un reato estorsivo.",
+        "Le fonti sono datate 14 aprile 2012 o riproducono un lancio con dateline Lamezia Terme, 14 aprile, ma il testo non afferma in modo autonomo e inequivoco che l'esplosione sia avvenuta proprio quel giorno; la temporalità canonica resta quindi al livello del mese di aprile 2012.",
+        "La ricerca geografica dedicata non ha individuato una fonte affidabile che identifichi il negozio, la strada, il quartiere o una località sub-comunale; non vengono quindi inferiti indirizzo, coordinate o una precisione superiore al Comune."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:negozio-non-identificato-2012-04:occurrence",
+      "basis_source_key": "news:ansa:2012-04-14:ordigno-negozio-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Negozio non identificato a Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:negozio-non-identificato-2012-04:target",
+      "basis_source_key": "news:ansa:2012-04-14:ordigno-negozio-lamezia",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Negozio non identificato a Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

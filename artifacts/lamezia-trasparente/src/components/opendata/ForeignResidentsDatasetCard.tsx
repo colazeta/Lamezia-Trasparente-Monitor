@@ -99,17 +99,15 @@ export function ForeignResidentsDatasetCard() {
 
       <div className="p-5 md:p-6">
         <p className="mb-3 text-xs text-muted-foreground">
-          Proiezione dal database canonico.{" "}
           {query.isError
-            ? "Aggiornamento non riuscito: è mostrata l’ultima risposta canonica ricevuta, non una nuova verifica della fonte."
-            : "Le date della fonte e di importazione restano distinte."}
+            ? "Aggiornamento non riuscito: sono mostrati gli ultimi dati ricevuti. La fonte non è stata verificata nuovamente."
+            : "La data di acquisizione non modifica il periodo a cui si riferiscono i dati."}
         </p>
         <ForeignResidentsPyramid records={records} />
 
         <p className="mt-3 text-sm leading-6 text-muted-foreground">
           Le barre mostrano maschi a sinistra e femmine a destra. Le quote e i
-          totali sono calcolati dalla pipeline locale a partire dal CSV
-          comunale.
+          totali sono calcolati a partire dai dati del CSV comunale.
         </p>
 
         <details className="mt-5 rounded-lg border border-border bg-muted/20 text-sm leading-6">

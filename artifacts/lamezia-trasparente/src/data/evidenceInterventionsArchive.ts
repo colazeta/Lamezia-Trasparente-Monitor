@@ -25,6 +25,14 @@ import { EVIDENCE_INTERVENTIONS_2026_09_07 } from "./evidenceInterventions202609
 import { EVIDENCE_INTERVENTIONS_2026_09_08 } from "./evidenceInterventions20260908";
 import { EVIDENCE_INTERVENTIONS_2026_09_09 } from "./evidenceInterventions20260909";
 import { EVIDENCE_INTERVENTIONS_2026_09_10 } from "./evidenceInterventions20260910";
+import { EVIDENCE_INTERVENTIONS_2026_09_11 } from "./evidenceInterventions20260911";
+import { EVIDENCE_INTERVENTIONS_2026_09_12 } from "./evidenceInterventions20260912";
+import { EVIDENCE_INTERVENTIONS_2026_09_13 } from "./evidenceInterventions20260913";
+import { EVIDENCE_INTERVENTIONS_2026_09_14 } from "./evidenceInterventions20260914";
+import { EVIDENCE_INTERVENTIONS_2026_09_14_EUROPE } from "./evidenceInterventions20260914Europe";
+import { EVIDENCE_INTERVENTIONS_2026_09_14_SUPPLEMENT } from "./evidenceInterventions20260914Supplement";
+import { EVIDENCE_INTERVENTIONS_2026_09_15 } from "./evidenceInterventions20260915";
+import { applyEvidenceInterventionUpdates20260914 } from "./evidenceInterventionUpdates20260914";
 
 export {
   EVIDENCE_AREA_LABELS,
@@ -43,7 +51,7 @@ export type {
   EvidenceThematicArea,
 };
 
-export const EVIDENCE_INTERVENTIONS: readonly EvidenceIntervention[] = [
+const EVIDENCE_INTERVENTIONS_BEFORE_2026_09_14_UPDATES: readonly EvidenceIntervention[] = [
   ...BASE_EVIDENCE_INTERVENTIONS,
   ...EVIDENCE_INTERVENTIONS_DAILY,
   ...EVIDENCE_INTERVENTIONS_2026_08_31,
@@ -58,7 +66,17 @@ export const EVIDENCE_INTERVENTIONS: readonly EvidenceIntervention[] = [
   ...EVIDENCE_INTERVENTIONS_2026_09_08,
   ...EVIDENCE_INTERVENTIONS_2026_09_09,
   ...EVIDENCE_INTERVENTIONS_2026_09_10,
+  ...EVIDENCE_INTERVENTIONS_2026_09_11,
+  ...EVIDENCE_INTERVENTIONS_2026_09_12,
+  ...EVIDENCE_INTERVENTIONS_2026_09_13,
+  ...EVIDENCE_INTERVENTIONS_2026_09_14,
+  ...EVIDENCE_INTERVENTIONS_2026_09_14_EUROPE,
+  ...EVIDENCE_INTERVENTIONS_2026_09_14_SUPPLEMENT,
+  ...EVIDENCE_INTERVENTIONS_2026_09_15,
 ];
+
+export const EVIDENCE_INTERVENTIONS: readonly EvidenceIntervention[] =
+  EVIDENCE_INTERVENTIONS_BEFORE_2026_09_14_UPDATES.map(applyEvidenceInterventionUpdates20260914);
 
 export function getEvidenceCountries() {
   return Array.from(new Set(EVIDENCE_INTERVENTIONS.map((item) => item.country))).sort((a, b) =>

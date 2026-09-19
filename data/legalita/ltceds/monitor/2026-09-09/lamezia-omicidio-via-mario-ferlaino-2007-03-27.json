@@ -2,10 +2,10 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-omicidio-via-mario-ferlaino-2007-03-27",
   "discovered_at": "2026-09-09T20:32:44+02:00",
-  "updated_at": "2026-09-09T20:32:44+02:00",
+  "updated_at": "2026-09-11T06:30:03+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
-  "title": "Omicidio aggravato in via Mario Ferlaino il 27 marzo 2007",
+  "title": "Omicidio aggravato nella zona nord di Nicastro il 27 marzo 2007",
   "temporal": {
     "start": "2007-03-27",
     "end": "2007-03-27",
@@ -13,6 +13,20 @@
     "precision": "exact_date"
   },
   "sources": [
+    {
+      "source_key": "press:lastampa:2007-03-27:omicidio-zona-nord-nicastro",
+      "source_type": "press_secondary",
+      "provider": "La Stampa",
+      "title": "Agguato a Lamezia Terme il 27 marzo 2007",
+      "url": "https://www.lastampa.it/cronaca/2007/03/27/news/agguato-a-lamezia-terme-1.37132418/",
+      "published_at": "2007-03-27",
+      "retrieved_at": "2026-09-11T06:30:03+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
     {
       "source_key": "press:ildispaccio:2012-07-23:omicidio-via-mario-ferlaino-2007",
       "source_type": "press_secondary",
@@ -23,6 +37,21 @@
       "retrieved_at": "2026-09-09T20:32:44+02:00",
       "support_roles": [
         "event_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:illametino:2012-07-23:omicidio-via-ferlaino-2007",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Ricostruzione e arresti per l'omicidio del 27 marzo 2007 a Lamezia Terme",
+      "url": "https://www.lametino.it/cronaca/lamezia-nuovi-arresti-per-l-omicidio-gualtieri-a-carico-esponenti-cosca-giampa.html",
+      "published_at": "2012-07-23",
+      "retrieved_at": "2026-09-11T06:30:03+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
         "procedural_context",
         "corroboration"
       ]
@@ -57,7 +86,9 @@
       "attempt_status": "completed",
       "situational_context": [
         "la fonte processuale giornalistica qualifica il fatto come omicidio aggravato consumato a Lamezia Terme il 27 marzo 2007",
-        "la ricostruzione colloca l'agguato in via Mario Ferlaino e riferisce l'esplosione di otto colpi di pistola mentre la vittima stava sistemando una bancarella di frutta",
+        "una fonte contemporanea del 27 marzo 2007 colloca l'omicidio in via Enrico Toti, nella zona nord di Nicastro; ricostruzioni successive del 2012 e 2015 lo collocano invece in via Ferlaino, indicata nel 2015 come via Mario Ferlaino",
+        "poiche la relazione tra i due toponimi non e stata verificata con sufficiente affidabilita e le fonti convergono almeno sulla zona nord di Nicastro, la localizzazione canonica e risolta prudentemente al quartiere Nicastro senza attribuire uno street scope",
+        "la fonte contemporanea riferisce cinque colpi di pistola calibro 9, mentre le ricostruzioni investigative e processuali successive riferiscono otto colpi; il record non forza una riconciliazione del numero di colpi",
         "nel luglio 2012 furono eseguiti arresti nei confronti di soggetti indicati dagli inquirenti come presunti mandanti ed esecutori; il 3 marzo 2014 furono pronunciate condanne di primo grado nei giudizi abbreviati, oggetto di appello nel 2015",
         "la ricerca svolta non ha recuperato un successivo esito definitivo univocamente verificabile del procedimento; il record non attribuisce responsabilita individuali definitive"
       ],
@@ -68,17 +99,17 @@
   "locations": [
     {
       "location_key": "location:lamezia-terme:via-mario-ferlaino:occurrence",
-      "basis_source_key": "press:lacnews24:2015-03-16:omicidio-via-mario-ferlaino-2007",
+      "basis_source_key": "press:lastampa:2007-03-27:omicidio-zona-nord-nicastro",
       "role": "occurrence",
       "municipality": "Lamezia Terme",
       "evidence_basis": "source_stated_street",
       "evidence_precision": "street_segment",
-      "resolved_precision": "street_segment",
+      "resolved_precision": "neighbourhood",
       "sensitivity": "public_place",
       "publication_risk": "victim_linked",
       "geometry": null,
-      "place_name": "Via Mario Ferlaino",
-      "neighbourhood": null,
+      "place_name": "Zona nord di Nicastro (fonti discordanti: via Enrico Toti / via Ferlaino)",
+      "neighbourhood": "Nicastro",
       "iccs_location_type": null
     }
   ]

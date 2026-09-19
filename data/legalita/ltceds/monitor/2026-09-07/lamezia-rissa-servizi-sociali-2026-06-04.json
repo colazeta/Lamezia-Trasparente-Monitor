@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-rissa-servizi-sociali-2026-06-04",
   "discovered_at": "2026-09-07T14:53:35+02:00",
-  "updated_at": "2026-09-07T14:53:35+02:00",
+  "updated_at": "2026-09-19T07:15:42+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Rissa e danneggiamenti negli uffici dei Servizi sociali del Comune di Lamezia Terme",
@@ -81,6 +81,20 @@
       "support_roles": [
         "location_support"
       ]
+    },
+    {
+      "source_key": "press:lametino:2026-09-18:rissa-servizi-sociali-lamezia-assoluzione",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, rissa per affido minore negli uffici dei Servizi sociali: assolto 32enne",
+      "url": "https://www.lametino.it/cronaca/lamezia-rissa-per-affido-minore-negli-uffici-dei-servizi-sociali-assolto-32enne.html",
+      "published_at": "2026-09-18T00:00:00+02:00",
+      "retrieved_at": "2026-09-19T07:15:42+02:00",
+      "support_roles": [
+        "event_support",
+        "procedural_context",
+        "corroboration"
+      ]
     }
   ],
   "offences": [
@@ -113,7 +127,8 @@
       "legal_reference": null,
       "attempt_status": "completed",
       "situational_context": [
-        "il 6 giugno 2026 il GIP del Tribunale di Lamezia Terme ha convalidato l'arresto di una delle persone coinvolte e, secondo la fonte, ha disposto il trasferimento in carcere con l'accusa di aggressione aggravata"
+        "il 6 giugno 2026 il GIP del Tribunale di Lamezia Terme ha convalidato l'arresto di una delle persone coinvolte e, secondo la fonte, ha disposto il trasferimento in carcere con l'accusa di aggressione aggravata",
+        "il 17 settembre 2026 il Tribunale di Lamezia Terme ha assolto la stessa persona dai reati a lui ascritti perché non imputabile al momento del fatto, dichiarando inefficace la custodia cautelare e ordinandone l'immediata liberazione se non detenuto per altro"
       ],
       "cyber_related": null,
       "affected_object_count": null
@@ -140,6 +155,21 @@
       "location_key": "location:lamezia-terme:uffici-servizi-sociali-comune",
       "basis_source_key": "agency:ansa:2026-06-04:rissa-servizi-sociali-lamezia",
       "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "minor_or_vulnerable",
+      "geometry": null,
+      "place_name": "Uffici dei Servizi sociali del Comune di Lamezia Terme (Palazzo Comunale)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:uffici-servizi-sociali-comune:target",
+      "basis_source_key": "agency:ansa:2026-06-04:rissa-servizi-sociali-lamezia",
+      "role": "target",
       "municipality": "Lamezia Terme",
       "evidence_basis": "source_stated_named_site",
       "evidence_precision": "exact_public_site",

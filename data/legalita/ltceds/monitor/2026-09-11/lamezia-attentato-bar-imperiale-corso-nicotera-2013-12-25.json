@@ -1,0 +1,113 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-attentato-bar-imperiale-corso-nicotera-2013-12-25",
+  "discovered_at": "2026-09-11T17:39:04+02:00",
+  "updated_at": "2026-09-11T17:39:04+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Attentato con ordigno al Bar Imperiale in Corso Giovanni Nicotera il 25 dicembre 2013",
+  "temporal": {
+    "start": "2013-12-25",
+    "end": "2013-12-25",
+    "edtf": "2013-12-25",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:corriere-della-calabria:2013-12-25:bomba-bar-corso-nicotera",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Lamezia, bomba davanti a un bar in centro",
+      "url": "https://www.corrieredellacalabria.it/2013/12/25/20047_lamezia_bomba_davanti_a_un_bar_in_centro/",
+      "published_at": "2013-12-25T18:31:00+01:00",
+      "retrieved_at": "2026-09-11T17:39:04+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:tgcom24:2013-12-25:bomba-bar-imperiale-lamezia",
+      "source_type": "press_secondary",
+      "provider": "TGCOM24",
+      "title": "Lamezia, esplode bomba davanti a bar",
+      "url": "https://www.tgcom24.mediaset.it/cronaca/articoli/2017526/lamezia-esplode-bomba-davanti-a-bar.shtml",
+      "published_at": "2013-12-25T20:06:00+01:00",
+      "retrieved_at": "2026-09-11T17:39:04+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:uscatanzaro:2013-12-26:bomba-bar-imperiale-lamezia",
+      "source_type": "press_secondary",
+      "provider": "UsCatanzaro.net",
+      "title": "Bomba in un locale a Lamezia",
+      "url": "https://www.uscatanzaro.net/bomba-in-un-locale-a-lamezia/",
+      "published_at": null,
+      "retrieved_at": "2026-09-11T17:39:04+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:intimidazione",
+      "classification_source_key": "press:uscatanzaro:2013-12-26:bomba-bar-imperiale-lamezia",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "not_applicable",
+      "situational_context": [
+        "Le fonti contemporanee convergono sull'esplosione, il 25 dicembre 2013, di un ordigno davanti al Bar Imperiale in Corso Giovanni Nicotera, mentre il locale era chiuso e senza feriti.",
+        "Corriere della Calabria colloca l'esplosione intorno alle ore 16 e riferisce danni a una vetrina del bar e a un'autovettura di un residente; sul posto intervennero Carabinieri e Vigili del fuoco.",
+        "UsCatanzaro.net descrive l'episodio come atto intimidatorio e nuova intimidazione; in assenza di una qualificazione giudiziaria o di polizia primaria reperita per il singolo episodio, la classificazione resta provvisoria.",
+        "La ricerca geografica dedicata conferma il Bar Imperiale e Corso Giovanni Nicotera. Una fonte secondaria di minore autorità colloca il locale all'angolo con Via Reno, ma tale dettaglio non viene usato per introdurre un civico o coordinate senza ulteriore corroborazione."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:bar-imperiale-corso-giovanni-nicotera:occurrence",
+      "basis_source_key": "press:tgcom24:2013-12-25:bomba-bar-imperiale-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Bar Imperiale, Corso Giovanni Nicotera",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:bar-imperiale-corso-giovanni-nicotera:target",
+      "basis_source_key": "press:tgcom24:2013-12-25:bomba-bar-imperiale-lamezia",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Bar Imperiale, Corso Giovanni Nicotera",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

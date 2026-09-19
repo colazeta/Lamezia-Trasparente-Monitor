@@ -1,0 +1,129 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-ordigno-fandango-progetto-sud-bella-2014-10-10",
+  "discovered_at": "2026-09-13T00:28:01+02:00",
+  "updated_at": "2026-09-13T00:38:00+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Esplosione di un ordigno alla casa d'appoggio Fandango di Progetto Sud nel quartiere Bella il 10 ottobre 2014",
+  "temporal": {
+    "start": "2014-10-10T02:30:00+02:00",
+    "end": "2014-10-10T02:30:00+02:00",
+    "edtf": "2014-10-10T02:30:00+02:00",
+    "precision": "exact_datetime"
+  },
+  "sources": [
+    {
+      "source_key": "source:redattore-sociale-2014-10-10-bomba-progetto-sud-fandango",
+      "source_type": "press_secondary",
+      "provider": "Redattore Sociale",
+      "title": "Bomba in una delle strutture della Progetto Sud di don Giacomo Panizza",
+      "url": "https://www.redattoresociale.it/article/servizi_editoriali/bomba_in_una_delle_strutture_della_progetto_sud_di_don_giacomo_panizza",
+      "published_at": "2014-10-10T12:39:00+02:00",
+      "retrieved_at": "2026-09-13T00:28:01+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "source:avvenire-2014-10-10-bomba-carta-progetto-sud",
+      "source_type": "press_secondary",
+      "provider": "Avvenire",
+      "title": "Lamezia, bomba carta contro prete antimafia",
+      "url": "https://www.avvenire.it/attualita/lamezia-bomba-carta-contro-prete-antimafia_17098",
+      "published_at": "2014-10-10T00:00:00+02:00",
+      "retrieved_at": "2026-09-13T00:28:01+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "corroboration",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "source:ltnews-2014-10-10-progetto-sud-bella-ordigno",
+      "source_type": "press_secondary",
+      "provider": "LTNews Lamezia Terme",
+      "title": "Lamezia, racket: nuovi \"avvertimenti\" a commercianti. Bomba a portone Progetto Sud nel quartiere Bella",
+      "url": "https://www.lameziatermenews.it/citta/1946-lamezia-racket-nuovi-qavvertimentiq-a-commercianti-bomba-a-portone-progetto-sud-nel-quartiere-bella.html",
+      "published_at": "2014-10-10T00:00:00+02:00",
+      "retrieved_at": "2026-09-13T00:28:01+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "source:uscatanzaro-2014-10-11-ordigno-progetto-sud-fandango",
+      "source_type": "press_secondary",
+      "provider": "UsCatanzaro.net",
+      "title": "Ordigno rudimentale contro Progetto Sud di Don Panizza",
+      "url": "https://www.uscatanzaro.net/ordigno-rudimentale-contro-progetto-sud-di-don-panizza",
+      "published_at": "2014-10-11T00:00:00+02:00",
+      "retrieved_at": "2026-09-13T00:28:01+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:intimidazione",
+      "classification_source_key": "source:avvenire-2014-10-10-bomba-carta-progetto-sud",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "not_applicable",
+      "situational_context": [
+        "nella notte del 10 ottobre 2014 un ordigno di basso potenziale esplose davanti al portone di una casa d'appoggio utilizzata dalla comunita terapeutica Fandango di Progetto Sud a Lamezia Terme, provocando lievi danni e senza feriti",
+        "fonti contemporanee identificano la struttura e la collocano nel quartiere Bella; nessuna fonte verificata in questa iterazione consente di attribuire una strada, un numero civico o coordinate senza inferenza",
+        "Avvenire riferisce che la Polizia riteneva l'episodio un messaggio intimidatorio, mentre UsCatanzaro.net riferisce indagini del Commissariato di Polizia",
+        "non e stata reperita una fonte primaria o giudiziaria accessibile che sostenga una qualificazione legale piu forte o attribuisca responsabilita individuali; la classificazione resta pertanto provvisoria",
+        "altri messaggi intimidatori segnalati nella stessa notte contro esercizi commerciali del centro non sono stati accorpati a questo evento"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:fandango-progetto-sud-bella:occurrence",
+      "basis_source_key": "source:redattore-sociale-2014-10-10-bomba-progetto-sud-fandango",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Portone della casa d'appoggio utilizzata dalla comunita terapeutica Fandango (Progetto Sud)",
+      "neighbourhood": "Bella",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:fandango-progetto-sud-bella:target",
+      "basis_source_key": "source:uscatanzaro-2014-10-11-ordigno-progetto-sud-fandango",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Casa d'appoggio utilizzata dalla comunita terapeutica Fandango (Progetto Sud)",
+      "neighbourhood": "Bella",
+      "iccs_location_type": null
+    }
+  ]
+}

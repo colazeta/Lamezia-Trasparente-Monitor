@@ -109,6 +109,65 @@ export function validateLedger(ledger) {
   }
   return errors;
 }
+const within = (file, location) =>
+  file === location || file.startsWith(location + "/");
+
+/** A directory match establishes ownership, never evidence of a prior review. */
+export function validateReviewBaseline(baseline, ledger) {
+  if (
+    baseline?.schemaVersion !== "lt-canonicalisation-review-baseline.v1" ||
+    !Array.isArray(baseline.files) ||
+    !/^[a-f0-9]{64}$/.test(baseline.sourceAuditSha256 ?? "") ||
+    !/^[a-f0-9]{40}$/.test(baseline.sourceCommit ?? "")
+  )
+    return ["INVALID_REVIEW_BASELINE"];
+  const errors = [],
+    paths = new Set();
+  for (const file of baseline.files) {
+    if (
+      typeof file.path !== "string" ||
+      !file.path ||
+      path.isAbsolute(file.path) ||
+      file.path.split("/").includes("..") ||
+      paths.has(file.path)
+    )
+      errors.push(`INVALID_REVIEW_PATH:${file.path}`);
+    paths.add(file.path);
+    if (!/^[a-f0-9]{64}$/.test(file.sha256 ?? ""))
+      errors.push(`INVALID_REVIEW_HASH:${file.path}`);
+    if (
+      !Array.isArray(file.assetIds) ||
+      !file.assetIds.length ||
+      new Set(file.assetIds).size !== file.assetIds.length ||
+      file.assetIds.some((id) => !ledger.assets.some((a) => a.id === id))
+    )
+      errors.push(`INVALID_REVIEW_ASSETS:${file.path}`);
+  }
+  return errors;
+}
+
+export function classifyFileReview(file, sha256, owners, receipt) {
+  const matchedAssetIds = owners.map((a) => a.id).sort();
+  let reviewRequiredReason = null;
+  if (!owners.length) reviewRequiredReason = "no-bounded-asset-review";
+  else if (!receipt) reviewRequiredReason = "not-in-review-baseline";
+  else if (receipt.sha256 !== sha256)
+    reviewRequiredReason = "content-changed-since-review";
+  else if (
+    receipt.path !== file ||
+    JSON.stringify([...receipt.assetIds].sort()) !==
+      JSON.stringify(matchedAssetIds)
+  )
+    reviewRequiredReason = "asset-ownership-changed";
+  const verified = reviewRequiredReason === null;
+  return {
+    matchedAssetIds,
+    reviewedAssetIds: verified ? matchedAssetIds : [],
+    semanticStatus: verified && owners.length === 1 ? owners[0].status : null,
+    review: verified ? "linked-to-bounded-asset-review" : "unreviewed",
+    reviewRequiredReason,
+  };
+}
 /** File discovery and literal references are not a substitute for semantic review. */
 export async function inspectCanonicalisation(base = root) {
   const ledger = JSON.parse(
@@ -118,6 +177,20 @@ export async function inspectCanonicalisation(base = root) {
       ),
     ),
     errors = validateLedger(ledger);
+  const reviewBaseline = JSON.parse(
+    await readFile(
+      path.join(base, "architecture/canonicalisation-review-baseline.v1.json"),
+      "utf8",
+    ),
+  );
+  const baselineErrors = validateReviewBaseline(reviewBaseline, ledger);
+  errors.push(...baselineErrors);
+  // Invalid evidence fails closed: do not grant review coverage from any receipt.
+  const receipts = new Map(
+    baselineErrors.length
+      ? []
+      : reviewBaseline.files.map((file) => [file.path, file]),
+  );
   for (const a of ledger.assets)
     for (const p of [...a.locations, ...a.consumers])
       try {
@@ -132,8 +205,7 @@ export async function inspectCanonicalisation(base = root) {
   )
     .split("\0")
     .filter(Boolean);
-  const within = (f, d) => f === d || f.startsWith(d + "/"),
-    inventory = [],
+  const inventory = [],
     codeReferences = [];
   for (const f of [...new Set(files)].sort()) {
     if (ledger.scope.discoveryRoots.some((d) => within(f, d))) {
@@ -141,13 +213,12 @@ export async function inspectCanonicalisation(base = root) {
         owners = ledger.assets.filter((a) =>
           a.locations.some((p) => within(f, p)),
         );
+      const sha256 = createHash("sha256").update(bytes).digest("hex");
       inventory.push({
         path: f,
         bytes: bytes.byteLength,
-        sha256: createHash("sha256").update(bytes).digest("hex"),
-        reviewedAssetIds: owners.map((a) => a.id),
-        semanticStatus: owners.length === 1 ? owners[0].status : null,
-        review: owners.length ? "linked-to-bounded-asset-review" : "unreviewed",
+        sha256,
+        ...classifyFileReview(f, sha256, owners, receipts.get(f)),
       });
     }
     if (
@@ -193,6 +264,14 @@ export async function inspectCanonicalisation(base = root) {
       encoding: "utf8",
     }).trim(),
     ledgerBaselineMain: ledger.baselineMain,
+    reviewBaseline: {
+      sourceCommit: reviewBaseline.sourceCommit,
+      sourceAuditSha256: reviewBaseline.sourceAuditSha256,
+      recordedFiles: reviewBaseline.files.length,
+      missingFiles: reviewBaseline.files
+        .filter((f) => !inventory.some((x) => x.path === f.path))
+        .map((f) => f.path),
+    },
     scope: ledger.scope,
     counts: {
       discoveredFiles: inventory.length,
@@ -201,6 +280,15 @@ export async function inspectCanonicalisation(base = root) {
       ).length,
       unreviewedFiles: inventory.filter((a) => a.review === "unreviewed")
         .length,
+      filesInRegisteredAssetLocations: inventory.filter(
+        (a) => a.matchedAssetIds.length,
+      ).length,
+      filesChangedSinceReview: inventory.filter(
+        (a) => a.reviewRequiredReason === "content-changed-since-review",
+      ).length,
+      filesAddedWithinRegisteredAssets: inventory.filter(
+        (a) => a.reviewRequiredReason === "not-in-review-baseline",
+      ).length,
       reviewedAssetGroups: queue.length,
       assetGroupsByStatus: Object.fromEntries(
         [...statuses].map((s) => [

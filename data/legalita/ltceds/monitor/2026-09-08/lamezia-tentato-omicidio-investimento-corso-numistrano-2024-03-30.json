@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-tentato-omicidio-investimento-corso-numistrano-2024-03-30",
   "discovered_at": "2026-09-08T16:21:40+02:00",
-  "updated_at": "2026-09-08T16:21:40+02:00",
+  "updated_at": "2026-09-13T06:52:12+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Tentato omicidio mediante investimento su Corso Numistrano",
@@ -39,6 +39,21 @@
       "support_roles": [
         "event_support",
         "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2024-04-10:rissa-inseguimento-tentato-omicidio",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "La folle notte di violenza a Lamezia: la rissa, l'inseguimento e il tentato omicidio",
+      "url": "https://www.corrieredellacalabria.it/2024/04/10/la-folle-notte-di-violenza-a-lamezia-la-rissa-linseguimento-e-il-tentato-omicidio",
+      "published_at": "2024-04-10T10:17:00+02:00",
+      "retrieved_at": "2026-09-13T06:52:12+02:00",
+      "support_roles": [
+        "event_support",
         "location_support",
         "procedural_context",
         "corroboration"
@@ -89,7 +104,7 @@
         "la Polizia intervenne intorno alle 03:30 del 30 marzo 2024 su Corso Numistrano dopo la segnalazione di un incidente stradale; la successiva ricostruzione investigativa descrive un tentativo deliberato di investire la persona offesa con un'autovettura dopo una precedente lite",
         "il 9 aprile 2024 furono eseguite due ordinanze di custodia cautelare in carcere; il procedimento era nella fase delle indagini preliminari",
         "il 10 dicembre 2024 uno dei due coimputati fu assolto per non aver commesso il fatto all'esito di rito abbreviato; le fonti reperite non consentono di stabilire l'esito dell'altro procedimento né la definitività della decisione",
-        "le fonti secondarie divergono sulla strada del locale in cui ebbe origine la precedente rissa; la localizzazione canonica dell'evento resta Corso Numistrano, attestata dalla fonte primaria per il tentato investimento"
+        "Corriere della Calabria, richiamando la ricostruzione dell'ordinanza cautelare, identifica il Cafè Retro su Corso Nicotera come luogo della lite e della rissa che precedettero l'inseguimento; il tentato investimento resta localizzato su Corso Numistrano"
       ],
       "cyber_related": null,
       "affected_object_count": 1
@@ -108,6 +123,21 @@
       "publication_risk": "victim_linked",
       "geometry": null,
       "place_name": "Corso Numistrano",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:cafe-retro-corso-nicotera:precursor-rissa",
+      "basis_source_key": "press:corriere-calabria:2024-04-10:rissa-inseguimento-tentato-omicidio",
+      "role": "other",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Cafè Retro, Corso Nicotera",
       "neighbourhood": null,
       "iccs_location_type": null
     }

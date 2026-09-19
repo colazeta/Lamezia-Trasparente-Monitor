@@ -1,0 +1,113 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-sparatoria-carabinieri-abitazione-2010-01-30",
+  "discovered_at": "2026-09-17T18:33:46+02:00",
+  "updated_at": "2026-09-17T18:33:46+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Sparatoria con ferimento di un carabiniere durante attività investigativa a Lamezia Terme il 30 gennaio 2010",
+  "temporal": {
+    "start": "2010-01-30",
+    "end": "2010-01-30",
+    "edtf": "2010-01-30",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:cn24tv:2010-01-30:sparatoria-carabiniere",
+      "source_type": "press_secondary",
+      "provider": "CN24TV",
+      "title": "Sparatoria a Lamezia. Identificato l’uomo che ha ferito il carabiniere",
+      "url": "https://cn24tv.it/news/sparatoria-a-lamezia-identificato-l-uomo-che-ha-ferito-il-carabiniere/",
+      "published_at": "2010-01-30T19:55:00+01:00",
+      "retrieved_at": "2026-09-17T18:33:46+02:00",
+      "support_roles": [
+        "event_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:nuova-cosenza:2010-01-30:conflitto-microspia-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Nuova Cosenza Quotidiano Digitale",
+      "title": "Carabiniere ferito in conflitto a fuoco a Lamezia. Stava piazzando una microspia",
+      "url": "https://www.nuovacosenza.com/cs/10/gennaio/ultime.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-17T18:33:46+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "public:gazzetta-ufficiale:2014-07-04:episodio-lamezia-2010-01-30",
+      "source_type": "public_authority_primary",
+      "provider": "Gazzetta Ufficiale della Repubblica Italiana",
+      "title": "Conferimento di ricompensa al valore dell'Arma dei Carabinieri per l'episodio di Lamezia Terme del 30 gennaio 2010",
+      "url": "https://www.gazzettaufficiale.it/eli/gu/2014/07/04/153/sg/pdf",
+      "published_at": null,
+      "retrieved_at": "2026-09-17T18:33:46+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:lesioni-con-arma-da-fuoco",
+      "classification_source_key": "public:gazzetta-ufficiale:2014-07-04:episodio-lamezia-2010-01-30",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti contemporanee riferiscono un conflitto a fuoco nella notte del 30 gennaio 2010 a Lamezia Terme, durante il quale un carabiniere fu ferito e anche l'uomo che avrebbe aperto il fuoco rimase ferito.",
+        "La cronaca contemporanea riferisce che due carabinieri in borghese stavano svolgendo attività investigativa davanti all'abitazione del soggetto sottoposto a indagine; non è stato recuperato un indirizzo affidabile e l'abitazione privata non viene ulteriormente identificata.",
+        "La Gazzetta Ufficiale, nel motivare una successiva ricompensa al valore dell'Arma, attesta che un malvivente aprì il fuoco contro un militare e reiterò l'azione di fuoco, ferendo un altro carabiniere che reagì e contribuì all'arresto dell'aggressore.",
+        "La chiave di reato è mantenuta provvisoria perché le fonti recuperate documentano la condotta e il ferimento ma non forniscono, per questo specifico episodio, una qualificazione giudiziaria sufficientemente precisa da codificare una fattispecie più specifica."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata-non-identificata:occurrence",
+      "basis_source_key": "press:nuova-cosenza:2010-01-30:conflitto-microspia-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Davanti a un'abitazione privata non identificata",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata-non-identificata:target",
+      "basis_source_key": "press:nuova-cosenza:2010-01-30:conflitto-microspia-lamezia",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Davanti a un'abitazione privata non identificata",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

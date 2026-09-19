@@ -1,0 +1,129 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-detenzione-cocaina-a2-svincolo-lamezia-2022-08",
+  "discovered_at": "2026-09-11T07:35:15+02:00",
+  "updated_at": "2026-09-11T07:35:15+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Detenzione ai fini di spaccio di circa 60 kg di cocaina sull'A2 all'altezza dello svincolo di Lamezia Terme",
+  "temporal": {
+    "start": "2022-08",
+    "end": "2022-08",
+    "edtf": "2022-08",
+    "precision": "month"
+  },
+  "sources": [
+    {
+      "source_key": "press:corriere-di-lamezia:2022-08-06:a2-60kg-cocaina",
+      "source_type": "press_secondary",
+      "provider": "Corriere di Lamezia",
+      "title": "Lamezia, arrestato corriere della droga con 60 kg di cocaina",
+      "url": "https://www.corrieredilamezia.it/cronaca/2022_08_06/lamezia-arrestato-corriere-della-droga-con-60-kg-di-cocaina_23517/",
+      "published_at": "2022-08-06T00:00:00+02:00",
+      "retrieved_at": "2026-09-11T07:35:15+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:rainews-calabria:2022-08-06:a2-60kg-cocaina",
+      "source_type": "press_secondary",
+      "provider": "RaiNews TGR Calabria",
+      "title": "In autostrada con 60 kg di cocaina: arrestato a Lamezia",
+      "url": "https://www.rainews.it/tgr/calabria/articoli/2022/08/cal-droga-guardiafinanza-lamezia-calabria-80d45071-f7d6-4b81-85b6-fcd9e3060d06.html",
+      "published_at": "2022-08-06T00:00:00+02:00",
+      "retrieved_at": "2026-09-11T07:35:15+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:strettoweb:2022-08-06:a2-60kg-cocaina",
+      "source_type": "press_secondary",
+      "provider": "StrettoWeb",
+      "title": "In autostrada con 60 kg di cocaina, un arresto in Calabria",
+      "url": "https://www.strettoweb.com/2022/08/autostrada-cocaina-arresto-calabria/1376121/",
+      "published_at": "2022-08-06T08:43:00+02:00",
+      "retrieved_at": "2026-09-11T07:35:15+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:detenzione-ai-fini-di-spaccio-stupefacenti",
+      "classification_source_key": "press:corriere-di-lamezia:2022-08-06:a2-60kg-cocaina",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti concordano sul fermo di un'autovettura sull'autostrada A2 del Mediterraneo all'altezza dello svincolo di Lamezia Terme e sul rinvenimento di 50 panetti di cocaina per un peso complessivo di circa 60 kg in un vano occulto del veicolo",
+        "le cronache che riportano l'intervento della Guardia di Finanza descrivono l'arresto in flagranza per illecita detenzione di sostanza stupefacente ai fini di spaccio; il procedimento era nella fase delle indagini preliminari",
+        "le fonti consultate sono state pubblicate il 6 agosto 2022 ma non riportano nel testo recuperato una data autonoma e inequivoca dell'intervento; la temporalità è quindi conservata al solo mese di agosto 2022",
+        "non è stato reperito online un comunicato originario della Guardia di Finanza inequivocabilmente riferibile all'episodio; la ricostruzione è sostenuta da fonti giornalistiche convergenti che attribuiscono l'operazione alle Fiamme Gialle di Lamezia Terme"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:a2-svincolo-lamezia:occurrence",
+      "basis_source_key": "press:corriere-di-lamezia:2022-08-06:a2-60kg-cocaina",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Autostrada A2 del Mediterraneo, all'altezza dello svincolo di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:a2-svincolo-lamezia:recovery",
+      "basis_source_key": "press:corriere-di-lamezia:2022-08-06:a2-60kg-cocaina",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Autovettura fermata sull'A2 del Mediterraneo, all'altezza dello svincolo di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:a2-svincolo-lamezia:arrest",
+      "basis_source_key": "press:corriere-di-lamezia:2022-08-06:a2-60kg-cocaina",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Autostrada A2 del Mediterraneo, all'altezza dello svincolo di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

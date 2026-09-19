@@ -1,0 +1,71 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-due-donne-passaggio-auto-2012-01-07",
+  "discovered_at": "2026-09-11T15:52:19+02:00",
+  "updated_at": "2026-09-11T15:52:19+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina e aggressione ai danni di due donne durante un passaggio in auto a Lamezia Terme",
+  "temporal": {
+    "start": "2012-01-07",
+    "end": "2012-01-07",
+    "edtf": "2012-01-07",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:approdo-calabria:2012-01-27:rapina-due-donne-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Approdo Calabria (ripresa ANSA)",
+      "title": "Aggressione e rapina a due prostitute a Lamezia, un arresto",
+      "url": "https://www.approdocalabria.it/aggressione-e-rapina-a-due-prostitute-a-lamezia-un-arresto/",
+      "published_at": null,
+      "retrieved_at": "2026-09-11T15:52:19+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "press:approdo-calabria:2012-01-27:rapina-due-donne-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La fonte, che riprende un dispaccio ANSA, riferisce che il fatto avvenne il 7 gennaio 2012 a Lamezia Terme: due donne chiesero un passaggio in auto verso la stazione, ma durante il tragitto i due uomini a bordo cambiarono strada e, dopo essersi fermati in un luogo non ulteriormente specificato, le aggredirono e le rapinarono.",
+        "La stessa fonte riferisce che una persona fu successivamente arrestata in esecuzione di un provvedimento del GIP e posta agli arresti domiciliari; il record conserva tale stato procedurale senza rappresentare l'accusa come responsabilità definitivamente accertata.",
+        "La fonte non specifica quali beni siano stati sottratti e non sostiene una distinta qualificazione legale di lesioni personali; viene pertanto censita soltanto la rapina esplicitamente indicata.",
+        "La stazione era la destinazione del passaggio richiesta dalle due donne, non il luogo della rapina: non viene quindi registrata come luogo di commissione, target o altro nodo operativo del fatto.",
+        "La ricerca geografica dedicata non ha individuato una fonte affidabile che identifichi strada, quartiere, località o punto di arresto; la localizzazione resta pertanto al livello comunale e non è idonea a generare hotspot puntuali."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:luogo-non-specificato-passaggio-auto:occurrence",
+      "basis_source_key": "press:approdo-calabria:2012-01-27:rapina-due-donne-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "unknown",
+      "publication_risk": "sexual_offence_context",
+      "geometry": null,
+      "place_name": "Luogo non specificato a Lamezia Terme, raggiunto dopo una deviazione durante un passaggio in auto",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

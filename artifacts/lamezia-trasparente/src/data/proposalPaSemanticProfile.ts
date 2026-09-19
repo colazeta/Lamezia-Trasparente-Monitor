@@ -221,6 +221,11 @@ const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
     mappingNote:
       "La materia ufficiale Cultura e tempo libero include espressamente l'accesso a luoghi dello sport e, come etichetta alternativa, gli impianti sportivi. Catasto e urbanistica resta una classificazione secondaria per il contesto dell'infrastruttura pubblica.",
   },
+  "Polizia locale e sicurezza urbana": {
+    primary: ps("8"),
+    mappingNote:
+      "La richiesta riguarda l'operatività e l'organico della Polizia Locale come funzione di sicurezza pubblica locale. Le modalità di reclutamento restano facet operative e non introducono una tassonomia tematica parallela.",
+  },
   "Trasparenza e partecipazione democratica": {
     primary: eu("GOVE"),
     mappingNote:

@@ -19,8 +19,8 @@ export function MunicipalDatasetStatus({
       <h2 className="text-xl font-semibold">{title}</h2>
       <p className="mt-3">
         {loading
-          ? "Caricamento dal database canonico…"
-          : "Il dataset canonico non è disponibile. L’assenza di dati non indica un valore pari a zero."}
+          ? "Caricamento dei dati demografici…"
+          : "I dati demografici non sono disponibili. L’assenza di dati non indica un valore pari a zero."}
       </p>
       {!loading && (
         <button type="button" className="mt-3 underline" onClick={retry}>

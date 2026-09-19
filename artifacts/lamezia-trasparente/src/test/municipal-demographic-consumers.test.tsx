@@ -33,7 +33,7 @@ describe("canonical demographic consumers", () => {
     view(<FamiliesChildrenDatasetCard />);
     expect(document.getElementById("famiglie-figli-lamezia")).not.toBeNull();
     expect(
-      screen.getByText(/Caricamento dal database canonico/),
+      screen.getByText(/Caricamento dei dati demografici/),
     ).toBeInTheDocument();
     expect(screen.queryByRole("img")).not.toBeInTheDocument();
     expect(
@@ -81,7 +81,7 @@ describe("canonical demographic consumers", () => {
     });
     await waitFor(() =>
       expect(
-        screen.getByText(/ultima risposta canonica ricevuta/),
+        screen.getByText(/sono mostrati gli ultimi dati ricevuti/),
       ).toBeInTheDocument(),
     );
     expect(

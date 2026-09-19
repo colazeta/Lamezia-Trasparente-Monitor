@@ -1,0 +1,132 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-danneggiamento-incendio-autolife-toyota-capizzaglie-2016-02",
+  "discovered_at": "2026-09-15T00:01:07+02:00",
+  "updated_at": "2026-09-15T00:01:07+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Danneggiamento aggravato mediante incendio di sette autovetture nel piazzale della concessionaria Autolife Toyota, quartiere Capizzaglie, tra il 4 e il 10 febbraio 2016",
+  "temporal": {
+    "start": "2016-02-04",
+    "end": "2016-02-10",
+    "edtf": "2016-02-04/2016-02-10",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "press:gazzetta-del-sud:2016-02-15:intimidazioni-danneggiamenti-autolife",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Intimidazioni e danneggiamenti, fermato 20enne",
+      "url": "https://catanzaro.gazzettadelsud.it/video/archivio/2016/02/15/intimidazioni-e-danneggiamenti-fermato-20enne-9cb682d5-1aea-457e-808b-c05a3bad3507",
+      "published_at": "2016-02-15T00:00:00+01:00",
+      "retrieved_at": "2026-09-15T00:01:07+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2016-02-14:scontrino-intimidazioni",
+      "source_type": "press_secondary",
+      "provider": "il Lametino.it",
+      "title": "Lamezia, tradito da uno scontrino il 20enne accusato delle intimidazioni",
+      "url": "https://www.lametino.it/Cronaca/lamezia-tradito-da-uno-scontrino-il-20enne-accusato-delle-intimidazioni.html",
+      "published_at": "2016-02-14T00:00:00+01:00",
+      "retrieved_at": "2026-09-15T00:01:07+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2016-06-27:intimidazioni-autolife-mediaexpress",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Intimidazioni a Lamezia, arrestato un 20enne",
+      "url": "https://www.corrieredellacalabria.it/2016/06/27/intimidazioni-a-lamezia-arrestato-un-20enne/",
+      "published_at": "2016-06-27T08:15:00+02:00",
+      "retrieved_at": "2026-09-15T00:01:07+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:danneggiamento-aggravato-incendio",
+      "classification_source_key": "press:gazzetta-del-sud:2016-02-15:intimidazioni-danneggiamenti-autolife",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la ricostruzione investigativa riportata dalle fonti attribuisce al medesimo episodio il danneggiamento mediante incendio di sette autovetture parcheggiate nel piazzale della concessionaria Autolife Toyota",
+        "le fonti contemporanee qualificano tra i reati contestati il danneggiamento aggravato mediante incendio; il record non aggiunge una fattispecie o un articolo di legge non espressamente attestati",
+        "una fonte successiva colloca gli episodi attribuiti nello stesso segmento temporale tra il 4 e il 10 febbraio 2016; non essendo emerso un giorno univoco per l'incendio Autolife, il record conserva un intervallo delimitato",
+        "il 13 febbraio 2016 il GIP dispose la custodia cautelare in carcere e la trasmissione degli atti alla DDA di Catanzaro, ravvisando secondo le fonti un possibile contesto di criminalità organizzata; tale passaggio è conservato come stato procedurale e non come accertamento definitivo di responsabilità"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 7
+    },
+    {
+      "offence_key": "offence:tentata-estorsione-aggravata",
+      "classification_source_key": "press:gazzetta-del-sud:2016-02-15:intimidazioni-danneggiamenti-autolife",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "la fonte che riproduce la ricostruzione di polizia include la tentata estorsione aggravata tra le contestazioni riferite alla serie intimidatoria che comprende il danneggiamento alla concessionaria Autolife Toyota",
+        "la qualificazione è registrata come contestazione investigativa e cautelare, senza inferire la definitività dell'addebito"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:autolife-toyota-capizzaglie:occurrence",
+      "basis_source_key": "press:gazzetta-del-sud:2016-02-15:intimidazioni-danneggiamenti-autolife",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Piazzale della concessionaria Autolife Toyota",
+      "neighbourhood": "Capizzaglie",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:autolife-toyota-capizzaglie:target",
+      "basis_source_key": "press:gazzetta-del-sud:2016-02-15:intimidazioni-danneggiamenti-autolife",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Piazzale della concessionaria Autolife Toyota",
+      "neighbourhood": "Capizzaglie",
+      "iccs_location_type": null
+    }
+  ]
+}

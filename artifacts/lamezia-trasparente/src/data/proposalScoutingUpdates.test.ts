@@ -12,7 +12,7 @@ describe("incremental proposal scouting updates", () => {
     expect(matches).toHaveLength(1);
 
     const proposal = matches[0];
-    expect(proposal.lastUpdated).toBe("2026-08-29");
+    expect(proposal.lastUpdated).toBe("2026-09-11");
     expect(
       proposal.events.some(
         (event) => event.id === "asili-nido-masi-controreplica-29-agosto",

@@ -1,0 +1,116 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-furto-le-agricole-via-salentini-2020-02",
+  "discovered_at": "2026-09-14T16:21:53+02:00",
+  "updated_at": "2026-09-14T16:21:53+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Furto di mezzi e attrezzature agricole nei depositi della Cooperativa Le Agricole in Via dei Salentini nel febbraio 2020",
+  "temporal": {
+    "start": "2020-02-20",
+    "end": "2020-02-24",
+    "edtf": "2020-02-20/2020-02-24",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "news:ansa:2020-02-25:le-agricole-furto",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Furto in coop, rubati mezzi agricoli",
+      "url": "https://tg24.sky.it/catanzaro/2020/02/25/furto-in-coop-rubati-mezzi-agricoli",
+      "published_at": "2020-02-25T11:56:00+01:00",
+      "retrieved_at": "2026-09-14T16:21:53+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2020-02-25:le-agricole-via-salentini-furto",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Lamezia, rubati alcuni mezzi della cooperativa Le Agricole della Progetto Sud",
+      "url": "https://www.corrieredellacalabria.it/2020/02/25/lamezia-rubati-mezzi-agricoli-della-cooperativa-le-agricole-della-progetto-sud/",
+      "published_at": "2020-02-25T10:37:00+01:00",
+      "retrieved_at": "2026-09-14T16:21:53+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:mediterranei-news:2020-02-26:le-agricole-via-salentini-furto",
+      "source_type": "press_secondary",
+      "provider": "MediterraneiNews",
+      "title": "Nuovo furto a danno de Le Agricole Cooperativa della Comunità Progetto Sud",
+      "url": "https://mediterraneinews.it/2020/02/26/nuovo-furto-a-danno-de-le-agricole-cooperativa-della-comunita-progetto-sud/",
+      "published_at": "2020-02-26T00:00:00+01:00",
+      "retrieved_at": "2026-09-14T16:21:53+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:furto",
+      "classification_source_key": "news:ansa:2020-02-25:le-agricole-furto",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "fonti contemporanee riferiscono un furto ai danni della Cooperativa Le Agricole della Comunità Progetto Sud: al loro arrivo i lavoratori trovarono scassinate le porte dei depositi e mancanti le macchine agricole",
+        "furono sottratti un trattore, una falciatrice, ulteriori attrezzature per la lavorazione della terra e alcuni sacchi di concime; la Comunità riferì di avere presentato immediata denuncia alle forze dell'ordine",
+        "le fonti del 25-26 febbraio collocano il fatto nella 'notte di domenica 22 febbraio', formulazione incompatibile con il calendario 2020, nel quale il 22 febbraio era sabato; una successiva comunicazione della Comunità Progetto Sud richiamata dalla stampa indica invece il 20 febbraio",
+        "per non creare una falsa precisione temporale, il record conserva un intervallo prudenziale 20-24 febbraio 2020, comprendente le date sostenute o implicate dalle fonti senza scegliere arbitrariamente un singolo giorno",
+        "non viene inferita una matrice mafiosa o intimidatoria: le fonti ricordano precedenti episodi ai danni della Comunità ma per questo fatto documentano direttamente il furto e la denuncia"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:le-agricole-via-salentini:occurrence",
+      "basis_source_key": "press:corriere-calabria:2020-02-25:le-agricole-via-salentini-furto",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "non_sensitive",
+      "geometry": null,
+      "place_name": "Depositi della Cooperativa Le Agricole, Via dei Salentini",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:le-agricole-via-salentini:target",
+      "basis_source_key": "press:corriere-calabria:2020-02-25:le-agricole-via-salentini-furto",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "non_sensitive",
+      "geometry": null,
+      "place_name": "Depositi della Cooperativa Le Agricole, Via dei Salentini",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

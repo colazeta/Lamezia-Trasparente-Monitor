@@ -197,7 +197,7 @@ describe("councilSessionV0", () => {
   });
 
   it("publishes source-traceable records for both council and commission notices", () => {
-    expect(councilSessionV0ReviewedRecords).toHaveLength(13);
+    expect(councilSessionV0ReviewedRecords).toHaveLength(29);
     expect(
       new Set(councilSessionV0ReviewedRecords.map((item) => item.kind)),
     ).toEqual(new Set(["council", "commission"]));
@@ -474,6 +474,155 @@ describe("councilSessionV0", () => {
     }
   });
 
+  it("materializes the 11–16 September III and IV Commission calendars from three official notices", () => {
+    const guarantorSingle = councilSessionV0ReviewedRecords.filter(
+      (session) => session.provenance?.publicationNumber === "2026/2879",
+    );
+    const commissionIv = councilSessionV0ReviewedRecords.filter(
+      (session) => session.provenance?.publicationNumber === "2026/2925",
+    );
+    const guarantorCalendar = councilSessionV0ReviewedRecords.filter(
+      (session) => session.provenance?.publicationNumber === "2026/2926",
+    );
+
+    expect(guarantorSingle.map((session) => session.scheduledAt.value)).toEqual(
+      ["2026-09-11T12:00:00+02:00"],
+    );
+    expect(commissionIv.map((session) => session.scheduledAt.value)).toEqual([
+      "2026-09-16T11:00:00+02:00",
+      "2026-09-15T12:00:00+02:00",
+      "2026-09-14T11:00:00+02:00",
+    ]);
+    expect(
+      guarantorCalendar.map((session) => session.scheduledAt.value),
+    ).toEqual(["2026-09-15T11:00:00+02:00", "2026-09-14T12:00:00+02:00"]);
+
+    for (const session of [...guarantorSingle, ...guarantorCalendar]) {
+      expect(session.title.value).toMatch(/III Commissione/i);
+      expect(session.agenda.value).toEqual([
+        'Regolamento per l\'istituzione della figura del "Garante delle persone con disabilità".',
+      ]);
+      expect(session.contextResearch.searchNote).toMatch(/Parallel Search/i);
+    }
+
+    expect(commissionIv.map((session) => session.agenda.value)).toEqual([
+      [
+        "Regolamento comunale per la promozione della Street Art. Audizione dell'Associazione Icica.",
+      ],
+      [
+        "Asili Nido Comunali. Audizione dell'assessore al ramo Gennaro Gianturco.",
+      ],
+      [
+        "Trasporto Pubblico Scolastico Locale. Audizione del dirigente della Lamezia Multiservizi, ing. Alessandro Vescio.",
+      ],
+    ]);
+
+    const municipalNurseriesSession = commissionIv.find(
+      (session) => session.scheduledAt.value === "2026-09-15T12:00:00+02:00",
+    );
+    expect(municipalNurseriesSession?.contextResearch).toEqual(
+      expect.objectContaining({
+        status: "reviewed_matches",
+        checkedAt: "2026-09-12T21:51:17Z",
+        media: [],
+      }),
+    );
+    expect(municipalNurseriesSession?.contextResearch.articles).toEqual([
+      expect.objectContaining({
+        title: "Avvio del servizio di Asilo Nido comunale",
+        publisher: "Comune di Lamezia Terme",
+        publishedAt: "2026-09-11",
+        relationship: "agenda_item",
+        url: "https://www.comune.lamezia-terme.cz.it/it/news/avvio-del-servizio-di-asilo-nido-comunale",
+      }),
+      expect.objectContaining({
+        title: "Asili nido comunali aperti dal 15 settembre",
+        publisher: "LameziaInforma",
+        publishedAt: "2026-09-11",
+        relationship: "agenda_item",
+        url: "https://www.lameziainforma.it/scuola-e-universita/2026/09/11/asili-nido-comunali-aperti-dal-15-settembre/69226/",
+      }),
+    ]);
+    expect(municipalNurseriesSession?.lastCheckedAt.value).toBe(
+      "2026-09-12T21:51:17Z",
+    );
+    expect(municipalNurseriesSession?.dataLimits.value?.join(" ")).toMatch(
+      /collegamenti di contesto non certificano svolgimento/i,
+    );
+
+    const schoolTransportSession = commissionIv.find(
+      (session) => session.scheduledAt.value === "2026-09-14T11:00:00+02:00",
+    );
+    expect(schoolTransportSession?.contextResearch).toEqual(
+      expect.objectContaining({
+        status: "reviewed_matches",
+        checkedAt: "2026-09-14T10:13:39Z",
+        media: [],
+      }),
+    );
+    expect(schoolTransportSession?.contextResearch.articles).toEqual([
+      expect.objectContaining({
+        publisher: "City One",
+        publishedAt: "2026-09-11",
+        relationship: "agenda_item",
+        url: "https://www.cityonelamezia.it/lamezia-gianturco-assistenza-specialistica-si-parte-con-il-nuovo-anno-scolastico-piu-ore-per-gli-alunni-con-disabilita/",
+      }),
+    ]);
+    expect(schoolTransportSession?.lastCheckedAt.value).toBe(
+      "2026-09-14T10:13:39Z",
+    );
+    expect(schoolTransportSession?.dataLimits.value?.join(" ")).toMatch(
+      /collegamenti di contesto non certificano svolgimento/i,
+    );
+
+    expect(guarantorSingle[0]?.provenance).toEqual(
+      expect.objectContaining({
+        documentUrl: expect.stringContaining("2026_2879_1_X"),
+        sourceContentHash:
+          "04f12caf167315030334618ea41d7e5091cf271b75baf33da58cccb1e35326c9",
+        documentSha256:
+          "b3f2d6a2b5884cd5e17b77b03289abeff7ab1f9994d7b70aa0d66ade22abdb09",
+      }),
+    );
+    expect(commissionIv[0]?.provenance).toEqual(
+      expect.objectContaining({
+        documentUrl: expect.stringContaining("2026_2925_1_X"),
+        sourceContentHash:
+          "5a9d168246b9a4ed62e13c53e6a1106415f2c5d7c8825ea8d439ce165deaa500",
+        documentSha256:
+          "671bbd99e42677437d3c2b424d2ffd1794c8b1195efbf867591e3550480d31d1",
+      }),
+    );
+    expect(guarantorCalendar[0]?.provenance).toEqual(
+      expect.objectContaining({
+        documentUrl: expect.stringContaining("2026_2926_1_X"),
+        sourceContentHash:
+          "fc6d1aaf789ee6902f85d537cd5b8dde937ea9e62573eacf8c75fd84d0c14117",
+        documentSha256:
+          "3de7a9e3185b36116474d8ecb3bed1c425b7395af5e85c9bb83bb16ca082e8d0",
+      }),
+    );
+
+    for (const session of [
+      ...guarantorSingle,
+      ...commissionIv.filter(
+        (entry) =>
+          entry.id !== municipalNurseriesSession?.id &&
+          entry.id !== schoolTransportSession?.id,
+      ),
+      ...guarantorCalendar,
+    ]) {
+      expect(session.sessionStatus.value).toBe("non_verificata");
+      expect(session.contextResearch.status).toBe("checked_no_match");
+      expect(session.contextResearch.articles).toEqual([]);
+      expect(session.contextResearch.media).toEqual([]);
+      expect(session.lastCheckedAt.value).toBe("2026-09-12T10:18:08Z");
+      expect(session.dataLimits.value?.join(" ")).toMatch(
+        /sede non è indicata.*non viene inferita/i,
+      );
+    }
+  });
+
   it("expands the reviewed II Commission calendar into two sourced occurrences", () => {
     const commissionSessions = councilSessionV0ReviewedRecords.filter(
       (session) =>
@@ -503,6 +652,94 @@ describe("councilSessionV0", () => {
       ).toBe(true);
       expect(session.contextResearch.searchNote).toMatch(
         /non ha restituito contenuti.*sedute della II Commissione/i,
+      );
+    }
+  });
+
+  it("materializes the 16–21 September Commission notices with official dates and agendas", () => {
+    const publicationContentHashes = new Map([
+      [
+        "2026/2953",
+        "a0847f430a5d647392679397388a437ab59552a0c8703b1b53c7b1d7ad43e451",
+      ],
+      [
+        "2026/2959",
+        "91111c510f5fd5aa973bd579d24a595d3cf54e0ebb4a66fee237c167b599c237",
+      ],
+      [
+        "2026/2960",
+        "30980bcc9f5acb9173fe1bab42601c7999edfa30e72e0341ac8143c11fb59317",
+      ],
+      [
+        "2026/2971",
+        "6db758ff5ddab2f37c7db4442641b0e75481ddfd9b201d9738a7579cd414c1f5",
+      ],
+      [
+        "2026/2981",
+        "a6a45d08d063c993b69995557a4a82417c4fba918de3315260a189bb2a78c38f",
+      ],
+      [
+        "2026/2986",
+        "6b5898f02ec82e8f3a587c49491033d0945396b9589c5d1584da4d2002205ca6",
+      ],
+      [
+        "2026/3001",
+        "7d6e5cc50baeb9e9d79c2b668de35004a3134587fd714964170828c2228adee3",
+      ],
+    ]);
+    const publications = [...publicationContentHashes.keys()];
+    const sessions = councilSessionV0ReviewedRecords.filter((session) =>
+      publications.includes(session.provenance?.publicationNumber ?? ""),
+    );
+
+    expect(sessions).toHaveLength(10);
+    expect(sessions.map((session) => session.scheduledAt.value)).toEqual([
+      "2026-09-21T10:30:00+02:00",
+      "2026-09-21T09:30:00+02:00",
+      "2026-09-18T12:00:00+02:00",
+      "2026-09-18T11:00:00+02:00",
+      "2026-09-18T10:00:00+02:00",
+      "2026-09-17T16:30:00+02:00",
+      "2026-09-17T15:30:00+02:00",
+      "2026-09-17T12:00:00+02:00",
+      "2026-09-17T11:00:00+02:00",
+      "2026-09-16T12:00:00+02:00",
+    ]);
+
+    for (const session of sessions) {
+      expect(session.provenance?.documentUrl).toMatch(
+        /2026_(2953|2959|2960|2971|2981|2986|3001)_1_X/,
+      );
+      expect(session.provenance?.documentSha256).toMatch(/^[a-f0-9]{64}$/);
+      expect(session.provenance?.sourceContentHash).toBe(
+        publicationContentHashes.get(
+          session.provenance?.publicationNumber ?? "",
+        ),
+      );
+      expect(session.provenance?.sourceContentHash).not.toBe(
+        session.provenance?.documentSha256,
+      );
+      expect(session.provenance?.archivedDocumentUrl).toContain(
+        session.provenance?.documentSha256,
+      );
+      expect(session.provenance?.sourceReviewStatus).toBe(
+        "reviewed_against_official_attachment",
+      );
+      expect(session.scheduledAt.sourceStatus).toBe("verificato");
+      expect(session.agenda.sourceStatus).toBe("verificato");
+      expect(session.agenda.value?.length).toBeGreaterThan(0);
+      expect(session.sessionStatus.value).toBe("non_verificata");
+      expect(session.contextResearch).toEqual(
+        expect.objectContaining({
+          status: "checked_no_match",
+          checkedAt: "2026-09-19T09:34:42Z",
+          articles: [],
+          media: [],
+        }),
+      );
+      expect(session.contextResearch.searchNote).toMatch(/Parallel Search/i);
+      expect(session.dataLimits.value?.join(" ")).toMatch(
+        /sede non è indicata.*non viene inferita/i,
       );
     }
   });

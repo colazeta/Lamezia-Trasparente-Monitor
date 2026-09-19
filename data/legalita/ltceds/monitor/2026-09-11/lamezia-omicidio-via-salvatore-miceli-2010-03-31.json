@@ -1,0 +1,109 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-omicidio-via-salvatore-miceli-2010-03-31",
+  "discovered_at": "2026-09-11T17:15:31.000Z",
+  "updated_at": "2026-09-11T17:15:31.000Z",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Omicidio a colpi d'arma da fuoco in via Salvatore Miceli il 31 marzo 2010",
+  "temporal": {
+    "start": "2010-03-31",
+    "end": "2010-03-31",
+    "edtf": "2010-03-31",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "source:sky-tg24:2010-03-31:omicidio-via-salvatore-miceli",
+      "source_type": "press_secondary",
+      "provider": "Sky TG24",
+      "title": "Agguato a Lamezia Terme, ucciso un 33enne",
+      "url": "https://tg24.sky.it/cronaca/2010/03/31/agguato_lamezia_terme_ucciso_33enne",
+      "published_at": "2010-03-31T21:23:00+02:00",
+      "retrieved_at": "2026-09-11T17:15:31.000Z",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support"
+      ]
+    },
+    {
+      "source_key": "source:tgcom24:2010-04-01:omicidio-via-miceli",
+      "source_type": "press_secondary",
+      "provider": "TGCOM24",
+      "title": "Agguato a Lamezia, ucciso 33enne",
+      "url": "https://www.tgcom24.mediaset.it/cronaca/articoli/478025/agguato-a-lamezia-ucciso-33enne.shtml",
+      "published_at": "2010-04-01T08:24:00+02:00",
+      "retrieved_at": "2026-09-11T17:15:31.000Z",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "source:apcom:2010-03-31:omicidio-lamezia",
+      "source_type": "news_agency",
+      "provider": "APCom (ripresa La Provincia di Como)",
+      "title": "Calabria/Trentatreenne ucciso in un agguato a Lamezia Terme",
+      "url": "https://www.laprovinciadicomo.it/stories/apcom/calabriatrentatreenne-ucciso-agguato-lamezia-terme-o_125540_11/",
+      "published_at": null,
+      "retrieved_at": "2026-09-11T17:15:31.000Z",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "source:ansa:2018-06-27:esito-appello-omicidio-lamezia-2010",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Assolto dopo condanna all'ergastolo",
+      "url": "https://www.ansa.it/sito/notizie/cronaca/2018/06/27/assolto-dopo-condanna-allergastolo_4e279b08-1070-425b-9808-da5b5f9636f9.html",
+      "published_at": "2018-06-27T20:53:00+02:00",
+      "retrieved_at": "2026-09-11T17:15:31.000Z",
+      "support_roles": [
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "source:sky-tg24:2010-03-31:omicidio-via-salvatore-miceli",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti contemporanee descrivono un agguato con numerosi colpi di pistola avvenuto la sera del 31 marzo 2010, poco dopo le 20:30.",
+        "La vittima fu raggiunta dai colpi in prossimita dell'ingresso della propria abitazione, all'interno di un complesso di case popolari in via Salvatore Miceli; non viene pubblicato un numero civico.",
+        "Una fonte ANSA del 27 giugno 2018 documenta l'assoluzione in appello di una persona che in primo grado era stata condannata all'ergastolo per un'asserita funzione di supporto logistico agli esecutori; il record non attribuisce pertanto responsabilita individuali definitive per l'omicidio."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-salvatore-miceli:occurrence",
+      "basis_source_key": "source:sky-tg24:2010-03-31:omicidio-via-salvatore-miceli",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via Salvatore Miceli, complesso di case popolari presso un'abitazione privata (civico non pubblicato)",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    }
+  ]
+}

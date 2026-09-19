@@ -1,0 +1,84 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-intimidazione-concessionaria-via-del-progresso-2011-05-19-20",
+  "discovered_at": "2026-09-12T16:03:53+02:00",
+  "updated_at": "2026-09-12T16:03:53+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Intimidazione con bottiglia di liquido infiammabile contro una concessionaria in via del Progresso nella notte tra il 19 e il 20 maggio 2011",
+  "temporal": {
+    "start": "2011-05-19",
+    "end": "2011-05-20",
+    "edtf": "2011-05-19/2011-05-20",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "press:il-lametino:2011-05-20:intimidazione-concessionaria-via-del-progresso",
+      "source_type": "press_secondary",
+      "provider": "il Lametino.it",
+      "title": "Lamezia, intimidazione a concessionaria di auto in via del Progresso",
+      "url": "https://www.lametino.it/cronaca/lamezia-intimidazione-a-concessionaria-di-auto-in-via-del-progresso.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-12T16:03:53+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:intimidazione",
+      "classification_source_key": "press:il-lametino:2011-05-20:intimidazione-concessionaria-via-del-progresso",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "not_applicable",
+      "situational_context": [
+        "la fonte riferisce che una bottiglia contenente liquido infiammabile fu lasciata davanti all'entrata di una concessionaria di auto in via del Progresso",
+        "la fonte descrive l'episodio come intimidazione e riferisce l'avvio delle indagini da parte del Commissariato di polizia",
+        "la mattina del 20 maggio 2011 gli investigatori avevano sentito il titolare della concessionaria"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:concessionaria-via-del-progresso-2011:occurrence",
+      "basis_source_key": "press:il-lametino:2011-05-20:intimidazione-concessionaria-via-del-progresso",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Ingresso di una concessionaria di auto, via del Progresso",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:concessionaria-via-del-progresso-2011:target",
+      "basis_source_key": "press:il-lametino:2011-05-20:intimidazione-concessionaria-via-del-progresso",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Concessionaria di auto, via del Progresso",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

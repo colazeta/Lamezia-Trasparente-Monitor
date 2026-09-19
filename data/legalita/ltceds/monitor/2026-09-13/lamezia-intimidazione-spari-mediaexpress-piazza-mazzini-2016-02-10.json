@@ -1,0 +1,113 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-intimidazione-spari-mediaexpress-piazza-mazzini-2016-02-10",
+  "discovered_at": "2026-09-13T01:08:34+02:00",
+  "updated_at": "2026-09-13T01:08:34+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Sei colpi di pistola contro l'agenzia Mediaexpress in Piazza Mazzini il 10 febbraio 2016",
+  "temporal": {
+    "start": "2016-02-10",
+    "end": "2016-02-10",
+    "edtf": "2016-02-10",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "source:corriere-calabria-2016-02-15-mediaexpress-sei-colpi",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Tre video accusano il ragazzo incappucciato di Lamezia – LE IMMAGINI",
+      "url": "https://www.corrieredellacalabria.it/2016/02/15/tre-video-accusano-il-ragazzo-incappucciato-di-lamezia-terme/",
+      "published_at": "2016-02-15T00:00:00+01:00",
+      "retrieved_at": "2026-09-13T01:08:34+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "corroboration",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "source:gazzetta-sud-2016-02-15-intimidazioni-danneggiamenti-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Intimidazioni e danneggiamenti, fermato 20enne",
+      "url": "https://calabria.gazzettadelsud.it/video/archivio/2016/02/15/intimidazioni-e-danneggiamenti-fermato-20enne-9cb682d5-1aea-457e-808b-c05a3bad3507/",
+      "published_at": "2016-02-15T00:00:00+01:00",
+      "retrieved_at": "2026-09-13T01:08:34+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "corroboration",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "source:approdo-calabria-2016-03-03-mediaexpress-piazza-mazzini",
+      "source_type": "press_secondary",
+      "provider": "Approdo Calabria",
+      "title": "Nuova intimidazione a Lamezia, bomba a supermercato",
+      "url": "https://www.approdocalabria.it/nuova-intimidazione-a-lamezia-bomba-esplode-davanti-a-supermercato/",
+      "published_at": "2016-03-03T00:00:00+01:00",
+      "retrieved_at": "2026-09-13T01:08:34+02:00",
+      "support_roles": [
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:intimidazione",
+      "classification_source_key": "source:corriere-calabria-2016-02-15-mediaexpress-sei-colpi",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "not_applicable",
+      "situational_context": [
+        "il 10 febbraio 2016 furono esplosi sei colpi di pistola contro la saracinesca dell'agenzia Mediaexpress a Lamezia Terme",
+        "una fonte successiva colloca espressamente l'agenzia Mediaexpress in Piazza Mazzini; nessuna fonte verificata in questa iterazione consente di attribuire un numero civico o coordinate senza inferenza",
+        "le fonti del 15 febbraio inseriscono l'episodio nell'attivita di contrasto a intimidazioni e danneggiamenti connessi al fenomeno estorsivo e documentano un successivo sviluppo investigativo di Polizia, ma non isolano per questo singolo fatto una qualificazione penale definitiva",
+        "la classificazione resta pertanto provvisoria come intimidazione; non sono inferite tentata estorsione, aggravante mafiosa o ulteriori fattispecie per il singolo episodio"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:mediaexpress-piazza-mazzini:occurrence",
+      "basis_source_key": "source:approdo-calabria-2016-03-03-mediaexpress-piazza-mazzini",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Saracinesca dell'agenzia Mediaexpress, Piazza Mazzini",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:mediaexpress-piazza-mazzini:target",
+      "basis_source_key": "source:approdo-calabria-2016-03-03-mediaexpress-piazza-mazzini",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Agenzia Mediaexpress, Piazza Mazzini",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

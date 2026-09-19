@@ -1,0 +1,83 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-ufficio-postale-via-aldo-moro-2008-09-03",
+  "discovered_at": "2026-09-17T18:00:19+02:00",
+  "updated_at": "2026-09-17T18:00:19+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina armata all'ufficio postale di via Aldo Moro a Lamezia Terme il 3 settembre 2008",
+  "temporal": {
+    "start": "2008-09-03",
+    "end": "2008-09-03",
+    "edtf": "2008-09-03",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:nuova-cosenza:2008-09-03:rapina-poste-via-aldo-moro",
+      "source_type": "press_secondary",
+      "provider": "Nuova Cosenza Quotidiano Digitale",
+      "title": "Rapina in ufficio postale di Lamezia, bottino 2000 euro",
+      "url": "https://www.nuovacosenza.com/cs/08/settembre/ultime.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-17T18:00:19+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "press:nuova-cosenza:2008-09-03:rapina-poste-via-aldo-moro",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La fonte contemporanea riferisce una rapina compiuta la mattina del 3 settembre 2008, pochi minuti dopo l'apertura dell'ufficio postale di via Aldo Moro a Lamezia Terme.",
+        "Secondo la prima ricostruzione riportata, erano da poco trascorse le 08:15 quando due persone con il volto coperto e armate di pistola, la cui natura reale o giocattolo non era ancora accertata, entrarono nell'ufficio e chiesero agli impiegati il denaro presente in cassa.",
+        "La fonte quantifica il bottino in circa 2.000 euro e riferisce che i due autori si dileguarono subito dopo il fatto."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-aldo-moro:ufficio-postale:occurrence",
+      "basis_source_key": "press:nuova-cosenza:2008-09-03:rapina-poste-via-aldo-moro",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Via Aldo Moro",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-aldo-moro:ufficio-postale:target",
+      "basis_source_key": "press:nuova-cosenza:2008-09-03:rapina-poste-via-aldo-moro",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via Aldo Moro",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

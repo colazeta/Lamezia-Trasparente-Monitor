@@ -1,0 +1,86 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-secondo-incendio-deposito-godino-via-arturo-perugini-2007-08",
+  "discovered_at": "2026-09-18T06:39:49+02:00",
+  "updated_at": "2026-09-18T06:39:49+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Secondo incendio al deposito di pneumatici Giuseppe Godino in via Arturo Perugini nell'agosto 2007",
+  "temporal": {
+    "start": null,
+    "end": "2007-08-09",
+    "edtf": "../2007-08-09",
+    "precision": "approximate"
+  },
+  "sources": [
+    {
+      "source_key": "press:gazzetta-del-sud:2007-08-09:secondo-incendio-godino",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Non c'è pace per i Godino. Secondo incendio in azienda",
+      "url": "https://www.messinaantiusura.it/wp-content/uploads/sites/2/2022/07/20070809gazc.pdf",
+      "published_at": "2007-08-09T00:00:00+02:00",
+      "retrieved_at": "2026-09-18T06:39:49+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:intimidazione",
+      "classification_source_key": "press:gazzetta-del-sud:2007-08-09:secondo-incendio-godino",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "not_applicable",
+      "situational_context": [
+        "La cronaca contemporanea del 9 agosto 2007 riferisce un secondo incendio al deposito della Giuseppe Godino in via Arturo Perugini, con la distruzione di circa cinquanta pneumatici; le fiamme lambirono anche l'impalcatura del fabbricato in ricostruzione e furono spente dai vigili del fuoco.",
+        "La stessa fonte ricorda che la ditta era già stata colpita dalla criminalità organizzata il 24 ottobre 2006 e riferisce che, dopo questo nuovo episodio, gli inquirenti decisero di intensificare la vigilanza all'azienda; il sindaco inquadrò pubblicamente il sostegno alla famiglia e agli operatori economici nelle azioni di contrasto al racket.",
+        "La fonte non riporta tuttavia per questo secondo incendio un accertamento giudiziario o di polizia sulla causa di innesco, né una contestazione specifica di incendio doloso o estorsione. La classificazione resta pertanto provvisoria come intimidazione e non viene inferita una fattispecie penale più specifica.",
+        "La data di pubblicazione è il 9 agosto 2007, ma il testo disponibile non indica in modo autonomo e inequivoco il giorno esatto in cui divamparono le fiamme. La temporalità canonica usa quindi il 9 agosto come termine superiore documentato e resta approssimativa.",
+        "La fonte identifica direttamente il deposito Giuseppe Godino e via Arturo Perugini; non è attestato un numero civico e non vengono attribuite coordinate."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:deposito-godino-via-arturo-perugini-2007-08:occurrence",
+      "basis_source_key": "press:gazzetta-del-sud:2007-08-09:secondo-incendio-godino",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Deposito della Giuseppe Godino, Via Arturo Perugini",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:deposito-godino-via-arturo-perugini-2007-08:target",
+      "basis_source_key": "press:gazzetta-del-sud:2007-08-09:secondo-incendio-godino",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Deposito della Giuseppe Godino, Via Arturo Perugini",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

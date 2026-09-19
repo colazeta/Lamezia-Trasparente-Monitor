@@ -1,0 +1,128 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-intimidazione-container-via-virgilio-2016-01-24",
+  "discovered_at": "2026-09-18T23:51:54+02:00",
+  "updated_at": "2026-09-18T23:51:54+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Intimidazione con cartucce e biglietto minatorio al negozio Container in via Virgilio il 24 gennaio 2016",
+  "temporal": {
+    "start": "2016-01-24",
+    "end": "2016-01-24",
+    "edtf": "2016-01-24",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:il-lametino:2016-01-25:intimidazione-via-virgilio",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, intimidazione negozio via Virgilio - REAZIONI",
+      "url": "https://www.lametino.it/cronaca/lamezia-intimidazione-negozio-via-virgilio-reazioni.html",
+      "published_at": "2016-01-25T00:00:00+01:00",
+      "retrieved_at": "2026-09-18T23:51:54+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2016-01-28:banda-mettiti-a-posto",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Lamezia, commercianti di nuovo nel mirino dei clan",
+      "url": "https://www.corrieredellacalabria.it/2016/01/28/a-lamezia-la-banda-del-mettiti-a-posto/",
+      "published_at": "2016-01-28T16:56:00+01:00",
+      "retrieved_at": "2026-09-18T23:51:54+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2016-01-29:intimidazioni-piazza-mazzini",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, salgono a 5 le intimidazioni. Due nella notte a piazza Mazzini - Reazioni",
+      "url": "https://www.lametino.it/cronaca/lamezia-salgono-a-5-le-intimidazioni-due-nella-notte-a-piazza-mazzini.html",
+      "published_at": "2016-01-29T00:00:00+01:00",
+      "retrieved_at": "2026-09-18T23:51:54+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:atto-intimidatorio",
+      "classification_source_key": "press:il-lametino:2016-01-25:intimidazione-via-virgilio",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti contemporanee collocano l'episodio nella mattina di domenica 24 gennaio 2016 presso un negozio di abbigliamento in via Virgilio, nel quartiere Nicastro di Lamezia Terme.",
+        "Presso l'esercizio furono rinvenute tre cartucce di fucile calibro 12 e una lettera o biglietto minatorio con l'invito a 'mettersi a posto'.",
+        "Una cronaca del 29 gennaio identifica il negozio come Container; il nome viene usato per risolvere il sito pubblico, senza inferire un civico o coordinate non attestati dalle fonti.",
+        "Le cronache inseriscono il fatto in una sequenza di intimidazioni a esercizi commerciali e richiamano un possibile contesto estorsivo, ma per questo specifico episodio non è stata recuperata una fonte giudiziaria o di polizia che sostenga una qualificazione penale più forte o un'attribuzione individuale; la classificazione resta pertanto provvisoria."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:container-via-virgilio:occurrence",
+      "basis_source_key": "press:il-lametino:2016-01-29:intimidazioni-piazza-mazzini",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Negozio di abbigliamento Container, via Virgilio",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:container-via-virgilio:target",
+      "basis_source_key": "press:il-lametino:2016-01-29:intimidazioni-piazza-mazzini",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Negozio di abbigliamento Container, via Virgilio",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:container-via-virgilio:discovery",
+      "basis_source_key": "press:il-lametino:2016-01-25:intimidazione-via-virgilio",
+      "role": "discovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Negozio di abbigliamento Container, via Virgilio",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    }
+  ]
+}

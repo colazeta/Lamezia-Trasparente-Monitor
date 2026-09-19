@@ -1,0 +1,114 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-furto-bar-ospedale-2013-03-03-04",
+  "discovered_at": "2026-09-18T11:33:34+02:00",
+  "updated_at": "2026-09-18T11:33:34+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Furto aggravato nel bar del presidio ospedaliero di Lamezia Terme nella notte tra il 3 e il 4 marzo 2013",
+  "temporal": {
+    "start": "2013-03-03",
+    "end": "2013-03-04",
+    "edtf": "2013-03-03/2013-03-04",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "press:lametino:2013-03-21:furto-bar-ospedale",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: Rubano nel bar dell'ospedale, arrestati",
+      "url": "https://www.lametino.it/cronaca/lamezia-rubano-nel-bar-dellospedale-arrestati.html",
+      "published_at": "2013-03-21T00:00:00+01:00",
+      "retrieved_at": "2026-09-18T11:33:34+02:00",
+      "support_roles": ["event_support", "location_support", "classification_support", "procedural_context"]
+    },
+    {
+      "source_key": "press:infooggi:2013-03-21:furto-bar-ospedale-lamezia",
+      "source_type": "press_secondary",
+      "provider": "InfoOggi",
+      "title": "Rapinato bar dell'ospedale di Lamezia Terme: due gli arresti",
+      "url": "https://www.infooggi.it/articolo/rapinato-bar-dell-ospedale-di-lamezia-terme-due-gli-arresti/39190/amp",
+      "published_at": "2013-03-21T00:00:00+01:00",
+      "retrieved_at": "2026-09-18T11:33:34+02:00",
+      "support_roles": ["event_support", "location_support", "classification_support", "corroboration"]
+    },
+    {
+      "source_key": "press:quicosenza:2013-03-21:furto-bar-ospedale-lamezia",
+      "source_type": "press_secondary",
+      "provider": "QuiCosenza",
+      "title": "Tentano furto nel bar dell'Ospedale, due arresti",
+      "url": "https://quicosenza.it/news/7462-tentano-furto-nel-bar-dellospedale-due-arresti/",
+      "published_at": "2013-03-21T00:00:00+01:00",
+      "retrieved_at": "2026-09-18T11:33:34+02:00",
+      "support_roles": ["event_support", "location_support", "classification_support", "corroboration"]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:furto-aggravato",
+      "classification_source_key": "press:lametino:2013-03-21:furto-bar-ospedale",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Nella notte tra il 3 e il 4 marzo 2013 due persone entrarono nel bar del presidio ospedaliero di Lamezia Terme forzando un infisso esterno e asportarono il registratore di cassa.",
+        "Il registratore di cassa fu rinvenuto il giorno successivo, privo del denaro, in un corridoio che conduce al locale lavanderia del medesimo ospedale.",
+        "Le fonti contemporanee riferiscono che il 21 marzo 2013 furono eseguite misure cautelari per furto aggravato in concorso; il record non contiene identità personali e non estende la qualificazione oltre quanto attestato dalle fonti."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:bar-presidio-ospedaliero:occurrence",
+      "basis_source_key": "press:lametino:2013-03-21:furto-bar-ospedale",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Bar del presidio ospedaliero di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:bar-presidio-ospedaliero:target",
+      "basis_source_key": "press:lametino:2013-03-21:furto-bar-ospedale",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Bar del presidio ospedaliero di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:ospedale-corridoio-lavanderia:recovery",
+      "basis_source_key": "press:lametino:2013-03-21:furto-bar-ospedale",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Corridoio che conduce al locale lavanderia del presidio ospedaliero di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-omicidio-quattrocchie-2006-06-15",
+  "discovered_at": "2026-09-18T01:10:23+02:00",
+  "updated_at": "2026-09-18T01:10:23+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Omicidio con arma da fuoco in località Quattrocchie il 15 giugno 2006",
+  "temporal": {
+    "start": "2006-06-15",
+    "end": "2006-06-15",
+    "edtf": "2006-06-15",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:tgcom24:2006-06-15:omicidio-quattrocchie-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Tgcom24",
+      "title": "Lamezia Terme: ucciso uomo",
+      "url": "https://www.tgcom24.mediaset.it/cronaca/articoli/314444/lamezia-terme-ucciso-uomo.shtml",
+      "published_at": null,
+      "retrieved_at": "2026-09-18T01:10:23+02:00",
+      "support_roles": ["event_support", "classification_support", "location_support", "corroboration"]
+    },
+    {
+      "source_key": "press:nuova-cosenza:2006-06-15:omicidio-quattrocchie-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Nuova Cosenza Quotidiano Digitale",
+      "title": "Calabria martoriata dalla criminalità: Ucciso a colpi di pistola un rappresentante di gioielli a Lamezia",
+      "url": "https://www.nuovacosenza.com/cs/06/giugno/ultime.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-18T01:10:23+02:00",
+      "support_roles": ["event_support", "classification_support", "location_support", "procedural_context", "corroboration"]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "press:nuova-cosenza:2006-06-15:omicidio-quattrocchie-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti contemporanee collocano l'omicidio nella sera del 15 giugno 2006, intorno alle 21, in località Quattrocchie a Lamezia Terme.",
+        "La vittima fu raggiunta da almeno cinque colpi di pistola mentre era a bordo della propria automobile nel cortile antistante la palazzina in cui abitava, nei pressi del cimitero del quartiere Nicastro, e morì poco dopo il ricovero in ospedale.",
+        "Le prime ricostruzioni investigative descrivevano due persone giunte e fuggite su un mezzo a due ruote; il giorno successivo le cronache riferivano che l'ipotesi della rapina era stata scartata dopo il rinvenimento nella vettura della borsa contenente gioielli e denaro.",
+        "Non è stata reperita una fonte primaria di polizia o giudiziaria direttamente accessibile per il fatto; il record si fonda su cronache contemporanee concordanti e non attribuisce responsabilità individuali."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:quattrocchie-abitazione-privata:occurrence",
+      "basis_source_key": "press:nuova-cosenza:2006-06-15:omicidio-quattrocchie-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Cortile antistante un'abitazione privata in località Quattrocchie, nei pressi del cimitero di Nicastro",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:quattrocchie-abitazione-privata:target",
+      "basis_source_key": "press:tgcom24:2006-06-15:omicidio-quattrocchie-lamezia",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Cortile antistante un'abitazione privata in località Quattrocchie, nei pressi del cimitero di Nicastro",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    }
+  ]
+}

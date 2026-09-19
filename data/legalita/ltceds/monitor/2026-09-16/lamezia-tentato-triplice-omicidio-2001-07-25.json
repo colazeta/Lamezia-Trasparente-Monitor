@@ -1,0 +1,98 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-tentato-triplice-omicidio-2001-07-25",
+  "discovered_at": "2026-09-16T02:18:48+02:00",
+  "updated_at": "2026-09-16T02:18:48+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Tentato triplice omicidio a Lamezia Terme il 25 luglio 2001",
+  "temporal": {
+    "start": "2001-07-25",
+    "end": "2001-07-25",
+    "edtf": "2001-07-25",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:corriere-calabria:2012-06-28:medusa-tentato-triplice-omicidio-2001",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Operazione Medusa: cronologia degli episodi della guerra criminale lametina",
+      "url": "https://www.corrieredellacalabria.it/2012/06/28/6490_operazione_medusa_la_lunga_scia_di_sangue_che_ha_bagnato_lamezia/",
+      "published_at": "2012-06-28T00:00:00+02:00",
+      "retrieved_at": "2026-09-16T02:18:48+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:gazzetta-sud:2013-05-17:operazione-medusa-esito-primo-grado",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Operazione Medusa: esito del processo di primo grado",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/archivio/2013/05/17/operazione-medusa-36-condannatidella-cosca-giampa-8f764897-504c-4179-be7a-a90c2873136e",
+      "published_at": "2013-05-17T00:00:00+02:00",
+      "retrieved_at": "2026-09-16T02:18:48+02:00",
+      "support_roles": [
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "press:corriere-calabria:2012-06-28:medusa-tentato-triplice-omicidio-2001",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "La cronologia pubblicata nel contesto dell'operazione Medusa qualifica espressamente l'episodio come tentato triplice omicidio e lo data al 25 luglio 2001.",
+        "La ricerca geografica dedicata non ha individuato una fonte affidabile che attesti una strada, un esercizio, un quartiere o una località sub-comunale del fatto; la localizzazione resta quindi al solo livello del Comune di Lamezia Terme e non vengono inferiti indirizzi o coordinate.",
+        "Una copia indicizzata sul web di materiale giudiziario collegato all'operazione riproduce la stessa data e qualificazione, ma il mirror non era direttamente recuperabile durante questa acquisizione; non viene quindi utilizzato come fonte primaria canonica dell'artefatto.",
+        "La fonte sull'esito del primo grado documenta il successivo sviluppo processuale dell'operazione Medusa in termini generali; non viene inferito da tale fonte uno specifico esito individuale per questo episodio."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 3
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:municipality:occurrence:2001-07-25",
+      "basis_source_key": "press:corriere-calabria:2012-06-28:medusa-tentato-triplice-omicidio-2001",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "unknown",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Lamezia Terme — luogo sub-comunale non identificato",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:municipality:target:2001-07-25",
+      "basis_source_key": "press:corriere-calabria:2012-06-28:medusa-tentato-triplice-omicidio-2001",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "unknown",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Lamezia Terme — luogo sub-comunale non identificato",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

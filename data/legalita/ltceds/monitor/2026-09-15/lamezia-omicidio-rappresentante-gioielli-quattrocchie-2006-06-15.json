@@ -1,0 +1,113 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-omicidio-rappresentante-gioielli-quattrocchie-2006-06-15",
+  "discovered_at": "2026-09-15T00:42:49+02:00",
+  "updated_at": "2026-09-15T00:42:49+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Omicidio con arma da fuoco di un rappresentante di gioielli in località Quattrocchie il 15 giugno 2006",
+  "temporal": {
+    "start": "2006-06-15",
+    "end": "2006-06-15",
+    "edtf": "2006-06-15",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:tgcom24:2006-06-15:omicidio-rappresentante-gioielli-quattrocchie",
+      "source_type": "press_secondary",
+      "provider": "Tgcom24",
+      "title": "Lamezia Terme: ucciso uomo",
+      "url": "https://www.tgcom24.mediaset.it/cronaca/articoli/314444/lamezia-terme-ucciso-uomo.shtml",
+      "published_at": null,
+      "retrieved_at": "2026-09-15T00:42:49+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:nuova-cosenza:2006-06-15:omicidio-rappresentante-gioielli-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Nuova Cosenza Quotidiano Digitale",
+      "title": "Calabria martoriata dalla criminalità: ucciso a colpi di pistola un rappresentante di gioielli a Lamezia",
+      "url": "https://www.nuovacosenza.com/cs/06/giugno/ultime.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-15T00:42:49+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:nuova-cosenza:2006-10:emergenza-mafia-lamezia-2006",
+      "source_type": "press_secondary",
+      "provider": "Nuova Cosenza Quotidiano Digitale",
+      "title": "Emergenza mafia: Lamezia sotto assedio dalla 'ndrangheta",
+      "url": "https://www.nuovacosenza.com/cs/06/ottobre/lamezia.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-15T00:42:49+02:00",
+      "support_roles": [
+        "event_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "press:tgcom24:2006-06-15:omicidio-rappresentante-gioielli-quattrocchie",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti contemporanee riferiscono che la vittima, un rappresentante di gioielli, fu raggiunta da almeno cinque colpi di pistola mentre si trovava a bordo della propria automobile nel cortile antistante una palazzina in località Quattrocchie e morì per le ferite poco dopo l'agguato; una cronaca iniziale parlò di decesso dopo il ricovero, mentre un aggiornamento del giorno successivo precisò che il decesso avvenne durante il trasporto verso l'ospedale",
+        "la prima ricostruzione investigativa riportata dalla stampa descrive l'episodio come un agguato e indica la fuga di due persone a bordo di una moto; un aggiornamento del 16 giugno riferì che, in quella fase, gli investigatori tendevano a escludere la matrice della criminalità organizzata; il record non attribuisce comunque una matrice o un movente non accertati",
+        "le fonti collocano il fatto intorno alle ore 21 del 15 giugno 2006, ma il record conserva prudenzialmente la sola data esatta perché i metadati temporali di una pagina d'archivio non sono coerenti con l'orario narrato nel testo"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:quattrocchie-cimitero-nicastro:occurrence",
+      "basis_source_key": "press:tgcom24:2006-06-15:omicidio-rappresentante-gioielli-quattrocchie",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Cortile antistante una palazzina in località Quattrocchie, nei pressi del cimitero di Nicastro",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:quattrocchie-cimitero-nicastro:target",
+      "basis_source_key": "press:tgcom24:2006-06-15:omicidio-rappresentante-gioielli-quattrocchie",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Cortile antistante una palazzina in località Quattrocchie, nei pressi del cimitero di Nicastro",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    }
+  ]
+}

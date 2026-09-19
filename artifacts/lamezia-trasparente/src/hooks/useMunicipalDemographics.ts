@@ -14,7 +14,7 @@ export function useMunicipalDemographicSnapshot(key: MunicipalDatasetKey) {
       });
       if (!r.ok || !r.headers.get("content-type")?.includes("application/json"))
         throw new Error(
-          "Il dataset canonico non è disponibile. Nessuna copia statica è stata sostituita ai dati del database.",
+          "I dati demografici non sono disponibili. Riprova più tardi.",
         );
       return validateMunicipalSnapshot(await r.json(), key);
     },

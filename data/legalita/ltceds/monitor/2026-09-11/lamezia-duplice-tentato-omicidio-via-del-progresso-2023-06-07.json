@@ -1,0 +1,147 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-duplice-tentato-omicidio-via-del-progresso-2023-06-07",
+  "discovered_at": "2026-09-11T21:07:00.000Z",
+  "updated_at": "2026-09-11T21:12:00.000Z",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Duplice tentato omicidio con pistola inceppata in via del Progresso il 7 giugno 2023",
+  "temporal": {
+    "start": "2023-06-07",
+    "end": "2023-06-07",
+    "edtf": "2023-06-07",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "source:ildispaccio:2023-06-12:duplice-tentato-omicidio-lamezia",
+      "source_type": "press_secondary",
+      "provider": "IlDispaccio",
+      "title": "Spara contro due conoscenti ma l’arma si inceppa: arrestato a Lamezia Terme per duplice tentato omicidio",
+      "url": "https://ildispaccio.it/calabria/catanzaro/2023/06/12/spara-contro-due-conoscenti-ma-larma-si-inceppa-arrestato-a-lamezia-terme-per-duplice-tentato-omicidio",
+      "published_at": "2023-06-12T15:23:00+02:00",
+      "retrieved_at": "2026-09-11T21:07:00.000Z",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "source:lacnews24:2023-06-12:pistola-inceppa-duplice-tentato-omicidio",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Lamezia Terme, tenta di sparare a due parenti dell'amante ma la pistola s'inceppa: arrestato 25enne",
+      "url": "https://www.lacnews24.it/cronaca/lamezia-terme-tenta-di-sparare-a-due-parenti-dellamante-ma-la-pistola-sinceppa-arrestato-25enne-u5kz86c0",
+      "published_at": null,
+      "retrieved_at": "2026-09-11T21:07:00.000Z",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "source:rai-tgr-calabria:2023-06-12:pistola-inceppa-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Rai TGR Calabria",
+      "title": "Spara contro conoscenti, illesi perché l'arma si inceppa",
+      "url": "https://www.rainews.it/tgr/calabria/articoli/2023/06/spara-contro-conoscenti-illesi-perche-larma-si-inceppa-lamezia-terme-1919da15-1b59-4fe6-825c-e295821e4260.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-11T21:07:00.000Z",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:tentato-omicidio",
+      "classification_source_key": "source:ildispaccio:2023-06-12:duplice-tentato-omicidio-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "Le fonti riferiscono che nel pomeriggio del 7 giugno 2023, intorno alle 15, due persone furono attirate a un appuntamento all'altezza di via del Progresso a Lamezia Terme e che un uomo estrasse una pistola tentando di sparare verso di loro; l'arma si sarebbe inceppata.",
+        "Nel sopralluogo sul luogo dell'azione i Carabinieri rinvennero una cartuccia calibro 7,65 inesplosa con innesco percosso.",
+        "Le indagini furono coordinate dalla Procura della Repubblica di Lamezia Terme e condotte dai Carabinieri; il GIP dispose una misura di custodia cautelare in carcere nei confronti dell'indagato.",
+        "La persona sottoposta alla misura fu localizzata nella notte dell'11 giugno nel rione Ciampa di Cavallo e arrestata; il record non contiene identità personali e non implica un accertamento definitivo di responsabilità."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-del-progresso:occurrence",
+      "basis_source_key": "source:ildispaccio:2023-06-12:duplice-tentato-omicidio-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Via del Progresso",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-del-progresso:target",
+      "basis_source_key": "source:ildispaccio:2023-06-12:duplice-tentato-omicidio-lamezia",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via del Progresso",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-del-progresso:recovery",
+      "basis_source_key": "source:ildispaccio:2023-06-12:duplice-tentato-omicidio-lamezia",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Via del Progresso",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:ciampa-di-cavallo:arrest",
+      "basis_source_key": "source:lacnews24:2023-06-12:pistola-inceppa-duplice-tentato-omicidio",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_neighbourhood",
+      "evidence_precision": "neighbourhood",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "non_sensitive",
+      "geometry": null,
+      "place_name": "Rione Ciampa di Cavallo",
+      "neighbourhood": "Ciampa di Cavallo",
+      "iccs_location_type": null
+    }
+  ]
+}

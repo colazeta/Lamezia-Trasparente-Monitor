@@ -1,6 +1,6 @@
 {
   "schema_version": "albo-reviewed-document-serving.v1",
-  "reviewed_at": "2026-09-07T04:36:00.000Z",
+  "reviewed_at": "2026-09-19T09:34:42.000Z",
   "source": "Albo Pretorio online del Comune di Lamezia Terme (piattaforma Tinnvision)",
   "source_url": "https://albo.tinnvision.cloud/albo/00301390795",
   "known_limits": [
@@ -38,6 +38,86 @@
       "review_status": "approved_public_civic_document",
       "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
       "reason": "Convocazione istituzionale revisionata e usata come fonte della seduta congiunta delle Commissioni III e IV del 7 settembre 2026."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/b3f2d6a2b5884cd5e17b77b03289abeff7ab1f9994d7b70aa0d66ade22abdb09.pdf",
+      "sha256": "b3f2d6a2b5884cd5e17b77b03289abeff7ab1f9994d7b70aa0d66ade22abdb09",
+      "source_publication_number": "2026/2879",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Convocazione istituzionale revisionata e usata come fonte della seduta della III Commissione dell'11 settembre 2026."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/671bbd99e42677437d3c2b424d2ffd1794c8b1195efbf867591e3550480d31d1.pdf",
+      "sha256": "671bbd99e42677437d3c2b424d2ffd1794c8b1195efbf867591e3550480d31d1",
+      "source_publication_number": "2026/2925",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Calendario istituzionale revisionato e usato come fonte delle sedute della IV Commissione dal 14 al 16 settembre 2026."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/3de7a9e3185b36116474d8ecb3bed1c425b7395af5e85c9bb83bb16ca082e8d0.pdf",
+      "sha256": "3de7a9e3185b36116474d8ecb3bed1c425b7395af5e85c9bb83bb16ca082e8d0",
+      "source_publication_number": "2026/2926",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Calendario istituzionale revisionato e usato come fonte delle sedute della III Commissione del 14 e 15 settembre 2026."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/57731fbea7c4cdd31d8ff82175a0f84fc4fb053c0d71cb073d00ce38b33c74b5.pdf",
+      "sha256": "57731fbea7c4cdd31d8ff82175a0f84fc4fb053c0d71cb073d00ce38b33c74b5",
+      "source_publication_number": "2026/2953",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Convocazione istituzionale revisionata e usata come fonte della seduta della V Commissione del 17 settembre 2026."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/674f8c685f04e85674e4530e180cc45bca76b0256d06397040c2a024afb8f440.pdf",
+      "sha256": "674f8c685f04e85674e4530e180cc45bca76b0256d06397040c2a024afb8f440",
+      "source_publication_number": "2026/2959",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Calendario istituzionale revisionato e usato come fonte delle sedute della II Commissione del 17 e 18 settembre 2026."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/f311abbc9e4c6e3d0b9cfe4d4d0225548be713cef74686ec2556148e8c1901e5.pdf",
+      "sha256": "f311abbc9e4c6e3d0b9cfe4d4d0225548be713cef74686ec2556148e8c1901e5",
+      "source_publication_number": "2026/2960",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Convocazione istituzionale revisionata e usata come fonte della seduta della III Commissione del 18 settembre 2026."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/08f1075950b3e90994c2c5353cb0b1dc0992a4c6f4d55b27ba2e5ddcb99f5c40.pdf",
+      "sha256": "08f1075950b3e90994c2c5353cb0b1dc0992a4c6f4d55b27ba2e5ddcb99f5c40",
+      "source_publication_number": "2026/2971",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Calendario istituzionale revisionato e usato come fonte delle sedute della I Commissione del 16 e 17 settembre 2026."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/588fe94ce804d0f1699cb42f41eee4390e4ecb3f3fab21379b100b5c84e3e4eb.pdf",
+      "sha256": "588fe94ce804d0f1699cb42f41eee4390e4ecb3f3fab21379b100b5c84e3e4eb",
+      "source_publication_number": "2026/2981",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Calendario istituzionale revisionato e usato come fonte delle sedute della IV Commissione del 17 e 18 settembre 2026."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/b23e5a278fa5550657c3804e2a60a37ad09a1bdad2efcff6a7ece4f68a6b15e1.pdf",
+      "sha256": "b23e5a278fa5550657c3804e2a60a37ad09a1bdad2efcff6a7ece4f68a6b15e1",
+      "source_publication_number": "2026/2986",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Convocazione istituzionale revisionata e usata come fonte della seduta della V Commissione del 21 settembre 2026."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/8eebc4e71f5def4118e620b94ea9855319f39f9c548aedb7d4860d19a42b6f7f.pdf",
+      "sha256": "8eebc4e71f5def4118e620b94ea9855319f39f9c548aedb7d4860d19a42b6f7f",
+      "source_publication_number": "2026/3001",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Convocazione istituzionale revisionata e usata come fonte della seduta della III Commissione del 21 settembre 2026."
     }
   ]
 }

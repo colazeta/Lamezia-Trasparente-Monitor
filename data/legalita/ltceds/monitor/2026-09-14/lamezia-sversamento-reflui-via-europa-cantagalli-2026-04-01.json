@@ -1,0 +1,130 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-sversamento-reflui-via-europa-cantagalli-2026-04-01",
+  "discovered_at": "2026-09-14T14:55:00+02:00",
+  "updated_at": "2026-09-14T14:55:00+02:00",
+  "record_status": "verified_source",
+  "event_form": "continuous_episode",
+  "title": "Sversamento di reflui fognari nei canaloni di via Europa con confluenza nel torrente Cantagalli rilevato il 1 aprile 2026",
+  "temporal": {
+    "start": "2026-04-01",
+    "end": "2026-04-01",
+    "edtf": "2026-04-01",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "news:ansa:2026-04-03:cantagalli-via-europa-sequestro",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Lamezia Terme, sequestrata un'area con scarichi fognari",
+      "url": "https://www.ansa.it/calabria/notizie/2026/04/03/lamezia-terme-sequestrata-unarea-con-scarichi-fognari_6699f958-4074-4eea-977c-d4ebdbd1b393.html",
+      "published_at": "2026-04-03T14:23:00+02:00",
+      "retrieved_at": "2026-09-14T14:55:00+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:lametino:2026-04-03:cantagalli-via-europa-sequestro",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, scarichi fognari che confluivano nel torrente Cantagalli: sequestrata area di 60 mq a Sant'Eufemia",
+      "url": "https://www.lametino.it/cronaca/lamezia-scarichi-fognari-che-confluivano-nel-torrente-cantagalli-sequestrata-area-di-60-mq-a-sant-eufemia.html",
+      "published_at": "2026-04-03T00:00:00+02:00",
+      "retrieved_at": "2026-09-14T14:55:00+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2026-04-03:cantagalli-via-europa-sequestro",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Lamezia, scarichi abusivi inquinavano il torrente Cantagalli: sequestrata un'area di 60 mq",
+      "url": "https://www.corrieredellacalabria.it/2026/04/03/lamezia-scarichi-abusivi-inquinavano-il-torrente-cantagalli-sequestrata-unarea-di-60-mq-foto/",
+      "published_at": "2026-04-03T00:00:00+02:00",
+      "retrieved_at": "2026-09-14T14:55:00+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:scarico-reflui-fognari",
+      "classification_source_key": "news:ansa:2026-04-03:cantagalli-via-europa-sequestro",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "not_applicable",
+      "situational_context": [
+        "il 1 aprile 2026 personale della Capitaneria di porto di Vibo Valentia, con il Reparto operativo aeronavale della Guardia di finanza e tecnici ARPACAL, sotto il coordinamento della Procura di Lamezia Terme, rilevò una situazione in essere di diffusa presenza di reflui fognari nei canaloni che costeggiano via Europa, nella zona di Sant'Eufemia",
+        "risalendo i canaloni a monte, gli operatori individuarono sotto un chiusino collocato nella vegetazione un foro dal quale fuoriuscivano ingenti quantità di reflui fognari; i liquami confluivano attraverso i canaloni nel torrente Cantagalli e quindi verso il mare",
+        "un'area di circa 60 metri quadrati, nelle prossimità del punto di fuoriuscita e sovrastante un tratto di rete fognaria, fu sottoposta a sequestro preventivo; le analisi ARPACAL rilevarono elevati valori di Escherichia coli nel punto di fuoriuscita e alla foce indicata dalle fonti",
+        "al momento delle cronache le indagini del gruppo interforze ambientale erano ancora in corso per individuare eventuali responsabilità; le fonti non riportano una contestazione penale specifica per questo episodio e la classificazione resta pertanto provvisoria"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-europa-canaloni:occurrence",
+      "basis_source_key": "news:ansa:2026-04-03:cantagalli-via-europa-sequestro",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "non_sensitive",
+      "geometry": null,
+      "place_name": "Canaloni che costeggiano Via Europa, Sant'Eufemia",
+      "neighbourhood": "Sant'Eufemia",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-europa-chiusino:discovery",
+      "basis_source_key": "press:lametino:2026-04-03:cantagalli-via-europa-sequestro",
+      "role": "discovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "non_sensitive",
+      "geometry": null,
+      "place_name": "Area sotto un chiusino lungo i canaloni di Via Europa, Sant'Eufemia",
+      "neighbourhood": "Sant'Eufemia",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:torrente-cantagalli:target",
+      "basis_source_key": "news:ansa:2026-04-03:cantagalli-via-europa-sequestro",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "non_sensitive",
+      "geometry": null,
+      "place_name": "Torrente Cantagalli",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

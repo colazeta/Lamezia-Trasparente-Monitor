@@ -1,0 +1,115 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-intimidazione-spari-magazzino-callipo-san-pietro-lametino-2024-01-13",
+  "discovered_at": "2026-09-12T20:59:17+02:00",
+  "updated_at": "2026-09-12T20:59:17+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Spari contro il magazzino del Gruppo Callipo a San Pietro Lametino",
+  "temporal": {
+    "start": "2024-01-13",
+    "end": "2024-01-13",
+    "edtf": "2024-01-13",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "agency:ansa:2024-01-15:callipo-san-pietro-lametino",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Spari contro magazzino del Gruppo Callipo: 'Non mi fermo'",
+      "url": "https://www.ansa.it/calabria/notizie/2024/01/15/spari-contro-magazzino-del-gruppo-callipo-non-mi-fermo_d9399d52-1d92-4f36-9424-a1f672db800b.html",
+      "published_at": "2024-01-15T17:24:00+01:00",
+      "retrieved_at": "2026-09-12T20:59:17+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:lacnews24:2024-01-15:callipo-san-pietro-lametino",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Intimidazione al gruppo Callipo, colpi di pistola contro un magazzino: indagini in corso",
+      "url": "https://www.lacnews24.it/cronaca/intimidazione-al-gruppo-callipo-colpi-di-pistola-contro-un-magazzino-indagini-in-corso-dlg19z1y",
+      "published_at": "2024-01-15T09:13:00+01:00",
+      "retrieved_at": "2026-09-12T20:59:17+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lametino:2024-01-15:callipo-san-pietro-lametino",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Callipo denuncia spari al suo magazzino nell'area industriale di San Pietro Lametino – Reazioni",
+      "url": "https://www.lametino.it/Cronaca/callipo-denuncia-spari-al-suo-magazzino-nell-area-industriale-di-san-pietro-lametino-reazioni.html",
+      "published_at": "2024-01-15T11:26:00+01:00",
+      "retrieved_at": "2026-09-12T20:59:17+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:intimidazione",
+      "classification_source_key": "agency:ansa:2024-01-15:callipo-san-pietro-lametino",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "not_applicable",
+      "situational_context": [
+        "le fonti collocano l'episodio nella serata di sabato 13 gennaio 2024; il record conserva la data senza attribuire un orario esatto, sebbene una fonte secondaria riferisca circa le 22:15",
+        "alcuni colpi di arma da fuoco furono esplosi contro il magazzino del Gruppo Callipo nell'area industriale di San Pietro Lametino; le fonti descrivono l'episodio come intimidatorio, ma non e stata reperita una qualificazione giudiziaria o di polizia piu specifica",
+        "ANSA riferisce che l'accaduto fu segnalato alla Polizia di Stato, che avvio le indagini; il record conserva questo stato procedurale senza inferire autori, movente specifico o matrice mafiosa",
+        "il Lametino riferiva nella mattinata del 15 gennaio che le forze dell'ordine avevano effettuato un sopralluogo e che, in quel momento, non vi erano ancora riscontri pubblici definitivi sull'accaduto; la successiva ANSA riferisce l'avvio delle indagini"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:magazzino-callipo-san-pietro-lametino:occurrence",
+      "basis_source_key": "agency:ansa:2024-01-15:callipo-san-pietro-lametino",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Magazzino del Gruppo Callipo, area industriale di San Pietro Lametino",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:magazzino-callipo-san-pietro-lametino:target",
+      "basis_source_key": "agency:ansa:2024-01-15:callipo-san-pietro-lametino",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Magazzino del Gruppo Callipo, area industriale di San Pietro Lametino",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

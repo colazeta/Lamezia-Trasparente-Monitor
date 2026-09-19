@@ -113,6 +113,26 @@ const REGION_CALABRIA_STAFFING: ProposalCompetentAuthority = {
     "https://www.asp.cz.it/files/FORMAZIONE_ROCCIA/000-documenti/piao-2026-2028-asp-cz.pdf",
 };
 
+const AZIENDA_ZERO_UROLOGIA: ProposalCompetentAuthority = {
+  id: "azienda-zero-calabria",
+  label: "Azienda Zero Calabria",
+  level: "health_authority",
+  sourceLabel:
+    "inPA — mobilità regionale e interregionale per 19 Dirigenti Medici di Urologia, Azienda Zero",
+  sourceUrl:
+    "https://www.inpa.gov.it/bandi-e-avvisi/dettaglio-bando-avviso/?concorso_id=8743d45835464cac955f196ef29b19e9",
+};
+
+const COMUNE_LAMEZIA_MOBILITY_VIGILANZA: ProposalCompetentAuthority = {
+  id: "comune-lamezia-terme",
+  label: "Comune di Lamezia Terme",
+  level: "municipal",
+  sourceLabel:
+    "Comune di Lamezia Terme — mobilità volontaria esterna per quattro Istruttori Agenti di Vigilanza",
+  sourceUrl:
+    "https://www.comune.lamezia-terme.cz.it/it/news/mobilita-volontaria-esterna-istruttore-di-vigilanza",
+};
+
 const REGION_CALABRIA_TRANSPORT: ProposalCompetentAuthority = {
   id: "regione-calabria",
   label: "Regione Calabria",
@@ -255,6 +275,19 @@ export const PROPOSAL_COMPETENCE_ASSESSMENTS: Readonly<
     involvedAuthorities: [REGION_CALABRIA_STAFFING],
     note:
       "Il presidio Giovanni Paolo II appartiene all'ASP di Catanzaro e il fabbisogno di personale è pianificato dall'Azienda. Il PIAO ASP precisa però che il Piano dei fabbisogni è soggetto ai vincoli di spesa regionali e all'approvazione della struttura commissariale: il Comune, pur destinatario politico dell'interrogazione, non viene quindi trattato come autorità competente per gli organici ospedalieri.",
+  },
+  "urologia-ripristino-operativita-pd-2026": {
+    status: "partially_verified",
+    primaryAuthority: AZIENDA_ZERO_UROLOGIA,
+    involvedAuthorities: [ASP_CATANZARO_STAFFING, REGION_CALABRIA_STAFFING],
+    note:
+      "L'avviso ufficiale inPA documenta che Azienda Zero gestisce una procedura di mobilità per 19 Dirigenti Medici di Urologia destinati alle aziende del SSR, coerentemente con la gestione accentrata delle procedure selettive. L'ASP di Catanzaro resta coinvolta nella dotazione e nell'organizzazione del presidio e la Regione/struttura commissariale nei vincoli e indirizzi di personale. L'assessment resta parziale perché le fonti acquisite non verificano la ripartizione specifica dei posti all'ASP di Catanzaro né attribuiscono a un solo ente tutte le decisioni necessarie per riaprire posti letto, ricoveri e chirurgia.",
+  },
+  "polizia-locale-mobilita-quattro-agenti-dicapp-2026": {
+    status: "partially_verified",
+    primaryAuthority: COMUNE_LAMEZIA_MOBILITY_VIGILANZA,
+    note:
+      "La fonte ufficiale comunale conferma che il Comune ha avviato e cura la procedura di mobilità ex art. 30 d.lgs. 165/2001 per quattro posti di Istruttore Agente di Vigilanza e individua il Settore Economico-Finanziario quale struttura curatrice. Questo sostiene la competenza comunale sulla conclusione del procedimento specifico. L'assessment resta parziale perché la proposta sindacale comprende anche ipotesi alternative di reclutamento, scorrimenti e utilizzo di risorse che non vengono attribuite automaticamente al medesimo percorso amministrativo senza ulteriore base verificata.",
   },
   "scuole-posticipo-apertura-petizione-2026": {
     status: "verified",

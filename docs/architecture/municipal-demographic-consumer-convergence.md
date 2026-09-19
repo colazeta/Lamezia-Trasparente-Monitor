@@ -49,7 +49,16 @@ pnpm test
 
 The census writes `reports/canonicalisation/audit.json` and `queue.json`. It records file hashes, reviewed asset ownership and literal code references. **Unreviewed files remain unreviewed.** A file census is not a full semantic audit; literal-reference scanning does not prove reachability and cannot resolve all computed paths. Files, asset groups, source rows and typed observations have different denominators, so no combined completion percentage is reported.
 
-Automated guards reject known legacy municipal file reads in runtime frontend code, duplicate asset IDs, missing ledger gates, unsupported completion claims and duplicated conceptual evidence paths. Existing raw artefacts and test fixtures remain legitimate.
+Review coverage is pinned to the file SHA-256 and asset ownership recorded in
+`architecture/canonicalisation-review-baseline.v1.json`. The baseline preserves
+the 120 file receipts from the bounded 10 September audit, with the audit's own
+SHA-256 and source commit. Matching an asset directory establishes ownership
+only: new files, changed bytes and changed ownership remain unreviewed with a
+null semantic status. Unchanged bytes retain only the original bounded review,
+not a certificate of migration or production use. The audit reports missing
+baseline files separately; their absence does not establish a safe deprecation.
+
+Automated guards reject known legacy municipal file reads in runtime frontend code, duplicate asset IDs, missing ledger gates, malformed review receipts, unsupported completion claims and duplicated conceptual evidence paths. Existing raw artefacts and test fixtures remain legitimate.
 
 ## Validation and safe release sequence
 

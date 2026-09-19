@@ -1,0 +1,97 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-furto-carburante-ciarapani-via-savutano-2012-01",
+  "discovered_at": "2026-09-11T08:41:15+02:00",
+  "updated_at": "2026-09-11T08:41:15+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Furto di carburante nel parco mezzi Ciarapanì in via Savutano",
+  "temporal": {
+    "start": "2012-01-26",
+    "end": "2012-01-27",
+    "edtf": "2012-01-26/2012-01-27",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "press:corriere-della-calabria:2012-01-27:ciarapani-furto-gasolio",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Lamezia, furto nel parco mezzi della Ciarapani: rubati oltre 800 litri di carburante e asportato un serbatoio",
+      "url": "https://www.corrieredellacalabria.it/2012/01/27/3012_lamezia_furto_nel_parco_mezzi_della_ciarapani_rubati_oltre_800_litri_di_carburante_e_asportato_un_serbatoio/",
+      "published_at": "2012-01-27T10:49:00+01:00",
+      "retrieved_at": "2026-09-11T08:41:15+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support"
+      ]
+    },
+    {
+      "source_key": "press:approdo-calabria:2012-01-27:ciarapani-furto-gasolio",
+      "source_type": "press_secondary",
+      "provider": "Approdo Calabria",
+      "title": "Rubato gasolio cooperativa raccolta differenziata di Lamezia Terme",
+      "url": "https://www.approdocalabria.it/rubato-gasolio-cooperativa-raccolta-differenziata-di-lamezia-terme/",
+      "published_at": "2012-01-27T00:00:00+01:00",
+      "retrieved_at": "2026-09-11T08:41:15+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:furto",
+      "classification_source_key": "press:corriere-della-calabria:2012-01-27:ciarapani-furto-gasolio",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti convergono su un furto notturno di carburante nel recinto del parco mezzi Ciarapanì a Lamezia Terme, con asportazione di gasolio e di un intero serbatoio da uno dei mezzi",
+        "Corriere della Calabria riferisce circa 800 litri sottratti e cinque mezzi coinvolti, mentre la ripresa di un dispaccio ANSA pubblicata da Approdo Calabria riferisce gasolio sottratto da quattro mezzi e l'asportazione di un serbatoio; il record non forza una riconciliazione del numero dei veicoli",
+        "le fonti pubblicate la mattina del 27 gennaio 2012 collocano il fatto nella notte appena trascorsa; in assenza di un orario o di un'indicazione inequivoca sul lato della mezzanotte, la temporalità è conservata come intervallo 26-27 gennaio 2012"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:ciarapani-via-savutano:occurrence",
+      "basis_source_key": "press:corriere-della-calabria:2012-01-27:ciarapani-furto-gasolio",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "non_sensitive",
+      "geometry": null,
+      "place_name": "Parco mezzi Ciarapanì, via Savutano",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:ciarapani-via-savutano:target",
+      "basis_source_key": "press:corriere-della-calabria:2012-01-27:ciarapani-furto-gasolio",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "non_sensitive",
+      "geometry": null,
+      "place_name": "Parco mezzi Ciarapanì, via Savutano",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    }
+  ]
+}

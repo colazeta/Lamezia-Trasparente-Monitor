@@ -1,0 +1,111 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-omicidio-via-marconi-2016-08-09",
+  "discovered_at": "2026-09-16T15:59:36+02:00",
+  "updated_at": "2026-09-16T15:59:36+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Omicidio con arma da fuoco nel giardino di un'abitazione in Via Marconi il 9 agosto 2016",
+  "temporal": {
+    "start": "2016-08-09",
+    "end": "2016-08-09",
+    "edtf": "2016-08-09",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "source:cn24tv:2016-08-10:omicidio-via-marconi",
+      "source_type": "press_secondary",
+      "provider": "CN24TV",
+      "title": "Agguato nella notte, noto penalista assassinato a colpi d'arma da fuoco",
+      "url": "https://cn24tv.it/news/139297/lamezia-terme-nicastro-sambiase-omicidio-avvocato-penalista-francesco-pagliuso.html",
+      "published_at": "2016-08-10T08:29:00+02:00",
+      "retrieved_at": "2026-09-16T15:59:36+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "source:rainews:2016-08-10:omicidio-via-marconi",
+      "source_type": "press_secondary",
+      "provider": "RaiNews",
+      "title": "Agguato a Lamezia Terme, ucciso noto avvocato penalista",
+      "url": "https://www.rainews.it/archivio-rainews/articoli/ContentItem-ca460a74-f025-401b-b95b-ab6da52561b9.html",
+      "published_at": "2016-08-10T09:01:00+02:00",
+      "retrieved_at": "2026-09-16T15:59:36+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "source:ansa:2025-02-26:omicidio-via-marconi-cassazione",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Definitiva condanna all'ergastolo per omicidio avvocato Pagliuso",
+      "url": "https://www.ansa.it/calabria/notizie/2025/02/26/definitiva-condanna-allergastolo-per-omicidio-avvocato-pagliuso_7bc475d0-021a-43ca-bb6a-3513b832d94f.html",
+      "published_at": "2025-02-26T21:21:00+01:00",
+      "retrieved_at": "2026-09-16T15:59:36+02:00",
+      "support_roles": [
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "source:ansa:2025-02-26:omicidio-via-marconi-cassazione",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti contemporanee collocano l'omicidio nella tarda serata del 9 agosto 2016, in Via Marconi a Lamezia Terme, nel giardino o cortile dell'abitazione della vittima, mentre questa rientrava in automobile; una fonte contemporanea indica le 22:30 circa, mentre il corpo fu rinvenuto alcune ore dopo.",
+        "Il luogo viene mantenuto al livello di Via Marconi: le fonti descrivono un'abitazione privata tra Nicastro e Sambiase ma non viene inferito né pubblicato un numero civico o un punto esatto della residenza.",
+        "ANSA riferisce che il 26 febbraio 2025 la Corte di cassazione ha reso definitiva la condanna all'ergastolo per l'omicidio volontario con aggravante mafiosa, rigettando i ricorsi; il record conserva tale esito come stato probatorio definitivo senza strutturare identità personali."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-marconi:occurrence",
+      "basis_source_key": "source:cn24tv:2016-08-10:omicidio-via-marconi",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Via Marconi",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-marconi:target",
+      "basis_source_key": "source:cn24tv:2016-08-10:omicidio-via-marconi",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Via Marconi",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

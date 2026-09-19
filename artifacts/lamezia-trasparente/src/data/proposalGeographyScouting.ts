@@ -139,4 +139,6 @@ export const SCOUTED_PROPOSAL_GEOGRAPHY: Record<string, ProposalGeography> = {
   "emodinamica-h24-commissione-sanita-pd-2026": GIOVANNI_PAOLO_II,
   "parco-via-degli-itali-manutenzione-branca-2026": PARCO_VIA_DEGLI_ITALI,
   "sant-eufemia-cimitero-accesso-custodia-vitale-2026": SANT_EUFEMIA_CEMETERY_ACCESS,
+  "urologia-ripristino-operativita-pd-2026": GIOVANNI_PAOLO_II,
+  "polizia-locale-mobilita-quattro-agenti-dicapp-2026": LAMEZIA_CITYWIDE,
 };

@@ -1,0 +1,116 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-cocaina-160-dosi-terme-caronte-2018-08",
+  "discovered_at": "2026-09-17T19:35:38+02:00",
+  "updated_at": "2026-09-17T19:35:38+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Presunta detenzione ai fini di spaccio di 160 dosi di cocaina e marijuana in un'abitazione in località Terme di Caronte entro il 25 agosto 2018",
+  "temporal": {
+    "start": null,
+    "end": "2018-08-25",
+    "edtf": "../2018-08-25",
+    "precision": "approximate"
+  },
+  "sources": [
+    {
+      "source_key": "press:cn24tv:2018-08-25:160-dosi-cocaina-caronte",
+      "source_type": "press_secondary",
+      "provider": "CN24TV",
+      "title": "Lamezia. Nella casa vacanze si spacciava la droga, sequestrate 160 dosi di coca",
+      "url": "https://cn24tv.it/news/spaccio-di-droga-a-lamezia-terme-localita-terme-di-caronte-sequestrate-160-dosi-di-coca/",
+      "published_at": "2018-08-25T08:45:00+02:00",
+      "retrieved_at": "2026-09-17T19:35:38+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:lameziaterme-it:2018-08-25:160-dosi-cocaina-caronte",
+      "source_type": "press_secondary",
+      "provider": "LameziaTerme.it",
+      "title": "Lamezia. Trentenne trovato in possesso di 160 dosi di cocaina",
+      "url": "https://www.lameziaterme.it/lamezia-trentenne-160-dosi-di-cocaina/",
+      "published_at": null,
+      "retrieved_at": "2026-09-17T19:35:38+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:detenzione-stupefacenti-ai-fini-di-spaccio",
+      "classification_source_key": "press:cn24tv:2018-08-25:160-dosi-cocaina-caronte",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti pubblicate il 25 agosto 2018 riferiscono che i finanzieri del Gruppo della Guardia di Finanza di Lamezia Terme individuarono un sospetto andirivieni presso alcune abitazioni private in località Terme di Caronte e sottoposero a perquisizione domiciliare una delle abitazioni.",
+        "Nell'abitazione perquisita furono rinvenute 160 dosi di cocaina già confezionate, diversi grammi di marijuana descritti come pronti per lo spaccio, un bilancino elettronico di precisione e materiale per il confezionamento.",
+        "Le fonti riferiscono che la persona presente fu colta in flagranza, arrestata e sottoposta agli arresti domiciliari; il record non tratta tali atti come accertamento definitivo di responsabilità.",
+        "Le fonti non indicano il giorno preciso della perquisizione; la data del 25 agosto 2018 è pertanto usata soltanto come limite superiore documentale."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:terme-di-caronte-abitazione-privata:occurrence",
+      "basis_source_key": "press:cn24tv:2018-08-25:160-dosi-cocaina-caronte",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata non identificata in località Terme di Caronte",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:terme-di-caronte-abitazione-privata:search",
+      "basis_source_key": "press:cn24tv:2018-08-25:160-dosi-cocaina-caronte",
+      "role": "search",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata non identificata in località Terme di Caronte",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:terme-di-caronte-abitazione-privata:recovery",
+      "basis_source_key": "press:cn24tv:2018-08-25:160-dosi-cocaina-caronte",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata non identificata in località Terme di Caronte",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

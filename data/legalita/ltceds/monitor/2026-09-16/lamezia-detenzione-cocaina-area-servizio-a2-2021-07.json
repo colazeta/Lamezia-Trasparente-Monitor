@@ -1,0 +1,128 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-detenzione-cocaina-area-servizio-a2-2021-07",
+  "discovered_at": "2026-09-16T07:53:25+02:00",
+  "updated_at": "2026-09-16T07:53:25+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Detenzione ai fini di spaccio di oltre 4,5 kg di cocaina nell'area di servizio Lamezia Est tra il 10 e l'11 luglio 2021",
+  "temporal": {
+    "start": "2021-07-10",
+    "end": "2021-07-11",
+    "edtf": "2021-07-10/2021-07-11",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "press:calabria-news:2021-07-13:cocaina-a2-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Calabria News",
+      "title": "Lamezia, Polizia arresta due corrieri della droga: sequestrati oltre 60 Kg di cocaina",
+      "url": "https://www.calabrianews.it/lamezia-polizia-arresta-due-corrieri-della-droga-sequestrati-oltre-60-kg-di-cocaina/",
+      "published_at": "2021-07-13T00:00:00+02:00",
+      "retrieved_at": "2026-09-16T07:53:25+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2021-07-13:cocaina-a2-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Maxi sequestro di cocaina sull’A2: arrestati due corrieri con 60 chili",
+      "url": "https://www.corrieredellacalabria.it/2021/07/13/maxi-sequestro-di-cocaina-sulla2-arrestati-due-corrieri-con-60-chili/",
+      "published_at": "2021-07-13T14:38:00+02:00",
+      "retrieved_at": "2026-09-16T07:53:25+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "geo:prezzi-distributori:lamezia-est-a2-nord",
+      "source_type": "other",
+      "provider": "PrezziDistributori.it",
+      "title": "Prezzo carburante oggi - LAMEZIA EST",
+      "url": "https://www.prezzidistributori.it/distributore/lamezia-terme/lamezia-est",
+      "published_at": null,
+      "retrieved_at": "2026-09-16T07:53:25+02:00",
+      "support_roles": [
+        "location_support"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:detenzione-stupefacenti-fini-spaccio",
+      "classification_source_key": "press:calabria-news:2021-07-13:cocaina-a2-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti descrivono due operazioni distinte della Polizia Stradale di Lamezia Terme svolte a poche ore di distanza nello stesso giorno durante il fine settimana immediatamente precedente al 13 luglio 2021; questo record riguarda esclusivamente la prima operazione, nella quale furono rinvenuti oltre 4,5 kg di cocaina suddivisi in quattro panetti.",
+        "Poiché le fonti consultate non indicano esplicitamente se la prima operazione avvenne sabato 10 o domenica 11 luglio 2021, la temporalità è conservata come intervallo delimitato 10–11 luglio senza attribuire un giorno non attestato.",
+        "La qualificazione 'detenzione ai fini di spaccio' è riportata espressamente dalle fonti che ricostruiscono l'intervento; l'arresto fu successivamente convalidato con applicazione di misura cautelare in carcere, conservata come contesto procedurale e non come accertamento definitivo di responsabilità.",
+        "La fonte dell'evento indica un'area di servizio sulla carreggiata nord dell'A2 del Mediterraneo; una fonte cartografica dedicata identifica l'area di servizio autostradale in direzione nord nel Comune di Lamezia Terme come Lamezia Est. Non sono inferiti un punto interno all'area, coordinate o ulteriori dettagli personali."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:lamezia-est-a2:occurrence",
+      "basis_source_key": "press:calabria-news:2021-07-13:cocaina-a2-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Area di servizio Lamezia Est, A2 del Mediterraneo, carreggiata nord",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:lamezia-est-a2:recovery",
+      "basis_source_key": "press:calabria-news:2021-07-13:cocaina-a2-lamezia",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Area di servizio Lamezia Est, A2 del Mediterraneo, carreggiata nord",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:lamezia-est-a2:arrest",
+      "basis_source_key": "press:calabria-news:2021-07-13:cocaina-a2-lamezia",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Area di servizio Lamezia Est, A2 del Mediterraneo, carreggiata nord",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

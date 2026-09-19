@@ -1,0 +1,99 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-ordigno-artusa-corso-nicotera-2012-12-29-30",
+  "discovered_at": "2026-09-12T05:26:24+02:00",
+  "updated_at": "2026-09-12T05:26:24+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Attentato con ordigno al negozio di abbigliamento Artusa in Corso Giovanni Nicotera nella notte tra 29 e 30 dicembre 2012",
+  "temporal": {
+    "start": "2012-12-29",
+    "end": "2012-12-30",
+    "edtf": "2012-12-29/2012-12-30",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "press:approdo-calabria:2012-12-30:bomba-artusa-corso-nicotera",
+      "source_type": "press_secondary",
+      "provider": "Approdo Calabria",
+      "title": "Lamezia, il racket fa esplodere una bomba in pieno centro",
+      "url": "https://www.approdocalabria.it/bomba-ad-un-negozio-nella-centralissima-qgiovanni-nicoteraq-il-sindaco-si-e-recato-sul-luogodellattentato",
+      "published_at": null,
+      "retrieved_at": "2026-09-12T05:26:24+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support"
+      ]
+    },
+    {
+      "source_key": "press:nuova-cosenza:2012-12-30:racket-negozio-moda-corso-nicotera",
+      "source_type": "press_secondary",
+      "provider": "Nuova Cosenza",
+      "title": "Racket in azione a Lamezia, distrutto negozio di moda nel centro",
+      "url": "https://www.nuovacosenza.com/cs/12/dic/30/racketlamezia.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-12T05:26:24+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:intimidazione",
+      "classification_source_key": "press:approdo-calabria:2012-12-30:bomba-artusa-corso-nicotera",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "not_applicable",
+      "situational_context": [
+        "Approdo Calabria riferisce che un ordigno di basso potenziale esplose davanti al punto vendita di abbigliamento Artusa in Corso Giovanni Nicotera, danneggiando il negozio, alcune auto in sosta e i vetri degli appartamenti sovrastanti, senza provocare feriti.",
+        "Nuova Cosenza corrobora l'esplosione di una bomba contro un negozio di moda in Corso Nicotera, collocandola intorno alla mezzanotte e riferendo che sull'episodio indagavano i Carabinieri.",
+        "Le fonti descrivono l'episodio come attentato o intimidazione riconducibile al contesto del racket, ma non è stata reperita una qualificazione giudiziaria o di polizia primaria accessibile per il singolo fatto. La classificazione resta quindi provvisoria e non viene inferito un reato estorsivo.",
+        "La temporalità è conservata come intervallo 29-30 dicembre 2012 perché le cronache del 30 dicembre collocano l'esplosione a ridosso della mezzanotte con formulazioni non perfettamente univoche sul lato della mezzanotte. La ricerca geografica dedicata identifica il negozio Artusa e Corso Giovanni Nicotera, ma non un civico verificato: non vengono attribuite coordinate né maggiore precisione." 
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:artusa-corso-giovanni-nicotera:occurrence",
+      "basis_source_key": "press:approdo-calabria:2012-12-30:bomba-artusa-corso-nicotera",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Negozio di abbigliamento Artusa, Corso Giovanni Nicotera",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:artusa-corso-giovanni-nicotera:target",
+      "basis_source_key": "press:approdo-calabria:2012-12-30:bomba-artusa-corso-nicotera",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Negozio di abbigliamento Artusa, Corso Giovanni Nicotera",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

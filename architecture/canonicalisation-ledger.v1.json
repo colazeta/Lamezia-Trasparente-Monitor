@@ -12,7 +12,8 @@
       "artifacts/api-server/src/data"
     ],
     "unknownPolicy": "Unreviewed files have null semantic status. Do not label them migrated or evidentially ambiguous.",
-    "countingPolicy": "Files, asset groups, source rows and typed observations have distinct denominators; no overall completion percentage."
+    "countingPolicy": "Files, asset groups, source rows and typed observations have distinct denominators; no overall completion percentage.",
+    "reviewValidity": "File bytes and asset ownership must still match the bounded review baseline. New or changed files are unreviewed even within registered directories."
   },
   "runtimeObservation": {
     "observedAt": "2026-09-10T20:21:15.818Z",
@@ -680,5 +681,7 @@
       "productionStatus": "unverified-not-deployed",
       "residualIssue": "Domain migration and consumer convergence remain pending."
     }
-  ]
+  ],
+  "reviewBaseline": "architecture/canonicalisation-review-baseline.v1.json",
+  "lastReconciledMain": "4a0ce9a74a46e9236fe0be16ee556ec86f48b8fa"
 }

@@ -1,0 +1,84 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-incendio-portone-studio-legale-piazza-fiorentino-2017-01-09",
+  "discovered_at": "2026-09-12T16:59:20+02:00",
+  "updated_at": "2026-09-12T16:59:20+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Incendio del portone di uno studio legale in piazza Fiorentino a Sambiase il 9 gennaio 2017",
+  "temporal": {
+    "start": "2017-01-09",
+    "end": "2017-01-09",
+    "edtf": "2017-01-09",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:lacnews24:2017-01-10:intimidazioni-piazza-fiorentino-compro-oro",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Intimidazioni a Lamezia, spari contro un “Compro oro” e incendiato portone avvocato",
+      "url": "https://www.lacnews24.it/cronaca/intimidazioni-a-lamezia-spari-contro-un-compro-oro-e-incendiato-portone-avvocato-gk1olp8l",
+      "published_at": "2017-01-10T15:51:00+01:00",
+      "retrieved_at": "2026-09-12T16:59:20+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:intimidazione",
+      "classification_source_key": "press:lacnews24:2017-01-10:intimidazioni-piazza-fiorentino-compro-oro",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "not_applicable",
+      "situational_context": [
+        "la fonte descrive l'episodio come intimidazione e riferisce che la sera del 9 gennaio 2017 fu incendiato il portone di uno studio legale in piazza Fiorentino, a Sambiase",
+        "un'autovettura parcheggiata nei pressi rimase danneggiata",
+        "la fonte riferisce indagini di polizia e carabinieri sui due episodi intimidatori avvenuti a distanza di poche ore"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:piazza-fiorentino-studio-legale-2017:occurrence",
+      "basis_source_key": "press:lacnews24:2017-01-10:intimidazioni-piazza-fiorentino-compro-oro",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Piazza Fiorentino",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:piazza-fiorentino-studio-legale-2017:target",
+      "basis_source_key": "press:lacnews24:2017-01-10:intimidazioni-piazza-fiorentino-compro-oro",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Piazza Fiorentino",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-incendio-doloso-deposito-autolinee-bilotta-2006-10-17",
+  "discovered_at": "2026-09-15T06:51:48+02:00",
+  "updated_at": "2026-09-15T06:51:48+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Incendio doloso nel deposito delle Autolinee Bilotta il 17 ottobre 2006",
+  "temporal": {
+    "start": "2006-10-17",
+    "end": "2006-10-17",
+    "edtf": "2006-10-17",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "public:senato:2006-10-19:atto-3-00193-bilotta",
+      "source_type": "public_authority_primary",
+      "provider": "Senato della Repubblica",
+      "title": "Legislatura 15 - Atto di Sindacato Ispettivo n. 3-00193",
+      "url": "https://www.senato.it/show-doc?id=221207&idoggetto=0&leg=15&tipodoc=Sindisp",
+      "published_at": null,
+      "retrieved_at": "2026-09-15T06:51:48+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:nuovacosenza:2006-10-17:incendio-pullman-bilotta",
+      "source_type": "press_secondary",
+      "provider": "Nuova Cosenza",
+      "title": "Incendiati i pullman della ditta Bilotta di Lamezia",
+      "url": "https://www.nuovacosenza.com/cs/06/ottobre/ultime.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-15T06:51:48+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:incendio-doloso",
+      "classification_source_key": "public:senato:2006-10-19:atto-3-00193-bilotta",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "l'atto ufficiale del Senato del 19 ottobre 2006 riferisce espressamente che il 17 ottobre, intorno alle 20:30, un incendio doloso si sviluppò nel deposito mezzi delle Autolinee Bilotta a Lamezia Terme",
+        "l'atto del Senato riferisce tre pullman adibiti al trasporto pubblico locale distrutti e altri mezzi gravemente danneggiati; la cronaca contemporanea di Nuova Cosenza riferiva invece due pullman distrutti e ulteriori mezzi danneggiati, per cui il record non fissa un affected_object_count univoco",
+        "Nuova Cosenza riferisce che Polizia e Carabinieri avviarono indagini sotto le direttive della Procura della Repubblica di Lamezia Terme; al momento della prima cronaca la natura dolosa era indicata come ipotesi dei primi accertamenti, mentre l'atto ufficiale successivo la qualifica come incendio doloso",
+        "la fonte istituzionale colloca il piazzale del deposito nel centro storico di Lamezia Terme, contiguo a edifici residenziali e negozi; nessuna fonte verificata consente di attribuire senza inferenza una strada, un civico o coordinate al deposito del 2006"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:deposito-autolinee-bilotta-centro-storico:occurrence",
+      "basis_source_key": "public:senato:2006-10-19:atto-3-00193-bilotta",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "non_sensitive",
+      "geometry": null,
+      "place_name": "Deposito mezzi delle Autolinee Bilotta, piazzale nel centro storico di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:deposito-autolinee-bilotta-centro-storico:target",
+      "basis_source_key": "public:senato:2006-10-19:atto-3-00193-bilotta",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "non_sensitive",
+      "geometry": null,
+      "place_name": "Deposito mezzi delle Autolinee Bilotta, piazzale nel centro storico di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

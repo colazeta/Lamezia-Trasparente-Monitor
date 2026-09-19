@@ -1,0 +1,85 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-attentato-ordigno-auto-via-salvatore-miceli-2015-06-01-02",
+  "discovered_at": "2026-09-13T14:32:11+02:00",
+  "updated_at": "2026-09-13T14:32:11+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Ordigno esploso sotto un'autovettura in via Salvatore Miceli nella notte tra 1 e 2 giugno 2015",
+  "temporal": {
+    "start": "2015-06-01",
+    "end": "2015-06-02",
+    "edtf": "2015-06-01/2015-06-02",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "source:corriere-della-calabria:2015-06-02:bomba-auto-via-salvatore-miceli",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Lamezia, bomba contro l'auto di un pregiudicato",
+      "url": "https://www.corrieredellacalabria.it/2015/06/02/lamezia-bomba-contro-l-auto-di-un-pregiudicato/",
+      "published_at": "2015-06-02T13:25:00+02:00",
+      "retrieved_at": "2026-09-13T14:32:11+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:attentato-con-ordigno",
+      "classification_source_key": "source:corriere-della-calabria:2015-06-02:bomba-auto-via-salvatore-miceli",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Corriere della Calabria riferisce che, nella notte precedente il 2 giugno 2015, un ordigno di medio potenziale fu fatto esplodere sotto un'autovettura parcheggiata vicino a un'abitazione privata in via Salvatore Miceli a Lamezia Terme; il veicolo prese fuoco e venne distrutto dalle fiamme.",
+        "Sul posto intervennero i Vigili del fuoco e la Polizia di Stato di Lamezia Terme; al momento della cronaca autori e cause dell'episodio risultavano ignoti.",
+        "La fonte descrive il fatto come attentato ma non fornisce una qualificazione penale formale né un movente accertato; la classificazione resta pertanto provvisoria e non vengono inferiti estorsione, aggravante mafiosa, danneggiamento o ulteriori fattispecie.",
+        "La fonte non consente di stabilire su quale lato della mezzanotte sia avvenuta l'esplosione; per evitare falsa precisione la temporalità canonica resta l'intervallo 1-2 giugno 2015."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-salvatore-miceli:occurrence",
+      "basis_source_key": "source:corriere-della-calabria:2015-06-02:bomba-auto-via-salvatore-miceli",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Via Salvatore Miceli",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-salvatore-miceli:target-vehicle",
+      "basis_source_key": "source:corriere-della-calabria:2015-06-02:bomba-auto-via-salvatore-miceli",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via Salvatore Miceli",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

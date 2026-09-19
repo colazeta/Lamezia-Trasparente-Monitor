@@ -1,0 +1,86 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-omicidio-via-gioacchino-murat-capizzaglie-2008-04-30",
+  "discovered_at": "2026-09-11T17:24:00+02:00",
+  "updated_at": "2026-09-11T17:24:00+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Omicidio a colpi d'arma da fuoco in via Gioacchino Murat, contrada Capizzaglie",
+  "temporal": {
+    "start": "2008-04-29",
+    "end": "2008-04-30",
+    "edtf": "2008-04-29/2008-04-30",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "press:il-giornale:2008-04-30:agguato-via-gioacchino-murat",
+      "source_type": "press_secondary",
+      "provider": "il Giornale",
+      "title": "Lamezia, agguato all'ex assessore",
+      "url": "https://www.ilgiornale.it/news/lamezia-agguato-allex-assessore.html",
+      "published_at": "2008-04-30T13:12:00+02:00",
+      "retrieved_at": "2026-09-11T17:24:00+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:corriere-della-sera:2008-04-30:agguato-capizzaglie",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Sera",
+      "title": "'Ndrangheta, agguato a Lamezia Terme",
+      "url": "https://www.corriere.it/cronache/08_aprile_30/lamezia_agguato_918e6f94-1682-11dd-8b67-00144f02aabc.shtml",
+      "published_at": null,
+      "retrieved_at": "2026-09-11T17:24:00+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "press:il-giornale:2008-04-30:agguato-via-gioacchino-murat",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti contemporanee riferiscono un omicidio commesso con numerosi colpi d'arma da fuoco mentre la vittima stava uscendo dalla propria abitazione a bordo di un furgone.",
+        "Una fonte colloca espressamente l'agguato in via Gioacchino Murat; una seconda fonte indipendente colloca la stessa abitazione in contrada Capizzaglie, alla periferia sud di Lamezia Terme.",
+        "Le cronache del 30 aprile descrivono il fatto come avvenuto nella notte; per non attribuire artificialmente il fatto al solo periodo successivo alla mezzanotte, la temporalità è conservata come intervallo tra il 29 e il 30 aprile 2008.",
+        "Le fonti riportano che gli investigatori considerarono nell'immediatezza una matrice mafiosa e che l'inchiesta avrebbe coinvolto la Direzione distrettuale antimafia; tale indicazione resta contesto investigativo e non viene trasformata in una qualificazione penale aggiuntiva o in un accertamento definitivo.",
+        "Una fonte riferisce che gli autori si allontanarono attraverso i campi circostanti l'abitazione; il dato non è materializzato come ulteriore punto geografico perché non consente di delimitare un luogo autonomo con precisione sufficiente."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-gioacchino-murat:occurrence",
+      "basis_source_key": "press:il-giornale:2008-04-30:agguato-via-gioacchino-murat",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via Gioacchino Murat, presso l'abitazione della vittima",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

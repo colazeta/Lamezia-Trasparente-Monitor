@@ -5,12 +5,16 @@ import { applyScoutingUpdates20260905 } from "./proposalScoutingUpdates20260905"
 import { applyScoutingUpdates20260906 } from "./proposalScoutingUpdates20260906";
 import { applyScoutingUpdates20260907 } from "./proposalScoutingUpdates20260907";
 import { applyScoutingUpdates20260909 } from "./proposalScoutingUpdates20260909";
+import { applyScoutingUpdates20260912 } from "./proposalScoutingUpdates20260912";
 import { SCOUTED_PUBLIC_PROPOSALS } from "./propostePubblicheScouting";
 import { SCOUTED_PUBLIC_PROPOSALS_20260903 } from "./propostePubblicheScouting20260903";
 import { SCOUTED_PUBLIC_PROPOSALS_20260904 } from "./propostePubblicheScouting20260904";
 import { SCOUTED_PUBLIC_PROPOSALS_20260906 } from "./propostePubblicheScouting20260906";
 import { SCOUTED_PUBLIC_PROPOSALS_20260908 } from "./propostePubblicheScouting20260908";
 import { SCOUTED_PUBLIC_PROPOSALS_20260909 } from "./propostePubblicheScouting20260909";
+import { SCOUTED_PUBLIC_PROPOSALS_20260911 } from "./propostePubblicheScouting20260911";
+import { SCOUTED_PUBLIC_PROPOSALS_20260913 } from "./propostePubblicheScouting20260913";
+import { SCOUTED_PUBLIC_PROPOSALS_20260915 } from "./propostePubblicheScouting20260915";
 
 export type {
   ProposalPromoterType,
@@ -52,7 +56,7 @@ export {
   getCanonicalProposalPresentation,
   getCanonicalProposalPresentationIds,
   hasCanonicalProposalPresentation,
-} from "./proposalCanonicalPresentationArchive";
+} from "./proposalCanonicalPresentationArchive20260915";
 
 export type {
   LtSemanticExtensionId,
@@ -112,7 +116,7 @@ export type {
   ProposalCompetenceAssessmentStatus,
   ProposalCompetentAuthority,
   ProposalInstitutionalCompetence,
-} from "./proposalInstitutionalCompetence";
+} from "./proposalInstitutionalCompetence20260913";
 export {
   PROPOSAL_AUTHORITY_LEVELS,
   PROPOSAL_COMPETENCE_ASSESSMENTS,
@@ -120,7 +124,7 @@ export {
   PROPOSAL_COMPETENCE_ASSESSMENT_STATUSES,
   getProposalInstitutionalCompetence,
   hasVerifiedProposalCompetence,
-} from "./proposalInstitutionalCompetence";
+} from "./proposalInstitutionalCompetence20260913";
 
 const EXISTING_PUBLIC_PROPOSALS = [
   ...core.PUBLIC_PROPOSALS.map(applyScoutingUpdates),
@@ -166,12 +170,18 @@ const UPDATED_SCOUTED_PUBLIC_PROPOSALS_20260906_20260909 =
 const UPDATED_SCOUTED_PUBLIC_PROPOSALS_20260908 =
   SCOUTED_PUBLIC_PROPOSALS_20260908.map(applyScoutingUpdates20260909);
 
+const UPDATED_EXISTING_PUBLIC_PROPOSALS_20260912 =
+  UPDATED_EXISTING_PUBLIC_PROPOSALS_20260909.map(applyScoutingUpdates20260912);
+
 export const PUBLIC_PROPOSALS = [
-  ...UPDATED_EXISTING_PUBLIC_PROPOSALS_20260909,
+  ...UPDATED_EXISTING_PUBLIC_PROPOSALS_20260912,
   ...UPDATED_SCOUTED_PUBLIC_PROPOSALS_20260904_20260909,
   ...UPDATED_SCOUTED_PUBLIC_PROPOSALS_20260906_20260909,
   ...UPDATED_SCOUTED_PUBLIC_PROPOSALS_20260908,
   ...SCOUTED_PUBLIC_PROPOSALS_20260909,
+  ...SCOUTED_PUBLIC_PROPOSALS_20260911,
+  ...SCOUTED_PUBLIC_PROPOSALS_20260913,
+  ...SCOUTED_PUBLIC_PROPOSALS_20260915,
 ] as const satisfies readonly core.PublicProposal[];
 
 export function getProposalThemes(

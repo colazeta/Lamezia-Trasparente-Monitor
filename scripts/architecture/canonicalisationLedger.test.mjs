@@ -7,8 +7,86 @@ import {
   validateLedger,
   forbiddenMunicipalReferences,
   inspectCanonicalisation,
+  classifyFileReview,
+  validateReviewBaseline,
 } from "./canonicalisationLedger.mjs";
 import { validateConceptualCatalog } from "./conceptualCatalog.mjs";
+test("review coverage is pinned to bytes and ownership, not a directory prefix", () => {
+  const owner = { id: "events", status: "REQUIRES_ENTITY_RESOLUTION" };
+  const receipt = {
+    path: "data/events/old.json",
+    sha256: "a".repeat(64),
+    assetIds: ["events"],
+  };
+  const unchanged = classifyFileReview(
+    receipt.path,
+    receipt.sha256,
+    [owner],
+    receipt,
+  );
+  assert.equal(unchanged.review, "linked-to-bounded-asset-review");
+  assert.equal(unchanged.semanticStatus, owner.status);
+  for (const [file, hash, owners, evidence, reason] of [
+    [
+      receipt.path,
+      "b".repeat(64),
+      [owner],
+      receipt,
+      "content-changed-since-review",
+    ],
+    [
+      "data/events/new.json",
+      receipt.sha256,
+      [owner],
+      undefined,
+      "not-in-review-baseline",
+    ],
+    [
+      receipt.path,
+      receipt.sha256,
+      [{ ...owner, id: "different-domain" }],
+      receipt,
+      "asset-ownership-changed",
+    ],
+    [receipt.path, receipt.sha256, [], receipt, "no-bounded-asset-review"],
+  ]) {
+    const result = classifyFileReview(file, hash, owners, evidence);
+    assert.equal(result.review, "unreviewed");
+    assert.equal(result.semanticStatus, null);
+    assert.deepEqual(result.reviewedAssetIds, []);
+    assert.equal(result.reviewRequiredReason, reason);
+  }
+});
+test("malformed review receipts cannot certify content", () => {
+  const ledger = { assets: [{ id: "events" }] };
+  const baseline = {
+    schemaVersion: "lt-canonicalisation-review-baseline.v1",
+    sourceCommit: "a".repeat(40),
+    sourceAuditSha256: "b".repeat(64),
+    files: [
+      {
+        path: "data/events/old.json",
+        sha256: "c".repeat(64),
+        assetIds: ["events"],
+      },
+    ],
+  };
+  assert.deepEqual(validateReviewBaseline(baseline, ledger), []);
+  baseline.files.push({ ...baseline.files[0] });
+  assert.ok(
+    validateReviewBaseline(baseline, ledger).some((e) =>
+      e.startsWith("INVALID_REVIEW_PATH:"),
+    ),
+  );
+  baseline.files = [
+    { path: "../outside.json", sha256: "unverified", assetIds: ["unknown"] },
+  ];
+  const errors = validateReviewBaseline(baseline, ledger);
+  assert.equal(errors.length, 3);
+  assert.deepEqual(validateReviewBaseline({}, ledger), [
+    "INVALID_REVIEW_BASELINE",
+  ]);
+});
 test("old runtime source authority is blocked in imports, re-exports, dynamic imports and URLs", () => {
   for (const s of [
     'import data from "./generated/lameziaFamiliesChildren.json";',

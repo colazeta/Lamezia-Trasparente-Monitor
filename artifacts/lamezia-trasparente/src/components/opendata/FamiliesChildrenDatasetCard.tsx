@@ -103,10 +103,9 @@ export function FamiliesChildrenDatasetCard() {
 
       <div className="p-5 md:p-6">
         <p className="mb-3 text-xs text-muted-foreground">
-          Proiezione dal database canonico.{" "}
           {query.isError
-            ? "Aggiornamento non riuscito: è mostrata l’ultima risposta canonica ricevuta, non una nuova verifica della fonte."
-            : "Le date della fonte e di importazione restano distinte."}
+            ? "Aggiornamento non riuscito: sono mostrati gli ultimi dati ricevuti. La fonte non è stata verificata nuovamente."
+            : "La data di acquisizione non modifica il periodo a cui si riferiscono i dati."}
         </p>
         <FamiliesChildrenChart records={records} />
 

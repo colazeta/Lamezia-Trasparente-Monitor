@@ -1,0 +1,117 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-detenzione-cocaina-inseguimento-via-dei-bizantini-2016-09-28",
+  "discovered_at": "2026-09-11T02:29:32+02:00",
+  "updated_at": "2026-09-11T02:29:32+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Detenzione ai fini di spaccio di cocaina contestata dopo un inseguimento iniziato in via dei Bizantini il 28 settembre 2016",
+  "temporal": {
+    "start": "2016-09-28",
+    "end": "2016-09-28",
+    "edtf": "2016-09-28",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:il-lametino:2016-09-29:via-bizantini-cocaina-inseguimento",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: non si fermano ad alt e fanno incidente, arrestati 2 giovani per possesso di cocaina",
+      "url": "https://www.lametino.it/cronaca/lamezia-non-si-fermano-ad-alt-e-fanno-incidente-arrestati-2-giovani-per-possesso-di-cocaina.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-11T02:29:32+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:quicosenza:111566:motocicletta-cocaina-furgone",
+      "source_type": "press_secondary",
+      "provider": "QuiCosenza",
+      "title": "Motocicletta 'imbottita' di cocaina si schianta contro un furgone",
+      "url": "https://quicosenza.it/news/111566-motocicletta-imbottita-di-cocaina-si-schianta-contro-un-furgone/",
+      "published_at": null,
+      "retrieved_at": "2026-09-11T02:29:32+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:detenzione-ai-fini-di-spaccio-stupefacenti",
+      "classification_source_key": "press:il-lametino:2016-09-29:via-bizantini-cocaina-inseguimento",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la cronaca contemporanea riferisce l'arresto di due persone per detenzione ai fini di spaccio di cocaina dopo un controllo di polizia avviato mentre percorrevano in moto via dei Bizantini",
+        "le fonti riferiscono che il mezzo proseguì la marcia dopo l'alt e che l'inseguimento terminò dopo meno di un chilometro con l'impatto contro un furgone in una curva",
+        "sul luogo dell'incidente fu rinvenuto un involucro contenente 54,5 grammi di cocaina; non viene inferita la strada esatta del punto di impatto perché le fonti consultate non attestano che fosse ancora via dei Bizantini",
+        "la data del 28 settembre 2016 deriva dal riferimento al tardo pomeriggio di ieri nell'articolo de il Lametino pubblicato il 29 settembre 2016",
+        "non è stato reperito online un comunicato originario della Polizia di Stato inequivocabilmente riferibile all'episodio; la qualificazione e la ricostruzione restano quindi sostenute da fonti giornalistiche che riportano l'intervento del Commissariato"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-dei-bizantini:occurrence",
+      "basis_source_key": "press:il-lametino:2016-09-29:via-bizantini-cocaina-inseguimento",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Via dei Bizantini",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:inseguimento-incidente-2016-09-28:other",
+      "basis_source_key": "press:il-lametino:2016-09-29:via-bizantini-cocaina-inseguimento",
+      "role": "other",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Curva raggiunta dopo meno di un chilometro di inseguimento iniziato in Via dei Bizantini",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:inseguimento-incidente-2016-09-28:recovery",
+      "basis_source_key": "press:il-lametino:2016-09-29:via-bizantini-cocaina-inseguimento",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Luogo dell'incidente raggiunto dopo meno di un chilometro di inseguimento iniziato in Via dei Bizantini",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

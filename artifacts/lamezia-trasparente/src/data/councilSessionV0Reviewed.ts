@@ -35,6 +35,18 @@ const COMMISSIONS_III_IV_JOINT_NOTICE_URL =
   "https://albo.tinnvision.cloud/allegati/2026_2861_1_X?ente=00301390795";
 const COMMISSIONS_III_IV_JOINT_ARCHIVED_DOCUMENT_URL =
   "/data/public/albo/documents/2026/feb500c847880bf03ab1cd09190b961828f5b3873d60bea800e93367a3c74468.pdf";
+const COMMISSION_III_GUARANTOR_NOTICE_URL =
+  "https://albo.tinnvision.cloud/allegati/2026_2879_1_X?ente=00301390795";
+const COMMISSION_III_GUARANTOR_ARCHIVED_DOCUMENT_URL =
+  "/data/public/albo/documents/2026/b3f2d6a2b5884cd5e17b77b03289abeff7ab1f9994d7b70aa0d66ade22abdb09.pdf";
+const COMMISSION_IV_MID_SEPTEMBER_NOTICE_URL =
+  "https://albo.tinnvision.cloud/allegati/2026_2925_1_X?ente=00301390795";
+const COMMISSION_IV_MID_SEPTEMBER_ARCHIVED_DOCUMENT_URL =
+  "/data/public/albo/documents/2026/671bbd99e42677437d3c2b424d2ffd1794c8b1195efbf867591e3550480d31d1.pdf";
+const COMMISSION_III_MID_SEPTEMBER_NOTICE_URL =
+  "https://albo.tinnvision.cloud/allegati/2026_2926_1_X?ente=00301390795";
+const COMMISSION_III_MID_SEPTEMBER_ARCHIVED_DOCUMENT_URL =
+  "/data/public/albo/documents/2026/3de7a9e3185b36116474d8ecb3bed1c425b7395af5e85c9bb83bb16ca082e8d0.pdf";
 const COUNCIL_SESSION_EVIDENCE_URL =
   "https://albo.tinnvision.cloud/allegati/2026_2755_6_ALLEG?ente=00301390795";
 const COUNCIL_SESSION_EVIDENCE_ARCHIVE_URL =
@@ -44,11 +56,21 @@ const COUNCIL_PROJECTS_OF_LIFE_URL =
 const COUNCIL_CITY_ONE_RECORDING_URL =
   "https://www.cityonelamezia.it/episodio/video/consiglio-comunale-del-13-agosto-consiglio-comunale/?format=video";
 const COUNCIL_VITALE_VIDEO_URL = "https://www.instagram.com/reel/DcGRDc8o1qI/";
+const MUNICIPAL_NURSERIES_NOTICE_URL =
+  "https://www.comune.lamezia-terme.cz.it/it/news/avvio-del-servizio-di-asilo-nido-comunale";
+const MUNICIPAL_NURSERIES_LAMEZIAINFORMA_URL =
+  "https://www.lameziainforma.it/scuola-e-universita/2026/09/11/asili-nido-comunali-aperti-dal-15-settembre/69226/";
+const SCHOOL_TRANSPORT_CITY_ONE_URL =
+  "https://www.cityonelamezia.it/lamezia-gianturco-assistenza-specialistica-si-parte-con-il-nuovo-anno-scolastico-piu-ore-per-gli-alunni-con-disabilita/";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
 const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
 const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-27T21:49:11Z";
 const COMMISSION_VI_RESEARCHED_AT = "2026-08-31T22:02:47Z";
 const SEPTEMBER_COMMISSION_RESEARCHED_AT = "2026-09-07T04:19:06Z";
+const MID_SEPTEMBER_COMMISSION_RESEARCHED_AT = "2026-09-12T10:18:08Z";
+const LATE_SEPTEMBER_COMMISSION_RESEARCHED_AT = "2026-09-19T09:34:42Z";
+const MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT = "2026-09-12T21:51:17Z";
+const SCHOOL_TRANSPORT_CONTEXT_RESEARCHED_AT = "2026-09-14T10:13:39Z";
 
 const councilContextResearch: CouncilSessionV0ContextResearch = {
   status: "reviewed_matches",
@@ -307,6 +329,88 @@ const commissionsIiiIvJointContextResearch: CouncilSessionV0ContextResearch = {
   media: [],
 };
 
+const commissionIiiGuarantorContextResearch: CouncilSessionV0ContextResearch = {
+  status: "checked_no_match",
+  checkedAt: MID_SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  searchNote:
+    "Ricerca eseguita con Parallel Search e verifica diretta delle fonti originali per la III Commissione dell'11, 14 e 15 settembre 2026, usando date, orari e il regolamento per l'istituzione del Garante delle persone con disabilità. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alle singole sedute. L'ordine del giorno ufficiale è disponibile e non viene ricostruita un'agenda editoriale.",
+  articles: [],
+  media: [],
+};
+
+const commissionIvMidSeptemberContextResearch: CouncilSessionV0ContextResearch =
+  {
+    status: "checked_no_match",
+    checkedAt: MID_SEPTEMBER_COMMISSION_RESEARCHED_AT,
+    searchNote:
+      "Ricerca eseguita con Parallel Search e verifica diretta delle fonti originali per la IV Commissione del 14, 15 e 16 settembre 2026, usando date, orari, Trasporto Pubblico Scolastico Locale, Asili Nido Comunali e regolamento Street Art con le audizioni indicate. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alle singole sedute. L'ordine del giorno ufficiale è disponibile e non viene ricostruita un'agenda editoriale.",
+    articles: [],
+    media: [],
+  };
+
+const commissionIvSchoolTransportContextResearch: CouncilSessionV0ContextResearch =
+  {
+    status: "reviewed_matches",
+    checkedAt: SCHOOL_TRANSPORT_CONTEXT_RESEARCHED_AT,
+    searchNote:
+      "Ricerca eseguita con Parallel Search per discovery e verifica diretta delle fonti originali per la IV Commissione del 14 settembre 2026. L'articolo di City One dell'11 settembre tratta il trasporto scolastico degli alunni con disabilità e la presenza di Lamezia Multiservizi, elementi pertinenti al punto ufficiale, e viene collegato come contesto tematico. La fonte non nomina la Commissione né documenta la seduta o l'audizione dell'ing. Alessandro Vescio. Non sono emerse dirette, registrazioni, clip o interviste collegabili con sufficiente precisione.",
+    articles: [
+      {
+        title:
+          "Lamezia, Gianturco: «Assistenza specialistica, si parte con il nuovo anno scolastico. Più ore per gli alunni con disabilità»",
+        url: SCHOOL_TRANSPORT_CITY_ONE_URL,
+        publisher: "City One",
+        publishedAt: "2026-09-11",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo tratta il trasporto scolastico degli alunni con disabilità e indica la presenza di Lamezia Multiservizi in un incontro comunale. Questi elementi sono pertinenti al punto ufficiale del 14 settembre, ma il testo non nomina la Commissione né attesta svolgimento, audizione o risultati della seduta.",
+        reviewedAt: SCHOOL_TRANSPORT_CONTEXT_RESEARCHED_AT,
+      },
+    ],
+    media: [],
+  };
+
+const commissionIvMunicipalNurseriesContextResearch: CouncilSessionV0ContextResearch =
+  {
+    status: "reviewed_matches",
+    checkedAt: MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT,
+    searchNote:
+      "Ricerca eseguita con Parallel Search per discovery e verifica diretta delle fonti originali per la IV Commissione del 15 settembre 2026. L'avviso del Comune e l'articolo di LameziaInforma dell'11 settembre riguardano l'avvio, nella stessa data, del servizio presso i tre asili nido comunali e vengono collegati come contesto del punto ufficiale. Nessuna delle due fonti nomina la Commissione o ne prova svolgimento, audizione o esiti. L'avviso comunale del 25 agosto sul precedente rinvio è fuori dalla finestra di sette giorni e non viene aggiunto. Non sono emerse dirette, registrazioni, clip o interviste collegabili con sufficiente precisione.",
+    articles: [
+      {
+        title: "Avvio del servizio di Asilo Nido comunale",
+        url: MUNICIPAL_NURSERIES_NOTICE_URL,
+        publisher: "Comune di Lamezia Terme",
+        publishedAt: "2026-09-11",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'avviso istituzionale comunica l'avvio del servizio il 15 settembre 2026 nei tre asili nido comunali, data e tema coincidenti con il punto della convocazione. Non menziona la Commissione e non attesta svolgimento, audizione o risultati della seduta.",
+        reviewedAt: MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT,
+      },
+      {
+        title: "Asili nido comunali aperti dal 15 settembre",
+        url: MUNICIPAL_NURSERIES_LAMEZIAINFORMA_URL,
+        publisher: "LameziaInforma",
+        publishedAt: "2026-09-11",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo riporta l'avvio del servizio il 15 settembre 2026 nei tre asili nido comunali e l'incontro dell'assessore con i genitori. Data, strutture e tema coincidono con il punto della convocazione, ma il testo non menziona la Commissione e non ne attesta svolgimento, audizione o risultati.",
+        reviewedAt: MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT,
+      },
+    ],
+    media: [],
+  };
+
+const lateSeptemberCommissionContextResearch: CouncilSessionV0ContextResearch =
+  {
+    status: "checked_no_match",
+    checkedAt: LATE_SEPTEMBER_COMMISSION_RESEARCHED_AT,
+    searchNote:
+      "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, il Lametino e risultati indicizzati per le sedute di I, II, III, IV e V Commissione dal 16 al 21 settembre 2026. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alle singole sedute. Gli ordini del giorno ufficiali sono disponibili e non viene ricostruita un'agenda editoriale.",
+    articles: [],
+    media: [],
+  };
+
 const commissionContextResearch: CouncilSessionV0ContextResearch = {
   status: "reviewed_matches",
   checkedAt: CONTEXT_RESEARCHED_AT,
@@ -347,6 +451,64 @@ function requireCandidate(
     throw new Error(`Invalid institutional session source record: ${input.id}`);
   }
   return candidate;
+}
+
+interface LateSeptemberNoticeInput {
+  publicationNumber: string;
+  publicationStart: string;
+  publicationEnd: string;
+  subject: string;
+  sourceContentHash: string;
+  documentSha256: string;
+}
+
+function lateSeptemberNotice({
+  publicationNumber,
+  publicationStart,
+  publicationEnd,
+  subject,
+  sourceContentHash,
+  documentSha256,
+}: LateSeptemberNoticeInput): {
+  candidate: InstitutionalSessionCandidate;
+  provenance: CouncilSessionV0Provenance;
+} {
+  const publicationId = publicationNumber.replace("/", "-");
+  const documentUrl = `https://albo.tinnvision.cloud/allegati/${publicationId.replace("-", "_")}_1_X?ente=00301390795`;
+  const candidate = requireCandidate({
+    id: `albo-${publicationId}`,
+    source: "Albo Pretorio Comune di Lamezia Terme",
+    source_url: OFFICIAL_ALBO_URL,
+    retrieved_at: LATE_SEPTEMBER_COMMISSION_RESEARCHED_AT,
+    publication_number: publicationNumber,
+    publication_start: publicationStart,
+    publication_end: publicationEnd,
+    act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+    subject,
+    document_url: documentUrl,
+    content_hash: sourceContentHash,
+    verification_status: "official_source_acquired",
+    privacy_risk: "low",
+    public_visibility: "publishable",
+  });
+
+  return {
+    candidate,
+    provenance: {
+      noticeId: candidate.id,
+      publicationNumber: candidate.publicationNumber,
+      sourceLabel: candidate.source.label,
+      sourceUrl: candidate.source.url,
+      documentUrl: candidate.source.documentUrl,
+      archivedDocumentUrl: `/data/public/albo/documents/2026/${documentSha256}.pdf`,
+      sourceContentHash: candidate.source.contentHash,
+      documentSha256,
+      embeddedDocumentSha256: null,
+      retrievedAt: candidate.source.retrievedAt,
+      reviewedAt: LATE_SEPTEMBER_COMMISSION_RESEARCHED_AT,
+      sourceReviewStatus: "reviewed_against_official_attachment",
+    },
+  };
 }
 
 const commissionCandidate = requireCandidate({
@@ -459,6 +621,142 @@ const commissionsIiiIvJointCandidate = requireCandidate({
   verification_status: "official_source_acquired",
   privacy_risk: "low",
   public_visibility: "publishable",
+});
+
+const commissionIiiGuarantorCandidate = requireCandidate({
+  id: "albo-2026-2879",
+  source: "Albo Pretorio Comune di Lamezia Terme",
+  source_url: OFFICIAL_ALBO_URL,
+  retrieved_at: MID_SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  publication_number: "2026/2879",
+  publication_start: "2026-09-09",
+  publication_end: "2026-09-16",
+  act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+  subject: "Convocazione 3° Commissione Consiliare Permanente.",
+  document_url: COMMISSION_III_GUARANTOR_NOTICE_URL,
+  content_hash:
+    "04f12caf167315030334618ea41d7e5091cf271b75baf33da58cccb1e35326c9",
+  verification_status: "official_source_acquired",
+  privacy_risk: "low",
+  public_visibility: "publishable",
+});
+
+const commissionIvMidSeptemberCandidate = requireCandidate({
+  id: "albo-2026-2925",
+  source: "Albo Pretorio Comune di Lamezia Terme",
+  source_url: OFFICIAL_ALBO_URL,
+  retrieved_at: MID_SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  publication_number: "2026/2925",
+  publication_start: "2026-09-11",
+  publication_end: "2026-09-18",
+  act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+  subject:
+    "Convocazione 4° Commissione Consiliare Permanente. Calendario lavori.",
+  document_url: COMMISSION_IV_MID_SEPTEMBER_NOTICE_URL,
+  content_hash:
+    "5a9d168246b9a4ed62e13c53e6a1106415f2c5d7c8825ea8d439ce165deaa500",
+  verification_status: "official_source_acquired",
+  privacy_risk: "low",
+  public_visibility: "publishable",
+});
+
+const commissionIiiMidSeptemberCandidate = requireCandidate({
+  id: "albo-2026-2926",
+  source: "Albo Pretorio Comune di Lamezia Terme",
+  source_url: OFFICIAL_ALBO_URL,
+  retrieved_at: MID_SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  publication_number: "2026/2926",
+  publication_start: "2026-09-11",
+  publication_end: "2026-09-18",
+  act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+  subject:
+    "Convocazione 3° Commissione Consiliare Permanente. Calendario lavori.",
+  document_url: COMMISSION_III_MID_SEPTEMBER_NOTICE_URL,
+  content_hash:
+    "fc6d1aaf789ee6902f85d537cd5b8dde937ea9e62573eacf8c75fd84d0c14117",
+  verification_status: "official_source_acquired",
+  privacy_risk: "low",
+  public_visibility: "publishable",
+});
+
+const commissionVSeptember17Notice = lateSeptemberNotice({
+  publicationNumber: "2026/2953",
+  publicationStart: "2026-09-15",
+  publicationEnd: "2026-09-22",
+  subject: "Convocazione 5° Commissione Consiliare Permante.",
+  sourceContentHash:
+    "a0847f430a5d647392679397388a437ab59552a0c8703b1b53c7b1d7ad43e451",
+  documentSha256:
+    "57731fbea7c4cdd31d8ff82175a0f84fc4fb053c0d71cb073d00ce38b33c74b5",
+});
+
+const commissionIiSeptemberCalendarNotice = lateSeptemberNotice({
+  publicationNumber: "2026/2959",
+  publicationStart: "2026-09-15",
+  publicationEnd: "2026-09-22",
+  subject:
+    "Convocazione 2° Commissione Consiliare Permanente. Calendario lavori.",
+  sourceContentHash:
+    "91111c510f5fd5aa973bd579d24a595d3cf54e0ebb4a66fee237c167b599c237",
+  documentSha256:
+    "674f8c685f04e85674e4530e180cc45bca76b0256d06397040c2a024afb8f440",
+});
+
+const commissionIiiSeptember18Notice = lateSeptemberNotice({
+  publicationNumber: "2026/2960",
+  publicationStart: "2026-09-15",
+  publicationEnd: "2026-09-22",
+  subject: "Convocazione 3° Commissione Consiliare Permanente.",
+  sourceContentHash:
+    "30980bcc9f5acb9173fe1bab42601c7999edfa30e72e0341ac8143c11fb59317",
+  documentSha256:
+    "f311abbc9e4c6e3d0b9cfe4d4d0225548be713cef74686ec2556148e8c1901e5",
+});
+
+const commissionISeptemberCalendarNotice = lateSeptemberNotice({
+  publicationNumber: "2026/2971",
+  publicationStart: "2026-09-16",
+  publicationEnd: "2026-09-23",
+  subject:
+    "Convocazione 1° Commissione Consiliare Permanente. Calendario lavori.",
+  sourceContentHash:
+    "6db758ff5ddab2f37c7db4442641b0e75481ddfd9b201d9738a7579cd414c1f5",
+  documentSha256:
+    "08f1075950b3e90994c2c5353cb0b1dc0992a4c6f4d55b27ba2e5ddcb99f5c40",
+});
+
+const commissionIvSeptemberCalendarNotice = lateSeptemberNotice({
+  publicationNumber: "2026/2981",
+  publicationStart: "2026-09-17",
+  publicationEnd: "2026-09-24",
+  subject:
+    "Convocazione 4° Commissione Consiliare Permanente. Calendario lavori.",
+  sourceContentHash:
+    "a6a45d08d063c993b69995557a4a82417c4fba918de3315260a189bb2a78c38f",
+  documentSha256:
+    "588fe94ce804d0f1699cb42f41eee4390e4ecb3f3fab21379b100b5c84e3e4eb",
+});
+
+const commissionVSeptember21Notice = lateSeptemberNotice({
+  publicationNumber: "2026/2986",
+  publicationStart: "2026-09-17",
+  publicationEnd: "2026-09-24",
+  subject: "Convocazione 5° Commissione Consiliare Permanente.",
+  sourceContentHash:
+    "6b5898f02ec82e8f3a587c49491033d0945396b9589c5d1584da4d2002205ca6",
+  documentSha256:
+    "b23e5a278fa5550657c3804e2a60a37ad09a1bdad2efcff6a7ece4f68a6b15e1",
+});
+
+const commissionIiiSeptember21Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3001",
+  publicationStart: "2026-09-18",
+  publicationEnd: "2026-09-25",
+  subject: "Convocazione 3° Commissione Consiliare Permanente.",
+  sourceContentHash:
+    "7d6e5cc50baeb9e9d79c2b668de35004a3134587fd714964170828c2228adee3",
+  documentSha256:
+    "8eebc4e71f5def4118e620b94ea9855319f39f9c548aedb7d4860d19a42b6f7f",
 });
 
 const councilCandidate = requireCandidate({
@@ -575,6 +873,54 @@ const commissionsIiiIvJointProvenance: CouncilSessionV0Provenance = {
   embeddedDocumentSha256: null,
   retrievedAt: commissionsIiiIvJointCandidate.source.retrievedAt,
   reviewedAt: SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  sourceReviewStatus: "reviewed_against_official_attachment",
+};
+
+const commissionIiiGuarantorProvenance: CouncilSessionV0Provenance = {
+  noticeId: commissionIiiGuarantorCandidate.id,
+  publicationNumber: commissionIiiGuarantorCandidate.publicationNumber,
+  sourceLabel: commissionIiiGuarantorCandidate.source.label,
+  sourceUrl: commissionIiiGuarantorCandidate.source.url,
+  documentUrl: commissionIiiGuarantorCandidate.source.documentUrl,
+  archivedDocumentUrl: COMMISSION_III_GUARANTOR_ARCHIVED_DOCUMENT_URL,
+  sourceContentHash: commissionIiiGuarantorCandidate.source.contentHash,
+  documentSha256:
+    "b3f2d6a2b5884cd5e17b77b03289abeff7ab1f9994d7b70aa0d66ade22abdb09",
+  embeddedDocumentSha256: null,
+  retrievedAt: commissionIiiGuarantorCandidate.source.retrievedAt,
+  reviewedAt: MID_SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  sourceReviewStatus: "reviewed_against_official_attachment",
+};
+
+const commissionIvMidSeptemberProvenance: CouncilSessionV0Provenance = {
+  noticeId: commissionIvMidSeptemberCandidate.id,
+  publicationNumber: commissionIvMidSeptemberCandidate.publicationNumber,
+  sourceLabel: commissionIvMidSeptemberCandidate.source.label,
+  sourceUrl: commissionIvMidSeptemberCandidate.source.url,
+  documentUrl: commissionIvMidSeptemberCandidate.source.documentUrl,
+  archivedDocumentUrl: COMMISSION_IV_MID_SEPTEMBER_ARCHIVED_DOCUMENT_URL,
+  sourceContentHash: commissionIvMidSeptemberCandidate.source.contentHash,
+  documentSha256:
+    "671bbd99e42677437d3c2b424d2ffd1794c8b1195efbf867591e3550480d31d1",
+  embeddedDocumentSha256: null,
+  retrievedAt: commissionIvMidSeptemberCandidate.source.retrievedAt,
+  reviewedAt: MID_SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  sourceReviewStatus: "reviewed_against_official_attachment",
+};
+
+const commissionIiiMidSeptemberProvenance: CouncilSessionV0Provenance = {
+  noticeId: commissionIiiMidSeptemberCandidate.id,
+  publicationNumber: commissionIiiMidSeptemberCandidate.publicationNumber,
+  sourceLabel: commissionIiiMidSeptemberCandidate.source.label,
+  sourceUrl: commissionIiiMidSeptemberCandidate.source.url,
+  documentUrl: commissionIiiMidSeptemberCandidate.source.documentUrl,
+  archivedDocumentUrl: COMMISSION_III_MID_SEPTEMBER_ARCHIVED_DOCUMENT_URL,
+  sourceContentHash: commissionIiiMidSeptemberCandidate.source.contentHash,
+  documentSha256:
+    "3de7a9e3185b36116474d8ecb3bed1c425b7395af5e85c9bb83bb16ca082e8d0",
+  embeddedDocumentSha256: null,
+  retrievedAt: commissionIiiMidSeptemberCandidate.source.retrievedAt,
+  reviewedAt: MID_SEPTEMBER_COMMISSION_RESEARCHED_AT,
   sourceReviewStatus: "reviewed_against_official_attachment",
 };
 
@@ -861,6 +1207,8 @@ function septemberCommissionSession({
   calendarSummary,
 }: SeptemberCommissionSessionInput): CouncilSessionV0 {
   const documentUrl = candidate.source.documentUrl ?? undefined;
+  const hasContextMatches =
+    contextResearch.articles.length > 0 || contextResearch.media.length > 0;
 
   return {
     id,
@@ -942,7 +1290,7 @@ function septemberCommissionSession({
     lastCheckedAt: {
       key: "lastCheckedAt",
       label: "Ultimo controllo",
-      value: SEPTEMBER_COMMISSION_RESEARCHED_AT,
+      value: contextResearch.checkedAt,
       sourceStatus: "verificato",
       sourceUrl: documentUrl,
       limit:
@@ -956,7 +1304,9 @@ function septemberCommissionSession({
         "La sede non è indicata nell'allegato ufficiale e non viene inferita.",
         "La scheda non certifica svolgimento, presenze, esiti o completezza storica.",
         "Streaming, registrazione e verbale sono indicati come non rilevati, non come inesistenti.",
-        "Non sono emersi collegamenti editoriali sufficientemente precisi al controllo corrente.",
+        hasContextMatches
+          ? "I collegamenti di contesto non certificano svolgimento, audizioni, votazioni o esiti della seduta."
+          : "Non sono emersi collegamenti editoriali sufficientemente precisi al controllo corrente.",
       ],
       sourceStatus: "parziale",
       sourceUrl: documentUrl,
@@ -974,6 +1324,46 @@ const decoAgenda = ["Denominazione comunale d'origine (De.Co.)."] as const;
 
 const sportDisabilityAgenda = [
   "Progetto Sport e Disabilità. Audizione dell'assessore al ramo Gennaro Gianturco.",
+] as const;
+
+const disabilityGuarantorAgenda = [
+  'Regolamento per l\'istituzione della figura del "Garante delle persone con disabilità".',
+] as const;
+
+const schoolTransportAgenda = [
+  "Trasporto Pubblico Scolastico Locale. Audizione del dirigente della Lamezia Multiservizi, ing. Alessandro Vescio.",
+] as const;
+
+const municipalNurseriesAgenda = [
+  "Asili Nido Comunali. Audizione dell'assessore al ramo Gennaro Gianturco.",
+] as const;
+
+const streetArtIcicaAgenda = [
+  "Regolamento comunale per la promozione della Street Art. Audizione dell'Associazione Icica.",
+] as const;
+
+const commissionPresidentElectionAgenda = ["Elezione del Presidente."] as const;
+
+const courtJudgmentDebtsAgenda = [
+  "Esame delle proposte di debiti fuori bilancio derivanti da sentenze esecutive.",
+] as const;
+
+const internalControlsAgenda = [
+  "Regolamento Controlli Interni. Audizione del Segretario Generale avv. Simona Provenzano e del dirigente del Settore Economico-Finanziario dott.ssa Nadia Aiello.",
+] as const;
+
+const taxiRegulationAgenda = [
+  "Informativa sulla proposta del nuovo Regolamento Taxi comunale.",
+] as const;
+
+const legalDisputesAgenda = [
+  "Trattazione della richiesta relativa allo studio e all'esame delle vertenze. Audizione del dirigente del Settore Avvocatura dott.ssa Alessandra Belvedere.",
+] as const;
+
+const workPlanningAgenda = ["Programmazione lavori."] as const;
+
+const wasteAbandonmentMotionAgenda = [
+  'Mozione prot. n. 71796/2026: "Interventi urgenti di bonifica, sicurezza, controllo e contrasto all\'abbandono dei rifiuti in località Serra e località Annunziata".',
 ] as const;
 
 const councilVerifiedSession: CouncilSessionV0 = {
@@ -1079,6 +1469,210 @@ const councilVerifiedSession: CouncilSessionV0 = {
 };
 
 export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
+  septemberCommissionSession({
+    id: "albo-2026-3001-commissione-iii-2026-09-21",
+    title:
+      "III Commissione consiliare permanente — seduta del 21 settembre 2026",
+    scheduledAt: "2026-09-21T10:30:00+02:00",
+    agenda: wasteAbandonmentMotionAgenda,
+    candidate: commissionIiiSeptember21Notice.candidate,
+    provenance: commissionIiiSeptember21Notice.provenance,
+    contextResearch: lateSeptemberCommissionContextResearch,
+    sourceLinkLabel: "Apri la convocazione ufficiale della III Commissione",
+    calendarSummary:
+      "La convocazione programma una seduta della III Commissione il 21 settembre 2026 alle 10:30.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-2986-commissione-v-2026-09-21",
+    title: "V Commissione consiliare permanente — seduta del 21 settembre 2026",
+    scheduledAt: "2026-09-21T09:30:00+02:00",
+    agenda: workPlanningAgenda,
+    candidate: commissionVSeptember21Notice.candidate,
+    provenance: commissionVSeptember21Notice.provenance,
+    contextResearch: lateSeptemberCommissionContextResearch,
+    sourceLinkLabel: "Apri la convocazione ufficiale della V Commissione",
+    calendarSummary:
+      "La convocazione programma una seduta della V Commissione il 21 settembre 2026 alle 09:30.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-2960-commissione-iii-2026-09-18",
+    title:
+      "III Commissione consiliare permanente — seduta del 18 settembre 2026",
+    scheduledAt: "2026-09-18T12:00:00+02:00",
+    agenda: disabilityGuarantorAgenda,
+    candidate: commissionIiiSeptember18Notice.candidate,
+    provenance: commissionIiiSeptember18Notice.provenance,
+    contextResearch: lateSeptemberCommissionContextResearch,
+    sourceLinkLabel: "Apri la convocazione ufficiale della III Commissione",
+    calendarSummary:
+      "La convocazione programma una seduta della III Commissione il 18 settembre 2026 alle 12:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-2981-commissione-iv-2026-09-18",
+    title:
+      "IV Commissione consiliare permanente — seduta del 18 settembre 2026",
+    scheduledAt: "2026-09-18T11:00:00+02:00",
+    agenda: streetArtAgenda,
+    candidate: commissionIvSeptemberCalendarNotice.candidate,
+    provenance: commissionIvSeptemberCalendarNotice.provenance,
+    contextResearch: lateSeptemberCommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della IV Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della IV Commissione, il 17 e il 18 settembre 2026 alle 11:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-2959-commissione-ii-2026-09-18",
+    title:
+      "II Commissione consiliare permanente — seduta del 18 settembre 2026",
+    scheduledAt: "2026-09-18T10:00:00+02:00",
+    agenda: internalControlsAgenda,
+    candidate: commissionIiSeptemberCalendarNotice.candidate,
+    provenance: commissionIiSeptemberCalendarNotice.provenance,
+    contextResearch: lateSeptemberCommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della II Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della II Commissione: 17 settembre alle 15:30 e 18 settembre 2026 alle 10:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-2971-commissione-i-2026-09-17",
+    title: "I Commissione consiliare permanente — seduta del 17 settembre 2026",
+    scheduledAt: "2026-09-17T16:30:00+02:00",
+    agenda: legalDisputesAgenda,
+    candidate: commissionISeptemberCalendarNotice.candidate,
+    provenance: commissionISeptemberCalendarNotice.provenance,
+    contextResearch: lateSeptemberCommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della I Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della I Commissione: 16 settembre alle 12:00 e 17 settembre 2026 alle 16:30.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-2959-commissione-ii-2026-09-17",
+    title:
+      "II Commissione consiliare permanente — seduta del 17 settembre 2026",
+    scheduledAt: "2026-09-17T15:30:00+02:00",
+    agenda: courtJudgmentDebtsAgenda,
+    candidate: commissionIiSeptemberCalendarNotice.candidate,
+    provenance: commissionIiSeptemberCalendarNotice.provenance,
+    contextResearch: lateSeptemberCommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della II Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della II Commissione: 17 settembre alle 15:30 e 18 settembre 2026 alle 10:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-2953-commissione-v-2026-09-17",
+    title: "V Commissione consiliare permanente — seduta del 17 settembre 2026",
+    scheduledAt: "2026-09-17T12:00:00+02:00",
+    agenda: commissionPresidentElectionAgenda,
+    candidate: commissionVSeptember17Notice.candidate,
+    provenance: commissionVSeptember17Notice.provenance,
+    contextResearch: lateSeptemberCommissionContextResearch,
+    sourceLinkLabel: "Apri la convocazione ufficiale della V Commissione",
+    calendarSummary:
+      "La convocazione programma una seduta della V Commissione il 17 settembre 2026 alle 12:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-2981-commissione-iv-2026-09-17",
+    title:
+      "IV Commissione consiliare permanente — seduta del 17 settembre 2026",
+    scheduledAt: "2026-09-17T11:00:00+02:00",
+    agenda: streetArtAgenda,
+    candidate: commissionIvSeptemberCalendarNotice.candidate,
+    provenance: commissionIvSeptemberCalendarNotice.provenance,
+    contextResearch: lateSeptemberCommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della IV Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della IV Commissione, il 17 e il 18 settembre 2026 alle 11:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-2971-commissione-i-2026-09-16",
+    title: "I Commissione consiliare permanente — seduta del 16 settembre 2026",
+    scheduledAt: "2026-09-16T12:00:00+02:00",
+    agenda: taxiRegulationAgenda,
+    candidate: commissionISeptemberCalendarNotice.candidate,
+    provenance: commissionISeptemberCalendarNotice.provenance,
+    contextResearch: lateSeptemberCommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della I Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della I Commissione: 16 settembre alle 12:00 e 17 settembre 2026 alle 16:30.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-2925-commissione-iv-2026-09-16",
+    title:
+      "IV Commissione consiliare permanente — seduta del 16 settembre 2026",
+    scheduledAt: "2026-09-16T11:00:00+02:00",
+    agenda: streetArtIcicaAgenda,
+    candidate: commissionIvMidSeptemberCandidate,
+    provenance: commissionIvMidSeptemberProvenance,
+    contextResearch: commissionIvMidSeptemberContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della IV Commissione",
+    calendarSummary:
+      "La stessa convocazione programma tre sedute della IV Commissione: 14 settembre alle 11:00, 15 settembre alle 12:00 e 16 settembre 2026 alle 11:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-2925-commissione-iv-2026-09-15",
+    title:
+      "IV Commissione consiliare permanente — seduta del 15 settembre 2026",
+    scheduledAt: "2026-09-15T12:00:00+02:00",
+    agenda: municipalNurseriesAgenda,
+    candidate: commissionIvMidSeptemberCandidate,
+    provenance: commissionIvMidSeptemberProvenance,
+    contextResearch: commissionIvMunicipalNurseriesContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della IV Commissione",
+    calendarSummary:
+      "La stessa convocazione programma tre sedute della IV Commissione: 14 settembre alle 11:00, 15 settembre alle 12:00 e 16 settembre 2026 alle 11:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-2926-commissione-iii-2026-09-15",
+    title:
+      "III Commissione consiliare permanente — seduta del 15 settembre 2026",
+    scheduledAt: "2026-09-15T11:00:00+02:00",
+    agenda: disabilityGuarantorAgenda,
+    candidate: commissionIiiMidSeptemberCandidate,
+    provenance: commissionIiiMidSeptemberProvenance,
+    contextResearch: commissionIiiGuarantorContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della III Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della III Commissione: 14 settembre alle 12:00 e 15 settembre 2026 alle 11:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-2926-commissione-iii-2026-09-14",
+    title:
+      "III Commissione consiliare permanente — seduta del 14 settembre 2026",
+    scheduledAt: "2026-09-14T12:00:00+02:00",
+    agenda: disabilityGuarantorAgenda,
+    candidate: commissionIiiMidSeptemberCandidate,
+    provenance: commissionIiiMidSeptemberProvenance,
+    contextResearch: commissionIiiGuarantorContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della III Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della III Commissione: 14 settembre alle 12:00 e 15 settembre 2026 alle 11:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-2925-commissione-iv-2026-09-14",
+    title:
+      "IV Commissione consiliare permanente — seduta del 14 settembre 2026",
+    scheduledAt: "2026-09-14T11:00:00+02:00",
+    agenda: schoolTransportAgenda,
+    candidate: commissionIvMidSeptemberCandidate,
+    provenance: commissionIvMidSeptemberProvenance,
+    contextResearch: commissionIvSchoolTransportContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della IV Commissione",
+    calendarSummary:
+      "La stessa convocazione programma tre sedute della IV Commissione: 14 settembre alle 11:00, 15 settembre alle 12:00 e 16 settembre 2026 alle 11:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-2879-commissione-iii-2026-09-11",
+    title:
+      "III Commissione consiliare permanente — seduta dell'11 settembre 2026",
+    scheduledAt: "2026-09-11T12:00:00+02:00",
+    agenda: disabilityGuarantorAgenda,
+    candidate: commissionIiiGuarantorCandidate,
+    provenance: commissionIiiGuarantorProvenance,
+    contextResearch: commissionIiiGuarantorContextResearch,
+    sourceLinkLabel: "Apri la convocazione ufficiale della III Commissione",
+    calendarSummary:
+      "La convocazione programma una seduta della III Commissione l'11 settembre 2026 alle 12:00.",
+  }),
   septemberCommissionSession({
     id: "albo-2026-2860-commissione-iv-2026-09-11",
     title:

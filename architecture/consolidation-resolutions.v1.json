@@ -63,6 +63,17 @@
       "evidence": [
         "data/legalita/ltceds/monitor/2026-09-07/lamezia-tentato-furto-sud-lavaggio-2025-02-10.json"
       ]
+    },
+    {
+      "id": "review-coverage-drift",
+      "disposition": "RESOLVED",
+      "before": "A newly added or changed file inside a registered directory inherited its link to an earlier bounded review.",
+      "after": "Pin bounded review receipts to exact SHA-256 and asset ownership; new, modified or reassigned files remain unreviewed with explicit reasons.",
+      "evidence": [
+        "scripts/architecture/canonicalisationLedger.mjs",
+        "scripts/architecture/canonicalisationLedger.test.mjs",
+        "architecture/canonicalisation-review-baseline.v1.json"
+      ]
     }
   ]
 }
