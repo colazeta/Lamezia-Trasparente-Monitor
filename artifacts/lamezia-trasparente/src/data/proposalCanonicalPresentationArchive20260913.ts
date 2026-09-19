@@ -13,7 +13,7 @@ const POLIZIA_LOCALE_RENDA_ID =
 
 const SCORDOVILLO_CANONICAL_PRESENTATION: CanonicalProposalPresentation = {
   proposalId: SCORDOVILLO_ID,
-  version: "1.1",
+  version: "1.0",
   title: "Trasparenza e confronto pubblico sul percorso abitativo di Scordovillo",
   request:
     "Rendere pubblicamente verificabile il percorso abitativo collegato al superamento di Scordovillo, discuterlo in sedi pubbliche e sospendere ulteriori procedure di acquisto finché criteri, requisiti, modalità e conseguenze dell'operazione non siano illustrati alla città.",
