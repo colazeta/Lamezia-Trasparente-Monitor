@@ -1,0 +1,130 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-detenzione-arma-clandestina-caminetto-2023-09",
+  "discovered_at": "2026-09-19T13:16:36+02:00",
+  "updated_at": "2026-09-19T13:16:36+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Detenzione illecita di una pistola clandestina rinvenuta in un'abitazione di Lamezia Terme entro il 20 settembre 2023",
+  "temporal": {
+    "start": null,
+    "end": "2023-09-20",
+    "edtf": null,
+    "precision": "approximate"
+  },
+  "sources": [
+    {
+      "source_key": "press:lameziatermeit:2023-09:arma-clandestina-caminetto",
+      "source_type": "press_secondary",
+      "provider": "LameziaTerme.it",
+      "title": "Lamezia. Arrestato 36enne per detenzione di arma clandestina",
+      "url": "https://www.lameziaterme.it/lamezia-arrestato-36enne-per-detenzione-di-arma-clandestina/",
+      "published_at": null,
+      "retrieved_at": "2026-09-19T13:16:36+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:secondopianonews:2023-09-20:arma-clandestina-caminetto",
+      "source_type": "press_secondary",
+      "provider": "Secondo Piano News",
+      "title": "Nasconde un'arma clandestina nel caminetto, arrestato",
+      "url": "https://www.secondopianonews.it/nasconde-unarma-clandestina-nel-caminetto-sorpreso-e-arrestato/",
+      "published_at": "2023-09-20",
+      "retrieved_at": "2026-09-19T13:16:36+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:soveratoweb:2023-09-20:arma-clandestina-caminetto",
+      "source_type": "press_secondary",
+      "provider": "Soverato Web",
+      "title": "Nascondeva arma clandestina nel caminetto, 36enne ai domiciliari",
+      "url": "https://www.soveratoweb.com/nascondeva-arma-clandestina-nel-caminetto-36enne-ai-domiciliari/",
+      "published_at": "2023-09-20",
+      "retrieved_at": "2026-09-19T13:16:36+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:detenzione-arma-clandestina",
+      "classification_source_key": "press:lameziatermeit:2023-09:arma-clandestina-caminetto",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti riferiscono l'arresto in flagranza per illecita detenzione di un'arma clandestina e del relativo munizionamento nell'ambito di un'attività dei Carabinieri della Stazione di Lamezia Terme Sambiase.",
+        "Nel caminetto dell'abitazione è stata rinvenuta una pistola CZ modello 85 calibro 9x21 con matricola punzonata e caricatore contenente 15 cartucce, occultata in un'intercapedine e avvolta in asciugamani.",
+        "Il GIP del Tribunale di Lamezia Terme ha disposto gli arresti domiciliari; le fonti precisano che il procedimento pendeva nella fase delle indagini preliminari. Non è stata reperita in questa iterazione una decisione definitiva.",
+        "Le fonti disponibili sono state pubblicate il 20 settembre 2023 ma non indicano in modo esplicito il giorno della perquisizione e dell'arresto; la data è quindi registrata esclusivamente come terminus ante quem e non come data esatta del fatto."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata:occurrence",
+      "basis_source_key": "press:lameziatermeit:2023-09:arma-clandestina-caminetto",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata a Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata:search",
+      "basis_source_key": "press:lameziatermeit:2023-09:arma-clandestina-caminetto",
+      "role": "search",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata a Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata:recovery",
+      "basis_source_key": "press:lameziatermeit:2023-09:arma-clandestina-caminetto",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata a Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
