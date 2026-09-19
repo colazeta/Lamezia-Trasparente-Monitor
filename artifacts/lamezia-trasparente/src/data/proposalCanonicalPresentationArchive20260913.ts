@@ -13,19 +13,21 @@ const POLIZIA_LOCALE_RENDA_ID =
 
 const SCORDOVILLO_CANONICAL_PRESENTATION: CanonicalProposalPresentation = {
   proposalId: SCORDOVILLO_ID,
-  version: "1.0",
-  title: "Consiglio comunale aperto su Scordovillo e trasparenza del percorso abitativo",
+  version: "1.1",
+  title: "Trasparenza e confronto pubblico sul percorso abitativo di Scordovillo",
   request:
-    "Convocare un Consiglio comunale aperto su Scordovillo e rendere pubblicamente verificabili criteri, responsabilità e modalità delle decisioni relative al percorso abitativo collegato al superamento del campo.",
+    "Rendere pubblicamente verificabile il percorso abitativo collegato al superamento di Scordovillo, discuterlo in sedi pubbliche e sospendere ulteriori procedure di acquisto finché criteri, requisiti, modalità e conseguenze dell'operazione non siano illustrati alla città.",
   actionTypes: ["organizzazione", "trasparenza", "coordinamento"],
   measures: [
     "Convocare un Consiglio comunale aperto dedicato alla vicenda Scordovillo.",
     "Rendere pubblici i criteri utilizzati per individuare i beneficiari e le modalità di assegnazione degli alloggi collegati al percorso.",
     "Chiarire in sede pubblica il ruolo del Comune e le responsabilità dei diversi soggetti istituzionali coinvolti.",
     "Esplicitare le valutazioni sull’impatto sociale delle soluzioni abitative nei quartieri interessati.",
+    "Sospendere le ulteriori procedure di acquisto di immobili nel territorio lametino finché criteri, requisiti, modalità e conseguenze dell’operazione non siano illustrati pubblicamente.",
+    "Aprire un confronto con i residenti dei quartieri interessati, includendo un incontro del Sindaco con i cittadini che chiedono chiarimenti sul percorso.",
   ],
   expectedOutcome:
-    "Rendere il percorso decisionale più conoscibile e verificabile e consentire una discussione pubblica delle scelte, senza attribuire alla seduta effetti sostanziali non ancora dimostrati.",
+    "Rendere il percorso decisionale più conoscibile e verificabile e consentire un confronto pubblico sulle scelte prima di ulteriori acquisizioni, senza attribuire alle misure effetti sostanziali non ancora dimostrati.",
 };
 
 const POLIZIA_LOCALE_RENDA_CANONICAL_PRESENTATION: CanonicalProposalPresentation = {
