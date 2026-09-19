@@ -1,0 +1,116 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-cinque-ordigni-svincolo-a3-2016-09-27",
+  "discovered_at": "2026-09-19T03:00:45+02:00",
+  "updated_at": "2026-09-19T03:00:45+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Detenzione e porto illegale di cinque ordigni esplosivi presso lo svincolo A3 di Lamezia Terme",
+  "temporal": {
+    "start": "2016-09-27",
+    "end": "2016-09-27",
+    "edtf": "2016-09-27",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:lesuberante:2016-09-30:cinque-ordigni-svincolo-a3",
+      "source_type": "press_secondary",
+      "provider": "L'Esuberante",
+      "title": "Lamezia Terme, due arresti per porto illegale di esplosivi",
+      "url": "https://www.lesuberante.it/lamezia-terme-due-arresti-per-porto-illegale-di-esplosivi/",
+      "published_at": "2016-09-30",
+      "retrieved_at": "2026-09-19T03:00:45+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:lametino:2016-09-30:cinque-ordigni-svincolo-a3",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: in auto con cinque ordigni esplosivi, 2 arresti",
+      "url": "https://www.lametino.it/Cronaca/lamezia-in-auto-con-cinque-ordigni-esplosivi-2-arresti.html",
+      "published_at": "2016-09-30",
+      "retrieved_at": "2026-09-19T03:00:45+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lanuovacalabria:2020-02-28:cinque-ordigni-processo",
+      "source_type": "press_secondary",
+      "provider": "La Nuova Calabria",
+      "title": "Trovati in auto con 5 ordigni esplosivi a Lamezia Terme, la Procura chiede 8 anni di reclusione per Vincenzini e De Sarro",
+      "url": "https://www.lanuovacalabria.it/trovati-in-auto-con-5-ordigni-esplosivi-a-lamezia-terme-la-procura-chiede-8-anni-di-reclusione-per-vincenzini-e-de-sarro",
+      "published_at": "2020-02-28",
+      "retrieved_at": "2026-09-19T03:00:45+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:detenzione-porto-illegale-esplosivi",
+      "classification_source_key": "press:lesuberante:2016-09-30:cinque-ordigni-svincolo-a3",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "durante un controllo del territorio in prossimita dello svincolo autostradale A3 di Lamezia Terme il veicolo tentava di forzare il posto di controllo",
+        "nella perquisizione del veicolo furono rinvenuti cinque ordigni esplosivi artigianali ad alto potenziale, con miccia a lenta combustione, del peso indicato dalle fonti in circa 650 grammi ciascuno",
+        "l'arresto per detenzione e porto illegale di esplosivi fu convalidato con applicazione della custodia cautelare in carcere",
+        "nel 2020 la Procura chiese una condanna nel procedimento relativo ai cinque ordigni; in questa acquisizione non e stata verificata una decisione definitiva specifica sul fatto e non e codificata come accertata alcuna aggravante mafiosa"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 5
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:svincolo-a3:occurrence",
+      "basis_source_key": "press:lesuberante:2016-09-30:cinque-ordigni-svincolo-a3",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Prossimita dello svincolo autostradale A3 di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:svincolo-a3:recovery",
+      "basis_source_key": "press:lesuberante:2016-09-30:cinque-ordigni-svincolo-a3",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Prossimita dello svincolo autostradale A3 di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
