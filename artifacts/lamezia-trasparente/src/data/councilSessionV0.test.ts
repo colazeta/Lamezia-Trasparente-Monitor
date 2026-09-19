@@ -706,6 +706,30 @@ describe("councilSessionV0", () => {
       "2026-09-16T12:00:00+02:00",
     ]);
 
+    const wasteMotionSession = sessions.find(
+      (session) =>
+        session.id === "albo-2026-3001-commissione-iii-2026-09-21",
+    );
+    expect(wasteMotionSession?.contextResearch).toEqual(
+      expect.objectContaining({
+        status: "reviewed_matches",
+        checkedAt: "2026-09-19T15:49:21Z",
+        media: [],
+      }),
+    );
+    expect(wasteMotionSession?.contextResearch.articles).toEqual([
+      expect.objectContaining({
+        publisher: "il Lametino",
+        publishedAt: "2026-09-14",
+        relationship: "agenda_item",
+        url: "https://www.lametino.it/ultime/lamezia-consigliera-serratore-presenta-mozione-su-rifiuti-e-sicurezza-in-localita-serra-e-annunziata.html",
+      }),
+    ]);
+    expect(wasteMotionSession?.lastCheckedAt.value).toBe(
+      "2026-09-19T15:49:21Z",
+    );
+    expect(wasteMotionSession?.sessionStatus.value).toBe("non_verificata");
+
     for (const session of sessions) {
       expect(session.provenance?.documentUrl).toMatch(
         /2026_(2953|2959|2960|2971|2981|2986|3001)_1_X/,
@@ -729,14 +753,16 @@ describe("councilSessionV0", () => {
       expect(session.agenda.sourceStatus).toBe("verificato");
       expect(session.agenda.value?.length).toBeGreaterThan(0);
       expect(session.sessionStatus.value).toBe("non_verificata");
-      expect(session.contextResearch).toEqual(
-        expect.objectContaining({
-          status: "checked_no_match",
-          checkedAt: "2026-09-19T09:34:42Z",
-          articles: [],
-          media: [],
-        }),
-      );
+      if (session.id !== wasteMotionSession?.id) {
+        expect(session.contextResearch).toEqual(
+          expect.objectContaining({
+            status: "checked_no_match",
+            checkedAt: "2026-09-19T09:34:42Z",
+            articles: [],
+            media: [],
+          }),
+        );
+      }
       expect(session.contextResearch.searchNote).toMatch(/Parallel Search/i);
       expect(session.dataLimits.value?.join(" ")).toMatch(
         /sede non è indicata.*non viene inferita/i,
