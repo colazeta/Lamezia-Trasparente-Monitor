@@ -5,7 +5,7 @@
   "updated_at": "2026-09-19T03:00:45+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
-  "title": "Detenzione e porto illegale di cinque ordigni esplosivi presso lo svincolo A3 di Lamezia Terme",
+  "title": "Detenzione e porto illegale di cinque ordigni esplosivi in prossimità dello svincolo A3 di Lamezia Terme",
   "temporal": {
     "start": "2016-09-27",
     "end": "2016-09-27",
@@ -47,7 +47,7 @@
       "source_key": "press:lanuovacalabria:2020-02-28:cinque-ordigni-processo",
       "source_type": "press_secondary",
       "provider": "La Nuova Calabria",
-      "title": "Trovati in auto con 5 ordigni esplosivi a Lamezia Terme, la Procura chiede 8 anni di reclusione per Vincenzini e De Sarro",
+      "title": "Aggiornamento processuale sul rinvenimento dei cinque ordigni a Lamezia Terme",
       "url": "https://www.lanuovacalabria.it/trovati-in-auto-con-5-ordigni-esplosivi-a-lamezia-terme-la-procura-chiede-8-anni-di-reclusione-per-vincenzini-e-de-sarro",
       "published_at": "2020-02-28",
       "retrieved_at": "2026-09-19T03:00:45+02:00",
@@ -72,10 +72,10 @@
       "legal_reference": null,
       "attempt_status": "completed",
       "situational_context": [
-        "durante un controllo del territorio in prossimita dello svincolo autostradale A3 di Lamezia Terme il veicolo tentava di forzare il posto di controllo",
+        "durante un controllo del territorio in prossimità dello svincolo autostradale A3 di Lamezia Terme il veicolo tentava di forzare il posto di controllo",
         "nella perquisizione del veicolo furono rinvenuti cinque ordigni esplosivi artigianali ad alto potenziale, con miccia a lenta combustione, del peso indicato dalle fonti in circa 650 grammi ciascuno",
         "l'arresto per detenzione e porto illegale di esplosivi fu convalidato con applicazione della custodia cautelare in carcere",
-        "nel 2020 la Procura chiese una condanna nel procedimento relativo ai cinque ordigni; in questa acquisizione non e stata verificata una decisione definitiva specifica sul fatto e non e codificata come accertata alcuna aggravante mafiosa"
+        "nel 2020 la Procura chiese una condanna nel procedimento relativo ai cinque ordigni; in questa acquisizione non è stata verificata una decisione definitiva specifica sul fatto e non è codificata come accertata alcuna aggravante mafiosa"
       ],
       "cyber_related": null,
       "affected_object_count": 5
@@ -93,7 +93,7 @@
       "sensitivity": "public_place",
       "publication_risk": "low_public_site",
       "geometry": null,
-      "place_name": "Prossimita dello svincolo autostradale A3 di Lamezia Terme",
+      "place_name": "Prossimità dello svincolo autostradale A3 di Lamezia Terme",
       "neighbourhood": null,
       "iccs_location_type": null
     },
@@ -108,7 +108,7 @@
       "sensitivity": "public_place",
       "publication_risk": "low_public_site",
       "geometry": null,
-      "place_name": "Prossimita dello svincolo autostradale A3 di Lamezia Terme",
+      "place_name": "Prossimità dello svincolo autostradale A3 di Lamezia Terme",
       "neighbourhood": null,
       "iccs_location_type": null
     }
