@@ -1,0 +1,130 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-incendio-villaggio-carita-via-indipendenza-2016-10-17",
+  "discovered_at": "2026-09-20T16:22:05+02:00",
+  "updated_at": "2026-09-20T16:22:05+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Incendio doloso ai container del Villaggio della Carità in via Indipendenza il 17 ottobre 2016",
+  "temporal": {
+    "start": "2016-10-17",
+    "end": "2016-10-17",
+    "edtf": "2016-10-17",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:corriere-calabria:2016-10-18:rogo-container-caritas",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Rogo ai container Caritas, la Procura apre un’inchiesta",
+      "url": "https://www.corrieredellacalabria.it/2016/10/18/rogo-ai-container-caritas-la-procura-apre-uninchiesta/",
+      "published_at": "2016-10-18",
+      "retrieved_at": "2026-09-20T16:22:05+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:infooggi-agi:2016-10-18:container-caritas-incendiati",
+      "source_type": "press_secondary",
+      "provider": "InfoOggi (ripresa AGI)",
+      "title": "Containers Caritas incendiati a Lamezia Terme, indagini",
+      "url": "https://www.infooggi.it/articolo/containers-caritas-incendiati-a-lamezia-terme-indaginic2a0/92131/",
+      "published_at": "2016-10-18",
+      "retrieved_at": "2026-09-20T16:22:05+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:parola-di-vita:2016-12-29:rogo-villaggio-carita",
+      "source_type": "press_secondary",
+      "provider": "Parola di Vita",
+      "title": "I dati delle povertà secondo la Caritas di Lamezia",
+      "url": "https://www.paroladivita.org/i-dati-delle-poverta-secondo-la-caritas-di-lamezia/",
+      "published_at": "2016-12-29",
+      "retrieved_at": "2026-09-20T16:22:05+02:00",
+      "support_roles": [
+        "event_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:incendio-doloso",
+      "classification_source_key": "press:corriere-calabria:2016-10-18:rogo-container-caritas",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Nella sera del 17 ottobre 2016 un incendio distrusse cinque dei sedici container destinati al progetto Villaggio della Carità della Diocesi e della Caritas di Lamezia Terme.",
+        "Corriere della Calabria riferisce il rinvenimento di una bottiglia contenente liquido infiammabile e considera tale reperto indicativo della natura dolosa del rogo; la ripresa AGI pubblicata da InfoOggi riferisce che Carabinieri e Vigili del Fuoco rinvennero una bottiglietta con liquido infiammabile e che erano in corso ulteriori accertamenti sulla matrice dolosa.",
+        "La Procura di Lamezia Terme aprì un'inchiesta e le indagini furono affidate ai Carabinieri; una ricostruzione della Caritas pubblicata a fine dicembre 2016 indicava ancora non individuati i responsabili.",
+        "Le fonti contemporanee non stabiliscono un movente definitivo: una voce iniziale che collegava l'incendio a un presunto progetto di accoglienza per migranti venne indicata come infondata. La classificazione resta pertanto provvisoria e non attribuisce una matrice estorsiva, mafiosa o discriminatoria."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 5
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:villaggio-carita-via-indipendenza:occurrence",
+      "basis_source_key": "press:corriere-calabria:2016-10-18:rogo-container-caritas",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "non_sensitive",
+      "geometry": null,
+      "place_name": "Villaggio della Carità — area dei container in via Indipendenza, nei pressi del cimitero",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:villaggio-carita-via-indipendenza:target",
+      "basis_source_key": "press:corriere-calabria:2016-10-18:rogo-container-caritas",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "non_sensitive",
+      "geometry": null,
+      "place_name": "Villaggio della Carità — area dei container in via Indipendenza, nei pressi del cimitero",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:villaggio-carita-via-indipendenza:recovery",
+      "basis_source_key": "press:corriere-calabria:2016-10-18:rogo-container-caritas",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "non_sensitive",
+      "geometry": null,
+      "place_name": "Uno dei container del Villaggio della Carità in via Indipendenza, dove fu rinvenuta una bottiglia con liquido infiammabile",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    }
+  ]
+}
