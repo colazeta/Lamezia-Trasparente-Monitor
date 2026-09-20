@@ -10,10 +10,41 @@
   },
   "territorialLevel": "cadastral urban section",
   "datasetType": "optional cadastral/accessory layer",
-  "verificationStatus": "source identified, not yet validated against official ISTAT census sections",
+  "verificationStatus": "source and licensing rechecked; geometry not yet validated against official ISTAT census sections",
   "frontendStatus": "metadata only, not wired into the public map",
   "publicMapRole": "future optional overlay",
   "warning": "Non usare per indicatori censuari ISTAT",
+  "licensing": {
+    "downloadDataset": {
+      "licence": "CC BY 4.0",
+      "licenceUrl": "https://creativecommons.org/licenses/by/4.0/deed.it",
+      "underlyingSource": "Agenzia delle Entrate",
+      "cleanedVersionProvider": "Zornade",
+      "recommendedVisibleAttribution": "Fonte: Agenzia delle Entrate; versione pulita e ottimizzata: Zornade",
+      "zornadeUrl": "https://zornade.com"
+    },
+    "api": {
+      "termsUrl": "https://zornade.com/terms",
+      "attributionGuideUrl": "https://app.zornade.com/attribuzioni",
+      "sourceLicenceMetadataField": "meta.licenses",
+      "sourceAttributionsAlwaysRequired": true,
+      "zornadeAttributionField": "meta.zornade_attribution",
+      "zornadeAttributionRequiredField": "meta.zornade_attribution_required",
+      "freeKeyVisibleAttribution": {
+        "text": "Dati elaborati da Zornade",
+        "url": "https://zornade.com"
+      },
+      "commercialLicenceMayRemoveZornadeAttributionOnly": true,
+      "rawDataRedistributionProhibited": true,
+      "massExtractionProhibited": true,
+      "competingDatabaseReconstructionProhibited": true
+    }
+  },
+  "publicationGate": {
+    "status": "blocked",
+    "visibleAttributionImplemented": false,
+    "rule": "Do not expose this layer or API-derived Zornade data publicly until the applicable source attribution and, when required, linked Zornade attribution are visibly implemented and verified."
+  },
   "notFor": [
     "main territorial base",
     "ISTAT census-section demographic indicators",
@@ -22,5 +53,6 @@
   "rawPath": "data/raw/territorio/zornade/sezioni_urbane_catasto/sezioni.gpkg",
   "processedGeoJsonPath": "data/processed/territorio/zornade_sezioni_urbane_catasto.geojson",
   "lameziaSubsetPath": "data/processed/territorio/zornade_sezioni_urbane_catasto_lamezia.geojson",
-  "lastSourceCheck": "2026-06-19"
+  "lastSourceCheck": "2026-09-20",
+  "lastLicenceCheck": "2026-09-20"
 }
