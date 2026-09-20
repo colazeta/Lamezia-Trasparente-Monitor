@@ -1,0 +1,115 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-minaccia-mannaia-polizia-locale-2015-11-15",
+  "discovered_at": "2026-09-20T14:59:34+02:00",
+  "updated_at": "2026-09-20T14:59:34+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Minaccia con una mannaia a un agente della Polizia locale presso il Comando di Lamezia Terme",
+  "temporal": {
+    "start": "2015-11-15",
+    "end": "2015-11-15",
+    "edtf": "2015-11-15",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:ltnews:2015-11-15:mannaia-polizia-locale",
+      "source_type": "press_secondary",
+      "provider": "LTNews Lamezia Terme",
+      "title": "Lamezia, commerciante cinese minaccia agente di polizia locale e tenta suicidio",
+      "url": "https://lameziatermenews.it/citta/10911-lamezia-commerciante-cinese-minaccia-agente-di-polizia-locale-e-tenta-suicidio.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-20T14:59:34+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:poliziamunicipale-cn24tv:2015-11-16:mannaia-vigile-urbano",
+      "source_type": "press_secondary",
+      "provider": "PoliziaMunicipale.it (fonte: CN24TV)",
+      "title": "Lamezia, minaccia un vigile urbano con mannaia",
+      "url": "https://www.poliziamunicipale.it/documenti/39491/lamezia-minaccia-un-vigile-urbano-con-mannaia",
+      "published_at": null,
+      "retrieved_at": "2026-09-20T14:59:34+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:minaccia",
+      "classification_source_key": "press:ltnews:2015-11-15:mannaia-polizia-locale",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La fonte contemporanea riferisce che, durante una verifica documentale relativa a un esercizio commerciale, una persona estrasse da uno zaino una mannaia e la brandì contro un maresciallo della Polizia locale.",
+        "Dopo la minaccia all'agente la stessa persona rivolse l'arma verso di sé; intervennero personale sanitario, Vigili del fuoco e Carabinieri e, al termine di una trattativa, l'arma fu sottratta e sequestrata.",
+        "Le fonti riferiscono un successivo trattamento sanitario obbligatorio e il deferimento per i reati commessi, ma non indicano una qualificazione penale formale specifica: la classificazione come minaccia resta pertanto provvisoria.",
+        "La data canonica del 15 novembre 2015 deriva dalla cronaca locale contemporanea con dateline esplicita. Una ripresa attribuita a CN24TV è datata 16 novembre e usa la formula 'questa mattina'; in assenza del comunicato originario questa discordanza è trattata come ritardo o incoerenza di ripubblicazione e non come prova di un secondo evento."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:comando-polizia-locale:occurrence",
+      "basis_source_key": "press:ltnews:2015-11-15:mannaia-polizia-locale",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Davanti al Comando della Polizia locale di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:comando-polizia-locale:target",
+      "basis_source_key": "press:ltnews:2015-11-15:mannaia-polizia-locale",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Comando della Polizia locale di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:comando-polizia-locale:recovery",
+      "basis_source_key": "press:ltnews:2015-11-15:mannaia-polizia-locale",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Comando della Polizia locale di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
