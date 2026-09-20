@@ -1,0 +1,85 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-omicidio-2001-11-07",
+  "discovered_at": "2026-09-20T02:24:59+02:00",
+  "updated_at": "2026-09-20T02:24:59+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Omicidio a Lamezia Terme il 7 novembre 2001",
+  "temporal": {
+    "start": "2001-11-07",
+    "end": "2001-11-07",
+    "edtf": "2001-11-07",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:illametino:2021-10-27:omicidio-lamezia-2001-11-07",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Esito giudiziario relativo all'omicidio del 7 novembre 2001 a Lamezia Terme",
+      "url": "https://www.lametino.it/cronaca/omicidio-di-spena-nel-2001-a-lamezia-assolti-vincenzo-torcasio-e-antonio-villella-dall-accusa-di-essere-mandante-ed-esecutore.html",
+      "published_at": "2021-10-27T00:00:00+02:00",
+      "retrieved_at": "2026-09-20T02:24:59+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corrieredellacalabria:2012-06-28:cronologia-omicidi-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Cronologia degli omicidi ricostruita nel contesto dell'operazione Medusa",
+      "url": "https://www.corrieredellacalabria.it/2012/06/28/6490_operazione_medusa_la_lunga_scia_di_sangue_che_ha_bagnato_lamezia",
+      "published_at": "2012-06-28T00:00:00+02:00",
+      "retrieved_at": "2026-09-20T02:24:59+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "press:illametino:2021-10-27:omicidio-lamezia-2001-11-07",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "fonti indipendenti ricostruiscono un omicidio consumato a Lamezia Terme il 7 novembre 2001",
+        "nel 2021 la Corte di Assise di Catanzaro ha pronunciato assoluzioni con formula piena nei confronti di due imputati accusati, rispettivamente, di essere mandante ed esecutore materiale; un ulteriore imputato era stato assolto nel luglio dello stesso anno",
+        "l'esito processuale non consente di attribuire responsabilita individuali e il record non identifica vittima, imputati o sospettati",
+        "una ricerca geografica dedicata non ha recuperato una fonte affidabile che collochi la scena a livello di strada, quartiere, localita o sito nominato; la localizzazione resta quindi al solo livello comunale"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:municipality:occurrence",
+      "basis_source_key": "press:illametino:2021-10-27:omicidio-lamezia-2001-11-07",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "unknown",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Lamezia Terme (luogo sub-comunale non specificato dalle fonti reperite)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
