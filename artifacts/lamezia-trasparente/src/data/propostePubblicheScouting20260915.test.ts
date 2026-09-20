@@ -15,8 +15,8 @@ import {
 const SERRA_ANNUNZIATA_ID =
   "serra-annunziata-rifiuti-sicurezza-serratore-2026";
 
-describe("scouted public proposals 15 September 2026", () => {
-  it("publishes the run proposal exactly once end to end", () => {
+describe("scouted public proposal Serra e Annunziata and institutional follow-up", () => {
+  it("publishes the proposal exactly once end to end", () => {
     expect(
       PUBLIC_PROPOSALS.filter(
         (proposal) => proposal.id === SERRA_ANNUNZIATA_ID,
@@ -91,7 +91,7 @@ describe("scouted public proposals 15 September 2026", () => {
     expect(competence.primaryAuthority).toBeUndefined();
   });
 
-  it("records presentation of the motion without inferring reception or implementation", () => {
+  it("records official calendarisation without inferring discussion, reception or implementation", () => {
     const proposal = PUBLIC_PROPOSALS.find(
       (item) => item.id === SERRA_ANNUNZIATA_ID,
     );
@@ -100,10 +100,26 @@ describe("scouted public proposals 15 September 2026", () => {
 
     expect(proposal.channel).toBe("mozione");
     expect(proposal.status).toBe("presentata_formalmente");
-    expect(proposal.events.map((event) => event.type)).toEqual(["deposito"]);
+    expect(proposal.lastUpdated).toBe("2026-09-18");
+    expect(proposal.events.map((event) => event.type)).toEqual([
+      "deposito",
+      "calendarizzazione",
+    ]);
+    expect(proposal.linkedActs.join(" ")).toContain("2026/3001");
+    expect(proposal.linkedActs.join(" ")).toContain("71796/2026");
+
+    const calendarisation = proposal.events.find(
+      (event) => event.type === "calendarizzazione",
+    );
+    expect(calendarisation?.evidenceLevel).toBe("fonte_ufficiale");
+    expect(calendarisation?.summary).toContain("21 settembre 2026 alle 10:30");
+    expect(calendarisation?.summary).toContain("71796/2026");
 
     const institutionalState = getProposalInstitutionalState(proposal);
     expect(institutionalState.implementation).toBe("none");
+    expect(proposal.events.some((event) => event.type === "discussione")).toBe(
+      false,
+    );
     expect(proposal.events.some((event) => event.type === "recepimento")).toBe(
       false,
     );
