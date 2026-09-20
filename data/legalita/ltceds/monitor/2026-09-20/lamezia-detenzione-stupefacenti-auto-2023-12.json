@@ -1,0 +1,132 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-detenzione-stupefacenti-auto-2023-12",
+  "discovered_at": "2026-09-20T18:37:04+02:00",
+  "updated_at": "2026-09-20T20:29:40+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Detenzione illecita di cocaina e marijuana rinvenute in un'autovettura lungo via dei Sensi a Lamezia Terme entro il 28 dicembre 2023",
+  "temporal": {
+    "start": null,
+    "end": "2023-12-28",
+    "precision": "approximate"
+  },
+  "sources": [
+    {
+      "source_key": "source:corriere-lamezia-2023-12-28-droga-auto",
+      "source_type": "press_secondary",
+      "provider": "Corriere di Lamezia",
+      "title": "Lamezia Terme, droga nascosta nell’auto, un lametino arrestato per detenzione illecita di sostanze stupefacenti",
+      "url": "https://www.corrieredilamezia.it/cronaca/2023_12_28/lamezia-terme-droga-nascosta-nellauto-un-lametino-arrestato-per-detenzione-illecita-di-sostanze-stupefacenti_44162",
+      "published_at": "2023-12-28",
+      "retrieved_at": "2026-09-20T18:37:04+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "source:calabriamagnifica-2023-12-28-droga-auto",
+      "source_type": "press_secondary",
+      "provider": "CalabriaMagnifica.it",
+      "title": "Arrestato 31enne per detenzione illecita di droga a Lamezia Terme",
+      "url": "https://www.calabriamagnifica.it/cronaca-e-attualita/arrestato-31enne-per-detenzione-illecita-di-droga-a-lamezia-terme",
+      "published_at": "2023-12-28",
+      "retrieved_at": "2026-09-20T18:37:04+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "source:lameziaterme-it-2023-12-28-via-dei-sensi-droga-auto",
+      "source_type": "press_secondary",
+      "provider": "LameziaTerme.it",
+      "title": "Lamezia. Droga nascosta nell’auto, arrestato 31enne",
+      "url": "https://www.lameziaterme.it/lamezia-droga-nascosta-auto-arrestato-31enne/",
+      "published_at": "2023-12-28",
+      "retrieved_at": "2026-09-20T20:29:40+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "source:cn24tv-2023-12-28-via-dei-sensi-droga-auto",
+      "source_type": "press_secondary",
+      "provider": "CN24TV",
+      "title": "Lamezia, si apposta in un parcheggio per vendere droga: scoperto e arrestato",
+      "url": "https://cn24tv.it/news/253678/lamezia-si-apposta-in-un-parcheggio-per-vendere-droga-scoperto-e-arrestato.html",
+      "published_at": "2023-12-28",
+      "retrieved_at": "2026-09-20T20:29:40+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:detenzione-illecita-stupefacenti",
+      "classification_source_key": "source:corriere-lamezia-2023-12-28-droga-auto",
+      "classification_basis": "source_stated_legal",
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti pubblicate il 28 dicembre 2023 riferiscono un arresto obbligatorio in flagranza eseguito dai Carabinieri della Sezione Radiomobile della Compagnia di Lamezia Terme per detenzione illecita di sostanze stupefacenti rinvenute nell'ambito di un controllo nel territorio comunale",
+        "le fonti documentano il rinvenimento di 27,5 grammi di cocaina, suddivisa in dosi, e 82 grammi di marijuana, oltre a bilancini di precisione, materiale per il confezionamento e circa 1.400 euro in contanti",
+        "la qualificazione è mantenuta alla detenzione illecita di sostanze stupefacenti: gli elementi descritti dalle fonti sono investigativamente compatibili con attività di spaccio, ma il monitor non promuove autonomamente il fatto a una qualificazione più specifica",
+        "fonti ulteriori pubblicate il 28 dicembre 2023 collocano il controllo nei parcheggi presenti lungo via dei Sensi; la localizzazione viene quindi aggiornata da municipality a street_segment senza inferire uno specifico parcheggio, un civico o coordinate",
+        "le fonti riferiscono che l'arresto è stato convalidato dal GIP del Tribunale di Lamezia Terme e che è stata applicata la misura dell'obbligo di presentazione alla polizia giudiziaria; il procedimento risultava pendente nella fase delle indagini preliminari",
+        "la data esatta del controllo non è esplicitata con sufficiente certezza nelle fonti recuperate: il 28 dicembre 2023 è trattato come terminus ante quem legato alla pubblicazione contemporanea e non come data del fatto inferita"
+      ]
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:controllo-auto-lamezia-2023-12:occurrence",
+      "basis_source_key": "source:lameziaterme-it-2023-12-28-via-dei-sensi-droga-auto",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "place_name": "Via dei Sensi"
+    },
+    {
+      "location_key": "location:autovettura-droga-lamezia-2023-12:recovery",
+      "basis_source_key": "source:lameziaterme-it-2023-12-28-via-dei-sensi-droga-auto",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "place_name": "Via dei Sensi"
+    },
+    {
+      "location_key": "location:arresto-droga-auto-lamezia-2023-12:arrest",
+      "basis_source_key": "source:lameziaterme-it-2023-12-28-via-dei-sensi-droga-auto",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "place_name": "Via dei Sensi"
+    }
+  ]
+}

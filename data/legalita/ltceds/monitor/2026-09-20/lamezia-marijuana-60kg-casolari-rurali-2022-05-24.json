@@ -1,0 +1,115 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-marijuana-60kg-casolari-rurali-2022-05-24",
+  "discovered_at": "2026-09-20T12:14:55+02:00",
+  "updated_at": "2026-09-20T12:14:55+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Detenzione ai fini di spaccio di 60 kg di marijuana in due casolari nelle aree rurali di Lamezia Terme",
+  "temporal": {
+    "start": "2022-05-24",
+    "end": "2022-05-24",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "source:catanzaroinforma-2022-05-25-marijuana-casolari",
+      "source_type": "press_secondary",
+      "provider": "CatanzaroInforma",
+      "title": "Spaccio di droga: arrestato 58enne a Lamezia Terme",
+      "url": "https://www.catanzaroinforma.it/cronaca/2022/05/25/spaccio-di-droga-arrestato-58enne-a-lamezia-terme/247902",
+      "published_at": "2022-05-25",
+      "retrieved_at": "2026-09-20T12:14:55+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "source:corriere-calabria-2022-05-25-marijuana-casolari",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Lamezia, arrestato 58enne per spaccio: era in possesso di 60 kg di marijuana",
+      "url": "https://www.corrieredellacalabria.it/2022/05/25/lamezia-arrestato-58enne-per-spaccio-deteneva-60-kg-di-marijuana/",
+      "published_at": "2022-05-25",
+      "retrieved_at": "2026-09-20T12:14:55+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "source:ltnews-2022-05-25-marijuana-casolari",
+      "source_type": "press_secondary",
+      "provider": "LTNews Lamezia Terme",
+      "title": "Lamezia, 58enne arrestato: i carabinieri scoprono in due casolari 60 chili di marijuana",
+      "url": "https://www.lameziatermenews.it/citta/20133-lamezia-58enne-arrestato-i-carabinieri-scoprono-in-due-casolari-60-chili-di-marijuana.html",
+      "published_at": "2022-05-25",
+      "retrieved_at": "2026-09-20T12:14:55+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:detenzione-stupefacenti-ai-fini-di-spaccio",
+      "classification_source_key": "source:catanzaroinforma-2022-05-25-marijuana-casolari",
+      "classification_basis": "source_stated_legal",
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti contemporanee riferiscono che nella mattinata del 24 maggio 2022 i Carabinieri del Gruppo di Lamezia Terme eseguirono una serie di perquisizioni nelle aree rurali lametine e rinvennero complessivamente 60 kg di marijuana all'interno di due casolari",
+        "in uno dei due immobili furono documentati ambienti e strutture destinati alla crescita, essiccazione e confezionamento della cannabis, compreso un impianto di lampade fitostimolanti e di aerazione",
+        "l'arresto fu eseguito in flagranza per detenzione ai fini di spaccio; le fonti recuperate collocano il procedimento nella fase delle indagini preliminari e non documentano in questa iterazione un accertamento definitivo di responsabilità",
+        "le fonti attestano soltanto aree rurali del territorio lametino e due casolari, senza strada, contrada, località nominata o coordinate; la localizzazione resta pertanto municipality-level e non deve alimentare hotspot puntuali"
+      ]
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:due-casolari-aree-rurali-lamezia:occurrence",
+      "basis_source_key": "source:catanzaroinforma-2022-05-25-marijuana-casolari",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "place_name": "Due casolari nelle aree rurali del territorio di Lamezia Terme"
+    },
+    {
+      "location_key": "location:due-casolari-aree-rurali-lamezia:search",
+      "basis_source_key": "source:catanzaroinforma-2022-05-25-marijuana-casolari",
+      "role": "search",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "place_name": "Due casolari nelle aree rurali del territorio di Lamezia Terme sottoposti a perquisizione"
+    },
+    {
+      "location_key": "location:due-casolari-aree-rurali-lamezia:recovery",
+      "basis_source_key": "source:catanzaroinforma-2022-05-25-marijuana-casolari",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "place_name": "Due casolari nelle aree rurali del territorio di Lamezia Terme nei quali furono rinvenuti complessivamente 60 kg di marijuana"
+    }
+  ]
+}
