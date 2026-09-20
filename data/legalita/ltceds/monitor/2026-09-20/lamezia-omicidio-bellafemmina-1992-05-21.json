@@ -1,0 +1,115 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-omicidio-bellafemmina-1992-05-21",
+  "discovered_at": "2026-09-20T02:24:59+02:00",
+  "updated_at": "2026-09-20T02:24:59+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Omicidio in località Bellafemmina il 21 maggio 1992",
+  "temporal": {
+    "start": "1992-05-21",
+    "end": "1992-05-21",
+    "edtf": "1992-05-21",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:lacnews24:2023-02-23:cronologia-lamezia-1992",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Ricostruzione storica della criminalità lametina: omicidio del 21 maggio 1992",
+      "url": "https://www.lacnews24.it/cronaca/lamezia-criminale-dieci-anni-di-sangue-e-due-faide-dalla-strage-dei-netturbini-al-duplice-omicidio-giampa-g0d67yxm",
+      "published_at": "2023-02-23T06:30:00+01:00",
+      "retrieved_at": "2026-09-20T02:24:59+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "other:resistere-lamezia:2010-05-21:anni-1991-1992",
+      "source_type": "other",
+      "provider": "Resistere a Lamezia",
+      "title": "Breve sintesi degli anni 1991-1992",
+      "url": "https://resisterealamezia.wordpress.com/2010/05/21/breve-sintesi-degli-anni-1991-1992/",
+      "published_at": "2010-05-21T00:00:00+02:00",
+      "retrieved_at": "2026-09-20T02:24:59+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corrieredellacalabria:2024-03-08:contesto-omicidio-1992",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Ricostruzione investigativa retrospettiva con riferimento all'omicidio del 21 maggio 1992",
+      "url": "https://www.corrieredellacalabria.it/2024/03/08/scambio-di-favori-tra-cosche-lappalto-dei-rifiuti-perche-riaprire-il-caso-dellomicidio-tramonte-cristiano/",
+      "published_at": "2024-03-08T00:00:00+01:00",
+      "retrieved_at": "2026-09-20T02:24:59+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "press:lacnews24:2023-02-23:cronologia-lamezia-1992",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "fonti retrospettive indipendenti collocano l'omicidio nella mattina del 21 maggio 1992 a Lamezia Terme",
+        "LaC News24 localizza l'agguato in località Bellafemmina e riferisce che tre sicari armati di pistola colpirono la vittima; una ricostruzione locale indipendente indica più generalmente Sant'Eufemia",
+        "una ricostruzione giornalistica del 2024 riporta dichiarazioni di collaboratori di giustizia su possibili responsabilità e moventi, ma non documenta un accertamento giudiziario definitivo; il record non attribuisce responsabilità individuali",
+        "non sono state recuperate in questa iterazione una fonte primaria coeva o una decisione giudiziaria definitiva specificamente riferibile al delitto"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:bellafemmina:occurrence",
+      "basis_source_key": "press:lacnews24:2023-02-23:cronologia-lamezia-1992",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "unknown",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Località Bellafemmina",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:bellafemmina:target",
+      "basis_source_key": "press:lacnews24:2023-02-23:cronologia-lamezia-1992",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "unknown",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Località Bellafemmina",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
