@@ -1,0 +1,100 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-detenzione-stupefacenti-auto-2023-12",
+  "discovered_at": "2026-09-20T18:37:04+02:00",
+  "updated_at": "2026-09-20T18:37:04+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Detenzione illecita di cocaina e marijuana rinvenute in un'autovettura a Lamezia Terme entro il 28 dicembre 2023",
+  "temporal": {
+    "start": null,
+    "end": "2023-12-28",
+    "precision": "approximate"
+  },
+  "sources": [
+    {
+      "source_key": "source:corriere-lamezia-2023-12-28-droga-auto",
+      "source_type": "press_secondary",
+      "provider": "Corriere di Lamezia",
+      "title": "Lamezia Terme, droga nascosta nell’auto, un lametino arrestato per detenzione illecita di sostanze stupefacenti",
+      "url": "https://www.corrieredilamezia.it/cronaca/2023_12_28/lamezia-terme-droga-nascosta-nellauto-un-lametino-arrestato-per-detenzione-illecita-di-sostanze-stupefacenti_44162",
+      "published_at": "2023-12-28",
+      "retrieved_at": "2026-09-20T18:37:04+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "source:calabriamagnifica-2023-12-28-droga-auto",
+      "source_type": "press_secondary",
+      "provider": "CalabriaMagnifica.it",
+      "title": "Arrestato 31enne per detenzione illecita di droga a Lamezia Terme",
+      "url": "https://www.calabriamagnifica.it/cronaca-e-attualita/arrestato-31enne-per-detenzione-illecita-di-droga-a-lamezia-terme",
+      "published_at": "2023-12-28",
+      "retrieved_at": "2026-09-20T18:37:04+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:detenzione-illecita-stupefacenti",
+      "classification_source_key": "source:corriere-lamezia-2023-12-28-droga-auto",
+      "classification_basis": "source_stated_legal",
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti pubblicate il 28 dicembre 2023 riferiscono un arresto obbligatorio in flagranza eseguito dai Carabinieri della Sezione Radiomobile della Compagnia di Lamezia Terme per detenzione illecita di sostanze stupefacenti rinvenute nell'ambito di un controllo nel territorio comunale",
+        "le fonti documentano il rinvenimento di 27,5 grammi di cocaina e 82 grammi di marijuana, oltre a un bilancino di precisione, materiale per il confezionamento e 1.400 euro in contanti",
+        "la qualificazione è mantenuta alla detenzione illecita di sostanze stupefacenti: le fonti recuperate in questa iterazione non consentono di promuovere autonomamente il fatto a detenzione ai fini di spaccio",
+        "le fonti reperite non indicano una strada, una località o un sito nominato del controllo; la localizzazione resta pertanto municipality-level e non deve alimentare hotspot puntuali",
+        "la data esatta del controllo non è esplicitata con sufficiente certezza nelle fonti recuperate: il 28 dicembre 2023 è trattato come terminus ante quem legato alla pubblicazione contemporanea e non come data del fatto inferita"
+      ]
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:controllo-auto-lamezia-2023-12:occurrence",
+      "basis_source_key": "source:corriere-lamezia-2023-12-28-droga-auto",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "non_sensitive",
+      "place_name": "Controllo veicolare nel territorio del Comune di Lamezia Terme"
+    },
+    {
+      "location_key": "location:autovettura-droga-lamezia-2023-12:recovery",
+      "basis_source_key": "source:calabriamagnifica-2023-12-28-droga-auto",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "non_sensitive",
+      "place_name": "Autovettura sottoposta a controllo nel territorio di Lamezia Terme"
+    },
+    {
+      "location_key": "location:arresto-droga-auto-lamezia-2023-12:arrest",
+      "basis_source_key": "source:corriere-lamezia-2023-12-28-droga-auto",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "non_sensitive",
+      "place_name": "Territorio del Comune di Lamezia Terme"
+    }
+  ]
+}
