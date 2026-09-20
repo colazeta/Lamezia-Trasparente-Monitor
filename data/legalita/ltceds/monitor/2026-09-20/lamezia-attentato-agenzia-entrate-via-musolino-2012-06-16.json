@@ -1,0 +1,114 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-attentato-agenzia-entrate-via-musolino-2012-06-16",
+  "discovered_at": "2026-09-20T10:08:11+02:00",
+  "updated_at": "2026-09-20T10:08:11+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Attentato con ordigno alla sede dell'Agenzia delle Entrate in via Benedetto Musolino il 16 giugno 2012",
+  "temporal": {
+    "start": "2012-06-16",
+    "end": "2012-06-16",
+    "edtf": "2012-06-16",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:corriere:2012-06-16:bomba-agenzia-entrate-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Sera",
+      "title": "Bomba esplode davanti alla sede dell'Agenzia delle Entrate in Calabria",
+      "url": "https://www.corriere.it/cronache/12_giugno_16/bomba-agenzia-entrate-calabria_fafe153a-b785-11e1-a264-b99bbdd148d8.shtml",
+      "published_at": "2012-06-16",
+      "retrieved_at": "2026-09-20T10:08:11+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:cn24tv:2012-06-16:bomba-agenzia-entrate-lamezia",
+      "source_type": "press_secondary",
+      "provider": "CN24TV",
+      "title": "Lamezia, bomba artigianale esplode davanti Agenzia delle Entrate",
+      "url": "https://cn24tv.it/news/49404/lamezia-bomba-artigianale-esplode-davanti-agenzia-delle-entrate.html",
+      "published_at": "2012-06-16",
+      "retrieved_at": "2026-09-20T10:08:11+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:ltnews:2012-06-16:bomba-agenzia-entrate-lamezia",
+      "source_type": "press_secondary",
+      "provider": "LTNews Lamezia Terme",
+      "title": "Lamezia, bomba contro l'Agenzia delle entrate",
+      "url": "https://lameziatermenews.it/citta.html?start=9612",
+      "published_at": "2012-06-16",
+      "retrieved_at": "2026-09-20T10:08:11+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:atto-intimidatorio-con-ordigno",
+      "classification_source_key": "press:corriere:2012-06-16:bomba-agenzia-entrate-lamezia",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti contemporanee documentano l'esplosione, nella notte del 16 giugno 2012, di un ordigno artigianale davanti all'ingresso della nuova sede dell'Agenzia delle Entrate di Lamezia Terme.",
+        "Corriere della Sera colloca l'esplosione alle 02:40 in via Benedetto Musolino e riferisce danni alla vetrata d'ingresso, alla parte in alluminio della porta e a una finestra adiacente; LTNews colloca l'episodio intorno alle 03:00 in via Musolino e precisa che l'ufficio vi era stato trasferito da poco dalla precedente sede di via Lissania.",
+        "CN24TV, riprendendo ANSA, riferisce che l'ordigno era costruito con polvere pirica e che sull'episodio indagava la Polizia; al momento della pubblicazione non risultavano rivendicazioni.",
+        "Non è stata reperita in questa iterazione una fonte primaria di polizia o giudiziaria direttamente accessibile che attribuisca allo specifico episodio una fattispecie penale o una matrice definitiva; la classificazione resta pertanto provvisoria."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:agenzia-entrate-via-benedetto-musolino:occurrence",
+      "basis_source_key": "press:corriere:2012-06-16:bomba-agenzia-entrate-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Agenzia delle Entrate — sede di Lamezia Terme, via Benedetto Musolino",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:agenzia-entrate-via-benedetto-musolino:target",
+      "basis_source_key": "press:corriere:2012-06-16:bomba-agenzia-entrate-lamezia",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Agenzia delle Entrate — sede di Lamezia Terme, via Benedetto Musolino",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
