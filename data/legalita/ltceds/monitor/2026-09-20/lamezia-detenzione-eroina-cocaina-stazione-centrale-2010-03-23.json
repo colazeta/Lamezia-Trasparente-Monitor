@@ -1,0 +1,99 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-detenzione-eroina-cocaina-stazione-centrale-2010-03-23",
+  "discovered_at": "2026-09-20T07:24:36+02:00",
+  "updated_at": "2026-09-20T07:24:36+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Detenzione ai fini di spaccio di eroina, cocaina e canapa indiana accertata alla stazione di Lamezia Terme Centrale il 23 marzo 2010",
+  "temporal": {
+    "start": "2010-03-23",
+    "end": "2010-03-23",
+    "edtf": "2010-03-23",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:cn24tv:2010-03-23:droga-treno-stazione-lamezia",
+      "source_type": "press_secondary",
+      "provider": "CN24TV",
+      "title": "Viaggiava in treno con la droga negli slip, arrestato",
+      "url": "https://cn24tv.it/news/viaggiava-in-treno-con-la-droga-negli-slip-arrestato/",
+      "published_at": "2010-03-23",
+      "retrieved_at": "2026-09-20T07:24:36+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:detenzione-stupefacenti-ai-fini-di-spaccio",
+      "classification_source_key": "press:cn24tv:2010-03-23:droga-treno-stazione-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "la fonte riferisce che il 23 marzo 2010 la Polizia ferroviaria di Lamezia Terme controllò due viaggiatori nella stazione di Lamezia Terme dopo che erano scesi da un treno proveniente da Paola",
+        "durante la perquisizione furono rinvenute sulla persona arrestata 31 capsule contenenti eroina, una capsula contenente cocaina e due bustine di canapa indiana",
+        "la fonte indica espressamente l'accusa di detenzione a fini di spaccio e riferisce l'arresto; menziona inoltre la contestazione della violazione di una misura cautelare, senza che sia stata verificata in questa ricerca una successiva decisione giudiziaria definitiva"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:stazione-centrale-treno-paola:occurrence",
+      "basis_source_key": "press:cn24tv:2010-03-23:droga-treno-stazione-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Stazione ferroviaria di Lamezia Terme Centrale, dopo la discesa da un treno proveniente da Paola",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:uffici-polfer:recovery",
+      "basis_source_key": "press:cn24tv:2010-03-23:droga-treno-stazione-lamezia",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Uffici della Polizia ferroviaria di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:stazione-centrale-treno-paola:arrest",
+      "basis_source_key": "press:cn24tv:2010-03-23:droga-treno-stazione-lamezia",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Stazione ferroviaria di Lamezia Terme Centrale",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
