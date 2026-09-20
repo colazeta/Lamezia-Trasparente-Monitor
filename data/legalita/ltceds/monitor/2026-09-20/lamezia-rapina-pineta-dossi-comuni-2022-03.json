@@ -1,0 +1,101 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-pineta-dossi-comuni-2022-03",
+  "discovered_at": "2026-09-20T22:14:00+02:00",
+  "updated_at": "2026-09-20T22:14:00+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina e aggressione nella pineta di località Dossi-Comuni accertate entro il 24 marzo 2022",
+  "temporal": {
+    "start": null,
+    "end": "2022-03-24",
+    "edtf": null,
+    "precision": "approximate"
+  },
+  "sources": [
+    {
+      "source_key": "polizia:questura-catanzaro:attivita-preventiva-repressiva-lamezia-2022",
+      "source_type": "law_enforcement_primary",
+      "provider": "Polizia di Stato — Questura di Catanzaro",
+      "title": "Lamezia Terme: attività preventiva e repressiva del Commissariato della Polizia di Stato",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/1236624ecc47090d0978432023",
+      "published_at": null,
+      "retrieved_at": "2026-09-20T22:14:00+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:calabria-diretta-news:2022-04-07:criminalita-lametino-controlli",
+      "source_type": "press_secondary",
+      "provider": "Calabria Diretta News",
+      "title": "Criminalità nel lametino, la Polizia intensifica i controlli",
+      "url": "https://www.calabriadirettanews.com/2022/04/07/criminalita-nel-lametino-la-polizia-intensifica-i-controlli/",
+      "published_at": "2022-04-07T00:00:00+02:00",
+      "retrieved_at": "2026-09-20T22:14:00+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "polizia:questura-catanzaro:attivita-preventiva-repressiva-lamezia-2022",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti riferiscono che due persone convinsero con uno stratagemma un giovane a salire sulla loro automobile e lo condussero nella pineta di località Dossi-Comuni, nel territorio di Lamezia Terme, dove fu malmenato e rapinato di denaro, telefono cellulare, computer portatile e altri oggetti personali",
+        "durante l'episodio fu inoltre aizzato un cane contro la vittima, che riportò morsi a una mano e a un braccio",
+        "il 24 marzo 2022 il Commissariato di Lamezia Terme eseguì nei confronti di due persone una misura cautelare personale emessa dal GIP su richiesta della Procura, riferendo gravi indizi in relazione ai reati di rapina e porto abusivo di arma; questa fase è registrata come contesto procedurale e non come accertamento definitivo di responsabilità",
+        "le fonti recuperate non indicano il giorno del fatto: il 24 marzo 2022 è conservato esclusivamente come terminus ante quem desunto dall'esecuzione della misura cautelare e non come data attribuita alla rapina"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:dossi-comuni-pineta:occurrence",
+      "basis_source_key": "polizia:questura-catanzaro:attivita-preventiva-repressiva-lamezia-2022",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Pineta di località Dossi-Comuni",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:dossi-comuni-pineta:target",
+      "basis_source_key": "polizia:questura-catanzaro:attivita-preventiva-repressiva-lamezia-2022",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Pineta di località Dossi-Comuni",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
