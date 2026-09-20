@@ -1,0 +1,98 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-unicredit-piazza-rotonda-2011-12-19",
+  "discovered_at": "2026-09-20T09:06:10+02:00",
+  "updated_at": "2026-09-20T09:06:10+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina alla filiale UniCredit di Piazza Rotonda n. 2 a Lamezia Terme il 19 dicembre 2011",
+  "temporal": {
+    "start": "2011-12-19",
+    "end": "2011-12-19",
+    "edtf": "2011-12-19",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "authority:gazzetta-prefettura-catanzaro:2012-02-21:unicredit-piazza-rotonda",
+      "source_type": "public_authority_primary",
+      "provider": "Gazzetta Ufficiale della Repubblica Italiana — Prefettura di Catanzaro",
+      "title": "Decreto di proroga dei termini legali e convenzionali, protocollo n. 2986/12/Gab.",
+      "url": "https://www.gazzettaufficiale.it/eli/gu/2012/02/21/22/p2/pdf",
+      "published_at": "2012-02-21",
+      "retrieved_at": "2026-09-20T09:06:10+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2011-12-19:rapina-unicredit",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, in quattro rapinano filiale Unicredit",
+      "url": "https://www.lametino.it/cronaca/lamezia-in-quattro-rapinano-filiale-unicredit.html",
+      "published_at": "2011-12-19",
+      "retrieved_at": "2026-09-20T09:06:10+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "authority:gazzetta-prefettura-catanzaro:2012-02-21:unicredit-piazza-rotonda",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "il decreto della Prefettura di Catanzaro pubblicato in Gazzetta Ufficiale attesta che lo sportello UniCredit di Piazza Rotonda n. 2 non poté operare regolarmente il 19 dicembre 2011 a causa di una rapina",
+        "la cronaca contemporanea riferisce che il colpo avvenne intorno alle 16:00 e fu compiuto da quattro persone armate di taglierini, che costrinsero gli impiegati a consegnare il denaro custodito in cassa",
+        "la stessa fonte riferisce la fuga a bordo di un'automobile condotta da un complice e indica i Carabinieri come autorità investigativa; in questa ricerca non è stata verificata una successiva decisione giudiziaria definitiva riferibile allo specifico episodio"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:piazza-rotonda-2-unicredit:occurrence",
+      "basis_source_key": "authority:gazzetta-prefettura-catanzaro:2012-02-21:unicredit-piazza-rotonda",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_exact",
+      "evidence_precision": "exact_address",
+      "resolved_precision": "exact_address",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "UniCredit S.p.A. — Agenzia di Lamezia Terme, Piazza Rotonda n. 2",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:piazza-rotonda-2-unicredit:target",
+      "basis_source_key": "authority:gazzetta-prefettura-catanzaro:2012-02-21:unicredit-piazza-rotonda",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_exact",
+      "evidence_precision": "exact_address",
+      "resolved_precision": "exact_address",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "UniCredit S.p.A. — Agenzia di Lamezia Terme, Piazza Rotonda n. 2",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
