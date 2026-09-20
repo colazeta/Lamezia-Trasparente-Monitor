@@ -1,0 +1,125 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-violenze-sessuali-reparto-psichiatria-2004-2007",
+  "discovered_at": "2026-09-20T03:35:00+02:00",
+  "updated_at": "2026-09-20T03:35:00+02:00",
+  "record_status": "verified_source",
+  "event_form": "course_of_conduct",
+  "title": "Violenze sessuali aggravate contestate nel reparto di Psichiatria dell'ospedale di Lamezia Terme tra il 2004 e il 2007",
+  "temporal": {
+    "start": null,
+    "end": "2007-08-14",
+    "edtf": null,
+    "precision": "approximate"
+  },
+  "sources": [
+    {
+      "source_key": "press:quotidiano-nazionale:2007-08-14:violenza-sessuale-psichiatria-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Quotidiano Nazionale",
+      "title": "Violenza sessuale sui pazienti Arrestati medico e due infermieri",
+      "url": "https://www.quotidiano.net/cronaca/2007/08/18/30791-violenza_sessuale_pazienti.shtml",
+      "published_at": "2007-08-14T00:00:00+02:00",
+      "retrieved_at": "2026-09-20T03:35:00+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:lacnews24:2018-01-30:cassazione-violenza-psichiatria-lamezia",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Accusato di aver violentato una paziente, la Cassazione annulla condanna",
+      "url": "https://www.lacnews24.it/cronaca/accusato-di-aver-violentato-una-paziente-la-cassazione-annulla-condanna-r4yyegof",
+      "published_at": "2018-01-30T00:00:00+01:00",
+      "retrieved_at": "2026-09-20T03:35:00+02:00",
+      "support_roles": [
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2021-10-08:assoluzione-psichiatria-lamezia",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, ricorso inammissibile: infermiere assolto dall'accusa di violenza sessuale al Reparto di Psichiatria",
+      "url": "https://www.lametino.it/cronaca/lamezia-ricorso-inammissibile-infermiere-assolto-dall-accusa-di-violenza-sessuale-al-reparto-di-psichiatria.html",
+      "published_at": "2021-10-08T00:00:00+02:00",
+      "retrieved_at": "2026-09-20T03:35:00+02:00",
+      "support_roles": [
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2021-10-08:assoluzione-psichiatria-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Violenza sessuale in ospedale, ricorso inammissibile: assolto un infermiere dopo 14 anni",
+      "url": "https://www.corrieredellacalabria.it/2021/10/08/violenza-sessuale-in-ospedale-ricorso-inammissibile-assolto-un-infermiere-dopo-14-anni/",
+      "published_at": "2021-10-08T00:00:00+02:00",
+      "retrieved_at": "2026-09-20T03:35:00+02:00",
+      "support_roles": [
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:violenza-sessuale-aggravata",
+      "classification_source_key": "press:quotidiano-nazionale:2007-08-14:violenza-sessuale-psichiatria-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La fonte contemporanea riferisce che nel 2007 la Polizia del Commissariato di Lamezia Terme eseguì misure cautelari nei confronti di tre operatori sanitari del reparto di Psichiatria dell'ospedale cittadino nell'ambito di un'indagine per violenza sessuale aggravata ai danni di pazienti ricoverate.",
+        "Secondo la ricostruzione iniziale, quattro degenti avrebbero subito condotte sessualmente violente; la fonte colloca l'inizio delle condotte alla fine del 2004 e riferisce che sarebbero proseguite fino a giorni prossimi all'intervento del 2007. L'estremo finale del record è pertanto un terminus ante quem approssimativo e non una data attribuita ai singoli episodi.",
+        "L'indagine sarebbe stata avviata dopo le segnalazioni di due pazienti al personale del reparto e il successivo interessamento dell'autorità giudiziaria da parte della struttura sanitaria.",
+        "Gli sviluppi giudiziari successivi non consentono di trattare unitariamente le contestazioni come definitivamente accertate: per uno degli operatori coinvolti la Cassazione annullò più volte precedenti decisioni e il relativo procedimento si concluse nel 2021 con un'assoluzione definitiva perché il fatto non sussiste. Il record descrive quindi il corso di condotta oggetto dell'indagine e delle contestazioni, senza attribuire responsabilità penale definitiva a persone specifiche."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:reparto-psichiatria-ospedale:occurrence",
+      "basis_source_key": "press:quotidiano-nazionale:2007-08-14:violenza-sessuale-psichiatria-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "sexual_offence_context",
+      "geometry": null,
+      "place_name": "Reparto di Psichiatria dell'ospedale di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:reparto-psichiatria-ospedale:target",
+      "basis_source_key": "press:quotidiano-nazionale:2007-08-14:violenza-sessuale-psichiatria-lamezia",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "sexual_offence_context",
+      "geometry": null,
+      "place_name": "Reparto di Psichiatria dell'ospedale di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
