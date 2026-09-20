@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-rapina-ufficio-postale-via-aldo-moro-2018-09-15",
   "discovered_at": "2026-09-08T11:39:49+02:00",
-  "updated_at": "2026-09-13T16:26:50+02:00",
+  "updated_at": "2026-09-20T01:13:31+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Rapina all'ufficio postale di via Aldo Moro a Lamezia Terme il 15 settembre 2018",
@@ -72,6 +72,32 @@
         "location_support",
         "corroboration"
       ]
+    },
+    {
+      "source_key": "press:lametino:2019-02-21:cenerentola-rapine-via-aldo-moro",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, operazione “Cenerentola”: i rapinatori incastrati dalla scarpa perduta - VIDEO",
+      "url": "https://www.lametino.it/cronaca/lamezia-operazione-cenerentola-i-rapinatori-incastrati-dalla-scarpa-perduta-video.html",
+      "published_at": "2019-02-21",
+      "retrieved_at": "2026-09-20T01:13:31+02:00",
+      "support_roles": [
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lameziaterme-it:2019-02-20:cenerentola-11-arresti",
+      "source_type": "press_secondary",
+      "provider": "LameziaTerme.it",
+      "title": "Furti e rapine in uffici postali, 11 arresti. Il basista è lametino",
+      "url": "https://www.lameziaterme.it/lamezia-furti-rapine-uffici-postali",
+      "published_at": "2019-02-20",
+      "retrieved_at": "2026-09-20T01:13:31+02:00",
+      "support_roles": [
+        "procedural_context",
+        "corroboration"
+      ]
     }
   ],
   "offences": [
@@ -88,7 +114,8 @@
       "situational_context": [
         "due persone si introdussero nell'ufficio postale in prossimità dell'orario di chiusura mentre erano in corso operazioni di caricamento dello sportello bancomat",
         "le fonti coeve riferiscono che fu sottratta una cassetta contenente denaro e che i responsabili si allontanarono facendo perdere le tracce",
-        "i Carabinieri intervennero sul posto e avviarono le indagini; non è stato individuato un successivo sviluppo giudiziario pubblico sufficientemente verificabile da collegare con certezza a questo specifico episodio"
+        "nel febbraio 2019 l'operazione Cenerentola dei Carabinieri di Lamezia Terme ricondusse all'indagine anche la rapina di settembre 2018 e indicò per quel colpo un bottino di circa 30.000 euro",
+        "nell'ambito dell'indagine complessiva il 20 febbraio 2019 fu eseguita un'ordinanza di custodia cautelare in carcere nei confronti di 11 indagati, emessa su richiesta della Procura della Repubblica presso il Tribunale di Lamezia Terme; la fase cautelare non equivale ad accertamento definitivo di responsabilità"
       ],
       "cyber_related": null,
       "affected_object_count": null
