@@ -1,0 +1,73 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-cessione-cocaina-coma-2012-11-05",
+  "discovered_at": "2026-09-20T02:52:20+02:00",
+  "updated_at": "2026-09-20T02:52:20+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Cessione di cocaina a Lamezia Terme il 5 novembre 2012, collegata a un successivo ricovero in coma",
+  "temporal": {
+    "start": "2012-11-05",
+    "end": "2012-11-05",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "source:lametino-2013-06-18-coma-spaccio",
+      "source_type": "press_secondary",
+      "provider": "il Lametino.it",
+      "title": "Lamezia: Giovane assume droga e va in coma, arrestati spacciatori",
+      "url": "https://www.lametino.it/cronaca/lamezia-giovane-assume-droga-e-va-in-coma-arrestati-spacciatori.html",
+      "published_at": "2013-06-18",
+      "retrieved_at": "2026-09-20T02:52:20+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "source:nuovacosenza-2013-06-18-coma-spaccio",
+      "source_type": "press_secondary",
+      "provider": "Nuova Cosenza Quotidiano",
+      "title": "Assume droga e finisce in coma: arrestati gli spacciatori a Lamezia",
+      "url": "http://www.nuovacosenza.com/cs/13/giu/18/spacciolamez.html",
+      "published_at": "2013-06-18",
+      "retrieved_at": "2026-09-20T02:52:20+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:spaccio-stupefacenti",
+      "classification_source_key": "source:lametino-2013-06-18-coma-spaccio",
+      "classification_basis": "source_stated_legal",
+      "attempt_status": "completed",
+      "situational_context": [
+        "la ricostruzione giornalistica, riportando le dichiarazioni della Polizia di Stato, colloca al 5 novembre 2012 la cessione di una dose descritta come cocaina tagliata male a un giovane che, dopo l'assunzione, fu ricoverato in stato di coma",
+        "le indagini avviate dopo il ricovero e sviluppate anche mediante intercettazioni portarono nel giugno 2013 all'esecuzione di misure cautelari nei confronti di due persone per spaccio di sostanze stupefacenti",
+        "le fonti recuperate descrivono una più ampia attività di spaccio nelle zone di Sambiase e Sant'Eufemia, ma non attestano che la specifica cessione del 5 novembre 2012 sia avvenuta in uno di tali luoghi; per questo il record non attribuisce all'episodio una localizzazione sub-comunale"
+      ]
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:cessione-non-precisata-lamezia:occurrence",
+      "basis_source_key": "source:lametino-2013-06-18-coma-spaccio",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "place_name": "Luogo della specifica cessione non precisato nel Comune di Lamezia Terme; le fonti recuperate non attestano strada, quartiere o località per l'episodio del 5 novembre 2012"
+    }
+  ]
+}
