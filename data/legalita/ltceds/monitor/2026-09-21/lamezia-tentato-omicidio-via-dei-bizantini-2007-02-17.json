@@ -1,0 +1,115 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-tentato-omicidio-via-dei-bizantini-2007-02-17",
+  "discovered_at": "2026-09-21T04:09:01+02:00",
+  "updated_at": "2026-09-21T04:09:01+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Tentato omicidio con arma da fuoco in via dei Bizantini, quartiere Capizzaglie, il 17 febbraio 2007",
+  "temporal": {
+    "start": "2007-02-17",
+    "end": "2007-02-17",
+    "edtf": "2007-02-17",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:lametino.it:2014-07-11:processo-perseo-via-dei-bizantini",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Processo Perseo, emergono nuovi particolari durante udienza",
+      "url": "https://www.lametino.it/cronaca/processo-perseo-emergono-nuovi-particolari-durante-udienza.html",
+      "published_at": "2014-07-11",
+      "retrieved_at": "2026-09-21T04:09:01+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:lametino.it:2014-07-25:processo-perseo-bossoli-via-dei-bizantini",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Processo Perseo, nominato perito su intercettazioni",
+      "url": "https://www.lametino.it/cronaca/processo-perseo-nominato-perito-su-intercettazioni.html",
+      "published_at": "2014-07-25",
+      "retrieved_at": "2026-09-21T04:09:01+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:tentato-omicidio",
+      "classification_source_key": "press:lametino.it:2014-07-25:processo-perseo-bossoli-via-dei-bizantini",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "iccs_label": null,
+      "istat_code": null,
+      "istat_label": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "agguato con arma da fuoco",
+        "numerosi colpi esplosi contro un gruppo di persone",
+        "una persona rimasta ferita alla schiena"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-dei-bizantini-capizzaglie:occurrence",
+      "basis_source_key": "press:lametino.it:2014-07-11:processo-perseo-via-dei-bizantini",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via dei Bizantini",
+      "neighbourhood": "Capizzaglie",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-dei-bizantini-capizzaglie:target",
+      "basis_source_key": "press:lametino.it:2014-07-11:processo-perseo-via-dei-bizantini",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via dei Bizantini",
+      "neighbourhood": "Capizzaglie",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-dei-bizantini-135:recovery",
+      "basis_source_key": "press:lametino.it:2014-07-25:processo-perseo-bossoli-via-dei-bizantini",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_exact",
+      "evidence_precision": "exact_address",
+      "resolved_precision": "exact_address",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via dei Bizantini 135",
+      "neighbourhood": "Capizzaglie",
+      "iccs_location_type": null
+    }
+  ]
+}
