@@ -1,0 +1,132 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-tentato-furto-aggravato-splendidi-e-splendenti-via-del-progresso-2026-01-11",
+  "discovered_at": "2026-09-21T06:46:35+02:00",
+  "updated_at": "2026-09-21T06:46:35+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Tentato furto aggravato a Splendidi e Splendenti in via del Progresso l'11 gennaio 2026",
+  "temporal": {
+    "start": "2026-01-11",
+    "end": "2026-01-11",
+    "edtf": "2026-01-11",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:lametino:2026-01-15:due-colpi-cantine-lento-splendidi",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, due colpi in una notte: ladri sorpresi dai Carabinieri, uno si nasconde in un cassonetto dei rifiuti e viene arrestato",
+      "url": "https://www.lametino.it/cronaca/lamezia-due-colpi-in-una-notte-ladri-sorpresi-dai-carabinieri-uno-si-nasconde-in-un-cassonetto-dei-rifiuti-e-viene-arrestato.html",
+      "published_at": "2026-01-15",
+      "retrieved_at": "2026-09-21T06:46:35+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:wesud:2026-01-15:furto-cantine-lento-splendidi",
+      "source_type": "press_secondary",
+      "provider": "WeSud",
+      "title": "Ladro sorpreso dai Carabinieri si nasconde in un cassonetto, arrestato",
+      "url": "https://wesud.it/ladro-sorpreso-dai-carabinieri-si-nasconde-in-un-cassonetto-arrestato",
+      "published_at": "2026-01-15",
+      "retrieved_at": "2026-09-21T06:46:35+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corrieredellacalabria:2026-01-15:furti-via-progresso-cassonetto",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Furti a Lamezia, i carabinieri sorprendono i ladri: arrestato un 42enne (si era nascosto in un cassonetto)",
+      "url": "https://www.corrieredellacalabria.it/2026/01/15/furti-a-lamezia-i-carabinieri-sorprendono-i-ladri-arrestato-un-42enne-si-era-nascosto-in-un-cassonetto",
+      "published_at": "2026-01-15T08:22:00+01:00",
+      "retrieved_at": "2026-09-21T06:46:35+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:furto-aggravato",
+      "classification_source_key": "press:wesud:2026-01-15:furto-cantine-lento-splendidi",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "Le fonti riferiscono che, dopo il furto già consumato nelle pertinenze delle Cantine Lento, furono utilizzati attrezzi da lavoro sottratti nell'azienda vinicola per iniziare a forare il muro perimetrale dell'adiacente punto vendita Splendidi e Splendenti.",
+        "L'intervento dei Carabinieri interruppe l'azione prima che il furto nel negozio adiacente fosse portato a compimento; per questo il record distingue questo tentativo dal furto consumato alle Cantine Lento.",
+        "La qualificazione tassonomica come furto aggravato tentato è mantenuta provvisoria perché le fonti recuperate descrivono con chiarezza la condotta e l'interruzione, ma non è stato reperito un atto giudiziario o un comunicato primario che esponga separatamente la contestazione giuridica riferita a questo secondo bersaglio."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-del-progresso:splendidi-e-splendenti:occurrence",
+      "basis_source_key": "press:wesud:2026-01-15:furto-cantine-lento-splendidi",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Splendidi e Splendenti, via del Progresso",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-del-progresso:splendidi-e-splendenti:target",
+      "basis_source_key": "press:wesud:2026-01-15:furto-cantine-lento-splendidi",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Splendidi e Splendenti, via del Progresso",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:2026-01-11:cassonetto:arrest",
+      "basis_source_key": "press:wesud:2026-01-15:furto-cantine-lento-splendidi",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Cassonetto dei rifiuti non ulteriormente localizzato durante la fuga",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
