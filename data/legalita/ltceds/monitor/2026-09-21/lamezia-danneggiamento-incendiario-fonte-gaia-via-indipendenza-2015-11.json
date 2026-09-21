@@ -1,0 +1,85 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-danneggiamento-incendiario-fonte-gaia-via-indipendenza-2015-11",
+  "discovered_at": "2026-09-21T20:51:06+02:00",
+  "updated_at": "2026-09-21T20:51:06+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Danneggiamento mediante incendio al negozio La Fonte Gaia in via Indipendenza, accertato entro il 18 novembre 2015",
+  "temporal": {
+    "start": null,
+    "end": "2015-11-18",
+    "edtf": null,
+    "precision": "approximate"
+  },
+  "sources": [
+    {
+      "source_key": "press:il-lametino:2015-11-18:fonte-gaia-via-indipendenza",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: bottiglia incendiaria davanti negozio in via Indipendenza - REAZIONI",
+      "url": "https://www.lametino.it/cronaca/lamezia-bottiglia-incendiaria-davanti-negozio-in-via-indipendenza.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-21T20:51:06+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:danneggiamento",
+      "classification_source_key": "press:il-lametino:2015-11-18:fonte-gaia-via-indipendenza",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La fonte contemporanea riferisce che una bottiglia di benzina collocata davanti al negozio La Fonte Gaia provocò un incendio e danni alla saracinesca e all'insegna.",
+        "La fonte documenta l'intervento dei Vigili del Fuoco e delle forze dell'ordine, ma non fornisce una qualificazione giuridica formale del fatto; la classificazione come danneggiamento resta pertanto provvisoria.",
+        "La fonte non separa con sufficiente chiarezza la data del fatto dalla data di pubblicazione; il 18 novembre 2015 è conservato esclusivamente come terminus ante quem e non come data esatta inferita.",
+        "Non è stato reperito in questa iterazione un successivo provvedimento giudiziario o comunicato istituzionale che consenta di rafforzare lo stato probatorio o attribuire un movente estorsivo."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:fonte-gaia-via-indipendenza:occurrence",
+      "basis_source_key": "press:il-lametino:2015-11-18:fonte-gaia-via-indipendenza",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Negozio La Fonte Gaia, via Indipendenza",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:fonte-gaia-via-indipendenza:target",
+      "basis_source_key": "press:il-lametino:2015-11-18:fonte-gaia-via-indipendenza",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Negozio La Fonte Gaia, via Indipendenza",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
