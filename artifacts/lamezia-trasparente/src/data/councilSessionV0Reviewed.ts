@@ -71,6 +71,7 @@ const COMMISSION_VI_RESEARCHED_AT = "2026-08-31T22:02:47Z";
 const SEPTEMBER_COMMISSION_RESEARCHED_AT = "2026-09-07T04:19:06Z";
 const MID_SEPTEMBER_COMMISSION_RESEARCHED_AT = "2026-09-12T10:18:08Z";
 const LATE_SEPTEMBER_COMMISSION_RESEARCHED_AT = "2026-09-19T09:34:42Z";
+const SEPTEMBER_22_25_COMMISSION_RESEARCHED_AT = "2026-09-21T22:07:23Z";
 const SERRA_ANNUNZIATA_CONTEXT_RESEARCHED_AT = "2026-09-19T15:49:21Z";
 const MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT = "2026-09-12T21:51:17Z";
 const SCHOOL_TRANSPORT_CONTEXT_RESEARCHED_AT = "2026-09-14T10:13:39Z";
@@ -414,6 +415,16 @@ const lateSeptemberCommissionContextResearch: CouncilSessionV0ContextResearch =
     media: [],
   };
 
+const september22To25CommissionContextResearch: CouncilSessionV0ContextResearch =
+  {
+    status: "checked_no_match",
+    checkedAt: SEPTEMBER_22_25_COMMISSION_RESEARCHED_AT,
+    searchNote:
+      "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, il Lametino e risultati indicizzati per le sedute di IV e V Commissione dal 22 al 25 settembre 2026. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alle singole sedute. Gli ordini del giorno ufficiali sono disponibili e non viene ricostruita un'agenda editoriale.",
+    articles: [],
+    media: [],
+  };
+
 const commissionIiiWasteMotionContextResearch: CouncilSessionV0ContextResearch =
   {
     status: "reviewed_matches",
@@ -485,6 +496,7 @@ interface LateSeptemberNoticeInput {
   subject: string;
   sourceContentHash: string;
   documentSha256: string;
+  reviewedAt?: string;
 }
 
 function lateSeptemberNotice({
@@ -494,6 +506,7 @@ function lateSeptemberNotice({
   subject,
   sourceContentHash,
   documentSha256,
+  reviewedAt = LATE_SEPTEMBER_COMMISSION_RESEARCHED_AT,
 }: LateSeptemberNoticeInput): {
   candidate: InstitutionalSessionCandidate;
   provenance: CouncilSessionV0Provenance;
@@ -504,7 +517,7 @@ function lateSeptemberNotice({
     id: `albo-${publicationId}`,
     source: "Albo Pretorio Comune di Lamezia Terme",
     source_url: OFFICIAL_ALBO_URL,
-    retrieved_at: LATE_SEPTEMBER_COMMISSION_RESEARCHED_AT,
+    retrieved_at: reviewedAt,
     publication_number: publicationNumber,
     publication_start: publicationStart,
     publication_end: publicationEnd,
@@ -530,7 +543,7 @@ function lateSeptemberNotice({
       documentSha256,
       embeddedDocumentSha256: null,
       retrievedAt: candidate.source.retrievedAt,
-      reviewedAt: LATE_SEPTEMBER_COMMISSION_RESEARCHED_AT,
+      reviewedAt,
       sourceReviewStatus: "reviewed_against_official_attachment",
     },
   };
@@ -782,6 +795,32 @@ const commissionIiiSeptember21Notice = lateSeptemberNotice({
     "7d6e5cc50baeb9e9d79c2b668de35004a3134587fd714964170828c2228adee3",
   documentSha256:
     "8eebc4e71f5def4118e620b94ea9855319f39f9c548aedb7d4860d19a42b6f7f",
+});
+
+const commissionVSeptember22To25Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3011",
+  publicationStart: "2026-09-21",
+  publicationEnd: "2026-09-28",
+  subject:
+    "Convocazione 5° Commissione Consiliare Permanente. Calendario lavori.",
+  sourceContentHash:
+    "8baf6844580bd1b54d2ee18a669183432df8c6512eb5cd5972e70d69fcdbeae9",
+  documentSha256:
+    "faa773ca9b02a88e8e7de334843e86dc20daa153f835f2acf50a2ca88a1754f5",
+  reviewedAt: SEPTEMBER_22_25_COMMISSION_RESEARCHED_AT,
+});
+
+const commissionIvSeptember22And23Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3012",
+  publicationStart: "2026-09-21",
+  publicationEnd: "2026-09-28",
+  subject:
+    "Convocazione 4° Commissione Consiliare Permanente. Calendario lavori.",
+  sourceContentHash:
+    "db8e6b45c1fc183b22c3d7aa421187efe779bd05c67b550038eb7712ac38fa3d",
+  documentSha256:
+    "85c4218e626ff552d3663519672675fd42d05a212a392f66683c3d1fba011492",
+  reviewedAt: SEPTEMBER_22_25_COMMISSION_RESEARCHED_AT,
 });
 
 const councilCandidate = requireCandidate({
@@ -1391,6 +1430,18 @@ const wasteAbandonmentMotionAgenda = [
   'Mozione prot. n. 71796/2026: "Interventi urgenti di bonifica, sicurezza, controllo e contrasto all\'abbandono dei rifiuti in località Serra e località Annunziata".',
 ] as const;
 
+const municipalAssetsRegulationAgenda = [
+  "Regolamento sulla gestione e valorizzazione dei beni comunali.",
+] as const;
+
+const roadNetworkWorksRulesAgenda = [
+  "Disciplinare per interventi sulla rete stradale.",
+] as const;
+
+const streetArtGiuliaUrbanaAgenda = [
+  "Regolamento comunale per la promozione della Street Art. Audizione del sig. Giacomo Marinaro, curatore e direttore artistico del progetto Giulia Urbana.",
+] as const;
+
 const councilVerifiedSession: CouncilSessionV0 = {
   id: "albo-2026-2673-consiglio-comunale",
   kind: "council",
@@ -1494,6 +1545,80 @@ const councilVerifiedSession: CouncilSessionV0 = {
 };
 
 export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
+  septemberCommissionSession({
+    id: "albo-2026-3011-commissione-v-2026-09-25",
+    title: "V Commissione consiliare permanente — seduta del 25 settembre 2026",
+    scheduledAt: "2026-09-25T10:00:00+02:00",
+    agenda: roadNetworkWorksRulesAgenda,
+    candidate: commissionVSeptember22To25Notice.candidate,
+    provenance: commissionVSeptember22To25Notice.provenance,
+    contextResearch: september22To25CommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della V Commissione",
+    calendarSummary:
+      "La stessa convocazione programma quattro sedute della V Commissione dal 22 al 25 settembre 2026; il 25 settembre è fissata alle 10:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-3011-commissione-v-2026-09-24",
+    title: "V Commissione consiliare permanente — seduta del 24 settembre 2026",
+    scheduledAt: "2026-09-24T10:00:00+02:00",
+    agenda: municipalAssetsRegulationAgenda,
+    candidate: commissionVSeptember22To25Notice.candidate,
+    provenance: commissionVSeptember22To25Notice.provenance,
+    contextResearch: september22To25CommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della V Commissione",
+    calendarSummary:
+      "La stessa convocazione programma quattro sedute della V Commissione dal 22 al 25 settembre 2026; il 24 settembre è fissata alle 10:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-3011-commissione-v-2026-09-23",
+    title: "V Commissione consiliare permanente — seduta del 23 settembre 2026",
+    scheduledAt: "2026-09-23T12:00:00+02:00",
+    agenda: roadNetworkWorksRulesAgenda,
+    candidate: commissionVSeptember22To25Notice.candidate,
+    provenance: commissionVSeptember22To25Notice.provenance,
+    contextResearch: september22To25CommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della V Commissione",
+    calendarSummary:
+      "La stessa convocazione programma quattro sedute della V Commissione dal 22 al 25 settembre 2026; il 23 settembre è fissata alle 12:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-3012-commissione-iv-2026-09-23",
+    title:
+      "IV Commissione consiliare permanente — seduta del 23 settembre 2026",
+    scheduledAt: "2026-09-23T11:00:00+02:00",
+    agenda: streetArtAgenda,
+    candidate: commissionIvSeptember22And23Notice.candidate,
+    provenance: commissionIvSeptember22And23Notice.provenance,
+    contextResearch: september22To25CommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della IV Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della IV Commissione: 22 settembre alle 10:00 e 23 settembre 2026 alle 11:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-3011-commissione-v-2026-09-22",
+    title: "V Commissione consiliare permanente — seduta del 22 settembre 2026",
+    scheduledAt: "2026-09-22T11:00:00+02:00",
+    agenda: municipalAssetsRegulationAgenda,
+    candidate: commissionVSeptember22To25Notice.candidate,
+    provenance: commissionVSeptember22To25Notice.provenance,
+    contextResearch: september22To25CommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della V Commissione",
+    calendarSummary:
+      "La stessa convocazione programma quattro sedute della V Commissione dal 22 al 25 settembre 2026; il 22 settembre è fissata alle 11:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-3012-commissione-iv-2026-09-22",
+    title:
+      "IV Commissione consiliare permanente — seduta del 22 settembre 2026",
+    scheduledAt: "2026-09-22T10:00:00+02:00",
+    agenda: streetArtGiuliaUrbanaAgenda,
+    candidate: commissionIvSeptember22And23Notice.candidate,
+    provenance: commissionIvSeptember22And23Notice.provenance,
+    contextResearch: september22To25CommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della IV Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della IV Commissione: 22 settembre alle 10:00 e 23 settembre 2026 alle 11:00.",
+  }),
   septemberCommissionSession({
     id: "albo-2026-3001-commissione-iii-2026-09-21",
     title:

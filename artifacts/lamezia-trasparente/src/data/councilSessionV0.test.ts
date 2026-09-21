@@ -197,7 +197,7 @@ describe("councilSessionV0", () => {
   });
 
   it("publishes source-traceable records for both council and commission notices", () => {
-    expect(councilSessionV0ReviewedRecords).toHaveLength(29);
+    expect(councilSessionV0ReviewedRecords).toHaveLength(35);
     expect(
       new Set(councilSessionV0ReviewedRecords.map((item) => item.kind)),
     ).toEqual(new Set(["council", "commission"]));
@@ -707,8 +707,7 @@ describe("councilSessionV0", () => {
     ]);
 
     const wasteMotionSession = sessions.find(
-      (session) =>
-        session.id === "albo-2026-3001-commissione-iii-2026-09-21",
+      (session) => session.id === "albo-2026-3001-commissione-iii-2026-09-21",
     );
     expect(wasteMotionSession?.contextResearch).toEqual(
       expect.objectContaining({
@@ -763,6 +762,85 @@ describe("councilSessionV0", () => {
           }),
         );
       }
+      expect(session.contextResearch.searchNote).toMatch(/Parallel Search/i);
+      expect(session.dataLimits.value?.join(" ")).toMatch(
+        /sede non è indicata.*non viene inferita/i,
+      );
+    }
+  });
+
+  it("materializes the 22–25 September IV and V Commission calendars", () => {
+    const sessions = councilSessionV0ReviewedRecords.filter((session) =>
+      ["2026/3011", "2026/3012"].includes(
+        session.provenance?.publicationNumber ?? "",
+      ),
+    );
+
+    expect(sessions).toHaveLength(6);
+    expect(sessions.map((session) => session.scheduledAt.value)).toEqual([
+      "2026-09-25T10:00:00+02:00",
+      "2026-09-24T10:00:00+02:00",
+      "2026-09-23T12:00:00+02:00",
+      "2026-09-23T11:00:00+02:00",
+      "2026-09-22T11:00:00+02:00",
+      "2026-09-22T10:00:00+02:00",
+    ]);
+
+    const ivSeptember22 = sessions.find(
+      (session) => session.id === "albo-2026-3012-commissione-iv-2026-09-22",
+    );
+    expect(ivSeptember22?.agenda.value).toEqual([
+      "Regolamento comunale per la promozione della Street Art. Audizione del sig. Giacomo Marinaro, curatore e direttore artistico del progetto Giulia Urbana.",
+    ]);
+
+    const expectedProvenance = new Map([
+      [
+        "2026/3011",
+        {
+          sourceContentHash:
+            "8baf6844580bd1b54d2ee18a669183432df8c6512eb5cd5972e70d69fcdbeae9",
+          documentSha256:
+            "faa773ca9b02a88e8e7de334843e86dc20daa153f835f2acf50a2ca88a1754f5",
+        },
+      ],
+      [
+        "2026/3012",
+        {
+          sourceContentHash:
+            "db8e6b45c1fc183b22c3d7aa421187efe779bd05c67b550038eb7712ac38fa3d",
+          documentSha256:
+            "85c4218e626ff552d3663519672675fd42d05a212a392f66683c3d1fba011492",
+        },
+      ],
+    ]);
+
+    for (const session of sessions) {
+      const publicationNumber = session.provenance?.publicationNumber ?? "";
+      const provenance = expectedProvenance.get(publicationNumber);
+      expect(provenance).toBeDefined();
+      if (!provenance)
+        throw new Error(`Missing provenance for ${publicationNumber}`);
+      expect(session.provenance).toEqual(
+        expect.objectContaining({
+          sourceContentHash: provenance.sourceContentHash,
+          documentSha256: provenance.documentSha256,
+          archivedDocumentUrl: expect.stringContaining(
+            provenance.documentSha256,
+          ),
+          sourceReviewStatus: "reviewed_against_official_attachment",
+        }),
+      );
+      expect(session.scheduledAt.sourceStatus).toBe("verificato");
+      expect(session.agenda.sourceStatus).toBe("verificato");
+      expect(session.sessionStatus.value).toBe("non_verificata");
+      expect(session.contextResearch).toEqual(
+        expect.objectContaining({
+          status: "checked_no_match",
+          checkedAt: "2026-09-21T22:07:23Z",
+          articles: [],
+          media: [],
+        }),
+      );
       expect(session.contextResearch.searchNote).toMatch(/Parallel Search/i);
       expect(session.dataLimits.value?.join(" ")).toMatch(
         /sede non è indicata.*non viene inferita/i,
