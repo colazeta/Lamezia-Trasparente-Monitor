@@ -1,0 +1,113 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-tentato-omicidio-via-dei-bizantini-capizzaglie-2011-12-11",
+  "discovered_at": "2026-09-21T04:48:00+02:00",
+  "updated_at": "2026-09-21T04:48:00+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Tentato omicidio con arma da fuoco in via dei Bizantini, quartiere Capizzaglie, l'11 dicembre 2011",
+  "temporal": {
+    "start": "2011-12-11",
+    "end": "2011-12-11",
+    "edtf": "2011-12-11",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:cn24tv:2011-12-11:operaio-ferito-agguato-lamezia",
+      "source_type": "press_secondary",
+      "provider": "CN24TV",
+      "title": "Lamezia: operaio ferito in agguato",
+      "url": "https://cn24tv.it/news/37547/lamezia-operaio-ferito-in-agguato.html",
+      "published_at": "2011-12-11T18:40:00+01:00",
+      "retrieved_at": "2026-09-21T04:48:00+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lacnews24:2016-08-06:duplice-tentato-omicidio-lamezia",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Duplice tentato omicidio a Lamezia: due arresti - FOTO",
+      "url": "https://www.lacnews24.it/cronaca/duplice-tentato-omicidio-a-lamezia-due-arresti-foto-ls9f80s1",
+      "published_at": "2016-08-06T10:51:00+02:00",
+      "retrieved_at": "2026-09-21T04:48:00+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:cn24tv:2018-01-17:tentato-duplice-omicidio-condanne",
+      "source_type": "press_secondary",
+      "provider": "CN24TV",
+      "title": "Tentato duplice omicidio, pesanti condanne per mandante ed esecutore",
+      "url": "https://cn24tv.it/news/167378/tentato-duplice-omicidio-pesanti-condanne-per-mandante-ed-esecutore.html",
+      "published_at": "2018-01-17T13:25:00+01:00",
+      "retrieved_at": "2026-09-21T04:48:00+02:00",
+      "support_roles": [
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:tentato-omicidio",
+      "classification_source_key": "press:lacnews24:2016-08-06:duplice-tentato-omicidio-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "L'11 dicembre 2011, nel quartiere Capizzaglie, nove colpi di pistola furono esplosi in via dei Bizantini; la persona presa di mira fu raggiunta da sei colpi e un minore che si trovava nelle vicinanze rimase ferito a un piede.",
+        "Le ricostruzioni contemporanee e investigative convergono su via dei Bizantini e sul quartiere Capizzaglie, ma descrivono in modo non uniforme il punto commerciale immediatamente prospiciente; per evitare falsa precisione la localizzazione è risolta al solo segmento stradale.",
+        "Nel 2016 l'episodio fu contestato come tentato omicidio aggravato nell'ambito dell'indagine Chimera; nel gennaio 2018 il GUP pronunciò condanne in rito abbreviato. Non è stata reperita in questa iterazione una fonte che documenti il successivo giudicato definitivo."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-dei-bizantini-capizzaglie:occurrence",
+      "basis_source_key": "press:lacnews24:2016-08-06:duplice-tentato-omicidio-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "minor_or_vulnerable",
+      "geometry": null,
+      "place_name": "Via dei Bizantini",
+      "neighbourhood": "Capizzaglie",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-dei-bizantini-capizzaglie:target",
+      "basis_source_key": "press:lacnews24:2016-08-06:duplice-tentato-omicidio-lamezia",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "minor_or_vulnerable",
+      "geometry": null,
+      "place_name": "Via dei Bizantini",
+      "neighbourhood": "Capizzaglie",
+      "iccs_location_type": null
+    }
+  ]
+}
