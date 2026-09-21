@@ -1,0 +1,84 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-ufficio-esattoria-2007-03-12",
+  "discovered_at": "2026-09-21T15:09:53+02:00",
+  "updated_at": "2026-09-21T15:09:53+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina all'ufficio dell'esattoria di Lamezia Terme il 12 marzo 2007",
+  "temporal": {
+    "start": "2007-03-12",
+    "end": "2007-03-12",
+    "edtf": null,
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:nuova-cosenza:2007-03-12:rapina-ufficio-esattoria",
+      "source_type": "press_secondary",
+      "provider": "Nuova Cosenza",
+      "title": "Lamezia/ Rapina all’ufficio esattoriale, bottino 1.000 euro",
+      "url": "https://www.nuovacosenza.com/cs/07/marzo/ultime.html",
+      "published_at": "2007-03-12",
+      "retrieved_at": "2026-09-21T15:09:53+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "press:nuova-cosenza:2007-03-12:rapina-ufficio-esattoria",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La fonte contemporanea descrive espressamente il fatto come rapina compiuta il 12 marzo 2007 nell'ufficio dell'esattoria di Lamezia Terme da tre persone, due uomini e una donna, armate di taglierini.",
+        "I rapinatori superarono la porta blindata approfittando della contemporanea uscita del direttore e sottrassero circa 700 euro dalle casse dell'ufficio.",
+        "Due impiegati furono inoltre rapinati dei portafogli, contenenti complessivamente circa 300 euro; gli autori si allontanarono a piedi e la fonte riferisce che le indagini erano condotte dalla Polizia."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:ufficio-esattoria:2007-03-12:occurrence",
+      "basis_source_key": "press:nuova-cosenza:2007-03-12:rapina-ufficio-esattoria",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Ufficio dell'esattoria di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:ufficio-esattoria:2007-03-12:target",
+      "basis_source_key": "press:nuova-cosenza:2007-03-12:rapina-ufficio-esattoria",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Ufficio dell'esattoria di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
