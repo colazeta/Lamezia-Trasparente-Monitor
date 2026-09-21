@@ -1,0 +1,100 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-furto-tabacchi-greco-via-eroi-di-sapri-2013-09-22",
+  "discovered_at": "2026-09-20T21:28:51+02:00",
+  "updated_at": "2026-09-20T21:28:51+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Furto aggravato al Bar Tabacchi Greco in via Eroi di Sapri",
+  "temporal": {
+    "start": "2013-09-22",
+    "end": "2013-09-22",
+    "edtf": "2013-09-22",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:ltnews:2013-11-29:furto-tabacchi-greco",
+      "source_type": "press_secondary",
+      "provider": "LTNews Lamezia Terme",
+      "title": "Lamezia, 32enne in manette per furto aggravato e danneggiamento",
+      "url": "https://www.lameziatermenews.it/citta/10312-lamezia-32enne-in-manette-per-furto-aggravato-e-danneggiamento.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-20T21:28:51+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:furto-tabacchi-greco",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: Tentava di occupare alloggio Aterp, arrestato per furto e danneggiamento",
+      "url": "https://www.lametino.it/Cronaca/lamezia-tentava-di-occupare-alloggio-aterp-arrestato-per-furto-e-danneggiamento.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-20T21:28:51+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:furto-aggravato",
+      "classification_source_key": "press:il-lametino:furto-tabacchi-greco",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti ricostruiscono un furto consumato il 22 settembre 2013 ai danni del Bar Tabacchi Greco in via Eroi di Sapri, nel Comune di Lamezia Terme",
+        "dal locale fu asportata una macchina cambia monete, successivamente rinvenuta; le fonti consultate non indicano il luogo del rinvenimento e non viene quindi materializzata una localizzazione di recovery",
+        "le indagini dei Carabinieri portarono successivamente all'individuazione di uno dei presunti autori e all'esecuzione di una misura cautelare; il record non tratta tale fase come accertamento definitivo di responsabilità",
+        "le stesse cronache descrivono anche un distinto episodio di danneggiamento relativo a un alloggio Aterp in via M. Nicotera, escluso da questo evento per non fondere fatti differenti"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:bar-tabacchi-greco-via-eroi-di-sapri:occurrence",
+      "basis_source_key": "press:ltnews:2013-11-29:furto-tabacchi-greco",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Bar Tabacchi Greco, Via Eroi di Sapri",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:bar-tabacchi-greco-via-eroi-di-sapri:target",
+      "basis_source_key": "press:ltnews:2013-11-29:furto-tabacchi-greco",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Bar Tabacchi Greco, Via Eroi di Sapri",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
