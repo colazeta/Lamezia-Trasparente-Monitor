@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-omicidio-centro-commerciale-i-pini-via-del-progresso-2003-10",
   "discovered_at": "2026-09-21T07:14:06+02:00",
-  "updated_at": "2026-09-21T07:14:06+02:00",
+  "updated_at": "2026-09-21T07:27:00+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Omicidio nel parcheggio del Centro Commerciale I Pini in via del Progresso nell'ottobre 2003",
