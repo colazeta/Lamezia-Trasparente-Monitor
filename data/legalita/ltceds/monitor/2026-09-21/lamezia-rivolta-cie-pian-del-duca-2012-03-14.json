@@ -1,0 +1,148 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rivolta-cie-pian-del-duca-2012-03-14",
+  "discovered_at": "2026-09-21T18:42:52+02:00",
+  "updated_at": "2026-09-21T18:42:52+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rivolta con danneggiamenti, lesioni e resistenza durante una fuga dal CIE di Pian del Duca il 14 marzo 2012",
+  "temporal": {
+    "start": "2012-03-14",
+    "end": "2012-03-14",
+    "edtf": null,
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:il-lametino:2012-03-22:rivolta-fuga-cie-pian-del-duca",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, due anni e sei mesi ai marocchini che hanno tentato la fuga dal Cie",
+      "url": "https://www.lametino.it/cronaca/lamezia-due-anni-e-sei-mesi-ai-marocchini-che-hanno-tentato-la-fuga-dal-cie.html",
+      "published_at": "2012-03-22",
+      "retrieved_at": "2026-09-21T18:42:52+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "public:camera-deputati:2012-01-25:cie-pian-del-duca-lamezia",
+      "source_type": "public_authority_primary",
+      "provider": "Camera dei deputati",
+      "title": "Atti Parlamentari, XVI legislatura, Allegato B ai resoconti, seduta del 25 gennaio 2012",
+      "url": "https://documenti.camera.it/_dati/leg16/lavori/stenografici/sed576/BINTERO.pdf",
+      "published_at": "2012-01-25",
+      "retrieved_at": "2026-09-21T18:42:52+02:00",
+      "support_roles": [
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:resistenza-a-pubblico-ufficiale",
+      "classification_source_key": "press:il-lametino:2012-03-22:rivolta-fuga-cie-pian-del-duca",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La fonte sul processo indica espressamente la resistenza a pubblico ufficiale tra i reati contestati per i fatti del 14 marzo 2012.",
+        "La ricostruzione riferisce che, durante la fuga dal CIE, furono lanciati mattoni e calcinacci verso due agenti addetti alla sorveglianza.",
+        "Il 22 marzo 2012 il giudice condannò cinque imputati a due anni e sei mesi di reclusione; per un sesto imputato furono applicati due anni e due mesi a seguito di patteggiamento. La fonte non consente di trattare tali esiti come definitivamente passati in giudicato."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:lesioni-a-pubblico-ufficiale",
+      "classification_source_key": "press:il-lametino:2012-03-22:rivolta-fuga-cie-pian-del-duca",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La fonte sul processo indica espressamente le lesioni a pubblico ufficiale tra i reati contestati in relazione all'episodio.",
+        "Non viene ricostruita autonomamente la dinamica o l'entità delle lesioni oltre quanto riportato nella qualificazione processuale; il record non aggiunge dettagli non attestati."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:danneggiamento-aggravato",
+      "classification_source_key": "press:il-lametino:2012-03-22:rivolta-fuga-cie-pian-del-duca",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La fonte sul processo indica espressamente il danneggiamento aggravato tra i reati contestati.",
+        "La ricostruzione riferisce che fu praticato un buco nella parete del CIE e che la fuga avvenne calandosi con lenzuola dal primo piano."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:lancio-di-oggetti-pericolosi",
+      "classification_source_key": "press:il-lametino:2012-03-22:rivolta-fuga-cie-pian-del-duca",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La fonte include il lancio di oggetti pericolosi tra i reati contestati e descrive il lancio di mattoni e calcinacci verso gli agenti durante la fuga.",
+        "Non viene attribuito un articolo di legge specifico perché la fonte utilizzata non lo indica."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:cie-pian-del-duca:2012-03-14:occurrence",
+      "basis_source_key": "press:il-lametino:2012-03-22:rivolta-fuga-cie-pian-del-duca",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "minor_or_vulnerable",
+      "geometry": null,
+      "place_name": "Centro di identificazione ed espulsione (CIE) di Lamezia Terme, contrada Pian del Duca",
+      "neighbourhood": "Pian del Duca",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:cie-pian-del-duca:2012-03-14:target",
+      "basis_source_key": "press:il-lametino:2012-03-22:rivolta-fuga-cie-pian-del-duca",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "minor_or_vulnerable",
+      "geometry": null,
+      "place_name": "Centro di identificazione ed espulsione (CIE) di Lamezia Terme, contrada Pian del Duca",
+      "neighbourhood": "Pian del Duca",
+      "iccs_location_type": null
+    }
+  ]
+}
