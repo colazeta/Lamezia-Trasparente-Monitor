@@ -1,0 +1,130 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-omicidio-autolavaggio-poste-centrali-2006-11-30",
+  "discovered_at": "2026-09-21T08:39:25+02:00",
+  "updated_at": "2026-09-21T08:39:25+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Omicidio del titolare di un autolavaggio nel sotterraneo delle Poste centrali di Lamezia Terme il 30 novembre 2006",
+  "temporal": {
+    "start": "2006-11-30",
+    "end": "2006-11-30",
+    "edtf": "2006-11-30",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:nuovacosenza:2006-11-30:omicidio-autolavaggio-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Nuova Cosenza Quotidiano Digitale",
+      "title": "Ucciso a coltellate il titolare di un autolavaggio di Lamezia",
+      "url": "https://www.nuovacosenza.com/cs/06/novembre/ultime.html",
+      "published_at": "2006-11-30",
+      "retrieved_at": "2026-09-21T08:39:25+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:nuovacosenza:2006-12:sviluppi-omicidio-lavaggista-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Nuova Cosenza Quotidiano Digitale",
+      "title": "Archivio cronaca dicembre 2006: arma e auto nell'omicidio del lavaggista a Lamezia",
+      "url": "https://www.nuovacosenza.com/cs/06/dicembre/ultime.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-21T08:39:25+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "press:nuovacosenza:2006-11-30:omicidio-autolavaggio-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La cronaca contemporanea qualifica il fatto come omicidio e riferisce che la vittima fu colpita da almeno quattro coltellate al collo e alla base della nuca mentre stava lavando un'automobile nei locali dell'attivita.",
+        "L'autolavaggio, con annesso garage, e descritto dalla fonte come situato nel sotterraneo delle Poste centrali di Lamezia Terme; non vengono inferiti strada, civico o coordinate.",
+        "Il 1 dicembre 2006 la cronaca riferisce il rinvenimento, all'interno dello stesso locale ma distante dal corpo, del coltello ritenuto utilizzato per l'omicidio; il 2 dicembre riferisce il recupero in piazza Diaz, a Sambiase, di una Golf sottratta dall'autolavaggio e ritenuta utilizzata dall'omicida per allontanarsi.",
+        "Le fonti recuperate documentano la fase investigativa immediatamente successiva al fatto; in questa acquisizione non viene attribuito alcun esito giudiziario definitivo."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:autolavaggio-poste-centrali:occurrence",
+      "basis_source_key": "press:nuovacosenza:2006-11-30:omicidio-autolavaggio-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Autolavaggio nel sotterraneo delle Poste centrali di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:autolavaggio-poste-centrali:target",
+      "basis_source_key": "press:nuovacosenza:2006-11-30:omicidio-autolavaggio-lamezia",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Autolavaggio nel sotterraneo delle Poste centrali di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:autolavaggio-poste-centrali:weapon-recovery",
+      "basis_source_key": "press:nuovacosenza:2006-12:sviluppi-omicidio-lavaggista-lamezia",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Autolavaggio nel sotterraneo delle Poste centrali di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:piazza-diaz-sambiase:vehicle-recovery",
+      "basis_source_key": "press:nuovacosenza:2006-12:sviluppi-omicidio-lavaggista-lamezia",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Piazza Diaz, Sambiase",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    }
+  ]
+}
