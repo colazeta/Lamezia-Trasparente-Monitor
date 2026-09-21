@@ -2,8 +2,8 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-ordigno-negozio-non-identificato-2012-04-14",
   "discovered_at": "2026-09-18T15:11:21+02:00",
-  "updated_at": "2026-09-18T15:11:21+02:00",
-  "record_status": "verified_source",
+  "updated_at": "2026-09-21T23:35:00+02:00",
+  "record_status": "merged",
   "event_form": "discrete",
   "title": "Esplosione di un ordigno davanti a un negozio non identificato a Lamezia Terme segnalata il 14 aprile 2012",
   "temporal": {
@@ -56,7 +56,8 @@
       "situational_context": [
         "Due fonti contemporanee riferiscono che un ordigno rudimentale, confezionato con circa mezzo chilo di polvere pirica, fu fatto esplodere davanti a un negozio a Lamezia Terme, danneggiando la serranda, la porta d'ingresso e alcune automobili parcheggiate nelle vicinanze; i Carabinieri avviarono le indagini.",
         "Le due fonti sono datate 14 aprile 2012 ma non precisano espressamente se la detonazione sia avvenuta il 14 aprile o nell'immediato periodo precedente; la temporalita e quindi registrata come approssimativa e ancorata alla data delle cronache contemporanee.",
-        "Non e stata reperita una fonte primaria direttamente accessibile ne una fonte che identifichi il negozio, una strada o una localita sub-comunale. Le fonti non stabiliscono inoltre una matrice estorsiva o mafiosa; la classificazione come atto intimidatorio con ordigno resta pertanto provvisoria e descrittiva della condotta documentata."
+        "Non e stata reperita una fonte primaria direttamente accessibile ne una fonte che identifichi il negozio, una strada o una localita sub-comunale. Le fonti non stabiliscono inoltre una matrice estorsiva o mafiosa; la classificazione come atto intimidatorio con ordigno resta pertanto provvisoria e descrittiva della condotta documentata.",
+        "Questo record è stato riconosciuto come duplicato dello stesso evento reale già censito con event_key lamezia-attentato-ordigno-negozio-non-identificato-2012-04 ed è pertanto marcato merged per impedirne il conteggio come evento autonomo."
       ],
       "cyber_related": null,
       "affected_object_count": null
