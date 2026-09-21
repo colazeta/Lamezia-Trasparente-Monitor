@@ -2,10 +2,10 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-rapina-ufficio-postale-sambiase-2019-02-08",
   "discovered_at": "2026-09-08T22:09:49+02:00",
-  "updated_at": "2026-09-08T22:09:49+02:00",
+  "updated_at": "2026-09-21T16:22:15+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
-  "title": "Rapina all'ufficio postale di Lamezia Terme-Sambiase l'8 febbraio 2019",
+  "title": "Rapina all'ufficio postale di Piazza 5 Dicembre, Sambiase, l'8 febbraio 2019",
   "temporal": {
     "start": "2019-02-08",
     "end": "2019-02-08",
@@ -44,6 +44,21 @@
         "procedural_context",
         "corroboration"
       ]
+    },
+    {
+      "source_key": "press:ltnews:2019-02-08:rapina-poste-piazza-5-dicembre",
+      "source_type": "press_secondary",
+      "provider": "LTNews Lamezia Terme",
+      "title": "Lamezia, rapina all'ufficio postale di piazza 5 Dicembre",
+      "url": "https://www.lameziatermenews.it/component/tags/tag/rapina.html",
+      "published_at": "2019-02-08",
+      "retrieved_at": "2026-09-21T16:22:15+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
     }
   ],
   "offences": [
@@ -58,7 +73,8 @@
       "legal_reference": null,
       "attempt_status": "completed",
       "situational_context": [
-        "rapina consumata l'8 febbraio 2019 presso l'ufficio postale di Lamezia Terme-Sambiase",
+        "rapina consumata l'8 febbraio 2019 presso l'ufficio postale di Piazza 5 Dicembre, nel quartiere Sambiase di Lamezia Terme",
+        "la fonte contemporanea dell'8 febbraio 2019 riferisce l'ingresso, poco dopo l'apertura, di tre persone col volto coperto da passamontagna, armate di una pistola indicata come forse giocattolo e di una mazza",
         "le fonti investigative successive riferiscono l'azione di tre persone con il volto travisato, armate di mazze e di una pistola risultata poi giocattolo",
         "nell'agosto 2020 il GIP del Tribunale di Lamezia Terme, su richiesta della Procura, emise una ordinanza di custodia cautelare nell'ambito dell'indagine; la fase cautelare non equivale ad accertamento definitivo di responsabilità"
       ],
@@ -69,7 +85,7 @@
   "locations": [
     {
       "location_key": "location:lamezia-terme:ufficio-postale-sambiase:target",
-      "basis_source_key": "press:lacnews24:2020-08-12:rapina-poste-sambiase-2019-02-08",
+      "basis_source_key": "press:ltnews:2019-02-08:rapina-poste-piazza-5-dicembre",
       "role": "target",
       "municipality": "Lamezia Terme",
       "evidence_basis": "source_stated_named_site",
@@ -78,7 +94,22 @@
       "sensitivity": "public_place",
       "publication_risk": "low_public_site",
       "geometry": null,
-      "place_name": "Ufficio postale di Lamezia Terme-Sambiase",
+      "place_name": "Ufficio postale di Piazza 5 Dicembre",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:ufficio-postale-sambiase:occurrence",
+      "basis_source_key": "press:ltnews:2019-02-08:rapina-poste-piazza-5-dicembre",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Ufficio postale di Piazza 5 Dicembre",
       "neighbourhood": "Sambiase",
       "iccs_location_type": null
     }
