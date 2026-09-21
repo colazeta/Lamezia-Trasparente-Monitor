@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-furti-cantine-lento-splendidi-splendenti-2026-01-11",
   "discovered_at": "2026-09-07T06:39:23+02:00",
-  "updated_at": "2026-09-21T07:00:00+02:00",
+  "updated_at": "2026-09-21T07:04:00+02:00",
   "record_status": "verified_source",
   "event_form": "continuous_episode",
   "title": "Furto aggravato alle Cantine Lento e tentato furto aggravato all'adiacente Splendidi e Splendenti in via del Progresso",
@@ -123,6 +123,22 @@
       "provider": "WeSud",
       "title": "Ladro sorpreso dai Carabinieri si nasconde in un cassonetto, arrestato",
       "url": "https://wesud.it/ladro-sorpreso-dai-carabinieri-si-nasconde-in-un-cassonetto-arrestato",
+      "published_at": "2026-01-15",
+      "retrieved_at": "2026-09-21T06:46:35+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lametino:2026-01-15:due-colpi-cantine-lento-splendidi",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, due colpi in una notte: ladri sorpresi dai Carabinieri, uno si nasconde in un cassonetto dei rifiuti e viene arrestato",
+      "url": "https://www.lametino.it/cronaca/lamezia-due-colpi-in-una-notte-ladri-sorpresi-dai-carabinieri-uno-si-nasconde-in-un-cassonetto-dei-rifiuti-e-viene-arrestato.html",
       "published_at": "2026-01-15",
       "retrieved_at": "2026-09-21T06:46:35+02:00",
       "support_roles": [
