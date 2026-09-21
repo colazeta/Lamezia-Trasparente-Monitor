@@ -1,0 +1,116 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-omicidio-centro-commerciale-i-pini-via-del-progresso-2003-10",
+  "discovered_at": "2026-09-21T07:14:06+02:00",
+  "updated_at": "2026-09-21T07:14:06+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Omicidio nel parcheggio del Centro Commerciale I Pini in via del Progresso nell'ottobre 2003",
+  "temporal": {
+    "start": "2003-10-22",
+    "end": "2003-10-27",
+    "edtf": "2003-10-22/2003-10-27",
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "press:ildispaccio:2015-03-05:faida-due-omicidi",
+      "source_type": "press_secondary",
+      "provider": "Il Dispaccio",
+      "title": "Faida di Lamezia, ricostruiti due omicidi: tre arresti",
+      "url": "https://ildispaccio.it/archivio/catanzaro/68649-faida-di-lamezia-fatta-luce-sugli-omicidi-di-giuseppe-torcasio-e-bruno-cittadino-ecco-gli-arrestati",
+      "published_at": "2015-03-05",
+      "retrieved_at": "2026-09-21T07:14:06+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corrieredellacalabria:2015-06-03:omicidio-2003-giudizio-immediato",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Omicidio del 2003, disposto il giudizio immediato",
+      "url": "https://www.corrieredellacalabria.it/2015/06/03/delitto-torcasio-giudizio-immediato-per-un-imprenditore-lametino/",
+      "published_at": "2015-06-03T17:10:00+02:00",
+      "retrieved_at": "2026-09-21T07:14:06+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corrieredellacalabria:2016-10-06:omicidio-2003-testimonianza-assise",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Testimonianza in Corte d'Assise sull'omicidio del 2003",
+      "url": "https://www.corrieredellacalabria.it/2016/10/06/il-trucco-di-torcasio-per-diventare-un-pentito/",
+      "published_at": "2016-10-06T19:12:00+02:00",
+      "retrieved_at": "2026-09-21T07:14:06+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "press:corrieredellacalabria:2015-06-03:omicidio-2003-giudizio-immediato",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti investigative e processuali qualificano il fatto come omicidio e ne collocano l'esecuzione nel parcheggio di un centro commerciale in via del Progresso.",
+        "Le fonti consultate presentano una discrepanza sulla data: le cronache del 5 marzo 2015, riferendo gli esiti delle indagini della Squadra Mobile e della DDA, indicano il 22 ottobre 2003; successive cronache processuali indicano il 27 ottobre 2003. L'intervallo temporale rappresenta il conflitto documentale e non la durata dell'evento.",
+        "Le cronache processuali identificano il luogo come l'allora Centro Commerciale o supermercato I Pini, in via del Progresso. Non vengono inferiti civico o coordinate."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:centro-commerciale-i-pini-via-del-progresso:occurrence",
+      "basis_source_key": "press:corrieredellacalabria:2016-10-06:omicidio-2003-testimonianza-assise",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Parcheggio del Centro Commerciale I Pini, via del Progresso",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:centro-commerciale-i-pini-via-del-progresso:target",
+      "basis_source_key": "press:corrieredellacalabria:2016-10-06:omicidio-2003-testimonianza-assise",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Parcheggio del Centro Commerciale I Pini, via del Progresso",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
