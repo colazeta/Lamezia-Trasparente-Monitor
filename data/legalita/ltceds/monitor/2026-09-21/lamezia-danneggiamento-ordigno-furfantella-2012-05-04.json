@@ -1,0 +1,100 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-danneggiamento-ordigno-furfantella-2012-05-04",
+  "discovered_at": "2026-09-21T22:11:58+02:00",
+  "updated_at": "2026-09-21T22:11:58+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Danneggiamento mediante ordigno al ristorante-pizzeria La Furfantella il 4 maggio 2012",
+  "temporal": {
+    "start": "2012-05-04",
+    "end": "2012-05-04",
+    "edtf": null,
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:cn24tv:2012-05-04:furfantella",
+      "source_type": "press_secondary",
+      "provider": "CN24TV",
+      "title": "Nuova bomba ai danni di un servizio commerciale a Lamezia Terme",
+      "url": "https://cn24tv.it/news/46477/nuova-bomba-ai-danni-di-un-servizio-commerciale-a-lamezia-terme.html",
+      "published_at": "2012-05-04T18:06:00+02:00",
+      "retrieved_at": "2026-09-21T22:11:58+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support"
+      ]
+    },
+    {
+      "source_key": "press:corriere-della-sera:2012-05-04:furfantella",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Sera",
+      "title": "Il sindaco incontra il ministro Cancellieri E a Lamezia Terme scoppiano due bombe",
+      "url": "https://www.corriere.it/cronache/12_maggio_04/calabria-esplosioni-macri_d373914a-95ff-11e1-b2cf-0f42ed87ec02.shtml",
+      "published_at": null,
+      "retrieved_at": "2026-09-21T22:11:58+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:danneggiamento",
+      "classification_source_key": "press:cn24tv:2012-05-04:furfantella",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La fonte contemporanea riferisce che il 4 maggio 2012, poco prima delle 15, ignoti tagliarono il telo della veranda sul retro del ristorante-pizzeria La Furfantella e lanciarono all'interno un ordigno, causando danni al locale.",
+        "Polizia e Vigili del Fuoco intervennero sul posto; non risultano persone ferite e il locale era chiuso al momento dell'esplosione.",
+        "Una seconda fonte contemporanea conferma l'esplosione nel pomeriggio del 4 maggio, descrive l'ordigno come artigianale e riferisce danni a una finestra e alla copertura posteriore della pizzeria.",
+        "I proprietari dichiararono di non avere ricevuto minacce o richieste estorsive; in assenza di una fonte giudiziaria o di polizia che sostenga una qualificazione più specifica o un movente, il record conserva una classificazione provvisoria di danneggiamento.",
+        "L'episodio è distinto dall'ordigno esploso davanti a uno studio fotografico del centro cittadino nelle circa 24 ore precedenti."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:ristorante-pizzeria-la-furfantella:occurrence",
+      "basis_source_key": "press:cn24tv:2012-05-04:furfantella",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Ristorante-pizzeria La Furfantella, centro cittadino",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:ristorante-pizzeria-la-furfantella:target",
+      "basis_source_key": "press:cn24tv:2012-05-04:furfantella",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Ristorante-pizzeria La Furfantella, centro cittadino",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
