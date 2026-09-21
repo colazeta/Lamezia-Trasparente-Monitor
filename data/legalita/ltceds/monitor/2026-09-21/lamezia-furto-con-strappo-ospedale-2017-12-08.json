@@ -1,0 +1,84 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-furto-con-strappo-ospedale-2017-12-08",
+  "discovered_at": "2026-09-21T03:28:19+02:00",
+  "updated_at": "2026-09-21T03:28:19+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Furto con strappo ai danni di una donna anziana nei pressi dell'ospedale di Lamezia Terme l'8 dicembre 2017",
+  "temporal": {
+    "start": "2017-12-08",
+    "end": "2017-12-08",
+    "edtf": "2017-12-08",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:lameziaterme.it:2017-12-08:scippo-ospedale-lamezia",
+      "source_type": "press_secondary",
+      "provider": "LameziaTerme.it",
+      "title": "Lamezia, signora scippata nei pressi dell'ospedale",
+      "url": "https://www.lameziaterme.it/lamezia-vecchietta-scippata-ospedale/",
+      "published_at": "2017-12-08",
+      "retrieved_at": "2026-09-21T03:28:19+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:furto-con-strappo",
+      "classification_source_key": "press:lameziaterme.it:2017-12-08:scippo-ospedale-lamezia",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La fonte contemporanea, pubblicata l'8 dicembre 2017, riferisce che una donna anziana era stata scippata meno di un'ora prima nei pressi dell'ospedale di Lamezia Terme.",
+        "Secondo la ricostruzione pubblicata, un uomo con il volto incappucciato si avvicinò alla donna, le strappò la borsetta e si allontanò; la donna non riportò ferite o contusioni.",
+        "La Polizia di Stato intervenne sul luogo e avviò le indagini. Non è stata reperita in questa iterazione una fonte primaria di polizia o giudiziaria riferibile con certezza allo stesso episodio; la qualificazione resta pertanto provvisoria."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:pressi-ospedale:occurrence",
+      "basis_source_key": "press:lameziaterme.it:2017-12-08:scippo-ospedale-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Area nei pressi dell'ospedale di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:pressi-ospedale:target",
+      "basis_source_key": "press:lameziaterme.it:2017-12-08:scippo-ospedale-lamezia",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Area nei pressi dell'ospedale di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
