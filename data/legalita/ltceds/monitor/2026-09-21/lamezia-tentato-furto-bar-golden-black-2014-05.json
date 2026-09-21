@@ -1,0 +1,112 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-tentato-furto-bar-golden-black-2014-05",
+  "discovered_at": "2026-09-21T05:43:18Z",
+  "updated_at": "2026-09-21T05:43:18Z",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Tentato furto di una macchina cambia-monete al Bar Golden Black in Via Trento nel maggio 2014",
+  "temporal": {
+    "start": null,
+    "end": "2014-05-20",
+    "edtf": null,
+    "precision": "approximate"
+  },
+  "sources": [
+    {
+      "source_key": "source:il-lametino-golden-black-2014-05-20",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: Tenta di rubare macchinetta cambia monete da un bar, arrestato",
+      "url": "https://www.lametino.it/cronaca/lamezia-tenta-di-rubare-macchinetta-cambia-monete-da-un-bar-arrestato.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-21T05:43:18Z",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "source:mininterno-guida-antiracket-golden-black-2013",
+      "source_type": "public_authority_primary",
+      "provider": "Ministero dell'Interno",
+      "title": "A Guide for the Critical Anti-Racket Consumer",
+      "url": "https://www1.interno.gov.it/mininterno/export/sites/default/it/assets/files/27/2013_12_02_Interno_GDEF1611EN.pdf",
+      "published_at": null,
+      "retrieved_at": "2026-09-21T05:43:18Z",
+      "support_roles": [
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:furto",
+      "classification_source_key": "source:il-lametino-golden-black-2014-05-20",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "commercial_premises",
+        "forced_entry",
+        "change_machine"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:golden-black-via-trento:occurrence",
+      "basis_source_key": "source:mininterno-guida-antiracket-golden-black-2013",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Bar Golden Black, Via Trento",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:golden-black-via-trento:target",
+      "basis_source_key": "source:mininterno-guida-antiracket-golden-black-2013",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Bar Golden Black, Via Trento",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:golden-black-via-trento:arrest",
+      "basis_source_key": "source:il-lametino-golden-black-2014-05-20",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Bar Golden Black, Via Trento",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
