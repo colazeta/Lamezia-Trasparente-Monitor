@@ -88,8 +88,43 @@ const EVIDENCE_INTERVENTIONS_BEFORE_2026_09_14_UPDATES: readonly EvidenceInterve
   ...EVIDENCE_INTERVENTIONS_2026_09_21,
 ];
 
+function deduplicateEvidenceInterventions(
+  items: readonly EvidenceIntervention[],
+): readonly EvidenceIntervention[] {
+  const byId = new Map<string, EvidenceIntervention>();
+
+  for (const item of items) {
+    const previous = byId.get(item.id);
+    if (!previous) {
+      byId.set(item.id, item);
+      continue;
+    }
+
+    const revisionHistory = Array.from(
+      new Map(
+        [...previous.revisionHistory, ...item.revisionHistory].map((revision) => [
+          `${revision.date}\u0000${revision.note}`,
+          revision,
+        ]),
+      ).values(),
+    );
+
+    byId.set(item.id, {
+      ...previous,
+      ...item,
+      revisionHistory,
+    });
+  }
+
+  return Array.from(byId.values());
+}
+
+const DEDUPLICATED_EVIDENCE_INTERVENTIONS = deduplicateEvidenceInterventions(
+  EVIDENCE_INTERVENTIONS_BEFORE_2026_09_14_UPDATES,
+);
+
 export const EVIDENCE_INTERVENTIONS: readonly EvidenceIntervention[] =
-  EVIDENCE_INTERVENTIONS_BEFORE_2026_09_14_UPDATES
+  DEDUPLICATED_EVIDENCE_INTERVENTIONS
     .map(applyEvidenceInterventionUpdates20260914)
     .map(applyEvidenceInterventionUpdates20260919);
 
