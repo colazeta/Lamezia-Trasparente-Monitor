@@ -2,10 +2,10 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-furti-cantine-lento-splendidi-splendenti-2026-01-11",
   "discovered_at": "2026-09-07T06:39:23+02:00",
-  "updated_at": "2026-09-15T02:42:37+02:00",
+  "updated_at": "2026-09-21T07:04:00+02:00",
   "record_status": "verified_source",
   "event_form": "continuous_episode",
-  "title": "Presunti furti aggravati in due attività adiacenti di via del Progresso a Lamezia Terme",
+  "title": "Furto aggravato alle Cantine Lento e tentato furto aggravato all'adiacente Splendidi e Splendenti in via del Progresso",
   "temporal": {
     "start": "2026-01-11",
     "end": "2026-01-11",
@@ -116,6 +116,38 @@
         "location_support",
         "corroboration"
       ]
+    },
+    {
+      "source_key": "press:wesud:2026-01-15:furto-cantine-lento-splendidi",
+      "source_type": "press_secondary",
+      "provider": "WeSud",
+      "title": "Ladro sorpreso dai Carabinieri si nasconde in un cassonetto, arrestato",
+      "url": "https://wesud.it/ladro-sorpreso-dai-carabinieri-si-nasconde-in-un-cassonetto-arrestato",
+      "published_at": "2026-01-15",
+      "retrieved_at": "2026-09-21T06:46:35+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lametino:2026-01-15:due-colpi-cantine-lento-splendidi",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, due colpi in una notte: ladri sorpresi dai Carabinieri, uno si nasconde in un cassonetto dei rifiuti e viene arrestato",
+      "url": "https://www.lametino.it/cronaca/lamezia-due-colpi-in-una-notte-ladri-sorpresi-dai-carabinieri-uno-si-nasconde-in-un-cassonetto-dei-rifiuti-e-viene-arrestato.html",
+      "published_at": "2026-01-15",
+      "retrieved_at": "2026-09-21T06:46:35+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
     }
   ],
   "offences": [
@@ -131,14 +163,31 @@
       "attempt_status": "completed",
       "situational_context": [
         "alle 03:50 dell'11 gennaio 2026 una residente di via del Progresso ha segnalato al 112 forti colpi provenienti dalla strada",
-        "le fonti riferiscono un furto in atto presso Cantine Lento e presso l'adiacente punto vendita Splendidi e Splendenti",
-        "ANSA descrive espressamente un furto compiuto e il successivo sopralluogo dei Carabinieri ha accertato che il furto alle Cantine Lento era stato compiuto con la partecipazione di almeno un'altra persona; le fonti consultate non attestano con la stessa chiarezza il completamento della sottrazione presso l'adiacente punto vendita",
-        "Gazzetta del Sud riferisce che gli autori sarebbero passati dall'abitazione privata dei proprietari dell'azienda per raggiungere l'adiacente punto vendita",
+        "ANSA e le altre fonti descrivono come compiuto il furto nelle pertinenze delle Cantine Lento; il successivo sopralluogo dei Carabinieri ha accertato la sottrazione di denaro e attrezzi da lavoro, tra cui un piccone e un martello demolitore elettrico",
+        "gli attrezzi sottratti alle Cantine Lento furono poi utilizzati per iniziare a forare il muro perimetrale dell'adiacente punto vendita Splendidi e Splendenti",
         "all'arrivo dei Carabinieri due uomini con il volto coperto avrebbero tentato la fuga scavalcando il muro perimetrale delle Cantine Lento",
         "uno dei soggetti è stato arrestato dopo essersi nascosto in un cassonetto; ANSA riferisce che l'arresto è stato successivamente convalidato e che il Tribunale di Lamezia Terme ha applicato la custodia cautelare in carcere"
       ],
       "cyber_related": null,
-      "affected_object_count": 2
+      "affected_object_count": 1
+    },
+    {
+      "offence_key": "offence:tentato-furto-aggravato",
+      "classification_source_key": "press:wesud:2026-01-15:furto-cantine-lento-splendidi",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "dopo il furto già consumato alle Cantine Lento, le fonti riferiscono che furono usati gli attrezzi sottratti nell'azienda vinicola per iniziare a forare il muro perimetrale dell'adiacente punto vendita Splendidi e Splendenti",
+        "l'intervento immediato dei Carabinieri interruppe l'azione prima che il furto nel secondo esercizio fosse portato a compimento",
+        "la qualificazione del secondo fatto come tentato furto aggravato resta provvisoria: la dinamica e l'interruzione sono esplicitamente descritte dalle fonti, ma non è stato reperito un atto giudiziario o un comunicato primario che esponga separatamente la contestazione giuridica relativa a questo secondo bersaglio"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
     }
   ],
   "locations": [
