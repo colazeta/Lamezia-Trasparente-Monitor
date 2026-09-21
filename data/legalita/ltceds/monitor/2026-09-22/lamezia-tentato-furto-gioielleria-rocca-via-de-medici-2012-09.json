@@ -1,0 +1,83 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-tentato-furto-gioielleria-rocca-via-de-medici-2012-09",
+  "discovered_at": "2026-09-21T22:08:34Z",
+  "updated_at": "2026-09-21T22:08:34Z",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Tentativo di furto presso la Gioielleria Rocca in via Ettore e Ruggero De Medici, accertato entro il 7 settembre 2012",
+  "temporal": {
+    "start": null,
+    "end": "2012-09-07",
+    "edtf": null,
+    "precision": "approximate"
+  },
+  "sources": [
+    {
+      "source_key": "source:il-lametino-gioielleria-rocca-2012-09-07",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: Probabile tentativo di furto a gioielleria Rocca",
+      "url": "https://www.lametino.it/cronaca/lamezia-probabile-tentativo-di-furto-a-gioielleria-rocca.html",
+      "published_at": "2012-09-07T00:00:00Z",
+      "retrieved_at": "2026-09-21T22:08:34Z",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:furto",
+      "classification_source_key": "source:il-lametino-gioielleria-rocca-2012-09-07",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "commercial_premises",
+        "attempted_forced_entry"
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:gioielleria-rocca-via-de-medici:occurrence",
+      "basis_source_key": "source:il-lametino-gioielleria-rocca-2012-09-07",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Gioielleria Rocca, via Ettore e Ruggero De Medici",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:gioielleria-rocca-via-de-medici:target",
+      "basis_source_key": "source:il-lametino-gioielleria-rocca-2012-09-07",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Gioielleria Rocca, via Ettore e Ruggero De Medici",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
