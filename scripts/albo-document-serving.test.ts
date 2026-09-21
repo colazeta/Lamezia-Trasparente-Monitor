@@ -165,6 +165,8 @@ test("serves the reviewed September commission attachments", () => {
     "data/public/albo/documents/2026/588fe94ce804d0f1699cb42f41eee4390e4ecb3f3fab21379b100b5c84e3e4eb.pdf",
     "data/public/albo/documents/2026/b23e5a278fa5550657c3804e2a60a37ad09a1bdad2efcff6a7ece4f68a6b15e1.pdf",
     "data/public/albo/documents/2026/8eebc4e71f5def4118e620b94ea9855319f39f9c548aedb7d4860d19a42b6f7f.pdf",
+    "data/public/albo/documents/2026/faa773ca9b02a88e8e7de334843e86dc20daa153f835f2acf50a2ca88a1754f5.pdf",
+    "data/public/albo/documents/2026/85c4218e626ff552d3663519672675fd42d05a212a392f66683c3d1fba011492.pdf",
   ];
 
   const served = alboDocumentServingFiles(repoRoot);
