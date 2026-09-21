@@ -1,0 +1,117 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-furto-aggravato-distributore-via-del-progresso-2023-06",
+  "discovered_at": "2026-09-21T05:36:30+02:00",
+  "updated_at": "2026-09-21T05:36:30+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Furto aggravato dell'incasso di un distributore di carburanti in via del Progresso nel giugno 2023",
+  "temporal": {
+    "start": "2023-06",
+    "end": "2023-06",
+    "edtf": "2023-06",
+    "precision": "month"
+  },
+  "sources": [
+    {
+      "source_key": "press:corrieredilamezia:2024-02-02:furti-attivita-mezzo-milione",
+      "source_type": "press_secondary",
+      "provider": "Corriere di Lamezia",
+      "title": "Lamezia Terme, furti in attività commerciali per mezzo milione di euro, arrestati due fratelli",
+      "url": "https://www.corrieredilamezia.it/cronaca/2024_02_02/lamezia-terme-furti-in-attivita-commerciali-per-mezzo-milione-di-euro-arrestati-due-fratelli_44994/",
+      "published_at": "2024-02-02",
+      "retrieved_at": "2026-09-21T05:36:30+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lametino:2024-02-02:furti-attivita-mezzo-milione",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, furti in attività commerciali per mezzo milione di euro: due arresti",
+      "url": "https://www.lametino.it/cronaca/lamezia-furti-in-attivita-commerciali-per-mezzo-milione-di-euro-due-arresti.html",
+      "published_at": "2024-02-02",
+      "retrieved_at": "2026-09-21T05:36:30+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corrieredellacalabria:2024-02-02:furti-attivita-mezzo-milione",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Furti in attività commerciali per mezzo milione di euro, in manette due fratelli a Lamezia",
+      "url": "https://www.corrieredellacalabria.it/2024/02/02/furti-in-attivita-commerciali-per-mezzo-milione-di-euro-in-manette-due-fratelli-a-lamezia/",
+      "published_at": "2024-02-02T18:32:00+01:00",
+      "retrieved_at": "2026-09-21T05:36:30+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:furto-aggravato",
+      "classification_source_key": "press:corrieredilamezia:2024-02-02:furti-attivita-mezzo-milione",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti che riferiscono l'esecuzione della misura cautelare il 2 febbraio 2024 qualificano i fatti investigati come furti aggravati e collocano il primo episodio nel giugno 2023.",
+        "Secondo la ricostruzione investigativa riportata, durante la pausa pranzo una persona si introdusse nel locale di gestione di un distributore di carburanti in via del Progresso, approfittando della momentanea assenza del gestore, e sottrasse oltre 8.000 euro di incasso.",
+        "Le fonti riferiscono l'acquisizione di gravi indizi mediante videosorveglianza e rilievi di polizia scientifica; il procedimento era ancora nella fase delle indagini e il record non assume la responsabilità penale come definitivamente accertata."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-del-progresso:distributore-2023-06:occurrence",
+      "basis_source_key": "press:corrieredilamezia:2024-02-02:furti-attivita-mezzo-milione",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Via del Progresso",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-del-progresso:distributore-2023-06:target",
+      "basis_source_key": "press:corrieredilamezia:2024-02-02:furti-attivita-mezzo-milione",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Via del Progresso",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
