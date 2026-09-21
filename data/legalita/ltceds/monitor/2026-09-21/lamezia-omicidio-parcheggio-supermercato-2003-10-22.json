@@ -57,7 +57,7 @@
       "attempt_status": "completed",
       "situational_context": [
         "Le fonti ricostruiscono un omicidio avvenuto il 22 ottobre 2003 nel parcheggio di un supermercato a Lamezia Terme, davanti a numerose persone.",
-        "Nel marzo 2015 furono eseguiti arresti nell'ambito delle indagini su questo omicidio e su un distinto omicidio del 2008; le fonti descrivono contestazioni a carico di presunti esecutori e mandanti, senza documentare in questa iterazione un accertamento definitivo di responsabilita."
+        "Nel marzo 2015 furono eseguiti arresti nell'ambito delle indagini su questo omicidio e su un distinto omicidio del 2008; le fonti descrivono contestazioni a carico di presunti esecutori e mandanti, senza documentare in questa iterazione un accertamento definitivo di responsabilità."
       ],
       "cyber_related": null,
       "affected_object_count": null
@@ -69,7 +69,7 @@
       "basis_source_key": "press:il-dispaccio:2015-03-05:omicidi-lamezia-2003-2008",
       "role": "occurrence",
       "municipality": "Lamezia Terme",
-      "evidence_basis": "source_stated_named_site",
+      "evidence_basis": "unknown",
       "evidence_precision": "municipality",
       "resolved_precision": "municipality",
       "sensitivity": "public_place",
@@ -84,7 +84,7 @@
       "basis_source_key": "press:il-dispaccio:2015-03-05:omicidi-lamezia-2003-2008",
       "role": "target",
       "municipality": "Lamezia Terme",
-      "evidence_basis": "source_stated_named_site",
+      "evidence_basis": "unknown",
       "evidence_precision": "municipality",
       "resolved_precision": "municipality",
       "sensitivity": "public_place",
