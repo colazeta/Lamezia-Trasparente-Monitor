@@ -1438,8 +1438,8 @@ const roadNetworkWorksRulesAgenda = [
   "Disciplinare per interventi sulla rete stradale.",
 ] as const;
 
-const streetArtGuliaUrbanaAgenda = [
-  "Regolamento comunale per la promozione della Street Art. Audizione del sig. Giacomo Marinaro, curatore e direttore artistico del progetto Gulia Urbana.",
+const streetArtGiuliaUrbanaAgenda = [
+  "Regolamento comunale per la promozione della Street Art. Audizione del sig. Giacomo Marinaro, curatore e direttore artistico del progetto Giulia Urbana.",
 ] as const;
 
 const councilVerifiedSession: CouncilSessionV0 = {
@@ -1611,7 +1611,7 @@ export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
     title:
       "IV Commissione consiliare permanente — seduta del 22 settembre 2026",
     scheduledAt: "2026-09-22T10:00:00+02:00",
-    agenda: streetArtGuliaUrbanaAgenda,
+    agenda: streetArtGiuliaUrbanaAgenda,
     candidate: commissionIvSeptember22And23Notice.candidate,
     provenance: commissionIvSeptember22And23Notice.provenance,
     contextResearch: september22To25CommissionContextResearch,

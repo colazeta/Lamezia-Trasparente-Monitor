@@ -55,7 +55,7 @@ Snapshot Albo di riferimento: commit `5c861b94256c9c659630d8ad19b2f27279d1721b`,
 | `2026/2986`   | V Commissione      | Seduta del 21 settembre 2026 alle 09:30          | Data, ora e programmazione lavori verificati; svolgimento non verificato                                                                |
 | `2026/3001`   | III Commissione    | Seduta del 21 settembre 2026 alle 10:30          | Data, ora e mozione su bonifica, sicurezza e contrasto all'abbandono dei rifiuti verificati; svolgimento non verificato                 |
 | `2026/3011`   | V Commissione      | Sedute dal 22 al 25 settembre 2026               | Date, orari, regolamento sui beni comunali e disciplinare per la rete stradale verificati; svolgimento non verificato                   |
-| `2026/3012`   | IV Commissione     | Sedute del 22 e 23 settembre 2026                | Date, orari, Street Art e audizione del curatore del progetto Gulia Urbana verificati; svolgimento non verificato                       |
+| `2026/3012`   | IV Commissione     | Sedute del 22 e 23 settembre 2026                | Date, orari, Street Art e audizione del curatore del progetto Giulia Urbana verificati; svolgimento non verificato                      |
 
 Per `2026/2673`:
 

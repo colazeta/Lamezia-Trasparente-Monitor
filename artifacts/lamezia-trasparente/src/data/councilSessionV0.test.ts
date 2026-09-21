@@ -790,7 +790,7 @@ describe("councilSessionV0", () => {
       (session) => session.id === "albo-2026-3012-commissione-iv-2026-09-22",
     );
     expect(ivSeptember22?.agenda.value).toEqual([
-      "Regolamento comunale per la promozione della Street Art. Audizione del sig. Giacomo Marinaro, curatore e direttore artistico del progetto Gulia Urbana.",
+      "Regolamento comunale per la promozione della Street Art. Audizione del sig. Giacomo Marinaro, curatore e direttore artistico del progetto Giulia Urbana.",
     ]);
 
     const expectedProvenance = new Map([
