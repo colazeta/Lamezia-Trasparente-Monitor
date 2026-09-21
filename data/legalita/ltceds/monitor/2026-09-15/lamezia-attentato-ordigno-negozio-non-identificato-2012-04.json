@@ -2,15 +2,15 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-attentato-ordigno-negozio-non-identificato-2012-04",
   "discovered_at": "2026-09-15T00:55:30+02:00",
-  "updated_at": "2026-09-15T00:55:30+02:00",
+  "updated_at": "2026-09-21T23:35:00+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Attentato con ordigno rudimentale contro un negozio non identificato a Lamezia Terme nell'aprile 2012",
   "temporal": {
-    "start": "2012-04",
-    "end": "2012-04",
-    "edtf": "2012-04",
-    "precision": "month"
+    "start": "2012-04-14",
+    "end": "2012-04-14",
+    "edtf": "2012-04-14~",
+    "precision": "approximate"
   },
   "sources": [
     {
@@ -56,6 +56,21 @@
         "location_support",
         "corroboration"
       ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2012-04-14:bomba-negozio-lamezia",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Bomba esplode davanti a un negozio a Lamezia Terme",
+      "url": "https://www.corrieredellacalabria.it/2012/04/14/4808_bomba_esplode_davanti_a_un_negozio_a_lamezia_terme/",
+      "published_at": "2012-04-14T20:54:00+02:00",
+      "retrieved_at": "2026-09-21T23:14:59+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
     }
   ],
   "offences": [
@@ -73,7 +88,7 @@
         "Il lancio ANSA, conservato in una ripresa d'archivio, riferisce che un ordigno rudimentale confezionato artigianalmente con circa mezzo chilo di polvere pirica fu fatto esplodere davanti a un negozio a Lamezia Terme.",
         "Lo scoppio provocò danni alla serranda e alla porta d'ingresso dell'esercizio commerciale e ad alcune automobili parcheggiate nelle vicinanze; l'episodio fu denunciato ai Carabinieri, che avviarono le indagini.",
         "Le testate che riprendono il lancio inquadrano il fatto nel contesto del racket, ma non è stata reperita una fonte primaria, giudiziaria o di polizia accessibile che documenti per il singolo episodio una contestazione di estorsione o una qualificazione penale più specifica. La classificazione resta pertanto provvisoria come intimidazione e non viene inferito un reato estorsivo.",
-        "Le fonti sono datate 14 aprile 2012 o riproducono un lancio con dateline Lamezia Terme, 14 aprile, ma il testo non afferma in modo autonomo e inequivoco che l'esplosione sia avvenuta proprio quel giorno; la temporalità canonica resta quindi al livello del mese di aprile 2012.",
+        "Le cronache contemporanee sono datate 14 aprile 2012 e descrivono il fatto come già avvenuto senza precisare autonomamente se la detonazione sia avvenuta quello stesso giorno o nell'immediato periodo precedente; la temporalità è quindi ancorata al 14 aprile 2012 con precisione approssimativa, non come data esatta del fatto.",
         "La ricerca geografica dedicata non ha individuato una fonte affidabile che identifichi il negozio, la strada, il quartiere o una località sub-comunale; non vengono quindi inferiti indirizzo, coordinate o una precisione superiore al Comune."
       ],
       "cyber_related": null,
