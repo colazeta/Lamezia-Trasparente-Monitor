@@ -75,7 +75,7 @@
       "sensitivity": "private_or_sensitive",
       "publication_risk": "victim_linked",
       "geometry": null,
-      "place_name": "Magazzino non identificato in via Garibaldi, centro di Nicastro, nei pressi della Cattedrale",
+      "place_name": "Via Garibaldi",
       "neighbourhood": "Nicastro",
       "iccs_location_type": null
     },
@@ -90,7 +90,7 @@
       "sensitivity": "private_or_sensitive",
       "publication_risk": "victim_linked",
       "geometry": null,
-      "place_name": "Magazzino non identificato in via Garibaldi, centro di Nicastro, nei pressi della Cattedrale",
+      "place_name": "Via Garibaldi",
       "neighbourhood": "Nicastro",
       "iccs_location_type": null
     }
