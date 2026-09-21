@@ -32,7 +32,14 @@ import { EVIDENCE_INTERVENTIONS_2026_09_14 } from "./evidenceInterventions202609
 import { EVIDENCE_INTERVENTIONS_2026_09_14_EUROPE } from "./evidenceInterventions20260914Europe";
 import { EVIDENCE_INTERVENTIONS_2026_09_14_SUPPLEMENT } from "./evidenceInterventions20260914Supplement";
 import { EVIDENCE_INTERVENTIONS_2026_09_15 } from "./evidenceInterventions20260915";
+import { EVIDENCE_INTERVENTIONS_2026_09_16 } from "./evidenceInterventions20260916";
+import { EVIDENCE_INTERVENTIONS_2026_09_17 } from "./evidenceInterventions20260917";
+import { EVIDENCE_INTERVENTIONS_2026_09_18 } from "./evidenceInterventions20260918";
+import { EVIDENCE_INTERVENTIONS_2026_09_19 } from "./evidenceInterventions20260919";
+import { EVIDENCE_INTERVENTIONS_2026_09_20 } from "./evidenceInterventions20260920";
+import { EVIDENCE_INTERVENTIONS_2026_09_21 } from "./evidenceInterventions20260921";
 import { applyEvidenceInterventionUpdates20260914 } from "./evidenceInterventionUpdates20260914";
+import { applyEvidenceInterventionUpdates20260919 } from "./evidenceInterventionUpdates20260919";
 
 export {
   EVIDENCE_AREA_LABELS,
@@ -73,10 +80,53 @@ const EVIDENCE_INTERVENTIONS_BEFORE_2026_09_14_UPDATES: readonly EvidenceInterve
   ...EVIDENCE_INTERVENTIONS_2026_09_14_EUROPE,
   ...EVIDENCE_INTERVENTIONS_2026_09_14_SUPPLEMENT,
   ...EVIDENCE_INTERVENTIONS_2026_09_15,
+  ...EVIDENCE_INTERVENTIONS_2026_09_16,
+  ...EVIDENCE_INTERVENTIONS_2026_09_17,
+  ...EVIDENCE_INTERVENTIONS_2026_09_18,
+  ...EVIDENCE_INTERVENTIONS_2026_09_19,
+  ...EVIDENCE_INTERVENTIONS_2026_09_20,
+  ...EVIDENCE_INTERVENTIONS_2026_09_21,
 ];
 
+function deduplicateEvidenceInterventions(
+  items: readonly EvidenceIntervention[],
+): readonly EvidenceIntervention[] {
+  const byId = new Map<string, EvidenceIntervention>();
+
+  for (const item of items) {
+    const previous = byId.get(item.id);
+    if (!previous) {
+      byId.set(item.id, item);
+      continue;
+    }
+
+    const revisionHistory = Array.from(
+      new Map(
+        [...previous.revisionHistory, ...item.revisionHistory].map((revision) => [
+          `${revision.date}\u0000${revision.note}`,
+          revision,
+        ]),
+      ).values(),
+    );
+
+    byId.set(item.id, {
+      ...previous,
+      ...item,
+      revisionHistory,
+    });
+  }
+
+  return Array.from(byId.values());
+}
+
+const DEDUPLICATED_EVIDENCE_INTERVENTIONS = deduplicateEvidenceInterventions(
+  EVIDENCE_INTERVENTIONS_BEFORE_2026_09_14_UPDATES,
+);
+
 export const EVIDENCE_INTERVENTIONS: readonly EvidenceIntervention[] =
-  EVIDENCE_INTERVENTIONS_BEFORE_2026_09_14_UPDATES.map(applyEvidenceInterventionUpdates20260914);
+  DEDUPLICATED_EVIDENCE_INTERVENTIONS
+    .map(applyEvidenceInterventionUpdates20260914)
+    .map(applyEvidenceInterventionUpdates20260919);
 
 export function getEvidenceCountries() {
   return Array.from(new Set(EVIDENCE_INTERVENTIONS.map((item) => item.country))).sort((a, b) =>
