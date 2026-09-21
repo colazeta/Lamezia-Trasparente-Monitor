@@ -1,0 +1,98 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-tentato-incendio-scuola-materna-ix-circolo-2004-04-27",
+  "discovered_at": "2026-09-21T17:21:38+02:00",
+  "updated_at": "2026-09-21T17:21:38+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Tentato incendio nella scuola materna dipendente dal IX Circolo Didattico di Lamezia Terme nella notte tra il 26 e il 27 aprile 2004",
+  "temporal": {
+    "start": "2004-04-26",
+    "end": "2004-04-27",
+    "edtf": null,
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "press:nuova-cosenza:2004-04-27:tentato-incendio-ix-circolo",
+      "source_type": "press_secondary",
+      "provider": "Nuova Cosenza",
+      "title": "Tentativo d’incendio in una scuola materna di Lamezia. Solidarietà della Lisistrata",
+      "url": "https://www.nuovacosenza.com/cs/aprile1529.html",
+      "published_at": "2004-04-27",
+      "retrieved_at": "2026-09-21T17:21:38+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "public:miur:2006:edifici-scolastici-calabria-ix-circolo-lamezia",
+      "source_type": "public_authority_primary",
+      "provider": "Ministero dell'Istruzione",
+      "title": "Elenco edifici scolastici della Calabria - Direzione didattica IX circolo Lamezia Terme",
+      "url": "https://archivio.pubblica.istruzione.it/news/2006/allegati/allegato_6bis_calabria.pdf",
+      "published_at": null,
+      "retrieved_at": "2026-09-21T17:21:38+02:00",
+      "support_roles": [
+        "corroboration",
+        "location_support"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:tentato-incendio",
+      "classification_source_key": "press:nuova-cosenza:2004-04-27:tentato-incendio-ix-circolo",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "La fonte contemporanea riferisce che, durante la notte, sconosciuti tentarono di incendiare alcuni armadi all'interno dell'edificio che ospitava una scuola materna dipendente dal IX Circolo Didattico di Lamezia Terme; il materiale didattico non subì danni e alcune pareti risultarono annerite.",
+        "L'episodio fu denunciato ai Carabinieri, che avviarono le indagini.",
+        "La classificazione è mantenuta provvisoria: la fonte descrive il fatto come tentativo d'incendio ma non riporta una qualificazione giudiziaria o un capo d'imputazione.",
+        "La ricerca geografica separata ha verificato che il IX Circolo comprendeva più edifici scolastici e più plessi dell'infanzia; la fonte dell'evento non consente di identificare senza ambiguità quale plesso fosse coinvolto, perciò non sono attribuiti strada, civico o coordinate."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:scuola-materna-ix-circolo:2004-04-27:occurrence",
+      "basis_source_key": "press:nuova-cosenza:2004-04-27:tentato-incendio-ix-circolo",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "municipality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Scuola materna dipendente dal IX Circolo Didattico di Lamezia Terme (plesso non univocamente risolto)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:scuola-materna-ix-circolo:2004-04-27:target",
+      "basis_source_key": "press:nuova-cosenza:2004-04-27:tentato-incendio-ix-circolo",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "municipality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Scuola materna dipendente dal IX Circolo Didattico di Lamezia Terme (plesso non univocamente risolto)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

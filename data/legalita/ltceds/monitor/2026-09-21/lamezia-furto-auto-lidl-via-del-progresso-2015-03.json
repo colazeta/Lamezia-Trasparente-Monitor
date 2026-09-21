@@ -1,0 +1,114 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-furto-auto-lidl-via-del-progresso-2015-03",
+  "discovered_at": "2026-09-21T13:55:27+02:00",
+  "updated_at": "2026-09-21T13:55:27+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Furto di una Fiat Panda presso il supermercato Lidl di via del Progresso con occultamento in via dei Sanniti, accertato entro il 21 marzo 2015",
+  "temporal": {
+    "start": null,
+    "end": "2015-03-21",
+    "edtf": null,
+    "precision": "approximate"
+  },
+  "sources": [
+    {
+      "source_key": "press:lametino:2015-03-21:furto-auto-lidl-via-progresso",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: due arresti per furto d'auto",
+      "url": "https://www.lametino.it/cronaca/lamezia-due-arresti-per-furto-d-auto.html",
+      "published_at": "2015-03-21",
+      "retrieved_at": "2026-09-21T13:55:27+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:furto",
+      "classification_source_key": "press:lametino:2015-03-21:furto-auto-lidl-via-progresso",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La fonte descrive il fatto come furto di una Fiat Panda mentre il proprietario si trovava a fare la spesa presso il supermercato Lidl di via del Progresso.",
+        "Una pattuglia dei Carabinieri intercettò il veicolo mentre usciva dall'area del supermercato e lo seguì insieme a un camion fino a via dei Sanniti, dove l'auto fu occultata in un parcheggio all'interno delle palazzine.",
+        "Dopo l'occultamento, il camion riprese la marcia e fu bloccato in via dei Bizantini; la fonte riferisce la successiva convalida degli arresti. Il riferimento a un possibile 'cavallo di ritorno' è mantenuto come contesto investigativo e non viene censito come estorsione consumata."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:lidl-via-del-progresso:furto-auto-2015-03:occurrence",
+      "basis_source_key": "press:lametino:2015-03-21:furto-auto-lidl-via-progresso",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Area del supermercato Lidl di via del Progresso",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:lidl-via-del-progresso:furto-auto-2015-03:target",
+      "basis_source_key": "press:lametino:2015-03-21:furto-auto-lidl-via-progresso",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Area del supermercato Lidl di via del Progresso",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-dei-sanniti:parcheggio-palazzine:furto-auto-2015-03:recovery",
+      "basis_source_key": "press:lametino:2015-03-21:furto-auto-lidl-via-progresso",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Parcheggio all'interno delle palazzine in via dei Sanniti",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-dei-bizantini:furto-auto-2015-03:arrest",
+      "basis_source_key": "press:lametino:2015-03-21:furto-auto-lidl-via-progresso",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Via dei Bizantini",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

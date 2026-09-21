@@ -1,0 +1,100 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-danneggiamento-alloggio-aterp-via-m-nicotera-2013-11",
+  "discovered_at": "2026-09-21T10:07:14+02:00",
+  "updated_at": "2026-09-21T10:07:14+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Danneggiamento del muro di chiusura di un alloggio ATERP in Via M. Nicotera, accertato entro il 29 novembre 2013",
+  "temporal": {
+    "start": null,
+    "end": "2013-11-29",
+    "edtf": null,
+    "precision": "approximate"
+  },
+  "sources": [
+    {
+      "source_key": "press:ltnews:2013-11-29:furto-tabacchi-greco",
+      "source_type": "press_secondary",
+      "provider": "LTNews Lamezia Terme",
+      "title": "Lamezia, 32enne in manette per furto aggravato e danneggiamento",
+      "url": "https://www.lameziatermenews.it/citta/10312-lamezia-32enne-in-manette-per-furto-aggravato-e-danneggiamento.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-21T10:07:14+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:furto-tabacchi-greco",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia: Tentava di occupare alloggio Aterp, arrestato per furto e danneggiamento",
+      "url": "https://www.lametino.it/Cronaca/lamezia-tentava-di-occupare-alloggio-aterp-arrestato-per-furto-e-danneggiamento.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-21T10:07:14+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:danneggiamento",
+      "classification_source_key": "press:ltnews:2013-11-29:furto-tabacchi-greco",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti distinguono questo episodio dal furto al Bar Tabacchi Greco: qui il fatto riguarda l'abbattimento del muro in mattoni forati posto a chiusura di un alloggio ATERP in Via M. Nicotera.",
+        "Il muro era stato collocato per impedire l'accesso e l'occupazione abusiva dell'alloggio; la cronaca riferisce che fu abbattuto con calci e pugni.",
+        "Le fonti non indicano il giorno esatto del danneggiamento; il 29 novembre 2013 costituisce soltanto un terminus ante quem.",
+        "La misura cautelare descritta nelle cronache riguarda l'ordinanza maturata sui due filoni investigativi e non viene trattata come accertamento definitivo di responsabilita."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-m-nicotera:aterp-danneggiamento:occurrence",
+      "basis_source_key": "press:ltnews:2013-11-29:furto-tabacchi-greco",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Via M. Nicotera",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-m-nicotera:aterp-danneggiamento:target",
+      "basis_source_key": "press:ltnews:2013-11-29:furto-tabacchi-greco",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Via M. Nicotera",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
