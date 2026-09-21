@@ -60,6 +60,21 @@
         "procedural_context",
         "corroboration"
       ]
+    },
+    {
+      "source_key": "press:corrieredilamezia:2026-01-15:furti-cantine-lento-cassonetto",
+      "source_type": "press_secondary",
+      "provider": "Corriere di Lamezia",
+      "title": "Lamezia, furti nella notte alle Cantine Lento: ladro braccato dai Carabinieri si nasconde in un cassonetto. Scoperto e arrestato",
+      "url": "https://www.corrieredilamezia.it/cronaca/2026_01_15/lamezia-furti-nella-notte-alle-cantine-lento-ladro-braccato-dai-carabinieri-si-nasconde-in-un-cassonetto-scoperto-e-arrestato_58116",
+      "published_at": "2026-01-15",
+      "retrieved_at": "2026-09-21T06:46:35+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
     }
   ],
   "offences": [
