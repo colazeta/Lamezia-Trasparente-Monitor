@@ -1,0 +1,97 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-ordigno-fandango-progetto-sud-bella-2014-10",
+  "discovered_at": "2026-09-22T08:04:06+02:00",
+  "updated_at": "2026-09-22T08:04:06+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Esplosione di un ordigno davanti alla struttura Fandango di Progetto Sud nel quartiere Bella tra il 9 e il 10 ottobre 2014",
+  "temporal": {
+    "start": "2014-10-09",
+    "end": "2014-10-10",
+    "edtf": null,
+    "precision": "bounded_interval"
+  },
+  "sources": [
+    {
+      "source_key": "press:giornale-di-calabria:2014-10-10:ordigno-fandango-progetto-sud",
+      "source_type": "press_secondary",
+      "provider": "Giornale di Calabria",
+      "title": "Bomba contro un centro per tossicodipendenti di Progetto Sud a Lamezia",
+      "url": "https://www.giornaledicalabria.it/bomba-contro-un-centro-per-tossicodipendenti-di-progetto-sud-a-lamezia",
+      "published_at": "2014-10-10",
+      "retrieved_at": "2026-09-22T08:04:06+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support"
+      ]
+    },
+    {
+      "source_key": "press:lamezia-terme-news:2014-10-10:ordigno-progetto-sud-bella",
+      "source_type": "press_secondary",
+      "provider": "LTNews Lamezia Terme",
+      "title": "Lamezia, racket: nuovi avvertimenti a commercianti. Bomba a portone Progetto Sud nel quartiere Bella",
+      "url": "https://www.lameziatermenews.it/citta/1946-lamezia-racket-nuovi-qavvertimentiq-a-commercianti-bomba-a-portone-progetto-sud-nel-quartiere-bella.html",
+      "published_at": "2014-10-10",
+      "retrieved_at": "2026-09-22T08:04:06+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:danneggiamento",
+      "classification_source_key": "press:giornale-di-calabria:2014-10-10:ordigno-fandango-progetto-sud",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti contemporanee riferiscono che un ordigno rudimentale o di piccole dimensioni fu fatto esplodere davanti al portone della struttura Fandango della Comunità Progetto Sud nel quartiere Bella di Lamezia Terme, provocando lievi danni al portone.",
+        "LTNews, pubblicato il 10 ottobre 2014, colloca l'esplosione nella notte; in assenza di un orario o di una data puntuale attestati da una fonte primaria, la temporalità è rappresentata prudentemente come intervallo tra il 9 e il 10 ottobre 2014.",
+        "Il Giornale di Calabria riferisce che sull'episodio indagava il Commissariato di polizia. Non è stata reperita in questa iterazione una fonte primaria o giudiziaria che attribuisca una qualificazione penale formale, un movente o responsabilità individuali; la classificazione come danneggiamento resta pertanto provvisoria."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:fandango-progetto-sud-bella:occurrence",
+      "basis_source_key": "press:giornale-di-calabria:2014-10-10:ordigno-fandango-progetto-sud",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "minor_or_vulnerable",
+      "geometry": null,
+      "place_name": "Struttura Fandango della Comunità Progetto Sud, quartiere Bella",
+      "neighbourhood": "Bella",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:fandango-progetto-sud-bella:target",
+      "basis_source_key": "press:giornale-di-calabria:2014-10-10:ordigno-fandango-progetto-sud",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "minor_or_vulnerable",
+      "geometry": null,
+      "place_name": "Struttura Fandango della Comunità Progetto Sud, quartiere Bella",
+      "neighbourhood": "Bella",
+      "iccs_location_type": null
+    }
+  ]
+}
