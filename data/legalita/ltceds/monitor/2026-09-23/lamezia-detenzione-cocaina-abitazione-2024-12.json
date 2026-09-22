@@ -1,0 +1,131 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-detenzione-cocaina-abitazione-2024-12",
+  "discovered_at": "2026-09-23T01:11:21+02:00",
+  "updated_at": "2026-09-23T01:11:21+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Detenzione ai fini di spaccio di 1,3 kg di cocaina in un'abitazione di Lamezia Terme nel dicembre 2024",
+  "temporal": {
+    "start": null,
+    "end": "2024-12-13",
+    "edtf": null,
+    "precision": "approximate"
+  },
+  "sources": [
+    {
+      "source_key": "news-agency:ansa:2024-12-15:cocaina-abitazione-lamezia-13kg",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Nascondeva in casa oltre un chilo di cocaina, arrestato",
+      "url": "https://www.ansa.it/calabria/notizie/2024/12/15/nascondeva-in-casa-oltre-un-chilo-di-cocaina-arrestato_e27b8b50-b0f6-4677-865e-27f70e2d6da7.html",
+      "published_at": "2024-12-15T11:02:00+01:00",
+      "retrieved_at": "2026-09-23T01:11:21+02:00",
+      "support_roles": ["event_support", "classification_support", "location_support", "procedural_context", "corroboration"]
+    },
+    {
+      "source_key": "press:corriere-lamezia:2024-12-15:cocaina-abitazione-49enne",
+      "source_type": "press_secondary",
+      "provider": "Corriere di Lamezia",
+      "title": "Lamezia, arrestato 49enne per detenzione e spaccio di droga, cocaina rinvenuta avrebbe fruttato oltre 150mila euro",
+      "url": "https://www.corrieredilamezia.it/cronaca/2024_12_15/lamezia-arrestato-49enne-per-detenzione-e-spaccio-di-droga-cocaina-rinvenuta-avrebbe-fruttato-oltre-150mila-euro_50051",
+      "published_at": null,
+      "retrieved_at": "2026-09-23T01:11:21+02:00",
+      "support_roles": ["event_support", "classification_support", "location_support", "procedural_context", "corroboration"]
+    },
+    {
+      "source_key": "press:catanzaro-informa:2024-12-15:cocaina-abitazione-lamezia",
+      "source_type": "press_secondary",
+      "provider": "CatanzaroInforma",
+      "title": "Lamezia Terme: contrasto allo spaccio di stupefacenti, un uomo arrestato dai carabinieri",
+      "url": "https://www.catanzaroinforma.it/cronaca/2024/12/15/lamezia-terme-contrasto-allo-spaccio-di-stupefacenti-un-uomo-arrestato-dai-carabinieri-2/354351",
+      "published_at": null,
+      "retrieved_at": "2026-09-23T01:11:21+02:00",
+      "support_roles": ["event_support", "classification_support", "location_support", "procedural_context", "corroboration"]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:detenzione-stupefacenti-fini-spaccio",
+      "classification_source_key": "press:corriere-lamezia:2024-12-15:cocaina-abitazione-49enne",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": "art. 73 D.P.R. 309/1990",
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti riferiscono l'arresto in flagranza per detenzione ai fini di spaccio dopo una perquisizione domiciliare a Lamezia Terme; il giorno materiale della perquisizione non è indicato in modo univoco nelle fonti accessibili.",
+        "Nell'abitazione furono rinvenuti circa 1,3 kg di cocaina suddivisi in cinque involucri termosigillati, oltre a un bilancino e materiale per il taglio e il confezionamento.",
+        "Durante la perquisizione una parte dello stupefacente fu lanciata da una finestra e recuperata dai militari che cinturavano l'area.",
+        "Il GIP di Lamezia Terme convalidò l'arresto e dispose la custodia cautelare in carcere; il procedimento era nella fase delle indagini preliminari e non viene rappresentato come accertamento definitivo di responsabilità.",
+        "Le fonti non pubblicano strada, quartiere o civico dell'abitazione; la localizzazione è quindi mantenuta al solo livello comunale, senza coordinate."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata:occurrence",
+      "basis_source_key": "news-agency:ansa:2024-12-15:cocaina-abitazione-lamezia-13kg",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata a Lamezia Terme (indirizzo non specificato)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata:search",
+      "basis_source_key": "news-agency:ansa:2024-12-15:cocaina-abitazione-lamezia-13kg",
+      "role": "search",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata a Lamezia Terme (indirizzo non specificato)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata:recovery",
+      "basis_source_key": "news-agency:ansa:2024-12-15:cocaina-abitazione-lamezia-13kg",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata a Lamezia Terme (indirizzo non specificato)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:arrest:municipality",
+      "basis_source_key": "news-agency:ansa:2024-12-15:cocaina-abitazione-lamezia-13kg",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Lamezia Terme (luogo esatto dell'arresto non specificato)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
