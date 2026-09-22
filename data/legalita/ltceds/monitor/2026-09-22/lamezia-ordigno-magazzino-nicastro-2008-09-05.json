@@ -1,0 +1,84 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-ordigno-magazzino-nicastro-2008-09-05",
+  "discovered_at": "2026-09-22T03:47:42+02:00",
+  "updated_at": "2026-09-22T03:47:42+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Esplosione di un ordigno davanti a un magazzino nel centro di Nicastro il 5 settembre 2008",
+  "temporal": {
+    "start": "2008-09-05",
+    "end": "2008-09-05",
+    "edtf": null,
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:nuova-cosenza:2008-09-05:ordigno-magazzino-nicastro",
+      "source_type": "press_secondary",
+      "provider": "Nuova Cosenza",
+      "title": "Bomba rudimentale esplode in pieno giorno, in centro, a Lamezia, evitata una strage",
+      "url": "https://www.nuovacosenza.com/cs/08/settembre/bombalamezia.html",
+      "published_at": "2008-09-05",
+      "retrieved_at": "2026-09-22T03:47:42+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:danneggiamento",
+      "classification_source_key": "press:nuova-cosenza:2008-09-05:ordigno-magazzino-nicastro",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La fonte contemporanea riferisce che un ordigno rudimentale fu fatto esplodere davanti a un magazzino nel centro del quartiere Nicastro e che la deflagrazione provocò ingenti danni ad abitazioni e autovetture parcheggiate nei dintorni.",
+        "L'esplosione è collocata alle ore 14 del 5 settembre 2008, a poca distanza dalla cattedrale; il magazzino aveva ospitato un negozio fino a circa due anni prima ed era allora offerto in locazione.",
+        "La fonte riferisce l'avvio di indagini congiunte da parte della Polizia di Stato e dei Carabinieri, ma non fornisce una qualificazione giuridica formale, un movente accertato o un esito giudiziario; la classificazione come danneggiamento resta pertanto provvisoria e non implica un movente estorsivo o mafioso."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:nicastro-magazzino-cattedrale:occurrence",
+      "basis_source_key": "press:nuova-cosenza:2008-09-05:ordigno-magazzino-nicastro",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_neighbourhood",
+      "evidence_precision": "neighbourhood",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "non_sensitive",
+      "geometry": null,
+      "place_name": "Magazzino nel centro di Nicastro, a poca distanza dalla cattedrale",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:nicastro-magazzino-cattedrale:target",
+      "basis_source_key": "press:nuova-cosenza:2008-09-05:ordigno-magazzino-nicastro",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_neighbourhood",
+      "evidence_precision": "neighbourhood",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "non_sensitive",
+      "geometry": null,
+      "place_name": "Magazzino nel centro di Nicastro, a poca distanza dalla cattedrale",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    }
+  ]
+}
