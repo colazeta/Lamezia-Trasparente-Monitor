@@ -1,0 +1,117 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-detenzione-cannabis-abitazione-sambiase-2022-11",
+  "discovered_at": "2026-09-22T14:49:06+02:00",
+  "updated_at": "2026-09-22T16:19:01+02:00",
+  "record_status": "merged",
+  "event_form": "discrete",
+  "title": "Detenzione ai fini di spaccio di circa 9 kg di cannabis in un'abitazione a Sambiase",
+  "temporal": {
+    "start": null,
+    "end": "2022-11-18",
+    "edtf": null,
+    "precision": "approximate"
+  },
+  "sources": [
+    {
+      "source_key": "press:corriere-calabria:2022-11-18:due-arresti-droga-sambiase",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Lamezia Terme, detenzione e spaccio di droga. Arrestate due persone",
+      "url": "https://www.corrieredellacalabria.it/2022/11/18/lamezia-terme-detenzione-e-spaccio-di-droga-arrestate-due-persone/",
+      "published_at": "2022-11-18T07:59:00+01:00",
+      "retrieved_at": "2026-09-22T14:49:06+02:00",
+      "support_roles": ["event_support", "classification_support", "location_support", "procedural_context", "corroboration"]
+    },
+    {
+      "source_key": "press:gazzetta-sud:2022-11-18:due-arresti-droga-sambiase",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Lamezia, spaccio di droga: arrestate due persone dai carabinieri",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2022/11/18/lamezia-spaccio-di-droga-arrestate-due-persone-dai-carabinieri-fba290b8-8ba3-4681-a2d8-eeb26baa9092",
+      "published_at": null,
+      "retrieved_at": "2026-09-22T14:49:06+02:00",
+      "support_roles": ["event_support", "classification_support", "location_support", "procedural_context", "corroboration"]
+    },
+    {
+      "source_key": "press:secondo-piano:2022-11-18:due-arresti-droga-sambiase",
+      "source_type": "press_secondary",
+      "provider": "Secondo Piano News",
+      "title": "Controlli antidroga a Lamezia, uomo sorpreso con 9 kg di erba, due arresti dei CC",
+      "url": "https://www.secondopianonews.it/controlli-antidroga-a-lamezia-uomo-sorpreso-con-9-kg-di-erba-due-arresti-dei-cc/",
+      "published_at": null,
+      "retrieved_at": "2026-09-22T14:49:06+02:00",
+      "support_roles": ["event_support", "classification_support", "location_support", "procedural_context", "corroboration"]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:detenzione-stupefacenti-fini-spaccio",
+      "classification_source_key": "press:corriere-calabria:2022-11-18:due-arresti-droga-sambiase",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti pubblicate il 18 novembre 2022 riferiscono che l'arresto era avvenuto nei giorni precedenti; il giorno esatto non è specificato e la temporalità resta quindi approssimativa con termine superiore alla data di pubblicazione.",
+        "In un controllo distinto dal rinvenimento nel magazzino, i Carabinieri della Stazione di Lamezia Terme Sambiase eseguirono una perquisizione domiciliare in un'abitazione di Sambiase.",
+        "Durante la perquisizione furono rinvenuti tre sacchi di plastica contenenti cannabis indica già essiccata, per un peso complessivo di circa 9 kg, descritta dalle fonti come pronta per essere immessa nel mercato dello spaccio nel lametino.",
+        "Le fonti inquadrano l'arresto nell'attività di contrasto alla detenzione ai fini di spaccio di sostanze stupefacenti.",
+        "L'arresto fu successivamente convalidato dal GIP del Tribunale di Lamezia Terme, che dispose la custodia domiciliare; il dato è conservato come contesto procedurale e non come accertamento definitivo di responsabilità.",
+        "Nessuna delle fonti consultate indica strada, civico o coordinate dell'abitazione privata; la localizzazione resta a precisione di quartiere e non deve essere trasformata in un hotspot puntuale."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:sambiase:abitazione:occurrence",
+      "basis_source_key": "press:secondo-piano:2022-11-18:due-arresti-droga-sambiase",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_neighbourhood",
+      "evidence_precision": "neighbourhood",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata in Sambiase (indirizzo non specificato)",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:sambiase:abitazione:search",
+      "basis_source_key": "press:secondo-piano:2022-11-18:due-arresti-droga-sambiase",
+      "role": "search",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_neighbourhood",
+      "evidence_precision": "neighbourhood",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata in Sambiase sottoposta a perquisizione domiciliare (indirizzo non specificato)",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:sambiase:abitazione:recovery",
+      "basis_source_key": "press:gazzetta-sud:2022-11-18:due-arresti-droga-sambiase",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_neighbourhood",
+      "evidence_precision": "neighbourhood",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata in Sambiase; luogo di rinvenimento di circa 9 kg di cannabis (indirizzo non specificato)",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    }
+  ]
+}

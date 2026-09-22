@@ -2,10 +2,10 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-rissa-accoltellamento-condominio-sambiase-2025-05-22",
   "discovered_at": "2026-09-07T16:14:33+02:00",
-  "updated_at": "2026-09-07T16:14:33+02:00",
+  "updated_at": "2026-09-22T17:35:39+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
-  "title": "Rissa condominiale con accoltellamento nel quartiere Sambiase",
+  "title": "Rissa condominiale con accoltellamento e tentato omicidio nel quartiere Sambiase",
   "temporal": {
     "start": "2025-05-22",
     "end": "2025-05-22",
@@ -46,6 +46,22 @@
       ]
     },
     {
+      "source_key": "press:corriere-calabria:2025-05-25:lite-parcheggio-tentato-omicidio-sambiase",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "A Lamezia la lite per un parcheggio sfocia in un tentato omicidio",
+      "url": "https://www.corrieredellacalabria.it/2025/05/24/a-lamezia-la-lite-per-un-parcheggio-sfocia-in-un-tentato-omicidio",
+      "published_at": "2025-05-25T00:00:00+02:00",
+      "retrieved_at": "2026-09-22T17:35:39+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
       "source_key": "press:lacnews24:2026-01-07:rissa-sambiase-otto-indagati",
       "source_type": "press_secondary",
       "provider": "LaC News24",
@@ -75,13 +91,29 @@
         "procedural_context",
         "corroboration"
       ]
+    },
+    {
+      "source_key": "press:rainews:2026-01-07:rissa-parcheggio-otto-indagati-sambiase",
+      "source_type": "press_secondary",
+      "provider": "RaiNews TGR Calabria",
+      "title": "La lite per un parcheggio finisce in rissa, otto indagati a Lamezia Terme",
+      "url": "https://www.rainews.it/tgr/calabria/articoli/2026/01/la-lite-per-un-parcheggio-finisce-in-rissa-otto-indagati-a-lamezia-terme-ac74ccf7-a098-4f07-97a2-be729f72195e.html",
+      "published_at": "2026-01-07T00:00:00+01:00",
+      "retrieved_at": "2026-09-22T17:35:39+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
     }
   ],
   "offences": [
     {
       "offence_key": "offence:rissa",
-      "classification_source_key": "press:lacnews24:2026-01-07:rissa-sambiase-otto-indagati",
-      "classification_basis": "provisional",
+      "classification_source_key": "press:rainews:2026-01-07:rissa-parcheggio-otto-indagati-sambiase",
+      "classification_basis": "source_stated_legal",
       "iccs_code": null,
       "istat_catalogue_id": null,
       "istat_synthetic_code": null,
@@ -90,8 +122,8 @@
       "attempt_status": "completed",
       "situational_context": [
         "la sera del 22 maggio 2025 una lite tra residenti in un condominio del quartiere Sambiase è degenerata in uno scontro violento",
-        "le ricostruzioni investigative successive collegano l'origine dello scontro a contrasti per l'uso di un parcheggio condominiale e riferiscono il coinvolgimento di più persone e l'impiego di armi improprie",
-        "la qualificazione come rissa è mantenuta provvisoria perché le fonti descrivono il fatto e la conclusione delle indagini, ma non consentono di attribuire in modo uniforme e definitivo la medesima fattispecie a tutti i partecipanti"
+        "le ricostruzioni investigative successive collegano l'origine dello scontro a contrasti per l'uso di un parcheggio condominiale e riferiscono il coinvolgimento di più persone e l'impiego anche di un badile e di una roncola",
+        "le fonti del gennaio 2026 riferiscono che la Procura di Lamezia Terme ha notificato l'avviso di conclusione delle indagini preliminari a otto persone per rissa; il dato rappresenta la qualificazione procedurale documentata e non una condanna definitiva"
       ],
       "cyber_related": null,
       "affected_object_count": null
@@ -126,6 +158,21 @@
       "resolved_precision": "neighbourhood",
       "sensitivity": "private_or_sensitive",
       "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Condominio non specificato nel quartiere Sambiase",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:sambiase:condominio-non-specificato:target",
+      "basis_source_key": "press:corriere-calabria:2025-05-25:lite-parcheggio-tentato-omicidio-sambiase",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_neighbourhood",
+      "evidence_precision": "neighbourhood",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
       "geometry": null,
       "place_name": "Condominio non specificato nel quartiere Sambiase",
       "neighbourhood": "Sambiase",
