@@ -2,8 +2,8 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-detenzione-cocaina-svincolo-a2-2023-08-18",
   "discovered_at": "2026-09-12T19:29:29+02:00",
-  "updated_at": "2026-09-12T19:29:29+02:00",
-  "record_status": "verified_source",
+  "updated_at": "2026-09-23T01:34:16+02:00",
+  "record_status": "merged",
   "event_form": "discrete",
   "title": "Detenzione ai fini di spaccio di 1,25 kg di cocaina nei pressi dello svincolo A2 di Lamezia Terme",
   "temporal": {
