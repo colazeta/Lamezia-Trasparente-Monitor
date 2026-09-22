@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-incendio-pasticceria-piazza-fiorentino-2025-05-17",
   "discovered_at": "2026-09-08T00:02:23+02:00",
-  "updated_at": "2026-09-08T00:02:23+02:00",
+  "updated_at": "2026-09-22T09:26:46+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Incendio al laboratorio di pasticceria in Piazza Fiorentino",
@@ -68,6 +68,21 @@
         "procedural_context",
         "corroboration"
       ]
+    },
+    {
+      "source_key": "press:gazzetta-sud:2025-10-23:incendi-lamezia-joker",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Lamezia, gli incendi in due esercizi commerciali nel maggio scorso: tre arresti",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2025/10/23/lamezia-gli-incendi-in-due-esercizi-commerciali-nel-maggio-scorso-tre-arresti-56b141cb-59ad-489d-a9ef-7bc52b0d1101",
+      "published_at": null,
+      "retrieved_at": "2026-09-22T09:26:46+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
     }
   ],
   "offences": [
@@ -97,13 +112,28 @@
       "basis_source_key": "press:lameziaterme:2025-05-17:incendi-esercizi-commerciali",
       "role": "target",
       "municipality": "Lamezia Terme",
-      "evidence_basis": "source_stated_named_site",
-      "evidence_precision": "exact_public_site",
-      "resolved_precision": "exact_public_site",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
       "sensitivity": "private_or_sensitive",
       "publication_risk": "victim_linked",
       "geometry": null,
-      "place_name": "Laboratorio di pasticceria, Piazza Fiorentino",
+      "place_name": "Piazza Fiorentino",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:piazza-fiorentino:occurrence",
+      "basis_source_key": "press:lameziaterme:2025-05-17:incendi-esercizi-commerciali",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Piazza Fiorentino",
       "neighbourhood": null,
       "iccs_location_type": null
     }

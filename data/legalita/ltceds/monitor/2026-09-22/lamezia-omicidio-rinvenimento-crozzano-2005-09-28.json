@@ -1,0 +1,115 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-omicidio-rinvenimento-crozzano-2005-09-28",
+  "discovered_at": "2026-09-22T12:10:41+02:00",
+  "updated_at": "2026-09-22T12:34:00+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Omicidio del 28 settembre 2005 con rinvenimento del corpo in località Crozzano il 1 ottobre 2005",
+  "temporal": {
+    "start": "2005-09-28",
+    "end": "2005-09-28",
+    "edtf": null,
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:corriere-sera:2005-10-03:corpo-carbonizzato-crozzano",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Sera",
+      "title": "Trovato bruciato il corpo di un uomo a Crozzano",
+      "url": "https://www.corriere.it/Primo_Piano/Cronache/2005/10_Ottobre/02/cadavere.html",
+      "published_at": "2005-10-03",
+      "retrieved_at": "2026-09-22T12:10:41+02:00",
+      "support_roles": ["event_support", "location_support", "corroboration"]
+    },
+    {
+      "source_key": "press:corriere-calabria:2016-01-22:processo-perseo-omicidio-2005",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Ricostruzione nel processo Perseo dell'omicidio del 28 settembre 2005",
+      "url": "https://www.corrieredellacalabria.it/2016/01/22/il-killer-che-armava-zizzania/",
+      "published_at": "2016-01-22",
+      "retrieved_at": "2026-09-22T12:10:41+02:00",
+      "support_roles": ["event_support", "classification_support", "location_support", "procedural_context"]
+    },
+    {
+      "source_key": "press:il-lametino:2017-07-15:cassazione-perseo-omicidio-2005",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Processo Perseo: Cassazione conferma una condanna per l'omicidio del 2005",
+      "url": "https://www.lametino.it/cronaca/processo-perseo-ecco-la-sentenza-in-cassazione.html",
+      "published_at": "2017-07-15",
+      "retrieved_at": "2026-09-22T12:10:41+02:00",
+      "support_roles": ["classification_support", "procedural_context", "corroboration"]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:omicidio",
+      "classification_source_key": "press:corriere-calabria:2016-01-22:processo-perseo-omicidio-2005",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La ricostruzione dibattimentale del processo Perseo riferita dalla stampa qualifica il fatto come omicidio e colloca l'uccisione al 28 settembre 2005.",
+        "La fonte contemporanea riferisce che il corpo carbonizzato fu rinvenuto intorno alle ore 13 del 1 ottobre 2005 nel portabagagli di una Fiat Stilo in località Crozzano, dopo una denuncia di scomparsa risalente al 28 settembre.",
+        "Una successiva ricostruzione processuale descrive il corpo come raggiunto da proiettili calibro 7,65 e abbandonato in località Crozzano; le fonti recuperate non consentono tuttavia di stabilire che Crozzano coincida anche con il luogo materiale dell'uccisione.",
+        "Nel 2017 la stampa giudiziaria ha riferito che la Corte di Cassazione, nel processo Perseo, ha confermato una condanna per questo omicidio; tale elemento è trattato come contesto probatorio e non introduce identità personali nel record LTCEDS."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:omicidio-2005-09-28:occurrence",
+      "basis_source_key": "press:corriere-calabria:2016-01-22:processo-perseo-omicidio-2005",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:omicidio-2005-09-28:target",
+      "basis_source_key": "press:corriere-calabria:2016-01-22:processo-perseo-omicidio-2005",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "unknown",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:crozzano:discovery",
+      "basis_source_key": "press:corriere-sera:2005-10-03:corpo-carbonizzato-crozzano",
+      "role": "discovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Crozzano",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
