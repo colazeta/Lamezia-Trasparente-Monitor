@@ -1,0 +1,116 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-danneggiamento-auto-via-san-umile-bisignano-2019-02-02",
+  "discovered_at": "2026-09-22T01:42:49+02:00",
+  "updated_at": "2026-09-22T01:42:49+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Danneggiamento di un'autovettura e inseguimento concluso in via S. Umile di Bisignano il 2 febbraio 2019",
+  "temporal": {
+    "start": "2019-02-02",
+    "end": "2019-02-02",
+    "edtf": null,
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "polizia:questura-catanzaro:2019-02-06:danneggiamento-autovettura-lamezia",
+      "source_type": "law_enforcement_primary",
+      "provider": "Questura di Catanzaro - Polizia di Stato",
+      "title": "Il Commissariato di Lamezia Terme ha denunciato due giovani per danneggiamento di un'autovettura",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/12365c5b1bd6885d3073676401",
+      "published_at": null,
+      "retrieved_at": "2026-09-22T01:42:49+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:danneggiamento",
+      "classification_source_key": "polizia:questura-catanzaro:2019-02-06:danneggiamento-autovettura-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La Questura riferisce che nella serata di sabato precedente al comunicato del 6 febbraio 2019 un'autovettura Ford Fiesta fu danneggiata davanti a un'abitazione privata situata in una frazione non nominata di Lamezia Terme; il riferimento temporale corrisponde al 2 febbraio 2019.",
+        "Secondo la ricostruzione di polizia, dopo il danneggiamento gli occupanti di un'Alfa Romeo 147 si allontanarono e furono inseguiti per le vie cittadine; una Volante intercetto' l'autovettura in via S. Umile di Bisignano.",
+        "La fonte primaria riferisce il deferimento alla Procura della Repubblica di Lamezia Terme per danneggiamento ed esercizio arbitrario delle proprie ragioni con violenza sulle cose; non viene rappresentato alcun accertamento definitivo di responsabilita'.",
+        "La frazione e l'abitazione in cui avvenne il danneggiamento non sono nominate dalla fonte: non sono stati quindi inferiti quartiere, strada, civico o coordinate per il luogo del fatto."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    },
+    {
+      "offence_key": "offence:esercizio-arbitrario-proprie-ragioni-con-violenza-sulle-cose",
+      "classification_source_key": "polizia:questura-catanzaro:2019-02-06:danneggiamento-autovettura-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La qualificazione e' riportata espressamente dalla Questura tra i reati per i quali i due soggetti furono deferiti alla Procura; non viene inferita una qualificazione ulteriore ne' un esito giudiziario successivo."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:frazione-non-specificata-abitazione-auto-2019:occurrence",
+      "basis_source_key": "polizia:questura-catanzaro:2019-02-06:danneggiamento-autovettura-lamezia",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Davanti a un'abitazione privata in una frazione non specificata di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:frazione-non-specificata-abitazione-auto-2019:target",
+      "basis_source_key": "polizia:questura-catanzaro:2019-02-06:danneggiamento-autovettura-lamezia",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Ford Fiesta parcheggiata davanti a un'abitazione privata in una frazione non specificata di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-san-umile-di-bisignano:other",
+      "basis_source_key": "polizia:questura-catanzaro:2019-02-06:danneggiamento-autovettura-lamezia",
+      "role": "other",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "non_sensitive",
+      "geometry": null,
+      "place_name": "Via S. Umile di Bisignano, punto di intercettazione dell'autovettura",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

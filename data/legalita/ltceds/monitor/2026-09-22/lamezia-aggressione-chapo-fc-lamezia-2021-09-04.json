@@ -1,0 +1,100 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-aggressione-chapo-fc-lamezia-2021-09-04",
+  "discovered_at": "2026-09-22T04:53:14+02:00",
+  "updated_at": "2026-09-22T04:53:14+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Aggressione a due dirigenti dell'FC Lamezia Terme presso il ristorante-pizzeria Chapò il 4 settembre 2021",
+  "temporal": {
+    "start": "2021-09-04",
+    "end": "2021-09-04",
+    "edtf": null,
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "polizia:questura-catanzaro:2021-09-24:aggressione-fc-lamezia-daspo",
+      "source_type": "law_enforcement_primary",
+      "provider": "Questura di Catanzaro - Polizia di Stato",
+      "title": "Il Questore di Catanzaro emette 4 DASPO nei confronti di ULTRAS lametini per l'aggressione al presidente e vice presidente dell'FC LAMEZIA TERME",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/1236614dbe0c83c50097581428",
+      "published_at": null,
+      "retrieved_at": "2026-09-22T04:53:14+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "corriere-lamezia:2021-09-24:aggressione-dirigenti-fc-lamezia-daspo",
+      "source_type": "press_secondary",
+      "provider": "Corriere di Lamezia",
+      "title": "Lamezia Terme, individuati autori aggressione a presidente e vice presidente Fc Lamezia Terme, emessi 4 daspo",
+      "url": "https://www.corrieredilamezia.it/cronaca/2021_09_24/9521_9521/",
+      "published_at": null,
+      "retrieved_at": "2026-09-22T04:53:14+02:00",
+      "support_roles": [
+        "corroboration",
+        "event_support",
+        "location_support",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:aggressione",
+      "classification_source_key": "polizia:questura-catanzaro:2021-09-24:aggressione-fc-lamezia-daspo",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La Questura di Catanzaro documenta un'aggressione avvenuta il 4 settembre 2021 ai danni di due dirigenti dell'FC Lamezia Terme mentre si trovavano con familiari a cena presso il ristorante-pizzeria Chapò, in occasione della presentazione della nuova squadra.",
+        "Il Commissariato di P.S. di Lamezia Terme intervenne nell'immediatezza e le successive indagini portarono all'identificazione e al deferimento all'autorità giudiziaria dei soggetti indicati dalla fonte; il Questore emise inoltre quattro provvedimenti DASPO.",
+        "La fonte primaria collega l'episodio a contrasti della tifoseria rispetto alla costituzione della nuova squadra cittadina e lo qualifica come episodio di violenza connesso a manifestazioni sportive; i DASPO sono misure amministrative di prevenzione e non costituiscono un accertamento definitivo di responsabilità penale.",
+        "Poiché la fonte non indica una specifica fattispecie penale oltre alla descrizione dell'aggressione, la classificazione resta provvisoria e non viene inferita una qualificazione giuridica ulteriore."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 2
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:ristorante-pizzeria-chapo:occurrence",
+      "basis_source_key": "polizia:questura-catanzaro:2021-09-24:aggressione-fc-lamezia-daspo",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Ristorante Pizzeria Chapò, Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:ristorante-pizzeria-chapo:target",
+      "basis_source_key": "polizia:questura-catanzaro:2021-09-24:aggressione-fc-lamezia-daspo",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Ristorante Pizzeria Chapò, Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
