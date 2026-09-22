@@ -2,8 +2,8 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-detenzione-cannabis-abitazione-sambiase-2022-11",
   "discovered_at": "2026-09-22T14:49:06+02:00",
-  "updated_at": "2026-09-22T14:49:06+02:00",
-  "record_status": "verified_source",
+  "updated_at": "2026-09-22T16:19:01+02:00",
+  "record_status": "merged",
   "event_form": "discrete",
   "title": "Detenzione ai fini di spaccio di circa 9 kg di cannabis in un'abitazione a Sambiase",
   "temporal": {
