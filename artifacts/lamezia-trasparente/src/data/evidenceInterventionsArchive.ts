@@ -38,6 +38,7 @@ import { EVIDENCE_INTERVENTIONS_2026_09_18 } from "./evidenceInterventions202609
 import { EVIDENCE_INTERVENTIONS_2026_09_19 } from "./evidenceInterventions20260919";
 import { EVIDENCE_INTERVENTIONS_2026_09_20 } from "./evidenceInterventions20260920";
 import { EVIDENCE_INTERVENTIONS_2026_09_21 } from "./evidenceInterventions20260921";
+import { EVIDENCE_INTERVENTIONS_2026_09_22 } from "./evidenceInterventions20260922";
 import { applyEvidenceInterventionUpdates20260914 } from "./evidenceInterventionUpdates20260914";
 import { applyEvidenceInterventionUpdates20260919 } from "./evidenceInterventionUpdates20260919";
 
@@ -86,6 +87,7 @@ const EVIDENCE_INTERVENTIONS_BEFORE_2026_09_14_UPDATES: readonly EvidenceInterve
   ...EVIDENCE_INTERVENTIONS_2026_09_19,
   ...EVIDENCE_INTERVENTIONS_2026_09_20,
   ...EVIDENCE_INTERVENTIONS_2026_09_21,
+  ...EVIDENCE_INTERVENTIONS_2026_09_22,
 ];
 
 function deduplicateEvidenceInterventions(
