@@ -2,10 +2,10 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-ordigno-magazzino-nicastro-2008-09-05",
   "discovered_at": "2026-09-22T03:47:42+02:00",
-  "updated_at": "2026-09-22T03:47:42+02:00",
+  "updated_at": "2026-09-22T06:37:34+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
-  "title": "Esplosione di un ordigno davanti a un magazzino nel centro di Nicastro il 5 settembre 2008",
+  "title": "Esplosione di un ordigno davanti a un magazzino in via Garibaldi, Nicastro, il 5 settembre 2008",
   "temporal": {
     "start": "2008-09-05",
     "end": "2008-09-05",
@@ -27,6 +27,19 @@
         "location_support",
         "procedural_context"
       ]
+    },
+    {
+      "source_key": "other:resistere-lamezia:2008:via-garibaldi-ordigno",
+      "source_type": "other",
+      "provider": "Resistere a Lamezia",
+      "title": "Notizie di ‘Ndrangheta, anno 2008",
+      "url": "https://resisterealamezia.wordpress.com/2009/01/01/notizie-di-ndrangheta-anno-2009/",
+      "published_at": null,
+      "retrieved_at": "2026-09-22T06:37:34+02:00",
+      "support_roles": [
+        "location_support",
+        "corroboration"
+      ]
     }
   ],
   "offences": [
@@ -43,7 +56,9 @@
       "situational_context": [
         "La fonte contemporanea riferisce che un ordigno rudimentale fu fatto esplodere davanti a un magazzino nel centro del quartiere Nicastro e che la deflagrazione provocò ingenti danni ad abitazioni e autovetture parcheggiate nei dintorni.",
         "L'esplosione è collocata alle ore 14 del 5 settembre 2008, a poca distanza dalla cattedrale; il magazzino aveva ospitato un negozio fino a circa due anni prima ed era allora offerto in locazione.",
-        "La fonte riferisce l'avvio di indagini congiunte da parte della Polizia di Stato e dei Carabinieri, ma non fornisce una qualificazione giuridica formale, un movente accertato o un esito giudiziario; la classificazione come danneggiamento resta pertanto provvisoria e non implica un movente estorsivo o mafioso."
+        "Una cronologia storica successiva, dichiaratamente raccolta dalla stampa locale del 2008, colloca esplicitamente l'episodio del 5 settembre in via Garibaldi; questa precisazione è coerente con la localizzazione contemporanea nel centro di Nicastro, in prossimità della cattedrale.",
+        "La fonte contemporanea riferisce l'avvio di indagini congiunte da parte della Polizia di Stato e dei Carabinieri, ma non fornisce una qualificazione giuridica formale, un movente accertato o un esito giudiziario; la classificazione come danneggiamento resta pertanto provvisoria e non implica un movente estorsivo o mafioso.",
+        "Non sono stati inferiti numero civico, coordinate, identità del proprietario o identità dell'eventuale precedente esercizio commerciale."
       ],
       "cyber_related": null,
       "affected_object_count": null
@@ -52,31 +67,31 @@
   "locations": [
     {
       "location_key": "location:lamezia-terme:nicastro-magazzino-cattedrale:occurrence",
-      "basis_source_key": "press:nuova-cosenza:2008-09-05:ordigno-magazzino-nicastro",
+      "basis_source_key": "other:resistere-lamezia:2008:via-garibaldi-ordigno",
       "role": "occurrence",
       "municipality": "Lamezia Terme",
-      "evidence_basis": "source_stated_neighbourhood",
-      "evidence_precision": "neighbourhood",
-      "resolved_precision": "neighbourhood",
-      "sensitivity": "non_sensitive",
-      "publication_risk": "non_sensitive",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
       "geometry": null,
-      "place_name": "Magazzino nel centro di Nicastro, a poca distanza dalla cattedrale",
+      "place_name": "Magazzino non identificato in via Garibaldi, centro di Nicastro, nei pressi della Cattedrale",
       "neighbourhood": "Nicastro",
       "iccs_location_type": null
     },
     {
       "location_key": "location:lamezia-terme:nicastro-magazzino-cattedrale:target",
-      "basis_source_key": "press:nuova-cosenza:2008-09-05:ordigno-magazzino-nicastro",
+      "basis_source_key": "other:resistere-lamezia:2008:via-garibaldi-ordigno",
       "role": "target",
       "municipality": "Lamezia Terme",
-      "evidence_basis": "source_stated_neighbourhood",
-      "evidence_precision": "neighbourhood",
-      "resolved_precision": "neighbourhood",
-      "sensitivity": "non_sensitive",
-      "publication_risk": "non_sensitive",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
       "geometry": null,
-      "place_name": "Magazzino nel centro di Nicastro, a poca distanza dalla cattedrale",
+      "place_name": "Magazzino non identificato in via Garibaldi, centro di Nicastro, nei pressi della Cattedrale",
       "neighbourhood": "Nicastro",
       "iccs_location_type": null
     }
