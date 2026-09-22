@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-pullo-traffico-spaccio-armi-2021",
   "discovered_at": "2026-09-07T04:48:37+02:00",
-  "updated_at": "2026-09-07T04:48:37+02:00",
+  "updated_at": "2026-09-22T03:20:21+02:00",
   "record_status": "verified_source",
   "event_form": "course_of_conduct",
   "title": "Rete di traffico e spaccio di stupefacenti contestata nell'operazione Pullo a Lamezia Terme",
@@ -145,6 +145,21 @@
       "geometry": null,
       "place_name": "Sambiase",
       "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:pullo:logistic-base",
+      "basis_source_key": "law:polizia-stato:2026-03-12:operazione-pullo-lamezia",
+      "role": "other",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "unknown",
+      "geometry": null,
+      "place_name": "Terreni agricoli in località Pullo",
+      "neighbourhood": null,
       "iccs_location_type": null
     }
   ]
