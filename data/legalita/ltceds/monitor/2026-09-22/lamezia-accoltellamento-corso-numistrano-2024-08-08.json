@@ -1,0 +1,98 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-accoltellamento-corso-numistrano-2024-08-08",
+  "discovered_at": "2026-09-22T07:36:39+02:00",
+  "updated_at": "2026-09-22T07:36:39+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Aggressione con arma da taglio su Corso Numistrano l'8 agosto 2024",
+  "temporal": {
+    "start": "2024-08-08",
+    "end": "2024-08-08",
+    "edtf": null,
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "lametino:2024-08-09:accoltellamento-corso-numistrano",
+      "source_type": "press_secondary",
+      "provider": "Il Lametino",
+      "title": "Lamezia, si rifiuta di spegnere una sigaretta: uomo accoltellato su corso Numistrano",
+      "url": "https://www.lametino.it/cronaca/lamezia-si-rifiuta-di-spegnere-una-sigaretta-uomo-accoltellato-su-corso-numistrano.html",
+      "published_at": "2024-08-09",
+      "retrieved_at": "2026-09-22T07:36:39+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support"
+      ]
+    },
+    {
+      "source_key": "lameziaterme-it:2024-08-08:lite-corso-numistrano",
+      "source_type": "press_secondary",
+      "provider": "LameziaTerme.it",
+      "title": "Lamezia Terme. Lite su corso Numistrano, un ferito",
+      "url": "https://www.lameziaterme.it/lamezia-terme-lite-su-corso-numistrano-un-ferito/",
+      "published_at": "2024-08-08",
+      "retrieved_at": "2026-09-22T07:36:39+02:00",
+      "support_roles": [
+        "corroboration",
+        "event_support",
+        "location_support"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:aggressione",
+      "classification_source_key": "lametino:2024-08-09:accoltellamento-corso-numistrano",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti contemporanee documentano un litigio tra due persone su Corso Numistrano, nel centro di Lamezia Terme, culminato nell'uso di un coltello e nel ferimento di una delle persone coinvolte.",
+        "Il Lametino, pubblicato il 9 agosto 2024, riferisce che l'episodio era avvenuto la sera precedente e colloca i due uomini su una panchina di Corso Numistrano; i Carabinieri intervenuti sul posto ricostruirono la dinamica e il ferito fu trasportato in ospedale.",
+        "LameziaTerme.it, pubblicato l'8 agosto 2024, conferma un accoltellamento conseguente a un litigio su Corso Numistrano e l'intervento delle forze dell'ordine e del 118.",
+        "In assenza di una fonte giudiziaria o di polizia recuperata che indichi una specifica fattispecie penale, la classificazione resta provvisoria come aggressione e non viene inferita una qualificazione giuridica ulteriore."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:corso-numistrano-panchina:occurrence",
+      "basis_source_key": "lametino:2024-08-09:accoltellamento-corso-numistrano",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Corso Numistrano, panchina non ulteriormente identificata",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:corso-numistrano-panchina:target",
+      "basis_source_key": "lametino:2024-08-09:accoltellamento-corso-numistrano",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Corso Numistrano, panchina non ulteriormente identificata",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
