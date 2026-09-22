@@ -2,8 +2,8 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-rissa-condominiale-tentato-omicidio-sambiase-2025-05-22",
   "discovered_at": "2026-09-17T12:27:53+02:00",
-  "updated_at": "2026-09-17T12:27:53+02:00",
-  "record_status": "verified_source",
+  "updated_at": "2026-09-22T17:35:39+02:00",
+  "record_status": "merged",
   "event_form": "discrete",
   "title": "Rissa condominiale con tentato omicidio nel quartiere Sambiase il 22 maggio 2025",
   "temporal": {
