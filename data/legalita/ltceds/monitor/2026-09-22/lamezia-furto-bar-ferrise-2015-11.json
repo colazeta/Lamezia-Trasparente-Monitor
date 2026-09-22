@@ -21,12 +21,7 @@
       "url": "https://www.lametino.it/cronaca/lamezia-ruba-denaro-e-biglietti-lotteria-in-bar-arrestato-31enne.html",
       "published_at": null,
       "retrieved_at": "2026-09-22T22:03:47+02:00",
-      "support_roles": [
-        "event_support",
-        "classification_support",
-        "location_support",
-        "procedural_context"
-      ]
+      "support_roles": ["event_support", "classification_support", "location_support", "procedural_context"]
     },
     {
       "source_key": "press:ltnews:2015-11-27:furto-bar-ferrise",
@@ -36,12 +31,7 @@
       "url": "https://www.lameziatermenews.it/component/tags/tag/arresto.html?start=20",
       "published_at": null,
       "retrieved_at": "2026-09-22T22:03:47+02:00",
-      "support_roles": [
-        "event_support",
-        "classification_support",
-        "location_support",
-        "corroboration"
-      ]
+      "support_roles": ["event_support", "classification_support", "location_support", "corroboration"]
     }
   ],
   "offences": [
@@ -90,7 +80,7 @@
       "evidence_precision": "exact_public_site",
       "resolved_precision": "exact_public_site",
       "sensitivity": "public_place",
-      "publication_risk": "low_public_site",
+      "publication_risk": "victim_linked",
       "geometry": null,
       "place_name": "Bar Ferrise",
       "neighbourhood": null,
