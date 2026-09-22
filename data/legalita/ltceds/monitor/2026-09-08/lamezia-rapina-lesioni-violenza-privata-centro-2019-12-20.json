@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-rapina-lesioni-violenza-privata-centro-2019-12-20",
   "discovered_at": "2026-09-08T10:01:49+02:00",
-  "updated_at": "2026-09-14T07:13:56+02:00",
+  "updated_at": "2026-09-22T20:20:07+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Rapina con violenza privata e lesioni in un appartamento nel centro di Lamezia Terme",
@@ -25,6 +25,21 @@
         "event_support",
         "classification_support",
         "procedural_context"
+      ]
+    },
+    {
+      "source_key": "authority:gnews-giustizia:2020-02-10:rapina-due-donne-lamezia",
+      "source_type": "public_authority_primary",
+      "provider": "gNews - Ministero della giustizia",
+      "title": "Aggressione e rapina a prostitute, tre arresti a Lamezia Terme",
+      "url": "https://www.gnewsonline.it/brevi/aggressione-e-rapina-a-prostitute-tre-arresti-a-lamezia-terme",
+      "published_at": "2020-02-10T00:00:00+01:00",
+      "retrieved_at": "2026-09-22T20:20:07+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
       ]
     },
     {
@@ -78,7 +93,7 @@
   "offences": [
     {
       "offence_key": "offence:rapina",
-      "classification_source_key": "news:ansa:2020-02-10:rapina-due-donne-lamezia",
+      "classification_source_key": "authority:gnews-giustizia:2020-02-10:rapina-due-donne-lamezia",
       "classification_basis": "source_stated_legal",
       "iccs_code": null,
       "istat_catalogue_id": null,
@@ -97,7 +112,7 @@
     },
     {
       "offence_key": "offence:violenza-privata",
-      "classification_source_key": "news:ansa:2020-02-10:rapina-due-donne-lamezia",
+      "classification_source_key": "authority:gnews-giustizia:2020-02-10:rapina-due-donne-lamezia",
       "classification_basis": "source_stated_legal",
       "iccs_code": null,
       "istat_catalogue_id": null,
@@ -114,7 +129,7 @@
     },
     {
       "offence_key": "offence:lesioni-personali",
-      "classification_source_key": "news:ansa:2020-02-10:rapina-due-donne-lamezia",
+      "classification_source_key": "authority:gnews-giustizia:2020-02-10:rapina-due-donne-lamezia",
       "classification_basis": "source_stated_legal",
       "iccs_code": null,
       "istat_catalogue_id": null,
