@@ -68,7 +68,7 @@
   ],
   "locations": [
     {
-      "location_key": "location:lamezia-terme:via-giorgio-la-pira-interspar:occurrence",
+      "location_key": "location:lamezia-terme:via-giorgio-la-pira:occurrence",
       "basis_source_key": "press:corriere-calabria:2026-06-18:artemis-ii-fiat500-cavallo-ritorno",
       "role": "occurrence",
       "municipality": "Lamezia Terme",
@@ -78,7 +78,7 @@
       "sensitivity": "public_place",
       "publication_risk": "low_public_site",
       "geometry": null,
-      "place_name": "Via Giorgio La Pira, nei pressi del supermercato Interspar",
+      "place_name": "Via Giorgio La Pira",
       "neighbourhood": null,
       "iccs_location_type": null
     },
@@ -98,7 +98,7 @@
       "iccs_location_type": null
     },
     {
-      "location_key": "location:lamezia-terme:contrada-carra-bruzia:other",
+      "location_key": "location:lamezia-terme:contrada-carra:other",
       "basis_source_key": "press:corriere-calabria:2026-06-18:artemis-ii-fiat500-cavallo-ritorno",
       "role": "other",
       "municipality": "Lamezia Terme",
@@ -108,7 +108,7 @@
       "sensitivity": "public_place",
       "publication_risk": "low_public_site",
       "geometry": null,
-      "place_name": "Contrada Carrà, nei pressi del bar pasticceria Bruzia",
+      "place_name": "Contrada Carrà",
       "neighbourhood": null,
       "iccs_location_type": null
     }
