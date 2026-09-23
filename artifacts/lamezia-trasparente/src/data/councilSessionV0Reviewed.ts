@@ -72,6 +72,7 @@ const SEPTEMBER_COMMISSION_RESEARCHED_AT = "2026-09-07T04:19:06Z";
 const MID_SEPTEMBER_COMMISSION_RESEARCHED_AT = "2026-09-12T10:18:08Z";
 const LATE_SEPTEMBER_COMMISSION_RESEARCHED_AT = "2026-09-19T09:34:42Z";
 const SEPTEMBER_22_25_COMMISSION_RESEARCHED_AT = "2026-09-21T22:07:23Z";
+const SEPTEMBER_24_COMMISSION_RESEARCHED_AT = "2026-09-23T10:14:27Z";
 const SERRA_ANNUNZIATA_CONTEXT_RESEARCHED_AT = "2026-09-19T15:49:21Z";
 const MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT = "2026-09-12T21:51:17Z";
 const SCHOOL_TRANSPORT_CONTEXT_RESEARCHED_AT = "2026-09-14T10:13:39Z";
@@ -424,6 +425,15 @@ const september22To25CommissionContextResearch: CouncilSessionV0ContextResearch 
     articles: [],
     media: [],
   };
+
+const september24CommissionContextResearch: CouncilSessionV0ContextResearch = {
+  status: "checked_no_match",
+  checkedAt: SEPTEMBER_24_COMMISSION_RESEARCHED_AT,
+  searchNote:
+    "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, City One, LameziaInforma, LameziaTermeNews, il Lametino e risultati indicizzati, inclusi canali social e video, per la seduta della III Commissione del 24 settembre 2026 alle 11:00. Le query hanno combinato organo, data, orario, raccolta dei rifiuti nelle zone collinari e montane e i nomi degli auditi Alessandro Vescio e Francesco Esposito. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alla seduta. L'ordine del giorno ufficiale è disponibile e non viene ricostruita un'agenda editoriale.",
+  articles: [],
+  media: [],
+};
 
 const commissionIiiWasteMotionContextResearch: CouncilSessionV0ContextResearch =
   {
@@ -821,6 +831,18 @@ const commissionIvSeptember22And23Notice = lateSeptemberNotice({
   documentSha256:
     "85c4218e626ff552d3663519672675fd42d05a212a392f66683c3d1fba011492",
   reviewedAt: SEPTEMBER_22_25_COMMISSION_RESEARCHED_AT,
+});
+
+const commissionIiiSeptember24Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3043",
+  publicationStart: "2026-09-22",
+  publicationEnd: "2026-09-29",
+  subject: "Convocazione 3° Commissione Consiliare Permanente.",
+  sourceContentHash:
+    "82e6f6fd989cf7e37ae8b4dd8e24a3d4e056a5b486d6fa68e6dd0d8c7f11f222",
+  documentSha256:
+    "bebe656039da9f7a4dd7b93f3baf530902ac0a1da3319e1bf3e063001845bbb8",
+  reviewedAt: SEPTEMBER_24_COMMISSION_RESEARCHED_AT,
 });
 
 const councilCandidate = requireCandidate({
@@ -1442,6 +1464,10 @@ const streetArtGiuliaUrbanaAgenda = [
   "Regolamento comunale per la promozione della Street Art. Audizione del sig. Giacomo Marinaro, curatore e direttore artistico del progetto Giulia Urbana.",
 ] as const;
 
+const hillsideWasteCollectionAgenda = [
+  "Servizio raccolta rifiuti nelle zone collinari e montane. Audizione del dirigente della Lamezia Multiservizi ing. Alessandro Vescio e del dirigente di Settore ing. Francesco Esposito.",
+] as const;
+
 const councilVerifiedSession: CouncilSessionV0 = {
   id: "albo-2026-2673-consiglio-comunale",
   kind: "council",
@@ -1545,6 +1571,19 @@ const councilVerifiedSession: CouncilSessionV0 = {
 };
 
 export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
+  septemberCommissionSession({
+    id: "albo-2026-3043-commissione-iii-2026-09-24",
+    title:
+      "III Commissione consiliare permanente — seduta del 24 settembre 2026",
+    scheduledAt: "2026-09-24T11:00:00+02:00",
+    agenda: hillsideWasteCollectionAgenda,
+    candidate: commissionIiiSeptember24Notice.candidate,
+    provenance: commissionIiiSeptember24Notice.provenance,
+    contextResearch: september24CommissionContextResearch,
+    sourceLinkLabel: "Apri la convocazione ufficiale della III Commissione",
+    calendarSummary:
+      "La convocazione programma una seduta della III Commissione il 24 settembre 2026 alle 11:00.",
+  }),
   septemberCommissionSession({
     id: "albo-2026-3011-commissione-v-2026-09-25",
     title: "V Commissione consiliare permanente — seduta del 25 settembre 2026",
