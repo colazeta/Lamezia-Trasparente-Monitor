@@ -729,6 +729,32 @@ describe("councilSessionV0", () => {
     );
     expect(wasteMotionSession?.sessionStatus.value).toBe("non_verificata");
 
+    const commissionISeptember17 = sessions.find(
+      (session) => session.id === "albo-2026-2971-commissione-i-2026-09-17",
+    );
+    expect(commissionISeptember17?.contextResearch).toEqual(
+      expect.objectContaining({
+        status: "reviewed_matches",
+        checkedAt: "2026-09-23T22:14:41Z",
+        media: [],
+      }),
+    );
+    expect(commissionISeptember17?.contextResearch.articles).toEqual([
+      expect.objectContaining({
+        publisher: "il Lametino",
+        publishedAt: "2026-09-23",
+        relationship: "possible_same_session",
+        url: "https://www.lametino.it/ultime/lamezia-mozioni-di-sfiducia-contro-cristiano-e-villella-tensioni-nelle-commissioni-consiliari.html",
+      }),
+    ]);
+    expect(commissionISeptember17?.agenda.value).toEqual([
+      "Trattazione della richiesta relativa allo studio e all'esame delle vertenze. Audizione del dirigente del Settore Avvocatura dott.ssa Alessandra Belvedere.",
+    ]);
+    expect(commissionISeptember17?.sessionStatus.value).toBe("non_verificata");
+    expect(commissionISeptember17?.lastCheckedAt.value).toBe(
+      "2026-09-23T22:14:41Z",
+    );
+
     for (const session of sessions) {
       expect(session.provenance?.documentUrl).toMatch(
         /2026_(2953|2959|2960|2971|2981|2986|3001)_1_X/,
@@ -752,7 +778,10 @@ describe("councilSessionV0", () => {
       expect(session.agenda.sourceStatus).toBe("verificato");
       expect(session.agenda.value?.length).toBeGreaterThan(0);
       expect(session.sessionStatus.value).toBe("non_verificata");
-      if (session.id !== wasteMotionSession?.id) {
+      if (
+        session.id !== wasteMotionSession?.id &&
+        session.id !== commissionISeptember17?.id
+      ) {
         expect(session.contextResearch).toEqual(
           expect.objectContaining({
             status: "checked_no_match",

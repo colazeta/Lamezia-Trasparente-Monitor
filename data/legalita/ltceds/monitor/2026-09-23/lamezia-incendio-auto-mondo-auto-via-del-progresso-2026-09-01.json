@@ -1,0 +1,112 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-incendio-auto-mondo-auto-via-del-progresso-2026-09-01",
+  "discovered_at": "2026-09-23T23:14:52+02:00",
+  "updated_at": "2026-09-23T23:14:52+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Incendio di un'autovettura nel parcheggio della concessionaria Mondo Auto Dr in Via del Progresso il 1 settembre 2026",
+  "temporal": {
+    "start": "2026-09-01",
+    "end": "2026-09-01",
+    "edtf": "2026-09-01",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:corriere-calabria:2026-09-01:mondo-auto-incendio",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Auto incendiata nel parcheggio di una concessionaria a Lamezia, indaga la polizia",
+      "url": "https://www.corrieredellacalabria.it/2026/09/01/lamezia-auto-incendiata-concessionaria-polizia-indagini",
+      "published_at": "2026-09-01T16:20:00+02:00",
+      "retrieved_at": "2026-09-23T23:14:52+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lametino:2026-09-01:mondo-auto-incendio",
+      "source_type": "press_secondary",
+      "provider": "Il Lametino",
+      "title": "Lamezia, auto incendiata in una concessionaria: indagini della Polizia",
+      "url": "https://www.lametino.it/cronaca/lamezia-auto-incendiata-in-una-concessionaria-indagini-della-polizia.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-23T23:14:52+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "other:mondo-auto:official-location-lamezia",
+      "source_type": "other",
+      "provider": "Mondo Auto",
+      "title": "Vendita Auto a Lamezia Terme - Mondo Auto",
+      "url": "https://www.mondoautolamezia.it/sedi/vendita-nuovo-usato-lamezia-terme",
+      "published_at": null,
+      "retrieved_at": "2026-09-23T23:14:52+02:00",
+      "support_roles": [
+        "location_support"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:incendio-veicoli",
+      "classification_source_key": "press:corriere-calabria:2026-09-01:mondo-auto-incendio",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Nella notte del 1 settembre 2026 una Fiat Punto parcheggiata presso la concessionaria Mondo Auto Dr in Via del Progresso, a Lamezia Terme, è stata interessata da un incendio.",
+        "Le fonti giornalistiche contemporanee riferiscono, sulla base delle prime risultanze investigative, una probabile natura dolosa; una fonte riferisce inoltre che le telecamere avrebbero ripreso una persona mentre appiccava il fuoco alla vettura.",
+        "La Polizia di Stato ha avviato indagini. L'eventuale matrice estorsiva è riportata soltanto come ipotesi investigativa e non viene codificata come ulteriore fattispecie o movente accertato.",
+        "La classificazione resta provisional perché non è stata reperita una fonte primaria o giudiziaria che riporti una qualificazione legale definitiva del fatto."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:mondo-auto-via-del-progresso-544:occurrence",
+      "basis_source_key": "press:corriere-calabria:2026-09-01:mondo-auto-incendio",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_address",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Mondo Auto Dr - Via del Progresso 544",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:mondo-auto-via-del-progresso-544:target",
+      "basis_source_key": "press:corriere-calabria:2026-09-01:mondo-auto-incendio",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_address",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Parcheggio della concessionaria Mondo Auto Dr - Via del Progresso 544 - Fiat Punto",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}

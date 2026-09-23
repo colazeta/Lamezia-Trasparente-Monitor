@@ -64,6 +64,8 @@ const SCHOOL_TRANSPORT_CITY_ONE_URL =
   "https://www.cityonelamezia.it/lamezia-gianturco-assistenza-specialistica-si-parte-con-il-nuovo-anno-scolastico-piu-ore-per-gli-alunni-con-disabilita/";
 const SERRA_ANNUNZIATA_LAMETINO_URL =
   "https://www.lametino.it/ultime/lamezia-consigliera-serratore-presenta-mozione-su-rifiuti-e-sicurezza-in-localita-serra-e-annunziata.html";
+const COMMISSION_I_MOTION_LAMETINO_URL =
+  "https://www.lametino.it/ultime/lamezia-mozioni-di-sfiducia-contro-cristiano-e-villella-tensioni-nelle-commissioni-consiliari.html";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
 const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
 const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-27T21:49:11Z";
@@ -74,6 +76,7 @@ const LATE_SEPTEMBER_COMMISSION_RESEARCHED_AT = "2026-09-19T09:34:42Z";
 const SEPTEMBER_22_25_COMMISSION_RESEARCHED_AT = "2026-09-21T22:07:23Z";
 const SEPTEMBER_24_COMMISSION_RESEARCHED_AT = "2026-09-23T10:14:27Z";
 const SERRA_ANNUNZIATA_CONTEXT_RESEARCHED_AT = "2026-09-19T15:49:21Z";
+const COMMISSION_I_MOTION_CONTEXT_RESEARCHED_AT = "2026-09-23T22:14:41Z";
 const MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT = "2026-09-12T21:51:17Z";
 const SCHOOL_TRANSPORT_CONTEXT_RESEARCHED_AT = "2026-09-14T10:13:39Z";
 
@@ -415,6 +418,27 @@ const lateSeptemberCommissionContextResearch: CouncilSessionV0ContextResearch =
     articles: [],
     media: [],
   };
+
+const commissionISeptember17ContextResearch: CouncilSessionV0ContextResearch = {
+  status: "reviewed_matches",
+  checkedAt: COMMISSION_I_MOTION_CONTEXT_RESEARCHED_AT,
+  searchNote:
+    "Ricerca eseguita con Parallel Search per discovery e verifica diretta dell'articolo originale de il Lametino e del calendario ufficiale Albo 2026/2971. L'articolo del 23 settembre identifica la I Commissione e riferisce fatti al 17 settembre 2026, ma indica la discussione del Regolamento Taxi, che il calendario ufficiale assegna alla seduta del 16 settembre; per questa discrepanza il collegamento resta `possible_same_session`. Le contestazioni riportate non verificano costituzione, svolgimento, validità, votazioni o esiti della seduta e non modificano i campi ufficiali. Non sono emersi contenuti audiovisivi collegabili con sufficiente precisione.",
+  articles: [
+    {
+      title:
+        "Lamezia, mozioni di sfiducia contro Cristiano e Villella: tensioni nelle Commissioni consiliari",
+      url: COMMISSION_I_MOTION_LAMETINO_URL,
+      publisher: "il Lametino",
+      publishedAt: "2026-09-23",
+      relationship: "possible_same_session",
+      relevanceNote:
+        "L'articolo nomina la I Commissione e attribuisce al 17 settembre una contestazione sulla regolare costituzione della seduta. Il riferimento al Regolamento Taxi non coincide però con il calendario ufficiale, che associa quel tema al 16 settembre e indica le vertenze per il 17: il collegamento resta possibile e non prova svolgimento, validità o risultati.",
+      reviewedAt: COMMISSION_I_MOTION_CONTEXT_RESEARCHED_AT,
+    },
+  ],
+  media: [],
+};
 
 const september22To25CommissionContextResearch: CouncilSessionV0ContextResearch =
   {
@@ -1729,7 +1753,7 @@ export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
     agenda: legalDisputesAgenda,
     candidate: commissionISeptemberCalendarNotice.candidate,
     provenance: commissionISeptemberCalendarNotice.provenance,
-    contextResearch: lateSeptemberCommissionContextResearch,
+    contextResearch: commissionISeptember17ContextResearch,
     sourceLinkLabel: "Apri il calendario ufficiale della I Commissione",
     calendarSummary:
       "La stessa convocazione programma due sedute della I Commissione: 16 settembre alle 12:00 e 17 settembre 2026 alle 16:30.",
