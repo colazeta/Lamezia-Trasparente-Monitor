@@ -1,6 +1,6 @@
 {
   "schema_version": "albo-reviewed-document-serving.v1",
-  "reviewed_at": "2026-09-19T09:34:42.000Z",
+  "reviewed_at": "2026-09-23T10:14:27.000Z",
   "source": "Albo Pretorio online del Comune di Lamezia Terme (piattaforma Tinnvision)",
   "source_url": "https://albo.tinnvision.cloud/albo/00301390795",
   "known_limits": [
@@ -134,6 +134,14 @@
       "review_status": "approved_public_civic_document",
       "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
       "reason": "Calendario istituzionale revisionato e usato come fonte delle sedute della IV Commissione del 22 e 23 settembre 2026."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/bebe656039da9f7a4dd7b93f3baf530902ac0a1da3319e1bf3e063001845bbb8.pdf",
+      "sha256": "bebe656039da9f7a4dd7b93f3baf530902ac0a1da3319e1bf3e063001845bbb8",
+      "source_publication_number": "2026/3043",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Convocazione istituzionale revisionata e usata come fonte della seduta della III Commissione del 24 settembre 2026."
     }
   ]
 }
