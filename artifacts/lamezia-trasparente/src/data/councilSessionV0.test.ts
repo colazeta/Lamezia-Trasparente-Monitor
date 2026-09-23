@@ -197,7 +197,7 @@ describe("councilSessionV0", () => {
   });
 
   it("publishes source-traceable records for both council and commission notices", () => {
-    expect(councilSessionV0ReviewedRecords).toHaveLength(35);
+    expect(councilSessionV0ReviewedRecords).toHaveLength(36);
     expect(
       new Set(councilSessionV0ReviewedRecords.map((item) => item.kind)),
     ).toEqual(new Set(["council", "commission"]));
@@ -846,5 +846,45 @@ describe("councilSessionV0", () => {
         /sede non è indicata.*non viene inferita/i,
       );
     }
+  });
+
+  it("materializes the 24 September III Commission notice", () => {
+    const session = councilSessionV0ReviewedRecords.find(
+      (item) => item.id === "albo-2026-3043-commissione-iii-2026-09-24",
+    );
+
+    expect(session).toBeDefined();
+    expect(session?.scheduledAt.value).toBe("2026-09-24T11:00:00+02:00");
+    expect(session?.agenda.value).toEqual([
+      "Servizio raccolta rifiuti nelle zone collinari e montane. Audizione del dirigente della Lamezia Multiservizi ing. Alessandro Vescio e del dirigente di Settore ing. Francesco Esposito.",
+    ]);
+    expect(session?.sessionStatus.value).toBe("non_verificata");
+    expect(session?.provenance).toEqual(
+      expect.objectContaining({
+        publicationNumber: "2026/3043",
+        documentUrl:
+          "https://albo.tinnvision.cloud/allegati/2026_3043_1_X?ente=00301390795",
+        sourceContentHash:
+          "82e6f6fd989cf7e37ae8b4dd8e24a3d4e056a5b486d6fa68e6dd0d8c7f11f222",
+        documentSha256:
+          "bebe656039da9f7a4dd7b93f3baf530902ac0a1da3319e1bf3e063001845bbb8",
+        archivedDocumentUrl: expect.stringContaining(
+          "bebe656039da9f7a4dd7b93f3baf530902ac0a1da3319e1bf3e063001845bbb8",
+        ),
+        sourceReviewStatus: "reviewed_against_official_attachment",
+      }),
+    );
+    expect(session?.contextResearch).toEqual(
+      expect.objectContaining({
+        status: "checked_no_match",
+        checkedAt: "2026-09-23T10:14:27Z",
+        articles: [],
+        media: [],
+      }),
+    );
+    expect(session?.contextResearch.searchNote).toMatch(/Parallel Search/i);
+    expect(session?.dataLimits.value?.join(" ")).toMatch(
+      /sede non è indicata.*non viene inferita/i,
+    );
   });
 });
