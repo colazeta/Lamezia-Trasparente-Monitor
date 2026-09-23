@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-danneggiamento-incendio-pasticceria-piazza-fiorentino-2025-05-17",
   "discovered_at": "2026-09-23T16:21:51+02:00",
-  "updated_at": "2026-09-23T16:21:51+02:00",
+  "updated_at": "2026-09-23T16:35:00+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Danneggiamento seguito da incendio al laboratorio di pasticceria in Piazza Fiorentino il 17 maggio 2025",
@@ -70,6 +70,19 @@
         "procedural_context",
         "corroboration"
       ]
+    },
+    {
+      "source_key": "press:il-lametino:2026-02-09:jocker-regressione-indagini",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Incendio in due negozi a Lamezia, per un indagato procedimento riparte da indagini preliminari",
+      "url": "https://www.lametino.it/cronaca/incendio-in-due-negozi-a-lamezia-per-un-indagato-procedimento-riparte-da-indagini-preliminari.html",
+      "published_at": "2026-02-09T00:00:00+01:00",
+      "retrieved_at": "2026-09-23T16:35:00+02:00",
+      "support_roles": [
+        "procedural_context",
+        "corroboration"
+      ]
     }
   ],
   "offences": [
@@ -86,7 +99,8 @@
       "situational_context": [
         "Le fonti contemporanee riferiscono che intorno alle 02:30 del 17 maggio 2025 i Vigili del Fuoco intervennero in Piazza Fiorentino per l'incendio di un laboratorio di pasticceria; nell'immediatezza le cause erano ancora in corso di accertamento.",
         "La successiva operazione Jocker dei Carabinieri ha collegato questo episodio e quello avvenuto poco dopo in Piazza 5 Dicembre, indicando tre persone come gravemente indiziate in concorso per due episodi di danneggiamento seguito da incendio.",
-        "Nell'ottobre 2025 il GIP di Lamezia Terme, su richiesta della Procura, dispose per i tre indagati gli arresti domiciliari con braccialetto elettronico; il dato è cautelare e non costituisce accertamento definitivo di responsabilità."
+        "Nell'ottobre 2025 il GIP di Lamezia Terme, su richiesta della Procura, dispose per i tre indagati gli arresti domiciliari con braccialetto elettronico; il dato è cautelare e non costituisce accertamento definitivo di responsabilità.",
+        "Nel febbraio 2026 il Tribunale di Lamezia Terme ha accolto un'eccezione difensiva relativa a uno dei tre indagati, determinando per quella posizione la regressione del procedimento alla fase delle indagini preliminari; la fonte non modifica la qualificazione del fatto ma impone di rappresentare lo stato probatorio come ancora non definitivo."
       ],
       "cyber_related": null,
       "affected_object_count": null
