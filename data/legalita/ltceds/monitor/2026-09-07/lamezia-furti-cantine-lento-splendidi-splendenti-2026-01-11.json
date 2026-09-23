@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-furti-cantine-lento-splendidi-splendenti-2026-01-11",
   "discovered_at": "2026-09-07T06:39:23+02:00",
-  "updated_at": "2026-09-21T07:04:00+02:00",
+  "updated_at": "2026-09-23T12:25:16+02:00",
   "record_status": "verified_source",
   "event_form": "continuous_episode",
   "title": "Furto aggravato alle Cantine Lento e tentato furto aggravato all'adiacente Splendidi e Splendenti in via del Progresso",
@@ -109,7 +109,7 @@
       "source_type": "other",
       "provider": "PagineBianche",
       "title": "Splendidi e Splendenti a Lamezia Terme (CZ): Indirizzo e Contatti",
-      "url": "https://www.paginebianche.it/scheda/lamezia-terme/splendidi-e-splendenti_T11203081",
+      "url": "https://www.paginebianche.it/scheda/lamezia-terme/splendidi-splendenti_T11203081",
       "published_at": null,
       "retrieved_at": "2026-09-07T19:38:37+02:00",
       "support_roles": [
@@ -166,7 +166,7 @@
         "ANSA e le altre fonti descrivono come compiuto il furto nelle pertinenze delle Cantine Lento; il successivo sopralluogo dei Carabinieri ha accertato la sottrazione di denaro e attrezzi da lavoro, tra cui un piccone e un martello demolitore elettrico",
         "gli attrezzi sottratti alle Cantine Lento furono poi utilizzati per iniziare a forare il muro perimetrale dell'adiacente punto vendita Splendidi e Splendenti",
         "all'arrivo dei Carabinieri due uomini con il volto coperto avrebbero tentato la fuga scavalcando il muro perimetrale delle Cantine Lento",
-        "uno dei soggetti è stato arrestato dopo essersi nascosto in un cassonetto; ANSA riferisce che l'arresto è stato successivamente convalidato e che il Tribunale di Lamezia Terme ha applicato la custodia cautelare in carcere"
+        "uno dei soggetti è stato arrestato dopo essersi nascosto in un cassonetto; al momento dell'arresto sono stati recuperati oggetti sottratti alle Cantine Lento, comprese le chiavi di un veicolo aziendale; ANSA riferisce inoltre che l'arresto è stato successivamente convalidato e che il Tribunale di Lamezia Terme ha applicato la custodia cautelare in carcere"
       ],
       "cyber_related": null,
       "affected_object_count": 1
@@ -293,6 +293,21 @@
       "publication_risk": "residential",
       "geometry": null,
       "place_name": "Cortile di un condominio raggiunto durante la fuga; arresto presso un cassonetto",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:cortile-condominio-cassonetto:recovery",
+      "basis_source_key": "agency:ansa:2026-01-15:furto-cantine-lento-cassonetto",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Luogo dell'arresto in un cortile condominiale a Lamezia Terme, dove furono recuperati oggetti sottratti alle Cantine Lento",
       "neighbourhood": null,
       "iccs_location_type": null
     }

@@ -1,0 +1,133 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-sparatoria-via-cilea-tentato-omicidio-2025-10-23",
+  "discovered_at": "2026-09-23T07:39:25+02:00",
+  "updated_at": "2026-09-23T07:39:25+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Sparatoria in via Cilea con due feriti e contestazione di tentato omicidio il 23 ottobre 2025",
+  "temporal": {
+    "start": "2025-10-23",
+    "end": "2025-10-23",
+    "edtf": "2025-10-23",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:corriere-calabria:2025-10-23:sparatoria-via-cilea",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Lite finisce a colpi di pistola a Lamezia Terme",
+      "url": "https://www.corrieredellacalabria.it/2025/10/23/lite-tra-rom-finisce-a-colpi-di-pistola-a-lamezia-terme",
+      "published_at": "2025-10-23T12:51:00+02:00",
+      "retrieved_at": "2026-09-23T07:39:25+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lameziainforma:2025-10-24:sparatoria-via-cilea",
+      "source_type": "press_secondary",
+      "provider": "LameziaInforma",
+      "title": "Una pistola Beretta calibro 9 con matricola abrasa per il ferimento avvenuto il giorno precedente in via Cilea",
+      "url": "https://www.lameziainforma.it/cronaca/2025/10/24/una-pistola-beretta-calibro-9-con-matricola-abrasa-per-il-ferimento-dei-due-rom-ieri-in-via-cilea/64102",
+      "published_at": "2025-10-24T18:51:00+02:00",
+      "retrieved_at": "2026-09-23T07:39:25+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lacnews24:2025-10-24:sparatoria-via-cilea",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Sparatoria a Lamezia, arrestato per tentato omicidio il 53enne che si era costituito: ha fatto fuoco con una Beretta",
+      "url": "https://www.lacnews24.it/cronaca/sparatoria-a-lamezia-arrestato-per-tentato-omicidio-il-53enne-che-si-era-costituito-ha-fatto-fuoco-con-una-beretta-i46gyg6c",
+      "published_at": "2025-10-24T17:20:00+02:00",
+      "retrieved_at": "2026-09-23T07:39:25+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:tentato-omicidio",
+      "classification_source_key": "press:lameziainforma:2025-10-24:sparatoria-via-cilea",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "Le fonti contemporanee riferiscono che nella tarda mattinata del 23 ottobre 2025, in via Cilea a Lamezia Terme, furono esplosi numerosi colpi di pistola e due persone rimasero ferite.",
+        "LameziaInforma riferisce l'arresto da parte dei Carabinieri con l'accusa di tentato omicidio; LaC News24 conferma la medesima qualificazione.",
+        "La qualificazione registra la contestazione in fase investigativa e non viene rappresentata come accertamento definitivo di responsabilità."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 2
+    },
+    {
+      "offence_key": "offence:porto-arma-clandestina",
+      "classification_source_key": "press:lameziainforma:2025-10-24:sparatoria-via-cilea",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "LameziaInforma riferisce che l'arresto fu eseguito anche per porto di arma clandestina.",
+        "La stessa fonte descrive l'arma come una pistola Beretta calibro 9 con matricola abrasa; non viene inferito autonomamente alcun ulteriore titolo di reato o riferimento normativo.",
+        "La qualificazione registra la contestazione in fase investigativa e non viene rappresentata come accertamento definitivo di responsabilità."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-cilea:occurrence",
+      "basis_source_key": "press:corriere-calabria:2025-10-23:sparatoria-via-cilea",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Via Cilea",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-cilea:target",
+      "basis_source_key": "press:corriere-calabria:2025-10-23:sparatoria-via-cilea",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via Cilea",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
