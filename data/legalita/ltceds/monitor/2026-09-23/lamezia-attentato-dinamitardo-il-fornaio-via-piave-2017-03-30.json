@@ -1,0 +1,126 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-attentato-dinamitardo-il-fornaio-via-piave-2017-03-30",
+  "discovered_at": "2026-09-23T12:46:57+02:00",
+  "updated_at": "2026-09-23T12:46:57+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Attentato dinamitardo al panificio Il Fornaio in via Piave",
+  "temporal": {
+    "start": "2017-03-30T23:30:00+02:00",
+    "end": "2017-03-30T23:30:00+02:00",
+    "edtf": "2017-03-30T23:30:00+02:00",
+    "precision": "exact_datetime"
+  },
+  "sources": [
+    {
+      "source_key": "law:polizia-stato:2017-04-07:attentato-il-fornaio-lamezia",
+      "source_type": "law_enforcement_primary",
+      "provider": "Polizia di Stato - Questura di Catanzaro",
+      "title": "’Ndrangheta: Lamezia Terme. Arrestati gli autori di un attentato dinamitardo",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/123658e74d21cdea8932796376",
+      "published_at": null,
+      "retrieved_at": "2026-09-23T12:46:57+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:lameziaterme-it:2017-03-30:bomba-il-fornaio-via-piave",
+      "source_type": "press_secondary",
+      "provider": "LameziaTerme.it",
+      "title": "Lamezia: Bomba nella tarda serata ad esercizio commerciale",
+      "url": "https://www.lameziaterme.it/lamezia-bomba-esercizio-commerciale",
+      "published_at": null,
+      "retrieved_at": "2026-09-23T12:46:57+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lametino:2017-03-31:bomba-il-fornaio-via-piave",
+      "source_type": "press_secondary",
+      "provider": "il Lametino",
+      "title": "Lamezia, bomba esplode contro negozio in via Piave - REAZIONI",
+      "url": "https://www.lametino.it/cronaca/lamezia-bomba-espode-contro-negozio-in-via-piave.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-23T12:46:57+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lacnews24:2017-04-07:bomba-fornaio-angotti-arresti",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Bomba al fornaio Angotti di Lamezia, arrestati i presunti responsabili",
+      "url": "https://www.lacnews24.it/cronaca/bomba-al-fornaio-angotti-di-lamezia-arrestati-i-presunti-responsabili-nomi-video-foto-vu8nrvkh",
+      "published_at": "2017-04-07T07:34:00+02:00",
+      "retrieved_at": "2026-09-23T12:46:57+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:attentato-dinamitardo",
+      "classification_source_key": "law:polizia-stato:2017-04-07:attentato-il-fornaio-lamezia",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "le fonti descrivono l'esplosione di un ordigno di medio-alto potenziale intorno alle 23:30 del 30 marzo 2017 davanti al panificio e negozio di generi alimentari Il Fornaio in via Piave",
+        "l'esplosione danneggiò la saracinesca dell'esercizio e, secondo le fonti contemporanee, anche veicoli, altri esercizi commerciali e immobili nelle immediate vicinanze",
+        "la Polizia di Stato definisce il fatto un attentato dinamitardo e riferisce che il 7 aprile 2017 furono eseguiti provvedimenti di fermo nell'ambito delle indagini; in assenza, nelle fonti acquisite, di una specifica qualificazione normativa del singolo fatto, la classificazione resta provvisoria"
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:il-fornaio-via-piave:occurrence",
+      "basis_source_key": "press:lameziaterme-it:2017-03-30:bomba-il-fornaio-via-piave",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Il Fornaio (Angotti), via Piave",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:il-fornaio-via-piave:target",
+      "basis_source_key": "press:lacnews24:2017-04-07:bomba-fornaio-angotti-arresti",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Il Fornaio (Angotti), via Piave",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
