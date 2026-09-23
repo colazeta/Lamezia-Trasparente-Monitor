@@ -1,0 +1,132 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-tentata-rapina-lesioni-piazza-mazzini-2021-09-16",
+  "discovered_at": "2026-09-23T14:08:03+02:00",
+  "updated_at": "2026-09-23T14:08:03+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Tentata rapina con accoltellamento in Piazza Mazzini il 16 settembre 2021",
+  "temporal": {
+    "start": "2021-09-16",
+    "end": "2021-09-16",
+    "edtf": "2021-09-16",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:lacnews24:2021-09-18:tentata-rapina-piazza-mazzini",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Lamezia, violenta aggressione in pieno centro: arrestato 33enne",
+      "url": "https://www.lacnews24.it/cronaca/lamezia-violenta-aggressione-in-pieno-centro-arrestato-33enne-tjq1n0in",
+      "published_at": "2021-09-18T11:47:00+02:00",
+      "retrieved_at": "2026-09-23T14:08:03+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:lameziainforma:2021-09-18:tentata-rapina-piazza-mazzini",
+      "source_type": "press_secondary",
+      "provider": "LameziaInforma",
+      "title": "Rapina con accoltellamento in Piazza Mazzini, arrestato un 33enne",
+      "url": "https://www.lameziainforma.it/cronaca/2021/09/18/rapina-con-accoltellamento-in-piazza-mazzini-arrestato-un-33enne/40341",
+      "published_at": null,
+      "retrieved_at": "2026-09-23T14:08:03+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "press:lacnews24:2021-09-18:tentata-rapina-piazza-mazzini",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "Le fonti contemporanee qualificano espressamente la condotta come tentata rapina: durante l'azione l'autore avrebbe cercato di sottrarre denaro e un telefono cellulare alla vittima.",
+        "I Carabinieri della Compagnia di Lamezia Terme intervennero in Piazza Mazzini nella notte del 16 settembre 2021 e procedettero all'arresto in flagranza.",
+        "Dopo la convalida dell'arresto il giudice dispose la custodia cautelare in carcere; il record non rappresenta la responsabilita come definitivamente accertata."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:lesioni-personali",
+      "classification_source_key": "press:lacnews24:2021-09-18:tentata-rapina-piazza-mazzini",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti riportano l'accusa di lesioni personali gravissime.",
+        "Nel corso della tentata rapina la vittima fu colpita al volto con un coltello e riportò una profonda ferita lacero-contusa."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:piazza-mazzini:occurrence",
+      "basis_source_key": "press:lacnews24:2021-09-18:tentata-rapina-piazza-mazzini",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Piazza Mazzini",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:piazza-mazzini:target",
+      "basis_source_key": "press:lacnews24:2021-09-18:tentata-rapina-piazza-mazzini",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Piazza Mazzini",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:piazza-mazzini:arrest",
+      "basis_source_key": "press:lacnews24:2021-09-18:tentata-rapina-piazza-mazzini",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Piazza Mazzini",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
