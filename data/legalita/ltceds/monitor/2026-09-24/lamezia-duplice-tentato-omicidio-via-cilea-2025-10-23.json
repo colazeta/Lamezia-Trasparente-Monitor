@@ -1,0 +1,177 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-duplice-tentato-omicidio-via-cilea-2025-10-23",
+  "discovered_at": "2026-09-24T00:44:41+02:00",
+  "updated_at": "2026-09-24T00:44:41+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Duplice tentato omicidio a colpi d'arma da fuoco in Via Cilea a Savutano il 23 ottobre 2025",
+  "temporal": {
+    "start": "2025-10-23",
+    "end": "2025-10-23",
+    "edtf": "2025-10-23",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "law-enforcement:carabinieri:2025-10-25:via-cilea-tentato-omicidio",
+      "source_type": "law_enforcement_primary",
+      "provider": "Arma dei Carabinieri",
+      "title": "Arrestato un uomo per tentato omicidio a colpi d'arma da fuoco",
+      "url": "https://www.carabinieri.it/in-vostro-aiuto/informazioni/comunicati-stampa/arrestato-un-uomo-per-tentato-omicidio-a-colpi-d-arma-da-fuoco",
+      "published_at": "2025-10-25T10:58:00+02:00",
+      "retrieved_at": "2026-09-24T00:44:41+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "agency:ansa:2025-10-23:sparatoria-via-cilea",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Sparatoria a Lamezia Terme, due feriti dopo una lite",
+      "url": "https://www.ansa.it/calabria/notizie/2025/10/23/sparatoria-a-lamezia-terme-due-feriti-dopo-una-lite_4f119a53-a9f8-43b4-9dba-d40a9e6de646.html",
+      "published_at": "2025-10-23T13:29:00+02:00",
+      "retrieved_at": "2026-09-24T00:44:41+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lametino:2025-10-23:sparatoria-via-cilea",
+      "source_type": "press_secondary",
+      "provider": "Il Lametino",
+      "title": "Lamezia, sparatoria in via Cilea: due feriti dopo una lite. Si costituisce un uomo di 53 anni",
+      "url": "https://www.lametino.it/cronaca/lamezia-sparatoria-in-via-cerasolo-due-feriti-dopo-una-lite.html",
+      "published_at": "2025-10-23T00:00:00+02:00",
+      "retrieved_at": "2026-09-24T00:44:41+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lametino:2025-10-27:convalida-via-cilea",
+      "source_type": "press_secondary",
+      "provider": "Il Lametino",
+      "title": "Lamezia, sparatoria in via Cilea: Gip convalida il fermo e dispone domiciliari per 53enne",
+      "url": "https://www.lametino.it/cronaca/lamezia-sparatoria-in-via-cilea-gip-convalida-il-fermo-e-dispone-domiciliari-per-53enne.html",
+      "published_at": "2025-10-27T00:00:00+01:00",
+      "retrieved_at": "2026-09-24T00:44:41+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:quotidiano-sud:2026-06-03:condanna-via-cilea",
+      "source_type": "press_secondary",
+      "provider": "Il Quotidiano del Sud",
+      "title": "Lamezia, sparò dieci colpi di pistola a padre e figlio rom, 54enne condannato a dieci anni",
+      "url": "https://www.quotidianodelsud.it/calabria/catanzaro/cronache/giudiziaria/2026/06/03/lamezia-sparo-dieci-colpi-di-pistola-a-padre-e-figlio-rom-54enne-condannato-a-dieci-anni",
+      "published_at": "2026-06-03T18:15:00+02:00",
+      "retrieved_at": "2026-09-24T00:44:41+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:tentato-omicidio",
+      "classification_source_key": "law-enforcement:carabinieri:2025-10-25:via-cilea-tentato-omicidio",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "Le fonti contemporanee collocano la sparatoria nella tarda mattinata del 23 ottobre 2025 in Via Cilea, nel quartiere Savutano, nei pressi delle palazzine popolari.",
+        "Due persone furono raggiunte da colpi d'arma da fuoco; la fonte primaria dei Carabinieri qualifica l'arresto per tentato omicidio.",
+        "Il GIP di Lamezia Terme convalidò il fermo e dispose gli arresti domiciliari; una successiva fonte giudiziaria giornalistica riferisce che il 3 giugno 2026 il GUP di Lamezia Terme ha pronunciato una condanna a dieci anni in rito abbreviato per il fatto, tra le cui contestazioni figura il duplice tentato omicidio.",
+        "La condanna riportata è una decisione di primo grado e non viene rappresentata come definitiva."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:porto-arma-clandestina",
+      "classification_source_key": "law-enforcement:carabinieri:2025-10-25:via-cilea-tentato-omicidio",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La fonte primaria dei Carabinieri riferisce espressamente anche l'arresto per porto di arma clandestina.",
+        "L'arma indicata nelle fonti è una pistola Beretta calibro 9 con matricola abrasa; le fonti riferiscono il recupero e sequestro dell'arma, ma non attestano con sufficiente precisione il luogo del recupero e pertanto non viene materializzata una location di recovery."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-cilea-savutano-palazzine-popolari:occurrence",
+      "basis_source_key": "press:lametino:2025-10-23:sparatoria-via-cilea",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Via Cilea, nei pressi delle palazzine popolari",
+      "neighbourhood": "Savutano",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-cilea-savutano-palazzine-popolari:target",
+      "basis_source_key": "press:lametino:2025-10-23:sparatoria-via-cilea",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via Cilea, nei pressi delle palazzine popolari",
+      "neighbourhood": "Savutano",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:stazione-carabinieri-sambiase:surrender",
+      "basis_source_key": "press:lametino:2025-10-27:convalida-via-cilea",
+      "role": "other",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Stazione Carabinieri di Lamezia Terme Sambiase (luogo di consegna spontanea)",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    }
+  ]
+}
