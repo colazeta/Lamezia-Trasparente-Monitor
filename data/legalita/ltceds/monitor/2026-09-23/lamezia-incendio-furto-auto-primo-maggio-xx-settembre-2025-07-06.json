@@ -1,0 +1,210 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-incendio-furto-auto-primo-maggio-xx-settembre-2025-07-06",
+  "discovered_at": "2026-09-23T18:28:03+02:00",
+  "updated_at": "2026-09-23T18:28:03+02:00",
+  "record_status": "verified_source",
+  "event_form": "continuous_episode",
+  "title": "Incendio di veicoli, furto d'auto e danneggiamenti tra Viale Primo Maggio e Via XX Settembre nella notte del 6 luglio 2025",
+  "temporal": {
+    "start": "2025-07-06",
+    "end": "2025-07-06",
+    "edtf": "2025-07-06",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "news:ansa:2025-07-06:sei-auto-incendio-primo-maggio",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Sei auto distrutte da un incendio a Lamezia, ipotesi dolo",
+      "url": "https://www.ansa.it/calabria/notizie/2025/07/06/sei-auto-distrutte-da-un-incendio-a-lamezia-ipotesi-dolo_35599fee-8a9d-4b75-8c2d-bee861e6740c.html",
+      "published_at": "2025-07-06T12:00:00+02:00",
+      "retrieved_at": "2026-09-23T18:28:03+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "news:ansa:2025-07-06:auto-incendiate-autore",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Auto incendiate a Lamezia, polizia sulle tracce dell'autore",
+      "url": "https://www.ansa.it/calabria/notizie/2025/07/06/auto-incendiate-a-lamezia-polizia-sulle-tracce-dellautore_cf70c372-ea1a-4d93-8952-294970eda83e.html",
+      "published_at": "2025-07-06T19:05:00+02:00",
+      "retrieved_at": "2026-09-23T18:28:03+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:agenparl:2025-10-30:carabinieri-furti-incendio-auto",
+      "source_type": "press_secondary",
+      "provider": "Agenparl",
+      "title": "CARABINIERI: Lamezia Terme. Furti, danneggiamenti e incendio di auto in sosta. Arrestato un minorenne.",
+      "url": "https://agenparl.eu/2025/10/30/carabinieri-lamezia-terme-furti-danneggiamenti-e-incendio-di-auto-in-sosta-arrestato-un-minorenne",
+      "published_at": "2025-10-30T00:00:00+01:00",
+      "retrieved_at": "2026-09-23T18:28:03+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "news:ansa:2025-10-30:27-reati-minorenne",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Ventisette reati commessi in una sola notte, arrestato 17enne",
+      "url": "https://www.ansa.it/calabria/notizie/2025/10/30/ventisette-reati-commessi-in-una-sola-notte-arrestato-17enne_72c2bf44-9a9f-4864-a4df-c43d2c4f9077.html",
+      "published_at": "2025-10-30T10:18:00+01:00",
+      "retrieved_at": "2026-09-23T18:28:03+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:incendio-veicoli",
+      "classification_source_key": "news:ansa:2025-07-06:auto-incendiate-autore",
+      "classification_basis": "provisional",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Nella notte del 6 luglio 2025, intorno alle 03:30, un incendio in Viale Primo Maggio coinvolse sei autovetture e un ciclomotore in sosta; le fonti contemporanee riferirono inizialmente una probabile origine dolosa.",
+        "Nella stessa giornata ANSA riferì che immagini di videosorveglianza avrebbero ripreso un individuo appiccare il fuoco a una delle auto, con successiva propagazione delle fiamme agli altri mezzi.",
+        "La successiva ricostruzione investigativa dei Carabinieri attribuisce cautelarmente l'episodio a un minorenne; la qualificazione resta provisional perché le fonti acquisite descrivono l'incendio e l'attribuzione investigativa senza indicare una specifica fattispecie normativa.",
+        "Sei auto e un ciclomotore risultano distrutti; il record non rappresenta la responsabilita come definitivamente accertata."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 7
+    },
+    {
+      "offence_key": "offence:furto",
+      "classification_source_key": "press:agenparl:2025-10-30:carabinieri-furti-incendio-auto",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La ricostruzione investigativa riferisce espressamente un furto consumato, nella stessa notte, ai danni di un'autovettura parcheggiata in Via XX Settembre.",
+        "L'autovettura sottratta sarebbe stata utilizzata per la successiva fuga; il dato e rappresentato come contestazione investigativa, non come accertamento definitivo di responsabilita."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 1
+    },
+    {
+      "offence_key": "offence:danneggiamento",
+      "classification_source_key": "press:agenparl:2025-10-30:carabinieri-furti-incendio-auto",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti investigative riferiscono che, durante la fuga a bordo dell'auto sottratta, furono danneggiate numerose auto in sosta e diversi elementi di arredo urbano, tra cui panchine, aiuole e arbusti.",
+        "Il percorso preciso dei danneggiamenti non e indicato dalle fonti acquisite e non viene inferito nel record."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:viale-primo-maggio:occurrence",
+      "basis_source_key": "news:ansa:2025-10-30:27-reati-minorenne",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Viale Primo Maggio",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:viale-primo-maggio:target",
+      "basis_source_key": "news:ansa:2025-10-30:27-reati-minorenne",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Viale Primo Maggio - veicoli in sosta",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-xx-settembre:occurrence",
+      "basis_source_key": "press:agenparl:2025-10-30:carabinieri-furti-incendio-auto",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Via XX Settembre",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-xx-settembre:target",
+      "basis_source_key": "press:agenparl:2025-10-30:carabinieri-furti-incendio-auto",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via XX Settembre - autovettura parcheggiata",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:centro-percorso-fuga:other",
+      "basis_source_key": "press:agenparl:2025-10-30:carabinieri-furti-incendio-auto",
+      "role": "other",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Centro di Lamezia Terme - percorso di fuga non specificato",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
