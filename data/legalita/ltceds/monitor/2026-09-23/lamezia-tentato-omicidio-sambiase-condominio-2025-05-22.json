@@ -1,0 +1,116 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-tentato-omicidio-sambiase-condominio-2025-05-22",
+  "discovered_at": "2026-09-23T19:16:43+02:00",
+  "updated_at": "2026-09-23T19:16:43+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Tentato omicidio durante una lite condominiale a Sambiase il 22 maggio 2025",
+  "temporal": {
+    "start": "2025-05-22",
+    "end": "2025-05-22",
+    "edtf": "2025-05-22",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "agency:ansa:2025-05-24:accoltellamento-sambiase",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Accoltella vicino di casa, arrestato 21enne a Lamezia",
+      "url": "https://www.ansa.it/calabria/notizie/2025/05/24/accoltella-vicino-di-casa-arrestato-21enne-a-lamezia_9c48fb67-ea85-44fb-ba6a-8e5f59dc9a99.html",
+      "published_at": "2025-05-24T16:32:00+02:00",
+      "retrieved_at": "2026-09-23T19:16:43+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:gazzetta-del-sud:2025-05-24:accoltellamento-sambiase",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Due coltellate sferrate alla schiena del vicino, 21enne di Lamezia accusato di tentato omicidio",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2025/05/24/sferro-due-coltellate-alla-schiena-del-vicino-21enne-di-lamezia-accusato-di-tentato-omicidio-1511361b-11bf-4b94-b760-e7b067348130",
+      "published_at": null,
+      "retrieved_at": "2026-09-23T19:16:43+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:city-one:2026-01-07:chiusura-indagini-rissa-sambiase",
+      "source_type": "press_secondary",
+      "provider": "City One",
+      "title": "Lamezia Terme: notificato avviso di conclusione indagini a 8 persone per una rissa del maggio 2025",
+      "url": "https://www.cityonelamezia.it/lamezia-terme-notificato-avviso-di-conclusione-indagini-a-8-persone-per-una-rissa-del-maggio-2025",
+      "published_at": null,
+      "retrieved_at": "2026-09-23T19:16:43+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:tentato-omicidio",
+      "classification_source_key": "agency:ansa:2025-05-24:accoltellamento-sambiase",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "ANSA riferisce espressamente l'arresto per tentato omicidio in relazione all'accoltellamento avvenuto la sera del 22 maggio 2025.",
+        "Le fonti descrivono due profonde ferite da coltello alla schiena nel contesto di una lite tra vicini legata a questioni di parcheggio.",
+        "Una successiva comunicazione, riprodotta da City One e attribuita al Comando Provinciale Carabinieri di Catanzaro, riferisce nel gennaio 2026 la conclusione delle indagini preliminari per otto persone coinvolte nell'episodio; il record non rappresenta alcuna responsabilita come definitivamente accertata."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:sambiase-condominio:occurrence",
+      "basis_source_key": "press:gazzetta-del-sud:2025-05-24:accoltellamento-sambiase",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_neighbourhood",
+      "evidence_precision": "neighbourhood",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Condominio non identificato nel quartiere Sambiase",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:sambiase-condominio:target",
+      "basis_source_key": "press:gazzetta-del-sud:2025-05-24:accoltellamento-sambiase",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_neighbourhood",
+      "evidence_precision": "neighbourhood",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Condominio non identificato nel quartiere Sambiase",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    }
+  ]
+}
