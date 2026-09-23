@@ -15,7 +15,7 @@
   "sources": [
     {
       "source_key": "press:ansa:2026-06-04:rissa-servizi-sociali-lamezia",
-      "source_type": "press_secondary",
+      "source_type": "news_agency",
       "provider": "ANSA",
       "title": "Rissa negli uffici del Comune di Lamezia Terme, alcuni fermati",
       "url": "https://www.ansa.it/calabria/notizie/2026/06/04/rissa-negli-uffici-del-comune-di-lamezia-terme-alcuni-fermati_d4a262cf-c5b5-48a4-8312-065b53b8896d.html",
@@ -60,7 +60,7 @@
     {
       "offence_key": "offence:rissa",
       "classification_source_key": "press:ansa:2026-06-04:rissa-servizi-sociali-lamezia",
-      "classification_basis": "source_stated_taxonomy",
+      "classification_basis": "provisional",
       "iccs_code": null,
       "istat_catalogue_id": null,
       "istat_synthetic_code": null,
@@ -68,7 +68,7 @@
       "legal_reference": null,
       "attempt_status": "completed",
       "situational_context": [
-        "ANSA descrive espressamente come rissa lo scontro tra familiari avvenuto il 4 giugno 2026 all'interno degli uffici dei Servizi sociali del Comune di Lamezia Terme.",
+        "ANSA descrive espressamente come rissa lo scontro tra familiari avvenuto il 4 giugno 2026 all'interno degli uffici dei Servizi sociali del Comune di Lamezia Terme, senza che le fonti acquisite documentino una contestazione formale del reato di rissa.",
         "Durante lo scontro un terzo intervenuto per sedarlo rimase lievemente ferito a un braccio e fu condotto al Pronto soccorso; il record non attribuisce la lesione a uno specifico partecipante.",
         "Uno degli arrestati fu successivamente assolto il 17 settembre 2026 dai reati a lui ascritti perché non imputabile al momento del fatto; l'evento è censito come fatto reale e non come attribuzione individuale di responsabilità."
       ],
