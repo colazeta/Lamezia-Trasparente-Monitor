@@ -1,0 +1,117 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-lesioni-via-dei-mille-2018-02-28",
+  "discovered_at": "2026-09-24T06:12:23+02:00",
+  "updated_at": "2026-09-24T06:12:23+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina e lesioni ai danni di una donna in Via dei Mille a Lamezia Terme il 28 febbraio 2018",
+  "temporal": {
+    "start": "2018-02-28",
+    "end": "2018-02-28",
+    "edtf": "2018-02-28",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "law:poliziadistato-catanzaro:2018-03-21:via-dei-mille-rapina-anziana",
+      "source_type": "law_enforcement_primary",
+      "provider": "Polizia di Stato - Questura di Catanzaro",
+      "title": "Lamezia Terme - Commissariato di Polizia arresta autore della rapina ai danni di una anziana donna",
+      "url": "https://questure.poliziadistato.it/Catanzaro/articolo/12365ab0d32eae8d8004290737",
+      "published_at": null,
+      "retrieved_at": "2026-09-24T06:12:23+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:ilgazzettino:2018-03-21:via-dei-mille-rapina-anziana",
+      "source_type": "press_secondary",
+      "provider": "Il Gazzettino",
+      "title": "Lamezia Terme, 16enne manda all’ospedale un’anziana per strapparle la borsa",
+      "url": "https://www.ilgazzettino.it/italia/cronaca_nera/lamezia_terme_16enne_rom_manda_ospedale_un_anziana_strapparle_la_borsa-3621125.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-24T06:12:23+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "law:poliziadistato-catanzaro:2018-03-21:via-dei-mille-rapina-anziana",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La fonte primaria della Questura di Catanzaro qualifica il fatto come rapina e riferisce che il 28 febbraio 2018 una donna anziana fu aggredita mentre percorreva il marciapiede di Via dei Mille.",
+        "La borsa fu strappata con una condotta violenta che provocò la caduta della vittima; la Squadra Volante la rinvenne a terra con il volto sanguinante.",
+        "Le indagini del Commissariato portarono nel marzo 2018 all'arresto di un minorenne indicato dagli investigatori come autore; il record conserva tale stato investigativo e non rappresenta una responsabilità definitivamente accertata."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:lesioni-personali",
+      "classification_source_key": "law:poliziadistato-catanzaro:2018-03-21:via-dei-mille-rapina-anziana",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La stessa fonte primaria indica espressamente anche le lesioni e riferisce traumi al volto e alla testa e una frattura al braccio conseguenti alla rapina.",
+        "La localizzazione disponibile per le lesioni coincide con il luogo dell'aggressione in Via dei Mille; non sono inferiti ulteriori luoghi sanitari o residenziali."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-dei-mille:occurrence",
+      "basis_source_key": "law:poliziadistato-catanzaro:2018-03-21:via-dei-mille-rapina-anziana",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Via dei Mille, Lamezia Terme",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-dei-mille:target",
+      "basis_source_key": "law:poliziadistato-catanzaro:2018-03-21:via-dei-mille-rapina-anziana",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "minor_or_vulnerable",
+      "geometry": null,
+      "place_name": "Via dei Mille, Lamezia Terme",
+      "neighbourhood": "Nicastro",
+      "iccs_location_type": null
+    }
+  ]
+}
