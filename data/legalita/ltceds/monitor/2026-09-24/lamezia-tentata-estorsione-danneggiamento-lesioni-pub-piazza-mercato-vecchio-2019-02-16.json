@@ -7,10 +7,10 @@
   "event_form": "discrete",
   "title": "Tentata estorsione, danneggiamento e lesioni in un pub di Piazza Mercato Vecchio il 16 febbraio 2019",
   "temporal": {
-    "start": "2019-02-16T23:55:00+01:00",
-    "end": "2019-02-16T23:55:00+01:00",
-    "edtf": null,
-    "precision": "exact_datetime"
+    "start": "2019-02-16",
+    "end": "2019-02-16",
+    "edtf": "2019-02-16",
+    "precision": "exact_date"
   },
   "sources": [
     {
@@ -126,7 +126,7 @@
       "publication_risk": "low_public_site",
       "geometry": null,
       "place_name": "Pub non nominato in Piazza Mercato Vecchio",
-      "neighbourhood": "Nicastro",
+      "neighbourhood": null,
       "iccs_location_type": null
     },
     {
@@ -141,7 +141,7 @@
       "publication_risk": "victim_linked",
       "geometry": null,
       "place_name": "Pub non nominato in Piazza Mercato Vecchio",
-      "neighbourhood": "Nicastro",
+      "neighbourhood": null,
       "iccs_location_type": null
     },
     {
@@ -156,7 +156,7 @@
       "publication_risk": "low_public_site",
       "geometry": null,
       "place_name": "Pub non nominato in Piazza Mercato Vecchio",
-      "neighbourhood": "Nicastro",
+      "neighbourhood": null,
       "iccs_location_type": null
     }
   ]
