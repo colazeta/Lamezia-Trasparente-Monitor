@@ -1,0 +1,179 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-lesioni-violenza-privata-via-telesio-2019-08-13",
+  "discovered_at": "2026-09-24T10:48:02+02:00",
+  "updated_at": "2026-09-24T10:48:02+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina, lesioni personali e violenza privata in via Telesio il 13 agosto 2019",
+  "temporal": {
+    "start": "2019-08-13",
+    "end": null,
+    "edtf": "2019-08-13",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "polizia:questura-catanzaro:2019-08-20:rapina-lesioni-violenza-privata-via-telesio",
+      "source_type": "law_enforcement_primary",
+      "provider": "Questura di Catanzaro - Polizia di Stato",
+      "title": "Arrestato cittadino marocchino resosi responsabile dei reati di rapina, lesioni personali e violenza privata",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/18085d5ba8a7a6606429466755",
+      "published_at": null,
+      "retrieved_at": "2026-09-24T10:48:02+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "ansa:2019-08-20:rapina-minaccia-donna-lamezia",
+      "source_type": "news_agency",
+      "provider": "ANSA",
+      "title": "Rapina e minaccia donna, arrestato",
+      "url": "https://www.ansa.it/calabria/notizie/2019/08/20/rapina-e-minaccia-donna-arrestato_ea04c1fa-e0e8-4740-b761-72f1287facc1.html",
+      "published_at": "2019-08-20T10:33:00+02:00",
+      "retrieved_at": "2026-09-24T10:48:02+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lameziaterme:2019-08-20:rapina-lesioni-violenza-privata-via-telesio",
+      "source_type": "press_secondary",
+      "provider": "LameziaTerme.it",
+      "title": "Lamezia. Un arresto per rapina, lesioni personali e violenza privata",
+      "url": "https://www.lameziaterme.it/lamezia-arresto-rapina-lesioni-personali-violenza-privata",
+      "published_at": "2019-08-20T00:00:00+02:00",
+      "retrieved_at": "2026-09-24T10:48:02+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lanuovacalabria:2019-08-20:rapina-botte-minacce-connazionale-lamezia",
+      "source_type": "press_secondary",
+      "provider": "La Nuova Calabria",
+      "title": "Rapina con botte e minacce a una connazionale, arrestato a Lamezia",
+      "url": "https://lanuovacalabria.it/rapina-con-botte-e-minacce-a-una-connazionale-arrestato-a-lamezia",
+      "published_at": "2019-08-20T10:21:00+02:00",
+      "retrieved_at": "2026-09-24T10:48:02+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "polizia:questura-catanzaro:2019-08-20:rapina-lesioni-violenza-privata-via-telesio",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La fonte primaria colloca i fatti nella serata del 13 agosto 2019 in via Telesio, a Lamezia Terme.",
+        "Secondo la ricostruzione investigativa, una donna che rientrava a piedi dopo avere effettuato un prelievo di 150 euro a un bancomat fu aggredita e rapinata.",
+        "La Questura qualifica espressamente il fatto come rapina; il record non assume che l'intero importo prelevato coincida con il bottino se non espressamente stabilito dalle fonti."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:lesioni-personali",
+      "classification_source_key": "polizia:questura-catanzaro:2019-08-20:rapina-lesioni-violenza-privata-via-telesio",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La Polizia di Stato include espressamente le lesioni personali tra i reati contestati in relazione all'aggressione del 13 agosto 2019.",
+        "Le fonti descrivono un'aggressione fisica alla vittima; il record non introduce una prognosi o una gravità clinica non sostenuta dalle fonti acquisite."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:violenza-privata",
+      "classification_source_key": "polizia:questura-catanzaro:2019-08-20:rapina-lesioni-violenza-privata-via-telesio",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La Polizia di Stato include espressamente la violenza privata tra i reati contestati per il medesimo episodio.",
+        "Una fonte di corroborazione riferisce che, dopo essersi sottratta all'aggressione, la vittima si rifugiò in un'abitazione privata, dove fu raggiunta, nuovamente picchiata e minacciata con un coltello; il proprietario dell'abitazione riuscì a disarmare l'aggressore e a costringerlo alla fuga.",
+        "Il 20 agosto 2019 fu eseguita una misura cautelare emessa dal GIP del Tribunale di Lamezia Terme su richiesta della Procura; ANSA riferisce l'applicazione degli arresti domiciliari. Il record rappresenta lo stato cautelare e non una responsabilità definitivamente accertata."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-telesio:occurrence",
+      "basis_source_key": "polizia:questura-catanzaro:2019-08-20:rapina-lesioni-violenza-privata-via-telesio",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Via Telesio",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-telesio:target",
+      "basis_source_key": "polizia:questura-catanzaro:2019-08-20:rapina-lesioni-violenza-privata-via-telesio",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via Telesio",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:abitazione-rifugio-vittima:other",
+      "basis_source_key": "press:lanuovacalabria:2019-08-20:rapina-botte-minacce-connazionale-lamezia",
+      "role": "other",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Abitazione privata presso cui la vittima si rifugiò (ubicazione non specificata)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
