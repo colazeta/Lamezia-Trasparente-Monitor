@@ -2,8 +2,8 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-rapina-piazza-mercato-vecchio-2025-01-19",
   "discovered_at": "2026-09-23T10:16:37+02:00",
-  "updated_at": "2026-09-23T10:16:37+02:00",
-  "record_status": "verified_source",
+  "updated_at": "2026-09-24T10:20:03+02:00",
+  "record_status": "merged",
   "event_form": "discrete",
   "title": "Rapina aggravata in Piazza Mercato Vecchio e fuga verso via Isonzo il 19 gennaio 2025",
   "temporal": {
@@ -21,12 +21,7 @@
       "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/327767938de213d45023360436",
       "published_at": null,
       "retrieved_at": "2026-09-23T10:16:37+02:00",
-      "support_roles": [
-        "event_support",
-        "classification_support",
-        "location_support",
-        "procedural_context"
-      ]
+      "support_roles": ["event_support", "classification_support", "location_support", "procedural_context"]
     },
     {
       "source_key": "press:il-lametino:2025-01-24:rapina-mercato-vecchio",
@@ -36,13 +31,7 @@
       "url": "https://www.lametino.it/Cronaca/lamezia-arrestato-dalla-polizia-giovane-autore-di-rapina.html",
       "published_at": "2025-01-24T14:21:00+01:00",
       "retrieved_at": "2026-09-23T10:16:37+02:00",
-      "support_roles": [
-        "event_support",
-        "classification_support",
-        "location_support",
-        "procedural_context",
-        "corroboration"
-      ]
+      "support_roles": ["event_support", "classification_support", "location_support", "procedural_context", "corroboration"]
     },
     {
       "source_key": "press:corriere-lamezia:2025-01-24:rapina-mercato-vecchio",
@@ -52,12 +41,7 @@
       "url": "https://www.corrieredilamezia.it/cronaca/2025_01_24/lamezia-rapina-ai-danni-di-un-giovane-un-arresto_50659",
       "published_at": null,
       "retrieved_at": "2026-09-23T10:16:37+02:00",
-      "support_roles": [
-        "event_support",
-        "classification_support",
-        "location_support",
-        "corroboration"
-      ]
+      "support_roles": ["event_support", "classification_support", "location_support", "corroboration"]
     }
   ],
   "offences": [
