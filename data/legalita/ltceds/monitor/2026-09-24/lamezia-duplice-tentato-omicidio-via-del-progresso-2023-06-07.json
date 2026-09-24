@@ -1,0 +1,147 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-duplice-tentato-omicidio-via-del-progresso-2023-06-07",
+  "discovered_at": "2026-09-24T17:58:39+02:00",
+  "updated_at": "2026-09-24T17:58:39+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Duplice tentato omicidio con arma da fuoco inceppata in Via del Progresso il 7 giugno 2023",
+  "temporal": {
+    "start": "2023-06-07",
+    "end": "2023-06-07",
+    "edtf": "2023-06-07",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:rainews:2023-06-12:arma-inceppata-lamezia",
+      "source_type": "press_secondary",
+      "provider": "RaiNews TGR Calabria",
+      "title": "Spara contro conoscenti, illesi perché l'arma si inceppa",
+      "url": "https://www.rainews.it/tgr/calabria/articoli/2023/06/spara-contro-conoscenti-illesi-perche-larma-si-inceppa-lamezia-terme-1919da15-1b59-4fe6-825c-e295821e4260.html",
+      "published_at": "2023-06-12T00:00:00+02:00",
+      "retrieved_at": "2026-09-24T17:58:39+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lametino:2023-06-12:tentato-duplice-omicidio-via-del-progresso",
+      "source_type": "press_secondary",
+      "provider": "Il Lametino",
+      "title": "Lamezia, tenta di uccidere gli ex cognati dell'amante: arrestato un ragazzo di 25 anni - VIDEO",
+      "url": "https://www.lametino.it/cronaca/lamezia-tenta-di-uccidere-gli-ex-cognati-dell-amante-arrestato-un-ragazzo-di-25-anni-video.html",
+      "published_at": "2023-06-12T00:00:00+02:00",
+      "retrieved_at": "2026-09-24T17:58:39+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2023-06-12:tentato-omicidio-lamezia-interrogatorio",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Tentato omicidio a Lamezia, Amato si avvale della facoltà di non rispondere",
+      "url": "https://www.corrieredellacalabria.it/2023/06/12/tentato-omicidio-a-lamezia-amato-si-avvale-della-facolta-di-non-rispondere-video/",
+      "published_at": "2023-06-12T18:03:00+02:00",
+      "retrieved_at": "2026-09-24T17:58:39+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:tentato-omicidio",
+      "classification_source_key": "press:rainews:2023-06-12:arma-inceppata-lamezia",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "Le fonti collocano il fatto il 7 giugno 2023, intorno alle ore 15, in Via del Progresso a Lamezia Terme; Il Lametino precisa che l'episodio avvenne davanti a un bar non identificato.",
+        "Secondo l'impostazione accusatoria, durante un appuntamento programmato con due persone fu puntata una pistola e fu tentato per due volte lo sparo, senza esplosione dei colpi perché l'arma si inceppò.",
+        "I Carabinieri repertarono sul luogo una cartuccia calibro 7.65 inesplosa con innesco percosso.",
+        "L'ordinanza di custodia cautelare in carcere fu emessa dal GIP su richiesta della Procura; le fonti qualificano il fatto come duplice tentato omicidio. Il procedimento era nella fase cautelare e non viene rappresentata una responsabilità definitiva."
+      ],
+      "cyber_related": null,
+      "affected_object_count": 2
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:via-del-progresso-bar-non-identificato:occurrence",
+      "basis_source_key": "press:lametino:2023-06-12:tentato-duplice-omicidio-via-del-progresso",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Via del Progresso, davanti a un bar non identificato",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-del-progresso-bar-non-identificato:target",
+      "basis_source_key": "press:lametino:2023-06-12:tentato-duplice-omicidio-via-del-progresso",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Via del Progresso, davanti a un bar non identificato",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:via-del-progresso-cartucchia:recovery",
+      "basis_source_key": "press:lametino:2023-06-12:tentato-duplice-omicidio-via-del-progresso",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_street",
+      "evidence_precision": "street_segment",
+      "resolved_precision": "street_segment",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Via del Progresso, luogo del sopralluogo e rinvenimento della cartuccia inesplosa",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:ciampa-di-cavallo:arrest",
+      "basis_source_key": "press:corriere-calabria:2023-06-12:tentato-omicidio-lamezia-interrogatorio",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_neighbourhood",
+      "evidence_precision": "neighbourhood",
+      "resolved_precision": "neighbourhood",
+      "sensitivity": "non_sensitive",
+      "publication_risk": "non_sensitive",
+      "geometry": null,
+      "place_name": "Rione Ciampa di Cavallo",
+      "neighbourhood": "Ciampa di Cavallo",
+      "iccs_location_type": null
+    }
+  ]
+}
