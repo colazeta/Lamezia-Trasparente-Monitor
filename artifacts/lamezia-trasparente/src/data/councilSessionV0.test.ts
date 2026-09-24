@@ -822,6 +822,45 @@ describe("councilSessionV0", () => {
       "Regolamento comunale per la promozione della Street Art. Audizione del sig. Giacomo Marinaro, curatore e direttore artistico del progetto Giulia Urbana.",
     ]);
 
+    const vSeptember25 = sessions.find(
+      (session) => session.id === "albo-2026-3011-commissione-v-2026-09-25",
+    );
+    expect(vSeptember25?.contextResearch).toEqual(
+      expect.objectContaining({
+        status: "reviewed_matches",
+        checkedAt: "2026-09-24T09:59:02Z",
+        media: [],
+      }),
+    );
+    expect(vSeptember25?.contextResearch.articles).toEqual([
+      expect.objectContaining({
+        publisher: "il Lametino",
+        publishedAt: "2026-09-23",
+        relationship: "agenda_item",
+        url: "https://www.lametino.it/ultimora/lamezia-lavori-di-bitumazione-in-via-trento-limitazione-della-circolazione-stradale-il-25-settembre.html",
+      }),
+    ]);
+    expect(vSeptember25?.contextResearch.searchNote).toMatch(
+      /non nomina la Commissione.*non attesta/i,
+    );
+    expect(vSeptember25?.agenda.value).toEqual([
+      "Disciplinare per interventi sulla rete stradale.",
+    ]);
+    expect(vSeptember25?.liveStreaming.value).toBeNull();
+    expect(vSeptember25?.recording.value).toBeNull();
+    expect(vSeptember25?.lastCheckedAt.value).toBe("2026-09-24T09:59:02Z");
+
+    const vSeptember23 = sessions.find(
+      (session) => session.id === "albo-2026-3011-commissione-v-2026-09-23",
+    );
+    expect(vSeptember23?.contextResearch).toEqual(
+      expect.objectContaining({
+        status: "checked_no_match",
+        articles: [],
+        media: [],
+      }),
+    );
+
     const expectedProvenance = new Map([
       [
         "2026/3011",
@@ -862,14 +901,16 @@ describe("councilSessionV0", () => {
       expect(session.scheduledAt.sourceStatus).toBe("verificato");
       expect(session.agenda.sourceStatus).toBe("verificato");
       expect(session.sessionStatus.value).toBe("non_verificata");
-      expect(session.contextResearch).toEqual(
-        expect.objectContaining({
-          status: "checked_no_match",
-          checkedAt: "2026-09-21T22:07:23Z",
-          articles: [],
-          media: [],
-        }),
-      );
+      if (session.id !== vSeptember25?.id) {
+        expect(session.contextResearch).toEqual(
+          expect.objectContaining({
+            status: "checked_no_match",
+            checkedAt: "2026-09-21T22:07:23Z",
+            articles: [],
+            media: [],
+          }),
+        );
+      }
       expect(session.contextResearch.searchNote).toMatch(/Parallel Search/i);
       expect(session.dataLimits.value?.join(" ")).toMatch(
         /sede non è indicata.*non viene inferita/i,

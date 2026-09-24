@@ -66,6 +66,8 @@ const SERRA_ANNUNZIATA_LAMETINO_URL =
   "https://www.lametino.it/ultime/lamezia-consigliera-serratore-presenta-mozione-su-rifiuti-e-sicurezza-in-localita-serra-e-annunziata.html";
 const COMMISSION_I_MOTION_LAMETINO_URL =
   "https://www.lametino.it/ultime/lamezia-mozioni-di-sfiducia-contro-cristiano-e-villella-tensioni-nelle-commissioni-consiliari.html";
+const VIA_TRENTO_ROADWORKS_LAMETINO_URL =
+  "https://www.lametino.it/ultimora/lamezia-lavori-di-bitumazione-in-via-trento-limitazione-della-circolazione-stradale-il-25-settembre.html";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
 const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
 const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-27T21:49:11Z";
@@ -77,6 +79,7 @@ const SEPTEMBER_22_25_COMMISSION_RESEARCHED_AT = "2026-09-21T22:07:23Z";
 const SEPTEMBER_24_COMMISSION_RESEARCHED_AT = "2026-09-23T10:14:27Z";
 const SERRA_ANNUNZIATA_CONTEXT_RESEARCHED_AT = "2026-09-19T15:49:21Z";
 const COMMISSION_I_MOTION_CONTEXT_RESEARCHED_AT = "2026-09-23T22:14:41Z";
+const VIA_TRENTO_ROADWORKS_CONTEXT_RESEARCHED_AT = "2026-09-24T09:59:02Z";
 const MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT = "2026-09-12T21:51:17Z";
 const SCHOOL_TRANSPORT_CONTEXT_RESEARCHED_AT = "2026-09-14T10:13:39Z";
 
@@ -447,6 +450,28 @@ const september22To25CommissionContextResearch: CouncilSessionV0ContextResearch 
     searchNote:
       "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, il Lametino e risultati indicizzati per le sedute di IV e V Commissione dal 22 al 25 settembre 2026. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alle singole sedute. Gli ordini del giorno ufficiali sono disponibili e non viene ricostruita un'agenda editoriale.",
     articles: [],
+    media: [],
+  };
+
+const commissionVSeptember25RoadWorksContextResearch: CouncilSessionV0ContextResearch =
+  {
+    status: "reviewed_matches",
+    checkedAt: VIA_TRENTO_ROADWORKS_CONTEXT_RESEARCHED_AT,
+    searchNote:
+      "Ricerca eseguita con Parallel Search per discovery e verifica diretta dell'articolo originale de il Lametino e del calendario ufficiale Albo 2026/3011. L'articolo del 23 settembre descrive un intervento di bitumazione in via Trento programmato per il 25 settembre e viene collegato come `agenda_item` al punto ufficiale «Disciplinare per interventi sulla rete stradale». La fonte non nomina la Commissione e non attesta programmazione, costituzione, svolgimento, trattazione, approvazione, votazioni o risultati della seduta. Campi e ordine del giorno ufficiali restano invariati. Non sono emersi contenuti audiovisivi collegabili con sufficiente precisione.",
+    articles: [
+      {
+        title:
+          "Lamezia, lavori di bitumazione in via Trento: limitazione della circolazione stradale il 25 settembre",
+        url: VIA_TRENTO_ROADWORKS_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-09-23",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo descrive lavori di bitumazione in via Trento previsti per il 25 settembre, tema e data pertinenti al punto ufficiale sul disciplinare per gli interventi sulla rete stradale. Non nomina la Commissione e non prova svolgimento, trattazione, approvazione o risultati della seduta.",
+        reviewedAt: VIA_TRENTO_ROADWORKS_CONTEXT_RESEARCHED_AT,
+      },
+    ],
     media: [],
   };
 
@@ -1615,7 +1640,7 @@ export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
     agenda: roadNetworkWorksRulesAgenda,
     candidate: commissionVSeptember22To25Notice.candidate,
     provenance: commissionVSeptember22To25Notice.provenance,
-    contextResearch: september22To25CommissionContextResearch,
+    contextResearch: commissionVSeptember25RoadWorksContextResearch,
     sourceLinkLabel: "Apri il calendario ufficiale della V Commissione",
     calendarSummary:
       "La stessa convocazione programma quattro sedute della V Commissione dal 22 al 25 settembre 2026; il 25 settembre è fissata alle 10:00.",
