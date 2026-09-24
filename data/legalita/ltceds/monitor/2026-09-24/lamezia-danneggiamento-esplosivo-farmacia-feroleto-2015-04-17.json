@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-danneggiamento-esplosivo-farmacia-feroleto-2015-04-17",
   "discovered_at": "2026-09-24T15:40:57+02:00",
-  "updated_at": "2026-09-24T15:53:00+02:00",
+  "updated_at": "2026-09-24T15:56:00+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Danneggiamento con esplosivo alla Farmacia Feroleto in corso Numistrano il 17 aprile 2015",
@@ -69,8 +69,8 @@
       "legal_reference": null,
       "attempt_status": "completed",
       "situational_context": [
-        "Nella notte del 17 aprile 2015, intorno alle 04:00, un ordigno esplose davanti alla Farmacia Feroleto in corso Numistrano, nel centro di Lamezia Terme.",
-        "Le fonti contemporanee riferiscono gravi danni all'ingresso della farmacia e danni anche ad attività commerciali e veicoli nelle immediate vicinanze; non risultano persone ferite.",
+        "Nella notte del 17 aprile 2015 un ordigno esplose davanti alla Farmacia Feroleto in corso Numistrano, nel centro di Lamezia Terme; le cronache contemporanee collocano la deflagrazione nelle ore notturne con orari approssimativi non perfettamente coincidenti, per cui il record mantiene precisione temporale alla sola data.",
+        "Le fonti contemporanee riferiscono gravi danni all'ingresso della farmacia e danni anche ad attività commerciali, abitazioni o veicoli nelle immediate vicinanze; non risultano persone ferite.",
         "Le cronache riferiscono l'avvio delle indagini da parte dei Carabinieri, ma nella ricerca corrente non è stato reperito un atto primario o giudiziario che sostenga una qualificazione legale più specifica o un'attribuzione individuale; la classificazione resta pertanto provvisoria."
       ],
       "cyber_related": null,
