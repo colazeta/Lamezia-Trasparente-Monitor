@@ -2,7 +2,7 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-tentato-omicidio-via-cilea-2025-10-23",
   "discovered_at": "2026-09-24T15:10:50+02:00",
-  "updated_at": "2026-09-24T15:10:50+02:00",
+  "updated_at": "2026-09-24T15:27:00+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Duplice tentato omicidio con arma da fuoco in via Cilea il 23 ottobre 2025",
@@ -98,6 +98,7 @@
       "published_at": "2026-06-03T18:15:00+02:00",
       "retrieved_at": "2026-09-24T15:10:50+02:00",
       "support_roles": [
+        "location_support",
         "classification_support",
         "procedural_context",
         "corroboration"
@@ -175,7 +176,7 @@
     },
     {
       "location_key": "location:lamezia-terme:via-delle-terme-2025-precedente-lite:other",
-      "basis_source_key": "press:il-lametino:2026-05-06:perizia-via-cilea",
+      "basis_source_key": "press:quotidiano-del-sud:2026-06-03:condanna-via-cilea",
       "role": "other",
       "municipality": "Lamezia Terme",
       "evidence_basis": "source_stated_street",
