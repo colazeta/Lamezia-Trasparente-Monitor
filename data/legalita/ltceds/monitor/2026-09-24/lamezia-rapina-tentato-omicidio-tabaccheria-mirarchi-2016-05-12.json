@@ -1,0 +1,134 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-tentato-omicidio-tabaccheria-mirarchi-2016-05-12",
+  "discovered_at": "2026-09-24T07:30:39+02:00",
+  "updated_at": "2026-09-24T07:30:39+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina armata alla Tabaccheria Mirarchi e ferimento a colpi di pistola in corso Vittorio Emanuele il 12 maggio 2016",
+  "temporal": {
+    "start": "2016-05-12",
+    "end": null,
+    "edtf": "2016-05-12",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:ltnews:2016-05-12:rapina-tabaccheria-mirarchi",
+      "source_type": "press_secondary",
+      "provider": "LTNews Lamezia Terme",
+      "title": "Lamezia, rapina con sparatoria in una tabaccheria. Un ferito",
+      "url": "https://www.lameziatermenews.it/citta/11974-lamezia-rapina-con-sparatoria-in-una-tabaccheria-un-ferito.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-24T07:30:39+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2016-07-15:arresto-rapina-mirarchi",
+      "source_type": "press_secondary",
+      "provider": "Il Lametino",
+      "title": "Lamezia: rapina in tabaccheria a Sambiase, arrestato 51enne anche per tentato omicidio",
+      "url": "https://www.lametino.it/cronaca/lamezia-rapina-in-tabaccheria-a-sambiase-arrestato-51enne-anche-per-tentato-omicidio.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-24T07:30:39+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:il-lametino:2017-01-25:condanna-rapina-mirarchi",
+      "source_type": "press_secondary",
+      "provider": "Il Lametino",
+      "title": "Lamezia: rapinò tabaccheria e ferì passante a Sambiase, condannato a 10 anni",
+      "url": "https://www.lametino.it/cronaca/lamezia-rapino-tabaccheria-e-feri-passante-a-sambiase-condannato-a-10-anni.html",
+      "published_at": "2017-01-25T16:40:00+01:00",
+      "retrieved_at": "2026-09-24T07:30:39+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "press:il-lametino:2016-07-15:arresto-rapina-mirarchi",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Le fonti contemporanee collocano la rapina la sera del 12 maggio 2016 alla Tabaccheria Mirarchi di Sambiase, su corso Vittorio Emanuele, nei pressi della Chiesa Matrice, all'orario di chiusura.",
+        "Due persone armate di pistola e con il volto coperto sottrassero circa 150 euro dall'incasso secondo le ricostruzioni giornalistiche disponibili.",
+        "Durante la fuga un passante intervenuto in soccorso delle titolari fu raggiunto da colpi di pistola e dovette essere sottoposto a intervento e ricovero ospedaliero.",
+        "Nel luglio 2016 una fonte giornalistica che riferisce l'esecuzione di un'ordinanza cautelare qualifica formalmente il fatto come rapina a mano armata; nel gennaio 2017 Il Lametino riferisce una condanna a dieci anni di reclusione collegata al medesimo episodio, senza che il record assuma la definitività della decisione."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    },
+    {
+      "offence_key": "offence:tentato-omicidio",
+      "classification_source_key": "press:il-lametino:2016-07-15:arresto-rapina-mirarchi",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "La fonte del 15 luglio 2016 riferisce l'arresto anche per tentato omicidio in relazione alla rapina del 12 maggio alla Tabaccheria Mirarchi.",
+        "La ricostruzione successiva precisa che il passante intervenuto in soccorso delle titolari fu colpito da alcuni colpi di pistola durante la fuga e ricoverato in ospedale.",
+        "Il record conserva la qualificazione riportata dalla fonte procedurale giornalistica e non introduce ulteriori fattispecie in assenza di un atto primario direttamente disponibile."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:tabaccheria-mirarchi-corso-vittorio-emanuele:occurrence",
+      "basis_source_key": "press:il-lametino:2017-01-25:condanna-rapina-mirarchi",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Tabaccheria Mirarchi, corso Vittorio Emanuele, nei pressi della Chiesa Matrice",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:tabaccheria-mirarchi-corso-vittorio-emanuele:target",
+      "basis_source_key": "press:il-lametino:2017-01-25:condanna-rapina-mirarchi",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Tabaccheria Mirarchi, corso Vittorio Emanuele, nei pressi della Chiesa Matrice",
+      "neighbourhood": "Sambiase",
+      "iccs_location_type": null
+    }
+  ]
+}
