@@ -1,0 +1,131 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-tentato-omicidio-villa-comunale-corso-numistrano-2020-06-29",
+  "discovered_at": "2026-09-24T08:36:14+02:00",
+  "updated_at": "2026-09-24T08:36:14+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Tentato omicidio con coltello nella Villa Comunale di Corso Numistrano il 29 giugno 2020",
+  "temporal": {
+    "start": "2020-06-29",
+    "end": null,
+    "edtf": "2020-06-29",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "polizia:questura-catanzaro:2020-06-30:tentato-omicidio-villa-numistrano",
+      "source_type": "law_enforcement_primary",
+      "provider": "Questura di Catanzaro - Polizia di Stato",
+      "title": "Lamezia Terme: la Polizia di Stato arresta un 92enne per tentato omicidio",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/12365efb1a99eed14149104083",
+      "published_at": null,
+      "retrieved_at": "2026-09-24T08:36:14+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:zoom24:2020-06-30:anziano-accoltellato-villa-numistrano",
+      "source_type": "press_secondary",
+      "provider": "Zoom24",
+      "title": "Anziano accoltellato a Lamezia, la Polizia arresta un 92enne",
+      "url": "https://www.zoom24.it/news/273807216134/anziano-accoltellato-a-lamezia-la-polizia-arresta-un-92enne",
+      "published_at": "2020-06-30T13:42:00+02:00",
+      "retrieved_at": "2026-09-24T08:36:14+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:tentato-omicidio",
+      "classification_source_key": "polizia:questura-catanzaro:2020-06-30:tentato-omicidio-villa-numistrano",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "attempted",
+      "situational_context": [
+        "La fonte primaria colloca il fatto nella mattinata del 29 giugno 2020 nella Villa Comunale di Corso Numistrano a Lamezia Terme.",
+        "Nel corso di un alterco, un uomo di 92 anni avrebbe colpito con un coltello un uomo di 75 anni, ferendolo gravemente; la persona ferita fu successivamente trasferita all'ospedale Pugliese-Ciaccio di Catanzaro con prognosi riservata.",
+        "La Questura qualifica espressamente il fatto come tentato omicidio. Il soggetto indicato come autore si presentò spontaneamente al Commissariato di Polizia; dopo gli accertamenti fu arrestato e sottoposto agli arresti domiciliari su disposizione del pubblico ministero, in attesa dell'udienza di convalida.",
+        "Il record rappresenta lo stato investigativo e cautelare descritto dalle fonti e non una responsabilità definitivamente accertata."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:villa-comunale-corso-numistrano:occurrence",
+      "basis_source_key": "polizia:questura-catanzaro:2020-06-30:tentato-omicidio-villa-numistrano",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Villa Comunale di Corso Numistrano",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:villa-comunale-corso-numistrano:target",
+      "basis_source_key": "polizia:questura-catanzaro:2020-06-30:tentato-omicidio-villa-numistrano",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Villa Comunale di Corso Numistrano",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:villa-comunale-corso-numistrano-dintorni:recovery",
+      "basis_source_key": "polizia:questura-catanzaro:2020-06-30:tentato-omicidio-villa-numistrano",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Poco distante dal luogo dell'accoltellamento nella Villa Comunale di Corso Numistrano",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:commissariato-polizia:arrest",
+      "basis_source_key": "polizia:questura-catanzaro:2020-06-30:tentato-omicidio-villa-numistrano",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Commissariato di Pubblica Sicurezza di Lamezia Terme",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
