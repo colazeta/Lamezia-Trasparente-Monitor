@@ -1,0 +1,145 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-rapina-stazione-centrale-2017-07-11",
+  "discovered_at": "2026-09-24T07:06:28+02:00",
+  "updated_at": "2026-09-24T07:06:28+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Rapina ai danni di una donna nei pressi della stazione ferroviaria di Lamezia Terme Centrale l'11 luglio 2017",
+  "temporal": {
+    "start": "2017-07-11T03:00:00+02:00",
+    "end": null,
+    "edtf": "2017-07-11T03:00",
+    "precision": "approximate"
+  },
+  "sources": [
+    {
+      "source_key": "law:poliziadistato-catanzaro:2017-07-11:rapina-stazione-centrale",
+      "source_type": "law_enforcement_primary",
+      "provider": "Polizia di Stato - Questura di Catanzaro",
+      "title": "Lamezia Terme: rapina una donna e viene subito arrestato",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/12365964ec5be1449422046930",
+      "published_at": null,
+      "retrieved_at": "2026-09-24T07:06:28+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:infooggi:2017-07-11:rapina-stazione-centrale",
+      "source_type": "press_secondary",
+      "provider": "InfoOggi",
+      "title": "Lamezia Terme: rapina una donna e viene subito arrestato dalla Polizia di Stato e dai Carabinieri",
+      "url": "https://www.infooggi.it/articolo/lamezia-terme-rapina-una-donna-e-viene-subito-arrestato-dalla-polizia-di-stato-e-dai-carabinieri/99751/amp",
+      "published_at": null,
+      "retrieved_at": "2026-09-24T07:06:28+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2017-07-11:rapina-stazione-centrale",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Aggredisce e ruba una donna in stazione: arrestato",
+      "url": "https://www.corrieredellacalabria.it/2017/07/11/aggredisce-e-ruba-una-donna-in-stazione-arrestato/",
+      "published_at": null,
+      "retrieved_at": "2026-09-24T07:06:28+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:rapina",
+      "classification_source_key": "law:poliziadistato-catanzaro:2017-07-11:rapina-stazione-centrale",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "La fonte primaria della Questura di Catanzaro qualifica il fatto come rapina e colloca l'evento poco dopo le ore 3 dell'11 luglio 2017 nei pressi della Stazione Ferroviaria di Lamezia Terme Centrale.",
+        "La vittima, mentre telefonava da una cabina telefonica, fu aggredita, spinta violentemente a terra e privata di due telefoni cellulari e di dieci euro; la localizzazione non viene resa più precisa oltre l'area nei pressi della stazione.",
+        "Polizia di Stato e Carabinieri individuarono e arrestarono poco dopo il soggetto indicato come autore; la perquisizione personale consentì il recupero dei due telefoni e delle due banconote da cinque euro. Le fonti non precisano il punto materiale dell'arresto o del recupero.",
+        "Nel rito direttissimo celebrato lo stesso giorno il giudice convalidò l'arresto e dispose la custodia in carcere in attesa del giudizio; il record conserva questo stato procedurale senza rappresentare una responsabilità definitivamente accertata."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:stazione-centrale-vicinity:occurrence",
+      "basis_source_key": "law:poliziadistato-catanzaro:2017-07-11:rapina-stazione-centrale",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Nei pressi della Stazione Ferroviaria di Lamezia Terme Centrale",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:stazione-centrale-vicinity:target",
+      "basis_source_key": "law:poliziadistato-catanzaro:2017-07-11:rapina-stazione-centrale",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "locality",
+      "resolved_precision": "locality",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Nei pressi della Stazione Ferroviaria di Lamezia Terme Centrale",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:unspecified:arrest:2017-07-11-stazione-centrale-rapina",
+      "basis_source_key": "law:poliziadistato-catanzaro:2017-07-11:rapina-stazione-centrale",
+      "role": "arrest",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "unknown",
+      "publication_risk": "unknown",
+      "geometry": null,
+      "place_name": "Lamezia Terme - luogo dell'arresto non ulteriormente specificato dalle fonti",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:unspecified:recovery:2017-07-11-stazione-centrale-rapina",
+      "basis_source_key": "law:poliziadistato-catanzaro:2017-07-11:rapina-stazione-centrale",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "unknown",
+      "publication_risk": "unknown",
+      "geometry": null,
+      "place_name": "Lamezia Terme - luogo del recupero dei beni non ulteriormente specificato dalle fonti",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
