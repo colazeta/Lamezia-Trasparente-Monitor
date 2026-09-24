@@ -1,0 +1,116 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-furto-offerte-san-giovanni-calabria-2025-10-09",
+  "discovered_at": "2026-09-24T02:06:42+02:00",
+  "updated_at": "2026-09-24T02:06:42+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Furto di circa 28.000 euro di offerte dall'abitazione nella disponibilità del parroco della Parrocchia San Giovanni Calabria il 9 ottobre 2025",
+  "temporal": {
+    "start": "2025-10-09",
+    "end": "2025-10-09",
+    "edtf": "2025-10-09",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:lametino:2026-06-27:furto-san-giovanni-calabria",
+      "source_type": "press_secondary",
+      "provider": "Il Lametino",
+      "title": "Lamezia, Polizia arresta 53enne per furto di circa 28mila euro nella Parrocchia ‘San Giovanni Calabria’",
+      "url": "https://www.lametino.it/cronaca/lamezia-polizia-arresta-53enne-per-furto-di-circa-28mila-euro-nella-parrocchia-san-giovanni-calabria.html",
+      "published_at": null,
+      "retrieved_at": "2026-09-24T02:06:42+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    },
+    {
+      "source_key": "press:corriere-calabria:2026-06-27:furto-san-giovanni-calabria",
+      "source_type": "press_secondary",
+      "provider": "Corriere della Calabria",
+      "title": "Furto di 28mila euro alla parrocchia ‘San Giovanni Calabria’, arrestato un 53enne",
+      "url": "https://www.corrieredellacalabria.it/2026/06/27/furto-di-28mila-euro-alla-parrocchia-san-giovanni-calabria-arrestato-un-53enne/",
+      "published_at": null,
+      "retrieved_at": "2026-09-24T02:06:42+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:gazzetta-sud:2026-06-27:furto-san-giovanni-calabria",
+      "source_type": "press_secondary",
+      "provider": "Gazzetta del Sud",
+      "title": "Rubò 28mila euro di offerte in parrocchia: 53enne incastrato dal Dna e arrestato a Lamezia Terme",
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2026/06/27/ruba-28mila-euro-di-offerte-in-parrocchia-53enne-incastrato-dal-dna-e-arrestato-a-lamezia-terme-2c760074-a3cf-444d-9573-370802fbe80b",
+      "published_at": null,
+      "retrieved_at": "2026-09-24T02:06:42+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:furto",
+      "classification_source_key": "press:lametino:2026-06-27:furto-san-giovanni-calabria",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": null,
+      "attempt_status": "completed",
+      "situational_context": [
+        "Il 9 ottobre 2025 una persona si sarebbe introdotta nell'abitazione nella disponibilità del parroco della Parrocchia San Giovanni Calabria a Lamezia Terme, danneggiando una porta in vetro, una finestra e una vetrata ad uso lucernario.",
+        "Le fonti riferiscono la sottrazione di circa 28.000 euro in contanti, costituiti per lo più da offerte parrocchiali.",
+        "L'indagine del Commissariato di Pubblica Sicurezza di Lamezia Terme, coordinata dalla Procura della Repubblica, ha utilizzato anche accertamenti di biologia forense e immagini di videosorveglianza.",
+        "Il 24 giugno 2026 è stata eseguita un'ordinanza cautelare del G.I.P. presso il Tribunale di Lamezia Terme, con applicazione degli arresti domiciliari. Il provvedimento appartiene alla fase delle indagini preliminari e non viene rappresentato come accertamento definitivo di responsabilità.",
+        "Alcune fonti giornalistiche descrivono il luogo come canonica; il record conserva la formulazione più prudente 'abitazione nella disponibilità del parroco' e non attribuisce un indirizzo non attestato dalle fonti dell'evento."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:abitazione-parroco-san-giovanni-calabria:occurrence",
+      "basis_source_key": "press:lametino:2026-06-27:furto-san-giovanni-calabria",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione nella disponibilità del parroco della Parrocchia San Giovanni Calabria (indirizzo non attestato)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:abitazione-parroco-san-giovanni-calabria:target",
+      "basis_source_key": "press:lametino:2026-06-27:furto-san-giovanni-calabria",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Abitazione nella disponibilità del parroco della Parrocchia San Giovanni Calabria (indirizzo non attestato)",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
