@@ -1,0 +1,128 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-danneggiamento-esplosivo-il-fornaio-via-piave-2017-03-30",
+  "discovered_at": "2026-09-24T11:56:22+02:00",
+  "updated_at": "2026-09-24T12:04:00+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Danneggiamento con esplosivo alla Panetteria Il Fornaio in via Piave il 30 marzo 2017",
+  "temporal": {
+    "start": "2017-03-30",
+    "end": null,
+    "edtf": "2017-03-30",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "polizia:questura-catanzaro:2017-04-07:attentato-il-fornaio",
+      "source_type": "law_enforcement_primary",
+      "provider": "Questura di Catanzaro - Polizia di Stato",
+      "title": "Lamezia Terme: la Polizia di Stato ferma gli autori dell'attentato dinamitardo ai danni di una panetteria di Lamezia Terme",
+      "url": "https://questure.poliziadistato.it/it/Catanzaro/articolo/123658e74d21cdea8932796376",
+      "published_at": "2017-04-07T00:00:00+02:00",
+      "retrieved_at": "2026-09-24T11:56:22+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lacnews24:2017-03-31:bomba-il-fornaio",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Paura a Lamezia Terme, bomba distrugge attività commerciale",
+      "url": "https://www.lacnews24.it/cronaca/paura-a-lamezia-terme-bomba-distrugge-attivita-commerciale-b4dctdtv",
+      "published_at": "2017-03-31T00:00:00+02:00",
+      "retrieved_at": "2026-09-24T11:56:22+02:00",
+      "support_roles": [
+        "event_support",
+        "location_support",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:lacnews24:2017-04-07:fermi-il-fornaio",
+      "source_type": "press_secondary",
+      "provider": "LaC News24",
+      "title": "Bomba al Fornaio Angotti di Lamezia, arrestati i presunti responsabili",
+      "url": "https://www.lacnews24.it/cronaca/bomba-al-fornaio-angotti-di-lamezia-arrestati-i-presunti-responsabili-nomi-video-foto-vu8nrvkh",
+      "published_at": "2017-04-07T00:00:00+02:00",
+      "retrieved_at": "2026-09-24T11:56:22+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    },
+    {
+      "source_key": "press:catanzaroinforma:2017-04-07:bomba-panetteria",
+      "source_type": "press_secondary",
+      "provider": "CatanzaroInforma",
+      "title": "Bomba alla panetteria a Lamezia, due arresti della Polizia",
+      "url": "https://www.catanzaroinforma.it/cronaca/2017/04/07/bomba-alla-panetteria-a-lameziadue-arresti-della-polizia-con-3-video/98587/",
+      "published_at": "2017-04-07T00:00:00+02:00",
+      "retrieved_at": "2026-09-24T11:56:22+02:00",
+      "support_roles": [
+        "event_support",
+        "procedural_context",
+        "corroboration"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:danneggiamento-con-esplosivo",
+      "classification_source_key": "press:lacnews24:2017-04-07:fermi-il-fornaio",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": "Danneggiamento con esplosivo aggravato dalla modalità mafiosa",
+      "attempt_status": "completed",
+      "situational_context": [
+        "Nella tarda serata del 30 marzo 2017, intorno alle 22:30, un ordigno ad alto potenziale esplose contro la Panetteria Il Fornaio, indicata anche come panificio Angotti, in via Piave a Lamezia Terme, nei pressi di via Adige.",
+        "Le fonti riferiscono gravi danni all'esercizio e danni anche ad attività commerciali, abitazioni e veicoli nelle immediate vicinanze, senza persone ferite.",
+        "Il 7 aprile 2017 la Polizia di Stato eseguì provvedimenti di fermo nei confronti di due persone indicate come presunti autori; le fonti relative ai fermi qualificano il fatto come danneggiamento con esplosivo aggravato dalla modalità mafiosa.",
+        "Il record rappresenta lo stato investigativo e cautelare documentato dalle fonti e non assume responsabilità definitivamente accertate."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:il-fornaio-via-piave:occurrence",
+      "basis_source_key": "press:lacnews24:2017-03-31:bomba-il-fornaio",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Panetteria Il Fornaio / panificio Angotti, via Piave, nei pressi di via Adige",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:il-fornaio-via-piave:target",
+      "basis_source_key": "press:lacnews24:2017-03-31:bomba-il-fornaio",
+      "role": "target",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "victim_linked",
+      "geometry": null,
+      "place_name": "Panetteria Il Fornaio / panificio Angotti, via Piave, nei pressi di via Adige",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
