@@ -2,15 +2,15 @@
   "ingestion_schema": "lt-crime-monitor/1.0",
   "event_key": "lamezia-danneggiamento-esplosivo-farmacia-feroleto-2015-04-17",
   "discovered_at": "2026-09-24T15:40:57+02:00",
-  "updated_at": "2026-09-24T15:40:57+02:00",
+  "updated_at": "2026-09-24T15:53:00+02:00",
   "record_status": "verified_source",
   "event_form": "discrete",
   "title": "Danneggiamento con esplosivo alla Farmacia Feroleto in corso Numistrano il 17 aprile 2015",
   "temporal": {
-    "start": "2015-04-17T04:00:00+02:00",
+    "start": "2015-04-17",
     "end": null,
-    "edtf": "2015-04-17T04:00:00+02:00",
-    "precision": "exact_datetime"
+    "edtf": "2015-04-17",
+    "precision": "exact_date"
   },
   "sources": [
     {
