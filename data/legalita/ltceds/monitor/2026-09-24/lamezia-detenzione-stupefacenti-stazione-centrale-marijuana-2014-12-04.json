@@ -1,0 +1,114 @@
+{
+  "ingestion_schema": "lt-crime-monitor/1.0",
+  "event_key": "lamezia-detenzione-stupefacenti-stazione-centrale-marijuana-2014-12-04",
+  "discovered_at": "2026-09-24T16:14:45+02:00",
+  "updated_at": "2026-09-24T16:14:45+02:00",
+  "record_status": "verified_source",
+  "event_form": "discrete",
+  "title": "Detenzione ai fini di spaccio di marijuana con controllo alla Stazione Centrale e sequestro domiciliare il 4 dicembre 2014",
+  "temporal": {
+    "start": "2014-12-04",
+    "end": "2014-12-04",
+    "edtf": "2014-12-04",
+    "precision": "exact_date"
+  },
+  "sources": [
+    {
+      "source_key": "press:strettoweb:2014-12-05:lamezia-marijuana-damigiana-stazione-centrale",
+      "source_type": "press_secondary",
+      "provider": "StrettoWeb",
+      "title": "Lamezia: giovane arrestato per spaccio di stupefacenti, deteneva marijuana dentro una damigiana",
+      "url": "https://www.strettoweb.com/2014/12/lamezia-giovane-arrestato-per-spaccio-di-stupefacenti-deteneva-marijuana-dentro-una-damigiana/221447/",
+      "published_at": "2014-12-05T12:04:00+01:00",
+      "retrieved_at": "2026-09-24T16:14:45+02:00",
+      "support_roles": [
+        "event_support",
+        "classification_support",
+        "location_support",
+        "procedural_context"
+      ]
+    }
+  ],
+  "offences": [
+    {
+      "offence_key": "offence:detenzione-ai-fini-di-spaccio-stupefacenti",
+      "classification_source_key": "press:strettoweb:2014-12-05:lamezia-marijuana-damigiana-stazione-centrale",
+      "classification_basis": "source_stated_legal",
+      "iccs_code": null,
+      "istat_catalogue_id": null,
+      "istat_synthetic_code": null,
+      "istat_analytical_code": null,
+      "legal_reference": "Detenzione ai fini di spaccio di sostanze stupefacenti",
+      "attempt_status": "completed",
+      "situational_context": [
+        "La sera del 4 dicembre 2014 il controllo iniziale con unita cinofila della Guardia di finanza avvenne presso la stazione ferroviaria di Lamezia Terme Centrale; la fonte riferisce il rinvenimento di tracce indicative della detenzione di sostanze stupefacenti.",
+        "La successiva perquisizione dell'abitazione porto al sequestro complessivo di 253 grammi di marijuana: tre dosi sul tavolo della cucina e ulteriori 250 grammi occultati in una damigiana sotto il porticato d'ingresso, oltre a un bilancino di precisione e materiale per il confezionamento.",
+        "La fonte riferisce l'arresto per detenzione ai fini di spaccio; non e stato reperito in questa acquisizione un successivo esito giudiziario e il record non rappresenta una responsabilita definitivamente accertata."
+      ],
+      "cyber_related": null,
+      "affected_object_count": null
+    }
+  ],
+  "locations": [
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata-non-pubblicata:occurrence",
+      "basis_source_key": "press:strettoweb:2014-12-05:lamezia-marijuana-damigiana-stazione-centrale",
+      "role": "occurrence",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata in Lamezia Terme, indirizzo non pubblicato",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:stazione-centrale:search",
+      "basis_source_key": "press:strettoweb:2014-12-05:lamezia-marijuana-damigiana-stazione-centrale",
+      "role": "search",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_named_site",
+      "evidence_precision": "exact_public_site",
+      "resolved_precision": "exact_public_site",
+      "sensitivity": "public_place",
+      "publication_risk": "low_public_site",
+      "geometry": null,
+      "place_name": "Stazione ferroviaria di Lamezia Terme Centrale",
+      "neighbourhood": "Sant'Eufemia Lamezia",
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata-non-pubblicata:search",
+      "basis_source_key": "press:strettoweb:2014-12-05:lamezia-marijuana-damigiana-stazione-centrale",
+      "role": "search",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata in Lamezia Terme, indirizzo non pubblicato",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    },
+    {
+      "location_key": "location:lamezia-terme:abitazione-privata-non-pubblicata:recovery",
+      "basis_source_key": "press:strettoweb:2014-12-05:lamezia-marijuana-damigiana-stazione-centrale",
+      "role": "recovery",
+      "municipality": "Lamezia Terme",
+      "evidence_basis": "source_stated_locality",
+      "evidence_precision": "municipality",
+      "resolved_precision": "municipality",
+      "sensitivity": "private_or_sensitive",
+      "publication_risk": "residential",
+      "geometry": null,
+      "place_name": "Abitazione privata in Lamezia Terme, indirizzo non pubblicato",
+      "neighbourhood": null,
+      "iccs_location_type": null
+    }
+  ]
+}
