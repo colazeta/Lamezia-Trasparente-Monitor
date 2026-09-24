@@ -48,7 +48,7 @@
       "source_key": "press:corriere-calabria:2023-06-12:tentato-omicidio-lamezia-interrogatorio",
       "source_type": "press_secondary",
       "provider": "Corriere della Calabria",
-      "title": "Tentato omicidio a Lamezia, Amato si avvale della facoltà di non rispondere",
+      "title": "Tentato omicidio a Lamezia, l'indagato si avvale della facoltà di non rispondere",
       "url": "https://www.corrieredellacalabria.it/2023/06/12/tentato-omicidio-a-lamezia-amato-si-avvale-della-facolta-di-non-rispondere-video/",
       "published_at": "2023-06-12T18:03:00+02:00",
       "retrieved_at": "2026-09-24T17:58:39+02:00",
@@ -114,7 +114,7 @@
       "iccs_location_type": null
     },
     {
-      "location_key": "location:lamezia-terme:via-del-progresso-cartucchia:recovery",
+      "location_key": "location:lamezia-terme:via-del-progresso-cartuccia:recovery",
       "basis_source_key": "press:lametino:2023-06-12:tentato-duplice-omicidio-via-del-progresso",
       "role": "recovery",
       "municipality": "Lamezia Terme",
