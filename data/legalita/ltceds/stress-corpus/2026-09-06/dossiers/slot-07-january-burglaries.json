@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.0",
+  "corpus_id": "ltceds-stress-corpus-2026-09-06",
+  "corpus_slot": 7,
+  "case_key": "2026-01-11-VIA-DEL-PROGRESSO-ADJACENT-BURGLARIES",
+  "status": "review_mode",
+  "candidate_kind": "CONTINUOUS_EPISODE_CANDIDATE",
+  "source_state": "carabinieri_derived_reporting_primary_url_not_resolved",
+  "retrieval_date": "2026-09-06",
+  "sources": [
+    {
+      "url": "https://lanuovacalabria.it/lamezia-furti-a-cantine-lento-e-splendidi-e-splendenti-uno-dei-2-ladri-beccato-in-un-cassonetto",
+      "source_type": "press_secondary",
+      "source_role": "direct_carabinieri_derived_discovery",
+      "supported_scope": "night of 11 January 2026; emergency call at about 03:50; aggravated theft investigation"
+    },
+    {
+      "url": "https://www.lameziaterme.it/lamezia-terme-furti-nella-notte-ladri-sorpresi-dai-carabinieri/",
+      "source_type": "press_secondary",
+      "source_role": "identity_corroboration",
+      "supported_scope": "theft in progress at Cantine Lento in Via del Progresso and the adjacent Splendidi e Splendenti outlet"
+    },
+    {
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2026/01/15/furti-nella-notte-a-lamezia-ladro-sorpreso-in-un-cassonetto-indagini-in-corso-per-identificare-i-complici-a9ea87c3-a28b-43cf-b005-6fe05c834618/",
+      "source_type": "press_secondary",
+      "source_role": "sequence_corroboration",
+      "supported_scope": "the perpetrators reportedly entered the first commercial premises and then reached the adjacent outlet through the connected residential premises"
+    },
+    {
+      "url": "https://www.lameziainforma.it/cronaca/2026/01/15/arrestato-n-42enne-lametino-per-furto-aggravato-in-abitazione-e-in-attivita-commerciale/65419/",
+      "source_type": "press_secondary",
+      "source_role": "corroboration",
+      "supported_scope": "aggravated theft involving a dwelling and commercial activity during the same intervention"
+    }
+  ],
+  "supported_facts": [
+    "The occurrence is reported during the night of 11 January 2026, with an emergency call at approximately 03:50.",
+    "Two adjacent commercial targets on Via del Progresso are described in the same immediate police intervention.",
+    "Reporting describes a physically and temporally continuous sequence from the first premises toward the adjacent outlet.",
+    "The later pursuit, hiding and arrest are procedural consequences and not separate crime-occurrence geography."
+  ],
+  "event_identity_analysis": {
+    "preferred_model": "one_EVENT",
+    "preferred_event_form": "continuous_episode",
+    "target_count": 2,
+    "rationale": "The sources support a contiguous sequence, adjacent targets and one uninterrupted intervention. There is presently no material temporal or spatial discontinuity justifying two canonical EVENT IDs.",
+    "split_condition": "Split only if a primary occurrence record later establishes independently completed episodes separated by a meaningful temporal/spatial break."
+  },
+  "temporal_analysis": {
+    "supported_date": "2026-01-11",
+    "supported_time_approx": "03:50",
+    "precision_for_candidate": "exact_date_with_approximate_time_context",
+    "caution": "Use exact datetime only if a primary source supports the clock time as occurrence time rather than call/intervention time."
+  },
+  "geography_analysis": {
+    "municipality": "Lamezia Terme",
+    "street": "Via del Progresso",
+    "target_relation": "adjacent",
+    "public_geometry_ready": false,
+    "non_occurrence_locations": ["pursuit location", "hiding location", "arrest location"]
+  },
+  "offence_analysis": {
+    "reported_family": "aggravated theft/burglary involving commercial and residential premises",
+    "classification_status": "provisional_pending_primary_source",
+    "modelling_note": "Multiple targets do not by themselves require multiple EVENT records; offence instances and target locations can remain one-to-many within the continuous episode."
+  },
+  "privacy_and_publication": {
+    "residential_component_present": true,
+    "person_identity_in_dossier": false,
+    "exact_residential_public_geometry_allowed": false,
+    "auto_publish": false
+  },
+  "recommended_resolution": "Treat as one continuous_episode candidate with multiple target locations/offence assertions. Keep arrest/pursuit geography separate. Do not finalise a reviewed bundle until a primary occurrence source is resolved.",
+  "review_decision": "needs_more_evidence",
+  "publication_blockers": [
+    "Original Carabinieri institutional source not resolved in the current indexed search.",
+    "Residential component requires geoprivacy review before any public projection."
+  ]
+}
