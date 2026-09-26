@@ -16,7 +16,7 @@ const SCORDOVILLO_CANONICAL_PRESENTATION: CanonicalProposalPresentation = {
   version: "1.0",
   title: "Trasparenza e confronto pubblico sul percorso abitativo di Scordovillo",
   request:
-    "Rendere pubblicamente verificabile il percorso abitativo collegato al superamento di Scordovillo, discuterlo in sedi pubbliche e sospendere ulteriori procedure di acquisto finché criteri, requisiti, modalità e conseguenze dell'operazione non siano illustrati alla città.",
+    "Rendere verificabile il percorso abitativo di Scordovillo, discuterlo pubblicamente e sospendere ulteriori procedure di acquisto di immobili finché criteri, requisiti, modalità e conseguenze dell’operazione non siano illustrati alla città.",
   actionTypes: ["organizzazione", "trasparenza", "coordinamento"],
   measures: [
     "Convocare un Consiglio comunale aperto dedicato alla vicenda Scordovillo.",
