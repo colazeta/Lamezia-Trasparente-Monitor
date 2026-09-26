@@ -77,6 +77,7 @@ const MID_SEPTEMBER_COMMISSION_RESEARCHED_AT = "2026-09-12T10:18:08Z";
 const LATE_SEPTEMBER_COMMISSION_RESEARCHED_AT = "2026-09-19T09:34:42Z";
 const SEPTEMBER_22_25_COMMISSION_RESEARCHED_AT = "2026-09-21T22:07:23Z";
 const SEPTEMBER_24_COMMISSION_RESEARCHED_AT = "2026-09-23T10:14:27Z";
+const SEPTEMBER_24_30_COMMISSION_RESEARCHED_AT = "2026-09-26T22:13:55Z";
 const SERRA_ANNUNZIATA_CONTEXT_RESEARCHED_AT = "2026-09-19T15:49:21Z";
 const COMMISSION_I_MOTION_CONTEXT_RESEARCHED_AT = "2026-09-23T22:14:41Z";
 const VIA_TRENTO_ROADWORKS_CONTEXT_RESEARCHED_AT = "2026-09-24T09:59:02Z";
@@ -483,6 +484,16 @@ const september24CommissionContextResearch: CouncilSessionV0ContextResearch = {
   articles: [],
   media: [],
 };
+
+const september24To30CommissionContextResearch: CouncilSessionV0ContextResearch =
+  {
+    status: "checked_no_match",
+    checkedAt: SEPTEMBER_24_30_COMMISSION_RESEARCHED_AT,
+    searchNote:
+      "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, il Lametino e risultati indicizzati, inclusi canali YouTube e Facebook, per le sedute di III, IV e V Commissione dal 24 al 30 settembre 2026. Le query hanno combinato organo, date, orari e temi distintivi: Garante delle persone con disabilità, tutela della salute e del benessere della comunità scolastica, adeguamento climatico degli edifici scolastici, Street Art, beni comunali e interventi sulla rete stradale. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alle singole sedute. Gli ordini del giorno ufficiali sono disponibili e non viene ricostruita un'agenda editoriale.",
+    articles: [],
+    media: [],
+  };
 
 const commissionIiiWasteMotionContextResearch: CouncilSessionV0ContextResearch =
   {
@@ -892,6 +903,56 @@ const commissionIiiSeptember24Notice = lateSeptemberNotice({
   documentSha256:
     "bebe656039da9f7a4dd7b93f3baf530902ac0a1da3319e1bf3e063001845bbb8",
   reviewedAt: SEPTEMBER_24_COMMISSION_RESEARCHED_AT,
+});
+
+const commissionIiiSeptember25Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3089",
+  publicationStart: "2026-09-25",
+  publicationEnd: "2026-10-02",
+  subject: "Convocazione 3° Commissione Consiliare Permanente.",
+  sourceContentHash:
+    "b621f17980514460f3620dfcae1fc8ad976072c73a2da36e1ced4164c8cbb179",
+  documentSha256:
+    "a4d38091b4b34ac513d25e6a7a200dcb0538f086ae29d2f4aa42e8f04b13cd62",
+  reviewedAt: SEPTEMBER_24_30_COMMISSION_RESEARCHED_AT,
+});
+
+const commissionVSeptember28To30Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3090",
+  publicationStart: "2026-09-25",
+  publicationEnd: "2026-10-02",
+  subject:
+    "Convocazione 5° Commissione Consiliare Permanente. Calendario lavori.",
+  sourceContentHash:
+    "1ccc848648feb3895b8d94ee2f546862f919b6e46b1592da9d3f0575f100e3e2",
+  documentSha256:
+    "095b6802f339bc9bbf7279fc905e021ffd9a6867d2dcc1a465e28439d1ade6a2",
+  reviewedAt: SEPTEMBER_24_30_COMMISSION_RESEARCHED_AT,
+});
+
+const commissionIvSeptember28Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3091",
+  publicationStart: "2026-09-25",
+  publicationEnd: "2026-10-02",
+  subject: "Convocazione 4° Commissione Consiliare Permanente.",
+  sourceContentHash:
+    "5664f02ecd0edb544711b691fbbb080732cb6e2e9c6cdea4f88f4052d9b225ba",
+  documentSha256:
+    "a8381207edd8c5ca1b7cacd2b3c006ebe4073ee3b22dd199fac616705031f23c",
+  reviewedAt: SEPTEMBER_24_30_COMMISSION_RESEARCHED_AT,
+});
+
+const commissionIvSeptember24And25Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3097",
+  publicationStart: "2026-09-25",
+  publicationEnd: "2026-10-02",
+  subject:
+    "Convocazione 4° Commissione Consiliare Permanente. Calendario lavori.",
+  sourceContentHash:
+    "4a6199e13ea5f62aff37318343b396776b6208511c9cdc12cc03d1b9eadaa708",
+  documentSha256:
+    "4f2d4c158f13f9239d1b5391f92315a7a7ef29a2e8769c8b04697f0a92f30b1d",
+  reviewedAt: SEPTEMBER_24_30_COMMISSION_RESEARCHED_AT,
 });
 
 const councilCandidate = requireCandidate({
@@ -1517,6 +1578,10 @@ const hillsideWasteCollectionAgenda = [
   "Servizio raccolta rifiuti nelle zone collinari e montane. Audizione del dirigente della Lamezia Multiservizi ing. Alessandro Vescio e del dirigente di Settore ing. Francesco Esposito.",
 ] as const;
 
+const schoolClimateMotionAgenda = [
+  "Mozione prot. n. 68544/2026: tutela della salute e del benessere della comunità scolastica e piano di adeguamento climatico degli edifici scolastici comunali.",
+] as const;
+
 const councilVerifiedSession: CouncilSessionV0 = {
   id: "albo-2026-2673-consiglio-comunale",
   kind: "council",
@@ -1621,17 +1686,79 @@ const councilVerifiedSession: CouncilSessionV0 = {
 
 export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
   septemberCommissionSession({
-    id: "albo-2026-3043-commissione-iii-2026-09-24",
+    id: "albo-2026-3090-commissione-v-2026-09-30",
+    title: "V Commissione consiliare permanente — seduta del 30 settembre 2026",
+    scheduledAt: "2026-09-30T09:00:00+02:00",
+    agenda: roadNetworkWorksRulesAgenda,
+    candidate: commissionVSeptember28To30Notice.candidate,
+    provenance: commissionVSeptember28To30Notice.provenance,
+    contextResearch: september24To30CommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della V Commissione",
+    calendarSummary:
+      "La stessa convocazione programma tre sedute della V Commissione dal 28 al 30 settembre 2026; il 30 settembre è fissata alle 09:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-3090-commissione-v-2026-09-29",
+    title: "V Commissione consiliare permanente — seduta del 29 settembre 2026",
+    scheduledAt: "2026-09-29T09:00:00+02:00",
+    agenda: roadNetworkWorksRulesAgenda,
+    candidate: commissionVSeptember28To30Notice.candidate,
+    provenance: commissionVSeptember28To30Notice.provenance,
+    contextResearch: september24To30CommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della V Commissione",
+    calendarSummary:
+      "La stessa convocazione programma tre sedute della V Commissione dal 28 al 30 settembre 2026; il 29 settembre è fissata alle 09:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-3091-commissione-iv-2026-09-28",
     title:
-      "III Commissione consiliare permanente — seduta del 24 settembre 2026",
-    scheduledAt: "2026-09-24T11:00:00+02:00",
-    agenda: hillsideWasteCollectionAgenda,
-    candidate: commissionIiiSeptember24Notice.candidate,
-    provenance: commissionIiiSeptember24Notice.provenance,
-    contextResearch: september24CommissionContextResearch,
+      "IV Commissione consiliare permanente — seduta del 28 settembre 2026",
+    scheduledAt: "2026-09-28T10:00:00+02:00",
+    agenda: streetArtAgenda,
+    candidate: commissionIvSeptember28Notice.candidate,
+    provenance: commissionIvSeptember28Notice.provenance,
+    contextResearch: september24To30CommissionContextResearch,
+    sourceLinkLabel: "Apri la convocazione ufficiale della IV Commissione",
+    calendarSummary:
+      "La convocazione programma una seduta della IV Commissione il 28 settembre 2026 alle 10:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-3090-commissione-v-2026-09-28",
+    title: "V Commissione consiliare permanente — seduta del 28 settembre 2026",
+    scheduledAt: "2026-09-28T09:00:00+02:00",
+    agenda: municipalAssetsRegulationAgenda,
+    candidate: commissionVSeptember28To30Notice.candidate,
+    provenance: commissionVSeptember28To30Notice.provenance,
+    contextResearch: september24To30CommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della V Commissione",
+    calendarSummary:
+      "La stessa convocazione programma tre sedute della V Commissione dal 28 al 30 settembre 2026; il 28 settembre è fissata alle 09:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-3089-commissione-iii-2026-09-25",
+    title:
+      "III Commissione consiliare permanente — seduta del 25 settembre 2026",
+    scheduledAt: "2026-09-25T12:00:00+02:00",
+    agenda: disabilityGuarantorAgenda,
+    candidate: commissionIiiSeptember25Notice.candidate,
+    provenance: commissionIiiSeptember25Notice.provenance,
+    contextResearch: september24To30CommissionContextResearch,
     sourceLinkLabel: "Apri la convocazione ufficiale della III Commissione",
     calendarSummary:
-      "La convocazione programma una seduta della III Commissione il 24 settembre 2026 alle 11:00.",
+      "La convocazione programma una seduta della III Commissione il 25 settembre 2026 alle 12:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-3097-commissione-iv-2026-09-25",
+    title:
+      "IV Commissione consiliare permanente — seduta del 25 settembre 2026",
+    scheduledAt: "2026-09-25T11:00:00+02:00",
+    agenda: streetArtAgenda,
+    candidate: commissionIvSeptember24And25Notice.candidate,
+    provenance: commissionIvSeptember24And25Notice.provenance,
+    contextResearch: september24To30CommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della IV Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della IV Commissione: 24 settembre alle 12:00 e 25 settembre 2026 alle 11:00.",
   }),
   septemberCommissionSession({
     id: "albo-2026-3011-commissione-v-2026-09-25",
@@ -1644,6 +1771,32 @@ export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
     sourceLinkLabel: "Apri il calendario ufficiale della V Commissione",
     calendarSummary:
       "La stessa convocazione programma quattro sedute della V Commissione dal 22 al 25 settembre 2026; il 25 settembre è fissata alle 10:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-3097-commissione-iv-2026-09-24",
+    title:
+      "IV Commissione consiliare permanente — seduta del 24 settembre 2026",
+    scheduledAt: "2026-09-24T12:00:00+02:00",
+    agenda: schoolClimateMotionAgenda,
+    candidate: commissionIvSeptember24And25Notice.candidate,
+    provenance: commissionIvSeptember24And25Notice.provenance,
+    contextResearch: september24To30CommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della IV Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della IV Commissione: 24 settembre alle 12:00 e 25 settembre 2026 alle 11:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-3043-commissione-iii-2026-09-24",
+    title:
+      "III Commissione consiliare permanente — seduta del 24 settembre 2026",
+    scheduledAt: "2026-09-24T11:00:00+02:00",
+    agenda: hillsideWasteCollectionAgenda,
+    candidate: commissionIiiSeptember24Notice.candidate,
+    provenance: commissionIiiSeptember24Notice.provenance,
+    contextResearch: september24CommissionContextResearch,
+    sourceLinkLabel: "Apri la convocazione ufficiale della III Commissione",
+    calendarSummary:
+      "La convocazione programma una seduta della III Commissione il 24 settembre 2026 alle 11:00.",
   }),
   septemberCommissionSession({
     id: "albo-2026-3011-commissione-v-2026-09-24",

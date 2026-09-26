@@ -142,6 +142,38 @@
       "review_status": "approved_public_civic_document",
       "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
       "reason": "Convocazione istituzionale revisionata e usata come fonte della seduta della III Commissione del 24 settembre 2026."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/a4d38091b4b34ac513d25e6a7a200dcb0538f086ae29d2f4aa42e8f04b13cd62.pdf",
+      "sha256": "a4d38091b4b34ac513d25e6a7a200dcb0538f086ae29d2f4aa42e8f04b13cd62",
+      "source_publication_number": "2026/3089",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Convocazione istituzionale revisionata e usata come fonte della seduta della III Commissione del 25 settembre 2026."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/095b6802f339bc9bbf7279fc905e021ffd9a6867d2dcc1a465e28439d1ade6a2.pdf",
+      "sha256": "095b6802f339bc9bbf7279fc905e021ffd9a6867d2dcc1a465e28439d1ade6a2",
+      "source_publication_number": "2026/3090",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Calendario istituzionale revisionato e usato come fonte delle sedute della V Commissione dal 28 al 30 settembre 2026."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/a8381207edd8c5ca1b7cacd2b3c006ebe4073ee3b22dd199fac616705031f23c.pdf",
+      "sha256": "a8381207edd8c5ca1b7cacd2b3c006ebe4073ee3b22dd199fac616705031f23c",
+      "source_publication_number": "2026/3091",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Convocazione istituzionale revisionata e usata come fonte della seduta della IV Commissione del 28 settembre 2026."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/4f2d4c158f13f9239d1b5391f92315a7a7ef29a2e8769c8b04697f0a92f30b1d.pdf",
+      "sha256": "4f2d4c158f13f9239d1b5391f92315a7a7ef29a2e8769c8b04697f0a92f30b1d",
+      "source_publication_number": "2026/3097",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Calendario istituzionale revisionato e usato come fonte delle sedute della IV Commissione del 24 e 25 settembre 2026."
     }
   ]
 }
