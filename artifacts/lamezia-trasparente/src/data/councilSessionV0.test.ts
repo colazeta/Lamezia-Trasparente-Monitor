@@ -197,7 +197,7 @@ describe("councilSessionV0", () => {
   });
 
   it("publishes source-traceable records for both council and commission notices", () => {
-    expect(councilSessionV0ReviewedRecords).toHaveLength(36);
+    expect(councilSessionV0ReviewedRecords).toHaveLength(43);
     expect(
       new Set(councilSessionV0ReviewedRecords.map((item) => item.kind)),
     ).toEqual(new Set(["council", "commission"]));
@@ -956,5 +956,117 @@ describe("councilSessionV0", () => {
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /sede non è indicata.*non viene inferita/i,
     );
+  });
+
+  it("materializes the 24–30 September III, IV and V Commission notices", () => {
+    const publications = ["2026/3089", "2026/3090", "2026/3091", "2026/3097"];
+    const sessions = councilSessionV0ReviewedRecords.filter((session) =>
+      publications.includes(session.provenance?.publicationNumber ?? ""),
+    );
+
+    expect(sessions).toHaveLength(7);
+    expect(sessions.map((session) => session.scheduledAt.value)).toEqual([
+      "2026-09-30T09:00:00+02:00",
+      "2026-09-29T09:00:00+02:00",
+      "2026-09-28T10:00:00+02:00",
+      "2026-09-28T09:00:00+02:00",
+      "2026-09-25T12:00:00+02:00",
+      "2026-09-25T11:00:00+02:00",
+      "2026-09-24T12:00:00+02:00",
+    ]);
+
+    expect(
+      sessions.find(
+        (session) => session.id === "albo-2026-3097-commissione-iv-2026-09-24",
+      )?.agenda.value,
+    ).toEqual([
+      "Mozione prot. n. 68544/2026: tutela della salute e del benessere della comunità scolastica e piano di adeguamento climatico degli edifici scolastici comunali.",
+    ]);
+    expect(
+      sessions.find(
+        (session) => session.id === "albo-2026-3090-commissione-v-2026-09-28",
+      )?.agenda.value,
+    ).toEqual([
+      "Regolamento sulla gestione e valorizzazione dei beni comunali.",
+    ]);
+    expect(
+      sessions.find(
+        (session) => session.id === "albo-2026-3090-commissione-v-2026-09-30",
+      )?.agenda.value,
+    ).toEqual(["Disciplinare per interventi sulla rete stradale."]);
+
+    const expectedProvenance = new Map([
+      [
+        "2026/3089",
+        {
+          sourceContentHash:
+            "b621f17980514460f3620dfcae1fc8ad976072c73a2da36e1ced4164c8cbb179",
+          documentSha256:
+            "a4d38091b4b34ac513d25e6a7a200dcb0538f086ae29d2f4aa42e8f04b13cd62",
+        },
+      ],
+      [
+        "2026/3090",
+        {
+          sourceContentHash:
+            "1ccc848648feb3895b8d94ee2f546862f919b6e46b1592da9d3f0575f100e3e2",
+          documentSha256:
+            "095b6802f339bc9bbf7279fc905e021ffd9a6867d2dcc1a465e28439d1ade6a2",
+        },
+      ],
+      [
+        "2026/3091",
+        {
+          sourceContentHash:
+            "5664f02ecd0edb544711b691fbbb080732cb6e2e9c6cdea4f88f4052d9b225ba",
+          documentSha256:
+            "a8381207edd8c5ca1b7cacd2b3c006ebe4073ee3b22dd199fac616705031f23c",
+        },
+      ],
+      [
+        "2026/3097",
+        {
+          sourceContentHash:
+            "4a6199e13ea5f62aff37318343b396776b6208511c9cdc12cc03d1b9eadaa708",
+          documentSha256:
+            "4f2d4c158f13f9239d1b5391f92315a7a7ef29a2e8769c8b04697f0a92f30b1d",
+        },
+      ],
+    ]);
+
+    for (const session of sessions) {
+      const publicationNumber = session.provenance?.publicationNumber ?? "";
+      const provenance = expectedProvenance.get(publicationNumber);
+      expect(provenance).toBeDefined();
+      if (!provenance)
+        throw new Error(`Missing provenance for ${publicationNumber}`);
+      expect(session.provenance).toEqual(
+        expect.objectContaining({
+          sourceContentHash: provenance.sourceContentHash,
+          documentSha256: provenance.documentSha256,
+          archivedDocumentUrl: expect.stringContaining(
+            provenance.documentSha256,
+          ),
+          sourceReviewStatus: "reviewed_against_official_attachment",
+        }),
+      );
+      expect(session.scheduledAt.sourceStatus).toBe("verificato");
+      expect(session.agenda.sourceStatus).toBe("verificato");
+      expect(session.sessionStatus.value).toBe("non_verificata");
+      expect(session.contextResearch).toEqual(
+        expect.objectContaining({
+          status: "checked_no_match",
+          checkedAt: "2026-09-26T22:13:55Z",
+          articles: [],
+          media: [],
+        }),
+      );
+      expect(session.contextResearch.searchNote).toMatch(/Parallel Search/i);
+      expect(session.liveStreaming.value).toBeNull();
+      expect(session.recording.value).toBeNull();
+      expect(session.dataLimits.value?.join(" ")).toMatch(
+        /sede non è indicata.*non viene inferita/i,
+      );
+    }
   });
 });
