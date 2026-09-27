@@ -69,7 +69,7 @@ export const EVIDENCE_INTERVENTIONS_2026_09_27 = [
   },
   {
     id: "mendoza-fiscal-exchange-tax-bill-rct",
-    title: "Bolette tributarie con fiscal exchange visibile",
+    title: "Bollette tributarie con fiscal exchange visibile",
     authority: "Municipalidad de la Ciudad de Mendoza — Dirección de Rentas",
     territory: "Ciudad de Mendoza",
     country: "Argentina",
