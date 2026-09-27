@@ -176,6 +176,9 @@ const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
   "Welfare e disabilità": {
     primary: ps("2"),
   },
+  "Welfare e inclusione sociale": {
+    primary: ps("2"),
+  },
   "Scuola e inclusione": {
     primary: ps("1"),
   },
