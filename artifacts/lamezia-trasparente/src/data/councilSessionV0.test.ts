@@ -991,6 +991,30 @@ describe("councilSessionV0", () => {
     ]);
     expect(
       sessions.find(
+        (session) => session.id === "albo-2026-3090-commissione-v-2026-09-28",
+      )?.contextResearch,
+    ).toEqual({
+      status: "reviewed_matches",
+      checkedAt: "2026-09-28T09:43:19Z",
+      searchNote: expect.stringContaining("possible_same_session"),
+      articles: [
+        expect.objectContaining({
+          title:
+            "Lamezia, verifica sul Regolamento edilizio e urbanistico: la V Commissione chiede adeguamento alle norme vigenti",
+          url: "https://www.lametino.it/ultime/lamezia-verifica-sul-regolamento-edilizio-e-urbanistico-la-v-commissione-chiede-adeguamento-alle-norme-vigenti.html",
+          publisher: "il Lametino",
+          publishedAt: "2026-09-28",
+          relationship: "possible_same_session",
+          relevanceNote: expect.stringContaining(
+            "tema diverso dall'ordine del giorno ufficiale",
+          ),
+          reviewedAt: "2026-09-28T09:43:19Z",
+        }),
+      ],
+      media: [],
+    });
+    expect(
+      sessions.find(
         (session) => session.id === "albo-2026-3090-commissione-v-2026-09-30",
       )?.agenda.value,
     ).toEqual(["Disciplinare per interventi sulla rete stradale."]);
@@ -1053,14 +1077,16 @@ describe("councilSessionV0", () => {
       expect(session.scheduledAt.sourceStatus).toBe("verificato");
       expect(session.agenda.sourceStatus).toBe("verificato");
       expect(session.sessionStatus.value).toBe("non_verificata");
-      expect(session.contextResearch).toEqual(
-        expect.objectContaining({
-          status: "checked_no_match",
-          checkedAt: "2026-09-26T22:13:55Z",
-          articles: [],
-          media: [],
-        }),
-      );
+      if (session.id !== "albo-2026-3090-commissione-v-2026-09-28") {
+        expect(session.contextResearch).toEqual(
+          expect.objectContaining({
+            status: "checked_no_match",
+            checkedAt: "2026-09-26T22:13:55Z",
+            articles: [],
+            media: [],
+          }),
+        );
+      }
       expect(session.contextResearch.searchNote).toMatch(/Parallel Search/i);
       expect(session.liveStreaming.value).toBeNull();
       expect(session.recording.value).toBeNull();
