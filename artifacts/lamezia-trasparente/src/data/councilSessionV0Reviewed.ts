@@ -70,6 +70,10 @@ const VIA_TRENTO_ROADWORKS_LAMETINO_URL =
   "https://www.lametino.it/ultimora/lamezia-lavori-di-bitumazione-in-via-trento-limitazione-della-circolazione-stradale-il-25-settembre.html";
 const COMMISSION_V_REU_LAMETINO_URL =
   "https://www.lametino.it/ultime/lamezia-verifica-sul-regolamento-edilizio-e-urbanistico-la-v-commissione-chiede-adeguamento-alle-norme-vigenti.html";
+const COMMISSION_V_REU_LAMEZIAINFORMA_URL =
+  "https://www.lameziainforma.it/politica/2026/09/28/il-comune-chiede-a-se-stesso-di-aggiornare-il-regolamento-edilizio-ed-urbanistico/69454/";
+const COMMISSION_V_MUNICIPAL_ASSET_LAMEZIAINFORMA_URL =
+  "https://www.lameziainforma.it/istituzione/2026/09/28/nuovo-rinnovo-fino-a-fine-2028-per-lassegnazione-alla-progetto-sud-dellimmobile-di-via-dei-bizantini/69453/";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
 const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
 const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-27T21:49:11Z";
@@ -80,10 +84,11 @@ const LATE_SEPTEMBER_COMMISSION_RESEARCHED_AT = "2026-09-19T09:34:42Z";
 const SEPTEMBER_22_25_COMMISSION_RESEARCHED_AT = "2026-09-21T22:07:23Z";
 const SEPTEMBER_24_COMMISSION_RESEARCHED_AT = "2026-09-23T10:14:27Z";
 const SEPTEMBER_24_30_COMMISSION_RESEARCHED_AT = "2026-09-26T22:13:55Z";
+const SEPTEMBER_29_OCTOBER_1_COMMISSION_RESEARCHED_AT = "2026-09-28T15:27:08Z";
 const SERRA_ANNUNZIATA_CONTEXT_RESEARCHED_AT = "2026-09-19T15:49:21Z";
 const COMMISSION_I_MOTION_CONTEXT_RESEARCHED_AT = "2026-09-23T22:14:41Z";
 const VIA_TRENTO_ROADWORKS_CONTEXT_RESEARCHED_AT = "2026-09-24T09:59:02Z";
-const COMMISSION_V_REU_CONTEXT_RESEARCHED_AT = "2026-09-28T09:43:19Z";
+const COMMISSION_V_REU_CONTEXT_RESEARCHED_AT = "2026-09-28T15:27:08Z";
 const MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT = "2026-09-12T21:51:17Z";
 const SCHOOL_TRANSPORT_CONTEXT_RESEARCHED_AT = "2026-09-14T10:13:39Z";
 
@@ -503,7 +508,7 @@ const commissionVSeptember28ReuContextResearch: CouncilSessionV0ContextResearch 
     status: "reviewed_matches",
     checkedAt: COMMISSION_V_REU_CONTEXT_RESEARCHED_AT,
     searchNote:
-      "Ricerca eseguita con Parallel Search per discovery e verifica diretta dell'articolo originale de il Lametino e della convocazione Albo 2026/3090. L'articolo del 28 settembre nomina la V Commissione e descrive un ordine del giorno sul Regolamento edilizio e urbanistico, ma non data una seduta né indica che il tema sia stato trattato il 28 settembre. L'ordine del giorno istituzionale di quella seduta riguarda invece la gestione e valorizzazione dei beni comunali: il collegamento resta `possible_same_session` e non modifica i campi ufficiali. La fonte non prova costituzione, svolgimento, trattazione, approvazione, votazioni o risultati. Non sono emersi contenuti audiovisivi collegabili con sufficiente precisione.",
+      "Ricerca eseguita con Parallel Search per discovery e verifica diretta degli articoli originali de il Lametino e LameziaInforma, della convocazione Albo 2026/3090 e della deliberazione di Giunta 2026/3123 richiamata dalla copertura sull'immobile comunale. I due articoli sul Regolamento edilizio e urbanistico nominano la V Commissione ma non datano una seduta e trattano un tema diverso dall'ordine del giorno ufficiale del 28 settembre: restano `possible_same_session`. L'articolo sul rinnovo della concessione di un immobile comunale è collegato come `agenda_item` perché pertinente alla gestione dei beni comunali, ma non nomina la Commissione. Nessuna fonte editoriale modifica i campi ufficiali o prova costituzione, svolgimento, trattazione, approvazione, votazioni o risultati. Non sono emersi contenuti audiovisivi collegabili con sufficiente precisione.",
     articles: [
       {
         title:
@@ -516,7 +521,39 @@ const commissionVSeptember28ReuContextResearch: CouncilSessionV0ContextResearch 
           "L'articolo nomina la V Commissione ed è pubblicato nella data della seduta, ma non data una riunione e tratta il Regolamento edilizio e urbanistico, tema diverso dall'ordine del giorno ufficiale sui beni comunali. Non prova svolgimento, trattazione, votazioni o risultati della seduta del 28 settembre.",
         reviewedAt: COMMISSION_V_REU_CONTEXT_RESEARCHED_AT,
       },
+      {
+        title:
+          "Il Comune chiede a sè stesso di aggiornare il Regolamento Edilizio ed Urbanistico",
+        url: COMMISSION_V_REU_LAMEZIAINFORMA_URL,
+        publisher: "LameziaInforma",
+        publishedAt: "2026-09-28",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "L'articolo attribuisce ai componenti della V Commissione un ordine del giorno sul Regolamento edilizio e urbanistico, ma non data una riunione e il tema è diverso dall'ordine del giorno ufficiale del 28 settembre sui beni comunali. Non prova svolgimento, trattazione, votazioni o risultati della seduta.",
+        reviewedAt: COMMISSION_V_REU_CONTEXT_RESEARCHED_AT,
+      },
+      {
+        title:
+          "Nuovo rinnovo fino a fine 2028 per l’assegnazione alla Progetto Sud dell’immobile di via dei Bizantini",
+        url: COMMISSION_V_MUNICIPAL_ASSET_LAMEZIAINFORMA_URL,
+        publisher: "LameziaInforma",
+        publishedAt: "2026-09-28",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo riguarda la concessione di un immobile comunale ed è quindi pertinente al punto ufficiale sulla gestione e valorizzazione dei beni comunali. Non nomina la Commissione e non prova svolgimento, trattazione, votazioni o risultati della seduta.",
+        reviewedAt: COMMISSION_V_REU_CONTEXT_RESEARCHED_AT,
+      },
     ],
+    media: [],
+  };
+
+const september29ToOctober1CommissionContextResearch: CouncilSessionV0ContextResearch =
+  {
+    status: "checked_no_match",
+    checkedAt: SEPTEMBER_29_OCTOBER_1_COMMISSION_RESEARCHED_AT,
+    searchNote:
+      "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, il Lametino e risultati indicizzati, inclusi canali YouTube e Facebook, per le sedute della III Commissione del 29 settembre e 1° ottobre 2026 e della IV Commissione del 29 e 30 settembre 2026. Le query hanno combinato organo, date, orari e temi distintivi: contrasto all'abbandono dei rifiuti e audizione del Vicecomandante Ten. Col. Aldo Rubino, Garante delle persone con disabilità e regolamento Street Art. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alle singole sedute. Gli ordini del giorno ufficiali sono disponibili e non viene ricostruita un'agenda editoriale.",
+    articles: [],
     media: [],
   };
 
@@ -978,6 +1015,32 @@ const commissionIvSeptember24And25Notice = lateSeptemberNotice({
   documentSha256:
     "4f2d4c158f13f9239d1b5391f92315a7a7ef29a2e8769c8b04697f0a92f30b1d",
   reviewedAt: SEPTEMBER_24_30_COMMISSION_RESEARCHED_AT,
+});
+
+const commissionIiiSeptember29AndOctober1Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3129",
+  publicationStart: "2026-09-28",
+  publicationEnd: "2026-10-05",
+  subject:
+    "Convocazione 3° Commissione Consiliare Permanente. Calendario lavori.",
+  sourceContentHash:
+    "62415093f67010fd438f1c50356797e45627e166ad510bb0dd4c3ff60b230539",
+  documentSha256:
+    "3bad1431481f91442b163c8476275d492807e42bf2bd80807961dd80d2e7a972",
+  reviewedAt: SEPTEMBER_29_OCTOBER_1_COMMISSION_RESEARCHED_AT,
+});
+
+const commissionIvSeptember29And30Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3127",
+  publicationStart: "2026-09-28",
+  publicationEnd: "2026-10-05",
+  subject:
+    "Convocazione 4° Commissione Consiliare Permanente. Calendario lavori.",
+  sourceContentHash:
+    "597162d76e5aa5f1c63f56847e6d96e6418f07263b3c32bb6738b7946d0e9b52",
+  documentSha256:
+    "a0138aeebec3e21db1a1b922f91886dd186bad25ffc56542076ecbbb147ae5ae",
+  reviewedAt: SEPTEMBER_29_OCTOBER_1_COMMISSION_RESEARCHED_AT,
 });
 
 const councilCandidate = requireCandidate({
@@ -1603,6 +1666,10 @@ const hillsideWasteCollectionAgenda = [
   "Servizio raccolta rifiuti nelle zone collinari e montane. Audizione del dirigente della Lamezia Multiservizi ing. Alessandro Vescio e del dirigente di Settore ing. Francesco Esposito.",
 ] as const;
 
+const wasteAbandonmentMeasuresAgenda = [
+  "Misure di contrasto all'abbandono di rifiuti. Audizione del Vicecomandante Ten. Col. Aldo Rubino.",
+] as const;
+
 const schoolClimateMotionAgenda = [
   "Mozione prot. n. 68544/2026: tutela della salute e del benessere della comunità scolastica e piano di adeguamento climatico degli edifici scolastici comunali.",
 ] as const;
@@ -1711,6 +1778,31 @@ const councilVerifiedSession: CouncilSessionV0 = {
 
 export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
   septemberCommissionSession({
+    id: "albo-2026-3129-commissione-iii-2026-10-01",
+    title: "III Commissione consiliare permanente — seduta del 1° ottobre 2026",
+    scheduledAt: "2026-10-01T11:00:00+02:00",
+    agenda: disabilityGuarantorAgenda,
+    candidate: commissionIiiSeptember29AndOctober1Notice.candidate,
+    provenance: commissionIiiSeptember29AndOctober1Notice.provenance,
+    contextResearch: september29ToOctober1CommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della III Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della III Commissione: 29 settembre e 1° ottobre 2026 alle 11:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-3127-commissione-iv-2026-09-30",
+    title:
+      "IV Commissione consiliare permanente — seduta del 30 settembre 2026",
+    scheduledAt: "2026-09-30T10:00:00+02:00",
+    agenda: streetArtAgenda,
+    candidate: commissionIvSeptember29And30Notice.candidate,
+    provenance: commissionIvSeptember29And30Notice.provenance,
+    contextResearch: september29ToOctober1CommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della IV Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della IV Commissione, il 29 e il 30 settembre 2026 alle 10:00.",
+  }),
+  septemberCommissionSession({
     id: "albo-2026-3090-commissione-v-2026-09-30",
     title: "V Commissione consiliare permanente — seduta del 30 settembre 2026",
     scheduledAt: "2026-09-30T09:00:00+02:00",
@@ -1721,6 +1813,32 @@ export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
     sourceLinkLabel: "Apri il calendario ufficiale della V Commissione",
     calendarSummary:
       "La stessa convocazione programma tre sedute della V Commissione dal 28 al 30 settembre 2026; il 30 settembre è fissata alle 09:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-3129-commissione-iii-2026-09-29",
+    title:
+      "III Commissione consiliare permanente — seduta del 29 settembre 2026",
+    scheduledAt: "2026-09-29T11:00:00+02:00",
+    agenda: wasteAbandonmentMeasuresAgenda,
+    candidate: commissionIiiSeptember29AndOctober1Notice.candidate,
+    provenance: commissionIiiSeptember29AndOctober1Notice.provenance,
+    contextResearch: september29ToOctober1CommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della III Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della III Commissione: 29 settembre e 1° ottobre 2026 alle 11:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-3127-commissione-iv-2026-09-29",
+    title:
+      "IV Commissione consiliare permanente — seduta del 29 settembre 2026",
+    scheduledAt: "2026-09-29T10:00:00+02:00",
+    agenda: streetArtAgenda,
+    candidate: commissionIvSeptember29And30Notice.candidate,
+    provenance: commissionIvSeptember29And30Notice.provenance,
+    contextResearch: september29ToOctober1CommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della IV Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della IV Commissione, il 29 e il 30 settembre 2026 alle 10:00.",
   }),
   septemberCommissionSession({
     id: "albo-2026-3090-commissione-v-2026-09-29",

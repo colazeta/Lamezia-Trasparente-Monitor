@@ -47,15 +47,15 @@ describe("HomeInstitutionalSessions", () => {
     expect(screen.getByText(/11 agosto 2026/i)).toBeInTheDocument();
     expect(screen.getByText(/10 agosto 2026/i)).toBeInTheDocument();
     expect(screen.getAllByText(/Ricerca contestuale eseguita/i)).toHaveLength(
-      43,
+      47,
     );
     expect(
       screen.getAllByText(/Stato della seduta non verificato/i),
-    ).toHaveLength(42);
+    ).toHaveLength(46);
     expect(screen.getByText(/Seduta svolta/i)).toBeInTheDocument();
     expect(
       screen.getAllByText("IV Commissione consiliare permanente"),
-    ).toHaveLength(16);
+    ).toHaveLength(18);
     expect(
       screen.getByText("III e IV Commissioni consiliari permanenti"),
     ).toBeInTheDocument();
@@ -66,13 +66,14 @@ describe("HomeInstitutionalSessions", () => {
     ).not.toBeInTheDocument();
     expect(
       screen.getByText(
-        /pubblicazioni 2026\/3090, 2026\/3091, 2026\/3089, 2026\/3097, 2026\/3011, 2026\/3043, 2026\/3012, 2026\/3001, 2026\/2986, 2026\/2960, 2026\/2981, 2026\/2959, 2026\/2971, 2026\/2953, 2026\/2925, 2026\/2926, 2026\/2879, 2026\/2860, 2026\/2859, 2026\/2861, 2026\/2840, 2026\/2788, 2026\/2648/i,
+        /pubblicazioni 2026\/3129, 2026\/3127, 2026\/3090, 2026\/3091, 2026\/3089, 2026\/3097, 2026\/3011, 2026\/3043, 2026\/3012, 2026\/3001, 2026\/2986, 2026\/2960, 2026\/2981, 2026\/2959, 2026\/2971, 2026\/2953, 2026\/2925, 2026\/2926, 2026\/2879, 2026\/2860, 2026\/2859, 2026\/2861, 2026\/2840, 2026\/2788, 2026\/2648/i,
       ),
     ).toBeInTheDocument();
     expect(screen.getByText(/7 articoli · 3 video/i)).toBeInTheDocument();
+    expect(screen.getByText(/3 articoli · 0 video/i)).toBeInTheDocument();
     expect(screen.getAllByText(/2 articoli · 0 video/i)).toHaveLength(3);
-    expect(screen.getAllByText(/1 articolo · 0 video/i)).toHaveLength(5);
-    expect(screen.getAllByText(/0 articoli · 0 video/i)).toHaveLength(34);
+    expect(screen.getAllByText(/1 articolo · 0 video/i)).toHaveLength(4);
+    expect(screen.getAllByText(/0 articoli · 0 video/i)).toHaveLength(38);
     expect(
       screen.getByText(/fonte istituzionale successiva lo conferma/i),
     ).toBeInTheDocument();
