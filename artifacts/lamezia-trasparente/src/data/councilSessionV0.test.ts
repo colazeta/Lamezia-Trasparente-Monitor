@@ -197,7 +197,7 @@ describe("councilSessionV0", () => {
   });
 
   it("publishes source-traceable records for both council and commission notices", () => {
-    expect(councilSessionV0ReviewedRecords).toHaveLength(43);
+    expect(councilSessionV0ReviewedRecords).toHaveLength(47);
     expect(
       new Set(councilSessionV0ReviewedRecords.map((item) => item.kind)),
     ).toEqual(new Set(["council", "commission"]));
@@ -995,7 +995,7 @@ describe("councilSessionV0", () => {
       )?.contextResearch,
     ).toEqual({
       status: "reviewed_matches",
-      checkedAt: "2026-09-28T09:43:19Z",
+      checkedAt: "2026-09-28T15:27:08Z",
       searchNote: expect.stringContaining("possible_same_session"),
       articles: [
         expect.objectContaining({
@@ -1008,7 +1008,31 @@ describe("councilSessionV0", () => {
           relevanceNote: expect.stringContaining(
             "tema diverso dall'ordine del giorno ufficiale",
           ),
-          reviewedAt: "2026-09-28T09:43:19Z",
+          reviewedAt: "2026-09-28T15:27:08Z",
+        }),
+        expect.objectContaining({
+          title:
+            "Il Comune chiede a sè stesso di aggiornare il Regolamento Edilizio ed Urbanistico",
+          url: "https://www.lameziainforma.it/politica/2026/09/28/il-comune-chiede-a-se-stesso-di-aggiornare-il-regolamento-edilizio-ed-urbanistico/69454/",
+          publisher: "LameziaInforma",
+          publishedAt: "2026-09-28",
+          relationship: "possible_same_session",
+          relevanceNote: expect.stringContaining(
+            "tema è diverso dall'ordine del giorno ufficiale",
+          ),
+          reviewedAt: "2026-09-28T15:27:08Z",
+        }),
+        expect.objectContaining({
+          title:
+            "Nuovo rinnovo fino a fine 2028 per l’assegnazione alla Progetto Sud dell’immobile di via dei Bizantini",
+          url: "https://www.lameziainforma.it/istituzione/2026/09/28/nuovo-rinnovo-fino-a-fine-2028-per-lassegnazione-alla-progetto-sud-dellimmobile-di-via-dei-bizantini/69453/",
+          publisher: "LameziaInforma",
+          publishedAt: "2026-09-28",
+          relationship: "agenda_item",
+          relevanceNote: expect.stringContaining(
+            "gestione e valorizzazione dei beni comunali",
+          ),
+          reviewedAt: "2026-09-28T15:27:08Z",
         }),
       ],
       media: [],
@@ -1087,6 +1111,91 @@ describe("councilSessionV0", () => {
           }),
         );
       }
+      expect(session.contextResearch.searchNote).toMatch(/Parallel Search/i);
+      expect(session.liveStreaming.value).toBeNull();
+      expect(session.recording.value).toBeNull();
+      expect(session.dataLimits.value?.join(" ")).toMatch(
+        /sede non è indicata.*non viene inferita/i,
+      );
+    }
+  });
+
+  it("materializes the 29 September–1 October III and IV Commission notices", () => {
+    const publications = ["2026/3127", "2026/3129"];
+    const sessions = councilSessionV0ReviewedRecords.filter((session) =>
+      publications.includes(session.provenance?.publicationNumber ?? ""),
+    );
+
+    expect(sessions).toHaveLength(4);
+    expect(sessions.map((session) => session.scheduledAt.value)).toEqual([
+      "2026-10-01T11:00:00+02:00",
+      "2026-09-30T10:00:00+02:00",
+      "2026-09-29T11:00:00+02:00",
+      "2026-09-29T10:00:00+02:00",
+    ]);
+    expect(
+      sessions.find(
+        (session) => session.id === "albo-2026-3129-commissione-iii-2026-09-29",
+      )?.agenda.value,
+    ).toEqual([
+      "Misure di contrasto all'abbandono di rifiuti. Audizione del Vicecomandante Ten. Col. Aldo Rubino.",
+    ]);
+    expect(
+      sessions.find(
+        (session) => session.id === "albo-2026-3129-commissione-iii-2026-10-01",
+      )?.agenda.value,
+    ).toEqual([
+      'Regolamento per l\'istituzione della figura del "Garante delle persone con disabilità".',
+    ]);
+
+    const expectedProvenance = new Map([
+      [
+        "2026/3127",
+        {
+          sourceContentHash:
+            "597162d76e5aa5f1c63f56847e6d96e6418f07263b3c32bb6738b7946d0e9b52",
+          documentSha256:
+            "a0138aeebec3e21db1a1b922f91886dd186bad25ffc56542076ecbbb147ae5ae",
+        },
+      ],
+      [
+        "2026/3129",
+        {
+          sourceContentHash:
+            "62415093f67010fd438f1c50356797e45627e166ad510bb0dd4c3ff60b230539",
+          documentSha256:
+            "3bad1431481f91442b163c8476275d492807e42bf2bd80807961dd80d2e7a972",
+        },
+      ],
+    ]);
+
+    for (const session of sessions) {
+      const publicationNumber = session.provenance?.publicationNumber ?? "";
+      const provenance = expectedProvenance.get(publicationNumber);
+      expect(provenance).toBeDefined();
+      if (!provenance)
+        throw new Error(`Missing provenance for ${publicationNumber}`);
+      expect(session.provenance).toEqual(
+        expect.objectContaining({
+          sourceContentHash: provenance.sourceContentHash,
+          documentSha256: provenance.documentSha256,
+          archivedDocumentUrl: expect.stringContaining(
+            provenance.documentSha256,
+          ),
+          sourceReviewStatus: "reviewed_against_official_attachment",
+        }),
+      );
+      expect(session.scheduledAt.sourceStatus).toBe("verificato");
+      expect(session.agenda.sourceStatus).toBe("verificato");
+      expect(session.sessionStatus.value).toBe("non_verificata");
+      expect(session.contextResearch).toEqual(
+        expect.objectContaining({
+          status: "checked_no_match",
+          checkedAt: "2026-09-28T15:27:08Z",
+          articles: [],
+          media: [],
+        }),
+      );
       expect(session.contextResearch.searchNote).toMatch(/Parallel Search/i);
       expect(session.liveStreaming.value).toBeNull();
       expect(session.recording.value).toBeNull();
