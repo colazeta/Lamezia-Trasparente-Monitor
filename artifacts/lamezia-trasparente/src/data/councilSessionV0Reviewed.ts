@@ -68,6 +68,8 @@ const COMMISSION_I_MOTION_LAMETINO_URL =
   "https://www.lametino.it/ultime/lamezia-mozioni-di-sfiducia-contro-cristiano-e-villella-tensioni-nelle-commissioni-consiliari.html";
 const VIA_TRENTO_ROADWORKS_LAMETINO_URL =
   "https://www.lametino.it/ultimora/lamezia-lavori-di-bitumazione-in-via-trento-limitazione-della-circolazione-stradale-il-25-settembre.html";
+const COMMISSION_V_REU_LAMETINO_URL =
+  "https://www.lametino.it/ultime/lamezia-verifica-sul-regolamento-edilizio-e-urbanistico-la-v-commissione-chiede-adeguamento-alle-norme-vigenti.html";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
 const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
 const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-27T21:49:11Z";
@@ -81,6 +83,7 @@ const SEPTEMBER_24_30_COMMISSION_RESEARCHED_AT = "2026-09-26T22:13:55Z";
 const SERRA_ANNUNZIATA_CONTEXT_RESEARCHED_AT = "2026-09-19T15:49:21Z";
 const COMMISSION_I_MOTION_CONTEXT_RESEARCHED_AT = "2026-09-23T22:14:41Z";
 const VIA_TRENTO_ROADWORKS_CONTEXT_RESEARCHED_AT = "2026-09-24T09:59:02Z";
+const COMMISSION_V_REU_CONTEXT_RESEARCHED_AT = "2026-09-28T09:43:19Z";
 const MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT = "2026-09-12T21:51:17Z";
 const SCHOOL_TRANSPORT_CONTEXT_RESEARCHED_AT = "2026-09-14T10:13:39Z";
 
@@ -492,6 +495,28 @@ const september24To30CommissionContextResearch: CouncilSessionV0ContextResearch 
     searchNote:
       "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, il Lametino e risultati indicizzati, inclusi canali YouTube e Facebook, per le sedute di III, IV e V Commissione dal 24 al 30 settembre 2026. Le query hanno combinato organo, date, orari e temi distintivi: Garante delle persone con disabilità, tutela della salute e del benessere della comunità scolastica, adeguamento climatico degli edifici scolastici, Street Art, beni comunali e interventi sulla rete stradale. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alle singole sedute. Gli ordini del giorno ufficiali sono disponibili e non viene ricostruita un'agenda editoriale.",
     articles: [],
+    media: [],
+  };
+
+const commissionVSeptember28ReuContextResearch: CouncilSessionV0ContextResearch =
+  {
+    status: "reviewed_matches",
+    checkedAt: COMMISSION_V_REU_CONTEXT_RESEARCHED_AT,
+    searchNote:
+      "Ricerca eseguita con Parallel Search per discovery e verifica diretta dell'articolo originale de il Lametino e della convocazione Albo 2026/3090. L'articolo del 28 settembre nomina la V Commissione e descrive un ordine del giorno sul Regolamento edilizio e urbanistico, ma non data una seduta né indica che il tema sia stato trattato il 28 settembre. L'ordine del giorno istituzionale di quella seduta riguarda invece la gestione e valorizzazione dei beni comunali: il collegamento resta `possible_same_session` e non modifica i campi ufficiali. La fonte non prova costituzione, svolgimento, trattazione, approvazione, votazioni o risultati. Non sono emersi contenuti audiovisivi collegabili con sufficiente precisione.",
+    articles: [
+      {
+        title:
+          "Lamezia, verifica sul Regolamento edilizio e urbanistico: la V Commissione chiede adeguamento alle norme vigenti",
+        url: COMMISSION_V_REU_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-09-28",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "L'articolo nomina la V Commissione ed è pubblicato nella data della seduta, ma non data una riunione e tratta il Regolamento edilizio e urbanistico, tema diverso dall'ordine del giorno ufficiale sui beni comunali. Non prova svolgimento, trattazione, votazioni o risultati della seduta del 28 settembre.",
+        reviewedAt: COMMISSION_V_REU_CONTEXT_RESEARCHED_AT,
+      },
+    ],
     media: [],
   };
 
@@ -1729,7 +1754,7 @@ export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
     agenda: municipalAssetsRegulationAgenda,
     candidate: commissionVSeptember28To30Notice.candidate,
     provenance: commissionVSeptember28To30Notice.provenance,
-    contextResearch: september24To30CommissionContextResearch,
+    contextResearch: commissionVSeptember28ReuContextResearch,
     sourceLinkLabel: "Apri il calendario ufficiale della V Commissione",
     calendarSummary:
       "La stessa convocazione programma tre sedute della V Commissione dal 28 al 30 settembre 2026; il 28 settembre è fissata alle 09:00.",
