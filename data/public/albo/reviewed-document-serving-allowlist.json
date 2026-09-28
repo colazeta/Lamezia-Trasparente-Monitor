@@ -1,6 +1,6 @@
 {
   "schema_version": "albo-reviewed-document-serving.v1",
-  "reviewed_at": "2026-09-26T22:13:55.000Z",
+  "reviewed_at": "2026-09-28T15:27:08.000Z",
   "source": "Albo Pretorio online del Comune di Lamezia Terme (piattaforma Tinnvision)",
   "source_url": "https://albo.tinnvision.cloud/albo/00301390795",
   "known_limits": [
@@ -174,6 +174,22 @@
       "review_status": "approved_public_civic_document",
       "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
       "reason": "Calendario istituzionale revisionato e usato come fonte delle sedute della IV Commissione del 24 e 25 settembre 2026."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/3bad1431481f91442b163c8476275d492807e42bf2bd80807961dd80d2e7a972.pdf",
+      "sha256": "3bad1431481f91442b163c8476275d492807e42bf2bd80807961dd80d2e7a972",
+      "source_publication_number": "2026/3129",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Calendario istituzionale revisionato e usato come fonte delle sedute della III Commissione del 29 settembre e 1 ottobre 2026."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/a0138aeebec3e21db1a1b922f91886dd186bad25ffc56542076ecbbb147ae5ae.pdf",
+      "sha256": "a0138aeebec3e21db1a1b922f91886dd186bad25ffc56542076ecbbb147ae5ae",
+      "source_publication_number": "2026/3127",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Calendario istituzionale revisionato e usato come fonte delle sedute della IV Commissione del 29 e 30 settembre 2026."
     }
   ]
 }
