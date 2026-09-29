@@ -74,6 +74,8 @@ const COMMISSION_V_REU_LAMEZIAINFORMA_URL =
   "https://www.lameziainforma.it/politica/2026/09/28/il-comune-chiede-a-se-stesso-di-aggiornare-il-regolamento-edilizio-ed-urbanistico/69454/";
 const COMMISSION_V_MUNICIPAL_ASSET_LAMEZIAINFORMA_URL =
   "https://www.lameziainforma.it/istituzione/2026/09/28/nuovo-rinnovo-fino-a-fine-2028-per-lassegnazione-alla-progetto-sud-dellimmobile-di-via-dei-bizantini/69453/";
+const COMMISSION_IV_STREET_ART_LAMEZIAINFORMA_URL =
+  "https://www.lameziainforma.it/arte-e-cultura/2026/09/22/street-art-prosegue-il-percorso-per-un-regolamento-comunale/69348/";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
 const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
 const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-27T21:49:11Z";
@@ -89,6 +91,7 @@ const SERRA_ANNUNZIATA_CONTEXT_RESEARCHED_AT = "2026-09-19T15:49:21Z";
 const COMMISSION_I_MOTION_CONTEXT_RESEARCHED_AT = "2026-09-23T22:14:41Z";
 const VIA_TRENTO_ROADWORKS_CONTEXT_RESEARCHED_AT = "2026-09-24T09:59:02Z";
 const COMMISSION_V_REU_CONTEXT_RESEARCHED_AT = "2026-09-28T15:27:08Z";
+const COMMISSION_IV_STREET_ART_CONTEXT_RESEARCHED_AT = "2026-09-29T04:07:44Z";
 const MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT = "2026-09-12T21:51:17Z";
 const SCHOOL_TRANSPORT_CONTEXT_RESEARCHED_AT = "2026-09-14T10:13:39Z";
 
@@ -459,6 +462,27 @@ const september22To25CommissionContextResearch: CouncilSessionV0ContextResearch 
     searchNote:
       "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, il Lametino e risultati indicizzati per le sedute di IV e V Commissione dal 22 al 25 settembre 2026. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alle singole sedute. Gli ordini del giorno ufficiali sono disponibili e non viene ricostruita un'agenda editoriale.",
     articles: [],
+    media: [],
+  };
+
+const commissionIvSeptember22StreetArtContextResearch: CouncilSessionV0ContextResearch =
+  {
+    status: "reviewed_matches",
+    checkedAt: COMMISSION_IV_STREET_ART_CONTEXT_RESEARCHED_AT,
+    searchNote:
+      "Ricerca eseguita con Parallel Search per discovery e verifica diretta dell'articolo originale LameziaInforma e del calendario ufficiale Albo 2026/3012. Organo, data, Regolamento Street Art e audizione di Giacomo Marinaro coincidono senza contraddizioni, quindi il collegamento è `same_session`. La fonte editoriale descrive la riunione ma non certifica costituzione, validità, votazioni o risultati e non modifica i campi ufficiali. Non sono emersi contenuti audiovisivi collegabili con sufficiente precisione.",
+    articles: [
+      {
+        title: "Street art, prosegue il percorso per un regolamento comunale",
+        url: COMMISSION_IV_STREET_ART_LAMEZIAINFORMA_URL,
+        publisher: "LameziaInforma",
+        publishedAt: "2026-09-22",
+        relationship: "same_session",
+        relevanceNote:
+          "L'articolo nomina la Commissione Cultura e, nella data ufficiale del 22 settembre, descrive il Regolamento Street Art e l'audizione di Giacomo Marinaro: organo, data e punti distintivi coincidono con l'Albo 2026/3012. Resta una fonte editoriale e non certifica costituzione, validità, votazioni o risultati.",
+        reviewedAt: COMMISSION_IV_STREET_ART_CONTEXT_RESEARCHED_AT,
+      },
+    ],
     media: [],
   };
 
@@ -1998,7 +2022,7 @@ export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
     agenda: streetArtGiuliaUrbanaAgenda,
     candidate: commissionIvSeptember22And23Notice.candidate,
     provenance: commissionIvSeptember22And23Notice.provenance,
-    contextResearch: september22To25CommissionContextResearch,
+    contextResearch: commissionIvSeptember22StreetArtContextResearch,
     sourceLinkLabel: "Apri il calendario ufficiale della IV Commissione",
     calendarSummary:
       "La stessa convocazione programma due sedute della IV Commissione: 22 settembre alle 10:00 e 23 settembre 2026 alle 11:00.",

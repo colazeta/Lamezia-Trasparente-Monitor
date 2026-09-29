@@ -821,6 +821,28 @@ describe("councilSessionV0", () => {
     expect(ivSeptember22?.agenda.value).toEqual([
       "Regolamento comunale per la promozione della Street Art. Audizione del sig. Giacomo Marinaro, curatore e direttore artistico del progetto Giulia Urbana.",
     ]);
+    expect(ivSeptember22?.contextResearch).toEqual(
+      expect.objectContaining({
+        status: "reviewed_matches",
+        checkedAt: "2026-09-29T04:07:44Z",
+        media: [],
+      }),
+    );
+    expect(ivSeptember22?.contextResearch.articles).toEqual([
+      expect.objectContaining({
+        title: "Street art, prosegue il percorso per un regolamento comunale",
+        publisher: "LameziaInforma",
+        publishedAt: "2026-09-22",
+        relationship: "same_session",
+        url: "https://www.lameziainforma.it/arte-e-cultura/2026/09/22/street-art-prosegue-il-percorso-per-un-regolamento-comunale/69348/",
+      }),
+    ]);
+    expect(ivSeptember22?.contextResearch.searchNote).toMatch(
+      /organo, data.*coincidono.*non certifica/i,
+    );
+    expect(ivSeptember22?.liveStreaming.value).toBeNull();
+    expect(ivSeptember22?.recording.value).toBeNull();
+    expect(ivSeptember22?.lastCheckedAt.value).toBe("2026-09-29T04:07:44Z");
 
     const vSeptember25 = sessions.find(
       (session) => session.id === "albo-2026-3011-commissione-v-2026-09-25",
@@ -901,7 +923,7 @@ describe("councilSessionV0", () => {
       expect(session.scheduledAt.sourceStatus).toBe("verificato");
       expect(session.agenda.sourceStatus).toBe("verificato");
       expect(session.sessionStatus.value).toBe("non_verificata");
-      if (session.id !== vSeptember25?.id) {
+      if (session.id !== vSeptember25?.id && session.id !== ivSeptember22?.id) {
         expect(session.contextResearch).toEqual(
           expect.objectContaining({
             status: "checked_no_match",
