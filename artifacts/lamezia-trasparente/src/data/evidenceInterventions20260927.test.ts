@@ -33,7 +33,7 @@ describe("evidence interventions 2026-09-27", () => {
     expect(item?.evidenceStrength).toBe("forte");
     expect(item?.effectSize).toContain("−20/−25%");
     expect(item?.effectSize).toContain("−5/−15%");
-    expect(item?.effectSize).toContain("−50%");
+    expect(item?.effectSize).toContain("−47%");
     expect(item?.results.toLowerCase()).toContain("non emergono");
   });
 

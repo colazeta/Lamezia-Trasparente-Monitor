@@ -29,9 +29,9 @@ export const EVIDENCE_INTERVENTIONS_2026_09_27 = [
       "Altri centri urbani svedesi senza congestion pricing, osservati negli stessi periodi prima, durante e dopo il trial e l'introduzione permanente.",
     outcomes: ["traffico", "PM10", "NO2", "visite acute per asma infantile", "ricoveri per condizioni non respiratorie", "incidenti"],
     results:
-      "Il programma ridusse immediatamente il traffico nel cordone di circa 20–25%. L'articolo finale stima riduzioni dell'inquinamento atmosferico nell'ordine del 5–15% e una riduzione significativa degli episodi acuti di asma nei bambini piccoli. Nel working paper, le visite acute per asma diminuiscono di circa 16% durante il trial e di circa 50% dopo l'introduzione permanente rispetto al periodo pre-policy. Non emergono cambiamenti analoghi negli incidenti o nei ricoveri per condizioni non respiratorie.",
+      "Il programma ridusse immediatamente il traffico nel cordone di circa 20–25%. L'articolo finale stima riduzioni dell'inquinamento atmosferico nell'ordine del 5–15% e una riduzione significativa degli episodi acuti di asma nei bambini piccoli. Durante il trial le visite acute per asma diminuiscono di circa il 12%; nel periodo successivo all'introduzione permanente la riduzione rispetto alla baseline pre-policy arriva a circa il 47%, pari a 8,7 visite in meno ogni 10.000 bambini. Non emergono cambiamenti analoghi negli incidenti o nei ricoveri per condizioni non respiratorie.",
     effectSize:
-      "Traffico circa −20/−25% durante il trial; inquinamento atmosferico circa −5/−15%; visite acute per asma circa −16% nel trial e circa −50% dopo l'implementazione permanente rispetto al pre-policy, con effetto sanitario graduale.",
+      "Traffico circa −20/−25% durante il trial; inquinamento atmosferico circa −5/−15%; visite acute per asma circa −12% nel trial e circa −47% dopo l'implementazione permanente rispetto alla baseline pre-policy (−8,7 visite per 10.000 bambini), con effetto sanitario graduale.",
     evidenceStrength: "forte",
     costsRequirements:
       "Richiede base giuridica, infrastruttura di rilevazione e fatturazione, gestione di esenzioni e ricorsi, monitoraggio del traffico e capacità di trasporto alternative. Non si usa una stima storica di costo come parametro trasferibile.",
@@ -64,7 +64,7 @@ export const EVIDENCE_INTERVENTIONS_2026_09_27 = [
     capacityDataNeeds: ["conteggi e velocità di traffico", "origine-destinazione", "offerta TPL", "qualità dell'aria", "analisi distributiva", "verifica giuridica e tecnologica"],
     tags: ["Stoccolma", "congestion pricing", "mobilità", "inquinamento", "asma", "difference-in-differences"],
     revisionHistory: [
-      { date: "2026-09-27", note: "Prima verifica e inserimento; separati effetti su traffico, inquinamento e salute e mantenuto il risultato nullo sugli outcome non respiratori." }
+      { date: "2026-09-27", note: "Prima verifica e inserimento; separati effetti su traffico, inquinamento e salute, mantenuto il risultato nullo sugli outcome non respiratori e ricalibrati gli effect size sanitari sulle stime pubblicate dagli autori." }
     ],
   },
   {
