@@ -883,6 +883,22 @@ describe("councilSessionV0", () => {
       }),
     );
 
+    const unmatchedSeptemberSessions = [
+      "albo-2026-3011-commissione-v-2026-09-22",
+      "albo-2026-3011-commissione-v-2026-09-23",
+      "albo-2026-3011-commissione-v-2026-09-24",
+      "albo-2026-3012-commissione-iv-2026-09-23",
+    ];
+    for (const id of unmatchedSeptemberSessions) {
+      const session = sessions.find((candidate) => candidate.id === id);
+      expect(session?.contextResearch.searchNote).toMatch(
+        /queste quattro sedute/i,
+      );
+      expect(session?.contextResearch.searchNote).not.toMatch(
+        /IV e V Commissione dal 22 al 25 settembre/i,
+      );
+    }
+
     const expectedProvenance = new Map([
       [
         "2026/3011",

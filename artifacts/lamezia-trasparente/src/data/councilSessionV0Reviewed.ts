@@ -460,7 +460,7 @@ const september22To25CommissionContextResearch: CouncilSessionV0ContextResearch 
     status: "checked_no_match",
     checkedAt: SEPTEMBER_22_25_COMMISSION_RESEARCHED_AT,
     searchNote:
-      "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, il Lametino e risultati indicizzati per le sedute di IV e V Commissione dal 22 al 25 settembre 2026. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alle singole sedute. Gli ordini del giorno ufficiali sono disponibili e non viene ricostruita un'agenda editoriale.",
+      "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, il Lametino e risultati indicizzati per le sedute della V Commissione del 22, 23 e 24 settembre 2026 e della IV Commissione del 23 settembre 2026. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione a queste quattro sedute. Gli ordini del giorno ufficiali sono disponibili e non viene ricostruita un'agenda editoriale.",
     articles: [],
     media: [],
   };
