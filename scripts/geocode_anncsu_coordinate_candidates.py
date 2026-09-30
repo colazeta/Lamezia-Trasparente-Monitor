@@ -79,6 +79,8 @@ CANDIDATE_FIELDS = [
     "provider_http_status",
     "provider_error_code",
     "provider_address_id",
+    "provider_street_name",
+    "provider_street_number",
     "provider_municipality_code",
     "provider_municipality_name",
     "provider_attribution",
@@ -157,6 +159,8 @@ def workbench_payload(rows: list[dict[str, Any]]) -> dict[str, list[dict[str, st
                 "provider_http_status": as_text(row.get("provider_http_status")),
                 "provider_error_code": as_text(row.get("provider_error_code")),
                 "provider_address_id": as_text(row.get("provider_address_id")),
+                "provider_street_name": as_text(row.get("provider_street_name")),
+                "provider_street_number": as_text(row.get("provider_street_number")),
                 "provider_municipality_code": as_text(row.get("provider_municipality_code")),
                 "provider_municipality_name": as_text(row.get("provider_municipality_name")),
                 "provider_attribution": as_text(row.get("provider_attribution")),
@@ -421,6 +425,7 @@ def write_report(
         for row in candidate_rows
         if as_text(row.get("provider_confidence"))
     )
+    cache_dir = ZORNADE_CACHE_DIR if provider == "zornade" else CACHE_DIR
     if replace_existing:
         output_mode = "replace selected access_ids; preserve unrelated rows"
     elif include_existing:
@@ -453,7 +458,7 @@ def write_report(
         f"- Request plan CSV: `{relpath(REQUEST_PLAN_CSV)}`",
         f"- Candidate CSV: `{relpath(CANDIDATES_CSV)}`",
         f"- Workbench candidate JSON: `{relpath(WORKBENCH_CANDIDATES_JSON)}`",
-        f"- Cache directory: `{relpath(CACHE_DIR)}`",
+        f"- Cache directory: `{relpath(cache_dir)}`",
         "",
         "This script creates coordinate candidates only. It does not overwrite ANNCSU raw coordinates, processed civic assignments, GPKG files, polygons, or public UI.",
         "",
@@ -618,8 +623,11 @@ def main() -> int:
     requested_count = 0
     cache_hits = 0
     zornade_api_key = os.environ.get(args.zornade_api_key_env, "").strip()
+    provider_preflight_failed = bool(
+        args.execute and args.provider == "zornade" and selected and not zornade_api_key
+    )
 
-    if args.execute and args.provider == "zornade" and selected and not zornade_api_key:
+    if provider_preflight_failed:
         failures.append(f"missing Zornade API key in environment variable {args.zornade_api_key_env}")
     elif args.execute:
         for row in selected:
@@ -696,7 +704,7 @@ def main() -> int:
                 else:
                     new_candidate_rows.extend(candidate_rows_for(row, [], as_text(row.get("address_query")), "all_variants"))
 
-    if not args.execute:
+    if not args.execute or provider_preflight_failed:
         candidate_rows = previous_rows
         outputs_written = False
     elif args.replace_existing:
