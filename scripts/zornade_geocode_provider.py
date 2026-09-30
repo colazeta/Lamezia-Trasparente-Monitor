@@ -348,6 +348,8 @@ def candidate_rows(
                 "candidate_status": status,
                 "provider_result_state": result_state,
                 "provider_address_id": as_text(candidate.get("address_id")),
+                "provider_street_name": as_text(candidate.get("street_name")),
+                "provider_street_number": as_text(candidate.get("street_number")),
                 "provider_municipality_code": as_text(candidate.get("municipality_code")),
                 "provider_municipality_name": municipality_name,
             }
