@@ -1,3 +1,5 @@
+import { municipalDemographicSources } from "./municipalDemographicPlan";
+
 export type SnapshotSource = {
   key: string;
   title: string;
@@ -53,4 +55,5 @@ export const sourceSnapshotManifest: SnapshotSource[] = [
     upstreamUrls: ["https://dati.anticorruzione.it/"],
     collections: { records: "cig" },
   },
+  ...municipalDemographicSources,
 ];

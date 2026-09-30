@@ -209,6 +209,16 @@ export function publicSnapshotImportReport(report: SnapshotImportReport) {
             records: r.records,
             verified: r.verified,
             inserted: r.inserted,
+            ...(r.demographics
+              ? {
+                  demographics: {
+                    seriesKey: r.demographics.seriesKey,
+                    observations: r.demographics.observations,
+                    inserted: r.demographics.inserted,
+                    verified: r.demographics.verified,
+                  },
+                }
+              : {}),
             legacy: r.legacy
               ? { inserted: r.legacy.inserted, matched: r.legacy.matched }
               : null,
