@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0",
+  "corpus_id": "ltceds-stress-corpus-2026-09-06",
+  "corpus_slot": 10,
+  "case_key": "1989-09-29-MERCATO-COPERTO-NICASTRO-HOMICIDE",
+  "status": "review_mode",
+  "candidate_kind": "HISTORICAL_EVENT_CANDIDATE",
+  "source_state": "historical_locator_corroborated_primary_judicial_source_not_resolved",
+  "retrieval_date": "2026-09-06",
+  "sources": [
+    {
+      "url": "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2026/06/06/omicidio-de-sensi-a-lamezia-prosciolto-uno-dei-presunti-esecutori-32c283dd-18bf-4754-b2cf-dce314ad7086/",
+      "source_type": "press_secondary",
+      "source_role": "historical_occurrence_locator_and_procedural_update",
+      "supported_scope": "homicide reported inside the covered market of Nicastro on 29 September 1989; later appellate development"
+    },
+    {
+      "url": "https://www.lametino.it/cronaca/lamezia-omicidio-cesare-de-sensi-imputato-prosciolto-in-appello-dopo-37-anni.html",
+      "source_type": "press_secondary",
+      "source_role": "corroboration",
+      "supported_scope": "same 1989 date/place and 2026 appellate development"
+    },
+    {
+      "url": "https://calabria7.news/giudiziaria/omicidio-de-sensi-dopo-37-anni-la-corte-dappello-di-catanzaro-dichiara-la-prescrizione-annullata-la-condanna/",
+      "source_type": "press_secondary",
+      "source_role": "procedural_corroboration",
+      "supported_scope": "2026 Court of Assise Appeal development following a first-instance judgment"
+    },
+    {
+      "url": "https://ca-catanzaro.giustizia.it/",
+      "source_type": "judicial_primary_locator_only",
+      "source_role": "institutional_court_locator",
+      "supported_scope": "official Court of Appeal institutional site; no case-specific judgment resolved from the current public search"
+    }
+  ],
+  "supported_facts": [
+    "Multiple contemporary judicial-news sources consistently locate the homicide inside the covered market of Nicastro on 29 September 1989.",
+    "A later criminal proceeding reached a first-instance judgment in 2023 and an appellate development in 2026, according to current reporting.",
+    "The 2026 appellate event is a procedural development and not a second criminal EVENT."
+  ],
+  "event_identity_analysis": {
+    "preferred_model": "one_historical_EVENT_plus_separate_procedural_history",
+    "event_resolvable_from_secondary_sources": true,
+    "reviewed_bundle_ready": false,
+    "rationale": "Date and occurrence place are consistently reported, but LTCEDS historical review requires a primary judicial/archival source before canonical promotion."
+  },
+  "temporal_analysis": {
+    "supported_occurrence_date": "1989-09-29",
+    "precision": "exact_date_secondary_corroborated",
+    "later_procedural_dates": ["2023 first-instance judgment reported", "2026 appellate development reported"],
+    "caution": "Do not use judgment dates as occurrence dates or collapse procedural stages into event identity."
+  },
+  "geography_analysis": {
+    "historical_place_label": "mercato coperto di Nicastro",
+    "modern_municipality_context": "Lamezia Terme",
+    "precision": "named_historical_public_site_secondary_corroborated",
+    "public_geometry_ready": false,
+    "caution": "Historical place identity should be resolved against a documented historical/modern location layer before mapping."
+  },
+  "offence_analysis": {
+    "reported_family": "homicide",
+    "classification_status": "behaviourally_clear_legal_and_case_details_pending_primary_source",
+    "caution": "Do not import later procedural labels or responsibility findings into the event record without judgment-level provenance."
+  },
+  "privacy_and_publication": {
+    "person_identity_in_dossier": false,
+    "historical_public_interest": true,
+    "auto_publish": false
+  },
+  "recommended_resolution": "Keep as a historical EVENT candidate with occurrence date 29 September 1989 and historical named-site locator. Resolve the 2023/2026 judgment identifiers or another primary judicial/archival record before creating a reviewed bundle.",
+  "review_decision": "needs_more_evidence",
+  "publication_blockers": [
+    "Case-specific primary judgment or archival judicial source not resolved in the current public search.",
+    "Historical site geometry has not been source-resolved for public mapping."
+  ]
+}
