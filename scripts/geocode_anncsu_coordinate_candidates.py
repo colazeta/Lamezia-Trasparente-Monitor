@@ -5,6 +5,7 @@ import csv
 import hashlib
 import json
 import math
+import os
 import re
 import sys
 import time
@@ -17,6 +18,7 @@ from pathlib import Path
 from typing import Any
 
 from electoral_geo_utils import QA_DIR, ROOT, relpath
+import zornade_geocode_provider as zornade
 
 
 SUSPECT_CSV = QA_DIR / "anncsu_coordinate_suspect_points_2025.csv"
@@ -25,6 +27,7 @@ REQUEST_PLAN_CSV = QA_DIR / "anncsu_coordinate_geocode_request_plan_2025.csv"
 CANDIDATES_CSV = QA_DIR / "anncsu_coordinate_geocode_candidates_2025.csv"
 REPORT_PATH = QA_DIR / "anncsu_coordinate_geocode_candidates_report_2025.md"
 CACHE_DIR = ROOT / ".cache" / "anncsu-geocode" / "nominatim"
+ZORNADE_CACHE_DIR = ROOT / ".cache" / "anncsu-geocode" / "zornade"
 WORKBENCH_DATA_DIR = ROOT / "tools" / "electoral-review-workbench" / "public" / "data"
 WORKBENCH_CANDIDATES_JSON = WORKBENCH_DATA_DIR / "coordinate_geocode_candidates_by_access.json"
 
@@ -36,6 +39,8 @@ LAMEZIA_BBOX = (16.0, 38.75, 16.6, 39.15)
 REQUEST_FIELDS = [
     "access_id",
     "priority",
+    "provider",
+    "provider_city",
     "address_query",
     "fallback_queries",
     "street",
@@ -68,6 +73,18 @@ CANDIDATE_FIELDS = [
     "distance_from_source_m",
     "provider_confidence",
     "candidate_status",
+    "provider_result_state",
+    "provider_endpoint",
+    "provider_city",
+    "provider_http_status",
+    "provider_error_code",
+    "provider_address_id",
+    "provider_street_name",
+    "provider_street_number",
+    "provider_municipality_code",
+    "provider_municipality_name",
+    "provider_attribution",
+    "provider_result_count",
     "provider_license",
     "cache_key",
 ]
@@ -136,6 +153,18 @@ def workbench_payload(rows: list[dict[str, Any]]) -> dict[str, list[dict[str, st
                 "distance_from_source_m": as_text(row.get("distance_from_source_m")),
                 "provider_confidence": as_text(row.get("provider_confidence")),
                 "candidate_status": as_text(row.get("candidate_status")),
+                "provider_result_state": as_text(row.get("provider_result_state")),
+                "provider_endpoint": as_text(row.get("provider_endpoint")),
+                "provider_city": as_text(row.get("provider_city")),
+                "provider_http_status": as_text(row.get("provider_http_status")),
+                "provider_error_code": as_text(row.get("provider_error_code")),
+                "provider_address_id": as_text(row.get("provider_address_id")),
+                "provider_street_name": as_text(row.get("provider_street_name")),
+                "provider_street_number": as_text(row.get("provider_street_number")),
+                "provider_municipality_code": as_text(row.get("provider_municipality_code")),
+                "provider_municipality_name": as_text(row.get("provider_municipality_name")),
+                "provider_attribution": as_text(row.get("provider_attribution")),
+                "provider_result_count": as_text(row.get("provider_result_count")),
             }
         )
     return grouped
@@ -356,11 +385,16 @@ def merge_candidates(existing_rows: list[dict[str, Any]], new_rows: list[dict[st
 
 
 def candidate_access_ids(rows: list[dict[str, Any]]) -> set[str]:
-    return {
-        as_text(row.get("access_id"))
-        for row in rows
-        if as_text(row.get("access_id"))
-    }
+    terminal_ids: set[str] = set()
+    for row in rows:
+        access_id = as_text(row.get("access_id"))
+        if not access_id:
+            continue
+        result_state = as_text(row.get("provider_result_state"))
+        if result_state and zornade.is_retryable_provider_state(result_state):
+            continue
+        terminal_ids.add(access_id)
+    return terminal_ids
 
 
 def write_report(
@@ -382,6 +416,8 @@ def write_report(
     replace_existing: bool,
     outputs_written: bool,
     failures: list[str],
+    provider: str,
+    zornade_api_key_env: str,
 ) -> None:
     counts = Counter(as_text(row.get("candidate_status")) for row in candidate_rows)
     confidence_counts = Counter(
@@ -389,6 +425,7 @@ def write_report(
         for row in candidate_rows
         if as_text(row.get("provider_confidence"))
     )
+    cache_dir = ZORNADE_CACHE_DIR if provider == "zornade" else CACHE_DIR
     if replace_existing:
         output_mode = "replace selected access_ids; preserve unrelated rows"
     elif include_existing:
@@ -417,10 +454,11 @@ def write_report(
         f"- Limit: {limit}",
         f"- Selection filter: {selection_filter or 'none'}",
         f"- Rate limit sleep seconds: {sleep_seconds}",
+        f"- Provider selected: {provider}",
         f"- Request plan CSV: `{relpath(REQUEST_PLAN_CSV)}`",
         f"- Candidate CSV: `{relpath(CANDIDATES_CSV)}`",
         f"- Workbench candidate JSON: `{relpath(WORKBENCH_CANDIDATES_JSON)}`",
-        f"- Cache directory: `{relpath(CACHE_DIR)}`",
+        f"- Cache directory: `{relpath(cache_dir)}`",
         "",
         "This script creates coordinate candidates only. It does not overwrite ANNCSU raw coordinates, processed civic assignments, GPKG files, polygons, or public UI.",
         "",
@@ -428,14 +466,35 @@ def write_report(
         "",
         "## Provider Guardrails",
         "",
-        f"- Provider: Nominatim search API ({NOMINATIM_SEARCH_URL}).",
-        f"- Public usage policy: {NOMINATIM_POLICY_URL}.",
-        "- Public Nominatim is not a bulk geocoding backend; use this script for small, cached, rate-limited QA batches or point it at a dedicated provider/internal instance.",
-        "- API candidates require human review before they can become manual coordinate overrides.",
-        "",
-        "## Candidate Status Counts",
-        "",
     ]
+    if provider == "zornade":
+        lines.extend(
+            [
+                f"- Provider: Zornade API v2 ({zornade.ZORNADE_SEARCH_URL}).",
+                f"- Documentation: {zornade.ZORNADE_DOCS_URL}.",
+                f"- Authentication: x-api-key read from environment variable `{zornade_api_key_env}`; the key is never written to outputs or cache files.",
+                "- Preferred query shape is street+civic with an explicit Lamezia Terme municipality filter; exponents are preserved as civic/exponent (for example 10/A).",
+                "- A 200 response with data=[] is stored as true no_match evidence. When a civic is supplied, no automatic street-only fallback is made.",
+                "- QUERY_TOO_BROAD, authentication/rate-limit failures and technical failures are stored as distinct provider states and remain retryable rather than being counted as completed evidence.",
+                "- Zornade candidates remain review evidence only: they never overwrite ANNCSU, assign an electoral section, or create/close candidate polygons.",
+            ]
+        )
+    else:
+        lines.extend(
+            [
+                f"- Provider: Nominatim search API ({NOMINATIM_SEARCH_URL}).",
+                f"- Public usage policy: {NOMINATIM_POLICY_URL}.",
+                "- Public Nominatim is not a bulk geocoding backend; use this script for small, cached, rate-limited QA batches or point it at a dedicated provider/internal instance.",
+                "- API candidates require human review before they can become manual coordinate overrides.",
+            ]
+        )
+    lines.extend(
+        [
+            "",
+            "## Candidate Status Counts",
+            "",
+        ]
+    )
     if counts:
         for key, value in sorted(counts.items()):
             lines.append(f"- `{key}`: {value}")
@@ -465,6 +524,8 @@ def write_report(
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Generate external geocoder candidates for ANNCSU coordinate suspects.")
     parser.add_argument("--execute", action="store_true", help="Call the provider. Without this flag only the request plan/report are written; candidate outputs are untouched.")
+    parser.add_argument("--provider", choices=("zornade", "nominatim"), default="zornade", help="Geocoder provider. Zornade is the default for Lamezia civic recovery; Nominatim remains an explicit legacy fallback.")
+    parser.add_argument("--zornade-api-key-env", default="ZORNADE_API_KEY", help="Environment variable containing the Zornade x-api-key. The key is never persisted.")
     parser.add_argument("--limit", type=int, default=25, help="Maximum planned rows to request or mark in a dry run.")
     parser.add_argument("--sleep-seconds", type=float, default=1.1, help="Delay between uncached provider requests.")
     parser.add_argument("--timeout-seconds", type=float, default=20.0, help="HTTP timeout per provider request.")
@@ -512,6 +573,18 @@ def main() -> int:
     for row in planned:
         row["street"] = as_text(row.get("odonimo_raw"))
         row["civic"] = as_text(row.get("civico"))
+        row["provider"] = args.provider
+        if args.provider == "zornade":
+            preferred = zornade.query_variants(row)
+            if preferred:
+                _variant, preferred_query, preferred_city = preferred[0]
+                row["address_query"] = preferred_query
+                row["fallback_queries"] = ""
+                row["provider_city"] = preferred_city
+            else:
+                row["provider_city"] = zornade.DEFAULT_CITY
+        else:
+            row["provider_city"] = ""
         access_id = as_text(row.get("access_id"))
         if access_id in previous_access_ids and not include_existing:
             row["request_status"] = "already_has_candidate"
@@ -549,8 +622,61 @@ def main() -> int:
     failures: list[str] = []
     requested_count = 0
     cache_hits = 0
-    if args.execute:
+    zornade_api_key = os.environ.get(args.zornade_api_key_env, "").strip()
+    provider_preflight_failed = bool(
+        args.execute and args.provider == "zornade" and selected and not zornade_api_key
+    )
+
+    if provider_preflight_failed:
+        failures.append(f"missing Zornade API key in environment variable {args.zornade_api_key_env}")
+    elif args.execute:
         for row in selected:
+            if args.provider == "zornade":
+                variants = zornade.query_variants(row)
+                if not variants:
+                    continue
+                query_variant, query, city = variants[0]
+                payload = zornade.cached_response(ZORNADE_CACHE_DIR, query, city)
+                if payload is not None:
+                    cache_hits += 1
+                else:
+                    requested_count += 1
+                    try:
+                        payload = zornade.request(
+                            query=query,
+                            city=city,
+                            api_key=zornade_api_key,
+                            timeout=args.timeout_seconds,
+                        )
+                        zornade.write_cache(ZORNADE_CACHE_DIR, query, city, payload)
+                        time.sleep(max(args.sleep_seconds, 0.0))
+                    except zornade.ZornadeRequestError as exc:
+                        new_candidate_rows.append(
+                            zornade.error_row(
+                                row=row,
+                                query=query,
+                                query_variant=query_variant,
+                                city=city,
+                                error=exc,
+                            )
+                        )
+                        failures.append(
+                            f"{row['access_id']}: {query_variant}: {exc.result_state}"
+                            + (f" ({exc.error_code})" if exc.error_code else "")
+                        )
+                        continue
+
+                new_candidate_rows.extend(
+                    zornade.candidate_rows(
+                        row=row,
+                        payload=payload,
+                        query=query,
+                        query_variant=query_variant,
+                        city=city,
+                    )
+                )
+                continue
+
             variants = query_variants(row)
             if not variants:
                 continue
@@ -561,9 +687,9 @@ def main() -> int:
                 if payload is not None:
                     cache_hits += 1
                 else:
+                    requested_count += 1
                     try:
                         payload = request_nominatim(query, args.user_agent, args.timeout_seconds)
-                        requested_count += 1
                         time.sleep(max(args.sleep_seconds, 1.0))
                     except (urllib.error.URLError, TimeoutError, RuntimeError, json.JSONDecodeError) as exc:
                         row_failures.append(f"{query_variant}: {exc}")
@@ -578,7 +704,7 @@ def main() -> int:
                 else:
                     new_candidate_rows.extend(candidate_rows_for(row, [], as_text(row.get("address_query")), "all_variants"))
 
-    if not args.execute:
+    if not args.execute or provider_preflight_failed:
         candidate_rows = previous_rows
         outputs_written = False
     elif args.replace_existing:
@@ -607,6 +733,7 @@ def main() -> int:
         f"street_prefix={args.street_prefix}" if args.street_prefix else "",
         "include_existing=yes" if args.include_existing else "",
         "replace_existing=yes" if args.replace_existing else "",
+        f"provider={args.provider}",
     ]
     write_report(
         planned_count=len(planned),
@@ -626,6 +753,8 @@ def main() -> int:
         replace_existing=args.replace_existing,
         outputs_written=outputs_written,
         failures=failures,
+        provider=args.provider,
+        zornade_api_key_env=args.zornade_api_key_env,
     )
 
     print(f"request_plan_csv={REQUEST_PLAN_CSV}")

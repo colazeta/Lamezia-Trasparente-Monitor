@@ -172,20 +172,40 @@ coordinate may still be unsuitable for geometry, but the raw field must remain
 unchanged. Corrections are handled as reviewed replacement evidence, not as
 edits to `COORD_X_COMUNE` or `COORD_Y_COMUNE`.
 
-`scripts/geocode_anncsu_coordinate_candidates.py` can generate a request plan
-and, when explicitly run with `--execute`, call a geocoder such as Nominatim for
-small cached batches of suspect addresses. It writes:
+`scripts/geocode_anncsu_coordinate_candidates.py` generates a request plan
+and, when explicitly run with `--execute`, uses Zornade API v2 as the preferred
+provider for Lamezia civic recovery. It writes:
 
 - `data/interim/qa/anncsu_coordinate_geocode_request_plan_2025.csv`
 - `data/interim/qa/anncsu_coordinate_geocode_candidates_2025.csv`
 - `data/interim/qa/anncsu_coordinate_geocode_candidates_report_2025.md`
 
-Public Nominatim must not be used as a bulk geocoding backend. Use it only for
-small, cached, rate-limited QA batches with an identifiable User-Agent, or point
-the same script pattern at a dedicated provider/internal instance. A geocoder
-result is only a candidate: it must be checked against the electoral street
-register, ANNCSU street context, boundary context, and then exported from the
-workbench as an explicit `manual_coordinate_override`.
+The preferred Zornade query is street+civic with an explicit `Lamezia Terme`
+municipality filter. Civic exponents are preserved (`10/A`, not `10`). When
+no civic is available, the lower-resolution request is street+municipality.
+For a civic query, HTTP 200 with `data: []` is a true `no_match` observation
+and is not followed by a street-only fallback. This prevents a missing civic
+from being replaced by a weaker street match or by an address outside the
+municipality.
+
+Provider state is part of the evidence model. `no_match` is distinct from
+`QUERY_TOO_BROAD`, authentication/configuration failures, rate limiting,
+request failures, and technical failures. Error states remain retryable and are
+not counted as completed geocoding evidence. Candidate rows preserve endpoint,
+query, municipality filter, provider address/street and municipality
+identifiers, HTTP/error state, response attribution metadata, cache key, and
+confidence. The API key is read from `ZORNADE_API_KEY` by default and is never
+persisted.
+
+A Zornade result remains a candidate even when the provider returns an exact
+civic. It must still be checked against the electoral street register, ANNCSU
+street context, and boundary context before a reviewer can export an explicit
+`manual_coordinate_override`. Geocoding alone never assigns a section and
+never creates, closes, or upgrades a candidate polygon.
+
+Nominatim remains available through `--provider nominatim` as an explicit
+legacy fallback for small, cached, rate-limited QA batches with an identifiable
+User-Agent. Public Nominatim must not be used as a bulk geocoding backend.
 
 For larger handoff work, `scripts/prepare_anncsu_dedicated_geocoder_batch.py`
 exports provider-agnostic CSV templates without calling any service and without
