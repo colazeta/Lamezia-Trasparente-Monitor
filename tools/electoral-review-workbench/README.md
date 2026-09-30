@@ -54,23 +54,49 @@ python scripts/diagnose_anncsu_coordinate_corruption.py
 ```
 
 Prepare external geocoder recovery candidates without modifying raw ANNCSU
-coordinates:
+coordinates. Zornade is the preferred provider for the Lamezia civic workflow:
 
 ```powershell
+$env:ZORNADE_API_KEY = "<local-secret>"
 python scripts/geocode_anncsu_coordinate_candidates.py
-python scripts/geocode_anncsu_coordinate_candidates.py --execute --limit 10 --user-agent "Lamezia-Trasparente-Monitor/anncsu-coordinate-qa contact@example.org"
-python scripts/geocode_anncsu_coordinate_candidates.py --execute --limit 5 --street-prefix CONTRADA --sleep-seconds 1.2 --merge-existing --skip-existing
+python scripts/geocode_anncsu_coordinate_candidates.py --execute --limit 10
+python scripts/geocode_anncsu_coordinate_candidates.py --execute --limit 5 --street-prefix CONTRADA --include-existing
 ```
 
-Use the first command for a request plan. Use `--execute` only for small,
-cached, rate-limited QA batches, or with a dedicated provider/internal geocoder
-that allows bulk use. The command writes both
+The API key is read only from `ZORNADE_API_KEY` (or the environment variable
+named by `--zornade-api-key-env`) and is never written to request plans,
+candidate CSVs, workbench payloads, reports, or cache files.
+
+For rows with a civic number, the preferred request is street+civic with the
+explicit municipality filter `Lamezia Terme`; exponents are preserved as
+`civic/exponent` (for example `10/A`). A successful HTTP 200 response with
+`data: []` is recorded as `no_match`. It is not followed by an automatic
+street-only query, because doing so would erase the evidential distinction
+between "this civic was not found in Lamezia Terme" and "the street exists".
+Rows without a civic use street+municipality as lower-resolution review
+evidence.
+
+Provider failures remain distinct from no-match evidence. In particular,
+`QUERY_TOO_BROAD`, authentication failures, rate limiting, request failures,
+and technical failures are stored as provider states and remain retryable; they
+do not count as completed geocoding evidence. Provenance fields preserve the
+provider endpoint, query, municipality filter, provider address/street and
+municipality identifiers, HTTP/error state, response attribution metadata, and
+cache key.
+
+The command writes both
 `data/interim/qa/anncsu_coordinate_geocode_candidates_2025.csv` and the
 workbench payload
 `tools/electoral-review-workbench/public/data/coordinate_geocode_candidates_by_access.json`.
-Use `--merge-existing --skip-existing` for follow-up micro-batches so previously
-reviewed or cached candidate evidence is preserved and the next batch advances
-to access_ids not already present in the candidate file.
+Every coordinate returned by Zornade remains a review candidate. It does not
+overwrite ANNCSU coordinates, assign a section, or create/close candidate
+polygons.
+
+Nominatim remains available only as an explicit legacy fallback:
+
+```powershell
+python scripts/geocode_anncsu_coordinate_candidates.py --provider nominatim --execute --limit 10 --user-agent "Lamezia-Trasparente-Monitor/anncsu-coordinate-qa contact@example.org"
+```
 
 For larger coverage, prepare a provider-agnostic handoff for a dedicated
 geocoder or an internal Nominatim instance with explicit bulk terms:
