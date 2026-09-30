@@ -45,14 +45,20 @@ test("production smoke permits supersession only after GitHub ancestry checks", 
   assert.match(smokeScript, /--allow-newer-main/);
   assert.match(
     smokeScript,
-    /compare\/\$\{expectedCommit\}\.\.\.\$\{observedCommit\}/,
+    /compare\/\$\{(?:expectedCommit|expected)\}\.\.\.\$\{(?:observedCommit|observed)\}/,
   );
   assert.match(
     smokeScript,
-    /compare\/\$\{observedCommit\}\.\.\.\$\{mainCommit\}/,
+    /compare\/\$\{(?:observedCommit|observed)\}\.\.\.\$\{mainCommit\}/,
   );
-  assert.match(smokeScript, /expectedToObserved\.status !== "ahead"/);
-  assert.match(smokeScript, /observedToMain\.status !== "ahead"/);
+  assert.match(
+    smokeScript,
+    /(?:expectedToObserved|comparison)\.status !== "ahead"/,
+  );
+  assert.match(
+    smokeScript,
+    /(?:observedToMain|productionToMain)\.status !== "ahead"/,
+  );
   assert.match(workflow, /GITHUB_TOKEN: \$\{\{ github\.token \}\}/);
   assert.match(workflow, /--expected-commit "\$GITHUB_SHA" --allow-newer-main/);
 });
