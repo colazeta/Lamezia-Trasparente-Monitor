@@ -4,8 +4,8 @@ export const EVIDENCE_INTERVENTIONS_2026_10_02_AYRSHIRE = [
   {
     id: "ayrshire-external-wall-insulation-health",
     title: "Isolamento esterno degli edifici in aree di povertà energetica",
-    authority: "South Ayrshire Council / East Ayrshire Council / Energy Agency",
-    territory: "South ed East Ayrshire, Scozia",
+    authority: "South Ayrshire Council / East Ayrshire Council / Dumfries and Galloway Council / Energy Agency",
+    territory: "South Ayrshire, East Ayrshire e Dumfries and Galloway, Scozia",
     country: "Regno Unito",
     implementationYear: "Dal 2013; valutazione 2013-2020",
     problem: "Abitazioni difficili da isolare, povertà energetica e scarso comfort termico.",
@@ -21,8 +21,8 @@ export const EVIDENCE_INTERVENTIONS_2026_10_02_AYRSHIRE = [
     evaluationMethod: "Studio osservazionale con survey before-after e analisi longitudinale di indicatori sanitari aggregati nelle aree trattate rispetto al territorio più ampio.",
     comparator: "Territorio sanitario più ampio e gli stessi nuclei prima dei lavori.",
     outcomes: ["comfort termico", "salute fisica auto-riferita", "utilizzo ospedaliero aggregato"],
-    results: "L'incapacità di raggiungere un adeguato comfort termico in inverno si riduce di circa due terzi. Gli indicatori aggregati di utilizzo ospedaliero migliorano per diversi anni nelle aree trattate, con segnale più marcato per condizioni respiratorie, ma il vantaggio si attenua verso il 2019-2020.",
-    effectSize: "Comfort termico: circa -2/3; nessun unico effect size causale individuale affidabile per l'utilizzo ospedaliero.",
+    results: "La quota di nuclei che dichiara di non riuscire a raggiungere un adeguato comfort termico in inverno scende dal 24% al 9% dopo l’isolamento esterno. Gli indicatori aggregati di ricoveri non elettivi nelle aree trattate risultano relativamente più bassi del resto dell’health board per gran parte di un periodo fino a cinque anni, con segnale più marcato per le condizioni respiratorie; il vantaggio si attenua dal 2019 e il periodo finale coincide con la pandemia.",
+    effectSize: "Incapacità di mantenere il comfort termico in inverno: 24%→9% (riduzione di circa due terzi). EER medio +12,2%, da banda D a C. Per i ricoveri aggregati non viene materializzato un unico effect size causale individuale.",
     evidenceStrength: "moderata",
     costsRequirements: "Intervento capital-intensive con diagnosi, progettazione, gare, contractor qualificati, controllo qualità e gestione di proprietà miste.",
     limitations: [
