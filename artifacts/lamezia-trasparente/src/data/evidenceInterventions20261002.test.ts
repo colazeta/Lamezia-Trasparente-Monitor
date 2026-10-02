@@ -38,7 +38,7 @@ describe("evidence interventions 2026-10-02", () => {
   it("preserves the temporary nature and null outcomes of the Swedish BID evidence", () => {
     const item = EVIDENCE_INTERVENTIONS_2026_10_02.find((x) => x.id === "sweden-small-town-bid-programme-did");
     expect(item?.evaluationMethod.toLowerCase()).toContain("difference-in-differences");
-    expect(item?.effectSize).toContain("+7,62%");
+    expect(item?.effectSize).toContain("circa +7%");
     expect(item?.results.toLowerCase()).toContain("attenua");
     expect(item?.results.toLowerCase()).toContain("non significativi");
   });
@@ -47,6 +47,8 @@ describe("evidence interventions 2026-10-02", () => {
     const item = EVIDENCE_INTERVENTIONS_2026_10_02.find((x) => x.id === "ayrshire-external-wall-insulation-health");
     expect(item?.evidenceStrength).toBe("moderata");
     expect(item?.evaluationMethod.toLowerCase()).toContain("osservazionale");
-    expect(item?.effectSize.toLowerCase()).toContain("nessun unico effect size causale");
+    expect(item?.effectSize).toContain("24%→9%");
+    expect(item?.effectSize).toContain("+12,2%");
+    expect(item?.effectSize.toLowerCase()).toContain("non viene materializzato un unico effect size causale");
   });
 });
