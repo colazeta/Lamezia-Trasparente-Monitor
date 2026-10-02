@@ -11,7 +11,7 @@ import { EVIDENCE_INTERVENTIONS_2026_10_02 } from "./evidenceInterventions202610
 
 describe("evidence interventions 2026-10-02", () => {
   it("contains only sourced, publishable and taxonomically valid records", () => {
-    expect(EVIDENCE_INTERVENTIONS_2026_10_02).toHaveLength(2);
+    expect(EVIDENCE_INTERVENTIONS_2026_10_02).toHaveLength(3);
     for (const item of EVIDENCE_INTERVENTIONS_2026_10_02) {
       expect(item.id).toMatch(/^[a-z0-9-]+$/);
       expect(item.evidenceStrength).not.toBe("da_verificare");
@@ -29,21 +29,24 @@ describe("evidence interventions 2026-10-02", () => {
   });
 
   it("keeps Geneva normalized demand distinct from total passenger trips and fare revenue", () => {
-    const item = EVIDENCE_INTERVENTIONS_2026_10_02.find(
-      (x) => x.id === "geneva-public-transport-fare-reduction-synthetic-control",
-    );
+    const item = EVIDENCE_INTERVENTIONS_2026_10_02.find((x) => x.id === "geneva-public-transport-fare-reduction-synthetic-control");
     expect(item?.effectSize).toContain("+10,6%");
     expect(item?.effectSize).toContain("+3,7%");
     expect(item?.results.toLowerCase()).toContain("ricavi");
   });
 
   it("preserves the temporary nature and null outcomes of the Swedish BID evidence", () => {
-    const item = EVIDENCE_INTERVENTIONS_2026_10_02.find(
-      (x) => x.id === "sweden-small-town-bid-programme-did",
-    );
+    const item = EVIDENCE_INTERVENTIONS_2026_10_02.find((x) => x.id === "sweden-small-town-bid-programme-did");
     expect(item?.evaluationMethod.toLowerCase()).toContain("difference-in-differences");
     expect(item?.effectSize).toContain("+7,62%");
     expect(item?.results.toLowerCase()).toContain("attenua");
     expect(item?.results.toLowerCase()).toContain("non significativi");
+  });
+
+  it("does not overstate causal health effects from the Ayrshire observational study", () => {
+    const item = EVIDENCE_INTERVENTIONS_2026_10_02.find((x) => x.id === "ayrshire-external-wall-insulation-health");
+    expect(item?.evidenceStrength).toBe("moderata");
+    expect(item?.evaluationMethod.toLowerCase()).toContain("osservazionale");
+    expect(item?.effectSize.toLowerCase()).toContain("nessun unico effect size causale");
   });
 });
