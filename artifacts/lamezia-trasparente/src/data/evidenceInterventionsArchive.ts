@@ -43,7 +43,9 @@ import { EVIDENCE_INTERVENTIONS_2026_09_23 } from "./evidenceInterventions202609
 import { EVIDENCE_INTERVENTIONS_2026_09_24 } from "./evidenceInterventions20260924";
 import { EVIDENCE_INTERVENTIONS_2026_09_25 } from "./evidenceInterventions20260925";
 import { EVIDENCE_INTERVENTIONS_2026_09_26 } from "./evidenceInterventions20260926";
-import { EVIDENCE_INTERVENTIONS_2026_09_27 } from "./evidenceInterventions20260927";\nimport { EVIDENCE_INTERVENTIONS_2026_10_01 } from "./evidenceInterventions20261001";\nimport { EVIDENCE_INTERVENTIONS_2026_10_02 } from "./evidenceInterventions20261002";
+import { EVIDENCE_INTERVENTIONS_2026_09_27 } from "./evidenceInterventions20260927";
+import { EVIDENCE_INTERVENTIONS_2026_10_01 } from "./evidenceInterventions20261001";
+import { EVIDENCE_INTERVENTIONS_2026_10_02 } from "./evidenceInterventions20261002";
 import { applyEvidenceInterventionUpdates20260914 } from "./evidenceInterventionUpdates20260914";
 import { applyEvidenceInterventionUpdates20260919 } from "./evidenceInterventionUpdates20260919";
 
@@ -98,6 +100,8 @@ const EVIDENCE_INTERVENTIONS_BEFORE_2026_09_14_UPDATES: readonly EvidenceInterve
   ...EVIDENCE_INTERVENTIONS_2026_09_25,
   ...EVIDENCE_INTERVENTIONS_2026_09_26,
   ...EVIDENCE_INTERVENTIONS_2026_09_27,
+  ...EVIDENCE_INTERVENTIONS_2026_10_01,
+  ...EVIDENCE_INTERVENTIONS_2026_10_02,
 ];
 
 function deduplicateEvidenceInterventions(
