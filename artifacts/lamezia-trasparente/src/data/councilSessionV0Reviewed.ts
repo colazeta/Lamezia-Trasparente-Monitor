@@ -87,6 +87,7 @@ const SEPTEMBER_22_25_COMMISSION_RESEARCHED_AT = "2026-09-21T22:07:23Z";
 const SEPTEMBER_24_COMMISSION_RESEARCHED_AT = "2026-09-23T10:14:27Z";
 const SEPTEMBER_24_30_COMMISSION_RESEARCHED_AT = "2026-09-26T22:13:55Z";
 const SEPTEMBER_29_OCTOBER_1_COMMISSION_RESEARCHED_AT = "2026-09-28T15:27:08Z";
+const OCTOBER_1_6_COMMISSION_RESEARCHED_AT = "2026-10-02T22:19:30Z";
 const SERRA_ANNUNZIATA_CONTEXT_RESEARCHED_AT = "2026-09-19T15:49:21Z";
 const COMMISSION_I_MOTION_CONTEXT_RESEARCHED_AT = "2026-09-23T22:14:41Z";
 const VIA_TRENTO_ROADWORKS_CONTEXT_RESEARCHED_AT = "2026-09-24T09:59:02Z";
@@ -581,6 +582,15 @@ const september29ToOctober1CommissionContextResearch: CouncilSessionV0ContextRes
     media: [],
   };
 
+const october1To6CommissionContextResearch: CouncilSessionV0ContextResearch = {
+  status: "checked_no_match",
+  checkedAt: OCTOBER_1_6_COMMISSION_RESEARCHED_AT,
+  searchNote:
+    "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, City One, LameziaInforma, LameziaTermeNews, il Lametino e risultati indicizzati, inclusi canali YouTube e Facebook, per le sedute di II, III, IV, V e VI Commissione dal 1° al 6 ottobre 2026. Le query hanno combinato organo, date, orari e temi distintivi: beni comunali, rete stradale, tariffe di asili nido e refezione scolastica, Street Art, mercato di prossimità a Sant'Eufemia Vetere, Garante delle persone con disabilità, debiti fuori bilancio e piano di riequilibrio. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alle singole sedute. Gli ordini del giorno ufficiali sono disponibili e non viene ricostruita un'agenda editoriale.",
+  articles: [],
+  media: [],
+};
+
 const commissionIiiWasteMotionContextResearch: CouncilSessionV0ContextResearch =
   {
     status: "reviewed_matches",
@@ -1065,6 +1075,82 @@ const commissionIvSeptember29And30Notice = lateSeptemberNotice({
   documentSha256:
     "a0138aeebec3e21db1a1b922f91886dd186bad25ffc56542076ecbbb147ae5ae",
   reviewedAt: SEPTEMBER_29_OCTOBER_1_COMMISSION_RESEARCHED_AT,
+});
+
+const commissionVOctober1And2Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3151",
+  publicationStart: "2026-09-30",
+  publicationEnd: "2026-10-07",
+  subject:
+    "Convocazione 5° Commissione Consiliare Permanente. Calendario lavori.",
+  sourceContentHash:
+    "2f133ea15d7c0972572dff147299e6cdf337044a1cadfdaa0eaa872bc942a6e3",
+  documentSha256:
+    "22fda4e484df93fbc9983803b62e066a46201d094f601ee38cdcd2a730004000",
+  reviewedAt: OCTOBER_1_6_COMMISSION_RESEARCHED_AT,
+});
+
+const commissionViOctober2Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3152",
+  publicationStart: "2026-09-30",
+  publicationEnd: "2026-10-07",
+  subject: "Convocazione 6° Commissione Consiliare Permanente.",
+  sourceContentHash:
+    "057df91b8abf8c7a3fcf0752c049b2035310fca58087dbe11603e6b7d66c4643",
+  documentSha256:
+    "5e9df217a9c8310fc25597070b99e01776e5a2b3b0993ef937e5b06fa95a6d93",
+  reviewedAt: OCTOBER_1_6_COMMISSION_RESEARCHED_AT,
+});
+
+const commissionIvOctober1And2Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3157",
+  publicationStart: "2026-09-30",
+  publicationEnd: "2026-10-07",
+  subject:
+    "Convocazione 4° Commissione Consiliare Permanente. Calendario lavori.",
+  sourceContentHash:
+    "cd8e31c6f50d175d5a071f9c51c34c82589b1237b6675cf6c6b6f8c510a9c205",
+  documentSha256:
+    "6bbec3fb6360a5d8cfd40362d775e398bd0f4a80d41c49d5c375d8216bbc77d8",
+  reviewedAt: OCTOBER_1_6_COMMISSION_RESEARCHED_AT,
+});
+
+const commissionIiiOctober5And6Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3190",
+  publicationStart: "2026-10-01",
+  publicationEnd: "2026-10-08",
+  subject:
+    "Convocazione 3° Commissione Consiliare Permanente. Calendario lavori.",
+  sourceContentHash:
+    "e4746942f27d592cf2b3ce71705382bcd5935fe9203c5e28fe5d4bab0ba45b73",
+  documentSha256:
+    "5d607076e9146eaadb5bc23b83928c865e1007c010abbf77c6dacbdf4a17770d",
+  reviewedAt: OCTOBER_1_6_COMMISSION_RESEARCHED_AT,
+});
+
+const commissionIiOctober5And6Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3197",
+  publicationStart: "2026-10-02",
+  publicationEnd: "2026-10-09",
+  subject:
+    "Convocazione 2° Commissione Consiliare Permanente. Calendario lavori.",
+  sourceContentHash:
+    "35477946eac942930eb5fc7be71afdc63505e07b4442416e703f6799f7d8e82e",
+  documentSha256:
+    "50dc729a39338b607925d93f7cf927a38ed75f88ec8ca8ebc7163a5166ae7cc1",
+  reviewedAt: OCTOBER_1_6_COMMISSION_RESEARCHED_AT,
+});
+
+const commissionIvOctober5Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3198",
+  publicationStart: "2026-10-02",
+  publicationEnd: "2026-10-09",
+  subject: "Convocazione 4° Commissione Consiliare Permanente.",
+  sourceContentHash:
+    "57af86ffd8640a7acf140edf2742e9b761022da32f8be076332c4e6145d2c090",
+  documentSha256:
+    "83fe0c8c9149f7fb01dd5ca0180d0c8d4decf59be9ef5c44a36baad7b1e6fbec",
+  reviewedAt: OCTOBER_1_6_COMMISSION_RESEARCHED_AT,
 });
 
 const councilCandidate = requireCandidate({
@@ -1698,6 +1784,18 @@ const schoolClimateMotionAgenda = [
   "Mozione prot. n. 68544/2026: tutela della salute e del benessere della comunità scolastica e piano di adeguamento climatico degli edifici scolastici comunali.",
 ] as const;
 
+const municipalNurseriesAndSchoolMealsTariffsAgenda = [
+  "Determinazione delle tariffe per i servizi asili nido comunali e refezione scolastica. Audizione dell'assessore Gennaro Gianturco.",
+] as const;
+
+const proximityMarketSantEufemiaAgenda = [
+  "Proposta prot. n. 74657/2026: avvio sperimentale di un mercato di prossimità nella zona di Sant'Eufemia Vetere.",
+] as const;
+
+const multiYearFinancialRebalancingAgenda = [
+  "Aggiornamento sul piano di riequilibrio finanziario pluriennale dell'Ente. Audizione dell'assessore al ramo dott.ssa Maria Nardo.",
+] as const;
+
 const councilVerifiedSession: CouncilSessionV0 = {
   id: "albo-2026-2673-consiglio-comunale",
   kind: "council",
@@ -1802,6 +1900,104 @@ const councilVerifiedSession: CouncilSessionV0 = {
 
 export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
   septemberCommissionSession({
+    id: "albo-2026-3190-commissione-iii-2026-10-06",
+    title: "III Commissione consiliare permanente — seduta del 6 ottobre 2026",
+    scheduledAt: "2026-10-06T11:00:00+02:00",
+    agenda: disabilityGuarantorAgenda,
+    candidate: commissionIiiOctober5And6Notice.candidate,
+    provenance: commissionIiiOctober5And6Notice.provenance,
+    contextResearch: october1To6CommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della III Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della III Commissione, il 5 e il 6 ottobre 2026 alle 11:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-3197-commissione-ii-2026-10-06",
+    title: "II Commissione consiliare permanente — seduta del 6 ottobre 2026",
+    scheduledAt: "2026-10-06T10:00:00+02:00",
+    agenda: multiYearFinancialRebalancingAgenda,
+    candidate: commissionIiOctober5And6Notice.candidate,
+    provenance: commissionIiOctober5And6Notice.provenance,
+    contextResearch: october1To6CommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della II Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della II Commissione: 5 ottobre alle 12:00 e 6 ottobre 2026 alle 10:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-3197-commissione-ii-2026-10-05",
+    title: "II Commissione consiliare permanente — seduta del 5 ottobre 2026",
+    scheduledAt: "2026-10-05T12:00:00+02:00",
+    agenda: courtJudgmentDebtsAgenda,
+    candidate: commissionIiOctober5And6Notice.candidate,
+    provenance: commissionIiOctober5And6Notice.provenance,
+    contextResearch: october1To6CommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della II Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della II Commissione: 5 ottobre alle 12:00 e 6 ottobre 2026 alle 10:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-3190-commissione-iii-2026-10-05",
+    title: "III Commissione consiliare permanente — seduta del 5 ottobre 2026",
+    scheduledAt: "2026-10-05T11:00:00+02:00",
+    agenda: disabilityGuarantorAgenda,
+    candidate: commissionIiiOctober5And6Notice.candidate,
+    provenance: commissionIiiOctober5And6Notice.provenance,
+    contextResearch: october1To6CommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della III Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della III Commissione, il 5 e il 6 ottobre 2026 alle 11:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-3198-commissione-iv-2026-10-05",
+    title: "IV Commissione consiliare permanente — seduta del 5 ottobre 2026",
+    scheduledAt: "2026-10-05T10:00:00+02:00",
+    agenda: streetArtAgenda,
+    candidate: commissionIvOctober5Notice.candidate,
+    provenance: commissionIvOctober5Notice.provenance,
+    contextResearch: october1To6CommissionContextResearch,
+    sourceLinkLabel: "Apri la convocazione ufficiale della IV Commissione",
+    calendarSummary:
+      "La convocazione programma una seduta della IV Commissione il 5 ottobre 2026 alle 10:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-3152-commissione-vi-2026-10-02",
+    title: "VI Commissione consiliare permanente — seduta del 2 ottobre 2026",
+    scheduledAt: "2026-10-02T11:00:00+02:00",
+    agenda: proximityMarketSantEufemiaAgenda,
+    candidate: commissionViOctober2Notice.candidate,
+    provenance: commissionViOctober2Notice.provenance,
+    contextResearch: october1To6CommissionContextResearch,
+    sourceLinkLabel: "Apri la convocazione ufficiale della VI Commissione",
+    calendarSummary:
+      "La convocazione programma una seduta della VI Commissione il 2 ottobre 2026 alle 11:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-3157-commissione-iv-2026-10-02",
+    title: "IV Commissione consiliare permanente — seduta del 2 ottobre 2026",
+    scheduledAt: "2026-10-02T10:00:00+02:00",
+    agenda: [
+      "Regolamento comunale per la promozione della Street Art. Audizione dell'assessore dott.ssa Annalisa Spinelli.",
+    ],
+    candidate: commissionIvOctober1And2Notice.candidate,
+    provenance: commissionIvOctober1And2Notice.provenance,
+    contextResearch: october1To6CommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della IV Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della IV Commissione, il 1° e il 2 ottobre 2026 alle 10:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-3151-commissione-v-2026-10-02",
+    title: "V Commissione consiliare permanente — seduta del 2 ottobre 2026",
+    scheduledAt: "2026-10-02T09:00:00+02:00",
+    agenda: roadNetworkWorksRulesAgenda,
+    candidate: commissionVOctober1And2Notice.candidate,
+    provenance: commissionVOctober1And2Notice.provenance,
+    contextResearch: october1To6CommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della V Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della V Commissione, il 1° e il 2 ottobre 2026 alle 09:00.",
+  }),
+  septemberCommissionSession({
     id: "albo-2026-3129-commissione-iii-2026-10-01",
     title: "III Commissione consiliare permanente — seduta del 1° ottobre 2026",
     scheduledAt: "2026-10-01T11:00:00+02:00",
@@ -1812,6 +2008,30 @@ export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
     sourceLinkLabel: "Apri il calendario ufficiale della III Commissione",
     calendarSummary:
       "La stessa convocazione programma due sedute della III Commissione: 29 settembre e 1° ottobre 2026 alle 11:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-3157-commissione-iv-2026-10-01",
+    title: "IV Commissione consiliare permanente — seduta del 1° ottobre 2026",
+    scheduledAt: "2026-10-01T10:00:00+02:00",
+    agenda: municipalNurseriesAndSchoolMealsTariffsAgenda,
+    candidate: commissionIvOctober1And2Notice.candidate,
+    provenance: commissionIvOctober1And2Notice.provenance,
+    contextResearch: october1To6CommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della IV Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della IV Commissione, il 1° e il 2 ottobre 2026 alle 10:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-3151-commissione-v-2026-10-01",
+    title: "V Commissione consiliare permanente — seduta del 1° ottobre 2026",
+    scheduledAt: "2026-10-01T09:00:00+02:00",
+    agenda: municipalAssetsRegulationAgenda,
+    candidate: commissionVOctober1And2Notice.candidate,
+    provenance: commissionVOctober1And2Notice.provenance,
+    contextResearch: october1To6CommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della V Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della V Commissione, il 1° e il 2 ottobre 2026 alle 09:00.",
   }),
   septemberCommissionSession({
     id: "albo-2026-3127-commissione-iv-2026-09-30",
