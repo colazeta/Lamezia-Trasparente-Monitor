@@ -197,7 +197,7 @@ describe("councilSessionV0", () => {
   });
 
   it("publishes source-traceable records for both council and commission notices", () => {
-    expect(councilSessionV0ReviewedRecords).toHaveLength(47);
+    expect(councilSessionV0ReviewedRecords).toHaveLength(57);
     expect(
       new Set(councilSessionV0ReviewedRecords.map((item) => item.kind)),
     ).toEqual(new Set(["council", "commission"]));
@@ -1230,6 +1230,126 @@ describe("councilSessionV0", () => {
         expect.objectContaining({
           status: "checked_no_match",
           checkedAt: "2026-09-28T15:27:08Z",
+          articles: [],
+          media: [],
+        }),
+      );
+      expect(session.contextResearch.searchNote).toMatch(/Parallel Search/i);
+      expect(session.liveStreaming.value).toBeNull();
+      expect(session.recording.value).toBeNull();
+      expect(session.dataLimits.value?.join(" ")).toMatch(
+        /sede non è indicata.*non viene inferita/i,
+      );
+    }
+  });
+
+  it("materializes the 1–6 October Commission calendars from six official notices", () => {
+    const publications = [
+      "2026/3151",
+      "2026/3152",
+      "2026/3157",
+      "2026/3190",
+      "2026/3197",
+      "2026/3198",
+    ];
+    const sessions = councilSessionV0ReviewedRecords.filter((session) =>
+      publications.includes(session.provenance?.publicationNumber ?? ""),
+    );
+
+    expect(sessions).toHaveLength(10);
+    expect(sessions.map((session) => session.scheduledAt.value)).toEqual([
+      "2026-10-06T11:00:00+02:00",
+      "2026-10-06T10:00:00+02:00",
+      "2026-10-05T12:00:00+02:00",
+      "2026-10-05T11:00:00+02:00",
+      "2026-10-05T10:00:00+02:00",
+      "2026-10-02T11:00:00+02:00",
+      "2026-10-02T10:00:00+02:00",
+      "2026-10-02T09:00:00+02:00",
+      "2026-10-01T10:00:00+02:00",
+      "2026-10-01T09:00:00+02:00",
+    ]);
+
+    const expectedProvenance = new Map([
+      [
+        "2026/3151",
+        {
+          sourceContentHash:
+            "2f133ea15d7c0972572dff147299e6cdf337044a1cadfdaa0eaa872bc942a6e3",
+          documentSha256:
+            "22fda4e484df93fbc9983803b62e066a46201d094f601ee38cdcd2a730004000",
+        },
+      ],
+      [
+        "2026/3152",
+        {
+          sourceContentHash:
+            "057df91b8abf8c7a3fcf0752c049b2035310fca58087dbe11603e6b7d66c4643",
+          documentSha256:
+            "5e9df217a9c8310fc25597070b99e01776e5a2b3b0993ef937e5b06fa95a6d93",
+        },
+      ],
+      [
+        "2026/3157",
+        {
+          sourceContentHash:
+            "cd8e31c6f50d175d5a071f9c51c34c82589b1237b6675cf6c6b6f8c510a9c205",
+          documentSha256:
+            "6bbec3fb6360a5d8cfd40362d775e398bd0f4a80d41c49d5c375d8216bbc77d8",
+        },
+      ],
+      [
+        "2026/3190",
+        {
+          sourceContentHash:
+            "e4746942f27d592cf2b3ce71705382bcd5935fe9203c5e28fe5d4bab0ba45b73",
+          documentSha256:
+            "5d607076e9146eaadb5bc23b83928c865e1007c010abbf77c6dacbdf4a17770d",
+        },
+      ],
+      [
+        "2026/3197",
+        {
+          sourceContentHash:
+            "35477946eac942930eb5fc7be71afdc63505e07b4442416e703f6799f7d8e82e",
+          documentSha256:
+            "50dc729a39338b607925d93f7cf927a38ed75f88ec8ca8ebc7163a5166ae7cc1",
+        },
+      ],
+      [
+        "2026/3198",
+        {
+          sourceContentHash:
+            "57af86ffd8640a7acf140edf2742e9b761022da32f8be076332c4e6145d2c090",
+          documentSha256:
+            "83fe0c8c9149f7fb01dd5ca0180d0c8d4decf59be9ef5c44a36baad7b1e6fbec",
+        },
+      ],
+    ]);
+
+    for (const session of sessions) {
+      const publicationNumber = session.provenance?.publicationNumber ?? "";
+      const provenance = expectedProvenance.get(publicationNumber);
+      expect(provenance).toBeDefined();
+      if (!provenance)
+        throw new Error(`Missing provenance for ${publicationNumber}`);
+      expect(session.provenance).toEqual(
+        expect.objectContaining({
+          sourceContentHash: provenance.sourceContentHash,
+          documentSha256: provenance.documentSha256,
+          archivedDocumentUrl: expect.stringContaining(
+            provenance.documentSha256,
+          ),
+          sourceReviewStatus: "reviewed_against_official_attachment",
+        }),
+      );
+      expect(session.scheduledAt.sourceStatus).toBe("verificato");
+      expect(session.agenda.sourceStatus).toBe("verificato");
+      expect(session.sessionStatus.value).toBe("non_verificata");
+      expect(session.contextResearch).toEqual(
+        expect.objectContaining({
+          status: "checked_no_match",
+          checkedAt: "2026-10-02T22:19:30Z",
           articles: [],
           media: [],
         }),

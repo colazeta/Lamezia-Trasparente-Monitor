@@ -1,6 +1,6 @@
 {
   "schema_version": "albo-reviewed-document-serving.v1",
-  "reviewed_at": "2026-09-28T15:27:08.000Z",
+  "reviewed_at": "2026-10-02T22:19:30.000Z",
   "source": "Albo Pretorio online del Comune di Lamezia Terme (piattaforma Tinnvision)",
   "source_url": "https://albo.tinnvision.cloud/albo/00301390795",
   "known_limits": [
@@ -190,6 +190,54 @@
       "review_status": "approved_public_civic_document",
       "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
       "reason": "Calendario istituzionale revisionato e usato come fonte delle sedute della IV Commissione del 29 e 30 settembre 2026."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/22fda4e484df93fbc9983803b62e066a46201d094f601ee38cdcd2a730004000.pdf",
+      "sha256": "22fda4e484df93fbc9983803b62e066a46201d094f601ee38cdcd2a730004000",
+      "source_publication_number": "2026/3151",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Calendario istituzionale revisionato e usato come fonte delle sedute della V Commissione del 1 e 2 ottobre 2026."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/5e9df217a9c8310fc25597070b99e01776e5a2b3b0993ef937e5b06fa95a6d93.pdf",
+      "sha256": "5e9df217a9c8310fc25597070b99e01776e5a2b3b0993ef937e5b06fa95a6d93",
+      "source_publication_number": "2026/3152",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Convocazione istituzionale revisionata e usata come fonte della seduta della VI Commissione del 2 ottobre 2026."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/6bbec3fb6360a5d8cfd40362d775e398bd0f4a80d41c49d5c375d8216bbc77d8.pdf",
+      "sha256": "6bbec3fb6360a5d8cfd40362d775e398bd0f4a80d41c49d5c375d8216bbc77d8",
+      "source_publication_number": "2026/3157",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Calendario istituzionale revisionato e usato come fonte delle sedute della IV Commissione del 1 e 2 ottobre 2026."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/5d607076e9146eaadb5bc23b83928c865e1007c010abbf77c6dacbdf4a17770d.pdf",
+      "sha256": "5d607076e9146eaadb5bc23b83928c865e1007c010abbf77c6dacbdf4a17770d",
+      "source_publication_number": "2026/3190",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Calendario istituzionale revisionato e usato come fonte delle sedute della III Commissione del 5 e 6 ottobre 2026."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/50dc729a39338b607925d93f7cf927a38ed75f88ec8ca8ebc7163a5166ae7cc1.pdf",
+      "sha256": "50dc729a39338b607925d93f7cf927a38ed75f88ec8ca8ebc7163a5166ae7cc1",
+      "source_publication_number": "2026/3197",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Calendario istituzionale revisionato e usato come fonte delle sedute della II Commissione del 5 e 6 ottobre 2026."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/83fe0c8c9149f7fb01dd5ca0180d0c8d4decf59be9ef5c44a36baad7b1e6fbec.pdf",
+      "sha256": "83fe0c8c9149f7fb01dd5ca0180d0c8d4decf59be9ef5c44a36baad7b1e6fbec",
+      "source_publication_number": "2026/3198",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Convocazione istituzionale revisionata e usata come fonte della seduta della IV Commissione del 5 ottobre 2026."
     }
   ]
 }
