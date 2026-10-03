@@ -247,6 +247,7 @@ Non sono emersi articoli che nominino con sufficiente precisione le sedute della
 - L'articolo de il Lametino del 1° ottobre viene collegato soltanto alla II Commissione del 6 ottobre perché descrive il supporto giuridico-contabile alla redazione del Piano di Riequilibrio Finanziario Pluriennale, coincidente con il punto ufficiale dell'Albo 2026/3197.
 - La relazione è `agenda_item`, non `same_session`: l'articolo non nomina la Commissione e documenta il contesto finanziario e una posizione critica, non la riunione.
 - Data, ora, ordine del giorno, stato, diretta e registrazione restano quelli ricavati o non rilevati nelle fonti istituzionali; l'articolo non viene usato come prova di programmazione, costituzione, svolgimento, trattazione, audizione, approvazione, votazioni o risultati.
+- L'assunzione di riuso è limitata ai metadati bibliografici pubblicamente accessibili necessari all'attribuzione — titolo, testata, data e URL — e al collegamento esterno alla pagina originale. Il contenuto dell'articolo non viene ripubblicato; il breve motivo di rilevanza è una sintesi autonoma usata esclusivamente per spiegare il collegamento tematico.
 
 Il controllo del 26 agosto ha collegato due contenuti audiovisivi editoriali alla seduta del 13 agosto: la registrazione integrale di City One, disponibile tramite un URL Facebook stabile, e un estratto attribuito al consigliere Salvatore Vescio pubblicato da Liberali Calabria. Entrambi restano elementi `media` esterni e non valorizzano la registrazione ufficiale.
 
