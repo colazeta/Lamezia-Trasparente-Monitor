@@ -45,7 +45,7 @@ describe("proposal institutional state", () => {
       getProposalInstitutionalState(
         byId("asili-nido-continuita-servizio-2026"),
       ).publicState,
-    ).toBe("con_seguito");
+    ).toBe("in_attuazione");
 
     expect(
       getProposalInstitutionalState(
@@ -54,7 +54,7 @@ describe("proposal institutional state", () => {
     ).toBe("con_seguito");
   });
 
-  it("promotes a formally presented proposal to follow-up when a response is documented", () => {
+  it("keeps formal follow-up distinct from implementation evidence", () => {
     const proposal = byId("asili-nido-continuita-servizio-2026");
     expect(proposal.status).toBe("presentata_formalmente");
     expect(
@@ -64,7 +64,8 @@ describe("proposal institutional state", () => {
     const state = getProposalInstitutionalState(proposal);
     expect(state.hasFormalization).toBe(true);
     expect(state.hasInstitutionalFollowUp).toBe(true);
-    expect(state.publicState).toBe("con_seguito");
+    expect(state.implementation).toBe("started");
+    expect(state.publicState).toBe("in_attuazione");
   });
 
   it("does not treat the launch of a petition as verified formal submission", () => {
@@ -80,7 +81,8 @@ describe("proposal institutional state", () => {
   });
 
   it("never infers implementation from reception alone", () => {
-    expect(Object.keys(PROPOSAL_IMPLEMENTATION_EVIDENCE)).toHaveLength(0);
+    expect(PROPOSAL_IMPLEMENTATION_EVIDENCE["asili-nido-continuita-servizio-2026"])
+      .toMatchObject({ state: "started" });
 
     const source = byId("piazza-italia-sicurezza-prevenzione-2026");
     const synthetic: PublicProposal = {
@@ -101,6 +103,7 @@ describe("proposal institutional state", () => {
       ],
     };
 
+    expect(PROPOSAL_IMPLEMENTATION_EVIDENCE[synthetic.id]).toBeUndefined();
     const state = getProposalInstitutionalState(synthetic);
     expect(state.progressStage).toBe("recepita");
     expect(state.implementation).toBe("none");
@@ -113,7 +116,7 @@ describe("proposal institutional state", () => {
     expect(available.every((state) => PROPOSAL_PUBLIC_STATES.includes(state))).toBe(
       true,
     );
-    expect(available).not.toContain("in_attuazione");
+    expect(available).toContain("in_attuazione");
   });
 
   it("filters against the compact public state rather than the technical status", () => {
