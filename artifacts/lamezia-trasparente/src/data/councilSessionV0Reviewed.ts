@@ -76,6 +76,8 @@ const COMMISSION_V_MUNICIPAL_ASSET_LAMEZIAINFORMA_URL =
   "https://www.lameziainforma.it/istituzione/2026/09/28/nuovo-rinnovo-fino-a-fine-2028-per-lassegnazione-alla-progetto-sud-dellimmobile-di-via-dei-bizantini/69453/";
 const COMMISSION_IV_STREET_ART_LAMEZIAINFORMA_URL =
   "https://www.lameziainforma.it/arte-e-cultura/2026/09/22/street-art-prosegue-il-percorso-per-un-regolamento-comunale/69348/";
+const MULTI_YEAR_REBALANCING_LAMETINO_URL =
+  "https://www.lametino.it/ultime/lamezia-comitato-progetto-civico-italia-contesta-affidamento-del-comune-oltre-13mila-euro-per-supporto-giuridico-al-piano-di-riequilibrio.html";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
 const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
 const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-27T21:49:11Z";
@@ -93,6 +95,7 @@ const COMMISSION_I_MOTION_CONTEXT_RESEARCHED_AT = "2026-09-23T22:14:41Z";
 const VIA_TRENTO_ROADWORKS_CONTEXT_RESEARCHED_AT = "2026-09-24T09:59:02Z";
 const COMMISSION_V_REU_CONTEXT_RESEARCHED_AT = "2026-09-28T15:27:08Z";
 const COMMISSION_IV_STREET_ART_CONTEXT_RESEARCHED_AT = "2026-09-29T04:07:44Z";
+const MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT = "2026-10-03T09:52:11Z";
 const MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT = "2026-09-12T21:51:17Z";
 const SCHOOL_TRANSPORT_CONTEXT_RESEARCHED_AT = "2026-09-14T10:13:39Z";
 
@@ -590,6 +593,28 @@ const october1To6CommissionContextResearch: CouncilSessionV0ContextResearch = {
   articles: [],
   media: [],
 };
+
+const commissionIiOctober6RebalancingContextResearch: CouncilSessionV0ContextResearch =
+  {
+    status: "reviewed_matches",
+    checkedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
+    searchNote:
+      "Ricerca eseguita con Parallel Search per discovery e verifica diretta dell'articolo originale de il Lametino e del calendario ufficiale Albo 2026/3197. L'articolo del 1° ottobre tratta il supporto giuridico-contabile alla redazione del Piano di Riequilibrio Finanziario Pluriennale e viene collegato come `agenda_item` al punto ufficiale della II Commissione del 6 ottobre. La fonte non nomina la Commissione e non attesta programmazione, costituzione, svolgimento, trattazione, audizione, approvazione, votazioni o risultati della seduta. Campi e ordine del giorno ufficiali restano invariati. Non sono emersi contenuti audiovisivi collegabili con sufficiente precisione.",
+    articles: [
+      {
+        title:
+          'Lamezia, Comitato Progetto Civico Italia contesta affidamento del Comune: "Oltre 13mila euro per supporto giuridico al piano di riequilibrio"',
+        url: MULTI_YEAR_REBALANCING_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-10-01",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo descrive l'affidamento di un supporto giuridico-contabile per la redazione del Piano di Riequilibrio Finanziario Pluriennale, tema coincidente con il punto ufficiale della II Commissione del 6 ottobre. Non nomina la Commissione e documenta il contesto finanziario, non la seduta, la sua trattazione, l'audizione o eventuali esiti.",
+        reviewedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
+      },
+    ],
+    media: [],
+  };
 
 const commissionIiiWasteMotionContextResearch: CouncilSessionV0ContextResearch =
   {
@@ -1918,7 +1943,7 @@ export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
     agenda: multiYearFinancialRebalancingAgenda,
     candidate: commissionIiOctober5And6Notice.candidate,
     provenance: commissionIiOctober5And6Notice.provenance,
-    contextResearch: october1To6CommissionContextResearch,
+    contextResearch: commissionIiOctober6RebalancingContextResearch,
     sourceLinkLabel: "Apri il calendario ufficiale della II Commissione",
     calendarSummary:
       "La stessa convocazione programma due sedute della II Commissione: 5 ottobre alle 12:00 e 6 ottobre 2026 alle 10:00.",
