@@ -78,8 +78,14 @@ const COMMISSION_IV_STREET_ART_LAMEZIAINFORMA_URL =
   "https://www.lameziainforma.it/arte-e-cultura/2026/09/22/street-art-prosegue-il-percorso-per-un-regolamento-comunale/69348/";
 const MULTI_YEAR_REBALANCING_LAMETINO_URL =
   "https://www.lametino.it/ultime/lamezia-comitato-progetto-civico-italia-contesta-affidamento-del-comune-oltre-13mila-euro-per-supporto-giuridico-al-piano-di-riequilibrio.html";
+const MULTI_YEAR_REBALANCING_LAMETINO_REPORT_URL =
+  "https://www.lametino.it/ultime/lamezia-per-la-redazione-del-piano-di-riequilibrio-il-comune-si-affida-anche-ad-uno-studio-di-reggio.html";
 const MULTI_YEAR_REBALANCING_LA_NOVITA_URL =
   "https://lanovitaonline.it/lamezia-pre-dissesto-affidamento-da-14-mila-euro-per-il-piano-la-consulenza-si-poteva-evitare/";
+const MULTI_YEAR_REBALANCING_CORRIERE_URL =
+  "https://www.corrieredilamezia.it/politica/2026_10_01/lamezia-comitato-progetto-civico-italia-siamo-in-pre-dissesto-e-il-comune-continua-a-spendere-i-soldi-dei-cittadini_67083/";
+const MULTI_YEAR_REBALANCING_NOTIZIE_URL =
+  "https://catanzaro.notizie.it/scelta-contro-lifel-14000-euro-per-consulenza-esterna-a-lamezia/";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
 const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
 const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-27T21:49:11Z";
@@ -97,7 +103,7 @@ const COMMISSION_I_MOTION_CONTEXT_RESEARCHED_AT = "2026-09-23T22:14:41Z";
 const VIA_TRENTO_ROADWORKS_CONTEXT_RESEARCHED_AT = "2026-09-24T09:59:02Z";
 const COMMISSION_V_REU_CONTEXT_RESEARCHED_AT = "2026-09-28T15:27:08Z";
 const COMMISSION_IV_STREET_ART_CONTEXT_RESEARCHED_AT = "2026-09-29T04:07:44Z";
-const MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT = "2026-10-03T10:20:12Z";
+const MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT = "2026-10-03T15:30:11Z";
 const MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT = "2026-09-12T21:51:17Z";
 const SCHOOL_TRANSPORT_CONTEXT_RESEARCHED_AT = "2026-09-14T10:13:39Z";
 
@@ -601,8 +607,19 @@ const commissionIiOctober6RebalancingContextResearch: CouncilSessionV0ContextRes
     status: "reviewed_matches",
     checkedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
     searchNote:
-      "Ricerca eseguita con Parallel Search per discovery e verifica diretta degli articoli originali de il Lametino e La Novità Online e del calendario ufficiale Albo 2026/3197. I due articoli del 1° ottobre trattano il supporto giuridico-contabile alla redazione del Piano di Riequilibrio Finanziario Pluriennale e vengono collegati come `agenda_item` al punto ufficiale della II Commissione del 6 ottobre. Le fonti non nominano la Commissione e non attestano programmazione, costituzione, svolgimento, trattazione, audizione, approvazione, votazioni o risultati della seduta. Campi e ordine del giorno ufficiali restano invariati. Non sono emersi contenuti audiovisivi collegabili con sufficiente precisione.",
+      "Ricerca eseguita con Parallel Search per discovery e verifica diretta dei cinque articoli originali de il Lametino, La Novità Online, Corriere di Lamezia e Notizie.it Catanzaro e del calendario ufficiale Albo 2026/3197. Gli articoli del 30 settembre e 1° ottobre trattano il supporto giuridico-contabile alla redazione del Piano di Riequilibrio Finanziario Pluriennale e vengono collegati come `agenda_item` al punto ufficiale della II Commissione del 6 ottobre. Le fonti non nominano la Commissione e non attestano programmazione, costituzione, svolgimento, trattazione, audizione, approvazione, votazioni o risultati della seduta. Campi e ordine del giorno ufficiali restano invariati. Non sono emersi contenuti audiovisivi collegabili con sufficiente precisione.",
     articles: [
+      {
+        title:
+          "Lamezia, per la redazione del Piano di riequilibrio il Comune si affida anche ad uno studio di Reggio",
+        url: MULTI_YEAR_REBALANCING_LAMETINO_REPORT_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-09-30",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo riferisce l'affidamento del Comune a uno studio esterno per il supporto giuridico-contabile alla redazione del Piano di Riequilibrio Finanziario Pluriennale, tema coincidente con il punto ufficiale della II Commissione del 6 ottobre. Non nomina la Commissione e documenta il contesto amministrativo, non la seduta, la sua trattazione, l'audizione o eventuali esiti.",
+        reviewedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
+      },
       {
         title:
           'Lamezia, Comitato Progetto Civico Italia contesta affidamento del Comune: "Oltre 13mila euro per supporto giuridico al piano di riequilibrio"',
@@ -623,6 +640,28 @@ const commissionIiOctober6RebalancingContextResearch: CouncilSessionV0ContextRes
         relationship: "agenda_item",
         relevanceNote:
           "L'articolo descrive lo stesso affidamento di supporto alla redazione del Piano di Riequilibrio Finanziario Pluriennale, tema coincidente con il punto ufficiale della II Commissione del 6 ottobre. Non nomina la Commissione e documenta il contesto finanziario, non la seduta, la sua trattazione, l'audizione o eventuali esiti.",
+        reviewedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
+      },
+      {
+        title:
+          "Lamezia, Comitato Progetto Civico Italia: “Siamo in pre-dissesto e il Comune continua a spendere i soldi dei cittadini”",
+        url: MULTI_YEAR_REBALANCING_CORRIERE_URL,
+        publisher: "Corriere di Lamezia",
+        publishedAt: "2026-10-01",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo riporta la posizione critica di Progetto Civico Italia sull'affidamento esterno di supporto al Piano di Riequilibrio Finanziario Pluriennale, tema coincidente con il punto ufficiale della II Commissione del 6 ottobre. Non nomina la Commissione e documenta il contesto politico-finanziario, non la seduta, la sua trattazione, l'audizione o eventuali esiti.",
+        reviewedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
+      },
+      {
+        title:
+          "Scelta contro l’IFEL: 14.000 euro per consulenza esterna a Lamezia",
+        url: MULTI_YEAR_REBALANCING_NOTIZIE_URL,
+        publisher: "Notizie.it Catanzaro",
+        publishedAt: "2026-10-01",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo descrive la contestazione dell'affidamento esterno per il supporto al Piano di Riequilibrio Finanziario Pluriennale, tema coincidente con il punto ufficiale della II Commissione del 6 ottobre. Non nomina la Commissione e documenta il contesto politico-finanziario, non la seduta, la sua trattazione, l'audizione o eventuali esiti.",
         reviewedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
       },
     ],
