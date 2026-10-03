@@ -1350,9 +1350,17 @@ describe("councilSessionV0", () => {
         expect(session.contextResearch).toEqual(
           expect.objectContaining({
             status: "reviewed_matches",
-            checkedAt: "2026-10-03T10:20:12Z",
+            checkedAt: "2026-10-03T15:30:11Z",
             media: [],
             articles: expect.arrayContaining([
+              expect.objectContaining({
+                publisher: "il Lametino",
+                publishedAt: "2026-09-30",
+                relationship: "agenda_item",
+                url: expect.stringContaining(
+                  "piano-di-riequilibrio-il-comune-si-affida",
+                ),
+              }),
               expect.objectContaining({
                 publisher: "il Lametino",
                 publishedAt: "2026-10-01",
@@ -1369,10 +1377,22 @@ describe("councilSessionV0", () => {
                   "pre-dissesto-affidamento-da-14-mila-euro",
                 ),
               }),
+              expect.objectContaining({
+                publisher: "Corriere di Lamezia",
+                publishedAt: "2026-10-01",
+                relationship: "agenda_item",
+                url: expect.stringContaining("siamo-in-pre-dissesto"),
+              }),
+              expect.objectContaining({
+                publisher: "Notizie.it Catanzaro",
+                publishedAt: "2026-10-01",
+                relationship: "agenda_item",
+                url: expect.stringContaining("scelta-contro-lifel"),
+              }),
             ]),
           }),
         );
-        expect(session.contextResearch.articles).toHaveLength(2);
+        expect(session.contextResearch.articles).toHaveLength(5);
         expect(session.contextResearch.searchNote).toMatch(
           /non nominano la Commissione.*non attestano.*audizione/i,
         );
