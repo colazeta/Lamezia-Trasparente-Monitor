@@ -1350,9 +1350,9 @@ describe("councilSessionV0", () => {
         expect(session.contextResearch).toEqual(
           expect.objectContaining({
             status: "reviewed_matches",
-            checkedAt: "2026-10-03T09:52:11Z",
+            checkedAt: "2026-10-03T10:20:12Z",
             media: [],
-            articles: [
+            articles: expect.arrayContaining([
               expect.objectContaining({
                 publisher: "il Lametino",
                 publishedAt: "2026-10-01",
@@ -1361,11 +1361,20 @@ describe("councilSessionV0", () => {
                   "supporto-giuridico-al-piano-di-riequilibrio",
                 ),
               }),
-            ],
+              expect.objectContaining({
+                publisher: "La Novità Online",
+                publishedAt: "2026-10-01",
+                relationship: "agenda_item",
+                url: expect.stringContaining(
+                  "pre-dissesto-affidamento-da-14-mila-euro",
+                ),
+              }),
+            ]),
           }),
         );
+        expect(session.contextResearch.articles).toHaveLength(2);
         expect(session.contextResearch.searchNote).toMatch(
-          /non nomina la Commissione.*non attesta.*audizione/i,
+          /non nominano la Commissione.*non attestano.*audizione/i,
         );
       } else {
         expect(session.contextResearch).toEqual(

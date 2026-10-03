@@ -1,3 +1,6 @@
+Warning: truncated output (original token count: 32498)
+Total output lines: 2609
+
 import {
   identifyInstitutionalSessionCandidate,
   type InstitutionalSessionCandidate,
@@ -78,6 +81,8 @@ const COMMISSION_IV_STREET_ART_LAMEZIAINFORMA_URL =
   "https://www.lameziainforma.it/arte-e-cultura/2026/09/22/street-art-prosegue-il-percorso-per-un-regolamento-comunale/69348/";
 const MULTI_YEAR_REBALANCING_LAMETINO_URL =
   "https://www.lametino.it/ultime/lamezia-comitato-progetto-civico-italia-contesta-affidamento-del-comune-oltre-13mila-euro-per-supporto-giuridico-al-piano-di-riequilibrio.html";
+const MULTI_YEAR_REBALANCING_LA_NOVITA_URL =
+  "https://lanovitaonline.it/lamezia-pre-dissesto-affidamento-da-14-mila-euro-per-il-piano-la-consulenza-si-poteva-evitare/";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
 const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
 const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-27T21:49:11Z";
@@ -95,7 +100,7 @@ const COMMISSION_I_MOTION_CONTEXT_RESEARCHED_AT = "2026-09-23T22:14:41Z";
 const VIA_TRENTO_ROADWORKS_CONTEXT_RESEARCHED_AT = "2026-09-24T09:59:02Z";
 const COMMISSION_V_REU_CONTEXT_RESEARCHED_AT = "2026-09-28T15:27:08Z";
 const COMMISSION_IV_STREET_ART_CONTEXT_RESEARCHED_AT = "2026-09-29T04:07:44Z";
-const MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT = "2026-10-03T09:52:11Z";
+const MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT = "2026-10-03T10:20:12Z";
 const MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT = "2026-09-12T21:51:17Z";
 const SCHOOL_TRANSPORT_CONTEXT_RESEARCHED_AT = "2026-09-14T10:13:39Z";
 
@@ -599,7 +604,7 @@ const commissionIiOctober6RebalancingContextResearch: CouncilSessionV0ContextRes
     status: "reviewed_matches",
     checkedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
     searchNote:
-      "Ricerca eseguita con Parallel Search per discovery e verifica diretta dell'articolo originale de il Lametino e del calendario ufficiale Albo 2026/3197. L'articolo del 1° ottobre tratta il supporto giuridico-contabile alla redazione del Piano di Riequilibrio Finanziario Pluriennale e viene collegato come `agenda_item` al punto ufficiale della II Commissione del 6 ottobre. La fonte non nomina la Commissione e non attesta programmazione, costituzione, svolgimento, trattazione, audizione, approvazione, votazioni o risultati della seduta. Campi e ordine del giorno ufficiali restano invariati. Non sono emersi contenuti audiovisivi collegabili con sufficiente precisione.",
+      "Ricerca eseguita con Parallel Search per discovery e verifica diretta degli articoli originali de il Lametino e La Novità Online e del calendario ufficiale Albo 2026/3197. I due articoli del 1° ottobre trattano il supporto giuridico-contabile alla redazione del Piano di Riequilibrio Finanziario Pluriennale e vengono collegati come `agenda_item` al punto ufficiale della II Commissione del 6 ottobre. Le fonti non nominano la Commissione e non attestano programmazione, costituzione, svolgimento, trattazione, audizione, approvazione, votazioni o risultati della seduta. Campi e ordine del giorno ufficiali restano invariati. Non sono emersi contenuti audiovisivi collegabili con sufficiente precisione.",
     articles: [
       {
         title:
@@ -610,6 +615,17 @@ const commissionIiOctober6RebalancingContextResearch: CouncilSessionV0ContextRes
         relationship: "agenda_item",
         relevanceNote:
           "L'articolo descrive l'affidamento di un supporto giuridico-contabile per la redazione del Piano di Riequilibrio Finanziario Pluriennale, tema coincidente con il punto ufficiale della II Commissione del 6 ottobre. Non nomina la Commissione e documenta il contesto finanziario, non la seduta, la sua trattazione, l'audizione o eventuali esiti.",
+        reviewedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
+      },
+      {
+        title:
+          "Lamezia | Pre-dissesto, affidamento da 14 mila euro per il Piano: «La consulenza si poteva evitare»",
+        url: MULTI_YEAR_REBALANCING_LA_NOVITA_URL,
+        publisher: "La Novità Online",
+        publishedAt: "2026-10-01",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo descrive lo stesso affidamento di supporto alla redazione del Piano di Riequilibrio Finanziario Pluriennale, tema coincidente con il punto ufficiale della II Commissione del 6 ottobre. Non nomina la Commissione e documenta il contesto finanziario, non la seduta, la sua trattazione, l'audizione o eventuali esiti.",
         reviewedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
       },
     ],
@@ -1029,248 +1045,7 @@ const commissionIiiSeptember24Notice = lateSeptemberNotice({
 const commissionIiiSeptember25Notice = lateSeptemberNotice({
   publicationNumber: "2026/3089",
   publicationStart: "2026-09-25",
-  publicationEnd: "2026-10-02",
-  subject: "Convocazione 3° Commissione Consiliare Permanente.",
-  sourceContentHash:
-    "b621f17980514460f3620dfcae1fc8ad976072c73a2da36e1ced4164c8cbb179",
-  documentSha256:
-    "a4d38091b4b34ac513d25e6a7a200dcb0538f086ae29d2f4aa42e8f04b13cd62",
-  reviewedAt: SEPTEMBER_24_30_COMMISSION_RESEARCHED_AT,
-});
-
-const commissionVSeptember28To30Notice = lateSeptemberNotice({
-  publicationNumber: "2026/3090",
-  publicationStart: "2026-09-25",
-  publicationEnd: "2026-10-02",
-  subject:
-    "Convocazione 5° Commissione Consiliare Permanente. Calendario lavori.",
-  sourceContentHash:
-    "1ccc848648feb3895b8d94ee2f546862f919b6e46b1592da9d3f0575f100e3e2",
-  documentSha256:
-    "095b6802f339bc9bbf7279fc905e021ffd9a6867d2dcc1a465e28439d1ade6a2",
-  reviewedAt: SEPTEMBER_24_30_COMMISSION_RESEARCHED_AT,
-});
-
-const commissionIvSeptember28Notice = lateSeptemberNotice({
-  publicationNumber: "2026/3091",
-  publicationStart: "2026-09-25",
-  publicationEnd: "2026-10-02",
-  subject: "Convocazione 4° Commissione Consiliare Permanente.",
-  sourceContentHash:
-    "5664f02ecd0edb544711b691fbbb080732cb6e2e9c6cdea4f88f4052d9b225ba",
-  documentSha256:
-    "a8381207edd8c5ca1b7cacd2b3c006ebe4073ee3b22dd199fac616705031f23c",
-  reviewedAt: SEPTEMBER_24_30_COMMISSION_RESEARCHED_AT,
-});
-
-const commissionIvSeptember24And25Notice = lateSeptemberNotice({
-  publicationNumber: "2026/3097",
-  publicationStart: "2026-09-25",
-  publicationEnd: "2026-10-02",
-  subject:
-    "Convocazione 4° Commissione Consiliare Permanente. Calendario lavori.",
-  sourceContentHash:
-    "4a6199e13ea5f62aff37318343b396776b6208511c9cdc12cc03d1b9eadaa708",
-  documentSha256:
-    "4f2d4c158f13f9239d1b5391f92315a7a7ef29a2e8769c8b04697f0a92f30b1d",
-  reviewedAt: SEPTEMBER_24_30_COMMISSION_RESEARCHED_AT,
-});
-
-const commissionIiiSeptember29AndOctober1Notice = lateSeptemberNotice({
-  publicationNumber: "2026/3129",
-  publicationStart: "2026-09-28",
-  publicationEnd: "2026-10-05",
-  subject:
-    "Convocazione 3° Commissione Consiliare Permanente. Calendario lavori.",
-  sourceContentHash:
-    "62415093f67010fd438f1c50356797e45627e166ad510bb0dd4c3ff60b230539",
-  documentSha256:
-    "3bad1431481f91442b163c8476275d492807e42bf2bd80807961dd80d2e7a972",
-  reviewedAt: SEPTEMBER_29_OCTOBER_1_COMMISSION_RESEARCHED_AT,
-});
-
-const commissionIvSeptember29And30Notice = lateSeptemberNotice({
-  publicationNumber: "2026/3127",
-  publicationStart: "2026-09-28",
-  publicationEnd: "2026-10-05",
-  subject:
-    "Convocazione 4° Commissione Consiliare Permanente. Calendario lavori.",
-  sourceContentHash:
-    "597162d76e5aa5f1c63f56847e6d96e6418f07263b3c32bb6738b7946d0e9b52",
-  documentSha256:
-    "a0138aeebec3e21db1a1b922f91886dd186bad25ffc56542076ecbbb147ae5ae",
-  reviewedAt: SEPTEMBER_29_OCTOBER_1_COMMISSION_RESEARCHED_AT,
-});
-
-const commissionVOctober1And2Notice = lateSeptemberNotice({
-  publicationNumber: "2026/3151",
-  publicationStart: "2026-09-30",
-  publicationEnd: "2026-10-07",
-  subject:
-    "Convocazione 5° Commissione Consiliare Permanente. Calendario lavori.",
-  sourceContentHash:
-    "2f133ea15d7c0972572dff147299e6cdf337044a1cadfdaa0eaa872bc942a6e3",
-  documentSha256:
-    "22fda4e484df93fbc9983803b62e066a46201d094f601ee38cdcd2a730004000",
-  reviewedAt: OCTOBER_1_6_COMMISSION_RESEARCHED_AT,
-});
-
-const commissionViOctober2Notice = lateSeptemberNotice({
-  publicationNumber: "2026/3152",
-  publicationStart: "2026-09-30",
-  publicationEnd: "2026-10-07",
-  subject: "Convocazione 6° Commissione Consiliare Permanente.",
-  sourceContentHash:
-    "057df91b8abf8c7a3fcf0752c049b2035310fca58087dbe11603e6b7d66c4643",
-  documentSha256:
-    "5e9df217a9c8310fc25597070b99e01776e5a2b3b0993ef937e5b06fa95a6d93",
-  reviewedAt: OCTOBER_1_6_COMMISSION_RESEARCHED_AT,
-});
-
-const commissionIvOctober1And2Notice = lateSeptemberNotice({
-  publicationNumber: "2026/3157",
-  publicationStart: "2026-09-30",
-  publicationEnd: "2026-10-07",
-  subject:
-    "Convocazione 4° Commissione Consiliare Permanente. Calendario lavori.",
-  sourceContentHash:
-    "cd8e31c6f50d175d5a071f9c51c34c82589b1237b6675cf6c6b6f8c510a9c205",
-  documentSha256:
-    "6bbec3fb6360a5d8cfd40362d775e398bd0f4a80d41c49d5c375d8216bbc77d8",
-  reviewedAt: OCTOBER_1_6_COMMISSION_RESEARCHED_AT,
-});
-
-const commissionIiiOctober5And6Notice = lateSeptemberNotice({
-  publicationNumber: "2026/3190",
-  publicationStart: "2026-10-01",
-  publicationEnd: "2026-10-08",
-  subject:
-    "Convocazione 3° Commissione Consiliare Permanente. Calendario lavori.",
-  sourceContentHash:
-    "e4746942f27d592cf2b3ce71705382bcd5935fe9203c5e28fe5d4bab0ba45b73",
-  documentSha256:
-    "5d607076e9146eaadb5bc23b83928c865e1007c010abbf77c6dacbdf4a17770d",
-  reviewedAt: OCTOBER_1_6_COMMISSION_RESEARCHED_AT,
-});
-
-const commissionIiOctober5And6Notice = lateSeptemberNotice({
-  publicationNumber: "2026/3197",
-  publicationStart: "2026-10-02",
-  publicationEnd: "2026-10-09",
-  subject:
-    "Convocazione 2° Commissione Consiliare Permanente. Calendario lavori.",
-  sourceContentHash:
-    "35477946eac942930eb5fc7be71afdc63505e07b4442416e703f6799f7d8e82e",
-  documentSha256:
-    "50dc729a39338b607925d93f7cf927a38ed75f88ec8ca8ebc7163a5166ae7cc1",
-  reviewedAt: OCTOBER_1_6_COMMISSION_RESEARCHED_AT,
-});
-
-const commissionIvOctober5Notice = lateSeptemberNotice({
-  publicationNumber: "2026/3198",
-  publicationStart: "2026-10-02",
-  publicationEnd: "2026-10-09",
-  subject: "Convocazione 4° Commissione Consiliare Permanente.",
-  sourceContentHash:
-    "57af86ffd8640a7acf140edf2742e9b761022da32f8be076332c4e6145d2c090",
-  documentSha256:
-    "83fe0c8c9149f7fb01dd5ca0180d0c8d4decf59be9ef5c44a36baad7b1e6fbec",
-  reviewedAt: OCTOBER_1_6_COMMISSION_RESEARCHED_AT,
-});
-
-const councilCandidate = requireCandidate({
-  id: "albo-2026-2673",
-  source: "Albo Pretorio Comune di Lamezia Terme",
-  source_url: OFFICIAL_ALBO_URL,
-  retrieved_at: "2026-08-11T07:32:34.743Z",
-  publication_number: "2026/2673",
-  publication_start: "2026-08-10",
-  publication_end: "2026-08-14",
-  act_type: "CONVOCAZIONE CONSIGLIO COMUNALE",
-  subject: "Avviso seduta di Consiglio Comunale.",
-  document_url: null,
-  content_hash:
-    "31789ffe968c4991b8b066817d50b757920a36b0bc6f83bff5628f9012a4d108",
-  verification_status: "official_source_acquired",
-  privacy_risk: "low",
-  public_visibility: "publishable",
-});
-
-const commissionProvenance: CouncilSessionV0Provenance = {
-  noticeId: commissionCandidate.id,
-  publicationNumber: commissionCandidate.publicationNumber,
-  sourceLabel: commissionCandidate.source.label,
-  sourceUrl: commissionCandidate.source.url,
-  documentUrl: commissionCandidate.source.documentUrl,
-  archivedDocumentUrl: COMMISSION_ARCHIVED_DOCUMENT_URL,
-  sourceContentHash: commissionCandidate.source.contentHash,
-  documentSha256:
-    "842702b2044b4b6f9a7b21a65eac2ab59866ee3f321872e6b28fd481598be304",
-  embeddedDocumentSha256:
-    "3069388db15c43fdbf3cc980195f9c88ded602a6e9f8f89f358a006ce789096c",
-  retrievedAt: commissionCandidate.source.retrievedAt,
-  reviewedAt: SOURCE_REVIEWED_AT,
-  sourceReviewStatus: "reviewed_against_official_attachment",
-};
-
-const commissionViProvenance: CouncilSessionV0Provenance = {
-  noticeId: commissionViCandidate.id,
-  publicationNumber: commissionViCandidate.publicationNumber,
-  sourceLabel: commissionViCandidate.source.label,
-  sourceUrl: commissionViCandidate.source.url,
-  documentUrl: commissionViCandidate.source.documentUrl,
-  archivedDocumentUrl: COMMISSION_VI_ARCHIVED_DOCUMENT_URL,
-  sourceContentHash: commissionViCandidate.source.contentHash,
-  documentSha256:
-    "165152190ac39451d35caf5815bfb4d7d6d7ee66c20abe630c98b47d62858c72",
-  embeddedDocumentSha256:
-    "c09e7aacd7d22f77f8e72db5b5198203748b5f032dfd604b236f46fe8a28197d",
-  retrievedAt: commissionViCandidate.source.retrievedAt,
-  reviewedAt: COMMISSION_VI_RESEARCHED_AT,
-  sourceReviewStatus: "reviewed_against_official_attachment",
-};
-
-const commissionIvEarlyProvenance: CouncilSessionV0Provenance = {
-  noticeId: commissionIvEarlyCandidate.id,
-  publicationNumber: commissionIvEarlyCandidate.publicationNumber,
-  sourceLabel: commissionIvEarlyCandidate.source.label,
-  sourceUrl: commissionIvEarlyCandidate.source.url,
-  documentUrl: commissionIvEarlyCandidate.source.documentUrl,
-  archivedDocumentUrl: COMMISSION_IV_EARLY_ARCHIVED_DOCUMENT_URL,
-  sourceContentHash: commissionIvEarlyCandidate.source.contentHash,
-  documentSha256:
-    "365976826d174821dfcd69c4c02710fcc8eb324c24ccefe2549d3fce932abd0b",
-  embeddedDocumentSha256:
-    "d642b7171bc1494ffcdb500eb3e30fd88883fbb166f3ebcd80da83a03d32d768",
-  retrievedAt: commissionIvEarlyCandidate.source.retrievedAt,
-  reviewedAt: SEPTEMBER_COMMISSION_RESEARCHED_AT,
-  sourceReviewStatus: "reviewed_against_official_attachment",
-};
-
-const commissionViSeptemberProvenance: CouncilSessionV0Provenance = {
-  noticeId: commissionViSeptemberCandidate.id,
-  publicationNumber: commissionViSeptemberCandidate.publicationNumber,
-  sourceLabel: commissionViSeptemberCandidate.source.label,
-  sourceUrl: commissionViSeptemberCandidate.source.url,
-  documentUrl: commissionViSeptemberCandidate.source.documentUrl,
-  archivedDocumentUrl: COMMISSION_VI_SEPTEMBER_ARCHIVED_DOCUMENT_URL,
-  sourceContentHash: commissionViSeptemberCandidate.source.contentHash,
-  documentSha256:
-    "a1dad36522921833ac71b994a73032d3454227d0a2c00f57156a8d7059d94baf",
-  embeddedDocumentSha256: null,
-  retrievedAt: commissionViSeptemberCandidate.source.retrievedAt,
-  reviewedAt: SEPTEMBER_COMMISSION_RESEARCHED_AT,
-  sourceReviewStatus: "reviewed_against_official_attachment",
-};
-
-const commissionIvLaterProvenance: CouncilSessionV0Provenance = {
-  noticeId: commissionIvLaterCandidate.id,
-  publicationNumber: commissionIvLaterCandidate.publicationNumber,
-  sourceLabel: commissionIvLaterCandidate.source.label,
-  sourceUrl: commissionIvLaterCandidate.source.url,
-  documentUrl: commissionIvLaterCandidate.source.documentUrl,
-  archivedDocumentUrl: COMMISSION_IV_LATER_ARCHIVED_DOCUMENT_URL,
-  sourceContentHash: commissionIvLaterCandidate.source.contentHash,
+  publication…2498 tokens truncated…andidate.source.contentHash,
   documentSha256:
     "dee314eb1f7e9133848be4b48c1c0b5e06ddd60371a92acc40ef9e290a62e411",
   embeddedDocumentSha256: null,
