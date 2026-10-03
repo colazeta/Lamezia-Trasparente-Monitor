@@ -1346,14 +1346,37 @@ describe("councilSessionV0", () => {
       expect(session.scheduledAt.sourceStatus).toBe("verificato");
       expect(session.agenda.sourceStatus).toBe("verificato");
       expect(session.sessionStatus.value).toBe("non_verificata");
-      expect(session.contextResearch).toEqual(
-        expect.objectContaining({
-          status: "checked_no_match",
-          checkedAt: "2026-10-02T22:19:30Z",
-          articles: [],
-          media: [],
-        }),
-      );
+      if (session.id === "albo-2026-3197-commissione-ii-2026-10-06") {
+        expect(session.contextResearch).toEqual(
+          expect.objectContaining({
+            status: "reviewed_matches",
+            checkedAt: "2026-10-03T09:52:11Z",
+            media: [],
+            articles: [
+              expect.objectContaining({
+                publisher: "il Lametino",
+                publishedAt: "2026-10-01",
+                relationship: "agenda_item",
+                url: expect.stringContaining(
+                  "supporto-giuridico-al-piano-di-riequilibrio",
+                ),
+              }),
+            ],
+          }),
+        );
+        expect(session.contextResearch.searchNote).toMatch(
+          /non nomina la Commissione.*non attesta.*audizione/i,
+        );
+      } else {
+        expect(session.contextResearch).toEqual(
+          expect.objectContaining({
+            status: "checked_no_match",
+            checkedAt: "2026-10-02T22:19:30Z",
+            articles: [],
+            media: [],
+          }),
+        );
+      }
       expect(session.contextResearch.searchNote).toMatch(/Parallel Search/i);
       expect(session.liveStreaming.value).toBeNull();
       expect(session.recording.value).toBeNull();
