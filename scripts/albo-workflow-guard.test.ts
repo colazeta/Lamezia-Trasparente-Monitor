@@ -55,7 +55,13 @@ function stagedPathsFromGitAddBlocks(contents: string) {
 }
 
 test("Albo ingestion workflow stages only public-safe Albo outputs", () => {
-  const stagedPaths = stagedPathsFromGitAddBlocks(workflow);
+  const refreshArguments = workflow.match(
+    /bash scripts\/submit-data-refresh-pr\.sh albo\s*\n\s*"[^"\n]+"\s*\n\s*([^\n]+)/,
+  );
+  const stagedPaths = [
+    ...stagedPathsFromGitAddBlocks(workflow),
+    ...(refreshArguments?.[1].trim().split(/\s+/) ?? []),
+  ];
   const forbiddenPrefixes = ["data/snapshots/albo", "data/processed/albo"];
 
   assert.ok(
@@ -71,6 +77,9 @@ test("Albo ingestion workflow stages only public-safe Albo outputs", () => {
       `workflow must not stage non-minimised Albo artifact path: ${path}`,
     );
   }
+  assert.ok(refreshArguments, "Albo refresh should use the protected-main PR delivery helper");
+  assert.deepEqual(stagedPaths, ["data/public/albo"]);
+  assert.doesNotMatch(workflow, /git push/, "Albo workflow must not write directly to protected main");
 });
 
 test("Albo public output commits are eligible for frontend rebuilds", () => {
