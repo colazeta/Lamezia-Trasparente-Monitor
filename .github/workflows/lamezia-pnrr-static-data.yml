@@ -23,6 +23,8 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
+  actions: write
 
 concurrency:
   group: lamezia-pnrr-static-feed-${{ github.ref }}
@@ -53,6 +55,7 @@ jobs:
           node --check scripts/build-lamezia-pnrr-static-data.mjs
           node --check scripts/check-lamezia-pnrr-static-data.mjs
           node --test scripts/pnrr/lameziaPnrrCore.test.mjs
+          node scripts/build-lamezia-pnrr-static-data.mjs --reconcile-local
           node scripts/check-lamezia-pnrr-static-data.mjs
 
       - name: Detect new CUPs and materialize municipal/OpenCUP project pages
@@ -62,16 +65,9 @@ jobs:
       - name: Commit changed static feed
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git add artifacts/lamezia-trasparente/src/data/generated/lameziaPnrrProjects.json
-
-          if git diff --cached --quiet; then
-            echo "No PNRR source or reconciliation changes to commit."
-            exit 0
-          fi
-
-          git commit -m "Update Lamezia PNRR static feed"
-          git push
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          bash scripts/submit-data-refresh-pr.sh pnrr
+          "Update Lamezia PNRR static feed"
+          artifacts/lamezia-trasparente/src/data/generated/lameziaPnrrProjects.json

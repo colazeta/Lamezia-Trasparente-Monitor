@@ -11,7 +11,7 @@
     "opencup_source_url": "https://www.opencup.gov.it/portale/web/opencup/home",
     "opencup_source_type": "official_public_investment_project_pages",
     "opencup_source_hash": "90d390d44bcf6fb8b169044888c614ee1f2196bf7e820bd40f22bc1a135d4ccf",
-    "albo_snapshot_generated_at": "2026-09-02T16:31:00.452Z",
+    "albo_snapshot_generated_at": "2026-09-03T18:34:57.880Z",
     "update_policy": "Controllo automatico ogni sei ore della sezione comunale PNRR, rilevamento dei nuovi CUP, arricchimento delle schede pubbliche OpenCUP e riconciliazione con gli output pubblici dell'Albo Pretorio; il file cambia solo quando mutano dati, stato di acquisizione o collegamenti documentali.",
     "opencup_update_policy": "Ogni nuovo CUP comunale genera subito una scheda e avvia l'acquisizione OpenCUP. Se il corredo non è ancora disponibile resta in attesa e viene ritentato automaticamente; un errore temporaneo su un CUP già acquisito conserva l'ultimo corredo valido, marcandolo come non aggiornato.",
     "reconciliation_rule": "Gli atti Albo sono collegati a una scheda progetto esclusivamente quando condividono lo stesso CUP normalizzato; i soli richiami testuali PNRR restano evidenze non riconciliate.",
@@ -74,8 +74,8 @@
     "municipal_attachments_classified": 252,
     "municipal_attachments_with_year": 221,
     "municipal_attachments_with_day": 42,
-    "albo_evidence": 11,
-    "linked_albo_evidence": 11,
+    "albo_evidence": 12,
+    "linked_albo_evidence": 12,
     "unmatched_albo_evidence": 0
   },
   "projects": [
@@ -4606,6 +4606,7 @@
         "fallback_used": false
       },
       "albo_evidence_ids": [
+        "albo-2026-2849",
         "albo-2026-2731"
       ]
     },
@@ -5963,6 +5964,41 @@
   ],
   "albo_evidence": [
     {
+      "id": "albo-2026-2849",
+      "public_id": "albo-2026-2849",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "publication_number": "2026/2849",
+      "publication_start": "2026-09-03",
+      "publication_end": "2026-09-18",
+      "office": "SETTORE TECNICO",
+      "act_type": "DETERMINAZIONE DIRIGENZIALE",
+      "act_number": "1383",
+      "act_date": "2026-09-01",
+      "subject": "PNRR M5C2I2.3.(PINQuA). Lavori in appalto integrato relativi all'intervento \"Più servizi al territorio: ristrutturazioni e riqualificazione di spazi urbani sociali\". Liquidazione. C.U.P. C81B21003520001. CIG A0187A63A4.",
+      "cups": [
+        "C81B21003520001"
+      ],
+      "mission_codes": [
+        "M5C2I2.3"
+      ],
+      "match_basis": [
+        "explicit_pnrr_marker",
+        "official_project_cup"
+      ],
+      "verification_status": "official_source_acquired",
+      "public_visibility": "publishable",
+      "privacy_risk": "low",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_2849_23_ALLEG?ente=00301390795",
+      "archived_path": "data/public/albo/documents/2026/822da6fbc8a64277ca900127733da2cea352cf8cbb976b253f502254cb6c0063.pdf",
+      "document_content_type": "application/pdf",
+      "document_size_bytes": 3536894,
+      "first_observed_at": "2026-09-03T18:34:57.880Z",
+      "last_observed_at": "2026-09-03T18:34:57.880Z",
+      "evidence_status": "official_albo_public_record",
+      "evidence_hash": "dc2b8b1afe1d4c4549b5cd56b445b80235b1ca8903414db1145c9f610b8d964c"
+    },
+    {
       "id": "albo-2026-2762",
       "public_id": "albo-2026-2762",
       "source": "Albo Pretorio Comune di Lamezia Terme",
@@ -5992,10 +6028,10 @@
       "archived_path": "data/public/albo/documents/2026/71a38e9a3bb026b05931a8e6e0a89561c1d92d2ba3b5cdeeac958fa54b8d4ecf.pdf",
       "document_content_type": "application/pdf",
       "document_size_bytes": 4008617,
-      "first_observed_at": "2026-09-02T16:31:00.452Z",
-      "last_observed_at": "2026-09-02T16:31:00.452Z",
+      "first_observed_at": "2026-09-03T18:34:57.880Z",
+      "last_observed_at": "2026-09-03T18:34:57.880Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "c3619ca7c6040207fa9198f3e8fb0f963b50268d3d8f96af33daf09410d9f609"
+      "evidence_hash": "e3dbee18ae90e8a22be8b4fd5c7f2034ecfdbdb0e93e614ad986d25f45c9ac2f"
     },
     {
       "id": "albo-2026-2765",
@@ -6025,10 +6061,10 @@
       "archived_path": "data/public/albo/documents/2026/5609968da473ba3dc8bd6893278ff37e476bf8fe86557c6e92e88cdc73311465.pdf",
       "document_content_type": "application/pdf",
       "document_size_bytes": 1948041,
-      "first_observed_at": "2026-09-02T16:31:00.452Z",
-      "last_observed_at": "2026-09-02T16:31:00.452Z",
+      "first_observed_at": "2026-09-03T18:34:57.880Z",
+      "last_observed_at": "2026-09-03T18:34:57.880Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "8d4d58523a144020a82548b144d4d018769f3e246b8d9668f63889233d2d5dd8"
+      "evidence_hash": "7178d113d943c2f77c6ef5972119b6c349790d1d5f3f6355a52602cba290dfac"
     },
     {
       "id": "albo-2026-2735",
@@ -6060,10 +6096,10 @@
       "archived_path": "data/public/albo/documents/2026/f86a73c444876cb21479002b5b16684ef2bb06a956974d7ffae2d7195c9382f9.pdf",
       "document_content_type": "application/pdf",
       "document_size_bytes": 2730905,
-      "first_observed_at": "2026-09-02T16:31:00.452Z",
-      "last_observed_at": "2026-09-02T16:31:00.452Z",
+      "first_observed_at": "2026-09-03T18:34:57.880Z",
+      "last_observed_at": "2026-09-03T18:34:57.880Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "b99d913321c88a000b322c1484ad440e279d2ae2cc7b52d69765b9a4e8f22033"
+      "evidence_hash": "97840d86cdfacbca7015f20fe506ecf3e1c718cba002bd2f6e626d8483f2cdd3"
     },
     {
       "id": "albo-2026-2730",
@@ -6095,10 +6131,10 @@
       "archived_path": "data/public/albo/documents/2026/8afc9d6ebf2babc6a9f34112c015ecc56f31ec6f03badb480e9e17e37bcbd335.pdf",
       "document_content_type": "application/pdf",
       "document_size_bytes": 2484234,
-      "first_observed_at": "2026-09-02T16:31:00.452Z",
-      "last_observed_at": "2026-09-02T16:31:00.452Z",
+      "first_observed_at": "2026-09-03T18:34:57.880Z",
+      "last_observed_at": "2026-09-03T18:34:57.880Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "46e7f118b14f82694851b90704ce1ceefd212c68b3a4c207f85d472bf1fdd90c"
+      "evidence_hash": "23b37fc13c6e738c3ee0e6fe43641e738ee0eb7c875c46f280b08696f9ce5a2f"
     },
     {
       "id": "albo-2026-2731",
@@ -6130,10 +6166,10 @@
       "archived_path": "data/public/albo/documents/2026/a2f5603b696f49f7759153582c4728633acac968c437fdf5a3c1a5b6e5ab3c07.pdf",
       "document_content_type": "application/pdf",
       "document_size_bytes": 2702097,
-      "first_observed_at": "2026-09-02T16:31:00.452Z",
-      "last_observed_at": "2026-09-02T16:31:00.452Z",
+      "first_observed_at": "2026-09-03T18:34:57.880Z",
+      "last_observed_at": "2026-09-03T18:34:57.880Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "e1cd12809a4fc1998ad98ed47b75508e32d5d0ac3b5fcf7ef5375b91ebcff5da"
+      "evidence_hash": "63f13722a1a19e383d7c52f0e278fb4ed7dbf4713bc85c6d82810557a6ce45c9"
     },
     {
       "id": "albo-2026-2732",
@@ -6165,10 +6201,10 @@
       "archived_path": "data/public/albo/documents/2026/76b73980df65098c7c6b8a9b23b46b57e460900817bf17f454aad25a4988e49c.pdf",
       "document_content_type": "application/pdf",
       "document_size_bytes": 2407565,
-      "first_observed_at": "2026-09-02T16:31:00.452Z",
-      "last_observed_at": "2026-09-02T16:31:00.452Z",
+      "first_observed_at": "2026-09-03T18:34:57.880Z",
+      "last_observed_at": "2026-09-03T18:34:57.880Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "97c7fd02c5c7f53d66d9186d531119a44703598f4178eac6005c04cfed475113"
+      "evidence_hash": "f7da440bd622015a40efb2de0bf9da60c7100eaf390f1e1cac97c546c5777ae9"
     },
     {
       "id": "albo-2026-2733",
@@ -6200,10 +6236,10 @@
       "archived_path": "data/public/albo/documents/2026/e68c2842bd0a0f642e107d82fca4b7a8b392ef9ed68d1a9da2fa3cb4c50ba89e.pdf",
       "document_content_type": "application/pdf",
       "document_size_bytes": 2130959,
-      "first_observed_at": "2026-09-02T16:31:00.452Z",
-      "last_observed_at": "2026-09-02T16:31:00.452Z",
+      "first_observed_at": "2026-09-03T18:34:57.880Z",
+      "last_observed_at": "2026-09-03T18:34:57.880Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "9d0810e2c42a30907423e1df7e4bbab8ecbc486d0162c725671168059bacba42"
+      "evidence_hash": "e327af5647a9cb542d50c1bd9cc81aa6380cae2ebe5137628b2da0afc15ec165"
     },
     {
       "id": "albo-2026-2725",
@@ -6233,10 +6269,10 @@
       "archived_path": "data/public/albo/documents/2026/0e9bda925b7ba95ad4eb5fcbd97df50bd7d6c5d5c32e4d78cec03c36015cce93.pdf",
       "document_content_type": "application/pdf",
       "document_size_bytes": 1818221,
-      "first_observed_at": "2026-09-02T16:31:00.452Z",
-      "last_observed_at": "2026-09-02T16:31:00.452Z",
+      "first_observed_at": "2026-09-03T18:34:57.880Z",
+      "last_observed_at": "2026-09-03T18:34:57.880Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "87d630f40c0cedb6cc0d820231151afea329316958c1963c9798da4bdf71fea7"
+      "evidence_hash": "eca88c265724a8ea9694ecf6bedabdde838f55c357dec9ed5ac2c66fcb2927b7"
     },
     {
       "id": "albo-2026-2726",
@@ -6266,10 +6302,10 @@
       "archived_path": "data/public/albo/documents/2026/ede98be0620845ed117228d306b2486f397b2d478cde7be34624615760641fc5.pdf",
       "document_content_type": "application/pdf",
       "document_size_bytes": 2014085,
-      "first_observed_at": "2026-09-02T16:31:00.452Z",
-      "last_observed_at": "2026-09-02T16:31:00.452Z",
+      "first_observed_at": "2026-09-03T18:34:57.880Z",
+      "last_observed_at": "2026-09-03T18:34:57.880Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "ddb64462b0edf654975e432a1d3f952909ca8100f33ee725a7f3ba8b0c468c10"
+      "evidence_hash": "e8ee98bb1aac027407f47a666cfa4bdc74e200fd03811550039fa41cda9c82be"
     },
     {
       "id": "albo-2026-2729",
@@ -6298,10 +6334,10 @@
       "archived_path": "data/public/albo/documents/2026/d6b088defa2f9ff8eb3e7d4329cd3876fc4d4b9926dd8d2c9cfbbfbb21a431e7.pdf",
       "document_content_type": "application/pdf",
       "document_size_bytes": 1926320,
-      "first_observed_at": "2026-09-02T16:31:00.452Z",
-      "last_observed_at": "2026-09-02T16:31:00.452Z",
+      "first_observed_at": "2026-09-03T18:34:57.880Z",
+      "last_observed_at": "2026-09-03T18:34:57.880Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "42e3dfcb6a3b0507c596f8a9c2e7064c977d3ca6d02050cb51bca1eefae65777"
+      "evidence_hash": "2748d71920046c025ea20cd1ada333f10e1d005bdb915b642daae354163a6f6b"
     },
     {
       "id": "albo-2026-2723",
@@ -6330,13 +6366,13 @@
       "public_visibility": "publishable",
       "privacy_risk": "low",
       "document_url": "https://albo.tinnvision.cloud/allegati/2026_2723_12_ALLEG?ente=00301390795",
-      "archived_path": "data/public/albo/documents/2026/18dcfdc2b37d732bbacbf174cb8b9f7d970222fadd1785284d2ec44bef7b48af.pdf",
-      "document_content_type": "application/pdf",
-      "document_size_bytes": 2564285,
+      "archived_path": null,
+      "document_content_type": null,
+      "document_size_bytes": null,
       "first_observed_at": "2026-09-02T16:31:00.452Z",
       "last_observed_at": "2026-09-02T16:31:00.452Z",
       "evidence_status": "official_albo_public_record",
-      "evidence_hash": "fe4a6acf3b2867f3c8ccc12116568ab9d852c324339c33f7a8ac573ad9833277"
+      "evidence_hash": "0bceb72bc60ee886b4850792cb8d1dcde8a7252fb643b3fb1083b2953f644f3f"
     }
   ],
   "unmatched_albo_evidence_ids": []

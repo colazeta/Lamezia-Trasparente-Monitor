@@ -19,6 +19,8 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
+  actions: write
 
 concurrency:
   group: anac-bdncp-sync
@@ -74,31 +76,9 @@ jobs:
       - name: Commit public ANAC census and last-known-good caches
         id: commit_snapshot
         shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git add \
-            data/public/contracts/anac-bdncp/latest.json \
-            data/public/contracts/anac-authority/latest.json
-
-          if git diff --cached --quiet; then
-            echo "No ANAC procurement census changes to commit."
-            echo "committed=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          git commit -m "Update ANAC procurement census"
-          git pull --rebase origin main
-          git push origin HEAD:main
-          echo "committed=true" >> "$GITHUB_OUTPUT"
-          echo "commit_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
-
-      - name: Verify the refreshed census is public
-        if: steps.commit_snapshot.outputs.committed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: >-
-          node scripts/check-public-contracts-page.mjs
-          --url https://lamezia-trasparente.pages.dev
-          --expected-commit "${{ steps.commit_snapshot.outputs.commit_sha }}"
-          --attempts 30
-          --delay-ms 10000
+          bash scripts/submit-data-refresh-pr.sh anac
+          "Update ANAC procurement census"
+          data/public/contracts/anac-bdncp/latest.json data/public/contracts/anac-authority/latest.json

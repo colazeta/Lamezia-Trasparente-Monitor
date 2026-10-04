@@ -646,7 +646,11 @@ export function buildAlboEvidenceArchive({
     if (!explicitPnrr && !matchedOfficialCup) continue;
 
     const manifest = manifestById.get(id);
-    const archivedDocument = record.archived_document ?? null;
+    // Current source snapshots can outlive a serving authorisation, just
+    // like retained evidence. Never reintroduce a revoked local PDF path.
+    const archivedDocument = [record.archived_document, manifest].find(
+      (document) => document?.storage_path && allowedArchivePaths.has(document.storage_path),
+    ) ?? null;
     const evidence = {
       id,
       public_id: record.public_id ?? id,
@@ -671,11 +675,11 @@ export function buildAlboEvidenceArchive({
       privacy_risk: record.privacy_risk,
       document_url: record.document_url ?? manifest?.document_url ?? null,
       archived_path:
-        archivedDocument?.storage_path ?? manifest?.storage_path ?? null,
+        archivedDocument?.storage_path ?? null,
       document_content_type:
-        archivedDocument?.content_type ?? manifest?.content_type ?? null,
+        archivedDocument?.content_type ?? null,
       document_size_bytes:
-        archivedDocument?.size_bytes ?? manifest?.size_bytes ?? null,
+        archivedDocument?.size_bytes ?? null,
       first_observed_at:
         record.first_observed_at ?? record.retrieved_at ?? sourceGeneratedAt,
       last_observed_at:
