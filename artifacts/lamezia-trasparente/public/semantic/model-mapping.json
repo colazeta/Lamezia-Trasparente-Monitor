@@ -1,0 +1,1666 @@
+{
+  "schemaVersion": "lt-semantic-model-mapping.v1",
+  "profileVersion": "1.3.0",
+  "modelVersion": "1.1.0",
+  "scope": "Concept definitions and minimum RDF validation for the existing model; not record population, RDF export completeness or public-release authorisation. Table bindings describe conceptual ownership, not RDF typing of every legacy row.",
+  "concepts": [
+    {
+      "id": "identity",
+      "rdfClass": "lt:CanonicalSubject",
+      "definition": "Un riferimento stabile a un soggetto, senza duplicarne gli attributi di dominio.",
+      "identityRule": "UUID e tipo di dominio; non si fonde per somiglianza del nome.",
+      "validation": {
+        "provenanceRequired": false
+      },
+      "parents": []
+    },
+    {
+      "id": "source",
+      "rdfClass": "lt:InformationSource",
+      "definition": "Il soggetto o sistema che pubblica informazioni.",
+      "identityRule": "Codice della fonte; non coincide con il documento acquisito.",
+      "validation": {
+        "provenanceRequired": false
+      },
+      "parents": []
+    },
+    {
+      "id": "artifact",
+      "rdfClass": "lt:SourceArtifact",
+      "definition": "Una sequenza di byte identificata da hash e formato.",
+      "identityRule": "Identità qualificata da endpoint e hash dei byte nel registro; lo stesso hash può essere acquisito da più fonti e localizzatori.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "release",
+      "rdfClass": "lt:SourceRelease",
+      "definition": "Un insieme di dati acquisito a un determinato stato.",
+      "identityRule": "Fonte, versione e hash; una nuova versione non sovrascrive la precedente.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "source_record",
+      "rdfClass": "lt:SourceRecord",
+      "definition": "Un'unità informativa di una versione di fonte.",
+      "identityRule": "Chiave originaria dentro la release; non coincide automaticamente con l'entità descritta.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "acquisition",
+      "rdfClass": "lt:AcquisitionRun",
+      "definition": "Un tentativo di acquisire o verificare una fonte.",
+      "identityRule": "ID del tentativo ed esito, anche quando non produce nuovi record.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "publication",
+      "rdfClass": "lt:PublicationEvent",
+      "definition": "La comparsa di un contenuto in un registro pubblico.",
+      "identityRule": "Fonte e identificativo di pubblicazione, distinti dall'identità dell'atto.",
+      "validation": {
+        "provenanceRequired": true,
+        "subjectKind": "event",
+        "domainType": "document.publication"
+      },
+      "parents": [
+        "lt:CanonicalSubject"
+      ]
+    },
+    {
+      "id": "document",
+      "rdfClass": "lt:DocumentResource",
+      "definition": "Una risorsa informativa o allegato che descrive un atto o altro soggetto.",
+      "identityRule": "Identità documentale distinta da formato, estrazione testuale e pubblicazione.",
+      "validation": {
+        "provenanceRequired": true,
+        "subjectKind": "entity",
+        "domainType": "document.document"
+      },
+      "parents": [
+        "lt:CanonicalSubject"
+      ]
+    },
+    {
+      "id": "act",
+      "rdfClass": "lt:AdministrativeDecision",
+      "definition": "Una decisione o parere formalizzato da un'autorità.",
+      "identityRule": "Autorità, ufficio, tipo, numero e data verificati; il titolo da solo non è una chiave.",
+      "validation": {
+        "provenanceRequired": true,
+        "subjectKind": "entity",
+        "domainType": "document.act"
+      },
+      "parents": [
+        "lt:CanonicalSubject"
+      ]
+    },
+    {
+      "id": "person",
+      "rdfClass": "lt:PersonIdentity",
+      "definition": "Un individuo la cui identità rimane stabile al cambiare della carica.",
+      "identityRule": "Identificatori qualificati e risoluzione documentata; mai soltanto il nome.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "organisation",
+      "rdfClass": "lt:InstitutionalOrganisation",
+      "definition": "Un ente o organo istituzionale, con natura e contesto espliciti.",
+      "identityRule": "Ente, unità e periodo; un organo non è la persona che lo presiede.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "role",
+      "rdfClass": "lt:InstitutionalRole",
+      "definition": "La definizione di una funzione svolta in un contesto istituzionale, distinta dalla sua attribuzione a una persona.",
+      "identityRule": "Codice del ruolo e contesto; persona, mandato e appartenenza mantengono identità e intervalli separati.",
+      "validation": {
+        "provenanceRequired": false
+      },
+      "parents": []
+    },
+    {
+      "id": "session",
+      "rdfClass": "lt:InstitutionalSession",
+      "definition": "Una riunione di un organo con documenti, interventi e voti.",
+      "identityRule": "Organo, data e identificativo della fonte; non il singolo verbale.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "procurement",
+      "rdfClass": "lt:ProcurementProcedure",
+      "definition": "Procedimento con cui un’amministrazione seleziona un contraente. Può produrre uno o più contratti.",
+      "identityRule": "Identificativo qualificato della procedura o del lotto, compreso il CIG dove applicabile; non coincide con il contratto stipulato.",
+      "validation": {
+        "provenanceRequired": true,
+        "subjectKind": "entity",
+        "domainType": "procurement.procedure"
+      },
+      "parents": [
+        "lt:CanonicalSubject"
+      ]
+    },
+    {
+      "id": "project",
+      "rdfClass": "lt:PublicProject",
+      "definition": "Un investimento che può essere descritto da più amministrazioni e fonti.",
+      "identityRule": "UUIDv7 indipendente dalla fonte. CUP qualificato con fonte, emittente e controllo di formato; record senza identità sufficiente conservano un esito esplicito.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "indicator",
+      "rdfClass": "lt:IndicatorDefinition",
+      "definition": "Definizione di ciò che si misura, con unità, metodo e significato. Le serie fissano le dimensioni della misura.",
+      "identityRule": "Definizione, unità e metodo; non il valore di un anno o una serie territoriale.",
+      "validation": {
+        "provenanceRequired": false
+      },
+      "parents": []
+    },
+    {
+      "id": "observation",
+      "rdfClass": "lt:StatisticalObservation",
+      "definition": "Il valore di una misura in un luogo, periodo e versione di fonte.",
+      "identityRule": "Serie, release, periodo e dimensioni; zero e dato mancante sono distinti.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "place",
+      "rdfClass": "lt:PlaceIdentity",
+      "definition": "Territorio o luogo identificabile, distinto dalle geometrie che ne rappresentano forma e posizione.",
+      "identityRule": "Codice o identificatore geografico qualificato; una coordinata approssimata non è una chiave di identità.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "asset",
+      "rdfClass": "lt:AssetIdentity",
+      "definition": "Un bene distinto dai provvedimenti che lo riguardano.",
+      "identityRule": "Identificatore del bene; confisca, assegnazione e riuso sono eventi separati.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "event",
+      "rdfClass": "lt:DocumentedCrimeEvent",
+      "definition": "Un evento con tempo, luogo, fonti e stato probatorio.",
+      "identityRule": "Identità LTCEDS; le fonti possono divergere senza produrre automaticamente nuovi eventi.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "evidence",
+      "rdfClass": "lt:EvidenceRecord",
+      "definition": "Una fonte, qualificazione o localizzazione a sostegno di un evento.",
+      "identityRule": "Evento, fonte, tipo di attestazione e versione; una menzione non prova responsabilità.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "cluster",
+      "rdfClass": "lt:DocumentedEventCluster",
+      "definition": "Un collegamento esplicito tra eventi sostenuto da fonti.",
+      "identityRule": "ID del cluster e criterio documentato; non inferire una rete criminale dalla prossimità.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "report",
+      "rdfClass": "lt:CivicReport",
+      "definition": "Una comunicazione ricevuta e sottoposta a verifica.",
+      "identityRule": "ID della segnalazione e storia; non è un fatto accertato.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "monitoring_case",
+      "rdfClass": "lt:MonitoringCase",
+      "definition": "Una valutazione curata su un oggetto civico e sulle sue evidenze.",
+      "identityRule": "Oggetto, autore, versione e stato di revisione; distinta dalla segnalazione ricevuta.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "request",
+      "rdfClass": "lt:CivicAccessRequest",
+      "definition": "Un procedimento di accesso civico con istanza, riscontri ed esito.",
+      "identityRule": "Identificativo della richiesta e storia del procedimento.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "call",
+      "rdfClass": "lt:PublicCall",
+      "definition": "Un avviso che stabilisce requisiti, scadenze e risorse disponibili.",
+      "identityRule": "Ente emittente e identificativo del bando; distinto dalla domanda di partecipazione.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "proposal",
+      "rdfClass": "lt:CivicProposal",
+      "definition": "Una proposta attribuita, con oggetto e stato istituzionale.",
+      "identityRule": "ID della proposta, fonti e revisioni; categoria tematica distinta dall'entità proposta.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "evaluation",
+      "rdfClass": "lt:InterventionEvaluation",
+      "definition": "Valutazione documentata di un intervento, con studio, risultati, limiti e contesto di applicabilità.",
+      "identityRule": "Studio e versione della valutazione; più valutazioni possono riguardare lo stesso intervento.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "editorial_content",
+      "rdfClass": null,
+      "definition": "Testi, sintesi, pagine e contributi curati per la presentazione.",
+      "identityRule": "ID editoriale e revisione; non crea da solo un soggetto canonico.",
+      "validation": null,
+      "parents": []
+    },
+    {
+      "id": "taxonomy",
+      "rdfClass": "lt:TaxonomyConcept",
+      "definition": "Una categoria o tema usato per organizzare i contenuti.",
+      "identityRule": "Schema e codice stabile; temi civici e categorie di performance sono faccette diverse.",
+      "validation": {
+        "provenanceRequired": false
+      },
+      "parents": []
+    },
+    {
+      "id": "application",
+      "rdfClass": null,
+      "definition": "Dati necessari al funzionamento del servizio.",
+      "identityRule": "ID applicativo; fuori dall'ontologia dei fatti civici.",
+      "validation": null,
+      "parents": []
+    },
+    {
+      "id": "contract",
+      "rdfClass": "lt:ProcurementContract",
+      "definition": "Accordo stipulato tra un’amministrazione e un contraente nell’ambito di una procedura. Distinto da lotto, aggiudicazione e pagamento.",
+      "identityRule": "Identificativo del contratto qualificato dalla fonte, collegato alla procedura; il CIG non basta a distinguere tutti gli oggetti.",
+      "validation": {
+        "provenanceRequired": true,
+        "subjectKind": "entity",
+        "domainType": "procurement.contract"
+      },
+      "parents": [
+        "lt:CanonicalSubject"
+      ]
+    },
+    {
+      "id": "series",
+      "rdfClass": "lt:ObservationSeries",
+      "definition": "Insieme di misure dello stesso indicatore a dimensioni definite, per esempio territorio e popolazione di riferimento.",
+      "identityRule": "Indicatore e dimensioni della serie; periodi e release distinguono le osservazioni.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "geometry",
+      "rdfClass": "lt:GeographicRepresentation",
+      "definition": "Geometria o posizione di un luogo, con sistema di riferimento, fonte, versione e precisione.",
+      "identityRule": "Luogo, fonte e versione della geometria; due geometrie diverse non implicano due luoghi.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "intervention",
+      "rdfClass": "lt:PolicyIntervention",
+      "definition": "Azione o strumento di politica pubblica definito per obiettivi e destinatari, che può essere studiato e proposto localmente.",
+      "identityRule": "Identificativo dell’intervento e della sua versione; distinto da proposta locale e valutazione scientifica.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "assertion",
+      "rdfClass": "lt:SourceAssertion",
+      "definition": "Un contenuto riportato o derivato da una fonte, conservato con valore, posizione e metodo di estrazione.",
+      "identityRule": "Record di fonte, puntatore al campo e versione dell’estrattore; non richiede un progetto già riconciliato.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "resolution",
+      "rdfClass": "lt:ResolutionOutcome",
+      "definition": "Un esito motivato di collegamento di un candidato a un soggetto oppure di mancata risoluzione esplicita.",
+      "identityRule": "Record, chiave del candidato e versione del risolutore; l’esito non risolto non richiede soggetti sintetici.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "identifier",
+      "rdfClass": "lt:QualifiedIdentifier",
+      "definition": "Un codice attribuito da un sistema o ente emittente a un soggetto.",
+      "identityRule": "Schema, emittente e valore; un identificatore non coincide con l’oggetto descritto.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "lot",
+      "rdfClass": "lt:ProcurementLot",
+      "definition": "Un lotto di una procedura, distinto dal contratto e dal codice CIG.",
+      "identityRule": "Procedura e numero del lotto; il CIG è un identificatore eventuale.",
+      "validation": {
+        "provenanceRequired": true,
+        "subjectKind": "entity",
+        "domainType": "procurement.lot"
+      },
+      "parents": [
+        "lt:CanonicalSubject"
+      ]
+    },
+    {
+      "id": "procurement_mention",
+      "rdfClass": "lt:ProcurementMention",
+      "definition": "Un riferimento a un possibile oggetto procurement estratto da una fonte.",
+      "identityRule": "Record di fonte e puntatore; la menzione non certifica procedura, firma o pagamento.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "financial_event",
+      "rdfClass": "lt:ProcurementFinancialEvent",
+      "definition": "Un evento di importo, valuta, tipo e data riferito a un contratto e sostenuto da evidenza.",
+      "identityRule": "UUIDv7 e contratto documentato; pagamento, impegno e storno rimangono distinti.",
+      "validation": {
+        "provenanceRequired": true,
+        "subjectKind": "event",
+        "domainType": "procurement.financial_event"
+      },
+      "parents": [
+        "lt:CanonicalSubject"
+      ]
+    },
+    {
+      "id": "publication_version",
+      "rdfClass": "lt:PublicationVersion",
+      "definition": "La descrizione immutabile di una pubblicazione in uno specifico record acquisito.",
+      "identityRule": "Record di fonte e release; titolo e visibilità non sono identità della pubblicazione.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "taxonomy_scheme",
+      "rdfClass": "lt:TaxonomyScheme",
+      "definition": "Una versione immutabile di un vocabolario classificatorio.",
+      "identityRule": "Chiave dello schema, versione e hash della definizione.",
+      "validation": {
+        "provenanceRequired": false
+      },
+      "parents": []
+    },
+    {
+      "id": "classification",
+      "rdfClass": "lt:ClassificationAssignment",
+      "definition": "Un concetto assegnato a un record, oppure un esito esplicito di mancata classificazione.",
+      "identityRule": "Record, faccetta e versione del metodo, con schema e versione quando applicabili.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "membership",
+      "rdfClass": "lt:InstitutionalMembership",
+      "definition": "La partecipazione di una persona a un organo per un intervallo documentato.",
+      "identityRule": "Persona, organo, ruolo e intervallo; non coincide con la persona o la definizione del ruolo.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "mandate",
+      "rdfClass": "lt:InstitutionalMandate",
+      "definition": "Un incarico attribuito a una persona nel tempo da un contesto istituzionale.",
+      "identityRule": "Persona, autorità conferente, tipo di mandato e intervallo documentato.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "relation",
+      "rdfClass": "lt:EvidenceBackedRelation",
+      "definition": "Un collegamento tipizzato tra oggetti con provenienza e criterio espliciti.",
+      "identityRule": "Estremi, tipo, fonte e versione; non sostituisce gli attributi dei domini.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "public_projection",
+      "rdfClass": "lt:PublicProjection",
+      "definition": "Una rappresentazione minimizzata e governata da una policy di pubblicazione.",
+      "identityRule": "Soggetto o record, versione della policy e della proiezione; la classe non concede autorizzazione.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "source_endpoint",
+      "rdfClass": "lt:SourceEndpoint",
+      "definition": "Un punto o canale di acquisizione appartenente a una fonte.",
+      "identityRule": "Fonte, URL qualificato e versione del canale; non coincide con il publisher o con i byte.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "dataset",
+      "rdfClass": "lt:DatasetDefinition",
+      "definition": "Una raccolta informativa identificata dal publisher e dal catalogo.",
+      "identityRule": "Catalogo, publisher e identificativo originario; distribuzioni e snapshot sono distinti.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "dataset_distribution",
+      "rdfClass": "lt:DatasetDistribution",
+      "definition": "Una risorsa di accesso a un dataset, che può cambiare contenuto nel tempo.",
+      "identityRule": "Dataset e identificativo della distribuzione; URL e artefatto acquisito non sono la stessa identità.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "source_status",
+      "rdfClass": "lt:SourceOperationalStatus",
+      "definition": "Uno stato sintetico del monitoraggio di una fonte o feed.",
+      "identityRule": "Feed e stato osservato; non equivale a un tentativo di acquisizione o a copertura completa.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "source_change",
+      "rdfClass": "lt:SourceChangeNotification",
+      "definition": "Una notifica di cambiamento di fonte da elaborare.",
+      "identityRule": "Fonte, versione o hash del cambiamento e rilevazione; non coincide con un fatto civico.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "institutional_activity",
+      "rdfClass": "lt:InstitutionalActivity",
+      "definition": "Una attività documentata attribuita a una persona in un contesto istituzionale.",
+      "identityRule": "Persona, fonte, tipo e data dell’attività; non coincide con il ruolo o il mandato.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "institutional_vote",
+      "rdfClass": "lt:InstitutionalVote",
+      "definition": "Una espressione di voto attribuita da una fonte a una persona nel contesto di un atto o seduta.",
+      "identityRule": "Persona, oggetto del voto, fonte e occasione; l’assenza di un voto non indica opposizione.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "session_intervention",
+      "rdfClass": "lt:SessionIntervention",
+      "definition": "Un intervento documentato di un partecipante nel contesto di una seduta o del suo resoconto.",
+      "identityRule": "Resoconto, partecipante, posizione e versione della fonte; distinto dalla carica.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "identity_mapping",
+      "rdfClass": "lt:LegacyIdentityMapping",
+      "definition": "Una decisione storicizzata che collega una identità precedente a un soggetto canonico.",
+      "identityRule": "Namespace, tipo e chiave precedente, periodo di validità e decisione; distinto dal soggetto.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "field_resolution",
+      "rdfClass": "lt:FieldValueResolution",
+      "definition": "Una scelta documentata di asserzione per un campo, che conserva le alternative e la storia.",
+      "identityRule": "Soggetto, campo, asserzione scelta, regola e intervallo; distinta dalla risoluzione dell’identità.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    },
+    {
+      "id": "location_evidence",
+      "rdfClass": "lt:LocationEvidence",
+      "definition": "Una localizzazione sostenuta da fonte, con ruolo, precisione, confidenza e limite di pubblicazione.",
+      "identityRule": "Evento o soggetto, fonte, ruolo e versione; non crea automaticamente un luogo canonico.",
+      "validation": {
+        "provenanceRequired": true
+      },
+      "parents": []
+    }
+  ],
+  "tables": {
+    "accesso_civico_requests": {
+      "label": "Richieste di accesso civico",
+      "domain": "monitoring",
+      "concept": "request",
+      "kind": "entity",
+      "grain": "Una richiesta con iter e riscontri",
+      "rdfClass": "lt:CivicAccessRequest"
+    },
+    "acts": {
+      "label": "Schede di atti del modello precedente",
+      "domain": "documents",
+      "concept": "act",
+      "kind": "legacy",
+      "grain": "Una scheda sintetica di atto senza identità documentale comune",
+      "rdfClass": "lt:AdministrativeDecision"
+    },
+    "attuazione_pnrr_projects": {
+      "label": "Progetti dalla fonte comunale",
+      "domain": "projects",
+      "concept": "project",
+      "kind": "source",
+      "grain": "Un record della fonte Attuazione PNRR",
+      "rdfClass": "lt:PublicProject"
+    },
+    "bandi": {
+      "label": "Bandi e avvisi",
+      "domain": "monitoring",
+      "concept": "call",
+      "kind": "entity",
+      "grain": "Un avviso con requisiti e scadenza",
+      "rdfClass": "lt:PublicCall"
+    },
+    "bando_matches": {
+      "label": "Collegamenti dei bandi",
+      "domain": "monitoring",
+      "concept": "call",
+      "kind": "relation",
+      "grain": "Un collegamento proposto tra bando e oggetto civico",
+      "rdfClass": "lt:PublicCall"
+    },
+    "canonical_subjects": {
+      "label": "Identità canoniche",
+      "domain": "identity",
+      "concept": "identity",
+      "kind": "entity",
+      "grain": "Un soggetto globale e il suo tipo di dominio",
+      "rdfClass": "lt:CanonicalSubject"
+    },
+    "categories": {
+      "label": "Categorie editoriali",
+      "domain": "editorial",
+      "concept": "taxonomy",
+      "kind": "editorial",
+      "grain": "Una categoria per organizzare i temi",
+      "rdfClass": "lt:TaxonomyConcept"
+    },
+    "change_sentinel_events": {
+      "label": "Segnalazioni di cambiamento delle fonti",
+      "domain": "sources",
+      "concept": "source_change",
+      "kind": "operation",
+      "grain": "Un cambiamento rilevato da processare",
+      "rdfClass": "lt:SourceChangeNotification"
+    },
+    "confiscated_assets": {
+      "label": "Beni confiscati",
+      "domain": "territory",
+      "concept": "asset",
+      "kind": "legacy",
+      "grain": "Un bene con stato e localizzazione ancora incorporati",
+      "rdfClass": "lt:AssetIdentity"
+    },
+    "contracts": {
+      "label": "Schede di contratti e affidamenti",
+      "domain": "procurement",
+      "concept": "contract",
+      "kind": "legacy",
+      "grain": "Una riga che combina campi di procedura, contratto e fornitore",
+      "rdfClass": "lt:ProcurementContract"
+    },
+    "conversations": {
+      "label": "Conversazioni",
+      "domain": "application",
+      "concept": "application",
+      "kind": "application",
+      "grain": "Una conversazione applicativa",
+      "rdfClass": null
+    },
+    "core_assertions": {
+      "label": "Asserzioni e valori di fonte",
+      "domain": "identity",
+      "concept": "assertion",
+      "kind": "source",
+      "grain": "Un campo o contenuto di un record, con puntatore, fonte e versione dell’estrattore",
+      "rdfClass": "lt:SourceAssertion"
+    },
+    "core_resolution_outcomes": {
+      "label": "Esiti di riconciliazione",
+      "domain": "identity",
+      "concept": "resolution",
+      "kind": "relation",
+      "grain": "Un candidato di un record e un esito motivato, anche senza soggetto canonico",
+      "rdfClass": "lt:ResolutionOutcome"
+    },
+    "crime_event_cluster_members": {
+      "label": "Eventi nei raggruppamenti",
+      "domain": "crime",
+      "concept": "relation",
+      "kind": "relation",
+      "grain": "Una appartenenza evento-raggruppamento",
+      "rdfClass": "lt:EvidenceBackedRelation"
+    },
+    "crime_event_cluster_sources": {
+      "label": "Fonti dei raggruppamenti",
+      "domain": "crime",
+      "concept": "evidence",
+      "kind": "relation",
+      "grain": "Una fonte a sostegno del raggruppamento",
+      "rdfClass": "lt:EvidenceRecord"
+    },
+    "crime_event_clusters": {
+      "label": "Raggruppamenti di eventi",
+      "domain": "crime",
+      "concept": "cluster",
+      "kind": "entity",
+      "grain": "Un raggruppamento documentato",
+      "rdfClass": "lt:DocumentedEventCluster"
+    },
+    "crime_event_locations": {
+      "label": "Localizzazioni degli eventi",
+      "domain": "crime",
+      "concept": "location_evidence",
+      "kind": "relation",
+      "grain": "Una attestazione di luogo, precisione e ruolo",
+      "rdfClass": "lt:LocationEvidence"
+    },
+    "crime_event_offences": {
+      "label": "Qualificazioni degli eventi",
+      "domain": "crime",
+      "concept": "evidence",
+      "kind": "relation",
+      "grain": "Una qualificazione dell'evento sostenuta da fonte",
+      "rdfClass": "lt:EvidenceRecord"
+    },
+    "crime_event_sources": {
+      "label": "Eventi e fonti collegate",
+      "domain": "crime",
+      "concept": "evidence",
+      "kind": "relation",
+      "grain": "Una associazione tra evento e fonte",
+      "rdfClass": "lt:EvidenceRecord"
+    },
+    "crime_events": {
+      "label": "Eventi criminali documentati",
+      "domain": "crime",
+      "concept": "event",
+      "kind": "event",
+      "grain": "Un evento LTCEDS con stato probatorio",
+      "rdfClass": "lt:DocumentedCrimeEvent"
+    },
+    "crime_public_events": {
+      "label": "Proiezioni pubbliche degli eventi",
+      "domain": "crime",
+      "concept": "public_projection",
+      "kind": "projection",
+      "grain": "Una proiezione approvata e minimizzata di un evento",
+      "rdfClass": "lt:PublicProjection"
+    },
+    "crime_sources": {
+      "label": "Fonti degli eventi",
+      "domain": "crime",
+      "concept": "evidence",
+      "kind": "source",
+      "grain": "Una fonte del dominio LTCEDS",
+      "rdfClass": "lt:EvidenceRecord"
+    },
+    "demographic_observations": {
+      "label": "Osservazioni demografiche",
+      "domain": "statistics",
+      "concept": "observation",
+      "kind": "entity",
+      "grain": "Una osservazione per serie, release, periodo e dimensioni",
+      "rdfClass": "lt:StatisticalObservation"
+    },
+    "demographic_releases": {
+      "label": "Release demografiche",
+      "domain": "statistics",
+      "concept": "release",
+      "kind": "source",
+      "grain": "Una versione di fonte della serie",
+      "rdfClass": "lt:SourceRelease"
+    },
+    "demographic_series": {
+      "label": "Serie demografiche",
+      "domain": "statistics",
+      "concept": "series",
+      "kind": "entity",
+      "grain": "Una definizione di serie statistica",
+      "rdfClass": "lt:ObservationSeries"
+    },
+    "document_acts": {
+      "label": "Identità degli atti amministrativi",
+      "domain": "documents",
+      "concept": "act",
+      "kind": "entity",
+      "grain": "One act with qualified issuer/office/type/number/date",
+      "rdfClass": "lt:AdministrativeDecision"
+    },
+    "document_documents": {
+      "label": "Risorse documentali ufficiali",
+      "domain": "documents",
+      "concept": "document",
+      "kind": "entity",
+      "grain": "One source document resource URL, distinct from bytes and acts",
+      "rdfClass": "lt:DocumentResource"
+    },
+    "document_publication_acts": {
+      "label": "Collegamenti documentati fra pubblicazioni e atti",
+      "domain": "documents",
+      "concept": "relation",
+      "kind": "relation",
+      "grain": "One evidence-backed publication-version to act link",
+      "rdfClass": "lt:EvidenceBackedRelation"
+    },
+    "document_publication_documents": {
+      "label": "Documenti delle versioni di pubblicazione",
+      "domain": "documents",
+      "concept": "relation",
+      "kind": "relation",
+      "grain": "One evidence-backed publication-version to document link",
+      "rdfClass": "lt:EvidenceBackedRelation"
+    },
+    "document_publication_versions": {
+      "label": "Versioni acquisite delle pubblicazioni",
+      "domain": "documents",
+      "concept": "publication_version",
+      "kind": "relation",
+      "grain": "One immutable source record/version; privacy-preserving fields",
+      "rdfClass": "lt:PublicationVersion"
+    },
+    "document_publications": {
+      "label": "Identità delle pubblicazioni",
+      "domain": "documents",
+      "concept": "publication",
+      "kind": "event",
+      "grain": "One publication identity in a qualified register",
+      "rdfClass": "lt:PublicationEvent"
+    },
+    "feed_status": {
+      "label": "Stato dei feed",
+      "domain": "sources",
+      "concept": "source_status",
+      "kind": "operation",
+      "grain": "Lo stato operativo di un feed",
+      "rdfClass": "lt:SourceOperationalStatus"
+    },
+    "fundamental_acts": {
+      "label": "Atti fondamentali selezionati",
+      "domain": "documents",
+      "concept": "act",
+      "kind": "editorial",
+      "grain": "Una scheda curata di atto fondamentale",
+      "rdfClass": "lt:AdministrativeDecision"
+    },
+    "helper_overrides": {
+      "label": "Testi di aiuto personalizzati",
+      "domain": "editorial",
+      "concept": "editorial_content",
+      "kind": "editorial",
+      "grain": "Una personalizzazione dell'aiuto contestuale",
+      "rdfClass": null
+    },
+    "italiadomani_projects": {
+      "label": "Progetti da ItaliaDomani",
+      "domain": "projects",
+      "concept": "project",
+      "kind": "source",
+      "grain": "Un record ItaliaDomani identificato dal CUP",
+      "rdfClass": "lt:PublicProject"
+    },
+    "legacy_subject_map": {
+      "label": "Corrispondenze con il modello precedente",
+      "domain": "identity",
+      "concept": "identity_mapping",
+      "kind": "relation",
+      "grain": "Una decisione storicizzata di collegamento di identità",
+      "rdfClass": "lt:LegacyIdentityMapping"
+    },
+    "legality_areas": {
+      "label": "Aree del monitoraggio legalità",
+      "domain": "monitoring",
+      "concept": "taxonomy",
+      "kind": "editorial",
+      "grain": "Una area del quadro di monitoraggio",
+      "rdfClass": "lt:TaxonomyConcept"
+    },
+    "legality_overview": {
+      "label": "Sintesi del monitoraggio legalità",
+      "domain": "monitoring",
+      "concept": "monitoring_case",
+      "kind": "projection",
+      "grain": "Una sintesi del quadro di monitoraggio",
+      "rdfClass": "lt:MonitoringCase"
+    },
+    "legality_requirements": {
+      "label": "Requisiti da verificare",
+      "domain": "monitoring",
+      "concept": "monitoring_case",
+      "kind": "editorial",
+      "grain": "Un requisito con evidenze e stato",
+      "rdfClass": "lt:MonitoringCase"
+    },
+    "messages": {
+      "label": "Messaggi",
+      "domain": "application",
+      "concept": "application",
+      "kind": "application",
+      "grain": "Un messaggio dentro una conversazione",
+      "rdfClass": null
+    },
+    "monitoring_reports": {
+      "label": "Analisi di monitoraggio",
+      "domain": "monitoring",
+      "concept": "monitoring_case",
+      "kind": "editorial",
+      "grain": "Una valutazione curata su un contratto o progetto",
+      "rdfClass": "lt:MonitoringCase"
+    },
+    "official_activities": {
+      "label": "Attività degli amministratori",
+      "domain": "institutions",
+      "concept": "institutional_activity",
+      "kind": "event",
+      "grain": "Una attività documentata attribuita a una persona",
+      "rdfClass": "lt:InstitutionalActivity"
+    },
+    "official_declarations": {
+      "label": "Dichiarazioni degli amministratori",
+      "domain": "institutions",
+      "concept": "document",
+      "kind": "relation",
+      "grain": "Una dichiarazione collegata a una persona",
+      "rdfClass": "lt:DocumentResource"
+    },
+    "official_remunerations": {
+      "label": "Compensi degli amministratori",
+      "domain": "institutions",
+      "concept": "observation",
+      "kind": "relation",
+      "grain": "Un importo per persona, tipo e periodo",
+      "rdfClass": "lt:StatisticalObservation"
+    },
+    "official_votes": {
+      "label": "Voti documentati",
+      "domain": "institutions",
+      "concept": "institutional_vote",
+      "kind": "event",
+      "grain": "Un voto della persona nel contesto di un atto o seduta",
+      "rdfClass": "lt:InstitutionalVote"
+    },
+    "officials": {
+      "label": "Persone e carica corrente",
+      "domain": "institutions",
+      "concept": "person",
+      "kind": "legacy",
+      "grain": "Una persona con attributi della carica ancora incorporati",
+      "rdfClass": "lt:PersonIdentity"
+    },
+    "opendata_datasets": {
+      "label": "Dataset del catalogo open data",
+      "domain": "sources",
+      "concept": "dataset",
+      "kind": "source",
+      "grain": "Un dataset censito nel catalogo precedente",
+      "rdfClass": "lt:DatasetDefinition"
+    },
+    "opendata_resources": {
+      "label": "Distribuzioni open data",
+      "domain": "sources",
+      "concept": "dataset_distribution",
+      "kind": "source",
+      "grain": "Una risorsa scaricabile di un dataset",
+      "rdfClass": "lt:DatasetDistribution"
+    },
+    "opendata_snapshots": {
+      "label": "Snapshot open data",
+      "domain": "sources",
+      "concept": "release",
+      "kind": "source",
+      "grain": "Una versione acquisita di una risorsa",
+      "rdfClass": "lt:SourceRelease"
+    },
+    "organi": {
+      "label": "Organi istituzionali",
+      "domain": "institutions",
+      "concept": "organisation",
+      "kind": "entity",
+      "grain": "Un organo identificato da slug",
+      "rdfClass": "lt:InstitutionalOrganisation"
+    },
+    "organi_members": {
+      "label": "Appartenenze e mandati",
+      "domain": "institutions",
+      "concept": "membership",
+      "kind": "relation",
+      "grain": "Una persona in un organo per un periodo",
+      "rdfClass": "lt:InstitutionalMembership"
+    },
+    "oversight_opinion_documents": {
+      "label": "Allegati ai pareri",
+      "domain": "documents",
+      "concept": "document",
+      "kind": "relation",
+      "grain": "Un documento collegato a un parere",
+      "rdfClass": "lt:DocumentResource"
+    },
+    "oversight_opinions": {
+      "label": "Pareri e vigilanza",
+      "domain": "documents",
+      "concept": "act",
+      "kind": "entity",
+      "grain": "Un parere con autore istituzionale e data",
+      "rdfClass": "lt:AdministrativeDecision"
+    },
+    "page_blocks": {
+      "label": "Blocchi delle pagine",
+      "domain": "editorial",
+      "concept": "editorial_content",
+      "kind": "editorial",
+      "grain": "Un blocco di presentazione con revisione",
+      "rdfClass": null
+    },
+    "performance_categories": {
+      "label": "Categorie di performance",
+      "domain": "statistics",
+      "concept": "taxonomy",
+      "kind": "editorial",
+      "grain": "Una categoria per raggruppare indicatori",
+      "rdfClass": "lt:TaxonomyConcept"
+    },
+    "performance_indicator_values": {
+      "label": "Valori degli indicatori",
+      "domain": "statistics",
+      "concept": "observation",
+      "kind": "entity",
+      "grain": "Un valore dell'indicatore nel periodo",
+      "rdfClass": "lt:StatisticalObservation"
+    },
+    "performance_indicators": {
+      "label": "Definizioni degli indicatori",
+      "domain": "statistics",
+      "concept": "indicator",
+      "kind": "entity",
+      "grain": "Una definizione di indicatore amministrativo",
+      "rdfClass": "lt:IndicatorDefinition"
+    },
+    "procurement_contracts": {
+      "label": "Contratti documentati",
+      "domain": "procurement",
+      "concept": "contract",
+      "kind": "entity",
+      "grain": "One contract in a lot, not a CIG mention",
+      "rdfClass": "lt:ProcurementContract"
+    },
+    "procurement_financial_events": {
+      "label": "Eventi finanziari dei contratti",
+      "domain": "procurement",
+      "concept": "financial_event",
+      "kind": "event",
+      "grain": "One financial lifecycle event, with evidence and explicit currency",
+      "rdfClass": "lt:ProcurementFinancialEvent"
+    },
+    "procurement_lots": {
+      "label": "Lotti delle procedure",
+      "domain": "procurement",
+      "concept": "lot",
+      "kind": "entity",
+      "grain": "One lot in a procedure",
+      "rdfClass": "lt:ProcurementLot"
+    },
+    "procurement_mentions": {
+      "label": "Riferimenti agli appalti da riconciliare",
+      "domain": "procurement",
+      "concept": "procurement_mention",
+      "kind": "relation",
+      "grain": "One source-scoped procurement candidate, not a contract",
+      "rdfClass": "lt:ProcurementMention"
+    },
+    "procurement_procedures": {
+      "label": "Procedure di affidamento",
+      "domain": "procurement",
+      "concept": "procurement",
+      "kind": "entity",
+      "grain": "One evidence-backed qualified procedure",
+      "rdfClass": "lt:ProcurementProcedure"
+    },
+    "project_field_resolutions": {
+      "label": "Scelte dei valori di progetto",
+      "domain": "projects",
+      "concept": "field_resolution",
+      "kind": "relation",
+      "grain": "Una scelta di campo, la sua evidenza e il periodo di validità; le varianti non sono eliminate",
+      "rdfClass": "lt:FieldValueResolution"
+    },
+    "project_identifiers": {
+      "label": "Identificatori dei progetti",
+      "domain": "projects",
+      "concept": "identifier",
+      "kind": "relation",
+      "grain": "Un codice CUP qualificato per schema ed emittente, collegato al progetto",
+      "rdfClass": "lt:QualifiedIdentifier"
+    },
+    "project_projects": {
+      "label": "Progetti canonici",
+      "domain": "projects",
+      "concept": "project",
+      "kind": "entity",
+      "grain": "Un investimento identificato da UUIDv7, con attributi tipizzati e provenienza dei valori",
+      "rdfClass": "lt:PublicProject"
+    },
+    "publications": {
+      "label": "Pubblicazioni dell'Albo",
+      "domain": "documents",
+      "concept": "publication",
+      "kind": "source",
+      "grain": "Una pubblicazione identificata dal progressivo",
+      "rdfClass": "lt:PublicationEvent"
+    },
+    "questions": {
+      "label": "Domande civiche",
+      "domain": "editorial",
+      "concept": "editorial_content",
+      "kind": "editorial",
+      "grain": "Una domanda usata come percorso di consultazione",
+      "rdfClass": null
+    },
+    "reports": {
+      "label": "Segnalazioni ricevute",
+      "domain": "monitoring",
+      "concept": "report",
+      "kind": "editorial",
+      "grain": "Una segnalazione civica con stato di verifica",
+      "rdfClass": "lt:CivicReport"
+    },
+    "sedute": {
+      "label": "Sedute degli organi",
+      "domain": "institutions",
+      "concept": "session",
+      "kind": "event",
+      "grain": "Una convocazione o seduta",
+      "rdfClass": "lt:InstitutionalSession"
+    },
+    "session_interventions": {
+      "label": "Interventi nei resoconti",
+      "domain": "institutions",
+      "concept": "session_intervention",
+      "kind": "event",
+      "grain": "Un intervento nel contesto di un resoconto",
+      "rdfClass": "lt:SessionIntervention"
+    },
+    "session_reports": {
+      "label": "Resoconti delle sedute",
+      "domain": "institutions",
+      "concept": "document",
+      "kind": "relation",
+      "grain": "Un resoconto associato a una seduta",
+      "rdfClass": "lt:DocumentResource"
+    },
+    "shares": {
+      "label": "Condivisioni",
+      "domain": "application",
+      "concept": "application",
+      "kind": "application",
+      "grain": "Una azione di condivisione nel servizio",
+      "rdfClass": null
+    },
+    "site_strings": {
+      "label": "Testi dell'interfaccia",
+      "domain": "editorial",
+      "concept": "editorial_content",
+      "kind": "editorial",
+      "grain": "Una stringa modificabile del sito",
+      "rdfClass": null
+    },
+    "source_acquisition_runs": {
+      "label": "Tentativi di acquisizione",
+      "domain": "sources",
+      "concept": "acquisition",
+      "kind": "operation",
+      "grain": "Un tentativo con esito e conteggi",
+      "rdfClass": "lt:AcquisitionRun"
+    },
+    "source_artifacts": {
+      "label": "Artefatti acquisiti",
+      "domain": "sources",
+      "concept": "artifact",
+      "kind": "source",
+      "grain": "Un artefatto identificato da endpoint e hash dei byte",
+      "rdfClass": "lt:SourceArtifact"
+    },
+    "source_endpoints": {
+      "label": "Punti di acquisizione",
+      "domain": "sources",
+      "concept": "source_endpoint",
+      "kind": "source",
+      "grain": "Un endpoint appartenente a una fonte",
+      "rdfClass": "lt:SourceEndpoint"
+    },
+    "source_records": {
+      "label": "Record acquisiti",
+      "domain": "sources",
+      "concept": "source_record",
+      "kind": "source",
+      "grain": "Una chiave originaria dentro una release",
+      "rdfClass": "lt:SourceRecord"
+    },
+    "source_releases": {
+      "label": "Versioni delle fonti",
+      "domain": "sources",
+      "concept": "release",
+      "kind": "source",
+      "grain": "Una release registrata",
+      "rdfClass": "lt:SourceRelease"
+    },
+    "source_sources": {
+      "label": "Fonti registrate",
+      "domain": "sources",
+      "concept": "source",
+      "kind": "source",
+      "grain": "Una fonte con il proprio codice",
+      "rdfClass": "lt:InformationSource"
+    },
+    "taxonomy_classifications": {
+      "label": "Classificazioni ed esiti per record di fonte",
+      "domain": "sources",
+      "concept": "classification",
+      "kind": "relation",
+      "grain": "One source record/facet/method classification or explicit non-classification outcome",
+      "rdfClass": "lt:ClassificationAssignment"
+    },
+    "taxonomy_concepts": {
+      "label": "Concetti delle tassonomie",
+      "domain": "sources",
+      "concept": "taxonomy",
+      "kind": "entity",
+      "grain": "One concept within a scheme version",
+      "rdfClass": "lt:TaxonomyConcept"
+    },
+    "taxonomy_schemes": {
+      "label": "Schemi di classificazione versionati",
+      "domain": "sources",
+      "concept": "taxonomy_scheme",
+      "kind": "entity",
+      "grain": "One immutable versioned classification scheme",
+      "rdfClass": "lt:TaxonomyScheme"
+    },
+    "theme_documents": {
+      "label": "Documenti nei temi",
+      "domain": "editorial",
+      "concept": "document",
+      "kind": "editorial",
+      "grain": "Una scheda documentale collegata a un tema",
+      "rdfClass": "lt:DocumentResource"
+    },
+    "theme_emails": {
+      "label": "Messaggi associati ai temi",
+      "domain": "application",
+      "concept": "application",
+      "kind": "application",
+      "grain": "Una comunicazione applicativa relativa a un tema",
+      "rdfClass": null
+    },
+    "theme_followers": {
+      "label": "Iscrizioni ai temi",
+      "domain": "application",
+      "concept": "application",
+      "kind": "application",
+      "grain": "Una iscrizione di un utente a un tema",
+      "rdfClass": null
+    },
+    "theme_metrics": {
+      "label": "Metriche dei temi",
+      "domain": "editorial",
+      "concept": "observation",
+      "kind": "legacy",
+      "grain": "Una metrica editoriale senza modello universale di serie",
+      "rdfClass": "lt:StatisticalObservation"
+    },
+    "theme_posts": {
+      "label": "Contributi nei temi",
+      "domain": "editorial",
+      "concept": "editorial_content",
+      "kind": "editorial",
+      "grain": "Un contributo redazionale nel tema",
+      "rdfClass": null
+    },
+    "theme_relevance_events": {
+      "label": "Interazioni con i temi",
+      "domain": "application",
+      "concept": "application",
+      "kind": "application",
+      "grain": "Un evento di utilizzo del sito, non un evento civico",
+      "rdfClass": null
+    },
+    "themes": {
+      "label": "Temi civici",
+      "domain": "editorial",
+      "concept": "taxonomy",
+      "kind": "editorial",
+      "grain": "Un tema di navigazione civica",
+      "rdfClass": "lt:TaxonomyConcept"
+    }
+  },
+  "relationships": [
+    {
+      "source": "source",
+      "target": "release",
+      "cardinality": "1:N",
+      "label": "Pubblica versioni informative",
+      "status": "partial",
+      "rdfProperty": "lt:hasSourceRelease"
+    },
+    {
+      "source": "release",
+      "target": "source_record",
+      "cardinality": "1:N",
+      "label": "Contiene record originari",
+      "status": "implemented",
+      "rdfProperty": "lt:containsSourceRecord"
+    },
+    {
+      "source": "release",
+      "target": "artifact",
+      "cardinality": "N:1",
+      "label": "Conserva i byte acquisiti",
+      "status": "implemented",
+      "rdfProperty": "lt:hasSourceArtifact"
+    },
+    {
+      "source": "source",
+      "target": "acquisition",
+      "cardinality": "1:N",
+      "label": "È verificata da tentativi di acquisizione",
+      "status": "implemented",
+      "rdfProperty": "lt:hasAcquisitionRun"
+    },
+    {
+      "source": "source_record",
+      "target": "project",
+      "cardinality": "N:M",
+      "label": "È riconciliato tramite esiti espliciti; primo perimetro PNRR",
+      "status": "partial",
+      "rdfProperty": "lt:hasProjectResolution"
+    },
+    {
+      "source": "publication",
+      "target": "act",
+      "cardinality": "N:M",
+      "label": "Pubblica o richiama atti",
+      "status": "partial",
+      "rdfProperty": "lt:publishesAdministrativeDecision"
+    },
+    {
+      "source": "act",
+      "target": "document",
+      "cardinality": "N:M",
+      "label": "È documentato da risorse e allegati",
+      "status": "partial",
+      "rdfProperty": "lt:hasDocumentResource"
+    },
+    {
+      "source": "person",
+      "target": "role",
+      "cardinality": "1:N",
+      "label": "Assume incarichi nel tempo",
+      "status": "partial",
+      "rdfProperty": "lt:hasInstitutionalRole"
+    },
+    {
+      "source": "organisation",
+      "target": "role",
+      "cardinality": "1:N",
+      "label": "È il contesto dell'incarico",
+      "status": "partial",
+      "rdfProperty": "lt:providesRoleContext"
+    },
+    {
+      "source": "organisation",
+      "target": "session",
+      "cardinality": "1:N",
+      "label": "Tiene sedute",
+      "status": "implemented",
+      "rdfProperty": "lt:holdsSession"
+    },
+    {
+      "source": "session",
+      "target": "document",
+      "cardinality": "1:N",
+      "label": "Ha resoconti e documenti",
+      "status": "partial",
+      "rdfProperty": "lt:hasSessionDocument"
+    },
+    {
+      "source": "procurement",
+      "target": "project",
+      "cardinality": "N:M",
+      "label": "Contribuisce alla realizzazione di progetti",
+      "status": "target",
+      "rdfProperty": "lt:contributesToProject"
+    },
+    {
+      "source": "indicator",
+      "target": "observation",
+      "cardinality": "1:N",
+      "label": "Definisce valori osservati",
+      "status": "partial",
+      "rdfProperty": "lt:hasIndicatorObservation"
+    },
+    {
+      "source": "release",
+      "target": "observation",
+      "cardinality": "1:N",
+      "label": "Documenta la versione dell'osservazione",
+      "status": "partial",
+      "rdfProperty": "lt:hasReleaseObservation"
+    },
+    {
+      "source": "event",
+      "target": "evidence",
+      "cardinality": "1:N",
+      "label": "È sostenuto da attestazioni",
+      "status": "implemented",
+      "rdfProperty": "lt:hasEventEvidence"
+    },
+    {
+      "source": "event",
+      "target": "location_evidence",
+      "cardinality": "N:M",
+      "label": "è localizzato in",
+      "status": "partial",
+      "rdfProperty": "lt:hasEventLocation"
+    },
+    {
+      "source": "report",
+      "target": "monitoring_case",
+      "cardinality": "N:M",
+      "label": "Può alimentare una analisi verificata",
+      "status": "target",
+      "rdfProperty": "lt:informsMonitoringCase"
+    },
+    {
+      "source": "proposal",
+      "target": "evaluation",
+      "cardinality": "N:M",
+      "label": "Può richiamare interventi valutati",
+      "status": "target",
+      "rdfProperty": "lt:refersToEvaluation"
+    },
+    {
+      "source": "procurement",
+      "target": "contract",
+      "cardinality": "1:N",
+      "label": "può produrre",
+      "status": "partial",
+      "rdfProperty": "lt:producesContract"
+    },
+    {
+      "source": "indicator",
+      "target": "series",
+      "cardinality": "1:N",
+      "label": "è misurato da",
+      "status": "target",
+      "rdfProperty": "lt:hasObservationSeries"
+    },
+    {
+      "source": "series",
+      "target": "observation",
+      "cardinality": "1:N",
+      "label": "raccoglie",
+      "status": "implemented",
+      "rdfProperty": "lt:hasSeriesObservation"
+    },
+    {
+      "source": "place",
+      "target": "geometry",
+      "cardinality": "1:N",
+      "label": "ha rappresentazioni",
+      "status": "partial",
+      "rdfProperty": "lt:hasGeographicRepresentation"
+    },
+    {
+      "source": "intervention",
+      "target": "evaluation",
+      "cardinality": "1:N",
+      "label": "è oggetto di",
+      "status": "target",
+      "rdfProperty": "lt:hasInterventionEvaluation"
+    },
+    {
+      "source": "source_record",
+      "target": "assertion",
+      "cardinality": "1:N",
+      "label": "Conserva le asserzioni estratte",
+      "status": "implemented",
+      "rdfProperty": "lt:hasSourceAssertion"
+    },
+    {
+      "source": "assertion",
+      "target": "resolution",
+      "cardinality": "1:N",
+      "label": "Documenta le decisioni",
+      "status": "implemented",
+      "rdfProperty": "lt:hasAssertionResolution"
+    },
+    {
+      "source": "project",
+      "target": "identifier",
+      "cardinality": "1:N",
+      "label": "È riconosciuto da codici qualificati",
+      "status": "implemented",
+      "rdfProperty": "lt:hasProjectIdentifier"
+    },
+    {
+      "source": "project",
+      "target": "field_resolution",
+      "cardinality": "1:N",
+      "label": "Mantiene scelte e varianti dei campi",
+      "status": "implemented",
+      "rdfProperty": "lt:hasProjectFieldResolution"
+    },
+    {
+      "source": "procurement",
+      "target": "lot",
+      "rdfProperty": "lt:hasProcurementLot",
+      "cardinality": "1:N",
+      "status": "implemented",
+      "label": "Contiene lotti documentati"
+    },
+    {
+      "source": "lot",
+      "target": "contract",
+      "rdfProperty": "lt:hasLotContract",
+      "cardinality": "1:N",
+      "status": "implemented",
+      "label": "Può avere contratti documentati"
+    },
+    {
+      "source": "contract",
+      "target": "financial_event",
+      "rdfProperty": "lt:hasFinancialEvent",
+      "cardinality": "1:N",
+      "status": "implemented",
+      "label": "Ha eventi finanziari sostenuti da evidenza"
+    },
+    {
+      "source": "publication",
+      "target": "publication_version",
+      "rdfProperty": "lt:hasPublicationVersion",
+      "cardinality": "1:N",
+      "status": "implemented",
+      "label": "Conserva versioni acquisite"
+    },
+    {
+      "source": "publication_version",
+      "target": "act",
+      "rdfProperty": "lt:linksAdministrativeDecision",
+      "cardinality": "N:M",
+      "status": "implemented",
+      "label": "Collega atti tramite evidenza della versione"
+    },
+    {
+      "source": "publication_version",
+      "target": "document",
+      "rdfProperty": "lt:linksDocumentResource",
+      "cardinality": "N:M",
+      "status": "implemented",
+      "label": "Collega documenti tramite evidenza della versione"
+    },
+    {
+      "source": "taxonomy_scheme",
+      "target": "taxonomy",
+      "rdfProperty": "lt:hasTaxonomyConcept",
+      "cardinality": "1:N",
+      "status": "implemented",
+      "label": "Definisce concetti nella versione dello schema"
+    },
+    {
+      "source": "source_record",
+      "target": "classification",
+      "rdfProperty": "lt:hasClassificationOutcome",
+      "cardinality": "1:N",
+      "status": "implemented",
+      "label": "Riceve classificazioni o esiti espliciti"
+    },
+    {
+      "source": "person",
+      "target": "membership",
+      "rdfProperty": "lt:hasInstitutionalMembership",
+      "cardinality": "1:N",
+      "status": "partial",
+      "label": "Partecipa a organi per intervalli documentati"
+    },
+    {
+      "source": "organisation",
+      "target": "membership",
+      "rdfProperty": "lt:hasMemberParticipation",
+      "cardinality": "1:N",
+      "status": "partial",
+      "label": "Ha partecipazioni storicizzate"
+    },
+    {
+      "source": "source",
+      "target": "source_endpoint",
+      "rdfProperty": "lt:hasSourceEndpoint",
+      "cardinality": "1:N",
+      "status": "implemented",
+      "label": "Ha punti di acquisizione qualificati"
+    },
+    {
+      "source": "dataset",
+      "target": "dataset_distribution",
+      "rdfProperty": "lt:hasDatasetDistribution",
+      "cardinality": "1:N",
+      "status": "implemented",
+      "label": "Offre distribuzioni acquisibili"
+    },
+    {
+      "source": "session",
+      "target": "session_intervention",
+      "rdfProperty": "lt:hasSessionIntervention",
+      "cardinality": "1:N",
+      "status": "partial",
+      "label": "Ha interventi documentati nei resoconti"
+    },
+    {
+      "source": "person",
+      "target": "institutional_vote",
+      "rdfProperty": "lt:hasInstitutionalVote",
+      "cardinality": "1:N",
+      "status": "partial",
+      "label": "Ha espressioni di voto documentate"
+    }
+  ]
+}

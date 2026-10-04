@@ -14,10 +14,10 @@
   dct:identifier "lamezia-trasparente-civic-ontology" ;
   dct:title "LameziaTrasparente civic ontology"@en ,
     "Ontologia civica di LameziaTrasparente"@it ;
-  dct:description "A deliberately small local ontology used to give stable semantics to LameziaTrasparente public data while reusing established W3C, EU and Italian public-sector vocabularies. External alignments are intentionally narrower than OWL equivalence unless explicitly stated."@en ;
+  dct:description "Local definitions for every civic concept in the versioned model, retaining legacy API vocabulary. Class coverage does not certify populated tables, complete RDF exports or public-release approval. External alignments remain conservative."@en ;
   dct:issued "2026-09-03"^^xsd:date ;
-  dct:modified "2026-09-03"^^xsd:date ;
-  owl:versionInfo "1.2.0" ;
+  dct:modified "2026-10-04"^^xsd:date ;
+  owl:versionInfo "1.3.0" ;
   rdfs:seeAlso <https://www.w3.org/TR/vocab-dcat-3/> ,
     <https://semiceu.github.io/DCAT-AP/releases/3.0.1/> ,
     <https://www.w3.org/TR/prov-o/> ,
@@ -39,7 +39,7 @@ lt:ValidationShapeGraph a owl:Class ;
 
 lt:AdministrativeAct a owl:Class ;
   rdfs:label "Administrative act"@en , "Atto amministrativo"@it ;
-  rdfs:comment "A public-safe administrative record published by LameziaTrasparente. This class does not imply that every record is legislation or an act with general normative effect."@en ;
+  rdfs:comment "Compatibility class for the legacy public API administrative record. It does not identify a canonical publication event, document resource or administrative decision; those have distinct classes in version 1.3.0."@en ;
   rdfs:subClassOf foaf:Document , prov:Entity .
 
 lt:AdministrativeActTextRepresentation a owl:Class ;
@@ -122,3 +122,655 @@ lt:italianTransparencyReference a owl:ObjectProperty ;
   rdfs:label "Italian transparency ontology reference"@en ;
   rdfs:domain lt:SemanticProfile ;
   rdfs:range rdfs:Resource .
+
+# Generated from architecture/data-domain-registry.v1.json. Run node scripts/semantic/generate-model.mjs --write.
+lt:conceptKey a owl:AnnotationProperty .
+lt:identityRule a owl:AnnotationProperty .
+lt:modelCardinality a owl:AnnotationProperty .
+lt:implementationStatus a owl:AnnotationProperty .
+lt:subjectKind a owl:DatatypeProperty ; rdfs:range xsd:string .
+lt:domainType a owl:DatatypeProperty ; rdfs:range xsd:string .
+lt:publicationVisibility a owl:DatatypeProperty ; rdfs:range xsd:string .
+lt:resolutionStatus a owl:DatatypeProperty ; rdfs:range xsd:string .
+lt:resolvedSubject a owl:ObjectProperty ; rdfs:range lt:CanonicalSubject .
+lt:classificationStatus a owl:DatatypeProperty ; rdfs:range xsd:string .
+lt:assignedConcept a owl:ObjectProperty ; rdfs:range lt:TaxonomyConcept .
+lt:classificationMethod a owl:DatatypeProperty ; rdfs:range xsd:string .
+lt:classificationFacet a owl:DatatypeProperty ; rdfs:range xsd:string .
+lt:publicationPolicyVersion a owl:DatatypeProperty ; rdfs:range xsd:string .
+
+lt:CanonicalSubject a owl:Class ;
+  rdfs:label "Identità canonica"@it ;
+  rdfs:comment "Un riferimento stabile a un soggetto, senza duplicarne gli attributi di dominio."@it ;
+  lt:conceptKey "identity" ;
+  lt:identityRule "UUID e tipo di dominio; non si fonde per somiglianza del nome."@it .
+
+lt:InformationSource a owl:Class ;
+  rdfs:label "Fonte"@it ;
+  rdfs:comment "Il soggetto o sistema che pubblica informazioni."@it ;
+  lt:conceptKey "source" ;
+  lt:identityRule "Codice della fonte; non coincide con il documento acquisito."@it .
+
+lt:SourceArtifact a owl:Class ;
+  rdfs:label "Artefatto"@it ;
+  rdfs:comment "Una sequenza di byte identificata da hash e formato."@it ;
+  lt:conceptKey "artifact" ;
+  lt:identityRule "Identità qualificata da endpoint e hash dei byte nel registro; lo stesso hash può essere acquisito da più fonti e localizzatori."@it .
+
+lt:SourceRelease a owl:Class ;
+  rdfs:label "Versione informativa"@it ;
+  rdfs:comment "Un insieme di dati acquisito a un determinato stato."@it ;
+  lt:conceptKey "release" ;
+  lt:identityRule "Fonte, versione e hash; una nuova versione non sovrascrive la precedente."@it .
+
+lt:SourceRecord a owl:Class ;
+  rdfs:label "Record di fonte"@it ;
+  rdfs:comment "Un'unità informativa di una versione di fonte."@it ;
+  lt:conceptKey "source_record" ;
+  lt:identityRule "Chiave originaria dentro la release; non coincide automaticamente con l'entità descritta."@it .
+
+lt:AcquisitionRun a owl:Class ;
+  rdfs:label "Acquisizione"@it ;
+  rdfs:comment "Un tentativo di acquisire o verificare una fonte."@it ;
+  lt:conceptKey "acquisition" ;
+  lt:identityRule "ID del tentativo ed esito, anche quando non produce nuovi record."@it .
+
+lt:PublicationEvent a owl:Class ;
+  rdfs:label "Pubblicazione"@it ;
+  rdfs:comment "La comparsa di un contenuto in un registro pubblico."@it ;
+  lt:conceptKey "publication" ;
+  lt:identityRule "Fonte e identificativo di pubblicazione, distinti dall'identità dell'atto."@it ;
+  rdfs:subClassOf lt:CanonicalSubject .
+
+lt:DocumentResource a owl:Class ;
+  rdfs:label "Documento"@it ;
+  rdfs:comment "Una risorsa informativa o allegato che descrive un atto o altro soggetto."@it ;
+  lt:conceptKey "document" ;
+  lt:identityRule "Identità documentale distinta da formato, estrazione testuale e pubblicazione."@it ;
+  rdfs:subClassOf lt:CanonicalSubject .
+
+lt:AdministrativeDecision a owl:Class ;
+  rdfs:label "Atto amministrativo"@it ;
+  rdfs:comment "Una decisione o parere formalizzato da un'autorità."@it ;
+  lt:conceptKey "act" ;
+  lt:identityRule "Autorità, ufficio, tipo, numero e data verificati; il titolo da solo non è una chiave."@it ;
+  rdfs:subClassOf lt:CanonicalSubject .
+
+lt:PersonIdentity a owl:Class ;
+  rdfs:label "Persona"@it ;
+  rdfs:comment "Un individuo la cui identità rimane stabile al cambiare della carica."@it ;
+  lt:conceptKey "person" ;
+  lt:identityRule "Identificatori qualificati e risoluzione documentata; mai soltanto il nome."@it .
+
+lt:InstitutionalOrganisation a owl:Class ;
+  rdfs:label "Organizzazione o organo"@it ;
+  rdfs:comment "Un ente o organo istituzionale, con natura e contesto espliciti."@it ;
+  lt:conceptKey "organisation" ;
+  lt:identityRule "Ente, unità e periodo; un organo non è la persona che lo presiede."@it .
+
+lt:InstitutionalRole a owl:Class ;
+  rdfs:label "Incarico o partecipazione"@it ;
+  rdfs:comment "La definizione di una funzione svolta in un contesto istituzionale, distinta dalla sua attribuzione a una persona."@it ;
+  lt:conceptKey "role" ;
+  lt:identityRule "Codice del ruolo e contesto; persona, mandato e appartenenza mantengono identità e intervalli separati."@it .
+
+lt:InstitutionalSession a owl:Class ;
+  rdfs:label "Seduta"@it ;
+  rdfs:comment "Una riunione di un organo con documenti, interventi e voti."@it ;
+  lt:conceptKey "session" ;
+  lt:identityRule "Organo, data e identificativo della fonte; non il singolo verbale."@it .
+
+lt:ProcurementProcedure a owl:Class ;
+  rdfs:label "Procedura di affidamento"@it ;
+  rdfs:comment "Procedimento con cui un’amministrazione seleziona un contraente. Può produrre uno o più contratti."@it ;
+  lt:conceptKey "procurement" ;
+  lt:identityRule "Identificativo qualificato della procedura o del lotto, compreso il CIG dove applicabile; non coincide con il contratto stipulato."@it ;
+  rdfs:subClassOf lt:CanonicalSubject .
+
+lt:PublicProject a owl:Class ;
+  rdfs:label "Progetto pubblico"@it ;
+  rdfs:comment "Un investimento che può essere descritto da più amministrazioni e fonti."@it ;
+  lt:conceptKey "project" ;
+  lt:identityRule "UUIDv7 indipendente dalla fonte. CUP qualificato con fonte, emittente e controllo di formato; record senza identità sufficiente conservano un esito esplicito."@it .
+
+lt:IndicatorDefinition a owl:Class ;
+  rdfs:label "Indicatore"@it ;
+  rdfs:comment "Definizione di ciò che si misura, con unità, metodo e significato. Le serie fissano le dimensioni della misura."@it ;
+  lt:conceptKey "indicator" ;
+  lt:identityRule "Definizione, unità e metodo; non il valore di un anno o una serie territoriale."@it .
+
+lt:StatisticalObservation a owl:Class ;
+  rdfs:label "Osservazione"@it ;
+  rdfs:comment "Il valore di una misura in un luogo, periodo e versione di fonte."@it ;
+  lt:conceptKey "observation" ;
+  lt:identityRule "Serie, release, periodo e dimensioni; zero e dato mancante sono distinti."@it .
+
+lt:PlaceIdentity a owl:Class ;
+  rdfs:label "Luogo"@it ;
+  rdfs:comment "Territorio o luogo identificabile, distinto dalle geometrie che ne rappresentano forma e posizione."@it ;
+  lt:conceptKey "place" ;
+  lt:identityRule "Codice o identificatore geografico qualificato; una coordinata approssimata non è una chiave di identità."@it .
+
+lt:AssetIdentity a owl:Class ;
+  rdfs:label "Bene"@it ;
+  rdfs:comment "Un bene distinto dai provvedimenti che lo riguardano."@it ;
+  lt:conceptKey "asset" ;
+  lt:identityRule "Identificatore del bene; confisca, assegnazione e riuso sono eventi separati."@it .
+
+lt:DocumentedCrimeEvent a owl:Class ;
+  rdfs:label "Evento documentato"@it ;
+  rdfs:comment "Un evento con tempo, luogo, fonti e stato probatorio."@it ;
+  lt:conceptKey "event" ;
+  lt:identityRule "Identità LTCEDS; le fonti possono divergere senza produrre automaticamente nuovi eventi."@it .
+
+lt:EvidenceRecord a owl:Class ;
+  rdfs:label "Evidenza di evento"@it ;
+  rdfs:comment "Una fonte, qualificazione o localizzazione a sostegno di un evento."@it ;
+  lt:conceptKey "evidence" ;
+  lt:identityRule "Evento, fonte, tipo di attestazione e versione; una menzione non prova responsabilità."@it .
+
+lt:DocumentedEventCluster a owl:Class ;
+  rdfs:label "Raggruppamento documentato"@it ;
+  rdfs:comment "Un collegamento esplicito tra eventi sostenuto da fonti."@it ;
+  lt:conceptKey "cluster" ;
+  lt:identityRule "ID del cluster e criterio documentato; non inferire una rete criminale dalla prossimità."@it .
+
+lt:CivicReport a owl:Class ;
+  rdfs:label "Segnalazione civica"@it ;
+  rdfs:comment "Una comunicazione ricevuta e sottoposta a verifica."@it ;
+  lt:conceptKey "report" ;
+  lt:identityRule "ID della segnalazione e storia; non è un fatto accertato."@it .
+
+lt:MonitoringCase a owl:Class ;
+  rdfs:label "Scheda di monitoraggio"@it ;
+  rdfs:comment "Una valutazione curata su un oggetto civico e sulle sue evidenze."@it ;
+  lt:conceptKey "monitoring_case" ;
+  lt:identityRule "Oggetto, autore, versione e stato di revisione; distinta dalla segnalazione ricevuta."@it .
+
+lt:CivicAccessRequest a owl:Class ;
+  rdfs:label "Richiesta di accesso"@it ;
+  rdfs:comment "Un procedimento di accesso civico con istanza, riscontri ed esito."@it ;
+  lt:conceptKey "request" ;
+  lt:identityRule "Identificativo della richiesta e storia del procedimento."@it .
+
+lt:PublicCall a owl:Class ;
+  rdfs:label "Bando o avviso"@it ;
+  rdfs:comment "Un avviso che stabilisce requisiti, scadenze e risorse disponibili."@it ;
+  lt:conceptKey "call" ;
+  lt:identityRule "Ente emittente e identificativo del bando; distinto dalla domanda di partecipazione."@it .
+
+lt:CivicProposal a owl:Class ;
+  rdfs:label "Proposta civica"@it ;
+  rdfs:comment "Una proposta attribuita, con oggetto e stato istituzionale."@it ;
+  lt:conceptKey "proposal" ;
+  lt:identityRule "ID della proposta, fonti e revisioni; categoria tematica distinta dall'entità proposta."@it .
+
+lt:InterventionEvaluation a owl:Class ;
+  rdfs:label "Valutazione di intervento"@it ;
+  rdfs:comment "Valutazione documentata di un intervento, con studio, risultati, limiti e contesto di applicabilità."@it ;
+  lt:conceptKey "evaluation" ;
+  lt:identityRule "Studio e versione della valutazione; più valutazioni possono riguardare lo stesso intervento."@it .
+
+lt:TaxonomyConcept a owl:Class ;
+  rdfs:label "Classificazione"@it ;
+  rdfs:comment "Una categoria o tema usato per organizzare i contenuti."@it ;
+  lt:conceptKey "taxonomy" ;
+  lt:identityRule "Schema e codice stabile; temi civici e categorie di performance sono faccette diverse."@it .
+
+lt:ProcurementContract a owl:Class ;
+  rdfs:label "Contratto pubblico"@it ;
+  rdfs:comment "Accordo stipulato tra un’amministrazione e un contraente nell’ambito di una procedura. Distinto da lotto, aggiudicazione e pagamento."@it ;
+  lt:conceptKey "contract" ;
+  lt:identityRule "Identificativo del contratto qualificato dalla fonte, collegato alla procedura; il CIG non basta a distinguere tutti gli oggetti."@it ;
+  rdfs:subClassOf lt:CanonicalSubject .
+
+lt:ObservationSeries a owl:Class ;
+  rdfs:label "Serie di osservazioni"@it ;
+  rdfs:comment "Insieme di misure dello stesso indicatore a dimensioni definite, per esempio territorio e popolazione di riferimento."@it ;
+  lt:conceptKey "series" ;
+  lt:identityRule "Indicatore e dimensioni della serie; periodi e release distinguono le osservazioni."@it .
+
+lt:GeographicRepresentation a owl:Class ;
+  rdfs:label "Rappresentazione geografica"@it ;
+  rdfs:comment "Geometria o posizione di un luogo, con sistema di riferimento, fonte, versione e precisione."@it ;
+  lt:conceptKey "geometry" ;
+  lt:identityRule "Luogo, fonte e versione della geometria; due geometrie diverse non implicano due luoghi."@it .
+
+lt:PolicyIntervention a owl:Class ;
+  rdfs:label "Intervento di politica pubblica"@it ;
+  rdfs:comment "Azione o strumento di politica pubblica definito per obiettivi e destinatari, che può essere studiato e proposto localmente."@it ;
+  lt:conceptKey "intervention" ;
+  lt:identityRule "Identificativo dell’intervento e della sua versione; distinto da proposta locale e valutazione scientifica."@it .
+
+lt:SourceAssertion a owl:Class ;
+  rdfs:label "Asserzione di fonte"@it ;
+  rdfs:comment "Un contenuto riportato o derivato da una fonte, conservato con valore, posizione e metodo di estrazione."@it ;
+  lt:conceptKey "assertion" ;
+  lt:identityRule "Record di fonte, puntatore al campo e versione dell’estrattore; non richiede un progetto già riconciliato."@it .
+
+lt:ResolutionOutcome a owl:Class ;
+  rdfs:label "Decisione di riconciliazione"@it ;
+  rdfs:comment "Un esito motivato di collegamento di un candidato a un soggetto oppure di mancata risoluzione esplicita."@it ;
+  lt:conceptKey "resolution" ;
+  lt:identityRule "Record, chiave del candidato e versione del risolutore; l’esito non risolto non richiede soggetti sintetici."@it .
+
+lt:QualifiedIdentifier a owl:Class ;
+  rdfs:label "Identificatore qualificato"@it ;
+  rdfs:comment "Un codice attribuito da un sistema o ente emittente a un soggetto."@it ;
+  lt:conceptKey "identifier" ;
+  lt:identityRule "Schema, emittente e valore; un identificatore non coincide con l’oggetto descritto."@it .
+
+lt:ProcurementLot a owl:Class ;
+  rdfs:label "Lotto di procedura"@it ;
+  rdfs:comment "Un lotto di una procedura, distinto dal contratto e dal codice CIG."@it ;
+  lt:conceptKey "lot" ;
+  lt:identityRule "Procedura e numero del lotto; il CIG è un identificatore eventuale."@it ;
+  rdfs:subClassOf lt:CanonicalSubject .
+
+lt:ProcurementMention a owl:Class ;
+  rdfs:label "Menzione di appalto"@it ;
+  rdfs:comment "Un riferimento a un possibile oggetto procurement estratto da una fonte."@it ;
+  lt:conceptKey "procurement_mention" ;
+  lt:identityRule "Record di fonte e puntatore; la menzione non certifica procedura, firma o pagamento."@it .
+
+lt:ProcurementFinancialEvent a owl:Class ;
+  rdfs:label "Evento finanziario"@it ;
+  rdfs:comment "Un evento di importo, valuta, tipo e data riferito a un contratto e sostenuto da evidenza."@it ;
+  lt:conceptKey "financial_event" ;
+  lt:identityRule "UUIDv7 e contratto documentato; pagamento, impegno e storno rimangono distinti."@it ;
+  rdfs:subClassOf lt:CanonicalSubject .
+
+lt:PublicationVersion a owl:Class ;
+  rdfs:label "Versione di pubblicazione"@it ;
+  rdfs:comment "La descrizione immutabile di una pubblicazione in uno specifico record acquisito."@it ;
+  lt:conceptKey "publication_version" ;
+  lt:identityRule "Record di fonte e release; titolo e visibilità non sono identità della pubblicazione."@it .
+
+lt:TaxonomyScheme a owl:Class ;
+  rdfs:label "Schema tassonomico"@it ;
+  rdfs:comment "Una versione immutabile di un vocabolario classificatorio."@it ;
+  lt:conceptKey "taxonomy_scheme" ;
+  lt:identityRule "Chiave dello schema, versione e hash della definizione."@it .
+
+lt:ClassificationAssignment a owl:Class ;
+  rdfs:label "Assegnazione di classificazione"@it ;
+  rdfs:comment "Un concetto assegnato a un record, oppure un esito esplicito di mancata classificazione."@it ;
+  lt:conceptKey "classification" ;
+  lt:identityRule "Record, faccetta e versione del metodo, con schema e versione quando applicabili."@it .
+
+lt:InstitutionalMembership a owl:Class ;
+  rdfs:label "Appartenenza istituzionale"@it ;
+  rdfs:comment "La partecipazione di una persona a un organo per un intervallo documentato."@it ;
+  lt:conceptKey "membership" ;
+  lt:identityRule "Persona, organo, ruolo e intervallo; non coincide con la persona o la definizione del ruolo."@it .
+
+lt:InstitutionalMandate a owl:Class ;
+  rdfs:label "Mandato istituzionale"@it ;
+  rdfs:comment "Un incarico attribuito a una persona nel tempo da un contesto istituzionale."@it ;
+  lt:conceptKey "mandate" ;
+  lt:identityRule "Persona, autorità conferente, tipo di mandato e intervallo documentato."@it .
+
+lt:EvidenceBackedRelation a owl:Class ;
+  rdfs:label "Relazione documentata"@it ;
+  rdfs:comment "Un collegamento tipizzato tra oggetti con provenienza e criterio espliciti."@it ;
+  lt:conceptKey "relation" ;
+  lt:identityRule "Estremi, tipo, fonte e versione; non sostituisce gli attributi dei domini."@it .
+
+lt:PublicProjection a owl:Class ;
+  rdfs:label "Proiezione pubblica"@it ;
+  rdfs:comment "Una rappresentazione minimizzata e governata da una policy di pubblicazione."@it ;
+  lt:conceptKey "public_projection" ;
+  lt:identityRule "Soggetto o record, versione della policy e della proiezione; la classe non concede autorizzazione."@it .
+
+lt:SourceEndpoint a owl:Class ;
+  rdfs:label "Endpoint di fonte"@it ;
+  rdfs:comment "Un punto o canale di acquisizione appartenente a una fonte."@it ;
+  lt:conceptKey "source_endpoint" ;
+  lt:identityRule "Fonte, URL qualificato e versione del canale; non coincide con il publisher o con i byte."@it .
+
+lt:DatasetDefinition a owl:Class ;
+  rdfs:label "Dataset del catalogo"@it ;
+  rdfs:comment "Una raccolta informativa identificata dal publisher e dal catalogo."@it ;
+  lt:conceptKey "dataset" ;
+  lt:identityRule "Catalogo, publisher e identificativo originario; distribuzioni e snapshot sono distinti."@it .
+
+lt:DatasetDistribution a owl:Class ;
+  rdfs:label "Distribuzione di dataset"@it ;
+  rdfs:comment "Una risorsa di accesso a un dataset, che può cambiare contenuto nel tempo."@it ;
+  lt:conceptKey "dataset_distribution" ;
+  lt:identityRule "Dataset e identificativo della distribuzione; URL e artefatto acquisito non sono la stessa identità."@it .
+
+lt:SourceOperationalStatus a owl:Class ;
+  rdfs:label "Stato operativo di fonte"@it ;
+  rdfs:comment "Uno stato sintetico del monitoraggio di una fonte o feed."@it ;
+  lt:conceptKey "source_status" ;
+  lt:identityRule "Feed e stato osservato; non equivale a un tentativo di acquisizione o a copertura completa."@it .
+
+lt:SourceChangeNotification a owl:Class ;
+  rdfs:label "Cambiamento rilevato"@it ;
+  rdfs:comment "Una notifica di cambiamento di fonte da elaborare."@it ;
+  lt:conceptKey "source_change" ;
+  lt:identityRule "Fonte, versione o hash del cambiamento e rilevazione; non coincide con un fatto civico."@it .
+
+lt:InstitutionalActivity a owl:Class ;
+  rdfs:label "Attività istituzionale"@it ;
+  rdfs:comment "Una attività documentata attribuita a una persona in un contesto istituzionale."@it ;
+  lt:conceptKey "institutional_activity" ;
+  lt:identityRule "Persona, fonte, tipo e data dell’attività; non coincide con il ruolo o il mandato."@it .
+
+lt:InstitutionalVote a owl:Class ;
+  rdfs:label "Voto istituzionale"@it ;
+  rdfs:comment "Una espressione di voto attribuita da una fonte a una persona nel contesto di un atto o seduta."@it ;
+  lt:conceptKey "institutional_vote" ;
+  lt:identityRule "Persona, oggetto del voto, fonte e occasione; l’assenza di un voto non indica opposizione."@it .
+
+lt:SessionIntervention a owl:Class ;
+  rdfs:label "Intervento in seduta"@it ;
+  rdfs:comment "Un intervento documentato di un partecipante nel contesto di una seduta o del suo resoconto."@it ;
+  lt:conceptKey "session_intervention" ;
+  lt:identityRule "Resoconto, partecipante, posizione e versione della fonte; distinto dalla carica."@it .
+
+lt:LegacyIdentityMapping a owl:Class ;
+  rdfs:label "Corrispondenza di identità"@it ;
+  rdfs:comment "Una decisione storicizzata che collega una identità precedente a un soggetto canonico."@it ;
+  lt:conceptKey "identity_mapping" ;
+  lt:identityRule "Namespace, tipo e chiave precedente, periodo di validità e decisione; distinto dal soggetto."@it .
+
+lt:FieldValueResolution a owl:Class ;
+  rdfs:label "Scelta di valore di campo"@it ;
+  rdfs:comment "Una scelta documentata di asserzione per un campo, che conserva le alternative e la storia."@it ;
+  lt:conceptKey "field_resolution" ;
+  lt:identityRule "Soggetto, campo, asserzione scelta, regola e intervallo; distinta dalla risoluzione dell’identità."@it .
+
+lt:LocationEvidence a owl:Class ;
+  rdfs:label "Attestazione di localizzazione"@it ;
+  rdfs:comment "Una localizzazione sostenuta da fonte, con ruolo, precisione, confidenza e limite di pubblicazione."@it ;
+  lt:conceptKey "location_evidence" ;
+  lt:identityRule "Evento o soggetto, fonte, ruolo e versione; non crea automaticamente un luogo canonico."@it .
+
+lt:hasSourceRelease a owl:ObjectProperty ;
+  rdfs:label "Pubblica versioni informative"@it ;
+  rdfs:domain lt:InformationSource ;
+  rdfs:range lt:SourceRelease ;
+  lt:modelCardinality "1:N" ;
+  lt:implementationStatus "partial" .
+
+lt:containsSourceRecord a owl:ObjectProperty ;
+  rdfs:label "Contiene record originari"@it ;
+  rdfs:domain lt:SourceRelease ;
+  rdfs:range lt:SourceRecord ;
+  lt:modelCardinality "1:N" ;
+  lt:implementationStatus "implemented" .
+
+lt:hasSourceArtifact a owl:ObjectProperty ;
+  rdfs:label "Conserva i byte acquisiti"@it ;
+  rdfs:domain lt:SourceRelease ;
+  rdfs:range lt:SourceArtifact ;
+  lt:modelCardinality "N:1" ;
+  lt:implementationStatus "implemented" .
+
+lt:hasAcquisitionRun a owl:ObjectProperty ;
+  rdfs:label "È verificata da tentativi di acquisizione"@it ;
+  rdfs:domain lt:InformationSource ;
+  rdfs:range lt:AcquisitionRun ;
+  lt:modelCardinality "1:N" ;
+  lt:implementationStatus "implemented" .
+
+lt:hasProjectResolution a owl:ObjectProperty ;
+  rdfs:label "È riconciliato tramite esiti espliciti; primo perimetro PNRR"@it ;
+  rdfs:domain lt:SourceRecord ;
+  rdfs:range lt:PublicProject ;
+  lt:modelCardinality "N:M" ;
+  lt:implementationStatus "partial" .
+
+lt:publishesAdministrativeDecision a owl:ObjectProperty ;
+  rdfs:label "Pubblica o richiama atti"@it ;
+  rdfs:domain lt:PublicationEvent ;
+  rdfs:range lt:AdministrativeDecision ;
+  lt:modelCardinality "N:M" ;
+  lt:implementationStatus "partial" .
+
+lt:hasDocumentResource a owl:ObjectProperty ;
+  rdfs:label "È documentato da risorse e allegati"@it ;
+  rdfs:domain lt:AdministrativeDecision ;
+  rdfs:range lt:DocumentResource ;
+  lt:modelCardinality "N:M" ;
+  lt:implementationStatus "partial" .
+
+lt:hasInstitutionalRole a owl:ObjectProperty ;
+  rdfs:label "Assume incarichi nel tempo"@it ;
+  rdfs:domain lt:PersonIdentity ;
+  rdfs:range lt:InstitutionalRole ;
+  lt:modelCardinality "1:N" ;
+  lt:implementationStatus "partial" .
+
+lt:providesRoleContext a owl:ObjectProperty ;
+  rdfs:label "È il contesto dell'incarico"@it ;
+  rdfs:domain lt:InstitutionalOrganisation ;
+  rdfs:range lt:InstitutionalRole ;
+  lt:modelCardinality "1:N" ;
+  lt:implementationStatus "partial" .
+
+lt:holdsSession a owl:ObjectProperty ;
+  rdfs:label "Tiene sedute"@it ;
+  rdfs:domain lt:InstitutionalOrganisation ;
+  rdfs:range lt:InstitutionalSession ;
+  lt:modelCardinality "1:N" ;
+  lt:implementationStatus "implemented" .
+
+lt:hasSessionDocument a owl:ObjectProperty ;
+  rdfs:label "Ha resoconti e documenti"@it ;
+  rdfs:domain lt:InstitutionalSession ;
+  rdfs:range lt:DocumentResource ;
+  lt:modelCardinality "1:N" ;
+  lt:implementationStatus "partial" .
+
+lt:contributesToProject a owl:ObjectProperty ;
+  rdfs:label "Contribuisce alla realizzazione di progetti"@it ;
+  rdfs:domain lt:ProcurementProcedure ;
+  rdfs:range lt:PublicProject ;
+  lt:modelCardinality "N:M" ;
+  lt:implementationStatus "target" .
+
+lt:hasIndicatorObservation a owl:ObjectProperty ;
+  rdfs:label "Definisce valori osservati"@it ;
+  rdfs:domain lt:IndicatorDefinition ;
+  rdfs:range lt:StatisticalObservation ;
+  lt:modelCardinality "1:N" ;
+  lt:implementationStatus "partial" .
+
+lt:hasReleaseObservation a owl:ObjectProperty ;
+  rdfs:label "Documenta la versione dell'osservazione"@it ;
+  rdfs:domain lt:SourceRelease ;
+  rdfs:range lt:StatisticalObservation ;
+  lt:modelCardinality "1:N" ;
+  lt:implementationStatus "partial" .
+
+lt:hasEventEvidence a owl:ObjectProperty ;
+  rdfs:label "È sostenuto da attestazioni"@it ;
+  rdfs:domain lt:DocumentedCrimeEvent ;
+  rdfs:range lt:EvidenceRecord ;
+  lt:modelCardinality "1:N" ;
+  lt:implementationStatus "implemented" .
+
+lt:hasEventLocation a owl:ObjectProperty ;
+  rdfs:label "è localizzato in"@it ;
+  rdfs:domain lt:DocumentedCrimeEvent ;
+  rdfs:range lt:LocationEvidence ;
+  lt:modelCardinality "N:M" ;
+  lt:implementationStatus "partial" .
+
+lt:informsMonitoringCase a owl:ObjectProperty ;
+  rdfs:label "Può alimentare una analisi verificata"@it ;
+  rdfs:domain lt:CivicReport ;
+  rdfs:range lt:MonitoringCase ;
+  lt:modelCardinality "N:M" ;
+  lt:implementationStatus "target" .
+
+lt:refersToEvaluation a owl:ObjectProperty ;
+  rdfs:label "Può richiamare interventi valutati"@it ;
+  rdfs:domain lt:CivicProposal ;
+  rdfs:range lt:InterventionEvaluation ;
+  lt:modelCardinality "N:M" ;
+  lt:implementationStatus "target" .
+
+lt:producesContract a owl:ObjectProperty ;
+  rdfs:label "può produrre"@it ;
+  rdfs:domain lt:ProcurementProcedure ;
+  rdfs:range lt:ProcurementContract ;
+  lt:modelCardinality "1:N" ;
+  lt:implementationStatus "partial" .
+
+lt:hasObservationSeries a owl:ObjectProperty ;
+  rdfs:label "è misurato da"@it ;
+  rdfs:domain lt:IndicatorDefinition ;
+  rdfs:range lt:ObservationSeries ;
+  lt:modelCardinality "1:N" ;
+  lt:implementationStatus "target" .
+
+lt:hasSeriesObservation a owl:ObjectProperty ;
+  rdfs:label "raccoglie"@it ;
+  rdfs:domain lt:ObservationSeries ;
+  rdfs:range lt:StatisticalObservation ;
+  lt:modelCardinality "1:N" ;
+  lt:implementationStatus "implemented" .
+
+lt:hasGeographicRepresentation a owl:ObjectProperty ;
+  rdfs:label "ha rappresentazioni"@it ;
+  rdfs:domain lt:PlaceIdentity ;
+  rdfs:range lt:GeographicRepresentation ;
+  lt:modelCardinality "1:N" ;
+  lt:implementationStatus "partial" .
+
+lt:hasInterventionEvaluation a owl:ObjectProperty ;
+  rdfs:label "è oggetto di"@it ;
+  rdfs:domain lt:PolicyIntervention ;
+  rdfs:range lt:InterventionEvaluation ;
+  lt:modelCardinality "1:N" ;
+  lt:implementationStatus "target" .
+
+lt:hasSourceAssertion a owl:ObjectProperty ;
+  rdfs:label "Conserva le asserzioni estratte"@it ;
+  rdfs:domain lt:SourceRecord ;
+  rdfs:range lt:SourceAssertion ;
+  lt:modelCardinality "1:N" ;
+  lt:implementationStatus "implemented" .
+
+lt:hasAssertionResolution a owl:ObjectProperty ;
+  rdfs:label "Documenta le decisioni"@it ;
+  rdfs:domain lt:SourceAssertion ;
+  rdfs:range lt:ResolutionOutcome ;
+  lt:modelCardinality "1:N" ;
+  lt:implementationStatus "implemented" .
+
+lt:hasProjectIdentifier a owl:ObjectProperty ;
+  rdfs:label "È riconosciuto da codici qualificati"@it ;
+  rdfs:domain lt:PublicProject ;
+  rdfs:range lt:QualifiedIdentifier ;
+  lt:modelCardinality "1:N" ;
+  lt:implementationStatus "implemented" .
+
+lt:hasProjectFieldResolution a owl:ObjectProperty ;
+  rdfs:label "Mantiene scelte e varianti dei campi"@it ;
+  rdfs:domain lt:PublicProject ;
+  rdfs:range lt:FieldValueResolution ;
+  lt:modelCardinality "1:N" ;
+  lt:implementationStatus "implemented" .
+
+lt:hasProcurementLot a owl:ObjectProperty ;
+  rdfs:label "Contiene lotti documentati"@it ;
+  rdfs:domain lt:ProcurementProcedure ;
+  rdfs:range lt:ProcurementLot ;
+  lt:modelCardinality "1:N" ;
+  lt:implementationStatus "implemented" .
+
+lt:hasLotContract a owl:ObjectProperty ;
+  rdfs:label "Può avere contratti documentati"@it ;
+  rdfs:domain lt:ProcurementLot ;
+  rdfs:range lt:ProcurementContract ;
+  lt:modelCardinality "1:N" ;
+  lt:implementationStatus "implemented" .
+
+lt:hasFinancialEvent a owl:ObjectProperty ;
+  rdfs:label "Ha eventi finanziari sostenuti da evidenza"@it ;
+  rdfs:domain lt:ProcurementContract ;
+  rdfs:range lt:ProcurementFinancialEvent ;
+  lt:modelCardinality "1:N" ;
+  lt:implementationStatus "implemented" .
+
+lt:hasPublicationVersion a owl:ObjectProperty ;
+  rdfs:label "Conserva versioni acquisite"@it ;
+  rdfs:domain lt:PublicationEvent ;
+  rdfs:range lt:PublicationVersion ;
+  lt:modelCardinality "1:N" ;
+  lt:implementationStatus "implemented" .
+
+lt:linksAdministrativeDecision a owl:ObjectProperty ;
+  rdfs:label "Collega atti tramite evidenza della versione"@it ;
+  rdfs:domain lt:PublicationVersion ;
+  rdfs:range lt:AdministrativeDecision ;
+  lt:modelCardinality "N:M" ;
+  lt:implementationStatus "implemented" .
+
+lt:linksDocumentResource a owl:ObjectProperty ;
+  rdfs:label "Collega documenti tramite evidenza della versione"@it ;
+  rdfs:domain lt:PublicationVersion ;
+  rdfs:range lt:DocumentResource ;
+  lt:modelCardinality "N:M" ;
+  lt:implementationStatus "implemented" .
+
+lt:hasTaxonomyConcept a owl:ObjectProperty ;
+  rdfs:label "Definisce concetti nella versione dello schema"@it ;
+  rdfs:domain lt:TaxonomyScheme ;
+  rdfs:range lt:TaxonomyConcept ;
+  lt:modelCardinality "1:N" ;
+  lt:implementationStatus "implemented" .
+
+lt:hasClassificationOutcome a owl:ObjectProperty ;
+  rdfs:label "Riceve classificazioni o esiti espliciti"@it ;
+  rdfs:domain lt:SourceRecord ;
+  rdfs:range lt:ClassificationAssignment ;
+  lt:modelCardinality "1:N" ;
+  lt:implementationStatus "implemented" .
+
+lt:hasInstitutionalMembership a owl:ObjectProperty ;
+  rdfs:label "Partecipa a organi per intervalli documentati"@it ;
+  rdfs:domain lt:PersonIdentity ;
+  rdfs:range lt:InstitutionalMembership ;
+  lt:modelCardinality "1:N" ;
+  lt:implementationStatus "partial" .
+
+lt:hasMemberParticipation a owl:ObjectProperty ;
+  rdfs:label "Ha partecipazioni storicizzate"@it ;
+  rdfs:domain lt:InstitutionalOrganisation ;
+  rdfs:range lt:InstitutionalMembership ;
+  lt:modelCardinality "1:N" ;
+  lt:implementationStatus "partial" .
+
+lt:hasSourceEndpoint a owl:ObjectProperty ;
+  rdfs:label "Ha punti di acquisizione qualificati"@it ;
+  rdfs:domain lt:InformationSource ;
+  rdfs:range lt:SourceEndpoint ;
+  lt:modelCardinality "1:N" ;
+  lt:implementationStatus "implemented" .
+
+lt:hasDatasetDistribution a owl:ObjectProperty ;
+  rdfs:label "Offre distribuzioni acquisibili"@it ;
+  rdfs:domain lt:DatasetDefinition ;
+  rdfs:range lt:DatasetDistribution ;
+  lt:modelCardinality "1:N" ;
+  lt:implementationStatus "implemented" .
+
+lt:hasSessionIntervention a owl:ObjectProperty ;
+  rdfs:label "Ha interventi documentati nei resoconti"@it ;
+  rdfs:domain lt:InstitutionalSession ;
+  rdfs:range lt:SessionIntervention ;
+  lt:modelCardinality "1:N" ;
+  lt:implementationStatus "partial" .
+
+lt:hasInstitutionalVote a owl:ObjectProperty ;
+  rdfs:label "Ha espressioni di voto documentate"@it ;
+  rdfs:domain lt:PersonIdentity ;
+  rdfs:range lt:InstitutionalVote ;
+  lt:modelCardinality "1:N" ;
+  lt:implementationStatus "partial" .

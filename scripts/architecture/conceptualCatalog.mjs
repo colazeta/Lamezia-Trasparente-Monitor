@@ -2,6 +2,10 @@ import { readFile, access, readdir } from "node:fs/promises";
 import path from "node:path";
 import ts from "typescript";
 import { checkConceptualProjections } from "./renderConceptualCatalog.mjs";
+import {
+  checkSemanticProjections,
+  validateSemanticModel,
+} from "../semantic/generate-model.mjs";
 
 export function routerPaths(source) {
   const file = ts.createSourceFile(
@@ -72,6 +76,7 @@ export function validateConceptualCatalog(
   unique(model.overlaps, "overlap decision");
   const kinds = new Set([
     "entity",
+    "event",
     "source",
     "relation",
     "projection",
@@ -192,6 +197,7 @@ export async function checkConceptualCatalog(root, registry, tableNames) {
     routes,
     classes,
   );
+  problems.push(...validateSemanticModel(model));
   for (const file of new Set(model.siteSections.flatMap((s) => s.evidence))) {
     if (file.startsWith("/") || file.split("/").includes("..")) {
       problems.push(`unsafe evidence path: ${file}`);
@@ -206,4 +212,5 @@ export async function checkConceptualCatalog(root, registry, tableNames) {
   if (problems.length)
     throw new Error(`Conceptual catalog: ${problems.join("; ")}`);
   await checkConceptualProjections(root, model);
+  await checkSemanticProjections(root, model);
 }
