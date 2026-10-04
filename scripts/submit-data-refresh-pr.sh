@@ -9,6 +9,13 @@ case "$kind" in albo|pnrr|anac) ;; *) echo "Unsupported refresh kind" >&2; exit 
 : "${GITHUB_REPOSITORY:?Repository required}"
 : "${GITHUB_RUN_ID:?Workflow run required}"
 
+for snapshot_path in "$@"; do
+  case "$kind:$snapshot_path" in
+    albo:data/public/albo|albo:data/public/albo/*|pnrr:artifacts/lamezia-trasparente/src/data/generated/lameziaPnrrProjects.json|anac:data/public/contracts/anac-bdncp/latest.json|anac:data/public/contracts/anac-authority/latest.json) ;;
+    *) echo "Unexpected refresh path: $snapshot_path" >&2; exit 1 ;;
+  esac
+done
+
 git add -- "$@"
 if git diff --cached --quiet; then
   echo "No $kind snapshot changes to propose."
@@ -51,6 +58,11 @@ pr_number="${pr_url##*/}"
 gh workflow run ci.yml --repo "$GITHUB_REPOSITORY" --ref "$branch"
 gh workflow run hook-guard.yml --repo "$GITHUB_REPOSITORY" --ref "$branch" -f "pr_number=$pr_number"
 gh workflow run v0-static-fallback-smoke.yml --repo "$GITHUB_REPOSITORY" --ref "$branch"
+# These are the data/* families already eligible under trusted-auto-merge.
+# GitHub still enforces all checks and any applicable required review.
+if ! gh pr merge "$pr_number" --repo "$GITHUB_REPOSITORY" --auto --squash; then
+  echo "::warning::Auto-merge could not be armed; proposal remains open for review: $pr_url"
+fi
 if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
   printf '### Snapshot proposed, not published\n\nPR: %s\n\nMerge and deployment verification remain required.\n' "$pr_url" >> "$GITHUB_STEP_SUMMARY"
 fi
