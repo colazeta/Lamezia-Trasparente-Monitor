@@ -53,6 +53,15 @@ conservati. Il clone di verifica ha eseguito due riconciliazioni idempotenti;
 il test PostgreSQL/PGlite applica la catena completa e prova rollback reale,
 FK qualificate, prove appartenenti al medesimo record e privacy.
 
+La migrazione additiva `0025_qualified_project_identity` impone anche ai progetti
+PNRR la coppia `entity / project.project` mediante FK qualificata e check.
+Prima della migrazione, la query produttiva ha rilevato 30 progetti e zero
+identità incompatibili. Il clone di verifica ha applicato le quattro istruzioni generate: 30 progetti
+compatibili, entrambi i nuovi vincoli validati. Il test PostgreSQL rifiuta
+identità di altri domini o eventi al posto di progetti, accetta il progetto
+corretto e rifiuta cambiamenti di tipo. Il controllo di scrittura esistente
+resta attivo.
+
 ## Verifica riproducibile
 
 ```sh
@@ -66,11 +75,11 @@ pnpm run build
 
 Il validatore Python usa le dipendenze versionate in
 `scripts/semantic/requirements.txt` e non richiede rete. Una fixture sintetica
-per ogni classe primaria supera SHACL; 125 mutazioni deliberate vengono
+per ogni classe primaria supera SHACL; 126 mutazioni deliberate vengono
 rifiutate, oltre al difetto di provenienza sulla fixture API precedente.
 La validazione riguarda gli invarianti minimi RDF, non sostituisce tutti i
 vincoli SQL o la revisione editoriale. La CI verifica anche la corrispondenza
-del modello generato e il test DB confronta tipi di soggetto e domini con lo
+del modello generato e il test DB confronta otto coppie qualificate di tipo di soggetto e dominio con lo
 schema runtime.
 
 ## Lavoro ancora aperto

@@ -339,7 +339,9 @@ lt:ProcurementProcedureModelShape a sh:NodeShape ;
 lt:PublicProjectModelShape a sh:NodeShape ;
   sh:targetClass lt:PublicProject ;
   sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
-  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] ;
+  sh:property [ sh:path lt:subjectKind ; sh:hasValue "entity" ] ;
+  sh:property [ sh:path lt:domainType ; sh:hasValue "project.project" ] .
 
 lt:IndicatorDefinitionModelShape a sh:NodeShape ;
   sh:targetClass lt:IndicatorDefinition ;

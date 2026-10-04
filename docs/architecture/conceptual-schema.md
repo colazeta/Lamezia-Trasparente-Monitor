@@ -81,7 +81,7 @@ Le cardinalità nel catalogo sono massime; l’assenza di un collegamento resta 
 
 ## Decisioni fisiche e passaggio graduale
 
-L’aggiornamento PNRR aggiunge cinque tabelle con migrazioni `0021` e `0022`; l’aggiornamento Albo aggiunge identità qualificate e quattordici tabelle con `0023` e `0024`. Tutte e 25 le migrazioni versionate sono applicate in produzione al controllo del 4 ottobre. I tipi, gli indici e le FK restano ispezionabili; le 89 tabelle non sono sostituite da una tabella generica di attributi.
+L’aggiornamento PNRR aggiunge cinque tabelle con migrazioni `0021` e `0022`; l’aggiornamento Albo aggiunge identità qualificate e quattordici tabelle con `0023` e `0024`. Il deploy Albo del 4 ottobre ha verificato 25/25 migrazioni applicate. La successiva `0025` aggiunge i vincoli qualificati `entity / project.project` ai progetti esistenti; prima della migrazione, i 30 progetti produttivi risultano compatibili. I tipi, gli indici e le FK restano ispezionabili; le 89 tabelle non sono sostituite da una tabella generica di attributi.
 
 Per le successive migrazioni: aggiungere prima strutture tipizzate e ponti verso l’identità esistente; eseguire backfill idempotenti con record irrisolti espliciti; riconciliare conteggi e campi per fonte/versione; verificare le letture API; infine convertire i vecchi modelli in proiezioni di compatibilità. La dismissione richiede assenza di scritture legacy e nessuna perdita di evidenza. Non rinominare tabelle solo per farle assomigliare al menu.
 

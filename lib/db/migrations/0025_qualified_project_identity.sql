@@ -1,0 +1,4 @@
+ALTER TABLE "project_projects" ADD COLUMN "subject_kind" text DEFAULT 'entity' NOT NULL;--> statement-breakpoint
+ALTER TABLE "project_projects" ADD COLUMN "domain_type" text DEFAULT 'project.project' NOT NULL;--> statement-breakpoint
+ALTER TABLE "project_projects" ADD CONSTRAINT "project_projects_typed_subject_fk" FOREIGN KEY ("id","subject_kind","domain_type") REFERENCES "public"."canonical_subjects"("subject_id","subject_kind","domain_type") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "project_projects" ADD CONSTRAINT "project_projects_typed_kind" CHECK ("project_projects"."subject_kind" = 'entity' AND "project_projects"."domain_type" = 'project.project');

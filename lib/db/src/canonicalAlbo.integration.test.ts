@@ -202,6 +202,36 @@ test("PostgreSQL migrations, real-source reconciliation, idempotence, provenance
             ),
           /document_publication_typed_subject_fk/,
         );
+        await assert.rejects(
+          () => db.query("INSERT INTO project_projects(id) VALUES ($1)", [id]),
+          /project_projects_typed_subject_fk/,
+        );
+        const eventId = generateCanonicalUuidV7();
+        await db.query(
+          "INSERT INTO canonical_subjects(subject_id,subject_kind,domain_type) VALUES ($1,'event','project.project')",
+          [eventId],
+        );
+        await assert.rejects(
+          () =>
+            db.query("INSERT INTO project_projects(id) VALUES ($1)", [eventId]),
+          /project_projects_typed_subject_fk/,
+        );
+        const projectId = generateCanonicalUuidV7();
+        await db.query(
+          "INSERT INTO canonical_subjects(subject_id,subject_kind,domain_type) VALUES ($1,'entity','project.project')",
+          [projectId],
+        );
+        await db.query("INSERT INTO project_projects(id) VALUES ($1)", [
+          projectId,
+        ]);
+        await assert.rejects(
+          () =>
+            db.query(
+              "UPDATE project_projects SET subject_kind='event' WHERE id=$1",
+              [projectId],
+            ),
+          /project_projects_typed_kind/,
+        );
       },
     );
     await t.test(

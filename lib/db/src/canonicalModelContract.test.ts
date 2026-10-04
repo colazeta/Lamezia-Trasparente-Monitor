@@ -60,5 +60,5 @@ test("RDF qualified identities agree with the actual database subject kind and d
     assert.equal(columns.id.primary, true, getTableName(table));
     qualified++;
   }
-  assert.equal(qualified, 7);
+  assert.equal(qualified, 8);
 });

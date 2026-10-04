@@ -375,9 +375,13 @@
         ],
         "rdfClass": "lt:PublicProject",
         "rdfValidation": {
-          "provenanceRequired": true
+          "provenanceRequired": true,
+          "subjectKind": "entity",
+          "domainType": "project.project"
         },
-        "rdfParents": []
+        "rdfParents": [
+          "lt:CanonicalSubject"
+        ]
       },
       {
         "id": "indicator",

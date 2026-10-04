@@ -166,9 +166,13 @@
       "definition": "Un investimento che può essere descritto da più amministrazioni e fonti.",
       "identityRule": "UUIDv7 indipendente dalla fonte. CUP qualificato con fonte, emittente e controllo di formato; record senza identità sufficiente conservano un esito esplicito.",
       "validation": {
-        "provenanceRequired": true
+        "provenanceRequired": true,
+        "subjectKind": "entity",
+        "domainType": "project.project"
       },
-      "parents": []
+      "parents": [
+        "lt:CanonicalSubject"
+      ]
     },
     {
       "id": "indicator",
