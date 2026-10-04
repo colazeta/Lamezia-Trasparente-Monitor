@@ -721,3 +721,17 @@ function publicRecord({ id, subject }) {
     public_visibility: "publishable",
   };
 }
+
+ test("current Albo snapshots cannot reintroduce a revoked PDF", () => {
+  const record = {...publicRecord({id: "albo-current", subject: "PNRR intervento"}), archived_document: {storage_path: "revoked.pdf", content_type: "application/pdf", size_bytes: 42}};
+  const args = {currentSources: [{items: [record]}], officialProjectCups: [], documentManifest: {documents: []}};
+  const denied = buildAlboEvidenceArchive(args)[0];
+  assert.equal(denied.archived_path, null);
+  assert.equal(denied.document_content_type, null);
+  assert.equal(denied.document_size_bytes, null);
+  assert.equal(denied.subject, record.subject);
+  const allowed = buildAlboEvidenceArchive({...args, reviewedDocumentAllowlist: {documents: [{storage_path: "revoked.pdf"}]}})[0];
+  assert.equal(allowed.archived_path, "revoked.pdf");
+  assert.notEqual(allowed.evidence_hash, denied.evidence_hash);
+  assert.equal(record.archived_document.storage_path, "revoked.pdf");
+});

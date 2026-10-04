@@ -125,6 +125,7 @@ async function fetchText(url, label, method = "GET") {
     method,
     headers: { "cache-control": "no-cache", pragma: "no-cache" },
     redirect: "follow",
+    signal: AbortSignal.timeout(30_000),
   });
   if (!response.ok) {
     throw new Error(`${label} returned HTTP ${response.status}: ${response.url}`);
@@ -142,6 +143,7 @@ async function fetchProbe(url, label) {
     method: "HEAD",
     headers: { "cache-control": "no-cache", pragma: "no-cache" },
     redirect: "follow",
+    signal: AbortSignal.timeout(30_000),
   });
   if (response.status >= 500 && response.status !== 503) {
     throw new Error(`${label} returned HTTP ${response.status}: ${response.url}`);
@@ -174,7 +176,7 @@ async function fetchGitHubJson(path, label) {
     "x-github-api-version": "2022-11-28",
   };
   if (token) headers.authorization = `Bearer ${token}`;
-  const response = await fetch(`https://api.github.com${path}`, { headers });
+  const response = await fetch(`https://api.github.com${path}`, { headers, signal: AbortSignal.timeout(30_000) });
   if (!response.ok) {
     throw new Error(`${label} returned HTTP ${response.status}: ${response.url}`);
   }
