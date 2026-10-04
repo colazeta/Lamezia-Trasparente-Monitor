@@ -15,6 +15,16 @@ export const digest = async (text) =>
   createHash("sha256").update(text).digest("hex");
 
 export function checkCivicPublicSupport(snapshot, support) {
+  const counts = support.documentsManifest.counts;
+  if (
+    counts.archived !== support.documentsManifest.documents.length ||
+    counts.archived +
+      counts.skipped +
+      counts.excluded +
+      counts.human_review_required !==
+      counts.considered
+  )
+    throw new Error("CIVIC_SUPPORT_DOCUMENT_COUNTS_MISMATCH");
   if (
     support.schema_version !== "canonical-albo-public-support.v1" ||
     support.body_hash !== snapshot.body_hash
