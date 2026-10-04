@@ -34,11 +34,19 @@ test("refresh proposes a branch and dispatches checks without changing protected
     assert.match(git("ls-remote", "origin", "refs/heads/main"), new RegExp(`^${base}\\s`));
     assert.equal(git("branch", "--show-current"), "data/refresh-albo-42-1");
     const calls = readFileSync(log, "utf8").trim().split("\n");
-    assert.equal(calls.length, 4);
-    assert.match(calls[0], /pr create.*--base main.*--head data\/refresh-albo-42-1/);
-    assert.match(calls[1], /workflow run ci.yml.*--ref data\/refresh-albo-42-1/);
-    assert.match(calls[2], /workflow run hook-guard.yml.*pr_number=123/);
-    assert.match(calls[3], /workflow run v0-static-fallback-smoke.yml/);
+    assert.equal(calls.length, 5);
+    assert.match(calls[0], /pr list.*data\/refresh-albo-/);
+    assert.match(calls[1], /pr create.*--base main.*--head data\/refresh-albo-42-1/);
+    assert.match(calls[2], /workflow run ci.yml.*--ref data\/refresh-albo-42-1/);
+    assert.match(calls[3], /workflow run hook-guard.yml.*pr_number=123/);
+    assert.match(calls[4], /workflow run v0-static-fallback-smoke.yml/);
+    git("switch", "main");
+    writeFileSync(path.join(cwd, "snapshot.json"), '{"another":true}\n');
+    writeFileSync(path.join(bin, "gh"), '#!/bin/sh\necho "https://github.com/test/project/pull/123"\n', { mode: 0o755 });
+    const pending = execFileSync("bash", [script, "albo", "Refresh", "snapshot.json"], { cwd, env, encoding: "utf8" });
+    assert.match(pending, /No new PR/);
+    assert.equal(git("branch", "--show-current"), "main");
+    assert.equal(git("rev-parse", "HEAD"), base);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }

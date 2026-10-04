@@ -14,6 +14,16 @@ if git diff --cached --quiet; then
   echo "No $kind snapshot changes to propose."
   exit 0
 fi
+# One pending proposal per source family bounds the queue during review.
+# Do not overwrite a reviewed head; the next run reacquires after merge.
+pending_url="$(gh pr list --repo "$GITHUB_REPOSITORY" --state open --json headRefName,url --jq ".[] | select(.headRefName | startswith(\"data/refresh-${kind}-\")) | .url" | head -n 1)"
+if [[ -n "$pending_url" ]]; then
+  echo "::notice::Pending $kind proposal: $pending_url. No new PR; source will be reacquired after review."
+  if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
+    printf '### Refresh awaiting review\n\nPending PR: %s\n\nNo new snapshot was published.\n' "$pending_url" >> "$GITHUB_STEP_SUMMARY"
+  fi
+  exit 0
+fi
 git config user.name "github-actions[bot]"
 git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 branch="data/refresh-${kind}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT:-1}"

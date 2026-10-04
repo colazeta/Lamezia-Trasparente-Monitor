@@ -45,3 +45,12 @@ Baseline ispezionata: `main` **7ca8fd605e46cc6d6bd7fe44595fe495a2a9541e**. La pr
 6. Review editoriale delle route critiche e QA mobile/accessibilità dei flussi effettivamente disponibili. Nessuna attestazione umana fittizia.
 
 Le condizioni aperte restano nel ledger #1649. Il codice può essere revisionato e integrato senza dichiarare conclusa la maturazione dell'intero progetto.
+
+## Verifiche aggiuntive sul candidato
+
+- Root typecheck finale riuscito; build web e smoke del bundle finale riusciti.
+- Suite API: 13 file, 80 test passati.
+- Suite DB sul feed committato, eseguita con `node --import tsx --test`: 45 passati, zero skipped. Il vincolo sugli input Git è conservato.
+- Browser live `/statistiche/`: la baseline mostra effettivamente quattro KPI a zero e zero pubblicazioni quando i dati non sono disponibili, confermando il difetto corretto a componenti.
+- La coda di refresh è limitata a una proposta aperta per famiglia; un ciclo non sovrascrive una PR già in review e non ne apre altre sovrapposte. Il test copre anche questo caso. Dopo merge, il ciclo successivo riacquisisce la fonte.
+- Primo head remoto `510b343c4c508ad76bd4f633eb602e791ff28220`: gate PNRR, hook guard e zero-cost policy riusciti; CI/smoke generali ancora in corso al momento di questo aggiornamento. Fare riferimento allo stato dell'ultimo head della PR #1650 per il risultato definitivo.
