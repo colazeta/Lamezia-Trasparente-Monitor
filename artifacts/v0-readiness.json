@@ -1,16 +1,16 @@
 {
   "schemaVersion": "v0-readiness/1",
-  "generatedAt": "2026-07-07T19:04:57.973Z",
+  "generatedAt": "2026-10-04T05:56:56.647Z",
   "outcome": "GO_WITH_LIMITS",
   "counts": {
     "P0": 0,
-    "P1": 22,
-    "P2": 4,
+    "P1": 23,
+    "P2": 3,
     "INFO": 4
   },
-  "reportPath": "docs\\launch-v0\\current-readiness.md",
-  "routeContractPath": "docs\\launch-v0\\v0-routes.json",
-  "uxCopyGatePath": "docs\\launch-v0\\ux-copy-readiness-gate.md",
+  "reportPath": "docs/launch-v0/current-readiness.md",
+  "routeContractPath": "docs/launch-v0/v0-routes.json",
+  "uxCopyGatePath": "docs/launch-v0/ux-copy-readiness-gate.md",
   "routeResults": [
     {
       "path": "/",
@@ -231,7 +231,7 @@
         },
         {
           "name": "reserved preview fallback",
-          "result": "PASS"
+          "result": "WARN"
         },
         {
           "name": "error-boundary policy documented",
@@ -378,7 +378,7 @@
       "code": "manual-ux-copy-gate",
       "route": "/",
       "message": "/ richiede QA comunicativa: label pubblica, stato v0, CTA, empty state e linguaggio prudente.",
-      "action": "Eseguire la checklist docs\\launch-v0\\ux-copy-readiness-gate.md prima della pubblicazione."
+      "action": "Eseguire la checklist docs/launch-v0/ux-copy-readiness-gate.md prima della pubblicazione."
     },
     {
       "severity": "P1",
@@ -392,7 +392,7 @@
       "code": "manual-ux-copy-gate",
       "route": "/convocazioni",
       "message": "/convocazioni richiede QA comunicativa: label pubblica, stato v0, CTA, empty state e linguaggio prudente.",
-      "action": "Eseguire la checklist docs\\launch-v0\\ux-copy-readiness-gate.md prima della pubblicazione."
+      "action": "Eseguire la checklist docs/launch-v0/ux-copy-readiness-gate.md prima della pubblicazione."
     },
     {
       "severity": "P1",
@@ -406,7 +406,7 @@
       "code": "manual-ux-copy-gate",
       "route": "/convocazioni/demo-consiglio-comunale-v0",
       "message": "/convocazioni/demo-consiglio-comunale-v0 richiede QA comunicativa: label pubblica, stato v0, CTA, empty state e linguaggio prudente.",
-      "action": "Eseguire la checklist docs\\launch-v0\\ux-copy-readiness-gate.md prima della pubblicazione."
+      "action": "Eseguire la checklist docs/launch-v0/ux-copy-readiness-gate.md prima della pubblicazione."
     },
     {
       "severity": "P1",
@@ -420,7 +420,7 @@
       "code": "manual-ux-copy-gate",
       "route": "/contratti",
       "message": "/contratti richiede QA comunicativa: label pubblica, stato v0, CTA, empty state e linguaggio prudente.",
-      "action": "Eseguire la checklist docs\\launch-v0\\ux-copy-readiness-gate.md prima della pubblicazione."
+      "action": "Eseguire la checklist docs/launch-v0/ux-copy-readiness-gate.md prima della pubblicazione."
     },
     {
       "severity": "P1",
@@ -434,7 +434,7 @@
       "code": "manual-ux-copy-gate",
       "route": "/organi",
       "message": "/organi richiede QA comunicativa: label pubblica, stato v0, CTA, empty state e linguaggio prudente.",
-      "action": "Eseguire la checklist docs\\launch-v0\\ux-copy-readiness-gate.md prima della pubblicazione."
+      "action": "Eseguire la checklist docs/launch-v0/ux-copy-readiness-gate.md prima della pubblicazione."
     },
     {
       "severity": "P1",
@@ -448,7 +448,7 @@
       "code": "manual-ux-copy-gate",
       "route": "/amministratori",
       "message": "/amministratori richiede QA comunicativa: label pubblica, stato v0, CTA, empty state e linguaggio prudente.",
-      "action": "Eseguire la checklist docs\\launch-v0\\ux-copy-readiness-gate.md prima della pubblicazione."
+      "action": "Eseguire la checklist docs/launch-v0/ux-copy-readiness-gate.md prima della pubblicazione."
     },
     {
       "severity": "P1",
@@ -462,7 +462,14 @@
       "code": "manual-ux-copy-gate",
       "route": "/pnrr",
       "message": "/pnrr richiede QA comunicativa: label pubblica, stato v0, CTA, empty state e linguaggio prudente.",
-      "action": "Eseguire la checklist docs\\launch-v0\\ux-copy-readiness-gate.md prima della pubblicazione."
+      "action": "Eseguire la checklist docs/launch-v0/ux-copy-readiness-gate.md prima della pubblicazione."
+    },
+    {
+      "severity": "P1",
+      "code": "reserved-route-public-risk",
+      "route": "/redazione",
+      "message": "/redazione richiede verifica: fallback riservato non rilevato.",
+      "action": "Verificare che la preview pubblica non esponga contenuti ordinari."
     },
     {
       "severity": "P1",
@@ -476,7 +483,7 @@
       "code": "manual-ux-copy-gate",
       "route": "/redazione",
       "message": "/redazione richiede QA comunicativa: label pubblica, stato v0, CTA, empty state e linguaggio prudente.",
-      "action": "Eseguire la checklist docs\\launch-v0\\ux-copy-readiness-gate.md prima della pubblicazione."
+      "action": "Eseguire la checklist docs/launch-v0/ux-copy-readiness-gate.md prima della pubblicazione."
     },
     {
       "severity": "P1",
@@ -490,7 +497,7 @@
       "code": "manual-ux-copy-gate",
       "route": "/fonti-dati",
       "message": "/fonti-dati richiede QA comunicativa: label pubblica, stato v0, CTA, empty state e linguaggio prudente.",
-      "action": "Eseguire la checklist docs\\launch-v0\\ux-copy-readiness-gate.md prima della pubblicazione."
+      "action": "Eseguire la checklist docs/launch-v0/ux-copy-readiness-gate.md prima della pubblicazione."
     },
     {
       "severity": "P1",
@@ -504,7 +511,7 @@
       "code": "manual-ux-copy-gate",
       "route": "/metodologia",
       "message": "/metodologia richiede QA comunicativa: label pubblica, stato v0, CTA, empty state e linguaggio prudente.",
-      "action": "Eseguire la checklist docs\\launch-v0\\ux-copy-readiness-gate.md prima della pubblicazione."
+      "action": "Eseguire la checklist docs/launch-v0/ux-copy-readiness-gate.md prima della pubblicazione."
     },
     {
       "severity": "P1",
@@ -518,7 +525,7 @@
       "code": "manual-ux-copy-gate",
       "route": "/note-legali",
       "message": "/note-legali richiede QA comunicativa: label pubblica, stato v0, CTA, empty state e linguaggio prudente.",
-      "action": "Eseguire la checklist docs\\launch-v0\\ux-copy-readiness-gate.md prima della pubblicazione."
+      "action": "Eseguire la checklist docs/launch-v0/ux-copy-readiness-gate.md prima della pubblicazione."
     },
     {
       "severity": "INFO",
@@ -538,28 +545,21 @@
       "severity": "P2",
       "code": "data-operations-reviewed",
       "route": null,
-      "message": "Convocazioni.tsx usa 19 operazioni su liste: verificare che input non normalizzati non producano error boundary.",
+      "message": "Convocazioni.tsx usa 20 operazioni su liste: verificare che input non normalizzati non producano error boundary.",
       "action": "Mantenere fallback/normalizzazione e test di render."
     },
     {
       "severity": "P2",
       "code": "data-operations-reviewed",
       "route": null,
-      "message": "Contracts.tsx usa 35 operazioni su liste: verificare che input non normalizzati non producano error boundary.",
+      "message": "Pnrr.tsx usa 55 operazioni su liste: verificare che input non normalizzati non producano error boundary.",
       "action": "Mantenere fallback/normalizzazione e test di render."
     },
     {
       "severity": "P2",
       "code": "data-operations-reviewed",
       "route": null,
-      "message": "Pnrr.tsx usa 30 operazioni su liste: verificare che input non normalizzati non producano error boundary.",
-      "action": "Mantenere fallback/normalizzazione e test di render."
-    },
-    {
-      "severity": "P2",
-      "code": "data-operations-reviewed",
-      "route": null,
-      "message": "Home.tsx usa 34 operazioni su liste: verificare che input non normalizzati non producano error boundary.",
+      "message": "Home.tsx usa 24 operazioni su liste: verificare che input non normalizzati non producano error boundary.",
       "action": "Mantenere fallback/normalizzazione e test di render."
     },
     {
@@ -567,7 +567,7 @@
       "code": "ux-copy-gate-docs-present",
       "route": null,
       "message": "Checklist UX/copy e documenti guida v0 presenti.",
-      "action": "Usare docs\\launch-v0\\ux-copy-readiness-gate.md per la review manuale."
+      "action": "Usare docs/launch-v0/ux-copy-readiness-gate.md per la review manuale."
     },
     {
       "severity": "INFO",

@@ -49,6 +49,10 @@ const openCupConcurrency = Number.parseInt(
   10,
 );
 const materializationAttemptedAt = new Date().toISOString();
+const reconcileLocal = process.argv.includes("--reconcile-local");
+if (process.argv.slice(2).some((arg) => arg !== "--reconcile-local")) {
+  throw new Error("Usage: node scripts/build-lamezia-pnrr-static-data.mjs [--reconcile-local]");
+}
 
 if (!Number.isInteger(minimumProjectCount) || minimumProjectCount < 1) {
   throw new Error(`Invalid LAMEZIA_PNRR_MIN_PROJECTS: ${minimumProjectCount}`);
@@ -76,13 +80,37 @@ const [
   reviewedDocumentAllowlist,
   existing,
 ] = await Promise.all([
-  fetchText(COMUNE_PNRR_INDEX_URL),
+  reconcileLocal ? Promise.resolve(null) : fetchText(COMUNE_PNRR_INDEX_URL),
   readJson(latestAlboPath),
   readJson(deliberationArchivePath),
   readJson(documentManifestPath),
   readJson(reviewedDocumentAllowlistPath),
   readJson(outputPath, null),
 ]);
+
+// Reconcile publication policy independently of remote acquisition. Keep the
+// original materialisation clock: a local repair is not a fresh source fetch.
+if (reconcileLocal) {
+  if (!existing) throw new Error("Local reconciliation requires an existing feed.");
+  const alboEvidence = buildAlboEvidenceArchive({
+    currentSources: [deliberationArchive, latestAlbo],
+    existingEvidence: existing.albo_evidence,
+    officialProjectCups: existing.projects.map((project) => project.cup).filter(Boolean),
+    documentManifest,
+    reviewedDocumentAllowlist,
+  });
+  const candidate = buildStaticPnrrDataset({
+    projects: existing.projects,
+    alboEvidence,
+    materializedAt: existing.metadata.materialized_at,
+    alboSnapshotGeneratedAt: latestAlbo.generated_at ?? null,
+  });
+  validateStaticPnrrDataset(candidate, { minimumProjects: minimumProjectCount });
+  validateCoverageRegression(candidate, existing);
+  await writeFile(outputPath, `${JSON.stringify(candidate, null, 2)}\n`, "utf8");
+  console.log("Reconciled local PNRR evidence; source acquisition timestamps were preserved.");
+  process.exit(0);
+}
 
 const links = extractProjectLinks(indexHtml);
 if (links.length < minimumProjectCount) {

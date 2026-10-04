@@ -1,6 +1,12 @@
 name: hook guard
 
 on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: "Same-repository data refresh PR to validate"
+        required: true
+        type: string
   pull_request:
     types: [opened, edited, synchronize, reopened, ready_for_review]
 
@@ -26,7 +32,15 @@ jobs:
         with:
           node-version: 24
 
+      - name: Validate dispatched refresh PR
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ inputs.pr_number }}
+        run: node scripts/hooks/run-dispatched-pr-guard.mjs
+
       - name: Run PR guard
+        if: github.event_name == 'pull_request'
         id: pr_guard
         continue-on-error: true
         env:
@@ -38,7 +52,7 @@ jobs:
         run: node scripts/hooks/pr-guard.mjs
 
       - name: Publish hook ledger comment
-        if: always()
+        if: always() && github.event_name == 'pull_request'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}

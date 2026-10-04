@@ -23,11 +23,11 @@ import {
 const TIMELINE_DAYS = 90;
 
 export function Statistics() {
-  const { data: stats, isLoading: statsLoading } = useGetStatsOverview();
-  const { data: topThemes, isLoading: themesLoading } = useGetTopThemes();
-  const { data: shareStats, isLoading: shareLoading } = useGetShareStats();
-  const { data: activity, isLoading: activityLoading } = useGetRecentActivity();
-  const { data: timeline, isLoading: timelineLoading } = useGetPublicationsTimeline({
+  const { data: stats, isLoading: statsLoading, isError: statsError } = useGetStatsOverview();
+  const { data: topThemes, isLoading: themesLoading, isError: themesError } = useGetTopThemes();
+  const { data: shareStats, isLoading: shareLoading, isError: shareError } = useGetShareStats();
+  const { data: activity, isLoading: activityLoading, isError: activityError } = useGetRecentActivity();
+  const { data: timeline, isLoading: timelineLoading, isError: timelineError } = useGetPublicationsTimeline({
     days: TIMELINE_DAYS,
   });
 
@@ -51,6 +51,17 @@ export function Statistics() {
         <p className="mt-3 text-muted-foreground text-lg max-w-3xl">
           Quadro riassuntivo dell'attività dell'osservatorio civico e del coinvolgimento della cittadinanza.
         </p>
+        <p className="mt-3 text-sm text-muted-foreground">
+          Fonte: API dell'osservatorio. I conteggi riguardano i record acquisiti e le interazioni registrate;
+          non costituiscono un censimento completo dell'attività comunale né una misura rappresentativa della partecipazione.
+          I dati mancanti non sono trattati come zero.
+        </p>
+        {(statsError || themesError || shareError || activityError || timelineError) && (
+          <p role="status" className="mt-4 rounded-lg border border-border bg-muted p-4 text-sm">
+            Alcune statistiche non sono disponibili: il collegamento alla fonte non ha risposto correttamente.
+            Eventuali valori già caricati possono riferirsi a un controllo precedente.
+          </p>
+        )}
       </div>
 
       {/* Main KPIs */}
@@ -102,7 +113,7 @@ export function Statistics() {
             {!timelineLoading && (
               <div className="text-right">
                 <div className="text-2xl font-display font-bold tabular-nums text-brand">
-                  {timelineTotal}
+                  {timeline ? timelineTotal : "Non disponibile"}
                 </div>
                 <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
                   atti nel periodo
@@ -177,7 +188,7 @@ export function Statistics() {
             </div>
           ) : (
             <div className="text-center text-sm text-muted-foreground py-12">
-              Nessuna pubblicazione registrata nel periodo selezionato.
+              {timelineError || !timeline ? "Serie delle pubblicazioni non disponibile." : "Nessuna pubblicazione registrata nel periodo selezionato."}
             </div>
           )}
         </CardContent>
@@ -198,7 +209,7 @@ export function Statistics() {
               <div className="divide-y divide-border">
                 {themesLoading ? (
                   Array(5).fill(0).map((_, i) => <RankRowSkeleton key={i} />)
-                ) : topThemes?.byRelevance.map((theme, i) => (
+                ) : (topThemes?.byRelevance ?? []).map((theme, i) => (
                   <div key={theme.id} className="flex items-center p-4 gap-4 hover-elevate transition-colors">
                     <div className="font-display font-bold text-2xl tabular-nums text-muted-foreground/40 w-6 text-center">
                       {i + 1}
@@ -233,7 +244,7 @@ export function Statistics() {
               <div className="divide-y divide-border">
                 {themesLoading ? (
                   Array(5).fill(0).map((_, i) => <RankRowSkeleton key={i} />)
-                ) : topThemes?.byShares.map((theme, i) => (
+                ) : (topThemes?.byShares ?? []).map((theme, i) => (
                   <div key={theme.id} className="flex items-center p-4 gap-4 hover-elevate transition-colors">
                     <div className="font-display font-bold text-2xl tabular-nums text-muted-foreground/40 w-6 text-center">
                       {i + 1}
@@ -278,7 +289,7 @@ export function Statistics() {
                         <div 
                           className="h-full rounded-full transition-all"
                           style={{
-                            width: `${(stat.count / Math.max(...shareStats.map(s => s.count))) * 100}%`,
+                            width: `${(stat.count / Math.max(1, ...shareStats.map(s => s.count))) * 100}%`,
                             backgroundColor: `hsl(var(--chart-${(i % 5) + 1}))`,
                           }}
                         />
@@ -308,14 +319,18 @@ export function Statistics() {
                       <Skeleton className="h-4 w-full" />
                     </div>
                   ))
-                ) : activity?.slice(0, 8).map(item => (
+                ) : activity && activity.length > 0 ? activity.slice(0, 8).map(item => (
                   <div key={item.id} className="p-4 hover-elevate transition-colors">
                     <div className="text-xs text-muted-foreground font-mono mb-1">
                       {format(new Date(item.date), 'dd MMM', { locale: it })} • {item.type}
                     </div>
                     <div className="font-medium line-clamp-2 leading-snug">{item.title}</div>
                   </div>
-                ))}
+                )) : (
+                  <p className="p-4 text-muted-foreground">
+                    {activityError || !activity ? "Attività recente non disponibile" : "Nessuna attività registrata nel periodo"}
+                  </p>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -337,7 +352,7 @@ function KpiCard({ title, value, loading, icon: Icon, desc, highlight = false }:
               <Skeleton className="h-9 w-24" />
             ) : (
               <p className={`text-3xl font-display font-bold tracking-tight tabular-nums ${highlight ? 'text-brand' : 'text-foreground'}`}>
-                {value || 0}
+                {value ?? "Non disponibile"}
               </p>
             )}
           </div>

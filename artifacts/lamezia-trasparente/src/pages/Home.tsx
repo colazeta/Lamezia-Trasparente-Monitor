@@ -188,6 +188,10 @@ export function Home() {
   const pnrrProjectCount = asApiList(pnrrProjects?.projects).length;
   const pulseItems = buildPulseItems();
   const pulseCounts = ALBO_PUBLIC_DIFF_SUMMARY.counts;
+  const lastAlboCheck = Date.parse(ALBO_OPERATIONAL_STATUS.last_update ?? "");
+  const alboSnapshotStale = !Number.isFinite(lastAlboCheck) || Date.now() - lastAlboCheck > 24 * 60 * 60 * 1000;
+  const nextAlboCheck = Date.parse(ALBO_OPERATIONAL_STATUS.next_scheduled_check ?? "");
+  const alboScheduleOverdue = Number.isFinite(nextAlboCheck) && nextAlboCheck < Date.now();
   const hasDiff =
     pulseCounts.new + pulseCounts.changed + pulseCounts.removed > 0;
 
@@ -297,7 +301,7 @@ export function Home() {
         <div className="container mx-auto px-4 md:px-6">
           <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <span className="eyebrow text-primary">Attività recente</span>
+              <span className="eyebrow text-primary">{alboSnapshotStale ? "Ultime variazioni disponibili" : "Attività recente"}</span>
               <h2 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-4xl">
                 Cosa è cambiato nell&apos;Albo
               </h2>
@@ -319,12 +323,20 @@ export function Home() {
                 </p>
                 <span className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
                   <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
-                  Prossimo controllo{" "}
+                  {alboScheduleOverdue ? "Controllo previsto, esecuzione non confermata" : "Prossimo controllo"}{" "}
                   {formatCivicTime(
                     ALBO_OPERATIONAL_STATUS.next_scheduled_check,
                   )}
                 </span>
               </div>
+
+              {alboSnapshotStale && (
+                <p role="status" className="mt-3 text-sm text-muted-foreground">
+                  Lo snapshot disponibile non ha un controllo confermato nelle ultime 24 ore.
+                  Le variazioni sotto riportate si riferiscono all'ultimo confronto disponibile;
+                  l'assenza di novità non prova l'assenza di nuovi atti nella fonte ufficiale.
+                </p>
+              )}
 
               <div className="mt-3 grid grid-cols-3 gap-2">
                 <PulseCount label="Nuovi" value={pulseCounts.new} />
