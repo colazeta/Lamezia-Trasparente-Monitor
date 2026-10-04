@@ -63,7 +63,7 @@
       "eligible": 100,
       "archived": 100,
       "skipped": 3,
-      "excluded": 40,
+      "excluded": 24,
       "human_review_required": 13
     },
     "warnings": [
