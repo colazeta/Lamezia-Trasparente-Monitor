@@ -108,7 +108,8 @@ const output = {
       eligible: documents.length,
       archived: documents.length,
       skipped: manifest.counts.skipped,
-      excluded: manifest.counts.considered - documents.length,
+      excluded:
+        manifest.counts.excluded + manifest.counts.archived - documents.length,
       human_review_required: manifest.counts.human_review_required,
     },
     warnings: manifest.warnings ?? [],

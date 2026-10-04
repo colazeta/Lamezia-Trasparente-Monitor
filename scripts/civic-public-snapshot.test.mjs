@@ -23,6 +23,14 @@ const support = JSON.parse(
 test("retained public edition and operational support are verified together", async () => {
   assert.deepEqual(await checkCivicPublicSnapshot(snapshot), snapshot);
   checkCivicPublicSupport(snapshot, support);
+  const counts = support.documentsManifest.counts;
+  assert.equal(
+    counts.archived +
+      counts.skipped +
+      counts.excluded +
+      counts.human_review_required,
+    counts.considered,
+  );
 });
 test("altered data, source bindings and unreconciled counts are rejected", async () => {
   for (const mutate of [
@@ -56,6 +64,11 @@ test("support cannot publish excluded IDs, old titles, removed descriptions or m
   for (const mutate of [
     (s) => {
       s.body_hash = "0".repeat(64);
+    },
+    (s) => {
+      s.documentsManifest.counts.excluded +=
+        s.documentsManifest.counts.skipped +
+        s.documentsManifest.counts.human_review_required;
     },
     (s) => {
       s.diff.diff.new.push({ id: "excluded-source-row" });
