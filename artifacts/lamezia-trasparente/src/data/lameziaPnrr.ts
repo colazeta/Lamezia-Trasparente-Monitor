@@ -4,8 +4,9 @@ import type {
   PublicationAttachment,
 } from "@workspace/api-client-react";
 
-import pnrrData from "./generated/lameziaPnrrProjects.json";
-import pnrrDataUrl from "./generated/lameziaPnrrProjects.json?url";
+import canonicalSnapshot from "../../../../data/public/canonical/civic-snapshot.json";
+const pnrrData=canonicalSnapshot.pnrr;
+const pnrrDataUrl=`${import.meta.env.BASE_URL}data/public/canonical/pnrr.json`;
 
 export type PnrrDataOrigin = "runtime-api" | "static-municipal" | "hybrid";
 

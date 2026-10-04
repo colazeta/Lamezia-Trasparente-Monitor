@@ -12,3 +12,4 @@ export * from "./macrotemi";
 export * from "./performanceCatalog";
 export * from "./ltcedsPilotImport";
 export * from "./canonicalPnrrReadModel";
+export * from "./canonicalPublicSnapshot";

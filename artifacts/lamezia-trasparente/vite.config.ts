@@ -3,6 +3,7 @@ import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
+import canonicalSnapshot from "../../data/public/canonical/civic-snapshot.json";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
 import {
@@ -33,7 +34,6 @@ if (Number.isNaN(port) || port <= 0) {
 
 const basePath = process.env.BASE_PATH ?? "/";
 const repoRoot = path.resolve(import.meta.dirname, "..", "..");
-const alboPublicSnapshotPath = "data/public/albo/latest.json";
 const anacBdncpSnapshotPath = "data/public/contracts/anac-bdncp/latest.json";
 const anacAuthoritySnapshotPath =
   "data/public/contracts/anac-authority/latest.json";
@@ -49,8 +49,15 @@ const repoPublicDataFiles = [
 const repoPublicDataAliases = [
   {
     publicPath: "data/curated/pnrr/lamezia-pnrr-projects.json",
-    sourcePath:
-      "artifacts/lamezia-trasparente/src/data/generated/lameziaPnrrProjects.json",
+    sourcePath: "data/public/canonical/pnrr.json",
+  },
+  {
+    publicPath: "data/public/canonical/pnrr.json",
+    sourcePath: "data/public/canonical/pnrr.json",
+  },
+  {
+    publicPath: "data/public/canonical/civic-snapshot.json",
+    sourcePath: "data/public/canonical/civic-snapshot.json",
   },
 ] as const;
 
@@ -173,27 +180,14 @@ function repoPublicDataPlugin(): Plugin {
 }
 
 function readRepoFile(relativePath: string): Buffer | null {
+  if (relativePath === "data/public/canonical/pnrr.json")
+    return Buffer.from(`${JSON.stringify(canonicalSnapshot.pnrr)}\n`);
   const sourcePath = path.join(repoRoot, relativePath);
   return existsSync(sourcePath) ? readFileSync(sourcePath) : null;
 }
 
 function readAlboSnapshot(): AlboPublicSnapshot {
-  const source = readRepoFile(alboPublicSnapshotPath);
-  if (!source) {
-    throw new Error(
-      `Public Albo snapshot is required to build canonical views: ${alboPublicSnapshotPath}`,
-    );
-  }
-
-  try {
-    return JSON.parse(source.toString("utf8")) as AlboPublicSnapshot;
-  } catch (error) {
-    throw new Error(
-      `Public Albo snapshot is not valid JSON: ${
-        error instanceof Error ? error.message : String(error)
-      }`,
-    );
-  }
+  return canonicalSnapshot.albo as unknown as AlboPublicSnapshot;
 }
 
 function readCanonicalAlboCorpus() {
@@ -240,11 +234,7 @@ function readStaticContractsDataset() {
     );
   }
 
-  return buildStaticContractsDataset(
-    snapshot,
-    anacSnapshot,
-    authoritySnapshot,
-  );
+  return buildStaticContractsDataset(snapshot, anacSnapshot, authoritySnapshot);
 }
 
 function contentTypeFor(filePath: string) {

@@ -14,13 +14,17 @@ const apiState = vi.hoisted(() => ({
   isError: false,
 }));
 
-vi.mock("@workspace/api-client-react", () => ({
-  useListDelibere: () => ({
-    data: apiState.data,
-    isLoading: apiState.isLoading,
-    isError: apiState.isError,
-  }),
-}));
+vi.mock("@/hooks/useCanonicalCivicSnapshot", async () => {
+  const retained = (
+    await import("../../../../data/public/canonical/civic-snapshot.json")
+  ).default;
+  return {
+    useCanonicalCivicSnapshot: () => ({
+      snapshot: retained,
+      unavailable: apiState.isError,
+    }),
+  };
+});
 
 import {
   DELIBERE_ARCHIVE_ITEMS,
@@ -677,46 +681,19 @@ describe("archivio pubblico delle delibere", () => {
     );
   });
 
-  it("conserva nell'URL un tema disponibile solo dopo il caricamento API", async () => {
-    const base = apiPublication();
-    const apiOnlyTheme = apiPublication({
-      id: 9200,
-      publicId: "albo-2026-9200",
-      progressivo: "2026/9200",
-      presentation: {
-        ...base.presentation,
-        display_title: "Piano della mobilità condivisa.",
-        search_text: "piano della mobilita condivisa",
-        area_theme: {
-          ...base.presentation.area_theme,
-          theme_id: "mobilita_condivisa",
-          theme_label: "Mobilità condivisa",
-        },
-      },
-    });
-    window.history.replaceState({}, "", "/delibere?tema=mobilita_condivisa");
-    apiState.isLoading = true;
-    const view = render(<Delibere />);
-
-    expect(new URLSearchParams(window.location.search).get("tema")).toBe(
-      "mobilita_condivisa",
-    );
-
-    apiState.data = [apiOnlyTheme];
-    apiState.isLoading = false;
-    view.rerender(<Delibere />);
-
-    await waitFor(() =>
-      expect(screen.getByLabelText("Filtra per area tematica")).toHaveValue(
-        "mobilita_condivisa",
-      ),
-    );
-    expect(new URLSearchParams(window.location.search).get("tema")).toBe(
-      "mobilita_condivisa",
-    );
+  it("ignora righe legacy esterne alla proiezione canonica", () => {
+    apiState.data = [
+      apiPublication({
+        id: 9200,
+        publicId: "albo-2026-9200",
+        progressivo: "2026/9200",
+      }),
+    ];
+    render(<Delibere />);
     expect(
-      screen.getByText(`1 di ${DELIBERE_ARCHIVE_ITEMS.length + 1} atti.`),
-    ).toBeInTheDocument();
+      screen.queryByText("OGGETTO RAW API DA NON PUBBLICARE COME TITOLO"),
+    ).not.toBeInTheDocument();
+    expect(screen.getAllByTestId("delibera-card").length).toBeGreaterThan(0);
   });
 
   it("distingue l'errore API dall'assenza di risultati", () => {

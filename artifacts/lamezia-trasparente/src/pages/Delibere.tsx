@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from "react";
-import { useListDelibere, type Publication } from "@workspace/api-client-react";
+import { useCanonicalCivicSnapshot } from "@/hooks/useCanonicalCivicSnapshot";
 import {
   Calendar,
   ChevronLeft,
@@ -30,12 +30,8 @@ import {
 } from "@/components/ui/empty";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  DELIBERE_ARCHIVE_ITEMS,
-  DELIBERE_ARCHIVE_SUMMARY,
-} from "@/data/delibereArchive";
+import { canonicalDelibereArchiveData } from "@/data/delibereArchive";
 import { ALBO_VERIFICATION_LABELS } from "@/data/alboStatus";
-import { asApiList } from "@/lib/apiList";
 import {
   ALL_DELIBERE_THEMES,
   DEFAULT_DELIBERA_FILTERS,
@@ -233,15 +229,16 @@ export function Delibere() {
   const previousPageRef = useRef(readerState.page);
   const focusResultsAfterPageChangeRef = useRef(false);
 
-  const { data: delibereData, isLoading, isError } = useListDelibere();
-
+  const { snapshot, unavailable: isError } = useCanonicalCivicSnapshot();
+  const archive = useMemo(
+    () => canonicalDelibereArchiveData(snapshot.alboArchive),
+    [snapshot.alboArchive],
+  );
+  const DELIBERE_ARCHIVE_SUMMARY = archive.summary;
+  const isLoading = false;
   const delibere = useMemo(
-    () =>
-      mergeDelibere(
-        DELIBERE_ARCHIVE_ITEMS,
-        asApiList<Publication>(delibereData),
-      ),
-    [delibereData],
+    () => mergeDelibere(archive.items, []),
+    [archive.items],
   );
   const themeOptions = useMemo(
     () => deliberaThemeOptions(delibere),
