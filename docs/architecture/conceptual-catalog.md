@@ -104,6 +104,9 @@ Origini, versioni, record osservati e operazioni di acquisizione.
 
 | Tabella | Nome leggibile | Concetto | Ruolo | Una riga rappresenta |
 | --- | --- | --- | --- | --- |
+| `taxonomy_classifications` | Classificazioni ed esiti per record di fonte | Classificazione | relation | One source record/facet/method classification or explicit non-classification outcome |
+| `taxonomy_concepts` | Concetti delle tassonomie | Classificazione | entity | One concept within a scheme version |
+| `taxonomy_schemes` | Schemi di classificazione versionati | Classificazione | entity | One immutable versioned classification scheme |
 | `source_sources` | Fonti registrate | Fonte | source | Una fonte con il proprio codice |
 | `source_endpoints` | Punti di acquisizione | Fonte | source | Un endpoint appartenente a una fonte |
 | `source_artifacts` | Artefatti acquisiti | Artefatto | source | Un artefatto identificato da endpoint e hash dei byte |
@@ -122,6 +125,12 @@ Decisioni amministrative, pubblicazioni, allegati e pareri.
 
 | Tabella | Nome leggibile | Concetto | Ruolo | Una riga rappresenta |
 | --- | --- | --- | --- | --- |
+| `document_publication_documents` | Documenti delle versioni di pubblicazione | Documento | relation | One evidence-backed publication-version to document link |
+| `document_publication_acts` | Collegamenti documentati fra pubblicazioni e atti | Documento | relation | One evidence-backed publication-version to act link |
+| `document_documents` | Risorse documentali ufficiali | Documento | entity | One source document resource URL, distinct from bytes and acts |
+| `document_acts` | Identità degli atti amministrativi | Atto amministrativo | entity | One act with qualified issuer/office/type/number/date |
+| `document_publication_versions` | Versioni acquisite delle pubblicazioni | Documento | relation | One immutable source record/version; privacy-preserving fields |
+| `document_publications` | Identità delle pubblicazioni | Pubblicazione | entity | One publication identity in a qualified register |
 | `publications` | Pubblicazioni dell'Albo | Pubblicazione | source | Una pubblicazione identificata dal progressivo |
 | `acts` | Schede di atti del modello precedente | Atto amministrativo | legacy | Una scheda sintetica di atto senza identità documentale comune |
 | `fundamental_acts` | Atti fondamentali selezionati | Atto amministrativo | editorial | Una scheda curata di atto fondamentale |
@@ -151,6 +160,11 @@ Procedure, affidamenti e contratti con i loro identificatori.
 
 | Tabella | Nome leggibile | Concetto | Ruolo | Una riga rappresenta |
 | --- | --- | --- | --- | --- |
+| `procurement_mentions` | Riferimenti agli appalti da riconciliare | Procedura di affidamento | relation | One source-scoped procurement candidate, not a contract |
+| `procurement_financial_events` | Eventi finanziari dei contratti | Evento documentato | entity | One financial lifecycle event, with evidence and explicit currency |
+| `procurement_contracts` | Contratti documentati | Contratto pubblico | entity | One contract in a lot, not a CIG mention |
+| `procurement_lots` | Lotti delle procedure | Procedura di affidamento | entity | One lot in a procedure |
+| `procurement_procedures` | Procedure di affidamento | Procedura di affidamento | entity | One evidence-backed qualified procedure |
 | `contracts` | Schede di contratti e affidamenti | Contratto pubblico | legacy | Una riga che combina campi di procedura, contratto e fornitore |
 
 ### Progetti pubblici

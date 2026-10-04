@@ -162,6 +162,20 @@
       "when": 1788851622950,
       "tag": "0022_canonical_pnrr_lookup_indexes",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1791100619341,
+      "tag": "0023_canonical_subject_qualification",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1791100745254,
+      "tag": "0024_canonical_albo_documents",
+      "breakpoints": true
     }
   ]
 }

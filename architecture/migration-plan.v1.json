@@ -73,29 +73,32 @@
     {
       "id": 6,
       "key": "taxonomy_core",
-      "status": "planned",
+      "status": "in_progress",
       "objective": "Persist reusable versioned taxonomies and classifications in the canonical database.",
       "prerequisites": [5],
       "deliverables": ["taxonomy.schemes", "taxonomy.concepts", "taxonomy.crosswalks", "taxonomy.classifications"],
-      "acceptance": ["lamezia-canonical-taxonomy.v1 is DB-represented", "Classifications record version/method/review state/evidence", "Classification failure cannot silently drop a record", "not_applicable, insufficient_evidence and review_required are first-class outcomes where applicable"]
+      "acceptance": ["lamezia-canonical-taxonomy.v1 is DB-represented", "Classifications record version/method/review state/evidence", "Classification failure cannot silently drop a record", "not_applicable, insufficient_evidence and review_required are first-class outcomes where applicable"],
+      "implementationNote": "Versioned relational taxonomy and source-record classifications for the existing Albo corpus; other domain schemes/crosswalks remain pending."
     },
     {
       "id": 7,
       "key": "albo_v2",
-      "status": "planned",
+      "status": "in_progress",
       "objective": "Separate source record, publication, document, administrative act and administrative event while preserving the current public-safety boundary.",
       "prerequisites": [2, 3, 4, 5, 6],
       "legacyModules": ["publications", "acts", "fundamentalActs", "oversightOpinions"],
-      "acceptance": ["Every current publication maps or has an explicit non-migration reason", "Attachments and extracted text retain provenance", "All acquired records receive a taxonomy outcome"]
+      "acceptance": ["Every current publication maps or has an explicit non-migration reason", "Attachments and extracted text retain provenance", "All acquired records receive a taxonomy outcome"],
+      "implementationNote": "Publication/act/document identities, immutable source versions and evidence-backed links imported for the registered public Albo snapshots. Complete attachment-byte registration, legacy API equivalence and other act domains remain pending."
     },
     {
       "id": 8,
       "key": "procurement_v2",
-      "status": "planned",
+      "status": "in_progress",
       "objective": "Replace monolithic contract rows with procedure, lot, contract, lifecycle events, parties and financial events.",
       "prerequisites": [7, 10],
       "legacyModules": ["contracts"],
-      "acceptance": ["Albo-only, ANAC-only, overlap and unresolved events reconcile", "CIG is an identifier rather than an ingestion prerequisite", "Legacy contracts becomes a compatibility projection before write freeze"]
+      "acceptance": ["Albo-only, ANAC-only, overlap and unresolved events reconcile", "CIG is an identifier rather than an ingestion prerequisite", "Legacy contracts becomes a compatibility projection before write freeze"],
+      "implementationNote": "Typed procedure/lot/contract/financial-event boundaries and source-scoped mentions. A CIG mention never creates a contract. Structured ANAC/party reconciliation and legacy cutover remain pending."
     },
     {
       "id": 9,

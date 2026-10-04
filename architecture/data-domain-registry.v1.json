@@ -50,7 +50,10 @@
     {"module":"messages","tables":["messages"],"boundedContext":"application","targetNamespace":"editorial","status":"retain_bounded_context","migrationPhase":17,"notes":"Application message state."},
     {"module":"redazione","tables":["page_blocks","site_strings","helper_overrides"],"boundedContext":"editorial","targetNamespace":"editorial","status":"retain_bounded_context","migrationPhase":16,"notes":"Editorial configuration stays a bounded context; add universal override ledger for civic facts."},
     {"module":"crimeEvents","tables":["crime_events","crime_sources","crime_event_offences","crime_event_locations","crime_event_sources","crime_event_clusters","crime_event_cluster_sources","crime_event_cluster_members","crime_public_events"],"boundedContext":"crime","targetNamespace":"crime","status":"reference_pattern","migrationPhase":0,"notes":"Reference evidence/event/public-projection architecture; retain and later link to universal source/party/geo registries."},
-    {"module":"canonicalIdentity","tables":["canonical_subjects","legacy_subject_map"],"boundedContext":"canonical_identity","targetNamespace":"core","status":"canonical_core","migrationPhase":2,"notes":"Universal UUIDv7 subject/addressability spine for canonical Entities and Events. Typed domain tables remain authoritative; unresolved/non-applicable records do not require a subject row."}
+    {"module":"canonicalIdentity","tables":["canonical_subjects","legacy_subject_map"],"boundedContext":"canonical_identity","targetNamespace":"core","status":"canonical_core","migrationPhase":2,"notes":"Universal UUIDv7 subject/addressability spine for canonical Entities and Events. Typed domain tables remain authoritative; unresolved/non-applicable records do not require a subject row."},
+    {"module":"taxonomy","tables":["taxonomy_schemes","taxonomy_concepts","taxonomy_classifications"],"boundedContext":"taxonomy","targetNamespace":"taxonomy","status":"partial_target","migrationPhase":6,"notes":"Additive typed model and immutable source-evidence links. Current Albo projection imported; no universal completeness or legacy cutover."},
+    {"module":"civicDocuments","tables":["document_publications","document_publication_versions","document_acts","document_documents","document_publication_acts","document_publication_documents"],"boundedContext":"document","targetNamespace":"document","status":"partial_target","migrationPhase":7,"notes":"Additive typed model and immutable source-evidence links. Current Albo projection imported; no universal completeness or legacy cutover."},
+    {"module":"procurementCanonical","tables":["procurement_procedures","procurement_lots","procurement_contracts","procurement_financial_events","procurement_mentions"],"boundedContext":"procurement","targetNamespace":"procurement","status":"partial_target","migrationPhase":8,"notes":"Additive typed model and immutable source-evidence links. Current Albo projection imported; no universal completeness or legacy cutover."}
   ],
   "dataLayers": [
     {"name":"raw","role":"source_faithful_artifacts","authoritative":false,"targetRule":"Every material civic artifact must be registered by the universal source/artifact registry."},
@@ -473,6 +476,20 @@
       }
     ],
     "tables": {
+      "procurement_mentions": {"label": "Riferimenti agli appalti da riconciliare", "domain": "procurement", "concept": "procurement", "kind": "relation", "grain": "One source-scoped procurement candidate, not a contract"},
+      "procurement_financial_events": {"label": "Eventi finanziari dei contratti", "domain": "procurement", "concept": "event", "kind": "entity", "grain": "One financial lifecycle event, with evidence and explicit currency"},
+      "procurement_contracts": {"label": "Contratti documentati", "domain": "procurement", "concept": "contract", "kind": "entity", "grain": "One contract in a lot, not a CIG mention"},
+      "procurement_lots": {"label": "Lotti delle procedure", "domain": "procurement", "concept": "procurement", "kind": "entity", "grain": "One lot in a procedure"},
+      "procurement_procedures": {"label": "Procedure di affidamento", "domain": "procurement", "concept": "procurement", "kind": "entity", "grain": "One evidence-backed qualified procedure"},
+      "document_publication_documents": {"label": "Documenti delle versioni di pubblicazione", "domain": "documents", "concept": "document", "kind": "relation", "grain": "One evidence-backed publication-version to document link"},
+      "document_publication_acts": {"label": "Collegamenti documentati fra pubblicazioni e atti", "domain": "documents", "concept": "document", "kind": "relation", "grain": "One evidence-backed publication-version to act link"},
+      "document_documents": {"label": "Risorse documentali ufficiali", "domain": "documents", "concept": "document", "kind": "entity", "grain": "One source document resource URL, distinct from bytes and acts"},
+      "document_acts": {"label": "Identità degli atti amministrativi", "domain": "documents", "concept": "act", "kind": "entity", "grain": "One act with qualified issuer/office/type/number/date"},
+      "document_publication_versions": {"label": "Versioni acquisite delle pubblicazioni", "domain": "documents", "concept": "document", "kind": "relation", "grain": "One immutable source record/version; privacy-preserving fields"},
+      "document_publications": {"label": "Identità delle pubblicazioni", "domain": "documents", "concept": "publication", "kind": "entity", "grain": "One publication identity in a qualified register"},
+      "taxonomy_classifications": {"label": "Classificazioni ed esiti per record di fonte", "domain": "sources", "concept": "taxonomy", "kind": "relation", "grain": "One source record/facet/method classification or explicit non-classification outcome"},
+      "taxonomy_concepts": {"label": "Concetti delle tassonomie", "domain": "sources", "concept": "taxonomy", "kind": "entity", "grain": "One concept within a scheme version"},
+      "taxonomy_schemes": {"label": "Schemi di classificazione versionati", "domain": "sources", "concept": "taxonomy", "kind": "entity", "grain": "One immutable versioned classification scheme"},
       "canonical_subjects": {
         "label": "Identità canoniche",
         "domain": "identity",
