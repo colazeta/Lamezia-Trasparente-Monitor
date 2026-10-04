@@ -46,3 +46,6 @@ export * from "./canonicalIdentity";
 export * from "./sourceRegistry";
 export * from "./assertions";
 export * from "./projects";
+export * from "./taxonomy";
+export * from "./civicDocuments";
+export * from "./procurementCanonical";

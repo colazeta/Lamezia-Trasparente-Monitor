@@ -92,6 +92,7 @@
     "leaflet": "^1.9.4",
     "react-leaflet": "^5.0.0",
     "react-markdown": "^10.1.0",
-    "supercluster": "^8.0.1"
+    "supercluster": "^8.0.1",
+    "@workspace/publication-standardisation": "workspace:*"
   }
 }
