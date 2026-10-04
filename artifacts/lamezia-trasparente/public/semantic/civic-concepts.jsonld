@@ -4,8 +4,8 @@
     {
       "@id": "https://lamezia-trasparente.pages.dev/semantic/civic-concepts",
       "@type": "skos:ConceptScheme",
-      "dct:identifier": "lt-civic-concepts-1.2.0",
-      "owl:versionInfo": "1.2.0",
+      "dct:identifier": "lt-civic-concepts-1.3.0",
+      "owl:versionInfo": "1.3.0",
       "dct:title": [
         {
           "@value": "LameziaTrasparente civic concepts",

@@ -32,7 +32,8 @@
       "0021_canonical_pnrr_evidence.sql",
       "0022_canonical_pnrr_lookup_indexes.sql",
       "0023_canonical_subject_qualification.sql",
-      "0024_canonical_albo_documents.sql"
+      "0024_canonical_albo_documents.sql",
+      "0025_qualified_project_identity.sql"
     ],
     "schemaTablesNotCreatedInVersionedMigrations": [],
     "migrationTablesNotInCurrentDrizzleSchema": []
