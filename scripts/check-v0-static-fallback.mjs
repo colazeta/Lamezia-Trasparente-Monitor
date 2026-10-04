@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { checkCivicPublicSnapshot } from "./check-civic-public-snapshot.mjs";
 import { assertMultiSourceContractsDataset } from "./lib/contractsDatasetValidation.mjs";
 import { access, readFile, readdir, stat } from "node:fs/promises";
 import { constants } from "node:fs";
@@ -357,7 +358,11 @@ function assertEdgeFallback(workerText, workerPath) {
   }
 }
 
-async function assertEdgeFallbackBehavior(workerPath, contractsDataset) {
+async function assertEdgeFallbackBehavior(
+  workerPath,
+  contractsDataset,
+  civicSnapshot,
+) {
   const workerModule = await import(
     `${pathToFileURL(workerPath).href}?smoke=${Date.now()}`
   );
@@ -386,6 +391,13 @@ async function assertEdgeFallbackBehavior(workerPath, contractsDataset) {
             headers: { "Content-Type": "application/json; charset=utf-8" },
           });
         }
+        if (
+          new URL(assetRequest.url).pathname ===
+          "/data/public/canonical/civic-snapshot.json"
+        )
+          return new Response(JSON.stringify(civicSnapshot), {
+            headers: { "Content-Type": "application/json" },
+          });
         assetRequests += 1;
         return new Response("asset-fallback", {
           headers: { "Content-Type": "text/html; charset=utf-8" },
@@ -393,6 +405,49 @@ async function assertEdgeFallbackBehavior(workerPath, contractsDataset) {
       },
     },
   };
+
+  const civicUrl = "https://public.example/api/public/v1/civic-snapshot";
+  const civicResponse = await workerFetch(new Request(civicUrl), env);
+  const civicResult = await checkCivicPublicSnapshot(
+    await civicResponse.json(),
+  );
+  if (
+    civicResponse.status !== 200 ||
+    civicResult.body_hash !== civicSnapshot.body_hash ||
+    civicResponse.headers.get("X-Civic-Projection-Origin") !==
+      "published-snapshot"
+  )
+    throw new Error("Invalid civic edge projection");
+  const civicHead = await workerFetch(
+    new Request(civicUrl, { method: "HEAD" }),
+    env,
+  );
+  if (
+    civicHead.status !== 200 ||
+    (await civicHead.text()) !== "" ||
+    civicHead.headers.get("ETag") !== `"${civicSnapshot.body_hash}"`
+  )
+    throw new Error("Invalid civic HEAD response");
+  const civicWrite = await workerFetch(
+    new Request(civicUrl, { method: "POST" }),
+    env,
+  );
+  if (civicWrite.status !== 405)
+    throw new Error("Civic snapshot accepts writes");
+  const corruptModule = await import(
+    `${pathToFileURL(workerPath).href}?corrupt-civic=${Date.now()}`
+  );
+  const corrupt = structuredClone(civicSnapshot);
+  corrupt.pnrr.projects[0].title += " drift";
+  const corruptResponse = await corruptModule.default.fetch(
+    new Request(civicUrl),
+    { ASSETS: { fetch: async () => new Response(JSON.stringify(corrupt)) } },
+  );
+  if (
+    corruptResponse.status !== 503 ||
+    (await corruptResponse.json()).pnrr !== undefined
+  )
+    throw new Error("Corrupt civic export did not fail closed");
 
   const contractsResponse = await workerFetch(
     new Request("https://public.example/api/contracts"),
@@ -752,6 +807,12 @@ async function main() {
   const edgeFallback = await assertEdgeFallbackBehavior(
     workerPath,
     contractsDataset,
+    await checkCivicPublicSnapshot(
+      await readJsonFile(
+        path.join(absoluteDistDir, "data/public/canonical/civic-snapshot.json"),
+        "Canonical civic snapshot",
+      ),
+    ),
   );
 
   for (const route of ["/albo", "/contratti", "/organi", "/amministratori"]) {

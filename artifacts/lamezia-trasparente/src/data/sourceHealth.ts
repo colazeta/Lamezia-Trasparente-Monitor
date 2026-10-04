@@ -6,7 +6,8 @@ import climateMetadata from "./generated/lameziaClimateDaily.metadata.json";
 import demographicTrend from "./generated/lameziaDemographicTrend.json";
 import familiesChildren from "./generated/lameziaFamiliesChildren.json";
 import foreignResidents from "./generated/lameziaForeignResidentsAgeSex.json";
-import pnrrProjects from "./generated/lameziaPnrrProjects.json";
+import canonicalSnapshot from "../../../../data/public/canonical/civic-snapshot.json";
+const pnrrProjects=canonicalSnapshot.pnrr;
 import householdComposition from "../../../api-server/src/data/lameziaHouseholdComposition2023.json";
 import { OPEN_DATA_THEME_LIBRARY } from "./opendataThemeCategories";
 

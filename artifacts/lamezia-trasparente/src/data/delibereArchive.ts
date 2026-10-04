@@ -1,4 +1,5 @@
-import publicDelibereArchive from "../../../../data/public/albo/delibere-archive.json";
+import canonicalSnapshot from "../../../../data/public/canonical/civic-snapshot.json";
+const publicDelibereArchive = canonicalSnapshot.alboArchive;
 import { classifyAlboRecordCategory } from "../../../../scripts/albo-classification-dictionary";
 
 import type {
@@ -64,8 +65,6 @@ type RawArchiveItem = Record<string, unknown> & {
 };
 
 type RawArchiveDocument = Record<string, unknown>;
-
-const rawArchive = publicDelibereArchive as unknown as RawArchive;
 
 function text(value: unknown): string | null {
   return typeof value === "string" && value.trim() ? value : null;
@@ -333,49 +332,48 @@ function latest(values: Array<string | null>): string | null {
   return available.sort((left, right) => right.localeCompare(left))[0] ?? null;
 }
 
-export const DELIBERE_ARCHIVE_ITEMS: DeliberaArchiveItem[] = (
-  Array.isArray(rawArchive.items) ? rawArchive.items : []
-)
-  .map(normalizeItem)
-  .filter((item): item is DeliberaArchiveItem => item !== null);
+export function canonicalDelibereArchiveData(input: unknown) {
+  const rawArchive = input as RawArchive;
+  const items: DeliberaArchiveItem[] = (
+    Array.isArray(rawArchive.items) ? rawArchive.items : []
+  )
+    .map(normalizeItem)
+    .filter((item): item is DeliberaArchiveItem => item !== null);
 
-export const DELIBERE_ARCHIVE_SUMMARY = {
-  generated_at: text(rawArchive.generated_at),
-  source: text(rawArchive.source) ?? "Albo Pretorio Comune di Lamezia Terme",
-  source_url:
-    text(rawArchive.source_url) ??
-    "https://albo.tinnvision.cloud/?ente=00301390795",
-  verification_status:
-    text(rawArchive.verification_status) ?? "verification_required",
-  coverage: {
-    first_observed_at: earliest(
-      DELIBERE_ARCHIVE_ITEMS.map((item) => item.first_observed_at),
-    ),
-    last_observed_at: latest(
-      DELIBERE_ARCHIVE_ITEMS.map((item) => item.last_observed_at),
-    ),
-    first_act_date: earliest(
-      DELIBERE_ARCHIVE_ITEMS.map(
-        (item) => item.act_date ?? item.publication_start,
+  const summary = {
+    generated_at: text(rawArchive.generated_at),
+    source: text(rawArchive.source) ?? "Albo Pretorio Comune di Lamezia Terme",
+    source_url:
+      text(rawArchive.source_url) ??
+      "https://albo.tinnvision.cloud/?ente=00301390795",
+    verification_status:
+      text(rawArchive.verification_status) ?? "verification_required",
+    coverage: {
+      first_observed_at: earliest(items.map((item) => item.first_observed_at)),
+      last_observed_at: latest(items.map((item) => item.last_observed_at)),
+      first_act_date: earliest(
+        items.map((item) => item.act_date ?? item.publication_start),
       ),
-    ),
-    last_act_date: latest(
-      DELIBERE_ARCHIVE_ITEMS.map(
-        (item) => item.act_date ?? item.publication_start,
+      last_act_date: latest(
+        items.map((item) => item.act_date ?? item.publication_start),
       ),
-    ),
-  },
-  counts: {
-    total: DELIBERE_ARCHIVE_ITEMS.length,
-    giunta: DELIBERE_ARCHIVE_ITEMS.filter(
-      (item) => item.deliberation_body === "giunta",
-    ).length,
-    consiglio: DELIBERE_ARCHIVE_ITEMS.filter(
-      (item) => item.deliberation_body === "consiglio",
-    ).length,
-    archived_documents: DELIBERE_ARCHIVE_ITEMS.filter(
-      (item) => item.archived_document !== null,
-    ).length,
-  },
-  known_limits: textArray(rawArchive.known_limits),
-};
+    },
+    counts: {
+      total: items.length,
+      giunta: items.filter((item) => item.deliberation_body === "giunta")
+        .length,
+      consiglio: items.filter((item) => item.deliberation_body === "consiglio")
+        .length,
+      archived_documents: items.filter(
+        (item) => item.archived_document !== null,
+      ).length,
+    },
+    known_limits: textArray(rawArchive.known_limits),
+  };
+
+  return { items, summary };
+}
+export const {
+  items: DELIBERE_ARCHIVE_ITEMS,
+  summary: DELIBERE_ARCHIVE_SUMMARY,
+} = canonicalDelibereArchiveData(publicDelibereArchive);

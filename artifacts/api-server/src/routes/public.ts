@@ -1,3 +1,4 @@
+import { pool, readCanonicalPublicSnapshot } from "@workspace/db";
 import { Router, type IRouter, type Request } from "express";
 import {
   listDocuments,
@@ -57,6 +58,7 @@ router.get("/", (req, res) => {
       description: "Server compatibile MCP sugli stessi dati (sola lettura).",
     },
     resources: {
+      civicSnapshot: `${base}/civic-snapshot`,
       documents: `${base}/documents`,
       contracts: `${base}/contracts`,
       themes: `${base}/themes`,
@@ -93,10 +95,31 @@ router.get("/crime-events", async (req, res) => {
 router.get("/crime-events/:eventId", async (req, res) => {
   const event = await getPublicCrimeEvent(req.params.eventId);
   if (!event) {
-    res.status(404).json({ error: "Evento non disponibile nella proiezione pubblica" });
+    res
+      .status(404)
+      .json({ error: "Evento non disponibile nella proiezione pubblica" });
     return;
   }
   res.json(event);
+});
+
+// Complete canonical edition. A failed proof returns no partial records.
+router.get("/civic-snapshot", async (_req, res) => {
+  try {
+    const snapshot = await readCanonicalPublicSnapshot(pool);
+    res.set("Cache-Control", "no-store");
+    res.set("ETag", `"${snapshot.body_hash}"`);
+    res.set("X-Civic-Projection-Origin", "canonical-database");
+    res.json(snapshot);
+  } catch {
+    res
+      .status(503)
+      .set("Cache-Control", "no-store")
+      .json({
+        status: "canonical-projection-unavailable",
+        scope: "registered_municipal_albo_and_pnrr_snapshots",
+      });
+  }
 });
 
 // --- Documenti / atti ---
@@ -107,7 +130,9 @@ router.get("/documents", async (req, res) => {
 router.get("/documents/:id/markdown", async (req, res) => {
   const result = await getDocumentMarkdown(req.params.id);
   if (!result) {
-    res.status(404).json({ error: "Testo Markdown non disponibile per questo atto" });
+    res
+      .status(404)
+      .json({ error: "Testo Markdown non disponibile per questo atto" });
     return;
   }
   if (req.query.format === "md") {
