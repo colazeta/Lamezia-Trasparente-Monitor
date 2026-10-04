@@ -11,6 +11,7 @@ import {
 } from "./sourceSnapshotPersistence";
 import { pnrrCompatibilityRows } from "./sourceSnapshotPnrr";
 import { reconcileCanonicalPnrr } from "./canonicalPnrr";
+import { reconcileCanonicalAlbo } from "./canonicalAlbo";
 
 type ImportSuccess = Awaited<ReturnType<typeof persistSourceSnapshot>> & {
   status: "succeeded";
@@ -44,6 +45,7 @@ export type SnapshotImportReport = {
   status: "planned" | "verified" | "failed";
   connectionOrMigrationError?: string;
   canonicalPnrr?: Awaited<ReturnType<typeof reconcileCanonicalPnrr>>;
+  canonicalAlbo?: Awaited<ReturnType<typeof reconcileCanonicalAlbo>>;
 };
 
 export function snapshotImportError(error: unknown): string {
@@ -171,6 +173,7 @@ export async function executeSourceSnapshotImport(
   if (report.status === "verified") {
     try {
       report.canonicalPnrr = await reconcileCanonicalPnrr(pool);
+      report.canonicalAlbo = await reconcileCanonicalAlbo(pool);
     } catch (error) {
       report.status = "failed";
       report.connectionOrMigrationError = snapshotImportError(error);
@@ -232,6 +235,31 @@ export function publicSnapshotImportReport(report: SnapshotImportReport) {
             unresolved: report.canonicalPnrr.unresolved,
             fields: report.canonicalPnrr.fields,
             fieldsWithAlternatives: report.canonicalPnrr.fieldsWithAlternatives,
+          },
+        }
+      : {}),
+    ...(report.canonicalAlbo
+      ? {
+          canonicalAlbo: {
+            status: report.canonicalAlbo.status,
+            resolverVersion: report.canonicalAlbo.resolverVersion,
+            sourceRecords: report.canonicalAlbo.sourceRecords,
+            publications: report.canonicalAlbo.publications,
+            versions: report.canonicalAlbo.versions,
+            acts: report.canonicalAlbo.acts,
+            documents: report.canonicalAlbo.documents,
+            assertions: report.canonicalAlbo.assertions,
+            candidates: report.canonicalAlbo.candidates,
+            resolved: report.canonicalAlbo.resolved,
+            unresolved: report.canonicalAlbo.unresolved,
+            nonResolved: report.canonicalAlbo.nonResolved,
+            notApplicable: report.canonicalAlbo.notApplicable,
+            insufficientEvidence: report.canonicalAlbo.insufficientEvidence,
+            reviewRequired: report.canonicalAlbo.reviewRequired,
+            noCanonicalTarget: report.canonicalAlbo.noCanonicalTarget,
+            classifications: report.canonicalAlbo.classifications,
+            procurementMentions: report.canonicalAlbo.procurementMentions,
+            withheldRecords: report.canonicalAlbo.withheldRecords,
           },
         }
       : {}),

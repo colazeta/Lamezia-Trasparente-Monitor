@@ -13,7 +13,10 @@ import {
 export const CANONICAL_SUBJECT_KINDS = ["entity", "event"] as const;
 export type CanonicalSubjectKind = (typeof CANONICAL_SUBJECT_KINDS)[number];
 
-export const LEGACY_SUBJECT_MAPPING_STATUSES = ["active", "superseded"] as const;
+export const LEGACY_SUBJECT_MAPPING_STATUSES = [
+  "active",
+  "superseded",
+] as const;
 export type LegacySubjectMappingStatus =
   (typeof LEGACY_SUBJECT_MAPPING_STATUSES)[number];
 
@@ -45,6 +48,9 @@ export const canonicalSubjectsTable = pgTable(
       .defaultNow(),
   },
   (t) => ({
+    qualifiedSubjectUnique: uniqueIndex(
+      "canonical_subjects_qualified_subject_uq",
+    ).on(t.subjectId, t.subjectKind, t.domainType),
     kindDomainIdx: index("canonical_subjects_kind_domain_idx").on(
       t.subjectKind,
       t.domainType,
@@ -139,4 +145,5 @@ export const legacySubjectMapTable = pgTable(
 export type CanonicalSubject = typeof canonicalSubjectsTable.$inferSelect;
 export type InsertCanonicalSubject = typeof canonicalSubjectsTable.$inferInsert;
 export type LegacySubjectMapping = typeof legacySubjectMapTable.$inferSelect;
-export type InsertLegacySubjectMapping = typeof legacySubjectMapTable.$inferInsert;
+export type InsertLegacySubjectMapping =
+  typeof legacySubjectMapTable.$inferInsert;

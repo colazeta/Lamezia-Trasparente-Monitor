@@ -70,6 +70,29 @@ test("public report omits original bytes, private paths, IDs and unexpected nest
     status: "verified",
     pnrrExpected: 1,
     raw: privateMarker,
+    canonicalAlbo: {
+      status: "verified",
+      resolverVersion: "albo-document-resolution.v1",
+      sourceRecords: 1,
+      publications: 1,
+      versions: 1,
+      acts: 0,
+      documents: 0,
+      assertions: 4,
+      candidates: 4,
+      resolved: 1,
+      unresolved: 0,
+      nonResolved: 3,
+      notApplicable: 1,
+      insufficientEvidence: 2,
+      reviewRequired: 0,
+      noCanonicalTarget: 0,
+      classifications: 3,
+      procurementMentions: 0,
+      withheldRecords: 1,
+      payload: privateMarker,
+      identities: privateMarker,
+    },
     sources: [
       {
         source: "example",
@@ -101,4 +124,6 @@ test("public report omits original bytes, private paths, IDs and unexpected nest
   const projected = publicSnapshotImportReport(report);
   assert.ok(!JSON.stringify(projected).includes(privateMarker));
   assert.equal(projected.results[0].status, "succeeded");
+  assert.equal(projected.canonicalAlbo?.notApplicable, 1);
+  assert.equal(projected.canonicalAlbo?.insufficientEvidence, 2);
 });

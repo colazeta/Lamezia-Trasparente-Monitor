@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "canonical_subjects_qualified_subject_uq" ON "canonical_subjects" USING btree ("subject_id","subject_kind","domain_type");
