@@ -9,10 +9,10 @@
 
 <https://lamezia-trasparente.pages.dev/semantic/shapes.ttl>
   a lt:ValidationShapeGraph ;
-  dct:identifier "lt-semantic-shapes-1.2.0" ;
+  dct:identifier "lt-semantic-shapes-1.3.0" ;
   dct:title "LameziaTrasparente semantic validation shapes"@en ,
     "Shape di validazione semantica di LameziaTrasparente"@it ;
-  owl:versionInfo "1.2.0" .
+  owl:versionInfo "1.3.0" .
 
 lt:SemanticProfileShape
   a sh:NodeShape ;
@@ -244,3 +244,340 @@ lt:PnrrProjectShape
     sh:minCount 1 ;
     sh:nodeKind sh:IRI
   ] .
+
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# Generated from architecture/data-domain-registry.v1.json. Run node scripts/semantic/generate-model.mjs --write.
+lt:CanonicalSubjectModelShape a sh:NodeShape ;
+  sh:targetClass lt:CanonicalSubject ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path dct:identifier ; sh:pattern "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$" ] ;
+  sh:property [ sh:path lt:subjectKind ; sh:minCount 1 ; sh:maxCount 1 ; sh:in ( "entity" "event" ) ] ;
+  sh:property [ sh:path lt:domainType ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] .
+
+lt:InformationSourceModelShape a sh:NodeShape ;
+  sh:targetClass lt:InformationSource ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] .
+
+lt:SourceArtifactModelShape a sh:NodeShape ;
+  sh:targetClass lt:SourceArtifact ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:SourceReleaseModelShape a sh:NodeShape ;
+  sh:targetClass lt:SourceRelease ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:SourceRecordModelShape a sh:NodeShape ;
+  sh:targetClass lt:SourceRecord ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:AcquisitionRunModelShape a sh:NodeShape ;
+  sh:targetClass lt:AcquisitionRun ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:PublicationEventModelShape a sh:NodeShape ;
+  sh:targetClass lt:PublicationEvent ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] ;
+  sh:property [ sh:path lt:subjectKind ; sh:hasValue "event" ] ;
+  sh:property [ sh:path lt:domainType ; sh:hasValue "document.publication" ] ;
+  sh:not [ sh:class lt:AdministrativeDecision ] ;
+  sh:not [ sh:class lt:DocumentResource ] .
+
+lt:DocumentResourceModelShape a sh:NodeShape ;
+  sh:targetClass lt:DocumentResource ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] ;
+  sh:property [ sh:path lt:subjectKind ; sh:hasValue "entity" ] ;
+  sh:property [ sh:path lt:domainType ; sh:hasValue "document.document" ] ;
+  sh:not [ sh:class lt:PublicationEvent ] ;
+  sh:not [ sh:class lt:AdministrativeDecision ] .
+
+lt:AdministrativeDecisionModelShape a sh:NodeShape ;
+  sh:targetClass lt:AdministrativeDecision ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] ;
+  sh:property [ sh:path lt:subjectKind ; sh:hasValue "entity" ] ;
+  sh:property [ sh:path lt:domainType ; sh:hasValue "document.act" ] ;
+  sh:not [ sh:class lt:PublicationEvent ] ;
+  sh:not [ sh:class lt:DocumentResource ] .
+
+lt:PersonIdentityModelShape a sh:NodeShape ;
+  sh:targetClass lt:PersonIdentity ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:InstitutionalOrganisationModelShape a sh:NodeShape ;
+  sh:targetClass lt:InstitutionalOrganisation ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:InstitutionalRoleModelShape a sh:NodeShape ;
+  sh:targetClass lt:InstitutionalRole ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] .
+
+lt:InstitutionalSessionModelShape a sh:NodeShape ;
+  sh:targetClass lt:InstitutionalSession ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:ProcurementProcedureModelShape a sh:NodeShape ;
+  sh:targetClass lt:ProcurementProcedure ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] ;
+  sh:property [ sh:path lt:subjectKind ; sh:hasValue "entity" ] ;
+  sh:property [ sh:path lt:domainType ; sh:hasValue "procurement.procedure" ] ;
+  sh:not [ sh:class lt:ProcurementLot ] ;
+  sh:not [ sh:class lt:ProcurementContract ] ;
+  sh:not [ sh:class lt:ProcurementMention ] ;
+  sh:not [ sh:class lt:ProcurementFinancialEvent ] .
+
+lt:PublicProjectModelShape a sh:NodeShape ;
+  sh:targetClass lt:PublicProject ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] ;
+  sh:property [ sh:path lt:subjectKind ; sh:hasValue "entity" ] ;
+  sh:property [ sh:path lt:domainType ; sh:hasValue "project.project" ] .
+
+lt:IndicatorDefinitionModelShape a sh:NodeShape ;
+  sh:targetClass lt:IndicatorDefinition ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] .
+
+lt:StatisticalObservationModelShape a sh:NodeShape ;
+  sh:targetClass lt:StatisticalObservation ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:PlaceIdentityModelShape a sh:NodeShape ;
+  sh:targetClass lt:PlaceIdentity ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:AssetIdentityModelShape a sh:NodeShape ;
+  sh:targetClass lt:AssetIdentity ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:DocumentedCrimeEventModelShape a sh:NodeShape ;
+  sh:targetClass lt:DocumentedCrimeEvent ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:EvidenceRecordModelShape a sh:NodeShape ;
+  sh:targetClass lt:EvidenceRecord ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:DocumentedEventClusterModelShape a sh:NodeShape ;
+  sh:targetClass lt:DocumentedEventCluster ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:CivicReportModelShape a sh:NodeShape ;
+  sh:targetClass lt:CivicReport ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:MonitoringCaseModelShape a sh:NodeShape ;
+  sh:targetClass lt:MonitoringCase ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:CivicAccessRequestModelShape a sh:NodeShape ;
+  sh:targetClass lt:CivicAccessRequest ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:PublicCallModelShape a sh:NodeShape ;
+  sh:targetClass lt:PublicCall ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:CivicProposalModelShape a sh:NodeShape ;
+  sh:targetClass lt:CivicProposal ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:InterventionEvaluationModelShape a sh:NodeShape ;
+  sh:targetClass lt:InterventionEvaluation ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:TaxonomyConceptModelShape a sh:NodeShape ;
+  sh:targetClass lt:TaxonomyConcept ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] .
+
+lt:ProcurementContractModelShape a sh:NodeShape ;
+  sh:targetClass lt:ProcurementContract ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] ;
+  sh:property [ sh:path lt:subjectKind ; sh:hasValue "entity" ] ;
+  sh:property [ sh:path lt:domainType ; sh:hasValue "procurement.contract" ] ;
+  sh:not [ sh:class lt:ProcurementProcedure ] ;
+  sh:not [ sh:class lt:ProcurementLot ] ;
+  sh:not [ sh:class lt:ProcurementMention ] ;
+  sh:not [ sh:class lt:ProcurementFinancialEvent ] .
+
+lt:ObservationSeriesModelShape a sh:NodeShape ;
+  sh:targetClass lt:ObservationSeries ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:GeographicRepresentationModelShape a sh:NodeShape ;
+  sh:targetClass lt:GeographicRepresentation ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:PolicyInterventionModelShape a sh:NodeShape ;
+  sh:targetClass lt:PolicyIntervention ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:SourceAssertionModelShape a sh:NodeShape ;
+  sh:targetClass lt:SourceAssertion ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:ResolutionOutcomeModelShape a sh:NodeShape ;
+  sh:targetClass lt:ResolutionOutcome ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] ;
+  sh:property [ sh:path lt:resolutionStatus ; sh:minCount 1 ; sh:maxCount 1 ; sh:in ( "resolved" "unresolved" "not_applicable" "no_canonical_target" "insufficient_evidence" "review_required" ) ] ;
+  sh:xone ( [ sh:property [ sh:path lt:resolutionStatus ; sh:hasValue "resolved" ] ; sh:property [ sh:path lt:resolvedSubject ; sh:minCount 1 ; sh:maxCount 1 ; sh:class lt:CanonicalSubject ] ] [ sh:property [ sh:path lt:resolutionStatus ; sh:not [ sh:in ( "resolved" ) ] ] ; sh:property [ sh:path lt:resolvedSubject ; sh:maxCount 0 ] ] ) .
+
+lt:QualifiedIdentifierModelShape a sh:NodeShape ;
+  sh:targetClass lt:QualifiedIdentifier ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:ProcurementLotModelShape a sh:NodeShape ;
+  sh:targetClass lt:ProcurementLot ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] ;
+  sh:property [ sh:path lt:subjectKind ; sh:hasValue "entity" ] ;
+  sh:property [ sh:path lt:domainType ; sh:hasValue "procurement.lot" ] ;
+  sh:not [ sh:class lt:ProcurementProcedure ] ;
+  sh:not [ sh:class lt:ProcurementContract ] ;
+  sh:not [ sh:class lt:ProcurementMention ] ;
+  sh:not [ sh:class lt:ProcurementFinancialEvent ] .
+
+lt:ProcurementMentionModelShape a sh:NodeShape ;
+  sh:targetClass lt:ProcurementMention ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] ;
+  sh:not [ sh:class lt:ProcurementProcedure ] ;
+  sh:not [ sh:class lt:ProcurementLot ] ;
+  sh:not [ sh:class lt:ProcurementContract ] ;
+  sh:not [ sh:class lt:ProcurementFinancialEvent ] ;
+  sh:property [ sh:path lt:describesContract ; sh:maxCount 0 ] .
+
+lt:ProcurementFinancialEventModelShape a sh:NodeShape ;
+  sh:targetClass lt:ProcurementFinancialEvent ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] ;
+  sh:property [ sh:path lt:subjectKind ; sh:hasValue "event" ] ;
+  sh:property [ sh:path lt:domainType ; sh:hasValue "procurement.financial_event" ] ;
+  sh:not [ sh:class lt:ProcurementProcedure ] ;
+  sh:not [ sh:class lt:ProcurementLot ] ;
+  sh:not [ sh:class lt:ProcurementContract ] ;
+  sh:not [ sh:class lt:ProcurementMention ] .
+
+lt:PublicationVersionModelShape a sh:NodeShape ;
+  sh:targetClass lt:PublicationVersion ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] ;
+  sh:property [ sh:path lt:publicationVisibility ; sh:minCount 1 ; sh:maxCount 1 ; sh:in ( "publishable" "metadata_only" "do_not_publish" ) ] ;
+  sh:or ( [ sh:property [ sh:path lt:publicationVisibility ; sh:hasValue "publishable" ] ; sh:property [ sh:path lt:publicationPolicyVersion ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ] [ sh:property [ sh:path lt:publicationVisibility ; sh:not [ sh:in ( "publishable" ) ] ] ; sh:property [ sh:path dct:title ; sh:maxCount 0 ] ] ) .
+
+lt:TaxonomySchemeModelShape a sh:NodeShape ;
+  sh:targetClass lt:TaxonomyScheme ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] .
+
+lt:ClassificationAssignmentModelShape a sh:NodeShape ;
+  sh:targetClass lt:ClassificationAssignment ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] ;
+  sh:property [ sh:path lt:classificationStatus ; sh:minCount 1 ; sh:maxCount 1 ; sh:in ( "classified" "unknown" "not_applicable" "insufficient_evidence" "review_required" ) ] ;
+  sh:property [ sh:path lt:classificationMethod ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path lt:classificationFacet ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:xone ( [ sh:property [ sh:path lt:classificationStatus ; sh:hasValue "classified" ] ; sh:property [ sh:path lt:assignedConcept ; sh:minCount 1 ; sh:maxCount 1 ; sh:class lt:TaxonomyConcept ] ] [ sh:property [ sh:path lt:classificationStatus ; sh:not [ sh:in ( "classified" ) ] ] ; sh:property [ sh:path lt:assignedConcept ; sh:maxCount 0 ] ] ) .
+
+lt:InstitutionalMembershipModelShape a sh:NodeShape ;
+  sh:targetClass lt:InstitutionalMembership ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:InstitutionalMandateModelShape a sh:NodeShape ;
+  sh:targetClass lt:InstitutionalMandate ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:EvidenceBackedRelationModelShape a sh:NodeShape ;
+  sh:targetClass lt:EvidenceBackedRelation ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:PublicProjectionModelShape a sh:NodeShape ;
+  sh:targetClass lt:PublicProjection ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] ;
+  sh:property [ sh:path lt:publicationPolicyVersion ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] .
+
+lt:SourceEndpointModelShape a sh:NodeShape ;
+  sh:targetClass lt:SourceEndpoint ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:DatasetDefinitionModelShape a sh:NodeShape ;
+  sh:targetClass lt:DatasetDefinition ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:DatasetDistributionModelShape a sh:NodeShape ;
+  sh:targetClass lt:DatasetDistribution ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:SourceOperationalStatusModelShape a sh:NodeShape ;
+  sh:targetClass lt:SourceOperationalStatus ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:SourceChangeNotificationModelShape a sh:NodeShape ;
+  sh:targetClass lt:SourceChangeNotification ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:InstitutionalActivityModelShape a sh:NodeShape ;
+  sh:targetClass lt:InstitutionalActivity ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:InstitutionalVoteModelShape a sh:NodeShape ;
+  sh:targetClass lt:InstitutionalVote ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:SessionInterventionModelShape a sh:NodeShape ;
+  sh:targetClass lt:SessionIntervention ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:LegacyIdentityMappingModelShape a sh:NodeShape ;
+  sh:targetClass lt:LegacyIdentityMapping ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:FieldValueResolutionModelShape a sh:NodeShape ;
+  sh:targetClass lt:FieldValueResolution ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .
+
+lt:LocationEvidenceModelShape a sh:NodeShape ;
+  sh:targetClass lt:LocationEvidence ;
+  sh:property [ sh:path dct:identifier ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] ;
+  sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:nodeKind sh:IRI ] .

@@ -68,7 +68,7 @@
       "prerequisites": [2, 3],
       "deliverables": ["core.assertions", "core.resolution_outcomes", "extraction provenance"],
       "acceptance": ["Derived canonical facts can be traced to evidence", "Manual corrections supersede rather than erase automatic results", "Unknown/ambiguous/not-applicable/insufficient-evidence states remain explicit", "A source record is never forced into a canonical entity or event merely to complete the pipeline"],
-      "implementationNote": "Assertion and resolution foundation implemented with the scoped PNRR extractor; other domain extractors remain pending."
+      "implementationNote": "Assertion and resolution foundation implemented for the scoped PNRR and Albo extractors; other domain extractors remain pending."
     },
     {
       "id": 6,

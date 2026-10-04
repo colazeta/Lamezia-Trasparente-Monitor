@@ -16,14 +16,15 @@ from pathlib import Path
 
 from pyshacl import validate
 from rdflib import Graph, Literal, Namespace, URIRef
-from rdflib.namespace import DCTERMS, OWL, RDF, SKOS
+from rdflib.namespace import DCTERMS, OWL, RDF, RDFS, SKOS
 
 ROOT = Path(__file__).resolve().parents[2]
 SEMANTIC_DIR = ROOT / "artifacts/lamezia-trasparente/public/semantic"
 FIXTURE = ROOT / "scripts/semantic/fixtures/conformance.ttl"
 SEMANTIC_PROFILE_SOURCE = ROOT / "artifacts/api-server/src/lib/semanticProfile.ts"
 
-EXPECTED_VERSION = "1.2.0"
+MODEL = json.loads((ROOT / "architecture/data-domain-registry.v1.json").read_text())["conceptualCatalog"]
+EXPECTED_VERSION = MODEL["semanticProfile"]["version"]
 BASE = "https://lamezia-trasparente.pages.dev"
 ONTOLOGY_IRI = URIRef(f"{BASE}/ontology")
 PROFILE_IRI = URIRef(f"{BASE}/semantic/profile.jsonld")
@@ -56,6 +57,10 @@ EXPECTED_NODE_SHAPES = {
     LT.PerformanceIndicatorShape,
     LT.PnrrProjectShape,
 }
+EXPECTED_NODE_SHAPES.update(
+    LT[f"{concept['rdfClass'].split(':')[1]}ModelShape"]
+    for concept in MODEL["concepts"] if concept.get("rdfClass")
+)
 
 
 class SemanticValidationError(RuntimeError):
@@ -222,10 +227,107 @@ def check_shape_inventory(shapes: Graph) -> None:
     )
 
 
+def check_model_correspondence(ontology: Graph) -> None:
+    """Check definitions and distinct identity against the normative model, not counts."""
+    classes: set[URIRef] = set()
+    for concept in MODEL["concepts"]:
+        if not concept.get("rdfClass"):
+            require(concept["semanticCoverage"] == "outside", f"unmapped civic concept: {concept['id']}")
+            continue
+        term = LT[concept["rdfClass"].split(":")[1]]
+        require(term not in classes, f"collapsed primary identity: {concept['id']}")
+        classes.add(term)
+        require((term, RDF.type, OWL.Class) in ontology, f"undeclared model class: {term}")
+        require(literal_value(ontology, term, LT.conceptKey) == concept["id"], f"class ownership drift: {term}")
+        require(literal_value(ontology, term, RDFS.comment) == concept["definition"], f"definition drift: {term}")
+        require(literal_value(ontology, term, LT.identityRule) == concept["identityRule"], f"identity rule drift: {term}")
+        expected_parents = {LT[p.split(":")[1]] for p in concept.get("rdfParents", [])}
+        require(set(ontology.objects(term, RDFS.subClassOf)) == expected_parents, f"parent drift: {term}")
+    for relation in MODEL["relationships"]:
+        predicate = LT[relation["rdfProperty"].split(":")[1]]
+        source = next(c for c in MODEL["concepts"] if c["id"] == relation["source"])
+        target = next(c for c in MODEL["concepts"] if c["id"] == relation["target"])
+        require((predicate, RDF.type, OWL.ObjectProperty) in ontology, f"missing model relation: {predicate}")
+        require(ontology.value(predicate, RDFS.domain) == LT[source["rdfClass"].split(":")[1]], f"relation domain drift: {predicate}")
+        require(ontology.value(predicate, RDFS.range) == LT[target["rdfClass"].split(":")[1]], f"relation range drift: {predicate}")
+        require(literal_value(ontology, predicate, LT.implementationStatus) == relation["status"], f"implementation claim drift: {predicate}")
+
+
+def model_fixture() -> tuple[Graph, dict[str, URIRef]]:
+    """One synthetic instance per primary class; none are exported civic records."""
+    graph = Graph()
+    nodes = {}
+    for index, concept in enumerate(MODEL["concepts"]):
+        if not concept.get("rdfClass"):
+            continue
+        node = URIRef(f"https://example.invalid/lt-model/{concept['id']}")
+        nodes[concept["id"]] = node
+        graph.add((node, RDF.type, LT[concept["rdfClass"].split(":")[1]]))
+        graph.add((node, DCTERMS.identifier, Literal(f"019a1234-5678-7abc-8def-{index:012x}")))
+        policy = concept["rdfValidation"]
+        if policy["provenanceRequired"]:
+            graph.add((node, PROV.wasDerivedFrom, URIRef(f"https://example.invalid/evidence/{concept['id']}")))
+        if concept["id"] == "identity" or policy.get("subjectKind"):
+            graph.add((node, LT.subjectKind, Literal(policy.get("subjectKind", "entity"))))
+            graph.add((node, LT.domainType, Literal(policy.get("domainType", "test.identity"))))
+        if concept["id"] == "publication_version":
+            graph.add((node, LT.publicationVisibility, Literal("metadata_only")))
+        if concept["id"] == "resolution":
+            graph.add((node, LT.resolutionStatus, Literal("not_applicable")))
+        if concept["id"] == "classification":
+            graph.add((node, LT.classificationStatus, Literal("not_applicable")))
+            graph.add((node, LT.classificationMethod, Literal("synthetic-validator.v1")))
+            graph.add((node, LT.classificationFacet, Literal("doc_type")))
+        if concept["id"] == "public_projection":
+            graph.add((node, LT.publicationPolicyVersion, Literal("synthetic-policy.v1")))
+    return graph, nodes
+
+
+def check_model_mutations(positive: Graph, shapes: Graph, ontology: Graph, nodes: dict[str, URIRef]) -> int:
+    count = 0
+
+    def rejects(label: str, remove=(), add=()) -> None:
+        nonlocal count
+        changed = merge_graphs(positive)
+        for triple in remove:
+            changed.remove(triple)
+        for triple in add:
+            changed.add(triple)
+        focus = list({triple[0] for triple in [*remove, *add]})
+        conforms, _, _ = run_shacl(changed, shapes, ontology, focus_nodes=focus)
+        require(not conforms, f"semantic mutation passed: {label}")
+        count += 1
+
+    for concept in MODEL["concepts"]:
+        if not concept.get("rdfClass"):
+            continue
+        node = nodes[concept["id"]]
+        rejects(f"missing identity/{concept['id']}", remove=list(positive.triples((node, DCTERMS.identifier, None))))
+        if concept["rdfValidation"]["provenanceRequired"]:
+            rejects(f"missing provenance/{concept['id']}", remove=list(positive.triples((node, PROV.wasDerivedFrom, None))))
+        kind = concept["rdfValidation"].get("subjectKind")
+        if kind:
+            rejects(f"wrong identity kind/{concept['id']}",
+                    remove=list(positive.triples((node, LT.subjectKind, None))),
+                    add=[(node, LT.subjectKind, Literal("entity" if kind == "event" else "event"))])
+    rejects("publication collapsed with document", add=[(nodes["publication"], RDF.type, LT.DocumentResource)])
+    rejects("procurement mention collapsed with contract", add=[(nodes["procurement_mention"], RDF.type, LT.ProcurementContract)])
+    rejects("procurement mention certifies a contract", add=[(nodes["procurement_mention"], LT.describesContract, URIRef("https://example.invalid/contract"))])
+    rejects("withheld publication title", add=[(nodes["publication_version"], DCTERMS.title, Literal("private marker"))])
+    rejects("publishable version lacks policy", remove=[(nodes["publication_version"], LT.publicationVisibility, Literal("metadata_only"))], add=[(nodes["publication_version"], LT.publicationVisibility, Literal("publishable"))])
+    rejects("resolved outcome lacks target", remove=[(nodes["resolution"], LT.resolutionStatus, Literal("not_applicable"))], add=[(nodes["resolution"], LT.resolutionStatus, Literal("resolved"))])
+    rejects("non-resolution creates synthetic target", add=[(nodes["resolution"], LT.resolvedSubject, nodes["identity"])])
+    rejects("classification lacks concept", remove=[(nodes["classification"], LT.classificationStatus, Literal("not_applicable"))], add=[(nodes["classification"], LT.classificationStatus, Literal("classified"))])
+    rejects("non-classification invents concept", add=[(nodes["classification"], LT.assignedConcept, nodes["taxonomy"])])
+    rejects("public projection lacks policy", remove=list(positive.triples((nodes["public_projection"], LT.publicationPolicyVersion, None))))
+    return count
+
+
 def run_shacl(
     data_graph: Graph,
     shapes: Graph,
     ontology: Graph,
+    focus_nodes: list[URIRef] | None = None,
 ) -> tuple[bool, Graph, str]:
     conforms, report_graph, report_text = validate(
         data_graph=data_graph,
@@ -235,6 +337,7 @@ def run_shacl(
         advanced=True,
         allow_infos=False,
         allow_warnings=False,
+        focus_nodes=focus_nodes,
     )
     return bool(conforms), report_graph, str(report_text)
 
@@ -252,14 +355,17 @@ def main() -> None:
     check_profile(profile)
     check_concept_scheme(concepts)
     check_shape_inventory(shapes)
+    check_model_correspondence(ontology)
+    primary_fixture, primary_nodes = model_fixture()
 
-    positive_data = merge_graphs(ontology, shapes, profile, concepts, fixture)
+    positive_data = merge_graphs(ontology, shapes, profile, concepts, fixture, primary_fixture)
     conforms, _, report_text = run_shacl(positive_data, shapes, ontology)
     require(conforms, f"positive semantic fixture failed SHACL:\n{report_text}")
+    mutations = check_model_mutations(positive_data, shapes, ontology, primary_nodes)
 
     # Mutation test: provenance is a deliberate fail-closed invariant for source-derived
     # administrative entities. Removing it must produce a SHACL violation.
-    negative_data = merge_graphs(ontology, shapes, profile, concepts, fixture)
+    negative_data = merge_graphs(ontology, shapes, profile, concepts, fixture, primary_fixture)
     test_act = URIRef("https://example.invalid/lt-test/act-1")
     for triple in list(negative_data.triples((test_act, PROV.wasDerivedFrom, None))):
         negative_data.remove(triple)
@@ -284,6 +390,8 @@ def main() -> None:
         f"triples={len(positive_data)}, "
         f"node_shapes={len(set(shapes.subjects(RDF.type, SH.NodeShape)))}, "
         f"top_concepts={len(EXPECTED_TOP_CONCEPTS)}, "
+        f"model_classes={len(primary_nodes)}, "
+        f"model_mutations={mutations}, "
         "negative_provenance_mutation=detected"
     )
 

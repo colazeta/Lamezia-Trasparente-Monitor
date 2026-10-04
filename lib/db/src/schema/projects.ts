@@ -12,6 +12,7 @@ import {
   index,
   unique,
   uniqueIndex,
+  foreignKey,
 } from "drizzle-orm/pg-core";
 import { canonicalSubjectsTable } from "./canonicalIdentity";
 import { coreAssertionsTable } from "./assertions";
@@ -19,6 +20,8 @@ import { coreAssertionsTable } from "./assertions";
 export const projectsTable = pgTable(
   "project_projects",
   {
+    subjectKind: text("subject_kind").notNull().default("entity"),
+    domainType: text("domain_type").notNull().default("project.project"),
     id: uuid("id")
       .primaryKey()
       .references(() => canonicalSubjectsTable.subjectId, {
@@ -57,6 +60,19 @@ export const projectsTable = pgTable(
       .defaultNow(),
   },
   (t) => [
+    check(
+      "project_projects_typed_kind",
+      sql`${t.subjectKind} = 'entity' AND ${t.domainType} = 'project.project'`,
+    ),
+    foreignKey({
+      name: "project_projects_typed_subject_fk",
+      columns: [t.id, t.subjectKind, t.domainType],
+      foreignColumns: [
+        canonicalSubjectsTable.subjectId,
+        canonicalSubjectsTable.subjectKind,
+        canonicalSubjectsTable.domainType,
+      ],
+    }).onDelete("restrict"),
     index("project_projects_mission_idx").on(t.mission),
     index("project_projects_execution_status_idx").on(t.executionStatus),
     check(

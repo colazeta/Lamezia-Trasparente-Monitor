@@ -1,16 +1,16 @@
 # Disegno concettuale del database
 
-Revisione concettuale del 7 settembre 2026 (#1115), aggiornata l’8 settembre con la [migrazione canonica PNRR](pnrr-canonical-model.md) (#1118). Questo documento è il punto di ingresso corrente. Il [catalogo completo](conceptual-catalog.md) deriva dallo stesso registro usato dall’Archivio interno; gli [esiti dell’assessment](conceptual-assessment-2026-09-07.md) distinguono struttura, contenuti presenti e lavoro residuo.
+Revisione del 4 ottobre 2026 (#1651, #1653), dopo la [migrazione canonica PNRR](pnrr-canonical-model.md) e la [riconciliazione Albo](albo-canonical-model.md). Questo documento è il punto di ingresso corrente. Il [catalogo completo](conceptual-catalog.md) deriva dallo stesso registro usato dall’Archivio interno; la [verifica corrente](model-verification-2026-10-04.md) distingue definizioni, strutture, dati effettivi e lavoro residuo. L’assessment del 7 settembre rimane una rilevazione storica.
 
 ## I tre livelli
 
 | Livello | Domanda | Fonte di verità |
 | --- | --- | --- |
 | Concettuale | Quale oggetto rappresentiamo e come lo distinguiamo dagli altri? | `conceptualCatalog` in `architecture/data-domain-registry.v1.json`, definizioni, identità e relazioni |
-| Logico | Quale tabella conserva entità, record di fonte, associazione o proiezione? | Mappa delle 75 tabelle nel medesimo registro, con granularità esplicita |
+| Logico | Quale tabella conserva entità, record di fonte, associazione o proiezione? | Mappa delle 89 tabelle nel medesimo registro, con granularità esplicita |
 | Fisico | Quali colonne, tipi, PK, FK, vincoli e indici esistono? | `lib/db/src/schema`, migrazioni versionate e catalogo PostgreSQL effettivo nell’Archivio interno |
 
-Il profilo RDF pubblico è una rappresentazione interoperabile di una parte del dominio. Non è il catalogo delle tabelle e non descrive ancora tutti i contenuti del sito. I nomi dei domini nel catalogo sono raggruppamenti, non nuovi schemi SQL.
+Il profilo RDF 1.3.0 definisce una classe distinta per ciascuno dei 57 concetti civici censiti; contenuti redazionali e stato applicativo hanno esclusione esplicita. `model-mapping.json` collega le 89 tabelle ai concetti e conserva granularità e ruolo. Il collegamento è responsabilità concettuale: non afferma che tutte le righe legacy siano istanze RDF della classe o che tutti i record siano importati ed esportati. I domini del catalogo sono raggruppamenti, non nuovi schemi SQL.
 
 ## Identità e fonte
 
@@ -34,13 +34,13 @@ Un record può descrivere più entità, non descriverne alcuna o restare irrisol
 
 | Concetto | Identità | Rappresentazione attuale |
 | --- | --- | --- |
-| Atto | Autorità, tipo, numero e data verificati | `acts` è una struttura legacy; `fundamental_acts` è una selezione redazionale |
-| Documento | Contenuto documentale, distinto da formato e copia | Allegati JSON e tabelle documentali specifiche; manca un registro universale |
-| Pubblicazione | Fonte e identificativo di pubblicazione | `publications`; contiene anche metadati, allegati ed estrazioni |
+| Atto | Autorità, ufficio, tipo, numero e data verificati | `document_acts`; `acts` rimane legacy e `fundamental_acts` è una selezione redazionale |
+| Documento | Risorsa documentale distinta dall’atto e dai byte | `document_documents`; acquisizione e registro degli allegati binari ancora parziali |
+| Pubblicazione | Registro qualificato e identificativo di pubblicazione | `document_publications`, con versioni immutabili in `document_publication_versions`; `publications` rimane compatibilità |
 
-Nel modello target una pubblicazione può riguardare più atti e uno stesso atto può essere ripubblicato; più documenti possono documentare un atto e uno stesso documento può riguardare più atti. Queste relazioni N:M non sono oggi integralmente materializzate. PDF, testo estratto e scheda di pubblicazione non devono diventare tre atti canonici.
+Una pubblicazione può riguardare più atti e uno stesso atto può essere ripubblicato. I collegamenti da una versione ad atti e risorse documentali sono persistiti con evidenza nelle tabelle `document_publication_acts` e `document_publication_documents`. Le relazioni tra atti e tutti gli allegati non sono universalmente riconciliate. PDF, testo estratto e scheda di pubblicazione non devono diventare tre atti canonici.
 
-`lt:AdministrativeAct` nel profilo pubblico corrente descrive il record amministrativo pubblicabile; il mapping verso la distinzione giuridica atto/documento è quindi dichiarato **parziale**. Questa revisione non cambia retroattivamente il significato degli IRI pubblici.
+`lt:AdministrativeAct` conserva il significato del record amministrativo pubblicabile nelle API di compatibilità. `lt:AdministrativeDecision`, `lt:PublicationEvent` e `lt:DocumentResource` rappresentano le nuove identità distinte; le shape rifiutano la fusione delle tre classi. Gli IRI preesistenti non cambiano significato retroattivamente.
 
 ## Persone, organi e incarichi
 
@@ -60,12 +60,13 @@ Il diagramma esprime le responsabilità concettuali; l’implementazione è parz
 flowchart TD
   R["Record di fonte"] -->|"N:M, primo perimetro PNRR"| P["Progetto pubblico"]
   A["Procedura di affidamento"] -->|"N:M, da realizzare"| P
-  A -->|"1:N, da realizzare"| C["Contratto pubblico"]
+  A -->|"1:N, schema implementato"| L["Lotto"]
+  L -->|"1:N, schema implementato"| C["Contratto pubblico"]
 ```
 
 `attuazione_pnrr_projects` e `italiadomani_projects` sono rappresentazioni per fonte del medesimo tipo di oggetto. La prima è identificata da `source_id`; la seconda dal CUP nel suo schema attuale. Il progetto canonico in `project_projects` usa un UUIDv7, identificatori qualificati in `project_identifiers` e scelte dei valori sostenute da asserzioni; mantiene versioni e divergenze di fonte. La mancanza di CUP non deve eliminare il record sorgente.
 
-Procedura, lotto, aggiudicazione, contratto e pagamento hanno granularità diverse. Il CIG collega informazioni della procedura o del lotto, ma non identifica indistintamente ogni contratto, pagamento e menzione. `contracts` è ancora una riga monolitica da armonizzare; il modello di dettaglio di lotti, parti ed eventi finanziari appartiene alla fase appalti del piano esistente.
+Procedura, lotto, aggiudicazione, contratto e pagamento hanno granularità diverse. Il CIG collega informazioni della procedura o del lotto, ma non identifica indistintamente ogni contratto, pagamento e menzione. `procurement_procedures`, `procurement_lots`, `procurement_contracts` e `procurement_financial_events` hanno identità, vincoli e evidenze distinti; il loro popolamento da fonti strutturate è ancora da riconciliare. I 41 candidati in `procurement_mentions` non generano contratti sintetici. `contracts` rimane una rappresentazione legacy; parti e attraversamento tra domini restano nel piano di migrazione.
 
 ## Misure, luoghi e contenuti civici
 
@@ -80,7 +81,7 @@ Le cardinalità nel catalogo sono massime; l’assenza di un collegamento resta 
 
 ## Decisioni fisiche e passaggio graduale
 
-La revisione del 7 settembre riguardava mapping e presentazione. L’aggiornamento PNRR aggiunge cinque tabelle con migrazioni versionate `0021` e `0022`, backfill controllato e indici per vincoli, identificatori e storia. I tipi, gli indici e le FK effettivi restano ispezionabili; il catalogo delle 75 tabelle non viene sostituito da una tabella generica di attributi.
+L’aggiornamento PNRR aggiunge cinque tabelle con migrazioni `0021` e `0022`; l’aggiornamento Albo aggiunge identità qualificate e quattordici tabelle con `0023` e `0024`. Il deploy Albo del 4 ottobre ha verificato 25/25 migrazioni applicate. La successiva `0025` aggiunge i vincoli qualificati `entity / project.project` ai progetti esistenti; prima della migrazione, i 30 progetti produttivi risultano compatibili. I tipi, gli indici e le FK restano ispezionabili; le 89 tabelle non sono sostituite da una tabella generica di attributi.
 
 Per le successive migrazioni: aggiungere prima strutture tipizzate e ponti verso l’identità esistente; eseguire backfill idempotenti con record irrisolti espliciti; riconciliare conteggi e campi per fonte/versione; verificare le letture API; infine convertire i vecchi modelli in proiezioni di compatibilità. La dismissione richiede assenza di scritture legacy e nessuna perdita di evidenza. Non rinominare tabelle solo per farle assomigliare al menu.
 
@@ -88,6 +89,6 @@ PK e vincoli univoci devono esprimere l’identità alla granularità corretta; 
 
 ## Manutenzione della mappa
 
-Aggiornare il registro quando cambia una tabella, una rotta o una fonte di lettura. Il controllo architetturale rifiuta tabelle e percorsi non classificati, termini locali RDF non dichiarati, evidenze di codice mancanti e proiezioni generate non aggiornate. La documentazione e i sottogruppi del menu sono generati dal registro; il catalogo fisico completo è caricato dall’area admin, mentre il menu pubblico usa soltanto una piccola mappa di percorsi.
+Aggiornare il registro quando cambia una tabella, una rotta, un concetto o una fonte di lettura. Il controllo architetturale rifiuta tabelle e percorsi non classificati, classi primarie mancanti o fuse, relazioni senza mapping, evidenze di codice mancanti e proiezioni generate non aggiornate. Ontologia, shape, mapping, documentazione e sottogruppi del menu derivano dal registro; il catalogo fisico completo resta nell’area admin. Il validatore RDF prova anche rimozione di identità/provenienza, confusione tra classi, target sintetici e titoli trattenuti.
 
 `pnpm run architecture:audit` verifica la convergenza strutturale. Non sostituisce la riconciliazione dei dati, la verifica della fonte o il controllo dell’autorizzazione server.

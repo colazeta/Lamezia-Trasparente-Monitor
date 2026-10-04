@@ -1,5 +1,7 @@
 # Assessment di armonizzazione concettuale
 
+> Rilevazione storica del 7 settembre. Per modello, migrazioni e conteggi correnti vedere [la verifica del 4 ottobre 2026](model-verification-2026-10-04.md).
+
 Issue #1115, 7 settembre 2026. Evidenze: schema e codice della baseline `0d561894b78c47c82ee4c1fae2d650e2cf8a9739`, conteggi PostgreSQL eseguiti in sola lettura durante questa revisione, [query e snapshot riproducibili](audit/conceptual-2026-09-07.ipynb). Il traffico di acquisizione può far variare i conteggi successivi.
 
 ## Giudizio

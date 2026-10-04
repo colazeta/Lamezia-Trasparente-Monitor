@@ -5,8 +5,8 @@
     "lt:SemanticProfile",
     "adms:SemanticAsset"
   ],
-  "dct:identifier": "lt-semantic-profile-1.2.0",
-  "owl:versionInfo": "1.2.0",
+  "dct:identifier": "lt-semantic-profile-1.3.0",
+  "owl:versionInfo": "1.3.0",
   "dct:title": [
     {
       "@value": "LameziaTrasparente civic semantic profile",
@@ -32,7 +32,7 @@
     "@type": "xsd:date"
   },
   "dct:modified": {
-    "@value": "2026-09-03",
+    "@value": "2026-10-04",
     "@type": "xsd:date"
   },
   "dct:references": [

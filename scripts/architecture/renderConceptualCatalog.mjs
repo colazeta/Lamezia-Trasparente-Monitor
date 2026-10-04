@@ -47,7 +47,7 @@ export function conceptualProjections(model) {
         ]),
       ),
       "## Modello logico: tabelle per dominio",
-      "I domini sono raggruppamenti concettuali; le tabelle restano nello schema PostgreSQL `public`. `entity`: entità/osservazione; `source`: struttura o record di fonte; `relation`: associazione; `projection`: proiezione; `legacy`: rappresentazione da armonizzare; `editorial`: contenuto redazionale; `operation`: esecuzione; `application`: stato del servizio.",
+      "I domini sono raggruppamenti concettuali; le tabelle restano nello schema PostgreSQL `public`. `entity`: entità/osservazione; `event`: evento; `source`: struttura o record di fonte; `relation`: associazione; `projection`: proiezione; `legacy`: rappresentazione da armonizzare; `editorial`: contenuto redazionale; `operation`: esecuzione; `application`: stato del servizio.",
       ...model.domains.flatMap((d) => [
         `### ${d.label}`,
         d.description,
