@@ -1,8 +1,8 @@
 {
   "schemaVersion": "anac-bdncp-sync.v1",
-  "generatedAt": "2026-09-03T10:04:39.844Z",
+  "generatedAt": "2026-10-04T11:16:00.084Z",
   "status": "degraded",
-  "lastAttemptAt": "2026-09-03T10:04:39.844Z",
+  "lastAttemptAt": "2026-10-04T11:16:00.084Z",
   "lastSuccessAt": null,
   "failureCategory": "source-unavailable",
   "source": {
@@ -20,7 +20,6 @@
     "80442759B9",
     "9705430633",
     "A0187A63A4",
-    "A01B55677B",
     "A01D5289C5",
     "B10F05AA17",
     "B24820344C",
@@ -34,6 +33,7 @@
     "BA19CCDBF3",
     "BA40458244",
     "BA558BFAEF",
+    "BBD3830D1B",
     "BBD93EF334",
     "BC59BBA1AD",
     "BCB680D8DC",
