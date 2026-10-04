@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import { Link, useRoute } from "wouter";
-import { useListPnrrProjects } from "@workspace/api-client-react";
 import {
   Landmark,
   FileText,
@@ -67,11 +66,8 @@ import { withPublicBasePath } from "@/lib/publicBasePath";
 import {
   LAMEZIA_PNRR_STATIC_DATA,
   LAMEZIA_PNRR_STATIC_DATA_URL,
-  LAMEZIA_PNRR_STATIC_VIEW,
-  adaptRuntimePnrrDocuments,
-  adaptRuntimePnrrProjects,
-  mergePnrrViewDocuments,
-  mergePnrrViewProjects,
+  buildStaticPnrrViewData,
+  type LameziaPnrrStaticDataset,
   type PnrrViewAttachment,
   type PnrrViewProject,
 } from "@/data/lameziaPnrr";
@@ -207,26 +203,15 @@ function dataStatus(project: PnrrViewProject) {
   return "ufficiale (censimento Italia Domani)";
 }
 
+import { useCanonicalCivicSnapshot } from "@/hooks/useCanonicalCivicSnapshot";
+
 export function Pnrr() {
   const [isProjectRoute, routeParams] = useRoute("/pnrr/:cup");
-  const {
-    data,
-    isLoading,
-    isError: apiSourceUnavailable,
-  } = useListPnrrProjects();
-  const runtimeProjects = useMemo(
-    () => adaptRuntimePnrrProjects(data?.projects),
-    [data?.projects],
-  );
-  const runtimeUnmatchedEvidence = useMemo(
-    () => adaptRuntimePnrrDocuments(data?.uncensored),
-    [data?.uncensored],
-  );
-  const projects = useMemo(
-    () =>
-      mergePnrrViewProjects(runtimeProjects, LAMEZIA_PNRR_STATIC_VIEW.projects),
-    [runtimeProjects],
-  );
+  const { snapshot } = useCanonicalCivicSnapshot();
+  const dataset = snapshot.pnrr as unknown as LameziaPnrrStaticDataset;
+  const view = useMemo(() => buildStaticPnrrViewData(dataset), [dataset]);
+  const projects = view.projects;
+  const uncensored = view.unmatchedEvidence;
   const requestedCup = isProjectRoute ? normaliseCup(routeParams?.cup) : null;
   const requestedProject = useMemo(
     () =>
@@ -237,27 +222,13 @@ export function Pnrr() {
         : null,
     [projects, requestedCup],
   );
-  const uncensored = useMemo(
-    () =>
-      mergePnrrViewDocuments(
-        runtimeUnmatchedEvidence,
-        LAMEZIA_PNRR_STATIC_VIEW.unmatchedEvidence,
-      ),
-    [runtimeUnmatchedEvidence],
-  );
-  const usingStaticFeed = runtimeProjects.length === 0;
-  const sourceUnavailable = apiSourceUnavailable && projects.length === 0;
-  const sourceLoading = isLoading && projects.length === 0;
-  const censusLastUpdatedAt = usingStaticFeed
-    ? LAMEZIA_PNRR_STATIC_DATA.metadata.materialized_at
-    : data?.censusLastUpdatedAt;
-  const importSourceLabel = usingStaticFeed
-    ? LAMEZIA_PNRR_STATIC_DATA.metadata.source
-    : data?.importSourceLabel;
-  const importSourceUrl = usingStaticFeed
-    ? LAMEZIA_PNRR_STATIC_DATA.metadata.source_url
-    : data?.importSourceUrl;
-  const importSourceStatus = usingStaticFeed ? "ok" : data?.importSourceStatus;
+  const usingStaticFeed = true;
+  const sourceUnavailable = false;
+  const sourceLoading = false;
+  const censusLastUpdatedAt = dataset.metadata.materialized_at;
+  const importSourceLabel = dataset.metadata.source;
+  const importSourceUrl = dataset.metadata.source_url;
+  const importSourceStatus = "ok";
 
   const [search, setSearch] = useState("");
   const [amountFilter, setAmountFilter] = useState<AmountFilter>("all");
@@ -477,11 +448,22 @@ export function Pnrr() {
         />
         <div className="mb-8 space-y-2 text-xs text-muted-foreground">
           <CivicMonitorReturn context="I progetti PNRR possono essere collegati a report civici, atti, affidamenti e richieste di accesso civico come elementi documentali da verificare." />
+          <p>
+            Edizione pubblica verificata sul modello canonico. Le date riportano
+            l’acquisizione delle fonti, non la data di pubblicazione del sito.{" "}
+            <a
+              className="text-primary hover:underline"
+              href="/api/public/v1/civic-snapshot"
+            >
+              Provenienza e copertura dell’edizione
+            </a>
+            .
+          </p>
           {importSourceLabel && (
             <p className="flex flex-wrap items-center gap-1.5">
               <ExternalLink className="h-3 w-3" aria-hidden="true" />
               {usingStaticFeed
-                ? "Fonte del feed statico: "
+                ? "Fonte delle schede comunali: "
                 : "Fonte dati usata dall'ultima importazione: "}
               {importSourceUrl ? (
                 <a
@@ -506,7 +488,7 @@ export function Pnrr() {
             <p className="flex items-center gap-1.5">
               <RefreshCw className="h-3 w-3" aria-hidden="true" />
               {usingStaticFeed
-                ? "Feed statico materializzato: "
+                ? "Snapshot della fonte: "
                 : "Ultimo aggiornamento dati rilevato: "}
               {formatDate(censusLastUpdatedAt)}
             </p>
@@ -519,35 +501,31 @@ export function Pnrr() {
               rel="noopener noreferrer"
               className="font-medium text-primary hover:underline"
             >
-              Apri il feed JSON materializzato
+              Apri lo snapshot JSON pubblicato
             </a>
           </p>
-          {LAMEZIA_PNRR_STATIC_DATA.coverage.projects_with_opencup > 0 && (
+          {dataset.coverage.projects_with_opencup > 0 && (
             <p className="flex flex-wrap items-center gap-1.5">
               <ExternalLink className="h-3 w-3" aria-hidden="true" />
               Arricchimento anagrafico:{" "}
               <a
-                href={LAMEZIA_PNRR_STATIC_DATA.metadata.opencup_source_url}
+                href={dataset.metadata.opencup_source_url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-medium text-primary hover:underline"
               >
-                {LAMEZIA_PNRR_STATIC_DATA.metadata.opencup_source}
+                {dataset.metadata.opencup_source}
               </a>
               <span>
-                · {LAMEZIA_PNRR_STATIC_DATA.coverage.projects_with_opencup} CUP
-                verificati · costo e finanziamento pubblico esposti in{" "}
-                {
-                  LAMEZIA_PNRR_STATIC_DATA.coverage
-                    .projects_with_opencup_public_funding
-                }{" "}
-                schede
+                · {dataset.coverage.projects_with_opencup} CUP verificati ·
+                costo e finanziamento pubblico esposti in{" "}
+                {dataset.coverage.projects_with_opencup_public_funding} schede
               </span>
             </p>
           )}
           <p>
-            {LAMEZIA_PNRR_STATIC_DATA.metadata.coverage_note}{" "}
-            {LAMEZIA_PNRR_STATIC_DATA.metadata.reconciliation_rule}
+            {dataset.metadata.coverage_note}{" "}
+            {dataset.metadata.reconciliation_rule}
           </p>
         </div>
 

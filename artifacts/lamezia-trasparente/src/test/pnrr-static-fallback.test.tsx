@@ -3,13 +3,24 @@ import { Router } from "wouter";
 import { memoryLocation } from "wouter/memory-location";
 import { describe, expect, it, vi } from "vitest";
 
-vi.mock("@workspace/api-client-react", () => ({
-  useListPnrrProjects: () => ({
-    data: undefined,
-    isLoading: false,
-    isError: true,
-  }),
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import type { ReactNode } from "react";
+
+vi.mock("@/lib/apiBaseUrl", () => ({
+  apiFetch: vi.fn(async () => new Response(null, { status: 503 })),
 }));
+
+function renderCivic(ui: ReactNode) {
+  return render(
+    <QueryClientProvider
+      client={
+        new QueryClient({ defaultOptions: { queries: { retry: false } } })
+      }
+    >
+      {ui}
+    </QueryClientProvider>,
+  );
+}
 
 vi.mock("@/components/MonitoringReportsSection", () => ({
   MonitoringReportsSection: () => null,
@@ -24,7 +35,7 @@ import { OpenCupProjectDetails, Pnrr } from "@/pages/Pnrr";
 
 describe("PNRR page static feed", () => {
   it("keeps municipal project sheets visible when the runtime API fails", () => {
-    render(
+    renderCivic(
       <Router>
         <Pnrr />
       </Router>,
@@ -93,7 +104,7 @@ describe("PNRR page static feed", () => {
       value: { writeText },
     });
 
-    render(
+    renderCivic(
       <Router hook={location.hook}>
         <Pnrr />
       </Router>,

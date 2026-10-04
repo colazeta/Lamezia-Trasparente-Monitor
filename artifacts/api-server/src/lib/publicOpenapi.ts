@@ -75,6 +75,33 @@ export function buildPublicOpenApi(baseUrl: string): Record<string, unknown> {
       { name: "pnrr", description: "Progetti PNRR (censimento Attuazione)" },
     ],
     paths: {
+      "/civic-snapshot": {
+        get: {
+          tags: ["documents", "pnrr"],
+          summary: "Edizione canonica pubblica Albo/PNRR",
+          description:
+            "Snapshot completo verificato sul database: Albo corrente, archivio delibere e schede PNRR comunali. Include policy, identità canoniche, versioni/hash delle fonti e riconciliazione; non equivale al censimento nazionale. Nessuna risposta parziale in caso di prova fallita.",
+          operationId: "getCanonicalCivicSnapshot",
+          responses: {
+            "200": jsonResponse(
+              {
+                $ref: "https://lamezia-trasparente.pages.dev/semantic/civic-public-projection.schema.json",
+              },
+              "Edizione pubblica verificata",
+            ),
+            "503": jsonResponse(
+              {
+                type: "object",
+                properties: {
+                  status: { const: "canonical-projection-unavailable" },
+                  scope: { type: "string" },
+                },
+              },
+              "Proiezione non verificabile o database indisponibile",
+            ),
+          },
+        },
+      },
       "/documents": {
         get: {
           operationId: "listPublicDocuments",

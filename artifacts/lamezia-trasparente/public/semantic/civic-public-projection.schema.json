@@ -1,0 +1,348 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lamezia-trasparente.pages.dev/semantic/civic-public-projection.schema.json",
+  "title": "Canonical municipal Albo and PNRR public edition v1",
+  "description": "A complete public edition verified against registered source bytes, typed canonical values and evidence. Acquisition dates remain source dates. This contract does not certify historical completeness or current freshness.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "policy_version",
+    "scope",
+    "sources",
+    "reconciliation",
+    "body_hash",
+    "albo",
+    "alboArchive",
+    "pnrr"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "canonical-civic-public.v1"
+    },
+    "policy_version": {
+      "const": "canonical-albo-pnrr-public.2026-10-04.1"
+    },
+    "scope": {
+      "const": "registered_municipal_albo_and_pnrr_snapshots"
+    },
+    "body_hash": {
+      "$ref": "#/$defs/hash"
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_key",
+          "release_id",
+          "byte_hash",
+          "repository_commit",
+          "repository_path"
+        ],
+        "properties": {
+          "source_key": {
+            "enum": [
+              "lamezia.albo.current",
+              "lamezia.albo.delibere",
+              "lamezia.pnrr.municipal"
+            ]
+          },
+          "release_id": {
+            "$ref": "#/$defs/uuid7"
+          },
+          "byte_hash": {
+            "$ref": "#/$defs/hash"
+          },
+          "repository_commit": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{40}$"
+          },
+          "repository_path": {
+            "enum": [
+              "data/public/albo/latest.json",
+              "data/public/albo/delibere-archive.json",
+              "artifacts/lamezia-trasparente/src/data/generated/lameziaPnrrProjects.json"
+            ]
+          }
+        }
+      }
+    },
+    "reconciliation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "unexplained_differences",
+        "albo_records",
+        "pnrr_projects",
+        "withheld_albo_records",
+        "withheld_pnrr_evidence"
+      ],
+      "properties": {
+        "status": {
+          "const": "verified"
+        },
+        "unexplained_differences": {
+          "const": 0
+        },
+        "albo_records": {
+          "$ref": "#/$defs/count"
+        },
+        "pnrr_projects": {
+          "$ref": "#/$defs/count"
+        },
+        "withheld_albo_records": {
+          "$ref": "#/$defs/count"
+        },
+        "withheld_pnrr_evidence": {
+          "$ref": "#/$defs/count"
+        }
+      }
+    },
+    "albo": {
+      "$ref": "#/$defs/alboEdition"
+    },
+    "alboArchive": {
+      "$ref": "#/$defs/alboEdition"
+    },
+    "pnrr": {
+      "type": "object",
+      "required": [
+        "metadata",
+        "coverage",
+        "source_coverage",
+        "projects",
+        "albo_evidence",
+        "unmatched_albo_evidence_ids"
+      ],
+      "properties": {
+        "metadata": {
+          "type": "object"
+        },
+        "coverage": {
+          "type": "object"
+        },
+        "source_coverage": {
+          "type": "object"
+        },
+        "projects": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "cup",
+              "title",
+              "amount_eur",
+              "attachments",
+              "albo_evidence_ids",
+              "canonical"
+            ],
+            "properties": {
+              "cup": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "amount_eur": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "attachments": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              },
+              "albo_evidence_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "canonical": {
+                "$ref": "#/$defs/projectIdentity"
+              }
+            }
+          }
+        },
+        "albo_evidence": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "public_visibility",
+              "privacy_risk"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "public_visibility": {
+                "const": "publishable"
+              },
+              "privacy_risk": {
+                "const": "low"
+              }
+            }
+          }
+        },
+        "unmatched_albo_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "uuid7": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-7[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$"
+    },
+    "count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "publicationIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "publication_id",
+        "source_record_id",
+        "release_id"
+      ],
+      "properties": {
+        "publication_id": {
+          "$ref": "#/$defs/uuid7"
+        },
+        "source_record_id": {
+          "$ref": "#/$defs/uuid7"
+        },
+        "release_id": {
+          "$ref": "#/$defs/uuid7"
+        }
+      }
+    },
+    "projectIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "project_id",
+        "source_record_id",
+        "release_id"
+      ],
+      "properties": {
+        "project_id": {
+          "$ref": "#/$defs/uuid7"
+        },
+        "source_record_id": {
+          "$ref": "#/$defs/uuid7"
+        },
+        "release_id": {
+          "$ref": "#/$defs/uuid7"
+        }
+      }
+    },
+    "alboEdition": {
+      "type": "object",
+      "required": [
+        "source",
+        "counts",
+        "source_counts",
+        "projection_counts",
+        "items"
+      ],
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "retrieved_at": {
+          "type": "string"
+        },
+        "counts": {
+          "type": "object"
+        },
+        "source_counts": {
+          "type": "object"
+        },
+        "projection_counts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_records",
+            "public_items",
+            "withheld"
+          ],
+          "properties": {
+            "source_records": {
+              "$ref": "#/$defs/count"
+            },
+            "public_items": {
+              "$ref": "#/$defs/count"
+            },
+            "withheld": {
+              "$ref": "#/$defs/count"
+            }
+          }
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "subject",
+              "public_visibility",
+              "canonical"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "subject": {
+                "type": "string"
+              },
+              "public_visibility": {
+                "enum": [
+                  "publishable",
+                  "metadata_only"
+                ]
+              },
+              "canonical": {
+                "$ref": "#/$defs/publicationIdentity"
+              }
+            }
+          }
+        },
+        "generated_at": {
+          "type": "string"
+        }
+      },
+      "anyOf": [
+        {
+          "required": [
+            "retrieved_at"
+          ]
+        },
+        {
+          "required": [
+            "generated_at"
+          ]
+        }
+      ]
+    }
+  }
+}

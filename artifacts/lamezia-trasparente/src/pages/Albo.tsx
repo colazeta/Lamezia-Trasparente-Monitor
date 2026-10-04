@@ -36,12 +36,13 @@ import {
 import { PageMeta } from "@/components/seo/PageMeta";
 import {
   ALBO_ARCHIVED_DOCUMENTS_BY_ID,
+  ALBO_PUBLIC_SUPPORT_BODY_HASH,
   ALBO_DOCUMENTS_MANIFEST,
   ALBO_PUBLIC_DIFF_CHANGED_ITEMS,
   ALBO_PUBLIC_DIFF_NEW_ITEMS,
   ALBO_PUBLIC_DIFF_REMOVED_ITEMS,
-  ALBO_PUBLIC_DIFF_SUMMARY,
   ALBO_PUBLIC_RUN_ITEMS,
+  canonicalAlboRunData,
   ALBO_PUBLIC_RUN_SUMMARY,
   alboPublicSearchText,
   normalizeAlboPublicSearchText,
@@ -57,6 +58,8 @@ import {
   updateAlboReaderSearch,
   type AlboReaderStatePatch,
 } from "@/lib/alboReaderState";
+
+import { useCanonicalCivicSnapshot } from "@/hooks/useCanonicalCivicSnapshot";
 
 type PulseKind = "new" | "changed" | "removed" | "context";
 
@@ -162,7 +165,8 @@ function classificationStats(
   );
 }
 
-function buildPulseItems(): PulseItem[] {
+function buildPulseItems(items: AlboPublicRunItem[]): PulseItem[] {
+  const current = new Map(items.map((item) => [item.id, item]));
   const activity: PulseItem[] = [
     ...ALBO_PUBLIC_DIFF_NEW_ITEMS.map((item) => ({
       kind: "new" as const,
@@ -178,9 +182,13 @@ function buildPulseItems(): PulseItem[] {
     })),
   ];
 
-  if (activity.length > 0) return activity.slice(0, PULSE_LIMIT);
+  const verified = activity.flatMap((pulse) => {
+    const item = current.get(pulse.item.id);
+    return item ? [{ ...pulse, item }] : [];
+  });
+  if (verified.length > 0) return verified.slice(0, PULSE_LIMIT);
 
-  return sortByPublication(ALBO_PUBLIC_RUN_ITEMS)
+  return sortByPublication(items)
     .slice(0, PULSE_LIMIT)
     .map((item) => ({ kind: "context" as const, item }));
 }
@@ -205,7 +213,7 @@ function AlboRecordDialog({
   item: AlboPublicRunItem | null;
   onClose: () => void;
 }) {
-  const archivedDocument = item
+  const archivedDocument = item?.retained_archival_edition
     ? ALBO_ARCHIVED_DOCUMENTS_BY_ID.get(item.id)
     : null;
 
@@ -441,7 +449,9 @@ function CurrentItemCard({
   item: AlboPublicRunItem;
   onSelect: (item: AlboPublicRunItem, trigger: HTMLElement) => void;
 }) {
-  const archived = ALBO_ARCHIVED_DOCUMENTS_BY_ID.has(item.id);
+  const archived =
+    item.retained_archival_edition &&
+    ALBO_ARCHIVED_DOCUMENTS_BY_ID.has(item.id);
 
   return (
     <Card className="p-4">
@@ -739,6 +749,16 @@ function AlboArchive({
 }
 
 export function Albo() {
+  const { snapshot } = useCanonicalCivicSnapshot();
+  const { items: ALBO_PUBLIC_RUN_ITEMS, summary: ALBO_PUBLIC_RUN_SUMMARY } =
+    useMemo(
+      () =>
+        canonicalAlboRunData(
+          snapshot.albo,
+          snapshot.body_hash === ALBO_PUBLIC_SUPPORT_BODY_HASH,
+        ),
+      [snapshot],
+    );
   const search = useSearch();
   const [location, navigate] = useLocation();
   const readerState = useMemo(() => parseAlboReaderState(search), [search]);
@@ -748,10 +768,16 @@ export function Albo() {
     readerState.selectedActId,
   );
 
-  const pulseItems = useMemo(() => buildPulseItems(), []);
+  const pulseItems = useMemo(
+    () =>
+      snapshot.body_hash === ALBO_PUBLIC_SUPPORT_BODY_HASH
+        ? buildPulseItems(ALBO_PUBLIC_RUN_ITEMS)
+        : [],
+    [ALBO_PUBLIC_RUN_ITEMS, snapshot.body_hash],
+  );
   const sortedItems = useMemo(
     () => sortByPublication(ALBO_PUBLIC_RUN_ITEMS),
-    [],
+    [ALBO_PUBLIC_RUN_ITEMS],
   );
   const snapshotDay = civicDateKey(ALBO_PUBLIC_RUN_SUMMARY.retrieved_at);
   const dailyItems = useMemo(
@@ -771,7 +797,7 @@ export function Albo() {
         ALBO_PUBLIC_RUN_ITEMS,
         (item) => item.classification.sector,
       ),
-    [],
+    [ALBO_PUBLIC_RUN_ITEMS],
   );
   const categoryOptions = useMemo(
     () =>
@@ -779,7 +805,7 @@ export function Albo() {
         ALBO_PUBLIC_RUN_ITEMS,
         (item) => item.classification.act_category,
       ),
-    [],
+    [ALBO_PUBLIC_RUN_ITEMS],
   );
   const query = readerState.q;
   const sectorFilter = sectorOptions.some(
@@ -877,7 +903,7 @@ export function Albo() {
     previousSelectedActRef.current = readerState.selectedActId;
   }, [readerState.selectedActId]);
 
-  const pulseCounts = ALBO_PUBLIC_DIFF_SUMMARY.counts;
+  const pulseCounts = ALBO_PUBLIC_RUN_SUMMARY.counts;
   const hasDiff =
     pulseCounts.new + pulseCounts.changed + pulseCounts.removed > 0;
   const baselineIsPublicSafe =
@@ -1119,7 +1145,11 @@ export function Albo() {
                   />
                   <MethodRow
                     label="Documenti archiviati"
-                    value={`${ALBO_DOCUMENTS_MANIFEST.counts.archived} su ${ALBO_DOCUMENTS_MANIFEST.counts.considered} considerati`}
+                    value={
+                      snapshot.body_hash === ALBO_PUBLIC_SUPPORT_BODY_HASH
+                        ? `${ALBO_DOCUMENTS_MANIFEST.counts.archived} su ${ALBO_DOCUMENTS_MANIFEST.counts.considered} considerati`
+                        : "Archivio conservato nell’edizione pubblicata"
+                    }
                   />
                 </dl>
               </div>

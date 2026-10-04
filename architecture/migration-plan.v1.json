@@ -85,6 +85,7 @@
       "key": "albo_v2",
       "status": "in_progress",
       "objective": "Separate source record, publication, document, administrative act and administrative event while preserving the current public-safety boundary.",
+      "implementationNotes": ["Issue #1655: current/archive Albo public readers now consume the verified canonical public edition; source-only record descriptions and legacy API rows are not merged into it."],
       "prerequisites": [2, 3, 4, 5, 6],
       "legacyModules": ["publications", "acts", "fundamentalActs", "oversightOpinions"],
       "acceptance": ["Every current publication maps or has an explicit non-migration reason", "Attachments and extracted text retain provenance", "All acquired records receive a taxonomy outcome"],
@@ -105,6 +106,7 @@
       "key": "projects_v2",
       "status": "in_progress",
       "objective": "Resolve Attuazione PNRR, Italia Domani, OpenCUP and related evidence onto canonical project entities.",
+      "implementationNotes": ["Issue #1655: the 30 registered municipal project sheets, selected field evidence and historical CUP qualification are reconciled before public API/static export; national census readers remain outside this cutover."],
       "prerequisites": [2, 3, 5],
       "legacyModules": ["attuazionePnrr", "italiadomaniProjects"],
       "acceptance": ["Same canonical project is not duplicated by source", "CUP is modeled as an identifier", "Source discrepancies remain visible as assertions"],
@@ -178,6 +180,7 @@
       "key": "universal_public_read_models",
       "status": "planned",
       "objective": "Generalize the LTCEDS canonical-to-public projection boundary across public domains.",
+      "implementationNotes": ["Issue #1655 delivers a bounded Albo/municipal-PNRR pilot with one read-only projection, source/hash proof, fail-closed API, deterministic static edition and checked refresh PRs. Universal phase remains planned; its cross-domain prerequisites are not claimed complete."],
       "prerequisites": [7, 8, 9, 11, 12, 13],
       "acceptance": ["Public APIs/static exports read public-safe projections", "Internal sensitive fields cannot leak through ad-hoc runtime reconstruction", "Projection policy/version is auditable"]
     },
@@ -194,6 +197,7 @@
       "key": "db_driven_static_exports",
       "status": "planned",
       "objective": "Move semantic resolution out of Vite/Cloudflare build into validated canonical/public projection jobs.",
+      "implementationNotes": ["Issue #1655 delivers a bounded Albo/municipal-PNRR pilot with one read-only projection, source/hash proof, fail-closed API, deterministic static edition and checked refresh PRs. Universal phase remains planned; its cross-domain prerequisites are not claimed complete."],
       "prerequisites": [17, 18],
       "acceptance": ["Vite serializes validated public data rather than resolving entities", "Static fallback remains deterministic and checksum-verifiable"]
     },

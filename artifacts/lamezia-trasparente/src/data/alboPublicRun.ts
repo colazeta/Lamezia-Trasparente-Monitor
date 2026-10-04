@@ -1,6 +1,9 @@
-import publicAlboLatest from "../../../../data/public/albo/latest.json";
-import publicAlboDiff from "../../../../data/public/albo/diff-latest.json";
-import publicAlboDocumentsManifest from "../../../../data/public/albo/documents-manifest.json";
+import canonicalSnapshot from "../../../../data/public/canonical/civic-snapshot.json";
+const publicAlboLatest = canonicalSnapshot.albo;
+import canonicalSupport from "./generated/canonicalAlboSupport.json";
+const publicAlboDiff = canonicalSupport.diff;
+const publicAlboDocumentsManifest = canonicalSupport.documentsManifest;
+export const ALBO_PUBLIC_SUPPORT_BODY_HASH = canonicalSupport.body_hash;
 import {
   ALBO_CLASSIFICATION_DICTIONARY,
   classifyAlboRecordCategory,
@@ -62,6 +65,7 @@ export type AlboPublicationPresentation = {
 };
 
 export type AlboPublicRunItem = {
+  retained_archival_edition?: boolean;
   id: string;
   source: string;
   source_url: string;
@@ -506,9 +510,32 @@ const latestDiff = publicAlboDiff as RawAlboPublicDiff;
 const documentsManifest =
   publicAlboDocumentsManifest as RawAlboDocumentsManifest;
 
-export const ALBO_PUBLIC_RUN_ITEMS: AlboPublicRunItem[] = latest.items
-  .map(normalizePublicRunItem)
-  .filter((item): item is AlboPublicRunItem => item !== null);
+export function canonicalAlboRunData(
+  input: unknown,
+  retainedArchivalEdition = true,
+) {
+  const data = input as RawAlboPublicLatest;
+  return {
+    items: data.items
+      .map(normalizePublicRunItem)
+      .filter((item): item is AlboPublicRunItem => item !== null)
+      .map((item) => ({
+        ...item,
+        retained_archival_edition: retainedArchivalEdition,
+      })),
+    summary: {
+      source: data.source,
+      source_url: data.source_url,
+      retrieved_at: data.retrieved_at,
+      verification_status: data.verification_status,
+      counts: data.counts,
+      known_limits: data.known_limits,
+      official_albo_disclaimer:
+        ALBO_OPERATIONAL_STATUS.official_albo_disclaimer,
+    },
+  };
+}
+export const ALBO_PUBLIC_RUN_ITEMS = canonicalAlboRunData(latest).items;
 
 export const ALBO_PUBLIC_RUN_SUMMARY = {
   source: latest.source,
@@ -578,24 +605,22 @@ export const ALBO_PUBLIC_DIFF_SUMMARY = {
 
 export const ALBO_PUBLIC_DIFF_NEW_ITEMS: AlboPublicRunItem[] = (
   latestDiff.diff?.new ?? []
-)
-  .map(normalizePublicRunItem)
-  .filter((item): item is AlboPublicRunItem => item !== null);
+).flatMap((row) => {
+  const item = ALBO_PUBLIC_RUN_ITEMS.find((current) => current.id === row.id);
+  return item ? [item] : [];
+});
 
 export const ALBO_PUBLIC_DIFF_CHANGED_ITEMS: AlboPublicDiffChangedItem[] = (
   latestDiff.diff?.changed ?? []
-)
-  .map((entry) => ({
-    before: entry.before ? normalizePublicRunItem(entry.before) : null,
-    after: entry.after ? normalizePublicRunItem(entry.after) : null,
-  }))
-  .filter((entry): entry is AlboPublicDiffChangedItem => entry.after !== null);
+).flatMap((entry) => {
+  const after = ALBO_PUBLIC_RUN_ITEMS.find(
+    (item) => item.id === entry.after?.id,
+  );
+  return after ? [{ before: null, after }] : [];
+});
 
-export const ALBO_PUBLIC_DIFF_REMOVED_ITEMS: AlboPublicRunItem[] = (
-  latestDiff.diff?.removed ?? []
-)
-  .map(normalizePublicRunItem)
-  .filter((item): item is AlboPublicRunItem => item !== null);
+// Removed-record descriptions have no current canonical public authorisation.
+export const ALBO_PUBLIC_DIFF_REMOVED_ITEMS: AlboPublicRunItem[] = [];
 
 export const ALBO_DOCUMENTS_MANIFEST = {
   generated_at: nullableText(documentsManifest.generated_at),

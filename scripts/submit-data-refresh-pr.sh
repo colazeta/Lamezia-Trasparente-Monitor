@@ -4,14 +4,14 @@ set -euo pipefail
 kind="$1"
 title="$2"
 shift 2
-case "$kind" in albo|pnrr|anac) ;; *) echo "Unsupported refresh kind" >&2; exit 1 ;; esac
+case "$kind" in albo|pnrr|anac|civic) ;; *) echo "Unsupported refresh kind" >&2; exit 1 ;; esac
 : "${GH_TOKEN:?GitHub token required}"
 : "${GITHUB_REPOSITORY:?Repository required}"
 : "${GITHUB_RUN_ID:?Workflow run required}"
 
 for snapshot_path in "$@"; do
   case "$kind:$snapshot_path" in
-    albo:data/public/albo|albo:data/public/albo/*|pnrr:artifacts/lamezia-trasparente/src/data/generated/lameziaPnrrProjects.json|anac:data/public/contracts/anac-bdncp/latest.json|anac:data/public/contracts/anac-authority/latest.json) ;;
+    albo:data/public/albo|albo:data/public/albo/*|pnrr:artifacts/lamezia-trasparente/src/data/generated/lameziaPnrrProjects.json|anac:data/public/contracts/anac-bdncp/latest.json|anac:data/public/contracts/anac-authority/latest.json|civic:data/public/canonical/civic-snapshot.json|civic:artifacts/lamezia-trasparente/src/data/generated/canonicalAlboSupport.json|civic:architecture/current-data-inventory.json) ;;
     *) echo "Unexpected refresh path: $snapshot_path" >&2; exit 1 ;;
   esac
 done
@@ -39,8 +39,10 @@ git commit -m "$title"
 git push origin "HEAD:refs/heads/$branch"
 body_file="$(mktemp)"
 trap 'rm -f "$body_file"' EXIT
+issue_number=1649
+if [[ "$kind" == "civic" ]]; then issue_number=1655; fi
 cat > "$body_file" <<EOF
-Related to #1649.
+Related to #$issue_number.
 
 Proposes the generated $kind snapshot; it is not yet published. Source metadata,
 coverage limitations, degraded acquisition states and privacy gates are preserved.

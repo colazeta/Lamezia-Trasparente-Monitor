@@ -12,6 +12,38 @@ const CONTRACTS_FEED_PATHS = new Set([
 ]);
 
 let contractsDatasetCache = null;
+let civicSnapshotCache = null;
+
+function canonicalJson(value) {
+  if (value === null || typeof value !== "object") return JSON.stringify(value);
+  if (Array.isArray(value)) return `[${value.map(canonicalJson).join(",")}]`;
+  return `{${Object.keys(value).sort().map(key => `${JSON.stringify(key)}:${canonicalJson(value[key])}`).join(",")}}`;
+}
+
+async function handleCivicSnapshot(request, env) {
+  if (request.method !== "GET" && request.method !== "HEAD") return methodNotAllowed(request);
+  try {
+    if (!civicSnapshotCache) {
+      const asset = new URL(request.url);
+      asset.pathname = "/data/public/canonical/civic-snapshot.json";
+      asset.search = "";
+      const response = await env.ASSETS.fetch(new Request(asset, {method:"GET"}));
+      if (!response.ok) throw new Error("Missing canonical public snapshot");
+      const snapshot = await response.json();
+      if (snapshot.schema_version !== "canonical-civic-public.v1" || snapshot.reconciliation?.status !== "verified" || snapshot.reconciliation.unexplained_differences !== 0 || !Array.isArray(snapshot.albo?.items) || !Array.isArray(snapshot.alboArchive?.items) || !Array.isArray(snapshot.pnrr?.projects)) throw new Error("Invalid canonical public snapshot");
+      const body = {albo:snapshot.albo,alboArchive:snapshot.alboArchive,pnrr:snapshot.pnrr};
+      const digest = Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(canonicalJson(body))))).map(v=>v.toString(16).padStart(2,"0")).join("");
+      if (digest !== snapshot.body_hash) throw new Error("Canonical snapshot digest mismatch");
+      civicSnapshotCache = snapshot;
+    }
+    const response = jsonResponse(request,civicSnapshotCache);
+    response.headers.set("ETag",`"${civicSnapshotCache.body_hash}"`);
+    response.headers.set("X-Civic-Projection-Origin","published-snapshot");
+    return response;
+  } catch {
+    return jsonResponse(request,{status:"canonical-projection-unavailable",scope:"registered_municipal_albo_and_pnrr_snapshots"},503);
+  }
+}
 
 function unavailableJson(request) {
   const body = JSON.stringify({
@@ -444,6 +476,10 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     const pathname = url.pathname;
+
+    if (pathname === "/api/public/v1/civic-snapshot") {
+      return handleCivicSnapshot(request, env);
+    }
 
     if (CONTRACTS_FEED_PATHS.has(pathname)) {
       if (request.method !== "GET" && request.method !== "HEAD") {
