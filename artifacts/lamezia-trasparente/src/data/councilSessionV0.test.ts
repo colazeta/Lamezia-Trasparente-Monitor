@@ -1350,7 +1350,7 @@ describe("councilSessionV0", () => {
         expect(session.contextResearch).toEqual(
           expect.objectContaining({
             status: "reviewed_matches",
-            checkedAt: "2026-10-05T16:05:14Z",
+            checkedAt: "2026-10-05T22:08:04Z",
             media: [],
             articles: expect.arrayContaining([
               expect.objectContaining({
@@ -1397,10 +1397,18 @@ describe("councilSessionV0", () => {
                   "piano-di-riequilibrio-arrivano-i-primi-tagli",
                 ),
               }),
+              expect.objectContaining({
+                publisher: "LameziaTerme.it",
+                publishedAt: "2026-10-05",
+                relationship: "agenda_item",
+                url: expect.stringContaining(
+                  "piano-di-riequilibrio-cristiano-villella-primi-tagli",
+                ),
+              }),
             ]),
           }),
         );
-        expect(session.contextResearch.articles).toHaveLength(6);
+        expect(session.contextResearch.articles).toHaveLength(7);
         expect(session.contextResearch.searchNote).toMatch(
           /non nominano la Commissione.*non attestano.*audizione/i,
         );
