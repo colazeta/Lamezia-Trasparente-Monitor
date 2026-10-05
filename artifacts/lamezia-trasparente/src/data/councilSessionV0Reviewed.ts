@@ -611,7 +611,7 @@ const commissionIiOctober6RebalancingContextResearch: CouncilSessionV0ContextRes
     status: "reviewed_matches",
     checkedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
     searchNote:
-      "Ricerca eseguita con Parallel Search per discovery e verifica diretta dei sette articoli originali de il Lametino, LameziaTerme.it, La Novità Online, Corriere di Lamezia e Notizie.it Catanzaro e del calendario ufficiale Albo 2026/3197. Gli articoli del 30 settembre, 1° e 5 ottobre trattano il Piano di Riequilibrio Finanziario Pluriennale o il relativo supporto giuridico-contabile e vengono collegati come `agenda_item` al punto ufficiale della II Commissione del 6 ottobre. Le fonti non nominano la Commissione e non attestano programmazione, costituzione, svolgimento, trattazione, audizione, approvazione, votazioni o risultati della seduta. Campi e ordine del giorno ufficiali restano invariati. Non sono emersi contenuti audiovisivi collegabili con sufficiente precisione.",
+      "Ricerca eseguita con Parallel Search per discovery e verifica diretta dei sette articoli originali de il Lametino, LameziaTerme.it, La Novità Online, Corriere di Lamezia e Notizie.it Catanzaro e del calendario ufficiale Albo 2026/3197. Gli articoli del 30 settembre, 1° e 5 ottobre trattano il Piano di Riequilibrio Finanziario Pluriennale o il relativo supporto giuridico-contabile e vengono collegati come `agenda_item` al punto ufficiale della II Commissione del 6 ottobre. Le fonti non identificano la II Commissione o la seduta del 6 ottobre; LameziaTerme.it richiama invece precedenti lavori della I Commissione. Nessuna fonte attesta programmazione, costituzione, svolgimento, trattazione, audizione, approvazione, votazioni o risultati della seduta del 6 ottobre. Campi e ordine del giorno ufficiali restano invariati. Non sono emersi contenuti audiovisivi collegabili con sufficiente precisione.",
     articles: [
       {
         title:
@@ -687,7 +687,7 @@ const commissionIiOctober6RebalancingContextResearch: CouncilSessionV0ContextRes
         publishedAt: "2026-10-05",
         relationship: "agenda_item",
         relevanceNote:
-          "L'articolo riporta la posizione di due consiglieri sulle variazioni al PEG e sugli effetti finanziari attribuiti al percorso verso il piano di riequilibrio, tema coincidente con il punto ufficiale della II Commissione del 6 ottobre. Non nomina la Commissione e documenta il contesto politico-finanziario, non la seduta, la sua trattazione, l'audizione o eventuali esiti.",
+          "L'articolo riporta la posizione di due consiglieri sulle variazioni al PEG e sugli effetti finanziari attribuiti al percorso verso il piano di riequilibrio, tema coincidente con il punto ufficiale della II Commissione del 6 ottobre. Richiama precedenti lavori della I Commissione, ma non identifica la II Commissione o la seduta del 6 ottobre e documenta il contesto politico-finanziario, non la seduta, la sua trattazione, l'audizione o eventuali esiti.",
         reviewedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
       },
     ],

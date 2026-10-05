@@ -1410,7 +1410,7 @@ describe("councilSessionV0", () => {
         );
         expect(session.contextResearch.articles).toHaveLength(7);
         expect(session.contextResearch.searchNote).toMatch(
-          /non nominano la Commissione.*non attestano.*audizione/i,
+          /non identificano la II Commissione.*I Commissione.*Nessuna fonte attesta.*audizione/i,
         );
       } else {
         expect(session.contextResearch).toEqual(
