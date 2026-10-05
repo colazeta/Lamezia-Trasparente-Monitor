@@ -1350,7 +1350,7 @@ describe("councilSessionV0", () => {
         expect(session.contextResearch).toEqual(
           expect.objectContaining({
             status: "reviewed_matches",
-            checkedAt: "2026-10-03T15:30:11Z",
+            checkedAt: "2026-10-05T16:05:14Z",
             media: [],
             articles: expect.arrayContaining([
               expect.objectContaining({
@@ -1389,10 +1389,18 @@ describe("councilSessionV0", () => {
                 relationship: "agenda_item",
                 url: expect.stringContaining("scelta-contro-lifel"),
               }),
+              expect.objectContaining({
+                publisher: "il Lametino",
+                publishedAt: "2026-10-05",
+                relationship: "agenda_item",
+                url: expect.stringContaining(
+                  "piano-di-riequilibrio-arrivano-i-primi-tagli",
+                ),
+              }),
             ]),
           }),
         );
-        expect(session.contextResearch.articles).toHaveLength(5);
+        expect(session.contextResearch.articles).toHaveLength(6);
         expect(session.contextResearch.searchNote).toMatch(
           /non nominano la Commissione.*non attestano.*audizione/i,
         );
