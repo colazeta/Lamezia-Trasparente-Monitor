@@ -73,7 +73,7 @@ describe("HomeInstitutionalSessions", () => {
       ),
     ).toBeInTheDocument();
     expect(screen.getByText(/7 articoli · 3 video/i)).toBeInTheDocument();
-    expect(screen.getByText(/6 articoli · 0 video/i)).toBeInTheDocument();
+    expect(screen.getByText(/7 articoli · 0 video/i)).toBeInTheDocument();
     expect(screen.getByText(/3 articoli · 0 video/i)).toBeInTheDocument();
     expect(screen.getAllByText(/2 articoli · 0 video/i)).toHaveLength(3);
     expect(screen.getAllByText(/1 articolo · 0 video/i)).toHaveLength(5);

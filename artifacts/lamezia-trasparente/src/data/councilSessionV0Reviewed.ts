@@ -88,6 +88,8 @@ const MULTI_YEAR_REBALANCING_NOTIZIE_URL =
   "https://catanzaro.notizie.it/scelta-contro-lifel-14000-euro-per-consulenza-esterna-a-lamezia/";
 const MULTI_YEAR_REBALANCING_AUSTERITY_LAMETINO_URL =
   "https://www.lametino.it/ultime/lamezia-cristiano-e-villella-fn-su-piano-di-riequilibrio-arrivano-i-primi-tagli-e-solo-linizio-dellausterita.html";
+const MULTI_YEAR_REBALANCING_AUSTERITY_LAMEZIATERME_URL =
+  "https://www.lameziaterme.it/piano-di-riequilibrio-cristiano-villella-primi-tagli-per-14-milioni-di-euro/";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
 const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
 const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-27T21:49:11Z";
@@ -105,7 +107,7 @@ const COMMISSION_I_MOTION_CONTEXT_RESEARCHED_AT = "2026-09-23T22:14:41Z";
 const VIA_TRENTO_ROADWORKS_CONTEXT_RESEARCHED_AT = "2026-09-24T09:59:02Z";
 const COMMISSION_V_REU_CONTEXT_RESEARCHED_AT = "2026-09-28T15:27:08Z";
 const COMMISSION_IV_STREET_ART_CONTEXT_RESEARCHED_AT = "2026-09-29T04:07:44Z";
-const MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT = "2026-10-05T16:05:14Z";
+const MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT = "2026-10-05T22:08:04Z";
 const MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT = "2026-09-12T21:51:17Z";
 const SCHOOL_TRANSPORT_CONTEXT_RESEARCHED_AT = "2026-09-14T10:13:39Z";
 
@@ -609,7 +611,7 @@ const commissionIiOctober6RebalancingContextResearch: CouncilSessionV0ContextRes
     status: "reviewed_matches",
     checkedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
     searchNote:
-      "Ricerca eseguita con Parallel Search per discovery e verifica diretta dei sei articoli originali de il Lametino, La Novità Online, Corriere di Lamezia e Notizie.it Catanzaro e del calendario ufficiale Albo 2026/3197. Gli articoli del 30 settembre, 1° e 5 ottobre trattano il Piano di Riequilibrio Finanziario Pluriennale o il relativo supporto giuridico-contabile e vengono collegati come `agenda_item` al punto ufficiale della II Commissione del 6 ottobre. Le fonti non nominano la Commissione e non attestano programmazione, costituzione, svolgimento, trattazione, audizione, approvazione, votazioni o risultati della seduta. Campi e ordine del giorno ufficiali restano invariati. Non sono emersi contenuti audiovisivi collegabili con sufficiente precisione.",
+      "Ricerca eseguita con Parallel Search per discovery e verifica diretta dei sette articoli originali de il Lametino, LameziaTerme.it, La Novità Online, Corriere di Lamezia e Notizie.it Catanzaro e del calendario ufficiale Albo 2026/3197. Gli articoli del 30 settembre, 1° e 5 ottobre trattano il Piano di Riequilibrio Finanziario Pluriennale o il relativo supporto giuridico-contabile e vengono collegati come `agenda_item` al punto ufficiale della II Commissione del 6 ottobre. Le fonti non identificano la II Commissione o la seduta del 6 ottobre; LameziaTerme.it richiama invece precedenti lavori della I Commissione. Nessuna fonte attesta programmazione, costituzione, svolgimento, trattazione, audizione, approvazione, votazioni o risultati della seduta del 6 ottobre. Campi e ordine del giorno ufficiali restano invariati. Non sono emersi contenuti audiovisivi collegabili con sufficiente precisione.",
     articles: [
       {
         title:
@@ -675,6 +677,17 @@ const commissionIiOctober6RebalancingContextResearch: CouncilSessionV0ContextRes
         relationship: "agenda_item",
         relevanceNote:
           "L'articolo riporta la posizione di due consiglieri sugli effetti finanziari attribuiti al percorso verso il piano di riequilibrio e sui relativi accantonamenti, tema coincidente con il punto ufficiale della II Commissione del 6 ottobre. Non nomina la Commissione e documenta il contesto politico-finanziario, non la seduta, la sua trattazione, l'audizione o eventuali esiti.",
+        reviewedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
+      },
+      {
+        title:
+          "Piano di Riequilibrio, Cristiano e Villella: primi tagli per 1,4 milioni di euro",
+        url: MULTI_YEAR_REBALANCING_AUSTERITY_LAMEZIATERME_URL,
+        publisher: "LameziaTerme.it",
+        publishedAt: "2026-10-05",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo riporta la posizione di due consiglieri sulle variazioni al PEG e sugli effetti finanziari attribuiti al percorso verso il piano di riequilibrio, tema coincidente con il punto ufficiale della II Commissione del 6 ottobre. Richiama precedenti lavori della I Commissione, ma non identifica la II Commissione o la seduta del 6 ottobre e documenta il contesto politico-finanziario, non la seduta, la sua trattazione, l'audizione o eventuali esiti.",
         reviewedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
       },
     ],
