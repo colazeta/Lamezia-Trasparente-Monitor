@@ -615,8 +615,8 @@ export function HomeInstitutionalSessions() {
         <p className="mt-4 text-sm leading-6 text-muted-foreground">
           Fonte: Albo Pretorio e documenti istituzionali.{" "}
           {hasUpcoming
-            ? "Date in arrivo e convocazioni recenti."
-            : "Le convocazioni più recenti disponibili; nessuna data futura risulta nell'archivio acquisito."}{" "}
+            ? "Prossime sedute e convocazioni recenti."
+            : "Le convocazioni più recenti disponibili; nessuna prossima seduta risulta nell'archivio acquisito."}{" "}
           Lo svolgimento è indicato solo se confermato da una fonte
           istituzionale. L'archivio non copre tutte le sedute.
         </p>

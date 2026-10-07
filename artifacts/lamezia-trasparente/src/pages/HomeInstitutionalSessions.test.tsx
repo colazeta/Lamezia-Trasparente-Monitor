@@ -21,7 +21,7 @@ describe("HomeInstitutionalSessions", () => {
       screen.getByRole("link", { name: /Tutte le sedute/ }),
     ).toHaveAttribute("href", "/convocazioni");
     expect(
-      screen.getByText(/nessuna data futura risulta nell'archivio acquisito/i),
+      screen.getByText(/nessuna prossima seduta risulta nell'archivio acquisito/i),
     ).toBeInTheDocument();
     expect(
       screen.getAllByText("Stato della seduta non verificato"),
