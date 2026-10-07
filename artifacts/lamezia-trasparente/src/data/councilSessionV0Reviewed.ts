@@ -94,6 +94,16 @@ const MULTI_YEAR_REBALANCING_AUSTERITY_GAZZETTA_URL =
   "https://catanzaro.gazzettadelsud.it/articoli/politica/2026/10/06/comune-di-lamezia-verso-il-predissesto-fn-basta-con-le-austerita-619d7fd4-575a-49e6-ba81-cb14a0148a3f/";
 const MULTI_YEAR_REBALANCING_RASO_BRANCA_URL =
   "https://www.lameziaterme.it/piano-di-riequilibrio-raso-branca-perche-un-incarico-esterno/";
+const MULTI_YEAR_REBALANCING_CRISIS_LAMETINO_URL =
+  "https://www.lametino.it/economia/crisi-finanziaria-dei-comuni-calabria-al-primo-posto-il-caso-lamezia.html";
+const MULTI_YEAR_REBALANCING_MASCARO_GAZZETTA_URL =
+  "https://catanzaro.gazzettadelsud.it/articoli/politica/2026/10/02/lamezia-piano-di-riequilibrio-sotto-accusa-mascaro-inutile-sperpero-di-denaro-1c1cb663-9810-4cfa-a2ea-86c2f5320db8/";
+const MULTI_YEAR_REBALANCING_CRISIS_QUOTIDIANO_URL =
+  "https://www.quotidianodelsud.it/calabria/catanzaro/cronache/pubblica-amministrazione/2026/10/04/comuni-in-crisi-lamezia-caso-emblematico-nella-relazione-della-corte-dei-conti";
+const MULTI_YEAR_REBALANCING_RASO_BRANCA_CORRIERE_URL =
+  "https://www.corrieredilamezia.it/politica/2026_10_06/piano-di-riequilibrio-raso-e-branca-una-scelta-sbagliata-che-oggi-solleva-nuovi-interrogativi_67203/";
+const MULTI_YEAR_REBALANCING_RASO_BRANCA_LAMETINO_URL =
+  "https://www.lametino.it/ultime/lamezia-raso-e-branca-serve-chiarezza-sullincarico-esterno-per-piano-di-riequilibrio.html";
 const COUNCIL_OCTOBER_9_CITY_ONE_URL =
   "https://cityonelamezia.it/2026/10/06/convocato-il-consiglio-comunale-per-venerdi-09-ottobre-2026/";
 const COUNCIL_OCTOBER_9_LAMETINO_URL =
@@ -116,7 +126,7 @@ const VIA_TRENTO_ROADWORKS_CONTEXT_RESEARCHED_AT = "2026-09-24T09:59:02Z";
 const COMMISSION_V_REU_CONTEXT_RESEARCHED_AT = "2026-09-28T15:27:08Z";
 const COMMISSION_IV_STREET_ART_CONTEXT_RESEARCHED_AT = "2026-09-29T04:07:44Z";
 const OCTOBER_7_RESEARCHED_AT = "2026-10-07T10:16:27Z";
-const MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT = OCTOBER_7_RESEARCHED_AT;
+const MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT = "2026-10-07T15:48:24Z";
 const MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT = "2026-09-12T21:51:17Z";
 const SCHOOL_TRANSPORT_CONTEXT_RESEARCHED_AT = "2026-09-14T10:13:39Z";
 
@@ -651,7 +661,7 @@ const commissionIiOctober6RebalancingContextResearch: CouncilSessionV0ContextRes
     status: "reviewed_matches",
     checkedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
     searchNote:
-      "Ricerca eseguita con Parallel Search per discovery e verifica diretta dei nove articoli originali de il Lametino, LameziaTerme.it, Gazzetta del Sud, La Novità Online, Corriere di Lamezia e Notizie.it Catanzaro e del calendario ufficiale Albo 2026/3197. Gli articoli dal 30 settembre al 6 ottobre trattano il Piano di Riequilibrio Finanziario Pluriennale, i suoi effetti finanziari attribuiti o il relativo supporto giuridico-contabile e vengono collegati come `agenda_item` al punto ufficiale della II Commissione del 6 ottobre. Le fonti non identificano la seduta del 6 ottobre: un articolo LameziaTerme.it richiama precedenti lavori della I Commissione, mentre quello di Raso e Branca menziona genericamente un mancato passaggio nella Commissione Bilancio senza indicare data o riunione. Nessuna fonte attesta programmazione, costituzione, svolgimento, trattazione, audizione, approvazione, votazioni o risultati della seduta del 6 ottobre. Campi e ordine del giorno ufficiali restano invariati. Non sono emersi contenuti audiovisivi collegabili con sufficiente precisione.",
+      "Ricerca eseguita con Parallel Search per discovery e verifica diretta dei quattordici articoli originali de il Lametino, LameziaTerme.it, Gazzetta del Sud, La Novità Online, Corriere di Lamezia, Notizie.it Catanzaro e Il Quotidiano del Sud e del calendario ufficiale Albo 2026/3197. Gli articoli dal 30 settembre al 6 ottobre trattano il Piano di Riequilibrio Finanziario Pluriennale, il quadro di crisi finanziaria, gli effetti finanziari attribuiti o il relativo supporto giuridico-contabile e vengono collegati come `agenda_item` al punto ufficiale della II Commissione del 6 ottobre. Tre pagine del 6 ottobre riprendono la stessa nota di Raso e Branca e sono conservate come distinti collegamenti editoriali, non come conferme indipendenti. Le fonti non identificano la seduta del 6 ottobre: un articolo LameziaTerme.it richiama precedenti lavori della I Commissione, mentre la nota di Raso e Branca menziona genericamente un mancato passaggio nella Commissione Bilancio senza indicare data o riunione. Nessuna fonte attesta programmazione, costituzione, svolgimento, trattazione, audizione, approvazione, votazioni o risultati della seduta del 6 ottobre. Campi e ordine del giorno ufficiali restano invariati. Non sono emersi contenuti audiovisivi collegabili con sufficiente precisione.",
     articles: [
       {
         title:
@@ -710,6 +720,39 @@ const commissionIiOctober6RebalancingContextResearch: CouncilSessionV0ContextRes
       },
       {
         title:
+          "Crisi finanziaria dei Comuni, Calabria al primo posto: il caso Lamezia",
+        url: MULTI_YEAR_REBALANCING_CRISIS_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-10-02",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo ricostruisce, a partire dalla relazione della Corte dei conti, il precedente piano di riequilibrio, il disavanzo e l'annunciato nuovo Piano di Riequilibrio Finanziario Pluriennale, tema del punto ufficiale della II Commissione del 6 ottobre. Non identifica la Commissione o la seduta e documenta il contesto finanziario, non svolgimento, trattazione, audizione o risultati.",
+        reviewedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
+      },
+      {
+        title:
+          "Lamezia, piano di riequilibrio sotto accusa. Mascaro: «Inutile sperpero di denaro»",
+        url: MULTI_YEAR_REBALANCING_MASCARO_GAZZETTA_URL,
+        publisher: "Gazzetta del Sud",
+        publishedAt: "2026-10-02",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo riporta una posizione critica sul nuovo piano e sull'incarico esterno di supporto alla sua predisposizione, temi pertinenti al punto ufficiale della II Commissione del 6 ottobre. Non identifica la Commissione o la seduta e documenta il contesto politico-finanziario, non svolgimento, trattazione, audizione o risultati.",
+        reviewedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
+      },
+      {
+        title:
+          "Comuni in crisi, Lamezia caso emblematico nella relazione della Corte dei Conti",
+        url: MULTI_YEAR_REBALANCING_CRISIS_QUOTIDIANO_URL,
+        publisher: "Il Quotidiano del Sud",
+        publishedAt: "2026-10-04",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo ricostruisce le precedenti procedure di riequilibrio, le criticità richiamate dalla Corte dei conti e il termine indicato per il nuovo piano, offrendo contesto al punto ufficiale della II Commissione del 6 ottobre. Non identifica la Commissione o la seduta e non ne prova svolgimento, trattazione, audizione o risultati.",
+        reviewedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
+      },
+      {
+        title:
           'Lamezia, Cristiano e Villella (FN) su piano di riequilibrio: "Arrivano i primi tagli, è solo l’inizio dell’austerità"',
         url: MULTI_YEAR_REBALANCING_AUSTERITY_LAMETINO_URL,
         publisher: "il Lametino",
@@ -750,6 +793,28 @@ const commissionIiOctober6RebalancingContextResearch: CouncilSessionV0ContextRes
         relationship: "agenda_item",
         relevanceNote:
           "L'articolo riporta le richieste di chiarimento di due consiglieri sull'incarico esterno collegato al Piano di Riequilibrio Finanziario Pluriennale, tema del punto ufficiale della II Commissione del 6 ottobre. Menziona genericamente un mancato passaggio nella Commissione Bilancio, ma non identifica una data o la seduta del 6 ottobre e non ne documenta svolgimento, trattazione, audizione o risultati.",
+        reviewedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
+      },
+      {
+        title:
+          "Piano di Riequilibrio, Raso e Branca: «Una scelta sbagliata che oggi solleva nuovi interrogativi»",
+        url: MULTI_YEAR_REBALANCING_RASO_BRANCA_CORRIERE_URL,
+        publisher: "Corriere di Lamezia",
+        publishedAt: "2026-10-06",
+        relationship: "agenda_item",
+        relevanceNote:
+          "La pagina riprende la stessa nota di Raso e Branca sull'incarico esterno collegato al Piano di Riequilibrio Finanziario Pluriennale. Menziona genericamente un mancato passaggio nella Commissione Bilancio, ma non identifica una data o la seduta del 6 ottobre e non ne documenta svolgimento, trattazione, audizione o risultati.",
+        reviewedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
+      },
+      {
+        title:
+          "Lamezia, Raso e Branca: «Serve chiarezza sull’incarico esterno per Piano di riequilibrio»",
+        url: MULTI_YEAR_REBALANCING_RASO_BRANCA_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-10-06",
+        relationship: "agenda_item",
+        relevanceNote:
+          "La pagina riprende la stessa nota di Raso e Branca sull'incarico esterno collegato al Piano di Riequilibrio Finanziario Pluriennale. Menziona genericamente un mancato passaggio nella Commissione Bilancio, ma non identifica una data o la seduta del 6 ottobre e non ne documenta svolgimento, trattazione, audizione o risultati.",
         reviewedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
       },
     ],
