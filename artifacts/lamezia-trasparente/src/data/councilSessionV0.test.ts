@@ -357,7 +357,7 @@ describe("councilSessionV0", () => {
         }),
         contextResearch: expect.objectContaining({
           status: "reviewed_matches",
-          checkedAt: "2026-10-07T10:16:27Z",
+          checkedAt: "2026-10-07T21:39:49Z",
           articles: expect.arrayContaining([
             expect.objectContaining({
               publisher: "City One",
@@ -370,6 +370,12 @@ describe("councilSessionV0", () => {
               publishedAt: "2026-10-06",
               relationship: "same_session",
               url: expect.stringContaining("lametino.it"),
+            }),
+            expect.objectContaining({
+              publisher: "LameziaInforma",
+              publishedAt: "2026-10-06",
+              relationship: "same_session",
+              url: expect.stringContaining("lameziainforma.it"),
             }),
           ]),
           media: [],
@@ -387,12 +393,12 @@ describe("councilSessionV0", () => {
       /Sala Consiliare.*Renato Luisi.*via Sen\. Arturo Perugini/i,
     );
     expect(council?.dataLimits.value?.join(" ")).toMatch(
-      /due articoli.*annunci precedenti.*non.*attestano.*svolgimento/i,
+      /tre articoli.*annunci precedenti.*non.*attestano.*svolgimento/i,
     );
     expect(council?.dataLimits.value?.join(" ")).not.toMatch(
       /non sono emersi collegamenti editoriali/i,
     );
-    expect(council?.contextResearch.articles).toHaveLength(2);
+    expect(council?.contextResearch.articles).toHaveLength(3);
     expect(council?.contextResearch.searchNote).toMatch(
       /Parallel Search.*annunci precedenti.*non provano.*svolgimento/is,
     );
