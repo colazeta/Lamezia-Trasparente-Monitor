@@ -356,9 +356,22 @@ describe("councilSessionV0", () => {
           sourceReviewStatus: "reviewed_against_official_attachment",
         }),
         contextResearch: expect.objectContaining({
-          status: "checked_no_match",
+          status: "reviewed_matches",
           checkedAt: "2026-10-07T10:16:27Z",
-          articles: [],
+          articles: expect.arrayContaining([
+            expect.objectContaining({
+              publisher: "City One",
+              publishedAt: "2026-10-06",
+              relationship: "same_session",
+              url: expect.stringContaining("cityonelamezia.it"),
+            }),
+            expect.objectContaining({
+              publisher: "il Lametino",
+              publishedAt: "2026-10-06",
+              relationship: "same_session",
+              url: expect.stringContaining("lametino.it"),
+            }),
+          ]),
           media: [],
         }),
       }),
@@ -373,7 +386,10 @@ describe("councilSessionV0", () => {
     expect(council?.dataLimits.value?.join(" ")).toMatch(
       /Sala Consiliare.*Renato Luisi.*via Sen\. Arturo Perugini/i,
     );
-    expect(council?.contextResearch.searchNote).toMatch(/Parallel Search/i);
+    expect(council?.contextResearch.articles).toHaveLength(2);
+    expect(council?.contextResearch.searchNote).toMatch(
+      /Parallel Search.*annunci precedenti.*non provano.*svolgimento/is,
+    );
     expect(council?.liveStreaming.value).toBeNull();
     expect(council?.recording.value).toBeNull();
   });

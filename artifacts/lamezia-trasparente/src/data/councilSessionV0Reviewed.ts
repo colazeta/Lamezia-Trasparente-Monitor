@@ -94,6 +94,10 @@ const MULTI_YEAR_REBALANCING_AUSTERITY_GAZZETTA_URL =
   "https://catanzaro.gazzettadelsud.it/articoli/politica/2026/10/06/comune-di-lamezia-verso-il-predissesto-fn-basta-con-le-austerita-619d7fd4-575a-49e6-ba81-cb14a0148a3f/";
 const MULTI_YEAR_REBALANCING_RASO_BRANCA_URL =
   "https://www.lameziaterme.it/piano-di-riequilibrio-raso-branca-perche-un-incarico-esterno/";
+const COUNCIL_OCTOBER_9_CITY_ONE_URL =
+  "https://cityonelamezia.it/2026/10/06/convocato-il-consiglio-comunale-per-venerdi-09-ottobre-2026/";
+const COUNCIL_OCTOBER_9_LAMETINO_URL =
+  "https://www.lametino.it/ultime/lamezia-il-9-ottobre-seduta-del-consiglio-comunale-fra-i-punti-la-nomina-del-collegio-dei-revisori.html";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
 const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
 const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-27T21:49:11Z";
@@ -612,11 +616,33 @@ const october1To6CommissionContextResearch: CouncilSessionV0ContextResearch = {
 };
 
 const councilOctober9ContextResearch: CouncilSessionV0ContextResearch = {
-  status: "checked_no_match",
+  status: "reviewed_matches",
   checkedAt: OCTOBER_7_RESEARCHED_AT,
   searchNote:
-    "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, City One, LameziaInforma, LameziaTermeNews, LameziaTerme.it, il Lametino e risultati indicizzati, inclusi canali YouTube e Facebook, per il Consiglio comunale convocato il 9 ottobre 2026 alle 09:30. Le query hanno combinato organo, data, orario, sede e temi distintivi dei 21 punti ufficiali. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alla seduta. L'ordine del giorno ufficiale è disponibile e non viene ricostruita un'agenda editoriale; la ricerca resta aperta fino al termine della finestra prevista.",
-  articles: [],
+    "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, City One, LameziaInforma, LameziaTermeNews, LameziaTerme.it, il Lametino e risultati indicizzati, inclusi canali YouTube e Facebook, per il Consiglio comunale convocato il 9 ottobre 2026 alle 09:30. Due articoli originali del 6 ottobre coincidono su organo, data, prima e seconda convocazione e punti distintivi dell'ordine del giorno e sono collegati come `same_session`. Sono annunci precedenti alla seduta e non provano costituzione, svolgimento, presenze, trattazione, votazioni o risultati. Non sono emersi contenuti audiovisivi collegabili con sufficiente precisione. L'ordine del giorno ufficiale resta quello dell'allegato istituzionale e non viene ricostruita un'agenda editoriale; la ricerca resta aperta fino al termine della finestra prevista.",
+  articles: [
+    {
+      title: "Convocato il Consiglio Comunale per venerdì 9 ottobre 2026",
+      url: COUNCIL_OCTOBER_9_CITY_ONE_URL,
+      publisher: "City One",
+      publishedAt: "2026-10-06",
+      relationship: "same_session",
+      relevanceNote:
+        "L'articolo identifica il Consiglio del 9 ottobre alle 09:30, la seconda convocazione del 12 ottobre alle 10:30, la sede e i punti ufficiali. È un annuncio precedente alla seduta e non prova costituzione, svolgimento, presenze, trattazione, votazioni o risultati.",
+      reviewedAt: OCTOBER_7_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Lamezia, il 9 ottobre seduta del Consiglio comunale: fra i punti la nomina del Collegio dei revisori",
+      url: COUNCIL_OCTOBER_9_LAMETINO_URL,
+      publisher: "il Lametino",
+      publishedAt: "2026-10-06",
+      relationship: "same_session",
+      relevanceNote:
+        "L'articolo identifica il Consiglio del 9 ottobre alle 09:30, la seconda convocazione del 12 ottobre alle 10:30 e temi distintivi dei 21 punti ufficiali. È un annuncio precedente alla seduta e non prova costituzione, svolgimento, presenze, trattazione, votazioni o risultati.",
+      reviewedAt: OCTOBER_7_RESEARCHED_AT,
+    },
+  ],
   media: [],
 };
 
