@@ -13,7 +13,6 @@ import {
   Vote,
   Link2,
   ClipboardList,
-  ShieldCheck,
 } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
@@ -45,11 +44,10 @@ import {
   type CoverageFilter,
   type SedutaPublication,
 } from "@/lib/convocazioniCoverage";
-import { CouncilSessionV0SummaryCard } from "@/components/launch/CouncilSessionV0Card";
+import { SessionAgenda } from "@/components/launch/SessionAgenda";
+import { PageMeta } from "@/components/seo/PageMeta";
 import { councilSessionV0ReviewedRecords } from "@/data/councilSessionV0Reviewed";
 import { asApiList } from "@/lib/apiList";
-import { summarizeReviewedCommissions } from "@/lib/reviewedCommissionSummary";
-import { V0SectionLanding } from "@/components/launch/V0SectionLanding";
 
 function MacrotemasRow({ macrotemi }: { macrotemi: string[] }) {
   const unique = Array.from(new Set(macrotemi)).filter((m) => m !== "altro");
@@ -73,10 +71,6 @@ function formatDate(value: string | null | undefined) {
 
 const UNGROUPED = "Altre sedute";
 const ALL_ORGANI = "all";
-const reviewedCommissionSummary = summarizeReviewedCommissions(
-  councilSessionV0ReviewedRecords,
-);
-
 type CoverageFilterKey = "report" | "votes" | "acts";
 
 const COVERAGE_FILTER_LABELS: Record<CoverageFilter, string> = {
@@ -246,330 +240,319 @@ export function Convocazioni() {
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 max-w-5xl">
-      <V0SectionLanding
-        eyebrow="Sedute e ordini del giorno"
-        icon={CalendarClock}
-        title="Sedute di Consiglio e Commissioni"
-        subtitle="Percorso civico per orientarsi tra convocazioni, sedute, ordini del giorno e documenti collegati, distinguendo dati verificati, parziali e da verificare."
-        stateLabel="Pubblicabile"
-        stateDescription="Indice consultabile con stati del dato e limiti dichiarati vicino ai contenuti."
-        findItems={[
-          "Sedute caricate, filtri per organo e macrotema e copertura documentale disponibile.",
-          "Ordini del giorno, resoconti, votazioni e atti collegati quando rilevati.",
-          "Prime schede fonte-centriche da avvisi ufficiali del Consiglio e delle Commissioni.",
-        ]}
-        missingItems={[
-          "Sincronizzazione stabile e verificata con tutte le fonti istituzionali delle sedute.",
-          "Collegamento puntuale e completo alle fonti per ogni documento di seduta.",
-          "Conferma manuale dei campi indicati come da verificare.",
-        ]}
-        sourceLimit="I badge da verificare indicano campi non presenti nella base locale o da controllare sulla fonte originaria: sono segnali di copertura, non valutazioni sulla regolarità degli atti."
-        cta={{ label: "Consulta convocazioni", href: "#convocazioni-elenco" }}
-        secondaryLink={{ label: "Fonti e limiti", href: "/fonti-dati" }}
+      <PageMeta
+        title="Agenda e archivio delle sedute — Lamezia Trasparente"
+        description="Convocazioni di Consiglio comunale e Commissioni in ordine cronologico, con filtri per mese e organo, documenti e fonti ufficiali."
+        path="/convocazioni"
       />
+      <header className="mb-8">
+        <Link
+          href="/"
+          className="text-sm font-semibold text-primary hover:underline"
+        >
+          Lamezia Trasparente
+        </Link>
+        <p className="eyebrow mt-5 text-primary">Consiglio e Commissioni</p>
+        <h1 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-4xl">
+          Convocazioni, agenda e archivio
+        </h1>
+        <p className="mt-3 max-w-3xl text-base leading-7 text-muted-foreground">
+          Date, ordini del giorno e documenti dalle fonti ufficiali disponibili.
+          Una data trascorsa non conferma che la seduta si sia svolta. La
+          selezione acquisita non costituisce una copertura storica completa.
+        </p>
+      </header>
+      <SessionAgenda sessions={councilSessionV0ReviewedRecords} />
 
-      <section
-        className="mb-8 space-y-4"
-        aria-labelledby="reviewed-sessions-title"
-      >
-        <div className="flex items-start gap-3">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand/10 text-brand">
-            <ShieldCheck className="h-4 w-4" aria-hidden="true" />
-          </span>
-          <div>
-            <h2
-              id="reviewed-sessions-title"
-              className="font-display text-2xl font-bold tracking-tight"
-            >
-              Prime schede da fonte ufficiale
-            </h2>
-            <p className="mt-1 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-              Tranche iniziale: una seduta del Consiglio confermata da fonte
-              istituzionale successiva e {reviewedCommissionSummary}. La
-              selezione non costituisce una copertura storica completa.
-            </p>
-          </div>
-        </div>
-        <div className="grid gap-4 lg:grid-cols-2">
-          {councilSessionV0ReviewedRecords.map((session) => (
-            <CouncilSessionV0SummaryCard key={session.id} session={session} />
-          ))}
-        </div>
-      </section>
-
-      <section
-        id="convocazioni-elenco"
-        className="mb-8 rounded-2xl border border-border bg-card/70 p-4 md:p-5"
-        aria-labelledby="convocazioni-dashboard-title"
-      >
-        <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
-          <div>
-            <h2
-              id="convocazioni-dashboard-title"
-              className="font-display text-xl font-bold tracking-tight"
-            >
-              Copertura documentale nella base API
-            </h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Indicatori calcolati sulla base locale: ordine del giorno,
-              resoconti, votazioni, atti collegati e segnali di collegamento a
-              contratti o PNRR.
-            </p>
-          </div>
-          <span className="rounded-full border border-border bg-background px-3 py-1 text-xs font-semibold text-muted-foreground">
-            {filteredSedute.length} sedute visibili
-          </span>
-        </div>
-
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {SUMMARY_CARDS.map(({ key, label, icon: Icon }) => (
-            <div
-              key={key}
-              className="rounded-xl border border-border bg-background p-3"
-            >
-              <div className="flex items-center justify-between gap-3">
-                <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  {label}
-                </span>
-                <Icon className="h-4 w-4 text-brand" aria-hidden="true" />
-              </div>
-              <p className="mt-2 font-display text-2xl font-bold">
-                {coverageSummary[key]}
+      <details className="mt-10 rounded-xl border border-border bg-card p-4 md:p-6">
+        <summary className="cursor-pointer font-display text-lg font-bold">
+          Altre sedute e copertura documentale
+        </summary>
+        <p className="mb-6 mt-3 text-sm leading-6 text-muted-foreground">
+          Ulteriori sedute dalla base dati, con filtri per temi, resoconti e
+          votazioni. Questo elenco può sovrapporsi alle schede documentate
+          dell'agenda.{" "}
+          <Link
+            href="/fonti-dati"
+            className="font-semibold text-primary hover:underline"
+          >
+            Fonti e limiti
+          </Link>
+        </p>
+        <section
+          id="convocazioni-elenco"
+          className="mb-8 rounded-2xl border border-border bg-card/70 p-4 md:p-5"
+          aria-labelledby="convocazioni-dashboard-title"
+        >
+          <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+            <div>
+              <h2
+                id="convocazioni-dashboard-title"
+                className="font-display text-xl font-bold tracking-tight"
+              >
+                Copertura documentale nella base API
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Indicatori calcolati sulla base locale: ordine del giorno,
+                resoconti, votazioni, atti collegati e segnali di collegamento a
+                contratti o PNRR.
               </p>
             </div>
-          ))}
-        </div>
+            <span className="rounded-full border border-border bg-background px-3 py-1 text-xs font-semibold text-muted-foreground">
+              {filteredSedute.length} sedute visibili
+            </span>
+          </div>
 
-        <p className="mt-4 rounded-xl bg-muted/40 p-3 text-xs leading-relaxed text-muted-foreground">
-          Nota metodologica: un dato non presente nel portale indica assenza
-          nella base locale o elemento da verificare sulle fonti, non una
-          conclusione sull'ente né sulla completezza della documentazione
-          amministrativa originale.
-        </p>
-      </section>
-
-      <section
-        className="mb-8 rounded-2xl border border-border bg-muted/20 p-4"
-        aria-label="Filtri convocazioni"
-      >
-        <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-5">
-          <Select value={organoFilter} onValueChange={setOrganoFilter}>
-            <SelectTrigger
-              className="h-10 bg-background"
-              aria-label="Filtra per organo"
-            >
-              <div className="flex items-center gap-2">
-                <Building2 className="h-4 w-4 text-muted-foreground shrink-0" />
-                <span className="truncate text-sm">
-                  {organoFilter === ALL_ORGANI
-                    ? "Tutti gli organi"
-                    : (organoOptions.find((o) => o.slug === organoFilter)
-                        ?.name ?? organoFilter)}
-                </span>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {SUMMARY_CARDS.map(({ key, label, icon: Icon }) => (
+              <div
+                key={key}
+                className="rounded-xl border border-border bg-background p-3"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    {label}
+                  </span>
+                  <Icon className="h-4 w-4 text-brand" aria-hidden="true" />
+                </div>
+                <p className="mt-2 font-display text-2xl font-bold">
+                  {coverageSummary[key]}
+                </p>
               </div>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={ALL_ORGANI}>Tutti gli organi</SelectItem>
-              {organoOptions.map((opt) => (
-                <SelectItem key={opt.slug} value={opt.slug}>
-                  {opt.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            ))}
+          </div>
 
-          <Select value={macrotemaFilter} onValueChange={setMacrotemaFilter}>
-            <SelectTrigger
-              className="h-10 bg-background"
-              aria-label="Filtra per tema"
-            >
-              <div className="flex items-center gap-2">
-                <Layers className="h-4 w-4 text-muted-foreground shrink-0" />
-                <span className="truncate text-sm">
-                  {macrotemaFilter === "all"
-                    ? "Tutti i temi"
-                    : (MACROTEMA_LABELS[macrotemaFilter] ?? macrotemaFilter)}
-                </span>
-              </div>
-            </SelectTrigger>
-            <SelectContent>
-              {MACROTEMA_OPTS.map((opt) => (
-                <SelectItem key={opt.key} value={opt.key}>
-                  {opt.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <p className="mt-4 rounded-xl bg-muted/40 p-3 text-xs leading-relaxed text-muted-foreground">
+            Nota metodologica: un dato non presente nel portale indica assenza
+            nella base locale o elemento da verificare sulle fonti, non una
+            conclusione sull'ente né sulla completezza della documentazione
+            amministrativa originale.
+          </p>
+        </section>
 
-          {[
-            ["report", reportFilter, setReportFilter],
-            ["votes", votesFilter, setVotesFilter],
-            ["acts", actsFilter, setActsFilter],
-          ].map(([key, value, setter]) => (
-            <Select
-              key={key as string}
-              value={value as CoverageFilter}
-              onValueChange={(next) =>
-                (setter as (value: CoverageFilter) => void)(
-                  next as CoverageFilter,
-                )
-              }
-            >
+        <section
+          className="mb-8 rounded-2xl border border-border bg-muted/20 p-4"
+          aria-label="Filtri convocazioni"
+        >
+          <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-5">
+            <Select value={organoFilter} onValueChange={setOrganoFilter}>
               <SelectTrigger
                 className="h-10 bg-background"
-                aria-label={`Filtra per ${key}`}
+                aria-label="Filtra per organo"
               >
-                <span className="truncate text-sm">
-                  {coverageFilterLabel(
-                    key as CoverageFilterKey,
-                    value as CoverageFilter,
-                  )}
-                </span>
+                <div className="flex items-center gap-2">
+                  <Building2 className="h-4 w-4 text-muted-foreground shrink-0" />
+                  <span className="truncate text-sm">
+                    {organoFilter === ALL_ORGANI
+                      ? "Tutti gli organi"
+                      : (organoOptions.find((o) => o.slug === organoFilter)
+                          ?.name ?? organoFilter)}
+                  </span>
+                </div>
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">
-                  {coverageFilterLabel(key as CoverageFilterKey, "all")}
-                </SelectItem>
-                <SelectItem value="present">
-                  {coverageFilterLabel(key as CoverageFilterKey, "present")}
-                </SelectItem>
-                <SelectItem value="missing">
-                  {coverageFilterLabel(key as CoverageFilterKey, "missing")}
-                </SelectItem>
+                <SelectItem value={ALL_ORGANI}>Tutti gli organi</SelectItem>
+                {organoOptions.map((opt) => (
+                  <SelectItem key={opt.slug} value={opt.slug}>
+                    {opt.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
-          ))}
-        </div>
-      </section>
 
-      {isLoading ? (
-        <div className="space-y-3">
-          {Array(4)
-            .fill(0)
-            .map((_, i) => (
-              <Card key={i} className="p-5">
-                <Skeleton className="h-4 w-40 mb-3" />
-                <Skeleton className="h-5 w-full" />
-              </Card>
+            <Select value={macrotemaFilter} onValueChange={setMacrotemaFilter}>
+              <SelectTrigger
+                className="h-10 bg-background"
+                aria-label="Filtra per tema"
+              >
+                <div className="flex items-center gap-2">
+                  <Layers className="h-4 w-4 text-muted-foreground shrink-0" />
+                  <span className="truncate text-sm">
+                    {macrotemaFilter === "all"
+                      ? "Tutti i temi"
+                      : (MACROTEMA_LABELS[macrotemaFilter] ?? macrotemaFilter)}
+                  </span>
+                </div>
+              </SelectTrigger>
+              <SelectContent>
+                {MACROTEMA_OPTS.map((opt) => (
+                  <SelectItem key={opt.key} value={opt.key}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {[
+              ["report", reportFilter, setReportFilter],
+              ["votes", votesFilter, setVotesFilter],
+              ["acts", actsFilter, setActsFilter],
+            ].map(([key, value, setter]) => (
+              <Select
+                key={key as string}
+                value={value as CoverageFilter}
+                onValueChange={(next) =>
+                  (setter as (value: CoverageFilter) => void)(
+                    next as CoverageFilter,
+                  )
+                }
+              >
+                <SelectTrigger
+                  className="h-10 bg-background"
+                  aria-label={`Filtra per ${key}`}
+                >
+                  <span className="truncate text-sm">
+                    {coverageFilterLabel(
+                      key as CoverageFilterKey,
+                      value as CoverageFilter,
+                    )}
+                  </span>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">
+                    {coverageFilterLabel(key as CoverageFilterKey, "all")}
+                  </SelectItem>
+                  <SelectItem value="present">
+                    {coverageFilterLabel(key as CoverageFilterKey, "present")}
+                  </SelectItem>
+                  <SelectItem value="missing">
+                    {coverageFilterLabel(key as CoverageFilterKey, "missing")}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
             ))}
-        </div>
-      ) : groups.length > 0 ? (
-        <div className="space-y-10">
-          {groups.map((g) => (
-            <section key={g.slug ?? g.name}>
-              <div className="mb-4 flex items-center gap-2.5">
-                <span className="flex h-8 w-8 items-center justify-center rounded-md bg-brand/10 text-brand">
-                  <Building2 className="h-4 w-4" />
-                </span>
-                {g.slug ? (
-                  <Link
-                    href={`/organi/${g.slug}`}
-                    className="text-xl md:text-2xl font-display font-bold tracking-tight hover:text-brand transition-colors"
-                  >
-                    {g.name}
-                  </Link>
-                ) : (
-                  <h2 className="text-xl md:text-2xl font-display font-bold tracking-tight">
-                    {g.name}
-                  </h2>
-                )}
-              </div>
+          </div>
+        </section>
 
-              <div className="space-y-3">
-                {g.items.map((s) => {
-                  const macrotemi =
-                    s.publicationId != null
-                      ? (macrotemiByPubId.get(s.publicationId) ?? [])
-                      : [];
-                  return (
+        {isLoading ? (
+          <div className="space-y-3">
+            {Array(4)
+              .fill(0)
+              .map((_, i) => (
+                <Card key={i} className="p-5">
+                  <Skeleton className="h-4 w-40 mb-3" />
+                  <Skeleton className="h-5 w-full" />
+                </Card>
+              ))}
+          </div>
+        ) : groups.length > 0 ? (
+          <div className="space-y-10">
+            {groups.map((g) => (
+              <section key={g.slug ?? g.name}>
+                <div className="mb-4 flex items-center gap-2.5">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-md bg-brand/10 text-brand">
+                    <Building2 className="h-4 w-4" />
+                  </span>
+                  {g.slug ? (
                     <Link
-                      key={s.id}
-                      href={
-                        s.publicationId != null
-                          ? `/convocazioni/${s.publicationId}`
-                          : "#"
-                      }
-                      className="block"
+                      href={`/organi/${g.slug}`}
+                      className="text-xl md:text-2xl font-display font-bold tracking-tight hover:text-brand transition-colors"
                     >
-                      <Card className="group p-5 transition-all hover:shadow-lg hover:-translate-y-0.5 hover:border-brand/40">
-                        <div className="flex items-center gap-2 text-sm font-semibold text-brand mb-2">
-                          <Calendar className="h-4 w-4" />
-                          {formatDate(s.date)}
-                        </div>
-                        {s.agenda && (
-                          <h3 className="font-display font-bold text-foreground leading-snug group-hover:text-brand transition-colors">
-                            {s.agenda}
-                          </h3>
-                        )}
-                        {macrotemi.length > 0 && (
-                          <MacrotemasRow macrotemi={macrotemi} />
-                        )}
-                        <div className="mt-3 flex flex-wrap gap-1.5">
-                          {(() => {
-                            const flags = getSedutaCoverageFlags(
-                              s,
-                              s.publicationId != null
-                                ? publicationsById.get(s.publicationId)
-                                : undefined,
-                            );
-                            return (
-                              <>
-                                <CoverageBadge
-                                  present={flags.hasReport}
-                                  label="Resoconto"
-                                />
-                                <CoverageBadge
-                                  present={flags.hasVotes}
-                                  label="Votazioni"
-                                />
-                                <CoverageBadge
-                                  present={flags.hasLinkedActs}
-                                  label="Atti collegati"
-                                />
-                              </>
-                            );
-                          })()}
-                        </div>
-                        <div className="mt-3 flex items-center justify-between border-t border-border pt-3">
-                          <span className="inline-flex items-center gap-1 text-sm font-semibold text-primary group-hover:text-brand transition-colors">
-                            Apri scheda seduta
-                            <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                          </span>
-                        </div>
-                      </Card>
+                      {g.name}
                     </Link>
-                  );
-                })}
-              </div>
-            </section>
-          ))}
-        </div>
-      ) : shouldUseReviewedFallback ? (
-        <p className="rounded-2xl border border-brand/20 bg-brand/5 p-4 text-sm leading-relaxed text-muted-foreground">
-          La base API non ha restituito altre sedute verificabili. Restano
-          consultabili le schede revisionate sopra; il limite riguarda la
-          copertura locale corrente e non dimostra assenza di ulteriori sedute
-          presso le fonti istituzionali.
-        </p>
-      ) : (
-        <Empty className="border bg-muted/20">
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <CalendarClock />
-            </EmptyMedia>
-            <EmptyTitle>Nessuna convocazione disponibile</EmptyTitle>
-            <EmptyDescription>
-              {macrotemaFilter !== "all" ||
-              organoFilter !== ALL_ORGANI ||
-              reportFilter !== "all" ||
-              votesFilter !== "all" ||
-              actsFilter !== "all"
-                ? "Nessuna convocazione trovata con i filtri selezionati. Prova ad ampliare la ricerca."
-                : "Al momento non risultano convocazioni pubblicate. Torna più tardi per aggiornamenti."}
-            </EmptyDescription>
-          </EmptyHeader>
-        </Empty>
-      )}
+                  ) : (
+                    <h2 className="text-xl md:text-2xl font-display font-bold tracking-tight">
+                      {g.name}
+                    </h2>
+                  )}
+                </div>
+
+                <div className="space-y-3">
+                  {g.items.map((s) => {
+                    const macrotemi =
+                      s.publicationId != null
+                        ? (macrotemiByPubId.get(s.publicationId) ?? [])
+                        : [];
+                    return (
+                      <Link
+                        key={s.id}
+                        href={
+                          s.publicationId != null
+                            ? `/convocazioni/${s.publicationId}`
+                            : "#"
+                        }
+                        className="block"
+                      >
+                        <Card className="group p-5 transition-all hover:shadow-lg hover:-translate-y-0.5 hover:border-brand/40">
+                          <div className="flex items-center gap-2 text-sm font-semibold text-brand mb-2">
+                            <Calendar className="h-4 w-4" />
+                            {formatDate(s.date)}
+                          </div>
+                          {s.agenda && (
+                            <h3 className="font-display font-bold text-foreground leading-snug group-hover:text-brand transition-colors">
+                              {s.agenda}
+                            </h3>
+                          )}
+                          {macrotemi.length > 0 && (
+                            <MacrotemasRow macrotemi={macrotemi} />
+                          )}
+                          <div className="mt-3 flex flex-wrap gap-1.5">
+                            {(() => {
+                              const flags = getSedutaCoverageFlags(
+                                s,
+                                s.publicationId != null
+                                  ? publicationsById.get(s.publicationId)
+                                  : undefined,
+                              );
+                              return (
+                                <>
+                                  <CoverageBadge
+                                    present={flags.hasReport}
+                                    label="Resoconto"
+                                  />
+                                  <CoverageBadge
+                                    present={flags.hasVotes}
+                                    label="Votazioni"
+                                  />
+                                  <CoverageBadge
+                                    present={flags.hasLinkedActs}
+                                    label="Atti collegati"
+                                  />
+                                </>
+                              );
+                            })()}
+                          </div>
+                          <div className="mt-3 flex items-center justify-between border-t border-border pt-3">
+                            <span className="inline-flex items-center gap-1 text-sm font-semibold text-primary group-hover:text-brand transition-colors">
+                              Apri scheda seduta
+                              <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                            </span>
+                          </div>
+                        </Card>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </section>
+            ))}
+          </div>
+        ) : shouldUseReviewedFallback ? (
+          <p className="rounded-2xl border border-brand/20 bg-brand/5 p-4 text-sm leading-relaxed text-muted-foreground">
+            La base API non ha restituito altre sedute verificabili. Restano
+            consultabili le schede revisionate sopra; il limite riguarda la
+            copertura locale corrente e non dimostra assenza di ulteriori sedute
+            presso le fonti istituzionali.
+          </p>
+        ) : (
+          <Empty className="border bg-muted/20">
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <CalendarClock />
+              </EmptyMedia>
+              <EmptyTitle>Nessuna convocazione disponibile</EmptyTitle>
+              <EmptyDescription>
+                {macrotemaFilter !== "all" ||
+                organoFilter !== ALL_ORGANI ||
+                reportFilter !== "all" ||
+                votesFilter !== "all" ||
+                actsFilter !== "all"
+                  ? "Nessuna convocazione trovata con i filtri selezionati. Prova ad ampliare la ricerca."
+                  : "Al momento non risultano convocazioni pubblicate. Torna più tardi per aggiornamenti."}
+              </EmptyDescription>
+            </EmptyHeader>
+          </Empty>
+        )}
+      </details>
     </div>
   );
 }

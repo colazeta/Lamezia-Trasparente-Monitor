@@ -5,8 +5,6 @@ import {
 } from "@workspace/api-client-react";
 import {
   ArrowRight,
-  Calendar,
-  CalendarClock,
   CheckCircle2,
   Database,
   FileSearch,
@@ -14,11 +12,9 @@ import {
   Gavel,
   Landmark,
   MapPinned,
-  Newspaper,
   RefreshCw,
   Search,
   Users,
-  Video,
 } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
@@ -36,12 +32,16 @@ import {
 } from "@/data/alboPublicRun";
 import { ALBO_OPERATIONAL_STATUS } from "@/data/alboStatus";
 import { councilSessionV0ReviewedRecords } from "@/data/councilSessionV0Reviewed";
-import {
-  councilSessionV0StatusLabels,
-  type CouncilSessionV0,
-} from "@/data/councilSessionV0";
+import { councilSessionV0StatusLabels } from "@/data/councilSessionV0";
 import { asApiList } from "@/lib/apiList";
 import { PUBLIC_NUMBER_PLACEHOLDER } from "@/lib/publicNumbers";
+import {
+  selectHomeSessions,
+  sessionDate,
+  sessionDateLabel,
+  sessionIsUpcoming,
+  sessionOrgan,
+} from "@/lib/sessionAgenda";
 
 type PulseKind = "new" | "changed" | "removed" | "context";
 
@@ -84,20 +84,6 @@ function formatCivicTime(value: string | null | undefined) {
     month: "short",
     hour: "2-digit",
     minute: "2-digit",
-  }).format(date);
-}
-
-function formatSessionDate(value: string | null) {
-  if (!value) return "Data e ora da verificare";
-
-  const isDateOnly = /^\d{4}-\d{2}-\d{2}$/.test(value);
-  const date = new Date(isDateOnly ? `${value}T00:00:00Z` : value);
-  if (Number.isNaN(date.getTime())) return "Data e ora da verificare";
-
-  return new Intl.DateTimeFormat("it-IT", {
-    timeZone: isDateOnly ? "UTC" : "Europe/Rome",
-    dateStyle: "long",
-    ...(isDateOnly ? {} : { timeStyle: "short" as const }),
   }).format(date);
 }
 
@@ -189,9 +175,14 @@ export function Home() {
   const pulseItems = buildPulseItems();
   const pulseCounts = ALBO_PUBLIC_DIFF_SUMMARY.counts;
   const lastAlboCheck = Date.parse(ALBO_OPERATIONAL_STATUS.last_update ?? "");
-  const alboSnapshotStale = !Number.isFinite(lastAlboCheck) || Date.now() - lastAlboCheck > 24 * 60 * 60 * 1000;
-  const nextAlboCheck = Date.parse(ALBO_OPERATIONAL_STATUS.next_scheduled_check ?? "");
-  const alboScheduleOverdue = Number.isFinite(nextAlboCheck) && nextAlboCheck < Date.now();
+  const alboSnapshotStale =
+    !Number.isFinite(lastAlboCheck) ||
+    Date.now() - lastAlboCheck > 24 * 60 * 60 * 1000;
+  const nextAlboCheck = Date.parse(
+    ALBO_OPERATIONAL_STATUS.next_scheduled_check ?? "",
+  );
+  const alboScheduleOverdue =
+    Number.isFinite(nextAlboCheck) && nextAlboCheck < Date.now();
   const hasDiff =
     pulseCounts.new + pulseCounts.changed + pulseCounts.removed > 0;
 
@@ -207,23 +198,20 @@ export function Home() {
         data-tour="home-hero"
         className="bg-sidebar text-sidebar-foreground"
       >
-        <div className="container mx-auto max-w-6xl px-4 py-14 md:px-6 md:py-20">
+        <div className="container mx-auto max-w-6xl px-4 py-8 md:px-6 md:py-10">
           <div className="max-w-4xl">
-            <h1 className="max-w-4xl font-display text-4xl font-bold leading-[1.03] text-white sm:text-5xl md:text-6xl lg:text-7xl">
+            <h1 className="max-w-4xl font-display text-3xl font-bold leading-tight text-white sm:text-4xl md:text-5xl">
               Capire cosa decide, spende e realizza il Comune.
             </h1>
 
-            <p className="mt-6 max-w-3xl text-base leading-7 text-sidebar-foreground/80 sm:text-lg md:text-xl">
-              Parti da una domanda, cerca una persona o un dataset, oppure segui
-              gli ultimi cambiamenti nelle fonti pubbliche.
+            <p className="mt-4 max-w-3xl text-base leading-7 text-sidebar-foreground/80 sm:text-lg">
+              Convocazioni, atti e risorse pubbliche di Lamezia Terme, con le
+              fonti per approfondire.
             </p>
 
-            <div className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+            <div className="mt-5 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
               <Button asChild variant="brand" size="lg" className="font-bold">
-                <a href="#oggi">
-                  Cosa è cambiato
-                  <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
-                </a>
+                <a href="#oggi">Cosa è cambiato</a>
               </Button>
               <Button
                 type="button"
@@ -241,13 +229,15 @@ export function Home() {
         </div>
       </section>
 
-      <section className="border-y border-border bg-background py-10 md:py-12">
+      <HomeInstitutionalSessions />
+
+      <section className="border-y border-border bg-background py-6 md:py-8">
         <div className="container mx-auto px-4 md:px-6">
           <div className="mb-6 flex flex-col justify-between gap-3 md:flex-row md:items-end">
             <div>
               <span className="eyebrow text-primary">Quadro civico</span>
               <h2 className="mt-2 font-display text-2xl font-bold tracking-tight md:text-3xl">
-                Numeri disponibili adesso
+                Il Comune nei dati disponibili
               </h2>
             </div>
             <Link
@@ -297,11 +287,15 @@ export function Home() {
         </div>
       </section>
 
-      <section id="oggi" className="scroll-mt-24 bg-muted/25 py-12 md:py-16">
+      <section id="oggi" className="scroll-mt-24 bg-muted/25 py-8 md:py-10">
         <div className="container mx-auto px-4 md:px-6">
           <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <span className="eyebrow text-primary">{alboSnapshotStale ? "Ultime variazioni disponibili" : "Attività recente"}</span>
+              <span className="eyebrow text-primary">
+                {alboSnapshotStale
+                  ? "Ultime variazioni disponibili"
+                  : "Attività recente"}
+              </span>
               <h2 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-4xl">
                 Cosa è cambiato nell&apos;Albo
               </h2>
@@ -323,7 +317,9 @@ export function Home() {
                 </p>
                 <span className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
                   <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
-                  {alboScheduleOverdue ? "Controllo previsto, esecuzione non confermata" : "Prossimo controllo"}{" "}
+                  {alboScheduleOverdue
+                    ? "Controllo previsto, esecuzione non confermata"
+                    : "Prossimo controllo"}{" "}
                   {formatCivicTime(
                     ALBO_OPERATIONAL_STATUS.next_scheduled_check,
                   )}
@@ -332,9 +328,10 @@ export function Home() {
 
               {alboSnapshotStale && (
                 <p role="status" className="mt-3 text-sm text-muted-foreground">
-                  Lo snapshot disponibile non ha un controllo confermato nelle ultime 24 ore.
-                  Le variazioni sotto riportate si riferiscono all'ultimo confronto disponibile;
-                  l'assenza di novità non prova l'assenza di nuovi atti nella fonte ufficiale.
+                  Lo snapshot disponibile non ha un controllo confermato nelle
+                  ultime 24 ore. Le variazioni sotto riportate si riferiscono
+                  all'ultimo confronto disponibile; l'assenza di novità non
+                  prova l'assenza di nuovi atti nella fonte ufficiale.
                 </p>
               )}
 
@@ -387,11 +384,10 @@ export function Home() {
               id="home-primary-domains"
               className="mt-2 font-display text-2xl font-bold tracking-tight md:text-3xl"
             >
-              Cinque porte per orientarsi
+              Esplora il Comune
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground md:text-base">
-              La navigazione primaria segue le domande dell&apos;utente; le
-              sezioni specialistiche restano disponibili nella ricerca globale.
+              Decisioni, risorse pubbliche, persone, territorio e fonti.
             </p>
           </div>
 
@@ -420,9 +416,7 @@ export function Home() {
         </div>
       </section>
 
-      <HomeInstitutionalSessions />
-
-      <section className="border-b border-border bg-muted/20 py-12 md:py-16">
+      <section className="border-b border-border bg-muted/20 py-8 md:py-10">
         <div className="container mx-auto grid gap-7 px-4 md:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
           <div className="max-w-xl">
             <span className="eyebrow text-primary">Risorse pubbliche</span>
@@ -454,7 +448,7 @@ export function Home() {
         </div>
       </section>
 
-      <section className="border-b border-border bg-background py-12 md:py-16">
+      <section className="border-b border-border bg-background py-8 md:py-10">
         <div className="container mx-auto grid gap-7 px-4 md:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
           <div className="max-w-xl">
             <span className="eyebrow text-primary">
@@ -488,7 +482,7 @@ export function Home() {
         </div>
       </section>
 
-      <section className="bg-muted/20 py-12 md:py-16">
+      <section className="bg-muted/20 py-8 md:py-10">
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid gap-7 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
             <div className="max-w-xl">
@@ -525,190 +519,110 @@ export function Home() {
   );
 }
 
-const councilHomeSessions = councilSessionV0ReviewedRecords.filter(
-  (session) => session.kind === "council",
-);
-const commissionHomeSessions = councilSessionV0ReviewedRecords.filter(
-  (session) => session.kind === "commission",
-);
-
 export function HomeInstitutionalSessions() {
+  const sessions = selectHomeSessions(councilSessionV0ReviewedRecords);
+  const hasUpcoming = sessions.some((session) => sessionIsUpcoming(session));
   return (
     <section
       id="consiglio-commissioni"
       aria-labelledby="consiglio-commissioni-title"
-      className="scroll-mt-24 border-b border-border bg-background py-12 md:py-16"
+      className="scroll-mt-24 border-b border-border bg-background py-8 md:py-10"
     >
-      <div className="container mx-auto grid gap-7 px-4 md:px-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-start">
-        <div className="max-w-xl">
-          <h2
-            id="consiglio-commissioni-title"
-            className="font-display text-3xl font-bold tracking-tight md:text-4xl"
-          >
-            Segui Consiglio comunale e Commissioni
-          </h2>
-          <p className="mt-3 text-base leading-7 text-muted-foreground">
-            Convocazioni, date e ordini del giorno dalle fonti istituzionali
-            disponibili. Lo svolgimento viene indicato solo quando una fonte
-            istituzionale successiva lo conferma.
-          </p>
-
-          <div className="mt-6">
-            <Button asChild>
-              <Link href="/convocazioni">
-                Apri l&apos;archivio delle sedute
-              </Link>
-            </Button>
+      <div className="container mx-auto max-w-6xl px-4 md:px-6">
+        <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <span className="eyebrow text-primary">
+              Consiglio e Commissioni
+            </span>
+            <h2
+              id="consiglio-commissioni-title"
+              className="mt-2 font-display text-2xl font-bold tracking-tight md:text-3xl"
+            >
+              {hasUpcoming ? "In agenda" : "Ultime convocazioni"}
+            </h2>
           </div>
+          <Button asChild variant="outline">
+            <Link href="/convocazioni">
+              Tutte le sedute · agenda e archivio
+            </Link>
+          </Button>
         </div>
-
-        <div className="grid gap-5 md:grid-cols-2">
-          <InstitutionalSessionsHomeCard
-            title="Consiglio comunale"
-            description="La data e lo svolgimento sono confermati da una fonte istituzionale successiva. Orario e ordine del giorno completo restano da verificare."
-            icon={Users}
-            sessions={councilHomeSessions}
-          />
-          <InstitutionalSessionsHomeCard
-            title="Commissioni consiliari"
-            description="Sedute delle Commissioni con date e orari controllati nelle rispettive convocazioni ufficiali."
-            icon={CalendarClock}
-            sessions={commissionHomeSessions}
-          />
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function InstitutionalSessionsHomeCard({
-  title,
-  description,
-  icon: Icon,
-  sessions,
-}: {
-  title: string;
-  description: string;
-  icon: React.ElementType;
-  sessions: readonly CouncilSessionV0[];
-}) {
-  const sourceReviewStatuses = new Set(
-    sessions
-      .map((session) => session.provenance?.sourceReviewStatus)
-      .filter(Boolean),
-  );
-  const hasMixedSourceReview = sourceReviewStatuses.size > 1;
-  const attachmentReviewed = sourceReviewStatuses.has(
-    "reviewed_against_official_attachment",
-  );
-  const laterOfficialSourceReviewed = sourceReviewStatuses.has(
-    "reviewed_against_later_official_source",
-  );
-  const publicationNumbers = [
-    ...new Set(
-      sessions
-        .map((session) => session.provenance?.publicationNumber)
-        .filter((publication): publication is string => Boolean(publication)),
-    ),
-  ];
-
-  return (
-    <Card className="flex h-full flex-col overflow-hidden border-primary/20">
-      <CardHeader className="border-b border-border bg-muted/25 py-4">
-        <div className="flex items-start justify-between gap-3">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-            <Icon className="h-5 w-5" aria-hidden="true" />
-          </span>
-          <span className="rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-primary">
-            {hasMixedSourceReview
-              ? "Verifica mista"
-              : attachmentReviewed
-                ? "Allegato controllato"
-                : laterOfficialSourceReviewed
-                  ? "Fonte successiva controllata"
-                  : "Metadati ufficiali"}
-          </span>
-        </div>
-        <h3 className="mt-4 font-display text-2xl font-bold tracking-tight">
-          {title}
-        </h3>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          {description}
-        </p>
-      </CardHeader>
-
-      <CardContent className="flex flex-1 flex-col p-0">
-        <div className="divide-y divide-border">
+        <div className="grid gap-4 lg:grid-cols-3">
           {sessions.map((session) => {
-            const contextArticleCount = session.contextResearch.articles.length;
-            const contextMediaCount = session.contextResearch.media.length;
-            const organLabel =
-              session.title.value?.split(" — ")[0] ??
-              (session.kind === "council"
-                ? "Consiglio comunale"
-                : "Commissione consiliare");
-            const sessionStatusSummary =
-              councilSessionV0StatusLabels[
-                session.sessionStatus.value ?? "non_verificata"
-              ];
-            const contextStatusSummary =
-              session.contextResearch.status === "not_run"
-                ? "Ricerca contestuale da completare"
-                : "Ricerca contestuale eseguita";
-            const contextCountSummary = `${contextArticleCount} ${contextArticleCount === 1 ? "articolo" : "articoli"} · ${contextMediaCount} video`;
+            const scheduled = sessionDate(session.scheduledAt.value);
+            const dateNumber = scheduled
+              ? new Intl.DateTimeFormat("it-IT", {
+                  timeZone: scheduled.timezone,
+                  day: "2-digit",
+                }).format(scheduled.date)
+              : "—";
+            const dateMonth = scheduled
+              ? new Intl.DateTimeFormat("it-IT", {
+                  timeZone: scheduled.timezone,
+                  month: "short",
+                }).format(scheduled.date)
+              : "Data";
             return (
               <Link
                 key={session.id}
                 href={`/convocazioni/${session.id}`}
-                className="group block p-4 transition-colors hover:bg-muted/45"
+                data-session-id={session.id}
+                className="group flex min-w-0 gap-4 rounded-xl border border-border bg-card p-5 transition-colors hover:border-primary/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
               >
-                <div className="flex items-start gap-3">
-                  <Calendar
-                    className="mt-0.5 h-4 w-4 shrink-0 text-primary"
-                    aria-hidden="true"
-                  />
-                  <div className="min-w-0">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-primary">
-                      {organLabel}
-                    </p>
-                    <p className="text-sm font-bold text-foreground group-hover:text-primary">
-                      {formatSessionDate(session.scheduledAt.value)}
-                    </p>
-                    <p className="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">
-                      {sessionStatusSummary} · {contextStatusSummary}
-                    </p>
-                    <p className="mt-1 flex items-center gap-1.5 text-xs font-semibold text-primary">
-                      {contextMediaCount > 0 ? (
-                        <Video
-                          className="h-3.5 w-3.5 shrink-0"
-                          aria-hidden="true"
-                        />
-                      ) : (
-                        <Newspaper
-                          className="h-3.5 w-3.5 shrink-0"
-                          aria-hidden="true"
-                        />
-                      )}
-                      {contextCountSummary}
-                    </p>
-                  </div>
-                  <ArrowRight
-                    className="ml-auto mt-0.5 h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-primary"
-                    aria-hidden="true"
-                  />
-                </div>
+                <span
+                  aria-hidden="true"
+                  className="flex h-20 w-14 shrink-0 flex-col items-center justify-center rounded-lg bg-primary/5 text-primary"
+                >
+                  <span className="font-display text-3xl font-bold leading-none tabular-nums">
+                    {dateNumber}
+                  </span>
+                  <span className="mt-1 text-sm font-semibold capitalize">
+                    {dateMonth}
+                  </span>
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-sm font-semibold text-primary">
+                    {sessionOrgan(session)}
+                  </span>
+                  <span className="mt-1 block line-clamp-2 font-display text-base font-bold leading-snug group-hover:text-primary">
+                    {session.agenda.value?.[0] ||
+                      "Convocazione e documenti della seduta"}
+                  </span>
+                  <time
+                    dateTime={
+                      scheduled ? session.scheduledAt.value! : undefined
+                    }
+                    className="mt-2 block text-sm text-muted-foreground"
+                  >
+                    {sessionDateLabel(session)}
+                  </time>
+                  <span className="mt-1 block text-sm text-muted-foreground">
+                    {
+                      councilSessionV0StatusLabels[
+                        session.sessionStatus.value ?? "non_verificata"
+                      ]
+                    }
+                  </span>
+                </span>
               </Link>
             );
           })}
         </div>
-
-        <div className="mt-auto border-t border-border bg-muted/20 px-4 py-3 text-xs leading-5 text-muted-foreground">
-          {publicationNumbers.length > 0
-            ? `Fonte: Albo Pretorio · ${publicationNumbers.length === 1 ? "pubblicazione" : "pubblicazioni"} ${publicationNumbers.join(", ")}`
-            : "Nessuna scheda revisionata disponibile."}
-        </div>
-      </CardContent>
-    </Card>
+        {sessions.length === 0 && (
+          <p className="text-sm text-muted-foreground">
+            Nessuna convocazione disponibile nello snapshot corrente.
+          </p>
+        )}
+        <p className="mt-4 text-sm leading-6 text-muted-foreground">
+          Fonte: Albo Pretorio e documenti istituzionali.{" "}
+          {hasUpcoming
+            ? "Date in arrivo e convocazioni recenti."
+            : "Le convocazioni più recenti disponibili; nessuna data futura risulta nell'archivio acquisito."}{" "}
+          Lo svolgimento è indicato solo se confermato da una fonte
+          istituzionale. L'archivio non copre tutte le sedute.
+        </p>
+      </div>
+    </section>
   );
 }
 
