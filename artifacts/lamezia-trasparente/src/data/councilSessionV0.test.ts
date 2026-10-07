@@ -1350,7 +1350,7 @@ describe("councilSessionV0", () => {
         expect(session.contextResearch).toEqual(
           expect.objectContaining({
             status: "reviewed_matches",
-            checkedAt: "2026-10-05T22:08:04Z",
+            checkedAt: "2026-10-06T03:24:30Z",
             media: [],
             articles: expect.arrayContaining([
               expect.objectContaining({
@@ -1405,10 +1405,18 @@ describe("councilSessionV0", () => {
                   "piano-di-riequilibrio-cristiano-villella-primi-tagli",
                 ),
               }),
+              expect.objectContaining({
+                publisher: "Gazzetta del Sud",
+                publishedAt: "2026-10-06",
+                relationship: "agenda_item",
+                url: expect.stringContaining(
+                  "comune-di-lamezia-verso-il-predissesto",
+                ),
+              }),
             ]),
           }),
         );
-        expect(session.contextResearch.articles).toHaveLength(7);
+        expect(session.contextResearch.articles).toHaveLength(8);
         expect(session.contextResearch.searchNote).toMatch(
           /non identificano la II Commissione.*I Commissione.*Nessuna fonte attesta.*audizione/i,
         );
