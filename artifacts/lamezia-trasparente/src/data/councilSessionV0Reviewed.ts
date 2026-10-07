@@ -2116,7 +2116,7 @@ const councilOctober9Session: CouncilSessionV0 = {
       'La sede indicata è la Sala Consiliare "Renato Luisi", in via Sen. Arturo Perugini.',
       "La convocazione non certifica svolgimento, presenze, trattazione, votazioni o risultati.",
       "Streaming, registrazione e verbale sono indicati come non rilevati, non come inesistenti.",
-      "Non sono emersi collegamenti editoriali sufficientemente precisi al controllo corrente.",
+      "I due articoli collegati sono annunci precedenti alla seduta e non ne attestano costituzione o svolgimento.",
     ],
     sourceStatus: "parziale",
     sourceUrl: councilOctober9DocumentUrl,

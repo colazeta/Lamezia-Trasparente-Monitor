@@ -386,6 +386,12 @@ describe("councilSessionV0", () => {
     expect(council?.dataLimits.value?.join(" ")).toMatch(
       /Sala Consiliare.*Renato Luisi.*via Sen\. Arturo Perugini/i,
     );
+    expect(council?.dataLimits.value?.join(" ")).toMatch(
+      /due articoli.*annunci precedenti.*non.*attestano.*svolgimento/i,
+    );
+    expect(council?.dataLimits.value?.join(" ")).not.toMatch(
+      /non sono emersi collegamenti editoriali/i,
+    );
     expect(council?.contextResearch.articles).toHaveLength(2);
     expect(council?.contextResearch.searchNote).toMatch(
       /Parallel Search.*annunci precedenti.*non provano.*svolgimento/is,
