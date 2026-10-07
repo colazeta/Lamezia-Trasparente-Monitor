@@ -1414,7 +1414,7 @@ describe("councilSessionV0", () => {
         expect(session.contextResearch).toEqual(
           expect.objectContaining({
             status: "reviewed_matches",
-            checkedAt: "2026-10-07T10:16:27Z",
+            checkedAt: "2026-10-07T15:48:24Z",
             media: [],
             articles: expect.arrayContaining([
               expect.objectContaining({
@@ -1455,6 +1455,30 @@ describe("councilSessionV0", () => {
               }),
               expect.objectContaining({
                 publisher: "il Lametino",
+                publishedAt: "2026-10-02",
+                relationship: "agenda_item",
+                url: expect.stringContaining(
+                  "crisi-finanziaria-dei-comuni-calabria-al-primo-posto",
+                ),
+              }),
+              expect.objectContaining({
+                publisher: "Gazzetta del Sud",
+                publishedAt: "2026-10-02",
+                relationship: "agenda_item",
+                url: expect.stringContaining(
+                  "piano-di-riequilibrio-sotto-accusa-mascaro",
+                ),
+              }),
+              expect.objectContaining({
+                publisher: "Il Quotidiano del Sud",
+                publishedAt: "2026-10-04",
+                relationship: "agenda_item",
+                url: expect.stringContaining(
+                  "comuni-in-crisi-lamezia-caso-emblematico",
+                ),
+              }),
+              expect.objectContaining({
+                publisher: "il Lametino",
                 publishedAt: "2026-10-05",
                 relationship: "agenda_item",
                 url: expect.stringContaining(
@@ -1485,12 +1509,28 @@ describe("councilSessionV0", () => {
                   "piano-di-riequilibrio-raso-branca-perche-un-incarico-esterno",
                 ),
               }),
+              expect.objectContaining({
+                publisher: "Corriere di Lamezia",
+                publishedAt: "2026-10-06",
+                relationship: "agenda_item",
+                url: expect.stringContaining(
+                  "piano-di-riequilibrio-raso-e-branca",
+                ),
+              }),
+              expect.objectContaining({
+                publisher: "il Lametino",
+                publishedAt: "2026-10-06",
+                relationship: "agenda_item",
+                url: expect.stringContaining(
+                  "raso-e-branca-serve-chiarezza-sullincarico-esterno",
+                ),
+              }),
             ]),
           }),
         );
-        expect(session.contextResearch.articles).toHaveLength(9);
+        expect(session.contextResearch.articles).toHaveLength(14);
         expect(session.contextResearch.searchNote).toMatch(
-          /non identificano la seduta.*I Commissione.*Commissione Bilancio.*Nessuna fonte attesta.*audizione/i,
+          /stessa nota.*non identificano la seduta.*I Commissione.*Commissione Bilancio.*Nessuna fonte attesta.*audizione/i,
         );
       } else {
         expect(session.contextResearch).toEqual(
