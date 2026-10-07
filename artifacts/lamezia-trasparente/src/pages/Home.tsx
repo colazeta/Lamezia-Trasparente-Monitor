@@ -4,7 +4,6 @@ import {
   useListPnrrProjects,
 } from "@workspace/api-client-react";
 import {
-  ArrowRight,
   CheckCircle2,
   Database,
   FileSearch,
@@ -584,7 +583,7 @@ export function HomeInstitutionalSessions() {
                   <span className="block text-sm font-semibold text-primary">
                     {sessionOrgan(session)}
                   </span>
-                  <span className="mt-1 block line-clamp-2 font-display text-base font-bold leading-snug group-hover:text-primary">
+                  <span className="mt-1 line-clamp-2 font-display text-base font-bold leading-snug group-hover:text-primary">
                     {session.agenda.value?.[0] ||
                       "Convocazione e documenti della seduta"}
                   </span>

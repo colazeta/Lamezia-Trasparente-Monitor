@@ -73,7 +73,7 @@ export function SessionAgendaRow({ session }: { session: CouncilSessionV0 }) {
         </p>
         <Link
           href={`/convocazioni/${session.id}`}
-          className="mt-1 block rounded-sm font-display text-lg font-bold leading-snug text-foreground hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+          className="mt-1 line-clamp-2 rounded-sm font-display text-lg font-bold leading-snug text-foreground hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
         >
           {title}
         </Link>

@@ -248,7 +248,7 @@ export function Convocazioni() {
       <header className="mb-8">
         <Link
           href="/"
-          className="text-sm font-semibold text-primary hover:underline"
+          className="block w-fit text-sm font-semibold text-primary hover:underline"
         >
           Lamezia Trasparente
         </Link>
