@@ -92,6 +92,8 @@ const MULTI_YEAR_REBALANCING_AUSTERITY_LAMEZIATERME_URL =
   "https://www.lameziaterme.it/piano-di-riequilibrio-cristiano-villella-primi-tagli-per-14-milioni-di-euro/";
 const MULTI_YEAR_REBALANCING_AUSTERITY_GAZZETTA_URL =
   "https://catanzaro.gazzettadelsud.it/articoli/politica/2026/10/06/comune-di-lamezia-verso-il-predissesto-fn-basta-con-le-austerita-619d7fd4-575a-49e6-ba81-cb14a0148a3f/";
+const MULTI_YEAR_REBALANCING_RASO_BRANCA_URL =
+  "https://www.lameziaterme.it/piano-di-riequilibrio-raso-branca-perche-un-incarico-esterno/";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
 const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
 const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-27T21:49:11Z";
@@ -109,7 +111,8 @@ const COMMISSION_I_MOTION_CONTEXT_RESEARCHED_AT = "2026-09-23T22:14:41Z";
 const VIA_TRENTO_ROADWORKS_CONTEXT_RESEARCHED_AT = "2026-09-24T09:59:02Z";
 const COMMISSION_V_REU_CONTEXT_RESEARCHED_AT = "2026-09-28T15:27:08Z";
 const COMMISSION_IV_STREET_ART_CONTEXT_RESEARCHED_AT = "2026-09-29T04:07:44Z";
-const MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT = "2026-10-06T03:24:30Z";
+const OCTOBER_7_RESEARCHED_AT = "2026-10-07T10:16:27Z";
+const MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT = OCTOBER_7_RESEARCHED_AT;
 const MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT = "2026-09-12T21:51:17Z";
 const SCHOOL_TRANSPORT_CONTEXT_RESEARCHED_AT = "2026-09-14T10:13:39Z";
 
@@ -608,12 +611,21 @@ const october1To6CommissionContextResearch: CouncilSessionV0ContextResearch = {
   media: [],
 };
 
+const councilOctober9ContextResearch: CouncilSessionV0ContextResearch = {
+  status: "checked_no_match",
+  checkedAt: OCTOBER_7_RESEARCHED_AT,
+  searchNote:
+    "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, City One, LameziaInforma, LameziaTermeNews, LameziaTerme.it, il Lametino e risultati indicizzati, inclusi canali YouTube e Facebook, per il Consiglio comunale convocato il 9 ottobre 2026 alle 09:30. Le query hanno combinato organo, data, orario, sede e temi distintivi dei 21 punti ufficiali. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alla seduta. L'ordine del giorno ufficiale è disponibile e non viene ricostruita un'agenda editoriale; la ricerca resta aperta fino al termine della finestra prevista.",
+  articles: [],
+  media: [],
+};
+
 const commissionIiOctober6RebalancingContextResearch: CouncilSessionV0ContextResearch =
   {
     status: "reviewed_matches",
     checkedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
     searchNote:
-      "Ricerca eseguita con Parallel Search per discovery e verifica diretta degli otto articoli originali de il Lametino, LameziaTerme.it, Gazzetta del Sud, La Novità Online, Corriere di Lamezia e Notizie.it Catanzaro e del calendario ufficiale Albo 2026/3197. Gli articoli dal 30 settembre al 6 ottobre trattano il Piano di Riequilibrio Finanziario Pluriennale, i suoi effetti finanziari attribuiti o il relativo supporto giuridico-contabile e vengono collegati come `agenda_item` al punto ufficiale della II Commissione del 6 ottobre. Le fonti non identificano la II Commissione o la seduta del 6 ottobre; LameziaTerme.it richiama invece precedenti lavori della I Commissione. Nessuna fonte attesta programmazione, costituzione, svolgimento, trattazione, audizione, approvazione, votazioni o risultati della seduta del 6 ottobre. Campi e ordine del giorno ufficiali restano invariati. Non sono emersi contenuti audiovisivi collegabili con sufficiente precisione.",
+      "Ricerca eseguita con Parallel Search per discovery e verifica diretta dei nove articoli originali de il Lametino, LameziaTerme.it, Gazzetta del Sud, La Novità Online, Corriere di Lamezia e Notizie.it Catanzaro e del calendario ufficiale Albo 2026/3197. Gli articoli dal 30 settembre al 6 ottobre trattano il Piano di Riequilibrio Finanziario Pluriennale, i suoi effetti finanziari attribuiti o il relativo supporto giuridico-contabile e vengono collegati come `agenda_item` al punto ufficiale della II Commissione del 6 ottobre. Le fonti non identificano la seduta del 6 ottobre: un articolo LameziaTerme.it richiama precedenti lavori della I Commissione, mentre quello di Raso e Branca menziona genericamente un mancato passaggio nella Commissione Bilancio senza indicare data o riunione. Nessuna fonte attesta programmazione, costituzione, svolgimento, trattazione, audizione, approvazione, votazioni o risultati della seduta del 6 ottobre. Campi e ordine del giorno ufficiali restano invariati. Non sono emersi contenuti audiovisivi collegabili con sufficiente precisione.",
     articles: [
       {
         title:
@@ -701,6 +713,17 @@ const commissionIiOctober6RebalancingContextResearch: CouncilSessionV0ContextRes
         relationship: "agenda_item",
         relevanceNote:
           "L'articolo descrive i primi effetti finanziari attribuiti al percorso verso il predissesto e i dubbi espressi sul contenzioso comunale, temi pertinenti al Piano di Riequilibrio Finanziario Pluriennale indicato nell'ordine del giorno ufficiale della II Commissione del 6 ottobre. Non identifica la Commissione o la seduta e documenta il contesto politico-finanziario, non lo svolgimento, la trattazione, l'audizione o eventuali esiti.",
+        reviewedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
+      },
+      {
+        title:
+          "Piano di riequilibrio, Raso e Branca: «Perché un incarico esterno?»",
+        url: MULTI_YEAR_REBALANCING_RASO_BRANCA_URL,
+        publisher: "LameziaTerme.it",
+        publishedAt: "2026-10-06",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo riporta le richieste di chiarimento di due consiglieri sull'incarico esterno collegato al Piano di Riequilibrio Finanziario Pluriennale, tema del punto ufficiale della II Commissione del 6 ottobre. Menziona genericamente un mancato passaggio nella Commissione Bilancio, ma non identifica una data o la seduta del 6 ottobre e non ne documenta svolgimento, trattazione, audizione o risultati.",
         reviewedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
       },
     ],
@@ -1268,6 +1291,42 @@ const commissionIvOctober5Notice = lateSeptemberNotice({
     "83fe0c8c9149f7fb01dd5ca0180d0c8d4decf59be9ef5c44a36baad7b1e6fbec",
   reviewedAt: OCTOBER_1_6_COMMISSION_RESEARCHED_AT,
 });
+
+const councilOctober9DocumentUrl =
+  "https://albo.tinnvision.cloud/allegati/2026_3221_1_X?ente=00301390795";
+const councilOctober9DocumentSha256 =
+  "83aea5a29ea10b1e32c08649c8f9fc9d3e8c45e1d015c6ea902ca6e2214a7c97";
+const councilOctober9Candidate = requireCandidate({
+  id: "albo-2026-3221",
+  source: "Albo Pretorio Comune di Lamezia Terme",
+  source_url: OFFICIAL_ALBO_URL,
+  retrieved_at: OCTOBER_7_RESEARCHED_AT,
+  publication_number: "2026/3221",
+  publication_start: "2026-10-06",
+  publication_end: "2026-10-08",
+  act_type: "CONVOCAZIONE CONSIGLIO COMUNALE",
+  subject: "Avviso seduta di Consiglio Comunale",
+  document_url: councilOctober9DocumentUrl,
+  content_hash:
+    "0b6cb9a1d7d74d086dca4c7cc4c17ce3000bf2b5e2c1efd53f4c8f20a5c279f1",
+  verification_status: "official_source_acquired",
+  privacy_risk: "low",
+  public_visibility: "publishable",
+});
+const councilOctober9Provenance: CouncilSessionV0Provenance = {
+  noticeId: councilOctober9Candidate.id,
+  publicationNumber: councilOctober9Candidate.publicationNumber,
+  sourceLabel: councilOctober9Candidate.source.label,
+  sourceUrl: councilOctober9Candidate.source.url,
+  documentUrl: councilOctober9Candidate.source.documentUrl,
+  archivedDocumentUrl: `/data/public/albo/documents/2026/${councilOctober9DocumentSha256}.pdf`,
+  sourceContentHash: councilOctober9Candidate.source.contentHash,
+  documentSha256: councilOctober9DocumentSha256,
+  embeddedDocumentSha256: null,
+  retrievedAt: councilOctober9Candidate.source.retrievedAt,
+  reviewedAt: OCTOBER_7_RESEARCHED_AT,
+  sourceReviewStatus: "reviewed_against_official_attachment",
+};
 
 const councilCandidate = requireCandidate({
   id: "albo-2026-2673",
@@ -1912,6 +1971,134 @@ const multiYearFinancialRebalancingAgenda = [
   "Aggiornamento sul piano di riequilibrio finanziario pluriennale dell'Ente. Audizione dell'assessore al ramo dott.ssa Maria Nardo.",
 ] as const;
 
+const councilOctober9Agenda = [
+  "Comunicazioni del Presidente sull'intervenuta approvazione dei verbali delle sedute del 10, 17, 21 e 30 luglio 2026 e del 13 agosto 2026.",
+  "Nomina del Collegio dei Revisori per il triennio 2026–2029.",
+  "Regolamento sui Controlli Interni.",
+  "Riconoscimento del debito fuori bilancio derivante dalla sentenza n. 616/26 del Tribunale di Lamezia Terme.",
+  "Riconoscimento del debito fuori bilancio derivante dalla sentenza n. 917/25 del Tribunale di Lamezia Terme.",
+  "Riconoscimento del debito fuori bilancio derivante dalla sentenza n. 826/24 della Commissione di Giustizia Tributaria di primo grado, II sezione di Catanzaro.",
+  "Riconoscimento del debito fuori bilancio derivante dalla sentenza n. 889/26 del Tribunale di Lamezia Terme.",
+  "Mozione sulla tutela della salute e del benessere della comunità scolastica, la valutazione del posticipo delle attività didattiche e il piano di adeguamento climatico degli edifici scolastici comunali.",
+  "Mozione su manutenzione, igiene urbana, riqualificazione e messa in sicurezza del Rione Timpone.",
+  "Mozione sulla procedura di mobilità per agenti di Polizia Locale e sul rafforzamento dell'organico.",
+  'Interrogazione sul ruolo strategico di Lamezia Terme nel progetto regionale "Città-Territorio dei Due Mari Catanzaro-Lamezia".',
+  'Interrogazione sulla delocalizzazione della base operativa dei Canadair da Lamezia Terme a Crotone nell\'ambito del CIS "Volare".',
+  "Interrogazione sul progetto della passerella ciclopedonale tra Marinella e Gizzeria Lido, sul ripristino di via Antonio Cappelli e sulla messa in sicurezza della SS18.",
+  'Interrogazione sulla crisi organizzativa e assistenziale del presidio ospedaliero "Giovanni Paolo II".',
+  "Interrogazione sull'area di accesso al Cimitero di Sant'Eufemia Lamezia e sul servizio di custodia.",
+  "Interrogazione sui Tirocinanti di inclusione sociale (TIS), sulle misure regionali e sul completamento del percorso occupazionale degli idonei.",
+  "Interrogazione sull'area giochi presso la scuola Nicholas Green.",
+  "Interrogazione sullo stato del Cimitero di Sambiase e sugli interventi di manutenzione e messa in sicurezza.",
+  "Interrogazione sulla frazione Caronte, il PTE, l'area camper, il progetto della piazza e la pulizia del torrente Bagni.",
+  "Interrogazione sullo stato manutentivo del Cimitero di Nicastro.",
+  "Interrogazione su San Teodoro-Piedichiusa, il nuovo parco, il torrente Niola/Piedichiusa, via SS. Salvatore e via dei Normanni.",
+] as const;
+
+const councilOctober9Session: CouncilSessionV0 = {
+  id: "albo-2026-3221-consiglio-comunale-2026-10-09",
+  kind: "council",
+  isDemoFixture: false,
+  provenance: councilOctober9Provenance,
+  contextResearch: councilOctober9ContextResearch,
+  title: {
+    key: "title",
+    label: "Titolo",
+    value: "Consiglio comunale — seduta del 9 ottobre 2026",
+    sourceStatus: "verificato",
+    sourceUrl: councilOctober9DocumentUrl,
+    limit:
+      "Titolo normalizzato dall'organo e dalla prima convocazione riportati nell'allegato ufficiale.",
+  },
+  scheduledAt: {
+    key: "scheduledAt",
+    label: "Data e ora",
+    value: "2026-10-09T09:30:00+02:00",
+    sourceStatus: "verificato",
+    sourceUrl: councilOctober9DocumentUrl,
+    limit:
+      "Prima convocazione trascritta dall'allegato ufficiale; la seconda convocazione è fissata al 12 ottobre 2026 alle 10:30.",
+  },
+  sessionStatus: {
+    key: "sessionStatus",
+    label: "Stato seduta",
+    value: "non_verificata",
+    sourceStatus: "parziale",
+    sourceUrl: councilOctober9DocumentUrl,
+    limit:
+      "La convocazione documenta la programmazione; non è stata collegata una fonte istituzionale che confermi svolgimento o rinvio.",
+  },
+  agenda: {
+    key: "agenda",
+    label: "Ordine del giorno",
+    value: councilOctober9Agenda,
+    sourceStatus: "verificato",
+    sourceUrl: councilOctober9DocumentUrl,
+    limit:
+      "Sintesi fedele dei 21 punti dell'allegato ufficiale; per protocolli, riferimenti e formulazione integrale consultare il documento.",
+  },
+  sourceLink: {
+    key: "sourceLink",
+    label: "Fonte",
+    value: "Apri la convocazione ufficiale del Consiglio comunale",
+    sourceStatus: "verificato",
+    sourceUrl: councilOctober9DocumentUrl,
+    limit:
+      "Pubblicazione 2026/3221; copia acquisita e verificata tramite SHA-256 nel repository.",
+  },
+  liveStreaming: {
+    key: "liveStreaming",
+    label: "Streaming live",
+    value: null,
+    sourceStatus: "assente",
+    sourceUrl: councilOctober9DocumentUrl,
+    limit:
+      "Non rilevato nella convocazione né nei canali controllati; ciò non equivale a dichiararne l'inesistenza.",
+  },
+  recording: {
+    key: "recording",
+    label: "Registrazione",
+    value: null,
+    sourceStatus: "assente",
+    sourceUrl: councilOctober9DocumentUrl,
+    limit:
+      "Non rilevata nella fonte istituzionale o nella ricerca editoriale; richiede ulteriori controlli nella finestra attiva.",
+  },
+  minutesOrReport: {
+    key: "minutesOrReport",
+    label: "Verbale o resoconto",
+    value: null,
+    sourceStatus: "assente",
+    sourceUrl: councilOctober9DocumentUrl,
+    limit:
+      "Non rilevato nella convocazione; eventuali pubblicazioni successive richiedono un controllo separato.",
+  },
+  lastCheckedAt: {
+    key: "lastCheckedAt",
+    label: "Ultimo controllo",
+    value: OCTOBER_7_RESEARCHED_AT,
+    sourceStatus: "verificato",
+    sourceUrl: councilOctober9DocumentUrl,
+    limit:
+      "Controllo dell'allegato ufficiale, della copia archiviata e delle fonti contestuali; la finestra di ricerca resta aperta.",
+  },
+  dataLimits: {
+    key: "dataLimits",
+    label: "Limiti del dato",
+    value: [
+      "La prima convocazione è fissata al 9 ottobre 2026 alle 09:30; la seconda al 12 ottobre alle 10:30.",
+      'La sede indicata è la Sala Consiliare "Renato Luisi", in via Sen. Arturo Perugini.',
+      "La convocazione non certifica svolgimento, presenze, trattazione, votazioni o risultati.",
+      "Streaming, registrazione e verbale sono indicati come non rilevati, non come inesistenti.",
+      "Non sono emersi collegamenti editoriali sufficientemente precisi al controllo corrente.",
+    ],
+    sourceStatus: "parziale",
+    sourceUrl: councilOctober9DocumentUrl,
+    limit:
+      "Verifica basata sulla convocazione ufficiale e su una ricerca contestuale ancora aperta.",
+  },
+};
+
 const councilVerifiedSession: CouncilSessionV0 = {
   id: "albo-2026-2673-consiglio-comunale",
   kind: "council",
@@ -2015,6 +2202,7 @@ const councilVerifiedSession: CouncilSessionV0 = {
 };
 
 export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
+  councilOctober9Session,
   septemberCommissionSession({
     id: "albo-2026-3190-commissione-iii-2026-10-06",
     title: "III Commissione consiliare permanente — seduta del 6 ottobre 2026",

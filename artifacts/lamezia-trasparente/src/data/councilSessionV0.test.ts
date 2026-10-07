@@ -197,7 +197,7 @@ describe("councilSessionV0", () => {
   });
 
   it("publishes source-traceable records for both council and commission notices", () => {
-    expect(councilSessionV0ReviewedRecords).toHaveLength(57);
+    expect(councilSessionV0ReviewedRecords).toHaveLength(58);
     expect(
       new Set(councilSessionV0ReviewedRecords.map((item) => item.kind)),
     ).toEqual(new Set(["council", "commission"]));
@@ -334,6 +334,48 @@ describe("councilSessionV0", () => {
         sourceUrls: ["https://www.instagram.com/reel/DcGRDc8o1qI/"],
       }),
     );
+  });
+
+  it("materializes the 9 October Council notice from the official attachment", () => {
+    const council = findCouncilSessionV0ReviewedRecord(
+      "albo-2026-3221-consiglio-comunale-2026-10-09",
+    );
+
+    expect(council).toEqual(
+      expect.objectContaining({
+        kind: "council",
+        isDemoFixture: false,
+        provenance: expect.objectContaining({
+          publicationNumber: "2026/3221",
+          documentUrl: expect.stringContaining("2026_3221_1_X"),
+          documentSha256:
+            "83aea5a29ea10b1e32c08649c8f9fc9d3e8c45e1d015c6ea902ca6e2214a7c97",
+          archivedDocumentUrl: expect.stringContaining(
+            "83aea5a29ea10b1e32c08649c8f9fc9d3e8c45e1d015c6ea902ca6e2214a7c97.pdf",
+          ),
+          sourceReviewStatus: "reviewed_against_official_attachment",
+        }),
+        contextResearch: expect.objectContaining({
+          status: "checked_no_match",
+          checkedAt: "2026-10-07T10:16:27Z",
+          articles: [],
+          media: [],
+        }),
+      }),
+    );
+    expect(council?.scheduledAt.value).toBe("2026-10-09T09:30:00+02:00");
+    expect(council?.scheduledAt.limit).toMatch(
+      /seconda convocazione.*12 ottobre 2026.*10:30/i,
+    );
+    expect(council?.agenda.value).toHaveLength(21);
+    expect(council?.agenda.sourceStatus).toBe("verificato");
+    expect(council?.sessionStatus.value).toBe("non_verificata");
+    expect(council?.dataLimits.value?.join(" ")).toMatch(
+      /Sala Consiliare.*Renato Luisi.*via Sen\. Arturo Perugini/i,
+    );
+    expect(council?.contextResearch.searchNote).toMatch(/Parallel Search/i);
+    expect(council?.liveStreaming.value).toBeNull();
+    expect(council?.recording.value).toBeNull();
   });
 
   it("expands the reviewed VI Commission calendar into two sourced occurrences", () => {
@@ -1350,7 +1392,7 @@ describe("councilSessionV0", () => {
         expect(session.contextResearch).toEqual(
           expect.objectContaining({
             status: "reviewed_matches",
-            checkedAt: "2026-10-06T03:24:30Z",
+            checkedAt: "2026-10-07T10:16:27Z",
             media: [],
             articles: expect.arrayContaining([
               expect.objectContaining({
@@ -1413,12 +1455,20 @@ describe("councilSessionV0", () => {
                   "comune-di-lamezia-verso-il-predissesto",
                 ),
               }),
+              expect.objectContaining({
+                publisher: "LameziaTerme.it",
+                publishedAt: "2026-10-06",
+                relationship: "agenda_item",
+                url: expect.stringContaining(
+                  "piano-di-riequilibrio-raso-branca-perche-un-incarico-esterno",
+                ),
+              }),
             ]),
           }),
         );
-        expect(session.contextResearch.articles).toHaveLength(8);
+        expect(session.contextResearch.articles).toHaveLength(9);
         expect(session.contextResearch.searchNote).toMatch(
-          /non identificano la II Commissione.*I Commissione.*Nessuna fonte attesta.*audizione/i,
+          /non identificano la seduta.*I Commissione.*Commissione Bilancio.*Nessuna fonte attesta.*audizione/i,
         );
       } else {
         expect(session.contextResearch).toEqual(
