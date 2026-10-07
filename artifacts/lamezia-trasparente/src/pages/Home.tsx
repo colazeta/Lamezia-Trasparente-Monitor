@@ -565,7 +565,7 @@ export function HomeInstitutionalSessions() {
         <div className="grid gap-5 md:grid-cols-2">
           <InstitutionalSessionsHomeCard
             title="Consiglio comunale"
-            description="La data e lo svolgimento sono confermati da una fonte istituzionale successiva. Orario e ordine del giorno completo restano da verificare."
+            description="Le date riportate nelle convocazioni sono verificate; lo svolgimento è indicato solo quando lo conferma una fonte istituzionale successiva."
             icon={Users}
             sessions={councilHomeSessions}
           />
