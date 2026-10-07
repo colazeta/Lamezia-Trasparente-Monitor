@@ -24,6 +24,7 @@ import {
   sessionDate,
   sessionDateLabel,
   sessionDateIsUpcoming,
+  sessionIsUpcoming,
   sessionOrgan,
   sortAgendaSessions,
 } from "@/lib/sessionAgenda";
@@ -182,7 +183,7 @@ export function SessionAgenda({
     if (organ !== "all" && sessionOrgan(session) !== organ) return false;
     if (
       period === "upcoming" &&
-      !sessionDateIsUpcoming(session.scheduledAt.value, now)
+      !sessionIsUpcoming(session, now)
     )
       return false;
     if (
@@ -202,7 +203,7 @@ export function SessionAgenda({
   for (const session of filtered) {
     const scheduled = sessionDate(session.scheduledAt.value);
     const group = scheduled
-      ? `${sessionDateIsUpcoming(session.scheduledAt.value, now) ? "upcoming" : "past"}:${scheduled.month}`
+      ? `${sessionIsUpcoming(session, now) ? "upcoming" : "archive"}:${scheduled.month}`
       : "undated";
     groups.set(group, [...(groups.get(group) ?? []), session]);
   }
@@ -271,7 +272,7 @@ export function SessionAgenda({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Tutte le date</SelectItem>
-              <SelectItem value="upcoming">Date in arrivo</SelectItem>
+              <SelectItem value="upcoming">Prossime sedute</SelectItem>
               <SelectItem value="past">Date trascorse</SelectItem>
             </SelectContent>
           </Select>
@@ -303,7 +304,7 @@ export function SessionAgenda({
           />
           <p className="font-semibold">Nessuna seduta corrisponde ai filtri.</p>
           <p className="mt-2 text-sm text-muted-foreground">
-            Le date in arrivo dipendono dalle convocazioni acquisite; l'archivio
+            Le prossime sedute dipendono dalle convocazioni acquisite; l'archivio
             non è completo.
           </p>
           <Button variant="outline" className="mt-4" onClick={reset}>
@@ -319,7 +320,7 @@ export function SessionAgenda({
                 key={key}
                 aria-label={
                   monthKey
-                    ? `${monthLabel(monthKey)} · ${periodKey === "upcoming" ? "date in arrivo" : "date trascorse"}`
+                    ? `${monthLabel(monthKey)} · ${periodKey === "upcoming" ? "prossime sedute" : "archivio"}`
                     : "Data da verificare"
                 }
               >
@@ -330,7 +331,7 @@ export function SessionAgenda({
                   <span className="text-sm text-muted-foreground">
                     {items.length} {items.length === 1 ? "seduta" : "sedute"}
                     {monthKey &&
-                      ` · ${periodKey === "upcoming" ? "date in arrivo" : "date trascorse"}`}
+                      ` · ${periodKey === "upcoming" ? "prossime sedute" : "archivio"}`}
                   </span>
                 </div>
                 {items.map((session) => (

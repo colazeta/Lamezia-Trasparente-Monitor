@@ -72,4 +72,28 @@ describe("session agenda date and ordering rules", () => {
       ),
     ).toEqual([]);
   });
+
+  it("keeps a completed date-only session from today in the homepage fallback", () => {
+    const now = new Date("2026-10-07T12:00:00Z");
+    const rows = [
+      make("yesterday", "2026-10-06"),
+      make("today-held", "2026-10-07", "svolta"),
+    ];
+    expect(selectHomeSessions(rows, now).map((row) => row.id)).toEqual([
+      "today-held",
+      "yesterday",
+    ]);
+  });
+
+  it("puts upcoming sessions ahead of postponed dates while retaining both", () => {
+    const now = new Date("2026-10-07T12:00:00Z");
+    const rows = [
+      make("postponed", "2026-10-08", "rinviata"),
+      make("next-session", "2026-10-09", "convocata"),
+    ];
+    expect(sortAgendaSessions(rows, now).map((row) => row.id)).toEqual([
+      "next-session",
+      "postponed",
+    ]);
+  });
 });

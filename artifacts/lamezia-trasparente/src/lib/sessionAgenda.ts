@@ -46,8 +46,8 @@ export function sortAgendaSessions(
     const right = sessionDate(b.scheduledAt.value);
     if (!left || !right)
       return left ? -1 : right ? 1 : a.id.localeCompare(b.id);
-    const upcomingA = sessionDateIsUpcoming(a.scheduledAt.value, now);
-    const upcomingB = sessionDateIsUpcoming(b.scheduledAt.value, now);
+    const upcomingA = sessionIsUpcoming(a, now);
+    const upcomingB = sessionIsUpcoming(b, now);
     if (upcomingA !== upcomingB) return upcomingA ? -1 : 1;
     const difference = left.date.getTime() - right.date.getTime();
     return (upcomingA ? difference : -difference) || a.id.localeCompare(b.id);
@@ -65,7 +65,7 @@ export function selectHomeSessions(
   );
   const recent = sortAgendaSessions(
     publicSessions.filter(
-      (session) => !sessionDateIsUpcoming(session.scheduledAt.value, now),
+      (session) => !sessionIsUpcoming(session, now),
     ),
     now,
   );

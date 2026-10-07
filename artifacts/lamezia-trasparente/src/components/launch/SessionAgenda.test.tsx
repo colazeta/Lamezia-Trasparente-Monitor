@@ -1,9 +1,27 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { councilSessionV0ReviewedRecords } from "@/data/councilSessionV0Reviewed";
 import { SessionAgenda } from "./SessionAgenda";
 
 describe("SessionAgenda", () => {
+  afterEach(() => vi.useRealTimers());
+
+  it("keeps postponed future dates in the archive instead of upcoming groups", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-10-07T12:00:00Z"));
+    const fixture = councilSessionV0ReviewedRecords[0];
+    const session = {
+      ...fixture,
+      scheduledAt: { ...fixture.scheduledAt, value: "2026-10-08" },
+      sessionStatus: { ...fixture.sessionStatus, value: "rinviata" },
+    };
+    render(<SessionAgenda sessions={[session]} />);
+    expect(
+      screen.getByRole("region", { name: "ottobre 2026 · archivio" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Seduta rinviata")).toBeInTheDocument();
+    expect(screen.queryByText(/prossime sedute/i)).not.toBeInTheDocument();
+  });
   it("keeps every reviewed occurrence available and narrows search without losing the archive", () => {
     const { container } = render(
       <SessionAgenda sessions={councilSessionV0ReviewedRecords} />,
