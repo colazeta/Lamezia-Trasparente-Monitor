@@ -5,12 +5,12 @@
     "source": "Città di Lamezia Terme — Attuazione Misure PNRR",
     "source_url": "https://www.comune.lamezia-terme.cz.it/it/attuazione-misure-pnrr",
     "source_type": "official_municipal_project_pages",
-    "materialized_at": "2026-09-03T11:10:38.924Z",
+    "materialized_at": "2026-10-08T13:24:27.913Z",
     "source_index_hash": "be25970bf1061b2275430bde868d6f04e9ae57277de67cd68fc2803ac8ecccb0",
     "opencup_source": "OpenCUP — Sistema CUP",
     "opencup_source_url": "https://www.opencup.gov.it/portale/web/opencup/home",
     "opencup_source_type": "official_public_investment_project_pages",
-    "opencup_source_hash": "90d390d44bcf6fb8b169044888c614ee1f2196bf7e820bd40f22bc1a135d4ccf",
+    "opencup_source_hash": "ea89a486db339394952d0cde3605382a103bb8b9cb9a8c4b0e83233325bbe042",
     "albo_snapshot_generated_at": "2026-09-03T18:34:57.880Z",
     "update_policy": "Controllo automatico ogni sei ore della sezione comunale PNRR, rilevamento dei nuovi CUP, arricchimento delle schede pubbliche OpenCUP e riconciliazione con gli output pubblici dell'Albo Pretorio; il file cambia solo quando mutano dati, stato di acquisizione o collegamenti documentali.",
     "opencup_update_policy": "Ogni nuovo CUP comunale genera subito una scheda e avvia l'acquisizione OpenCUP. Se il corredo non è ancora disponibile resta in attesa e viene ritentato automaticamente; un errore temporaneo su un CUP già acquisito conserva l'ultimo corredo valido, marcandolo come non aggiornato.",
@@ -3067,7 +3067,7 @@
           "macro_area": "SUD",
           "region": "CALABRIA",
           "province": "CATANZARO",
-          "municipality": "FALERNA, PIANOPOLI, NOCERA TIRINESE, SAN PIETRO A MAIDA, LAMEZIA TERME, CORTALE, CURINGA, PLATANIA, FEROLETO ANTICO, GIZZERIA, JACURSO"
+          "municipality": "SAN PIETRO A MAIDA, PLATANIA, PIANOPOLI, NOCERA TIRINESE, JACURSO, GIZZERIA, FEROLETO ANTICO, FALERNA, CURINGA, CORTALE, LAMEZIA TERME"
         },
         "holder": {
           "name": "COMUNE DI LAMEZIA TERME - CZ -",
@@ -3100,12 +3100,12 @@
           "strategic_infrastructure_law": false
         },
         "verification_status": "official_opencup_project_page",
-        "source_record_hash": "d44d99debac24ca97d565622dc1dc4f17ddc1d779d2dad6060c1793cf54c759e"
+        "source_record_hash": "99729b818a69a288f92be6ac23bb1451450ef386261091748fe0d71d12e7c791"
       },
       "opencup_acquisition": {
         "status": "fresh",
-        "acquired_at": "2026-09-03T11:10:38.924Z",
-        "status_observed_at": "2026-09-03T11:10:38.924Z",
+        "acquired_at": "2026-10-08T13:24:27.913Z",
+        "status_observed_at": "2026-10-08T13:24:27.913Z",
         "fallback_used": false
       },
       "albo_evidence_ids": []
