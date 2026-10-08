@@ -1,0 +1,85 @@
+{
+  "schema_version": "1.0",
+  "corpus_id": "ltceds-stress-corpus-2026-09-06",
+  "corpus_slot": 6,
+  "case_key": "2025-SHATTER-27-AUTONOMOUS-EVENTS",
+  "status": "review_mode",
+  "candidate_kind": "EVENT_CLUSTER",
+  "source_state": "carabinieri_derived_reporting_primary_url_not_resolved",
+  "retrieval_date": "2026-09-06",
+  "sources": [
+    {
+      "url": "https://www.cityonelamezia.it/operazione-shatter-a-lamezia-terme-eseguite-misure-cautelari/",
+      "source_type": "press_secondary",
+      "source_role": "direct_carabinieri_derived_discovery",
+      "supported_scope": "27 autonomous criminal events; centre and Sambiase; investigation originated from the night 28 February-1 March; more than 180 hours from 45 surveillance systems"
+    },
+    {
+      "url": "https://www.lameziainforma.it/cronaca/2025/06/16/operazione-shatter-su-furti-aggravati-su-auto-e-danneggiamenti-di-autovetture-in-sosta/62039/",
+      "source_type": "press_secondary",
+      "source_role": "corroboration",
+      "supported_scope": "27 autonomous criminal events consisting of aggravated thefts and damage in central Lamezia and Sambiase"
+    },
+    {
+      "url": "https://calabria7.news/giudiziaria/operazione-shatter-due-arresti-per-la-piaga-dei-furti-dauto-a-lamezia-terme/",
+      "source_type": "press_secondary",
+      "source_role": "corroboration",
+      "supported_scope": "27 autonomous events, vehicle theft/damage, central Lamezia and Sambiase"
+    },
+    {
+      "url": "https://www.calabriamagnifica.it/cronaca-e-attualita/operazione-shatter-furti-e-danneggiamenti-in-serie-a-lamezia-terme/",
+      "source_type": "press_secondary",
+      "source_role": "temporal_seed_corroboration",
+      "supported_scope": "investigation began during the night between 28 February and 1 March 2025 after four reported car thefts"
+    },
+    {
+      "url": "https://agenparl.eu/2025/10/30/carabinieri-lamezia-terme-furti-danneggiamenti-e-incendio-di-auto-in-sosta-arrestato-un-minorenne/",
+      "source_type": "press_secondary",
+      "source_role": "later_related_investigative_context",
+      "supported_scope": "180 hours/45 surveillance devices and a separately described 3 April episode in Sambiase"
+    }
+  ],
+  "supported_facts": [
+    "Reporting consistently states that investigators reconstructed 27 autonomous criminal events involving aggravated thefts and vehicle damage.",
+    "The reconstructed events are reported in central Lamezia Terme and the Sambiase area.",
+    "The investigation originated from a sequence reported during the night between 28 February and 1 March 2025.",
+    "The material reviewed does not enumerate all 27 occurrences one by one with independent time/place anchors."
+  ],
+  "event_identity_analysis": {
+    "reported_event_count": 27,
+    "count_precision": "exact_as_reported",
+    "preferred_model": "EVENT_CLUSTER",
+    "resolution_status": "unresolved_or_partially_resolvable",
+    "synthetic_member_minting_allowed": false,
+    "rationale": "A source-supported aggregate count does not establish 27 separately resolvable canonical occurrences."
+  },
+  "temporal_analysis": {
+    "seed_occurrence_window": "2025-02-28/2025-03-01",
+    "cluster_time_claim": null,
+    "precision": "seed_window_known_cluster_member_dates_not_exhaustively_resolved",
+    "caution": "Do not assign the entire reported count of 27 to the seed night unless an occurrence-level list proves that all members fall in that window."
+  },
+  "geography_analysis": {
+    "reported_areas": ["central Lamezia Terme", "Sambiase"],
+    "precision": "area_level_for_cluster",
+    "public_geometry_ready": false,
+    "caution": "A cluster-wide centre/neighbourhood label must not become one pseudo-point representing 27 events."
+  },
+  "offence_analysis": {
+    "reported_families": ["aggravated theft", "vehicle/property damage"],
+    "classification_status": "cluster_level_only",
+    "caution": "Do not assign the same offence code to every unresolved member without occurrence-level evidence."
+  },
+  "privacy_and_publication": {
+    "minor_or_vulnerable_context_present_in_related_reporting": true,
+    "person_identity_in_dossier": false,
+    "auto_publish": false,
+    "map_cluster_as_event_point": false
+  },
+  "recommended_resolution": "Create one EVENT_CLUSTER record with reported_event_count=27 and preserve the 28 February-1 March window as the investigation seed occurrence window. Resolve member EVENTs only when each occurrence has independent distinguishing evidence.",
+  "review_decision": "cluster",
+  "publication_blockers": [
+    "Original institutional Carabinieri page not resolved by the current indexed search.",
+    "No exhaustive occurrence-level enumeration supporting 27 individual EVENT records."
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0",
+  "cycle_id": "ltceds-stress-resolution-03",
+  "corpus_id": "ltceds-stress-corpus-2026-09-06",
+  "date": "2026-09-06",
+  "scope_slots": [18],
+  "research_method": {
+    "discovery_engine": "Parallel Search",
+    "primary_source": "Questura di Catanzaro / Polizia di Stato indexed official source",
+    "purpose": "Test whether CLUSTER-SCOPE-001 recurs independently of Shatter."
+  },
+  "outcomes": [
+    {
+      "slot": 18,
+      "case_key": "PERSEO-HUNDREDS-OF-EXTORTION-EPISODES",
+      "candidate_kind": "EVENT_CLUSTER",
+      "decision": "cluster",
+      "source_state": "primary_official_source_indexed_page_access_protected",
+      "sampling_target_result": "satisfied_approximate_aggregate_cardinality",
+      "diagnostic_result": "official wording reports several hundred extortion episodes against business/commercial activities but does not enumerate members; a 2005-2011 interval in the same sentence explicitly qualifies the mafia-war context and cannot be silently copied to every extortion episode"
+    }
+  ],
+  "counts": {
+    "slots_examined": 1,
+    "slots_newly_filled": 1,
+    "event_clusters_confirmed": 1,
+    "schema_gaps_confirmed": 1,
+    "human_approved_reviewed_bundles": 0,
+    "real_case_compiler_dry_runs": 0
+  },
+  "standard_findings": [
+    {
+      "finding_id": "CLUSTER-SCOPE-001",
+      "previous_status": "schema_gap_candidate",
+      "status": "confirmed_schema_gap",
+      "component": "EVENT_CLUSTER / ASSERTION",
+      "independent_cases": [
+        "2025-SHATTER-27-AUTONOMOUS-EVENTS",
+        "PERSEO-HUNDREDS-OF-EXTORTION-EPISODES"
+      ],
+      "observation": "Cluster-level sources can provide cardinality, seed/context periods, broad geography, target classes and offence families with different evidentiary scopes. A single cluster-wide date/place field would misattribute facts to unresolved members.",
+      "required_standard_revision": "Allow source-scoped ASSERTION records whose subject may be EVENT_CLUSTER, with an explicit assertion scope distinguishing cluster context, investigation seed, all reported members, member subset, and procedural context.",
+      "anti_pattern": "Do not add one synthetic cluster occurrence date, midpoint, representative point, or copy contextual temporal/geographic facts to every unresolved member.",
+      "persistence_follow_up": "Canonical persistence must eventually retain cluster assertions separately from EVENT member rows; public map output must not emit cluster assertions as crime-event points.",
+      "schema_change_required": true
+    },
+    {
+      "finding_id": "ASSERTION-SCOPE-001",
+      "status": "new_required_rule",
+      "component": "provenance semantics",
+      "observation": "Facts co-located in the same sentence/source do not necessarily share the same subject scope. Perseo's 2005-2011 period cannot be automatically attached to the separately mentioned hundreds of extortion episodes.",
+      "required_rule": "Every derived/cross-object fact must preserve the exact subject/predicate scope supported by the source."
+    }
+  ],
+  "cycle_conclusion": "revise_LTCEDS_cluster_assertion_scope_before_stable_1.0",
+  "publication_policy": "no_auto_publish"
+}
