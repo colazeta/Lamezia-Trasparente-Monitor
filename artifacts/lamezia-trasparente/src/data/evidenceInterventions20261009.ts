@@ -38,8 +38,8 @@ export const EVIDENCE_INTERVENTIONS_2026_10_09 = [
       "durata dell'effetto",
       "versamenti dei vicini"
     ],
-    "results": "L'annuncio della vittoria produce +5,4 punti percentuali di pagamento puntuale nel mese successivo, senza persistenza in assenza dell'opera. La costruzione del marciapiede è associata a +7,1 p.p. di pagamento puntuale (stima IV/LATE), +5,5 p.p. entro 3 mesi e +4,8 p.p. entro 6 mesi; benefici duraturi e spillover positivi sui vicini. La sola possibilità di vincere non stimola in modo sostanziale il recupero degli arretrati.",
-    "effectSize": "+5,4 p.p. riconoscimento immediato (non persistente); +7,1 p.p. pagamento puntuale per marciapiede ricevuto (IV/LATE, non ITT); +5,5 p.p. entro 3 mesi; +4,8 p.p. entro 6 mesi.",
+    "results": "L'annuncio della vittoria produce +5,4 punti percentuali di pagamento puntuale nel mese successivo, senza persistenza in assenza dell'opera. Nel triennio 2009–2011 il sorteggio produce +3,1 p.p. di pagamento puntuale in media (ITT). La costruzione del marciapiede è associata a +7,1 p.p. di pagamento puntuale (stima IV/LATE), +5,5 p.p. entro 3 mesi e +4,8 p.p. entro 6 mesi; benefici duraturi e spillover positivi sui vicini. La sola possibilità di vincere non stimola in modo sostanziale il recupero degli arretrati.",
+    "effectSize": "+5,4 p.p. riconoscimento immediato (non persistente); +7,1 p.p. pagamento puntuale per marciapiede ricevuto (IV/LATE, non ITT); +3,1 p.p. pagamento puntuale medio nell’intero triennio (ITT); +5,5 p.p. entro 3 mesi; +4,8 p.p. entro 6 mesi.",
     "evidenceStrength": "forte",
     "costsRequirements": "Costo medio storico circa ARS 5.250 per marciapiede (circa USD 1.553 all'epoca), alto rispetto alla tassa annuale; servono regolamento, dati tributi, capacità lavori pubblici e verifica di legittimità/equità.",
     "limitations": [
