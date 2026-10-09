@@ -69,7 +69,9 @@ Snapshot Albo di riferimento: commit `5c861b94256c9c659630d8ad19b2f27279d1721b`,
 | `2026/3190`   | III Commissione    | Sedute del 5 e 6 ottobre 2026 alle 11:00         | Date, orari e regolamento sul Garante delle persone con disabilità verificati; svolgimento non verificato                               |
 | `2026/3197`   | II Commissione     | Sedute del 5 e 6 ottobre 2026                    | Date, orari, debiti fuori bilancio, piano di riequilibrio e audizione verificati; svolgimento non verificato                            |
 | `2026/3198`   | IV Commissione     | Seduta del 5 ottobre 2026 alle 10:00             | Data, ora e regolamento comunale per la promozione della Street Art verificati; svolgimento non verificato                              |
-| `2026/3221`   | Consiglio comunale | Seduta del 9 ottobre 2026 alle 09:30             | Prima e seconda convocazione, sede e 21 punti verificati nell'allegato ufficiale; svolgimento non verificato                            |
+| `2026/3221`   | Consiglio comunale | Seduta del 9 ottobre 2026 alle 09:30             | Prima e seconda convocazione, sede e 21 punti verificati; fonte successiva 2026/3263: seduta sospesa per mancanza del numero legale     |
+| `2026/3262`   | V Commissione      | Sedute del 12 e 13 ottobre 2026 alle 09:00       | Date, orari, regolamento sui beni comunali e disciplinare per la rete stradale verificati; svolgimento non verificato                   |
+| `2026/3263`   | Consiglio comunale | Avviso per la seconda convocazione del 12 ottobre | Fonte successiva della scheda 2026/3221: attesta la sospensione del 9 ottobre e il passaggio di 18 punti alla seconda convocazione      |
 
 Per `2026/2673`:
 

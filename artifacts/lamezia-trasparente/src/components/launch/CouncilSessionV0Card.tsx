@@ -455,7 +455,10 @@ export function CouncilSessionV0Detail({
                 : session.sessionStatus.value === "svolta" &&
                     session.sessionStatus.sourceStatus === "verificato"
                   ? "Una fonte istituzionale successiva conferma la seduta."
-                  : "La convocazione non prova lo svolgimento della seduta."}
+                  : session.sessionStatus.value === "sospesa" &&
+                      session.sessionStatus.sourceStatus === "verificato"
+                    ? "Una fonte istituzionale successiva conferma che la seduta si è tenuta ed è stata sospesa."
+                    : "La convocazione non prova lo svolgimento della seduta."}
             </p>
           </div>
         </div>
