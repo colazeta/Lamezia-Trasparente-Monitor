@@ -114,6 +114,10 @@ const COUNCIL_OCTOBER_9_LAMEZIATERME_URL =
   "https://www.lameziaterme.it/lamezia-consiglio-comunale-21-punti-tra-conti-sanita-emergenze-della-citta/";
 const COUNCIL_OCTOBER_9_CITY_ONE_LIVE_URL =
   "https://www.youtube.com/watch?v=36nih-4G2GA";
+const COUNCIL_OCTOBER_9_REVISORS_LAMETINO_URL =
+  "https://www.lametino.it/ultime/lamezia-nominato-il-collegio-dei-revisori-dei-conti-rieletto-daffina-alla-presidenza.html";
+const COUNCIL_OCTOBER_9_SUSPENDED_LAMETINO_URL =
+  "https://www.lametino.it/ultime/lamezia-seduta-consiglio-sospesa-per-mancanza-numero-legale-niente-voto-su-debiti-fuori-bilancio-si-torna-in-aula-il-12-ottobre.html";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
 const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
 const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-27T21:49:11Z";
@@ -132,7 +136,8 @@ const VIA_TRENTO_ROADWORKS_CONTEXT_RESEARCHED_AT = "2026-09-24T09:59:02Z";
 const COMMISSION_V_REU_CONTEXT_RESEARCHED_AT = "2026-09-28T15:27:08Z";
 const COMMISSION_IV_STREET_ART_CONTEXT_RESEARCHED_AT = "2026-09-29T04:07:44Z";
 const OCTOBER_7_RESEARCHED_AT = "2026-10-07T10:16:27Z";
-const COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT = "2026-10-09T09:24:17Z";
+const COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT = "2026-10-09T15:32:27Z";
+const OCTOBER_12_13_COMMISSION_RESEARCHED_AT = "2026-10-09T15:32:27Z";
 const MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT = "2026-10-07T15:48:24Z";
 const MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT = "2026-09-12T21:51:17Z";
 const SCHOOL_TRANSPORT_CONTEXT_RESEARCHED_AT = "2026-09-14T10:13:39Z";
@@ -632,11 +637,21 @@ const october1To6CommissionContextResearch: CouncilSessionV0ContextResearch = {
   media: [],
 };
 
+const october12To13CommissionContextResearch: CouncilSessionV0ContextResearch =
+  {
+    status: "checked_no_match",
+    checkedAt: OCTOBER_12_13_COMMISSION_RESEARCHED_AT,
+    searchNote:
+      "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, il Lametino e risultati indicizzati, inclusi canali YouTube e Facebook, per le sedute della V Commissione del 12 e 13 ottobre 2026. Le query hanno combinato organo, date, orario e temi distintivi: regolamento sulla gestione e valorizzazione dei beni comunali e disciplinare per interventi sulla rete stradale. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alle singole sedute. Gli ordini del giorno ufficiali sono disponibili e non viene ricostruita un'agenda editoriale.",
+    articles: [],
+    media: [],
+  };
+
 const councilOctober9ContextResearch: CouncilSessionV0ContextResearch = {
   status: "reviewed_matches",
   checkedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
   searchNote:
-    "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, LameziaTerme.it, il Lametino e risultati indicizzati, inclusi canali YouTube e Facebook, per il Consiglio comunale convocato il 9 ottobre 2026 alle 09:30. Quattro articoli originali del 6 ottobre coincidono su organo, data e punti distintivi dell'ordine del giorno e sono collegati come `same_session`; City One, il Lametino e LameziaTerme.it riportano anche l'orario della prima convocazione. Sono annunci precedenti alla seduta e non provano costituzione, svolgimento, presenze, trattazione, votazioni o risultati. Il 9 ottobre la pagina YouTube originale di City One mostrava in diretta un video intitolato «Diretta consiglio comunale del 9 ottobre 2026», collegato come `possible_same_session`, `live_stream` e `live`: titolo, organo, data e collocazione temporale coincidono, ma il video non espone un punto distintivo dell'ordine del giorno o il numero della pubblicazione ufficiale. Resta copertura editoriale e non prova costituzione, completezza, svolgimento o risultati della seduta. Il portale istituzionale ConsigliCloud mostrava «No meetings found», quindi non è stato valorizzato alcuno streaming istituzionale. L'ordine del giorno ufficiale resta quello dell'allegato istituzionale e non viene ricostruita un'agenda editoriale; la ricerca resta aperta fino al termine della finestra prevista.",
+    "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, LameziaTerme.it, il Lametino e risultati indicizzati, inclusi canali YouTube e Facebook, per il Consiglio comunale convocato il 9 ottobre 2026 alle 09:30. Sei articoli originali coincidono su organo, data e punti distintivi e sono collegati come `same_session`: quattro annunci del 6 ottobre e due resoconti del 9 ottobre. I resoconti restano fonti editoriali e non valorizzano campi ufficiali, presenze, votazioni o risultati. La pubblicazione istituzionale successiva 2026/3263 attesta invece la mancanza del numero legale e il rinvio dei 18 punti non discussi e votati alla seconda convocazione del 12 ottobre alle 10:30. La pagina YouTube originale di City One rende ora disponibile il replay di 4:17:09 del video «Diretta consiglio comunale del 9 ottobre 2026», collegato come `possible_same_session`, `live_stream` e `replay_available`: titolo, organo e data coincidono, ma il video non espone un punto distintivo dell'ordine del giorno o il numero della pubblicazione ufficiale. Resta copertura editoriale e non prova completezza, presenze, votazioni o risultati. Il portale istituzionale ConsigliCloud mostrava «No meetings found», quindi non è stato valorizzato alcuno streaming o registrazione istituzionale. L'ordine del giorno ufficiale resta quello dell'allegato istituzionale e non viene ricostruita un'agenda editoriale; la ricerca resta aperta fino al termine della finestra prevista.",
   articles: [
     {
       title: "Convocato il Consiglio Comunale per venerdì 9 ottobre 2026",
@@ -681,6 +696,28 @@ const councilOctober9ContextResearch: CouncilSessionV0ContextResearch = {
         "L'articolo identifica il Consiglio del 9 ottobre alle 09:30, la sede e numerosi punti distintivi dei 21 punti ufficiali, inclusi revisori, controlli interni, debiti fuori bilancio, mozioni e interrogazioni. È un annuncio precedente alla seduta e non prova costituzione, svolgimento, presenze, trattazione, votazioni o risultati.",
       reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
     },
+    {
+      title:
+        "Lamezia, nominato il Collegio dei revisori dei conti: rieletto Daffinà alla presidenza",
+      url: COUNCIL_OCTOBER_9_REVISORS_LAMETINO_URL,
+      publisher: "il Lametino",
+      publishedAt: "2026-10-09",
+      relationship: "same_session",
+      relevanceNote:
+        "Il resoconto identifica il Consiglio del 9 ottobre e il punto distintivo sulla nomina del Collegio dei revisori. Resta una fonte editoriale: non completa i campi ufficiali e non certifica presenze, votazioni o risultati.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Lamezia, seduta Consiglio sospesa per mancanza numero legale: niente voto su debiti fuori bilancio, si torna in aula il 12 ottobre",
+      url: COUNCIL_OCTOBER_9_SUSPENDED_LAMETINO_URL,
+      publisher: "il Lametino",
+      publishedAt: "2026-10-09",
+      relationship: "same_session",
+      relevanceNote:
+        "Il resoconto identifica organo, data, mancanza del numero legale e seconda convocazione. È conservato come contesto editoriale; lo stato ufficiale è valorizzato soltanto dalla successiva pubblicazione Albo 2026/3263.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
   ],
   media: [
     {
@@ -690,9 +727,9 @@ const councilOctober9ContextResearch: CouncilSessionV0ContextResearch = {
       publishedAt: "2026-10-09",
       relationship: "possible_same_session",
       mediaType: "live_stream",
-      availability: "live",
+      availability: "replay_available",
       relevanceNote:
-        "Titolo, organo, data e collocazione temporale rendono plausibile il collegamento alla seduta del 9 ottobre 2026, ma il video non espone un punto distintivo dell'ordine del giorno o il numero della pubblicazione ufficiale; la pagina originale del canale City One risultava in diretta durante il controllo. È copertura editoriale esterna e non certifica programmazione istituzionale, costituzione, completezza, svolgimento, presenze, votazioni o risultati.",
+        "Titolo, organo e data rendono plausibile il collegamento alla seduta del 9 ottobre 2026, ma il video non espone un punto distintivo dell'ordine del giorno o il numero della pubblicazione ufficiale; la pagina originale del canale City One rende ora disponibile il replay di 4:17:09. È copertura editoriale esterna e non certifica programmazione istituzionale, completezza, presenze, votazioni o risultati.",
       reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
     },
   ],
@@ -1425,6 +1462,18 @@ const commissionIvOctober5Notice = lateSeptemberNotice({
   reviewedAt: OCTOBER_1_6_COMMISSION_RESEARCHED_AT,
 });
 
+const commissionVOctober12And13Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3262",
+  publicationStart: "2026-10-09",
+  publicationEnd: "2026-10-16",
+  subject: "Convocazione seduta 5° Commissione Consiliare permanente.",
+  sourceContentHash:
+    "77c48da9bd24ef016efb6d91aee2111faaadfaaad94195f3ef7f8c01ac799928",
+  documentSha256:
+    "162b92486574751b01024336f282ec58496ae951bbec08c455d42480f2cf2cce",
+  reviewedAt: OCTOBER_12_13_COMMISSION_RESEARCHED_AT,
+});
+
 const councilOctober9DocumentUrl =
   "https://albo.tinnvision.cloud/allegati/2026_3221_1_X?ente=00301390795";
 const councilOctober9DocumentSha256 =
@@ -1457,8 +1506,24 @@ const councilOctober9Provenance: CouncilSessionV0Provenance = {
   documentSha256: councilOctober9DocumentSha256,
   embeddedDocumentSha256: null,
   retrievedAt: councilOctober9Candidate.source.retrievedAt,
-  reviewedAt: OCTOBER_7_RESEARCHED_AT,
-  sourceReviewStatus: "reviewed_against_official_attachment",
+  reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+  sourceReviewStatus: "reviewed_against_later_official_source",
+  supplementalEvidence: [
+    {
+      publicationNumber: "2026/3263",
+      sourceLabel: "Albo Pretorio Comune di Lamezia Terme",
+      sourceUrl:
+        "https://albo.tinnvision.cloud/allegati/2026_3263_1_X?ente=00301390795",
+      archivedDocumentUrl:
+        "/data/public/albo/documents/2026/cfcb9e41a26ac25a2e48f034365cfee2cfe4b5ba1ac5b1fcff09e483caacc4a0.pdf",
+      documentSha256:
+        "cfcb9e41a26ac25a2e48f034365cfee2cfe4b5ba1ac5b1fcff09e483caacc4a0",
+      retrievedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+      verificationNote:
+        "Avviso ufficiale di seconda convocazione: attesta la mancanza del numero legale nella prima convocazione del 9 ottobre e ripropone per il 12 ottobre alle 10:30 i 18 punti non discussi e votati.",
+    },
+  ],
 };
 
 const councilCandidate = requireCandidate({
@@ -2155,11 +2220,12 @@ const councilOctober9Session: CouncilSessionV0 = {
   sessionStatus: {
     key: "sessionStatus",
     label: "Stato seduta",
-    value: "non_verificata",
-    sourceStatus: "parziale",
-    sourceUrl: councilOctober9DocumentUrl,
+    value: "rinviata",
+    sourceStatus: "verificato",
+    sourceUrl:
+      "https://albo.tinnvision.cloud/allegati/2026_3263_1_X?ente=00301390795",
     limit:
-      "La convocazione documenta la programmazione; non è stata collegata una fonte istituzionale che confermi svolgimento o rinvio.",
+      "L'avviso ufficiale 2026/3263 attesta la mancanza del numero legale nella prima convocazione e il rinvio dei 18 punti non discussi e votati alla seconda convocazione del 12 ottobre; non è un verbale completo della seduta.",
   },
   agenda: {
     key: "agenda",
@@ -2186,7 +2252,7 @@ const councilOctober9Session: CouncilSessionV0 = {
     sourceStatus: "assente",
     sourceUrl: councilOctober9DocumentUrl,
     limit:
-      "Non rilevato nella fonte istituzionale; la diretta editoriale di City One resta nella sezione contestuale e non valorizza questo campo.",
+      "Non rilevato nella fonte istituzionale; il replay editoriale di City One resta nella sezione contestuale e non valorizza questo campo.",
   },
   recording: {
     key: "recording",
@@ -2195,7 +2261,7 @@ const councilOctober9Session: CouncilSessionV0 = {
     sourceStatus: "assente",
     sourceUrl: councilOctober9DocumentUrl,
     limit:
-      "Non rilevata nella fonte istituzionale; la diretta editoriale di City One non viene trattata come registrazione ufficiale e l'eventuale replay richiede un controllo successivo.",
+      "Non rilevata nella fonte istituzionale; il replay editoriale di City One non viene trattato come registrazione ufficiale.",
   },
   minutesOrReport: {
     key: "minutesOrReport",
@@ -2221,15 +2287,15 @@ const councilOctober9Session: CouncilSessionV0 = {
     value: [
       "La prima convocazione è fissata al 9 ottobre 2026 alle 09:30; la seconda al 12 ottobre alle 10:30.",
       'La sede indicata è la Sala Consiliare "Renato Luisi", in via Sen. Arturo Perugini.',
-      "La convocazione non certifica svolgimento, presenze, trattazione, votazioni o risultati.",
+      "L'avviso ufficiale 2026/3263 attesta la mancanza del numero legale e il rinvio alla seconda convocazione dei 18 punti non discussi e votati; non costituisce un verbale completo.",
       "Streaming istituzionale, registrazione istituzionale e verbale sono indicati come non rilevati, non come inesistenti.",
-      "I quattro articoli collegati sono annunci precedenti alla seduta e non ne attestano costituzione o svolgimento.",
-      "La diretta City One è una fonte editoriale esterna: non certifica programmazione, costituzione, completezza, svolgimento, presenze, votazioni o risultati.",
+      "I sei articoli collegati, inclusi due resoconti del 9 ottobre, restano fonti editoriali e non valorizzano campi, presenze, votazioni o risultati ufficiali.",
+      "Il replay City One è una fonte editoriale esterna: non certifica programmazione, completezza, presenze, votazioni o risultati.",
     ],
     sourceStatus: "parziale",
     sourceUrl: councilOctober9DocumentUrl,
     limit:
-      "Verifica basata sulla convocazione ufficiale e su una ricerca contestuale ancora aperta.",
+      "Verifica basata sulla convocazione ufficiale, sull'avviso ufficiale di seconda convocazione e su una ricerca contestuale ancora aperta.",
   },
 };
 
@@ -2336,6 +2402,30 @@ const councilVerifiedSession: CouncilSessionV0 = {
 };
 
 export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
+  septemberCommissionSession({
+    id: "albo-2026-3262-commissione-v-2026-10-13",
+    title: "V Commissione consiliare permanente — seduta del 13 ottobre 2026",
+    scheduledAt: "2026-10-13T09:00:00+02:00",
+    agenda: roadNetworkWorksRulesAgenda,
+    candidate: commissionVOctober12And13Notice.candidate,
+    provenance: commissionVOctober12And13Notice.provenance,
+    contextResearch: october12To13CommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della V Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della V Commissione, il 12 e il 13 ottobre 2026 alle 09:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-3262-commissione-v-2026-10-12",
+    title: "V Commissione consiliare permanente — seduta del 12 ottobre 2026",
+    scheduledAt: "2026-10-12T09:00:00+02:00",
+    agenda: municipalAssetsRegulationAgenda,
+    candidate: commissionVOctober12And13Notice.candidate,
+    provenance: commissionVOctober12And13Notice.provenance,
+    contextResearch: october12To13CommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della V Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della V Commissione, il 12 e il 13 ottobre 2026 alle 09:00.",
+  }),
   councilOctober9Session,
   septemberCommissionSession({
     id: "albo-2026-3190-commissione-iii-2026-10-06",
