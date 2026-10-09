@@ -70,7 +70,7 @@ export const EVIDENCE_INTERVENTIONS_2026_10_09 = [
     ],
     "lastVerifiedAt": "2026-10-09",
     "transferabilityItaly": "Meccanismo di reciprocità potenzialmente trasferibile; bassa trasferibilità della lotteria di opere, soggetta a verifica legale, contabile e di equità.",
-    "lameziaAdaptation": "Collegare per quartiere entrate TARI e servizi/manutenzioni verificabili, pubblicando opere, costi e tempi. Non subordinare la messa in sicurezza dei marciapiedi alla regolarità fiscale dei residenti. Valutare incentivi solo dopo istruttoria legale.",
+    "lameziaAdaptation": "Collegare esplicitamente le entrate ai servizi effettivamente finanziati: TARI e servizi rifiuti, manutenzione dei marciapiedi e pertinenti stanziamenti del bilancio ordinario, senza imputare opere stradali alla TARI. Pubblicare per quartiere costi, tempi e collaudi; non subordinare la sicurezza alla regolarità fiscale dei residenti. Valutare eventuali incentivi solo dopo verifica legale ed equità distributiva.",
     "implementability": "medio_termine",
     "capacityDataNeeds": [
       "anagrafe tributaria pseudonimizzata",
