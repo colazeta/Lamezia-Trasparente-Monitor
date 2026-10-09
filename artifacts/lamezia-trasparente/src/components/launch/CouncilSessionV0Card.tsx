@@ -241,6 +241,12 @@ export function CouncilSessionV0SummaryCard({
   );
   const contextArticleCount = session.contextResearch.articles.length;
   const contextMediaCount = session.contextResearch.media.length;
+  const hasVerifiedScheduledAt =
+    session.scheduledAt.sourceStatus === "verificato" &&
+    session.scheduledAt.value !== null;
+  const hasVerifiedAgenda =
+    session.agenda.sourceStatus === "verificato" &&
+    (session.agenda.value?.length ?? 0) > 0;
 
   return (
     <Card
@@ -268,7 +274,9 @@ export function CouncilSessionV0SummaryCard({
             ? "Avviso individuato nell'Albo; data, ora e ordine del giorno restano da verificare."
             : session.provenance?.sourceReviewStatus ===
                 "reviewed_against_later_official_source"
-              ? "Una fonte istituzionale successiva conferma data e svolgimento; orario e ordine del giorno completo non sono disponibili."
+              ? hasVerifiedScheduledAt && hasVerifiedAgenda
+                ? "Data, ora e ordine del giorno sono stati verificati sull'allegato ufficiale; una fonte istituzionale successiva aggiorna lo stato della seduta."
+                : "Una fonte istituzionale successiva conferma data e svolgimento; orario e ordine del giorno completo non sono disponibili."
               : "Data, ora e ordine del giorno sono stati confrontati con l'allegato ufficiale archiviato."}
       </p>
       <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
@@ -373,9 +381,11 @@ export function CouncilSessionV0Detail({
       ? "Programmata"
       : session.sessionStatus.value === "svolta"
         ? "Svolta"
-        : session.sessionStatus.value === "rinviata"
-          ? "Rinviata"
-          : "Non verificato";
+        : session.sessionStatus.value === "sospesa"
+          ? "Sospesa"
+          : session.sessionStatus.value === "rinviata"
+            ? "Rinviata"
+            : "Non verificato";
   const hasContextMedia = session.contextResearch.media.length > 0;
   const hasContextArticles = session.contextResearch.articles.length > 0;
   const hasEditorialAgenda =
@@ -453,7 +463,10 @@ export function CouncilSessionV0Detail({
                 : session.sessionStatus.value === "svolta" &&
                     session.sessionStatus.sourceStatus === "verificato"
                   ? "Una fonte istituzionale successiva conferma la seduta."
-                  : "La convocazione non prova lo svolgimento della seduta."}
+                  : session.sessionStatus.value === "sospesa" &&
+                      session.sessionStatus.sourceStatus === "verificato"
+                    ? "Una fonte istituzionale successiva conferma che la seduta si è tenuta ed è stata sospesa."
+                    : "La convocazione non prova lo svolgimento della seduta."}
             </p>
           </div>
         </div>
