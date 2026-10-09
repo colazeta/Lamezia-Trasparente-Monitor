@@ -2220,12 +2220,12 @@ const councilOctober9Session: CouncilSessionV0 = {
   sessionStatus: {
     key: "sessionStatus",
     label: "Stato seduta",
-    value: "rinviata",
+    value: "sospesa",
     sourceStatus: "verificato",
     sourceUrl:
       "https://albo.tinnvision.cloud/allegati/2026_3263_1_X?ente=00301390795",
     limit:
-      "L'avviso ufficiale 2026/3263 attesta la mancanza del numero legale nella prima convocazione e il rinvio dei 18 punti non discussi e votati alla seconda convocazione del 12 ottobre; non è un verbale completo della seduta.",
+      "L'avviso ufficiale 2026/3263 attesta che la prima convocazione si è tenuta ma è stata sospesa per mancanza del numero legale e che i 18 punti non discussi e votati sono passati alla seconda convocazione del 12 ottobre; non è un verbale completo della seduta.",
   },
   agenda: {
     key: "agenda",
@@ -2287,7 +2287,7 @@ const councilOctober9Session: CouncilSessionV0 = {
     value: [
       "La prima convocazione è fissata al 9 ottobre 2026 alle 09:30; la seconda al 12 ottobre alle 10:30.",
       'La sede indicata è la Sala Consiliare "Renato Luisi", in via Sen. Arturo Perugini.',
-      "L'avviso ufficiale 2026/3263 attesta la mancanza del numero legale e il rinvio alla seconda convocazione dei 18 punti non discussi e votati; non costituisce un verbale completo.",
+      "L'avviso ufficiale 2026/3263 attesta lo svolgimento parziale e la sospensione per mancanza del numero legale, con passaggio alla seconda convocazione dei 18 punti non discussi e votati; non costituisce un verbale completo.",
       "Streaming istituzionale, registrazione istituzionale e verbale sono indicati come non rilevati, non come inesistenti.",
       "I sei articoli collegati, inclusi due resoconti del 9 ottobre, restano fonti editoriali e non valorizzano campi, presenze, votazioni o risultati ufficiali.",
       "Il replay City One è una fonte editoriale esterna: non certifica programmazione, completezza, presenze, votazioni o risultati.",

@@ -33,6 +33,7 @@ import {
 const expectedSessionStatuses: readonly CouncilSessionV0Status[] = [
   "programmata",
   "svolta",
+  "sospesa",
   "rinviata",
   "non_verificata",
 ];
@@ -414,7 +415,7 @@ describe("councilSessionV0", () => {
     );
     expect(council?.agenda.value).toHaveLength(21);
     expect(council?.agenda.sourceStatus).toBe("verificato");
-    expect(council?.sessionStatus.value).toBe("rinviata");
+    expect(council?.sessionStatus.value).toBe("sospesa");
     expect(council?.sessionStatus.sourceStatus).toBe("verificato");
     expect(council?.sessionStatus.sourceUrl).toContain("2026_3263_1_X");
     expect(council?.dataLimits.value?.join(" ")).toMatch(

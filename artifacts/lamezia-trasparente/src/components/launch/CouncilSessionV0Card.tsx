@@ -373,9 +373,11 @@ export function CouncilSessionV0Detail({
       ? "Programmata"
       : session.sessionStatus.value === "svolta"
         ? "Svolta"
-        : session.sessionStatus.value === "rinviata"
-          ? "Rinviata"
-          : "Non verificato";
+        : session.sessionStatus.value === "sospesa"
+          ? "Sospesa"
+          : session.sessionStatus.value === "rinviata"
+            ? "Rinviata"
+            : "Non verificato";
   const hasContextMedia = session.contextResearch.media.length > 0;
   const hasContextArticles = session.contextResearch.articles.length > 0;
   const hasEditorialAgenda =

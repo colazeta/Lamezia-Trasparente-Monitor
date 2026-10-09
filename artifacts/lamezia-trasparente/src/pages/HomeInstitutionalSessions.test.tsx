@@ -64,7 +64,7 @@ describe("HomeInstitutionalSessions", () => {
     expect(
       screen.getAllByText(/Stato della seduta non verificato/i),
     ).toHaveLength(58);
-    expect(screen.getByText(/Seduta rinviata/i)).toBeInTheDocument();
+    expect(screen.getByText(/Seduta sospesa/i)).toBeInTheDocument();
     expect(screen.getByText(/Seduta svolta/i)).toBeInTheDocument();
     expect(
       screen.getAllByText("IV Commissione consiliare permanente"),
