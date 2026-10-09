@@ -368,7 +368,7 @@ describe("councilSessionV0", () => {
         }),
         contextResearch: expect.objectContaining({
           status: "reviewed_matches",
-          checkedAt: "2026-10-09T15:32:27Z",
+          checkedAt: "2026-10-09T21:58:00Z",
           articles: expect.arrayContaining([
             expect.objectContaining({
               publisher: "City One",
@@ -393,6 +393,16 @@ describe("councilSessionV0", () => {
               publishedAt: "2026-10-06",
               relationship: "same_session",
               url: expect.stringContaining("lameziaterme.it"),
+            }),
+            expect.objectContaining({
+              title:
+                "Consiglio comunale, Scordovillo e revisori al centro dei lavori",
+              publisher: "LameziaTerme.it",
+              publishedAt: "2026-10-09",
+              relationship: "same_session",
+              url: expect.stringContaining(
+                "consiglio-comunale-scordovillo-revisori-al-centro-dei-lavori",
+              ),
             }),
           ]),
           media: [
@@ -422,15 +432,15 @@ describe("councilSessionV0", () => {
       /Sala Consiliare.*Renato Luisi.*via Sen\. Arturo Perugini/i,
     );
     expect(council?.dataLimits.value?.join(" ")).toMatch(
-      /sei articoli.*fonti editoriali.*non valorizzano.*risultati ufficiali/i,
+      /sette articoli.*fonti editoriali.*non valorizzano.*risultati ufficiali/i,
     );
     expect(council?.dataLimits.value?.join(" ")).not.toMatch(
       /non sono emersi collegamenti editoriali/i,
     );
-    expect(council?.contextResearch.articles).toHaveLength(6);
+    expect(council?.contextResearch.articles).toHaveLength(7);
     expect(council?.contextResearch.media).toHaveLength(1);
     expect(council?.contextResearch.searchNote).toMatch(
-      /Parallel Search.*sei articoli.*2026\/3263.*18 punti.*City One.*possible_same_session.*live_stream.*replay_available/is,
+      /Parallel Search.*sette articoli.*2026\/3263.*18 punti.*City One.*possible_same_session.*live_stream.*replay_available/is,
     );
     expect(council?.liveStreaming.value).toBeNull();
     expect(council?.recording.value).toBeNull();
