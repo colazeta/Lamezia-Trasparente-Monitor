@@ -1,6 +1,6 @@
 {
   "schema_version": "albo-reviewed-document-serving.v1",
-  "reviewed_at": "2026-10-07T10:16:27.000Z",
+  "reviewed_at": "2026-10-09T15:32:27.000Z",
   "source": "Albo Pretorio online del Comune di Lamezia Terme (piattaforma Tinnvision)",
   "source_url": "https://albo.tinnvision.cloud/albo/00301390795",
   "known_limits": [
@@ -246,6 +246,22 @@
       "review_status": "approved_public_civic_document",
       "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
       "reason": "Convocazione istituzionale revisionata e usata come fonte della seduta del Consiglio comunale del 9 ottobre 2026."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/162b92486574751b01024336f282ec58496ae951bbec08c455d42480f2cf2cce.pdf",
+      "sha256": "162b92486574751b01024336f282ec58496ae951bbec08c455d42480f2cf2cce",
+      "source_publication_number": "2026/3262",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Calendario istituzionale revisionato e usato come fonte delle sedute della V Commissione del 12 e 13 ottobre 2026."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/cfcb9e41a26ac25a2e48f034365cfee2cfe4b5ba1ac5b1fcff09e483caacc4a0.pdf",
+      "sha256": "cfcb9e41a26ac25a2e48f034365cfee2cfe4b5ba1ac5b1fcff09e483caacc4a0",
+      "source_publication_number": "2026/3263",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Avviso istituzionale revisionato e usato come fonte dello stato sospeso della seduta del Consiglio comunale del 9 ottobre 2026."
     }
   ]
 }

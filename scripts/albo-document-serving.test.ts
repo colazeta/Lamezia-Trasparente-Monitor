@@ -152,7 +152,7 @@ function sha256(value: Buffer): string {
   return createHash("sha256").update(value).digest("hex");
 }
 
-test("serves the reviewed September commission attachments", () => {
+test("serves the reviewed council and commission attachments", () => {
   const repoRoot = path.resolve(import.meta.dirname, "..");
   const expected = [
     "data/public/albo/documents/2026/a1dad36522921833ac71b994a73032d3454227d0a2c00f57156a8d7059d94baf.pdf",
@@ -167,6 +167,8 @@ test("serves the reviewed September commission attachments", () => {
     "data/public/albo/documents/2026/8eebc4e71f5def4118e620b94ea9855319f39f9c548aedb7d4860d19a42b6f7f.pdf",
     "data/public/albo/documents/2026/faa773ca9b02a88e8e7de334843e86dc20daa153f835f2acf50a2ca88a1754f5.pdf",
     "data/public/albo/documents/2026/85c4218e626ff552d3663519672675fd42d05a212a392f66683c3d1fba011492.pdf",
+    "data/public/albo/documents/2026/162b92486574751b01024336f282ec58496ae951bbec08c455d42480f2cf2cce.pdf",
+    "data/public/albo/documents/2026/cfcb9e41a26ac25a2e48f034365cfee2cfe4b5ba1ac5b1fcff09e483caacc4a0.pdf",
   ];
 
   const served = alboDocumentServingFiles(repoRoot);

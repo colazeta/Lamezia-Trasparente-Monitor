@@ -33,6 +33,7 @@ import {
 const expectedSessionStatuses: readonly CouncilSessionV0Status[] = [
   "programmata",
   "svolta",
+  "sospesa",
   "rinviata",
   "non_verificata",
 ];
@@ -197,7 +198,7 @@ describe("councilSessionV0", () => {
   });
 
   it("publishes source-traceable records for both council and commission notices", () => {
-    expect(councilSessionV0ReviewedRecords).toHaveLength(58);
+    expect(councilSessionV0ReviewedRecords).toHaveLength(60);
     expect(
       new Set(councilSessionV0ReviewedRecords.map((item) => item.kind)),
     ).toEqual(new Set(["council", "commission"]));
@@ -353,11 +354,21 @@ describe("councilSessionV0", () => {
           archivedDocumentUrl: expect.stringContaining(
             "83aea5a29ea10b1e32c08649c8f9fc9d3e8c45e1d015c6ea902ca6e2214a7c97.pdf",
           ),
-          sourceReviewStatus: "reviewed_against_official_attachment",
+          sourceReviewStatus: "reviewed_against_later_official_source",
+          supplementalEvidence: [
+            expect.objectContaining({
+              publicationNumber: "2026/3263",
+              documentSha256:
+                "cfcb9e41a26ac25a2e48f034365cfee2cfe4b5ba1ac5b1fcff09e483caacc4a0",
+              archivedDocumentUrl: expect.stringContaining(
+                "cfcb9e41a26ac25a2e48f034365cfee2cfe4b5ba1ac5b1fcff09e483caacc4a0.pdf",
+              ),
+            }),
+          ],
         }),
         contextResearch: expect.objectContaining({
           status: "reviewed_matches",
-          checkedAt: "2026-10-09T09:24:17Z",
+          checkedAt: "2026-10-09T15:32:27Z",
           articles: expect.arrayContaining([
             expect.objectContaining({
               publisher: "City One",
@@ -391,7 +402,7 @@ describe("councilSessionV0", () => {
               publishedAt: "2026-10-09",
               relationship: "possible_same_session",
               mediaType: "live_stream",
-              availability: "live",
+              availability: "replay_available",
               url: "https://www.youtube.com/watch?v=36nih-4G2GA",
             }),
           ],
@@ -404,23 +415,65 @@ describe("councilSessionV0", () => {
     );
     expect(council?.agenda.value).toHaveLength(21);
     expect(council?.agenda.sourceStatus).toBe("verificato");
-    expect(council?.sessionStatus.value).toBe("non_verificata");
+    expect(council?.sessionStatus.value).toBe("sospesa");
+    expect(council?.sessionStatus.sourceStatus).toBe("verificato");
+    expect(council?.sessionStatus.sourceUrl).toContain("2026_3263_1_X");
     expect(council?.dataLimits.value?.join(" ")).toMatch(
       /Sala Consiliare.*Renato Luisi.*via Sen\. Arturo Perugini/i,
     );
     expect(council?.dataLimits.value?.join(" ")).toMatch(
-      /quattro articoli.*annunci precedenti.*non.*attestano.*svolgimento/i,
+      /sei articoli.*fonti editoriali.*non valorizzano.*risultati ufficiali/i,
     );
     expect(council?.dataLimits.value?.join(" ")).not.toMatch(
       /non sono emersi collegamenti editoriali/i,
     );
-    expect(council?.contextResearch.articles).toHaveLength(4);
+    expect(council?.contextResearch.articles).toHaveLength(6);
     expect(council?.contextResearch.media).toHaveLength(1);
     expect(council?.contextResearch.searchNote).toMatch(
-      /Parallel Search.*annunci precedenti.*non provano.*svolgimento.*City One.*possible_same_session.*live_stream.*live/is,
+      /Parallel Search.*sei articoli.*2026\/3263.*18 punti.*City One.*possible_same_session.*live_stream.*replay_available/is,
     );
     expect(council?.liveStreaming.value).toBeNull();
     expect(council?.recording.value).toBeNull();
+  });
+
+  it("materializes the 12–13 October V Commission calendar from publication 2026/3262", () => {
+    const sessions = councilSessionV0ReviewedRecords.filter(
+      (session) => session.provenance?.publicationNumber === "2026/3262",
+    );
+
+    expect(sessions).toHaveLength(2);
+    expect(sessions.map((session) => session.scheduledAt.value)).toEqual([
+      "2026-10-13T09:00:00+02:00",
+      "2026-10-12T09:00:00+02:00",
+    ]);
+    expect(sessions[0]?.agenda.value).toEqual([
+      "Disciplinare per interventi sulla rete stradale.",
+    ]);
+    expect(sessions[1]?.agenda.value).toEqual([
+      "Regolamento sulla gestione e valorizzazione dei beni comunali.",
+    ]);
+
+    for (const session of sessions) {
+      expect(session.kind).toBe("commission");
+      expect(session.provenance).toEqual(
+        expect.objectContaining({
+          documentSha256:
+            "162b92486574751b01024336f282ec58496ae951bbec08c455d42480f2cf2cce",
+          archivedDocumentUrl: expect.stringContaining(
+            "162b92486574751b01024336f282ec58496ae951bbec08c455d42480f2cf2cce.pdf",
+          ),
+          sourceReviewStatus: "reviewed_against_official_attachment",
+        }),
+      );
+      expect(session.contextResearch).toEqual(
+        expect.objectContaining({
+          status: "checked_no_match",
+          checkedAt: "2026-10-09T15:32:27Z",
+          articles: [],
+          media: [],
+        }),
+      );
+    }
   });
 
   it("expands the reviewed VI Commission calendar into two sourced occurrences", () => {

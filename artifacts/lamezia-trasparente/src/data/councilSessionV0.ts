@@ -1,6 +1,7 @@
 export const COUNCIL_SESSION_V0_STATUSES = [
   "programmata",
   "svolta",
+  "sospesa",
   "rinviata",
   "non_verificata",
 ] as const;
@@ -100,6 +101,7 @@ export const councilSessionV0StatusLabels: Record<
 > = {
   programmata: "Seduta programmata",
   svolta: "Seduta svolta",
+  sospesa: "Seduta sospesa",
   rinviata: "Seduta rinviata",
   non_verificata: "Stato della seduta non verificato",
 };

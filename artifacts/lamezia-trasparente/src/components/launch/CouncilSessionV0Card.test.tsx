@@ -111,6 +111,34 @@ describe("CouncilSessionV0Card", () => {
     ).toBeInTheDocument();
   });
 
+  it("describes a verified suspended sitting without contradicting its status", () => {
+    const session = reviewedRecord(
+      "albo-2026-3221-consiglio-comunale-2026-10-09",
+    );
+
+    const { rerender } = render(<CouncilSessionV0Detail session={session} />);
+
+    expect(screen.getByText("Sospesa")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        /fonte istituzionale successiva conferma che la seduta si è tenuta ed è stata sospesa/i,
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText(/La convocazione non prova lo svolgimento/i),
+    ).not.toBeInTheDocument();
+
+    rerender(<CouncilSessionV0SummaryCard session={session} />);
+    expect(
+      screen.getByText(
+        /Data, ora e ordine del giorno sono stati verificati.*fonte istituzionale successiva aggiorna lo stato/is,
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText(/orario e ordine del giorno completo non sono disponibili/i),
+    ).not.toBeInTheDocument();
+  });
+
   it("keeps contextual articles separate from official session fields", () => {
     const session = reviewedRecord("albo-2026-2648-commissione-ii-2026-08-10");
 
