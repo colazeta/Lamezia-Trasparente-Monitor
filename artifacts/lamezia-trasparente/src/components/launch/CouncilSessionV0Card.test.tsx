@@ -226,7 +226,7 @@ describe("CouncilSessionV0Card", () => {
             publishedAt: "2026-08-13",
             relationship: "possible_same_session" as const,
             mediaType: "live_stream" as const,
-            availability: "replay_available" as const,
+            availability: "live" as const,
             relevanceNote:
               "Video editoriale compatibile con organo e giornata; il test non lo usa come fonte ufficiale della seduta.",
             reviewedAt: "2026-08-23T10:00:00Z",
@@ -241,7 +241,9 @@ describe("CouncilSessionV0Card", () => {
       screen.getByRole("heading", { name: "Video e interviste" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/Diretta editoriale.*Replay disponibile/i),
+      screen.getByText(
+        /Diretta editoriale.*In diretta al controllo del 23 agosto 2026/i,
+      ),
     ).toBeInTheDocument();
     expect(
       screen.getByText(

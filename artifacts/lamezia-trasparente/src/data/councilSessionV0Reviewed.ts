@@ -112,6 +112,8 @@ const COUNCIL_OCTOBER_9_LAMEZIAINFORMA_URL =
   "https://www.lameziainforma.it/politica/2026/10/06/venerdi-consiglio-comunale-interlocutorio-su-21-punti-nomina-dei-revisori-dei-conti-unico-pragmatico/69602/";
 const COUNCIL_OCTOBER_9_LAMEZIATERME_URL =
   "https://www.lameziaterme.it/lamezia-consiglio-comunale-21-punti-tra-conti-sanita-emergenze-della-citta/";
+const COUNCIL_OCTOBER_9_CITY_ONE_LIVE_URL =
+  "https://www.youtube.com/watch?v=36nih-4G2GA";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
 const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
 const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-27T21:49:11Z";
@@ -130,7 +132,7 @@ const VIA_TRENTO_ROADWORKS_CONTEXT_RESEARCHED_AT = "2026-09-24T09:59:02Z";
 const COMMISSION_V_REU_CONTEXT_RESEARCHED_AT = "2026-09-28T15:27:08Z";
 const COMMISSION_IV_STREET_ART_CONTEXT_RESEARCHED_AT = "2026-09-29T04:07:44Z";
 const OCTOBER_7_RESEARCHED_AT = "2026-10-07T10:16:27Z";
-const COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT = "2026-10-08T09:26:47Z";
+const COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT = "2026-10-09T09:24:17Z";
 const MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT = "2026-10-07T15:48:24Z";
 const MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT = "2026-09-12T21:51:17Z";
 const SCHOOL_TRANSPORT_CONTEXT_RESEARCHED_AT = "2026-09-14T10:13:39Z";
@@ -634,7 +636,7 @@ const councilOctober9ContextResearch: CouncilSessionV0ContextResearch = {
   status: "reviewed_matches",
   checkedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
   searchNote:
-    "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, City One, LameziaInforma, LameziaTermeNews, LameziaTerme.it, il Lametino e risultati indicizzati, inclusi canali YouTube e Facebook, per il Consiglio comunale convocato il 9 ottobre 2026 alle 09:30. Quattro articoli originali del 6 ottobre coincidono su organo, data e punti distintivi dell'ordine del giorno e sono collegati come `same_session`; City One, il Lametino e LameziaTerme.it riportano anche l'orario della prima convocazione. Sono annunci precedenti alla seduta e non provano costituzione, svolgimento, presenze, trattazione, votazioni o risultati. Non sono emersi contenuti audiovisivi collegabili con sufficiente precisione. L'ordine del giorno ufficiale resta quello dell'allegato istituzionale e non viene ricostruita un'agenda editoriale; la ricerca resta aperta fino al termine della finestra prevista.",
+    "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, LameziaTerme.it, il Lametino e risultati indicizzati, inclusi canali YouTube e Facebook, per il Consiglio comunale convocato il 9 ottobre 2026 alle 09:30. Quattro articoli originali del 6 ottobre coincidono su organo, data e punti distintivi dell'ordine del giorno e sono collegati come `same_session`; City One, il Lametino e LameziaTerme.it riportano anche l'orario della prima convocazione. Sono annunci precedenti alla seduta e non provano costituzione, svolgimento, presenze, trattazione, votazioni o risultati. Il 9 ottobre la pagina YouTube originale di City One mostrava in diretta un video intitolato «Diretta consiglio comunale del 9 ottobre 2026», collegato come `possible_same_session`, `live_stream` e `live`: titolo, organo, data e collocazione temporale coincidono, ma il video non espone un punto distintivo dell'ordine del giorno o il numero della pubblicazione ufficiale. Resta copertura editoriale e non prova costituzione, completezza, svolgimento o risultati della seduta. Il portale istituzionale ConsigliCloud mostrava «No meetings found», quindi non è stato valorizzato alcuno streaming istituzionale. L'ordine del giorno ufficiale resta quello dell'allegato istituzionale e non viene ricostruita un'agenda editoriale; la ricerca resta aperta fino al termine della finestra prevista.",
   articles: [
     {
       title: "Convocato il Consiglio Comunale per venerdì 9 ottobre 2026",
@@ -680,7 +682,20 @@ const councilOctober9ContextResearch: CouncilSessionV0ContextResearch = {
       reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
     },
   ],
-  media: [],
+  media: [
+    {
+      title: "Diretta consiglio comunale del 9 ottobre 2026",
+      url: COUNCIL_OCTOBER_9_CITY_ONE_LIVE_URL,
+      publisher: "City One",
+      publishedAt: "2026-10-09",
+      relationship: "possible_same_session",
+      mediaType: "live_stream",
+      availability: "live",
+      relevanceNote:
+        "Titolo, organo, data e collocazione temporale rendono plausibile il collegamento alla seduta del 9 ottobre 2026, ma il video non espone un punto distintivo dell'ordine del giorno o il numero della pubblicazione ufficiale; la pagina originale del canale City One risultava in diretta durante il controllo. È copertura editoriale esterna e non certifica programmazione istituzionale, costituzione, completezza, svolgimento, presenze, votazioni o risultati.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+  ],
 };
 
 const commissionIiOctober6RebalancingContextResearch: CouncilSessionV0ContextResearch =
@@ -2171,7 +2186,7 @@ const councilOctober9Session: CouncilSessionV0 = {
     sourceStatus: "assente",
     sourceUrl: councilOctober9DocumentUrl,
     limit:
-      "Non rilevato nella convocazione né nei canali controllati; ciò non equivale a dichiararne l'inesistenza.",
+      "Non rilevato nella fonte istituzionale; la diretta editoriale di City One resta nella sezione contestuale e non valorizza questo campo.",
   },
   recording: {
     key: "recording",
@@ -2180,7 +2195,7 @@ const councilOctober9Session: CouncilSessionV0 = {
     sourceStatus: "assente",
     sourceUrl: councilOctober9DocumentUrl,
     limit:
-      "Non rilevata nella fonte istituzionale o nella ricerca editoriale; richiede ulteriori controlli nella finestra attiva.",
+      "Non rilevata nella fonte istituzionale; la diretta editoriale di City One non viene trattata come registrazione ufficiale e l'eventuale replay richiede un controllo successivo.",
   },
   minutesOrReport: {
     key: "minutesOrReport",
@@ -2207,8 +2222,9 @@ const councilOctober9Session: CouncilSessionV0 = {
       "La prima convocazione è fissata al 9 ottobre 2026 alle 09:30; la seconda al 12 ottobre alle 10:30.",
       'La sede indicata è la Sala Consiliare "Renato Luisi", in via Sen. Arturo Perugini.',
       "La convocazione non certifica svolgimento, presenze, trattazione, votazioni o risultati.",
-      "Streaming, registrazione e verbale sono indicati come non rilevati, non come inesistenti.",
+      "Streaming istituzionale, registrazione istituzionale e verbale sono indicati come non rilevati, non come inesistenti.",
       "I quattro articoli collegati sono annunci precedenti alla seduta e non ne attestano costituzione o svolgimento.",
+      "La diretta City One è una fonte editoriale esterna: non certifica programmazione, costituzione, completezza, svolgimento, presenze, votazioni o risultati.",
     ],
     sourceStatus: "parziale",
     sourceUrl: councilOctober9DocumentUrl,

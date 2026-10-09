@@ -610,6 +610,9 @@ export function CouncilSessionV0Detail({
                             media.availability
                           ]
                         }
+                        {media.availability === "live"
+                          ? ` al controllo del ${formatDate(media.reviewedAt)}`
+                          : ""}
                       </p>
                       <details className="mt-2 text-xs text-muted-foreground">
                         <summary className="cursor-pointer font-semibold text-brand">

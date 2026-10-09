@@ -357,7 +357,7 @@ describe("councilSessionV0", () => {
         }),
         contextResearch: expect.objectContaining({
           status: "reviewed_matches",
-          checkedAt: "2026-10-08T09:26:47Z",
+          checkedAt: "2026-10-09T09:24:17Z",
           articles: expect.arrayContaining([
             expect.objectContaining({
               publisher: "City One",
@@ -384,7 +384,17 @@ describe("councilSessionV0", () => {
               url: expect.stringContaining("lameziaterme.it"),
             }),
           ]),
-          media: [],
+          media: [
+            expect.objectContaining({
+              title: "Diretta consiglio comunale del 9 ottobre 2026",
+              publisher: "City One",
+              publishedAt: "2026-10-09",
+              relationship: "possible_same_session",
+              mediaType: "live_stream",
+              availability: "live",
+              url: "https://www.youtube.com/watch?v=36nih-4G2GA",
+            }),
+          ],
         }),
       }),
     );
@@ -405,8 +415,9 @@ describe("councilSessionV0", () => {
       /non sono emersi collegamenti editoriali/i,
     );
     expect(council?.contextResearch.articles).toHaveLength(4);
+    expect(council?.contextResearch.media).toHaveLength(1);
     expect(council?.contextResearch.searchNote).toMatch(
-      /Parallel Search.*annunci precedenti.*non provano.*svolgimento/is,
+      /Parallel Search.*annunci precedenti.*non provano.*svolgimento.*City One.*possible_same_session.*live_stream.*live/is,
     );
     expect(council?.liveStreaming.value).toBeNull();
     expect(council?.recording.value).toBeNull();
