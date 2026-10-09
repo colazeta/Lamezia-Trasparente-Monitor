@@ -389,7 +389,7 @@ describe("councilSessionV0", () => {
               title: "Diretta consiglio comunale del 9 ottobre 2026",
               publisher: "City One",
               publishedAt: "2026-10-09",
-              relationship: "same_session",
+              relationship: "possible_same_session",
               mediaType: "live_stream",
               availability: "live",
               url: "https://www.youtube.com/watch?v=36nih-4G2GA",
@@ -417,7 +417,7 @@ describe("councilSessionV0", () => {
     expect(council?.contextResearch.articles).toHaveLength(4);
     expect(council?.contextResearch.media).toHaveLength(1);
     expect(council?.contextResearch.searchNote).toMatch(
-      /Parallel Search.*annunci precedenti.*non provano.*svolgimento.*City One.*live_stream.*live/is,
+      /Parallel Search.*annunci precedenti.*non provano.*svolgimento.*City One.*possible_same_session.*live_stream.*live/is,
     );
     expect(council?.liveStreaming.value).toBeNull();
     expect(council?.recording.value).toBeNull();

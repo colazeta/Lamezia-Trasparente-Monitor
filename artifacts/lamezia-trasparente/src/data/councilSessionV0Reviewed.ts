@@ -636,7 +636,7 @@ const councilOctober9ContextResearch: CouncilSessionV0ContextResearch = {
   status: "reviewed_matches",
   checkedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
   searchNote:
-    "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, LameziaTerme.it, il Lametino e risultati indicizzati, inclusi canali YouTube e Facebook, per il Consiglio comunale convocato il 9 ottobre 2026 alle 09:30. Quattro articoli originali del 6 ottobre coincidono su organo, data e punti distintivi dell'ordine del giorno e sono collegati come `same_session`; City One, il Lametino e LameziaTerme.it riportano anche l'orario della prima convocazione. Sono annunci precedenti alla seduta e non provano costituzione, svolgimento, presenze, trattazione, votazioni o risultati. Il 9 ottobre la pagina YouTube originale di City One mostrava in diretta un video intitolato «Diretta consiglio comunale del 9 ottobre 2026», collegato come `same_session`, `live_stream` e `live`; resta copertura editoriale e non prova costituzione, completezza, svolgimento o risultati della seduta. Il portale istituzionale ConsigliCloud mostrava «No meetings found», quindi non è stato valorizzato alcuno streaming istituzionale. L'ordine del giorno ufficiale resta quello dell'allegato istituzionale e non viene ricostruita un'agenda editoriale; la ricerca resta aperta fino al termine della finestra prevista.",
+    "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, LameziaTerme.it, il Lametino e risultati indicizzati, inclusi canali YouTube e Facebook, per il Consiglio comunale convocato il 9 ottobre 2026 alle 09:30. Quattro articoli originali del 6 ottobre coincidono su organo, data e punti distintivi dell'ordine del giorno e sono collegati come `same_session`; City One, il Lametino e LameziaTerme.it riportano anche l'orario della prima convocazione. Sono annunci precedenti alla seduta e non provano costituzione, svolgimento, presenze, trattazione, votazioni o risultati. Il 9 ottobre la pagina YouTube originale di City One mostrava in diretta un video intitolato «Diretta consiglio comunale del 9 ottobre 2026», collegato come `possible_same_session`, `live_stream` e `live`: titolo, organo, data e collocazione temporale coincidono, ma il video non espone un punto distintivo dell'ordine del giorno o il numero della pubblicazione ufficiale. Resta copertura editoriale e non prova costituzione, completezza, svolgimento o risultati della seduta. Il portale istituzionale ConsigliCloud mostrava «No meetings found», quindi non è stato valorizzato alcuno streaming istituzionale. L'ordine del giorno ufficiale resta quello dell'allegato istituzionale e non viene ricostruita un'agenda editoriale; la ricerca resta aperta fino al termine della finestra prevista.",
   articles: [
     {
       title: "Convocato il Consiglio Comunale per venerdì 9 ottobre 2026",
@@ -688,11 +688,11 @@ const councilOctober9ContextResearch: CouncilSessionV0ContextResearch = {
       url: COUNCIL_OCTOBER_9_CITY_ONE_LIVE_URL,
       publisher: "City One",
       publishedAt: "2026-10-09",
-      relationship: "same_session",
+      relationship: "possible_same_session",
       mediaType: "live_stream",
       availability: "live",
       relevanceNote:
-        "Titolo, organo e data identificano la seduta del 9 ottobre 2026 senza contraddizioni; la pagina originale del canale City One risultava in diretta durante il controllo. È copertura editoriale esterna e non certifica programmazione istituzionale, costituzione, completezza, svolgimento, presenze, votazioni o risultati.",
+        "Titolo, organo, data e collocazione temporale rendono plausibile il collegamento alla seduta del 9 ottobre 2026, ma il video non espone un punto distintivo dell'ordine del giorno o il numero della pubblicazione ufficiale; la pagina originale del canale City One risultava in diretta durante il controllo. È copertura editoriale esterna e non certifica programmazione istituzionale, costituzione, completezza, svolgimento, presenze, votazioni o risultati.",
       reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
     },
   ],
