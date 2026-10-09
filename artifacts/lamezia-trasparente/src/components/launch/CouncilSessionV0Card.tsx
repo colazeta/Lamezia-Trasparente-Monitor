@@ -241,6 +241,12 @@ export function CouncilSessionV0SummaryCard({
   );
   const contextArticleCount = session.contextResearch.articles.length;
   const contextMediaCount = session.contextResearch.media.length;
+  const hasVerifiedScheduledAt =
+    session.scheduledAt.sourceStatus === "verificato" &&
+    session.scheduledAt.value !== null;
+  const hasVerifiedAgenda =
+    session.agenda.sourceStatus === "verificato" &&
+    (session.agenda.value?.length ?? 0) > 0;
 
   return (
     <Card
@@ -268,7 +274,9 @@ export function CouncilSessionV0SummaryCard({
             ? "Avviso individuato nell'Albo; data, ora e ordine del giorno restano da verificare."
             : session.provenance?.sourceReviewStatus ===
                 "reviewed_against_later_official_source"
-              ? "Una fonte istituzionale successiva conferma data e svolgimento; orario e ordine del giorno completo non sono disponibili."
+              ? hasVerifiedScheduledAt && hasVerifiedAgenda
+                ? "Data, ora e ordine del giorno sono stati verificati sull'allegato ufficiale; una fonte istituzionale successiva aggiorna lo stato della seduta."
+                : "Una fonte istituzionale successiva conferma data e svolgimento; orario e ordine del giorno completo non sono disponibili."
               : "Data, ora e ordine del giorno sono stati confrontati con l'allegato ufficiale archiviato."}
       </p>
       <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
