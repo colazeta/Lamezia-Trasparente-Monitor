@@ -368,7 +368,7 @@ describe("councilSessionV0", () => {
         }),
         contextResearch: expect.objectContaining({
           status: "reviewed_matches",
-          checkedAt: "2026-10-10T10:17:09Z",
+          checkedAt: "2026-10-10T22:11:04Z",
           articles: expect.arrayContaining([
             expect.objectContaining({
               publisher: "City One",
@@ -441,7 +441,17 @@ describe("councilSessionV0", () => {
               url: expect.stringContaining(
                 "stallo-sul-nuovo-regolamento",
               ),
+            }),            expect.objectContaining({
+              title:
+                "Taxi a Lamezia, USB proclama lo stato di agitazione dopo i rinvii",
+              publisher: "LameziaTerme.it",
+              publishedAt: "2026-10-10",
+              relationship: "same_session",
+              url: expect.stringContaining(
+                "taxi-lamezia-usb-proclama-stato-agitazione-dopo-rinvii",
+              ),
             }),
+
           ]),
           media: [
             expect.objectContaining({
@@ -489,15 +499,15 @@ describe("councilSessionV0", () => {
       /Sala Consiliare.*Renato Luisi.*via Sen\. Arturo Perugini/i,
     );
     expect(council?.dataLimits.value?.join(" ")).toMatch(
-      /dodici articoli.*fonti editoriali.*non valorizzano.*risultati ufficiali/i,
+      /tredici articoli.*fonti editoriali.*non valorizzano.*risultati ufficiali/i,
     );
     expect(council?.dataLimits.value?.join(" ")).not.toMatch(
       /non sono emersi collegamenti editoriali/i,
     );
-    expect(council?.contextResearch.articles).toHaveLength(12);
+    expect(council?.contextResearch.articles).toHaveLength(13);
     expect(council?.contextResearch.media).toHaveLength(3);
     expect(council?.contextResearch.searchNote).toMatch(
-      /Parallel Search.*dodici articoli.*USB Taxi.*non sono conferme indipendenti.*2026\/3263.*18 punti.*tre collegamenti audiovisivi.*City One.*LameziaTerme\.it.*possible_same_session.*live_stream.*same_session.*interview.*replay_available/is,
+      /Parallel Search.*tredici articoli.*USB Taxi.*non sono conferme indipendenti.*2026\/3263.*18 punti.*tre collegamenti audiovisivi.*City One.*LameziaTerme\.it.*possible_same_session.*live_stream.*same_session.*interview.*replay_available/is,
     );
     expect(council?.liveStreaming.value).toBeNull();
     expect(council?.recording.value).toBeNull();
