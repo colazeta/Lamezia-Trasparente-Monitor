@@ -124,6 +124,16 @@ const COUNCIL_OCTOBER_9_SUSPENDED_LAMETINO_URL =
   "https://www.lametino.it/ultime/lamezia-seduta-consiglio-sospesa-per-mancanza-numero-legale-niente-voto-su-debiti-fuori-bilancio-si-torna-in-aula-il-12-ottobre.html";
 const COUNCIL_OCTOBER_9_REPORT_LAMEZIATERME_URL =
   "https://www.lameziaterme.it/consiglio-comunale-scordovillo-revisori-al-centro-dei-lavori/";
+const COUNCIL_OCTOBER_9_REPORT_LAMEZIAINFORMA_URL =
+  "https://www.lameziainforma.it/politica/2026/10/09/confermato-daffina-come-presidente-del-collegio-dei-revisori-dei-conti-consiglio-comunale-senza-altri-esiti/69647/";
+const COUNCIL_OCTOBER_9_REPORT_CORRIERE_CALABRIA_URL =
+  "https://www.corrieredellacalabria.it/2026/10/10/lamezia-murone-futuro-nazionale-scontro-consiglio-numero-legale-maggioranza/";
+const COUNCIL_OCTOBER_9_REPORT_GAZZETTA_URL =
+  "https://catanzaro.gazzettadelsud.it/articoli/politica/2026/10/10/comune-di-lamezia-collegio-dei-revisori-dei-conti-daffina-confermato-presidente-fbf4810c-cacb-48ed-adbc-6bfc403487fe/";
+const COUNCIL_OCTOBER_12_USB_LAMETINO_URL =
+  "https://www.lametino.it/ultimora/lamezia-usb-taxi-proclama-stato-di-agitazione-lunedi-in-consiglio-comunale-per-chiedere-nuovo-regolamento.html";
+const COUNCIL_OCTOBER_12_USB_CALABRIA_DIRETTA_URL =
+  "https://www.calabriadirettanews.com/2026/10/10/lamezia-terme-stallo-sul-nuovo-regolamento-la-usb-taxi-dichiara-lo-stato-di-agitazione/";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
 const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
 const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-27T21:49:11Z";
@@ -142,7 +152,7 @@ const VIA_TRENTO_ROADWORKS_CONTEXT_RESEARCHED_AT = "2026-09-24T09:59:02Z";
 const COMMISSION_V_REU_CONTEXT_RESEARCHED_AT = "2026-09-28T15:27:08Z";
 const COMMISSION_IV_STREET_ART_CONTEXT_RESEARCHED_AT = "2026-09-29T04:07:44Z";
 const OCTOBER_7_RESEARCHED_AT = "2026-10-07T10:16:27Z";
-const COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT = "2026-10-10T03:39:54Z";
+const COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT = "2026-10-10T10:17:09Z";
 const OCTOBER_12_13_COMMISSION_RESEARCHED_AT = "2026-10-09T15:32:27Z";
 const MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT = "2026-10-07T15:48:24Z";
 const MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT = "2026-09-12T21:51:17Z";
@@ -657,7 +667,7 @@ const councilOctober9ContextResearch: CouncilSessionV0ContextResearch = {
   status: "reviewed_matches",
   checkedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
   searchNote:
-    "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, LameziaTerme.it, il Lametino e risultati indicizzati, inclusi canali YouTube e Facebook, per il Consiglio comunale convocato il 9 ottobre 2026 alle 09:30. Sette articoli originali coincidono su organo, data e punti distintivi e sono collegati come `same_session`: quattro annunci del 6 ottobre e tre resoconti del 9 ottobre. I resoconti restano fonti editoriali e non valorizzano campi ufficiali, presenze, votazioni o risultati. La pubblicazione istituzionale successiva 2026/3263 attesta invece la mancanza del numero legale e il rinvio dei 18 punti non discussi e votati alla seconda convocazione del 12 ottobre alle 10:30. Tre collegamenti audiovisivi editoriali sono disponibili come replay: la diretta YouTube di City One di 4:17:09 e la diretta Facebook di LameziaTerme.it di 3:52:52 restano `possible_same_session` e `live_stream` perché titolo, organo e data coincidono senza un punto distintivo o il numero Albo; la conferenza stampa del centrosinistra di 12:27 è collegata come `same_session` e `interview` perché il titolo identifica espressamente la fase successiva al Consiglio del 9 ottobre. Tutti hanno stato `replay_available` e non provano completezza, presenze, votazioni o risultati. Il portale istituzionale ConsigliCloud mostrava «No meetings found», quindi non è stato valorizzato alcuno streaming o registrazione istituzionale. L'ordine del giorno ufficiale resta quello dell'allegato istituzionale e non viene ricostruita un'agenda editoriale; la ricerca resta aperta fino al termine della finestra prevista.",
+    "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, LameziaTerme.it, il Lametino, Corriere della Calabria, Gazzetta del Sud, Calabria Diretta News e risultati indicizzati, inclusi canali YouTube e Facebook, per il Consiglio comunale convocato il 9 ottobre 2026 alle 09:30 e proseguito in seconda convocazione il 12 ottobre alle 10:30. Dodici articoli originali sono collegati come `same_session`: quattro annunci del 6 ottobre, quattro resoconti del 9 ottobre, due resoconti del 10 ottobre e due articoli del 10 ottobre sulla nota USB Taxi che annuncia la presenza al Consiglio del 12 ottobre. I due articoli USB riprendono la stessa nota e non sono conferme indipendenti. Tutti restano fonti editoriali e non valorizzano campi ufficiali, presenze, votazioni o risultati. La pubblicazione istituzionale 2026/3263 attesta invece la mancanza del numero legale e il rinvio dei 18 punti non discussi e votati alla seconda convocazione del 12 ottobre alle 10:30. Tre collegamenti audiovisivi editoriali sono disponibili come replay: la diretta YouTube di City One di 4:17:09 e la diretta Facebook di LameziaTerme.it di 3:52:52 restano `possible_same_session` e `live_stream` perché titolo, organo e data coincidono senza un punto distintivo o il numero Albo; la conferenza stampa del centrosinistra di 12:27 è collegata come `same_session` e `interview` perché il titolo identifica espressamente la fase successiva al Consiglio del 9 ottobre. Tutti hanno stato `replay_available` e non provano completezza, presenze, votazioni o risultati. Il portale istituzionale ConsigliCloud mostrava «No meetings found», quindi non è stato valorizzato alcuno streaming o registrazione istituzionale. L'ordine del giorno ufficiale resta quello dell'allegato istituzionale e non viene ricostruita un'agenda editoriale; la ricerca resta aperta fino al termine della finestra prevista."
   articles: [
     {
       title: "Convocato il Consiglio Comunale per venerdì 9 ottobre 2026",
@@ -732,6 +742,61 @@ const councilOctober9ContextResearch: CouncilSessionV0ContextResearch = {
       relationship: "same_session",
       relevanceNote:
         "Il resoconto identifica la seduta, lo smantellamento del campo di Scordovillo, la nomina del Collegio dei revisori, l'aggiornamento del regolamento sui controlli interni, la perdita del numero legale e la ripresa del 12 ottobre. Resta una fonte editoriale: non completa i campi ufficiali e non certifica presenze, votazioni o risultati.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Confermato Daffinà come presidente del collegio dei revisori dei conti, consiglio comunale senza altri esiti",
+      url: COUNCIL_OCTOBER_9_REPORT_LAMEZIAINFORMA_URL,
+      publisher: "LameziaInforma",
+      publishedAt: "2026-10-09",
+      relationship: "same_session",
+      relevanceNote:
+        "Il resoconto identifica il Consiglio del 9 ottobre e temi distintivi quali Scordovillo, nomina dei revisori e regolamento sui controlli interni. Resta una fonte editoriale: non completa i campi ufficiali e non certifica presenze, votazioni o risultati.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Lamezia, scontro tra Murone e Futuro Nazionale. Poi la maggioranza sparisce dall'Aula",
+      url: COUNCIL_OCTOBER_9_REPORT_CORRIERE_CALABRIA_URL,
+      publisher: "Corriere della Calabria",
+      publishedAt: "2026-10-10",
+      relationship: "same_session",
+      relevanceNote:
+        "Il resoconto identifica la seduta del 9 ottobre, la perdita del numero legale sui debiti fuori bilancio e la seconda convocazione del 12 ottobre. È contesto editoriale e non certifica presenze, votazioni, deliberazioni o risultati ufficiali.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Comune di Lamezia, Collegio dei revisori dei conti. Daffinà confermato presidente",
+      url: COUNCIL_OCTOBER_9_REPORT_GAZZETTA_URL,
+      publisher: "Gazzetta del Sud",
+      publishedAt: "2026-10-10",
+      relationship: "same_session",
+      relevanceNote:
+        "Il resoconto identifica il Consiglio del 9 ottobre, la nomina del Collegio dei revisori, Scordovillo e la sospensione per mancanza del numero legale. Resta una fonte editoriale e non completa campi, presenze, votazioni o risultati ufficiali.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Lamezia, USB Taxi proclama stato di agitazione: lunedì in Consiglio comunale per chiedere nuovo regolamento",
+      url: COUNCIL_OCTOBER_12_USB_LAMETINO_URL,
+      publisher: "il Lametino",
+      publishedAt: "2026-10-10",
+      relationship: "same_session",
+      relevanceNote:
+        "L'articolo collega espressamente il rinvio del Consiglio del 9 ottobre alla seconda convocazione del 12 ottobre e riporta la presenza annunciata della delegazione USB Taxi. Non prova che il regolamento taxi sia trattato, né svolgimento, presenze, votazioni o risultati della seduta.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Lamezia Terme, stallo sul nuovo regolamento: la USB Taxi dichiara lo stato di agitazione",
+      url: COUNCIL_OCTOBER_12_USB_CALABRIA_DIRETTA_URL,
+      publisher: "Calabria Diretta News",
+      publishedAt: "2026-10-10",
+      relationship: "same_session",
+      relevanceNote:
+        "L'articolo riprende la stessa nota USB Taxi e identifica la seduta del 12 ottobre; non costituisce una conferma indipendente. Non prova che il regolamento taxi sia trattato, né svolgimento, presenze, votazioni o risultati della seduta.",
       reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
     },
   ],
@@ -2330,7 +2395,7 @@ const councilOctober9Session: CouncilSessionV0 = {
       'La sede indicata è la Sala Consiliare "Renato Luisi", in via Sen. Arturo Perugini.',
       "L'avviso ufficiale 2026/3263 attesta lo svolgimento parziale e la sospensione per mancanza del numero legale, con passaggio alla seconda convocazione dei 18 punti non discussi e votati; non costituisce un verbale completo.",
       "Streaming istituzionale, registrazione istituzionale e verbale sono indicati come non rilevati, non come inesistenti.",
-      "I sette articoli collegati, inclusi tre resoconti del 9 ottobre, restano fonti editoriali e non valorizzano campi, presenze, votazioni o risultati ufficiali.",
+      "I dodici articoli collegati, inclusi sei resoconti tra il 9 e il 10 ottobre e due articoli sulla nota USB Taxi relativa al 12 ottobre, restano fonti editoriali e non valorizzano campi, presenze, votazioni o risultati ufficiali.",
       "I tre replay di City One e LameziaTerme.it sono fonti editoriali esterne: non certificano programmazione istituzionale, completezza, presenze, votazioni o risultati.",
     ],
     sourceStatus: "parziale",
