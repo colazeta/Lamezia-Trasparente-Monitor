@@ -368,7 +368,7 @@ describe("councilSessionV0", () => {
         }),
         contextResearch: expect.objectContaining({
           status: "reviewed_matches",
-          checkedAt: "2026-10-09T21:58:00Z",
+          checkedAt: "2026-10-10T03:39:54Z",
           articles: expect.arrayContaining([
             expect.objectContaining({
               publisher: "City One",
@@ -415,6 +415,25 @@ describe("councilSessionV0", () => {
               availability: "replay_available",
               url: "https://www.youtube.com/watch?v=36nih-4G2GA",
             }),
+            expect.objectContaining({
+              title: "Consiglio Comunale 9 ottobre 2026",
+              publisher: "LameziaTerme.it",
+              publishedAt: "2026-10-09",
+              relationship: "possible_same_session",
+              mediaType: "live_stream",
+              availability: "replay_available",
+              url: expect.stringContaining("1112463858409425"),
+            }),
+            expect.objectContaining({
+              title:
+                "Conferenza stampa del centrosinistra post consiglio comunale del 9 ottobre 2026",
+              publisher: "LameziaTerme.it",
+              publishedAt: "2026-10-09",
+              relationship: "same_session",
+              mediaType: "interview",
+              availability: "replay_available",
+              url: expect.stringContaining("1423909363164071"),
+            }),
           ],
         }),
       }),
@@ -438,9 +457,9 @@ describe("councilSessionV0", () => {
       /non sono emersi collegamenti editoriali/i,
     );
     expect(council?.contextResearch.articles).toHaveLength(7);
-    expect(council?.contextResearch.media).toHaveLength(1);
+    expect(council?.contextResearch.media).toHaveLength(3);
     expect(council?.contextResearch.searchNote).toMatch(
-      /Parallel Search.*sette articoli.*2026\/3263.*18 punti.*City One.*possible_same_session.*live_stream.*replay_available/is,
+      /Parallel Search.*sette articoli.*2026\/3263.*18 punti.*tre collegamenti audiovisivi.*City One.*LameziaTerme\.it.*possible_same_session.*live_stream.*same_session.*interview.*replay_available/is,
     );
     expect(council?.liveStreaming.value).toBeNull();
     expect(council?.recording.value).toBeNull();
