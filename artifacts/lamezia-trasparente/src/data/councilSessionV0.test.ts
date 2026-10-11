@@ -368,7 +368,7 @@ describe("councilSessionV0", () => {
         }),
         contextResearch: expect.objectContaining({
           status: "reviewed_matches",
-          checkedAt: "2026-10-11T10:05:46Z",
+          checkedAt: "2026-10-11T16:07:16Z",
           articles: expect.arrayContaining([
             expect.objectContaining({
               publisher: "City One",
