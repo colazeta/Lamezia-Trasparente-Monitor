@@ -368,7 +368,7 @@ describe("councilSessionV0", () => {
         }),
         contextResearch: expect.objectContaining({
           status: "reviewed_matches",
-          checkedAt: "2026-10-11T10:05:46Z",
+          checkedAt: "2026-10-11T16:07:16Z",
           articles: expect.arrayContaining([
             expect.objectContaining({
               publisher: "City One",
@@ -473,7 +473,25 @@ describe("councilSessionV0", () => {
                 "taxi-nuovo-regolamento-fermo-usb-proclama-lo-stato-di-agitazione",
               ),
             }),
-
+            expect.objectContaining({
+              title:
+                "La conta nei banchi in consiglio comunale per non pensare alle scadenze in arrivo contabili istituzionali",
+              publisher: "LameziaInforma",
+              publishedAt: "2026-10-11",
+              relationship: "same_session",
+              url: expect.stringContaining("69676"),
+            }),
+            expect.objectContaining({
+              title: expect.stringContaining(
+                "Nessuna crisi, sul Piano di riequilibrio",
+              ),
+              publisher: "il Lametino",
+              publishedAt: "2026-10-11",
+              relationship: "same_session",
+              url: expect.stringContaining(
+                "sindaco-murone-nessuna-crisi-sul-piano-di-riequilibrio",
+              ),
+            }),
           ]),
           media: [
             expect.objectContaining({
@@ -539,15 +557,15 @@ describe("councilSessionV0", () => {
       /Sala Consiliare.*Renato Luisi.*via Sen\. Arturo Perugini/i,
     );
     expect(council?.dataLimits.value?.join(" ")).toMatch(
-      /sedici articoli.*fonti editoriali.*non valorizzano.*risultati ufficiali/i,
+      /diciotto articoli.*fonti editoriali.*non valorizzano.*risultati ufficiali/i,
     );
     expect(council?.dataLimits.value?.join(" ")).not.toMatch(
       /non sono emersi collegamenti editoriali/i,
     );
-    expect(council?.contextResearch.articles).toHaveLength(16);
+    expect(council?.contextResearch.articles).toHaveLength(18);
     expect(council?.contextResearch.media).toHaveLength(5);
     expect(council?.contextResearch.searchNote).toMatch(
-      /Parallel Search.*sedici articoli.*USB Taxi.*non sono conferme indipendenti.*2026\/3263.*18 punti.*cinque collegamenti audiovisivi.*City One.*LameziaTerme\.it.*possible_same_session.*live_stream.*excerpt.*same_session.*interview.*replay_available/is,
+      /Parallel Search.*diciotto articoli.*USB Taxi.*due approfondimenti.*non sono conferme indipendenti.*2026\/3263.*18 punti.*cinque collegamenti audiovisivi.*City One.*LameziaTerme\.it.*possible_same_session.*live_stream.*excerpt.*same_session.*interview.*replay_available/is,
     );
     expect(council?.liveStreaming.value).toBeNull();
     expect(council?.recording.value).toBeNull();
