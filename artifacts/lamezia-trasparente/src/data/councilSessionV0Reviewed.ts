@@ -136,6 +136,12 @@ const COUNCIL_OCTOBER_12_USB_CALABRIA_DIRETTA_URL =
   "https://www.calabriadirettanews.com/2026/10/10/lamezia-terme-stallo-sul-nuovo-regolamento-la-usb-taxi-dichiara-lo-stato-di-agitazione/";
 const COUNCIL_OCTOBER_12_USB_LAMEZIATERME_URL =
   "https://www.lameziaterme.it/taxi-lamezia-usb-proclama-stato-agitazione-dopo-rinvii/";
+const COUNCIL_OCTOBER_12_USB_LAMEZIAINFORMA_URL =
+  "https://www.lameziainforma.it/politica/2026/10/10/lusb-taxi-lamenta-la-non-approvazione-degli-aggiornamenti-del-regolamento-richiesti/69666/";
+const COUNCIL_OCTOBER_12_USB_LAMEZIA_OGGI_URL =
+  "https://www.lameziaoggi.it/lamezia-terme/2026/10/10/usb-taxi-proclama-stato-di-agitazione-lunedi-in-consiglio-comunale-a-lamezia-per-chiedere-nuovo-regolamento/";
+const COUNCIL_OCTOBER_12_USB_LA_NOVITA_URL =
+  "https://lanovitaonline.it/lamezia-terme-taxi-nuovo-regolamento-fermo-usb-proclama-lo-stato-di-agitazione/";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
 const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
 const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-27T21:49:11Z";
@@ -154,7 +160,7 @@ const VIA_TRENTO_ROADWORKS_CONTEXT_RESEARCHED_AT = "2026-09-24T09:59:02Z";
 const COMMISSION_V_REU_CONTEXT_RESEARCHED_AT = "2026-09-28T15:27:08Z";
 const COMMISSION_IV_STREET_ART_CONTEXT_RESEARCHED_AT = "2026-09-29T04:07:44Z";
 const OCTOBER_7_RESEARCHED_AT = "2026-10-07T10:16:27Z";
-const COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT = "2026-10-10T22:11:04Z";
+const COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT = "2026-10-11T03:38:09Z";
 const OCTOBER_12_13_COMMISSION_RESEARCHED_AT = "2026-10-09T15:32:27Z";
 const MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT = "2026-10-07T15:48:24Z";
 const MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT = "2026-09-12T21:51:17Z";
@@ -669,7 +675,7 @@ const councilOctober9ContextResearch: CouncilSessionV0ContextResearch = {
   status: "reviewed_matches",
   checkedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
   searchNote:
-    "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, LameziaTerme.it, il Lametino, Corriere della Calabria, Gazzetta del Sud, Calabria Diretta News e risultati indicizzati, inclusi canali YouTube e Facebook, per il Consiglio comunale convocato il 9 ottobre 2026 alle 09:30 e proseguito in seconda convocazione il 12 ottobre alle 10:30. Tredici articoli originali sono collegati come `same_session`: quattro annunci del 6 ottobre, quattro resoconti del 9 ottobre, due resoconti del 10 ottobre e tre articoli del 10 ottobre sulla nota USB Taxi che annuncia la presenza al Consiglio del 12 ottobre. I tre articoli USB riprendono la stessa nota e non sono conferme indipendenti. Tutti restano fonti editoriali e non valorizzano campi ufficiali, presenze, votazioni o risultati. La pubblicazione istituzionale 2026/3263 attesta invece la mancanza del numero legale e il rinvio dei 18 punti non discussi e votati alla seconda convocazione del 12 ottobre alle 10:30. Tre collegamenti audiovisivi editoriali sono disponibili come replay: la diretta YouTube di City One di 4:17:09 e la diretta Facebook di LameziaTerme.it di 3:52:52 restano `possible_same_session` e `live_stream` perché titolo, organo e data coincidono senza un punto distintivo o il numero Albo; la conferenza stampa del centrosinistra di 12:27 è collegata come `same_session` e `interview` perché il titolo identifica espressamente la fase successiva al Consiglio del 9 ottobre. Tutti hanno stato `replay_available` e non provano completezza, presenze, votazioni o risultati. Il portale istituzionale ConsigliCloud mostrava «No meetings found», quindi non è stato valorizzato alcuno streaming o registrazione istituzionale. L'ordine del giorno ufficiale resta quello dell'allegato istituzionale e non viene ricostruita un'agenda editoriale; la ricerca resta aperta fino al termine della finestra prevista.",
+    "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, LameziaTerme.it, Lamezia Oggi, La Novità Online, il Lametino, Corriere della Calabria, Gazzetta del Sud, Calabria Diretta News e risultati indicizzati, inclusi canali YouTube e Facebook, per il Consiglio comunale convocato il 9 ottobre 2026 alle 09:30 e proseguito in seconda convocazione il 12 ottobre alle 10:30. Sedici articoli originali sono collegati come `same_session`: quattro annunci del 6 ottobre, quattro resoconti del 9 ottobre, due resoconti del 10 ottobre e sei articoli del 10 ottobre sulla nota USB Taxi che annuncia la presenza al Consiglio del 12 ottobre. I sei articoli USB riprendono la stessa iniziativa e non sono conferme indipendenti. Tutti restano fonti editoriali e non valorizzano campi ufficiali, presenze, votazioni o risultati. La pubblicazione istituzionale 2026/3263 attesta invece la mancanza del numero legale e il rinvio dei 18 punti non discussi e votati alla seconda convocazione del 12 ottobre alle 10:30. Tre collegamenti audiovisivi editoriali sono disponibili come replay: la diretta YouTube di City One di 4:17:09 e la diretta Facebook di LameziaTerme.it di 3:52:52 restano `possible_same_session` e `live_stream` perché titolo, organo e data coincidono senza un punto distintivo o il numero Albo; la conferenza stampa del centrosinistra di 12:27 è collegata come `same_session` e `interview` perché il titolo identifica espressamente la fase successiva al Consiglio del 9 ottobre. Tutti hanno stato `replay_available` e non provano completezza, presenze, votazioni o risultati. Il portale istituzionale ConsigliCloud mostrava «No meetings found», quindi non è stato valorizzato alcuno streaming o registrazione istituzionale. L'ordine del giorno ufficiale resta quello dell'allegato istituzionale e non viene ricostruita un'agenda editoriale; la ricerca resta aperta fino al termine della finestra prevista.",
   articles: [
     {
       title: "Convocato il Consiglio Comunale per venerdì 9 ottobre 2026",
@@ -811,6 +817,39 @@ const councilOctober9ContextResearch: CouncilSessionV0ContextResearch = {
       reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
     },
 
+    {
+      title:
+        "L’Usb Taxi lamenta la non approvazione degli aggiornamenti del regolamento richiesti",
+      url: COUNCIL_OCTOBER_12_USB_LAMEZIAINFORMA_URL,
+      publisher: "LameziaInforma",
+      publishedAt: "2026-10-10",
+      relationship: "same_session",
+      relevanceNote:
+        "L'articolo identifica espressamente il Consiglio del 12 ottobre e precisa editorialmente che il tema Taxi non è previsto nell'ordine del giorno. Riprende la stessa iniziativa USB già pubblicata da altre testate e non è una conferma indipendente; non modifica l'agenda ufficiale e non prova svolgimento, presenze, votazioni o risultati.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "USB Taxi proclama stato di agitazione: lunedì in Consiglio comunale a Lamezia per chiedere nuovo regolamento",
+      url: COUNCIL_OCTOBER_12_USB_LAMEZIA_OGGI_URL,
+      publisher: "Lamezia Oggi",
+      publishedAt: "2026-10-10",
+      relationship: "same_session",
+      relevanceNote:
+        "L'articolo riprende la stessa iniziativa USB Taxi e identifica espressamente il Consiglio del 12 ottobre; non costituisce una conferma indipendente. Non prova che il regolamento Taxi sia iscritto o trattato, né svolgimento, presenze, votazioni o risultati della seduta.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Lamezia Terme | Taxi, nuovo regolamento fermo: USB proclama lo stato di agitazione",
+      url: COUNCIL_OCTOBER_12_USB_LA_NOVITA_URL,
+      publisher: "La Novità Online",
+      publishedAt: "2026-10-10",
+      relationship: "same_session",
+      relevanceNote:
+        "L'articolo riprende la stessa iniziativa USB Taxi e identifica espressamente il Consiglio del 12 ottobre; non costituisce una conferma indipendente. Non prova che il regolamento Taxi sia iscritto o trattato, né svolgimento, presenze, votazioni o risultati della seduta.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
   ],
   media: [
     {
@@ -2407,7 +2446,7 @@ const councilOctober9Session: CouncilSessionV0 = {
       'La sede indicata è la Sala Consiliare "Renato Luisi", in via Sen. Arturo Perugini.',
       "L'avviso ufficiale 2026/3263 attesta lo svolgimento parziale e la sospensione per mancanza del numero legale, con passaggio alla seconda convocazione dei 18 punti non discussi e votati; non costituisce un verbale completo.",
       "Streaming istituzionale, registrazione istituzionale e verbale sono indicati come non rilevati, non come inesistenti.",
-      "I tredici articoli collegati, inclusi sei resoconti tra il 9 e il 10 ottobre e tre articoli sulla nota USB Taxi relativa al 12 ottobre, restano fonti editoriali e non valorizzano campi, presenze, votazioni o risultati ufficiali.",
+      "I sedici articoli collegati, inclusi sei resoconti tra il 9 e il 10 ottobre e sei articoli sulla nota USB Taxi relativa al 12 ottobre, restano fonti editoriali e non valorizzano campi, presenze, votazioni o risultati ufficiali.",
       "I tre replay di City One e LameziaTerme.it sono fonti editoriali esterne: non certificano programmazione istituzionale, completezza, presenze, votazioni o risultati.",
     ],
     sourceStatus: "parziale",
