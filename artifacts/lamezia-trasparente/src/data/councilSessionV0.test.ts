@@ -368,7 +368,7 @@ describe("councilSessionV0", () => {
         }),
         contextResearch: expect.objectContaining({
           status: "reviewed_matches",
-          checkedAt: "2026-10-10T22:11:04Z",
+          checkedAt: "2026-10-11T03:38:09Z",
           articles: expect.arrayContaining([
             expect.objectContaining({
               publisher: "City One",
@@ -451,6 +451,28 @@ describe("councilSessionV0", () => {
                 "taxi-lamezia-usb-proclama-stato-agitazione-dopo-rinvii",
               ),
             }),
+            expect.objectContaining({
+              publisher: "LameziaInforma",
+              publishedAt: "2026-10-10",
+              relationship: "same_session",
+              url: expect.stringContaining("69666"),
+            }),
+            expect.objectContaining({
+              publisher: "Lamezia Oggi",
+              publishedAt: "2026-10-10",
+              relationship: "same_session",
+              url: expect.stringContaining(
+                "usb-taxi-proclama-stato-di-agitazione-lunedi-in-consiglio-comunale",
+              ),
+            }),
+            expect.objectContaining({
+              publisher: "La Novità Online",
+              publishedAt: "2026-10-10",
+              relationship: "same_session",
+              url: expect.stringContaining(
+                "taxi-nuovo-regolamento-fermo-usb-proclama-lo-stato-di-agitazione",
+              ),
+            }),
 
           ]),
           media: [
@@ -499,15 +521,15 @@ describe("councilSessionV0", () => {
       /Sala Consiliare.*Renato Luisi.*via Sen\. Arturo Perugini/i,
     );
     expect(council?.dataLimits.value?.join(" ")).toMatch(
-      /tredici articoli.*fonti editoriali.*non valorizzano.*risultati ufficiali/i,
+      /sedici articoli.*fonti editoriali.*non valorizzano.*risultati ufficiali/i,
     );
     expect(council?.dataLimits.value?.join(" ")).not.toMatch(
       /non sono emersi collegamenti editoriali/i,
     );
-    expect(council?.contextResearch.articles).toHaveLength(13);
+    expect(council?.contextResearch.articles).toHaveLength(16);
     expect(council?.contextResearch.media).toHaveLength(3);
     expect(council?.contextResearch.searchNote).toMatch(
-      /Parallel Search.*tredici articoli.*USB Taxi.*non sono conferme indipendenti.*2026\/3263.*18 punti.*tre collegamenti audiovisivi.*City One.*LameziaTerme\.it.*possible_same_session.*live_stream.*same_session.*interview.*replay_available/is,
+      /Parallel Search.*sedici articoli.*USB Taxi.*non sono conferme indipendenti.*2026\/3263.*18 punti.*tre collegamenti audiovisivi.*City One.*LameziaTerme\.it.*possible_same_session.*live_stream.*same_session.*interview.*replay_available/is,
     );
     expect(council?.liveStreaming.value).toBeNull();
     expect(council?.recording.value).toBeNull();
