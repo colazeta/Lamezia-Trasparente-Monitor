@@ -368,7 +368,7 @@ describe("councilSessionV0", () => {
         }),
         contextResearch: expect.objectContaining({
           status: "reviewed_matches",
-          checkedAt: "2026-10-11T16:07:16Z",
+          checkedAt: "2026-10-11T22:17:04Z",
           articles: expect.arrayContaining([
             expect.objectContaining({
               publisher: "City One",
@@ -492,6 +492,15 @@ describe("councilSessionV0", () => {
                 "sindaco-murone-nessuna-crisi-sul-piano-di-riequilibrio",
               ),
             }),
+            expect.objectContaining({
+              title: expect.stringContaining("Maggioranza senza numeri"),
+              publisher: "Gazzetta del Sud",
+              publishedAt: "2026-10-11",
+              relationship: "same_session",
+              url: expect.stringContaining(
+                "593af877-017f-4027-bf99-67e88e418fb9",
+              ),
+            }),
           ]),
           media: [
             expect.objectContaining({
@@ -557,15 +566,15 @@ describe("councilSessionV0", () => {
       /Sala Consiliare.*Renato Luisi.*via Sen\. Arturo Perugini/i,
     );
     expect(council?.dataLimits.value?.join(" ")).toMatch(
-      /diciotto articoli.*fonti editoriali.*non valorizzano.*risultati ufficiali/i,
+      /diciannove articoli.*fonti editoriali.*non valorizzano.*risultati ufficiali/i,
     );
     expect(council?.dataLimits.value?.join(" ")).not.toMatch(
       /non sono emersi collegamenti editoriali/i,
     );
-    expect(council?.contextResearch.articles).toHaveLength(18);
+    expect(council?.contextResearch.articles).toHaveLength(19);
     expect(council?.contextResearch.media).toHaveLength(5);
     expect(council?.contextResearch.searchNote).toMatch(
-      /Parallel Search.*diciotto articoli.*USB Taxi.*due approfondimenti.*non sono conferme indipendenti.*2026\/3263.*18 punti.*cinque collegamenti audiovisivi.*City One.*LameziaTerme\.it.*possible_same_session.*live_stream.*excerpt.*same_session.*interview.*replay_available/is,
+      /Parallel Search.*diciannove articoli.*USB Taxi.*tre approfondimenti.*non sono conferme indipendenti.*2026\/3263.*18 punti.*cinque collegamenti audiovisivi.*City One.*LameziaTerme\.it.*possible_same_session.*live_stream.*excerpt.*same_session.*interview.*replay_available/is,
     );
     expect(council?.liveStreaming.value).toBeNull();
     expect(council?.recording.value).toBeNull();
