@@ -368,7 +368,7 @@ describe("councilSessionV0", () => {
         }),
         contextResearch: expect.objectContaining({
           status: "reviewed_matches",
-          checkedAt: "2026-10-11T03:38:09Z",
+          checkedAt: "2026-10-11T10:05:46Z",
           articles: expect.arrayContaining([
             expect.objectContaining({
               publisher: "City One",
@@ -486,6 +486,24 @@ describe("councilSessionV0", () => {
               url: "https://www.youtube.com/watch?v=36nih-4G2GA",
             }),
             expect.objectContaining({
+              title: "Consiglio comunale del 9 ottobre 2026",
+              publisher: "City One",
+              publishedAt: "2026-10-09",
+              relationship: "possible_same_session",
+              mediaType: "live_stream",
+              availability: "replay_available",
+              url: expect.stringContaining("935130015986793"),
+            }),
+            expect.objectContaining({
+              title: "Consiglio Comunale 9 ottobre 2026",
+              publisher: "LameziaTerme.it",
+              publishedAt: "2026-10-09",
+              relationship: "possible_same_session",
+              mediaType: "excerpt",
+              availability: "replay_available",
+              url: expect.stringContaining("979266201889411"),
+            }),
+            expect.objectContaining({
               title: "Consiglio Comunale 9 ottobre 2026",
               publisher: "LameziaTerme.it",
               publishedAt: "2026-10-09",
@@ -527,9 +545,9 @@ describe("councilSessionV0", () => {
       /non sono emersi collegamenti editoriali/i,
     );
     expect(council?.contextResearch.articles).toHaveLength(16);
-    expect(council?.contextResearch.media).toHaveLength(3);
+    expect(council?.contextResearch.media).toHaveLength(5);
     expect(council?.contextResearch.searchNote).toMatch(
-      /Parallel Search.*sedici articoli.*USB Taxi.*non sono conferme indipendenti.*2026\/3263.*18 punti.*tre collegamenti audiovisivi.*City One.*LameziaTerme\.it.*possible_same_session.*live_stream.*same_session.*interview.*replay_available/is,
+      /Parallel Search.*sedici articoli.*USB Taxi.*non sono conferme indipendenti.*2026\/3263.*18 punti.*cinque collegamenti audiovisivi.*City One.*LameziaTerme\.it.*possible_same_session.*live_stream.*excerpt.*same_session.*interview.*replay_available/is,
     );
     expect(council?.liveStreaming.value).toBeNull();
     expect(council?.recording.value).toBeNull();
