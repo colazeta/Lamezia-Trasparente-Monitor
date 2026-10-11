@@ -565,7 +565,7 @@ describe("councilSessionV0", () => {
     expect(council?.contextResearch.articles).toHaveLength(18);
     expect(council?.contextResearch.media).toHaveLength(5);
     expect(council?.contextResearch.searchNote).toMatch(
-      /Parallel Search.*diciotto articoli.*due approfondimenti.*USB Taxi.*non sono conferme indipendenti.*2026\/3263.*18 punti.*cinque collegamenti audiovisivi.*City One.*LameziaTerme\.it.*possible_same_session.*live_stream.*excerpt.*same_session.*interview.*replay_available/is,
+      /Parallel Search.*diciotto articoli.*USB Taxi.*due approfondimenti.*non sono conferme indipendenti.*2026\/3263.*18 punti.*cinque collegamenti audiovisivi.*City One.*LameziaTerme\.it.*possible_same_session.*live_stream.*excerpt.*same_session.*interview.*replay_available/is,
     );
     expect(council?.liveStreaming.value).toBeNull();
     expect(council?.recording.value).toBeNull();
