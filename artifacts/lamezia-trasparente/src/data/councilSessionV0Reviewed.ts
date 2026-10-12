@@ -156,6 +156,8 @@ const COUNCIL_OCTOBER_11_MURONE_LAMETINO_URL =
   "https://www.lametino.it/ultime/lamezia-sindaco-murone-nessuna-crisi-sul-piano-di-riequilibrio-presto-confernza-per-fare-chiarezza.html";
 const COUNCIL_OCTOBER_11_GAZZETTA_CONTEXT_URL =
   "https://catanzaro.gazzettadelsud.it/articoli/politica/2026/10/11/lamezia-laffondo-del-centrosinistra-maggioranza-senza-numeri-593af877-017f-4027-bf99-67e88e418fb9/";
+const COUNCIL_OCTOBER_12_REPORT_LAMETINO_URL =
+  "https://www.lametino.it/ultime/lamezia-dal-consiglio-comunale-via-libera-a-quattro-debiti-di-bilancio.html";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
 const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
 const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-27T21:49:11Z";
@@ -174,8 +176,8 @@ const VIA_TRENTO_ROADWORKS_CONTEXT_RESEARCHED_AT = "2026-09-24T09:59:02Z";
 const COMMISSION_V_REU_CONTEXT_RESEARCHED_AT = "2026-09-28T15:27:08Z";
 const COMMISSION_IV_STREET_ART_CONTEXT_RESEARCHED_AT = "2026-09-29T04:07:44Z";
 const OCTOBER_7_RESEARCHED_AT = "2026-10-07T10:16:27Z";
-const COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT = "2026-10-12T15:53:26Z";
-const OCTOBER_12_13_COMMISSION_RESEARCHED_AT = "2026-10-12T15:53:26Z";
+const COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT = "2026-10-12T21:30:32Z";
+const OCTOBER_12_13_COMMISSION_RESEARCHED_AT = "2026-10-12T21:30:32Z";
 const MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT = "2026-10-07T15:48:24Z";
 const MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT = "2026-09-12T21:51:17Z";
 const SCHOOL_TRANSPORT_CONTEXT_RESEARCHED_AT = "2026-09-14T10:13:39Z";
@@ -680,7 +682,7 @@ const october12To13CommissionContextResearch: CouncilSessionV0ContextResearch =
     status: "checked_no_match",
     checkedAt: OCTOBER_12_13_COMMISSION_RESEARCHED_AT,
     searchNote:
-      "Ricerca ripetuta il 12 ottobre con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, il Lametino e risultati indicizzati, inclusi canali YouTube e Facebook, per le sedute della V Commissione del 12 e 13 ottobre 2026. Le query hanno combinato organo, date, orario e temi distintivi: regolamento sulla gestione e valorizzazione dei beni comunali e disciplinare per interventi sulla rete stradale. Anche al controllo successivo alla seduta del 12 ottobre non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alle singole sedute. Gli ordini del giorno ufficiali sono disponibili e non viene ricostruita un'agenda editoriale.",
+      "Ricerca ripetuta il 12 ottobre con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, il Lametino e risultati indicizzati, inclusi canali YouTube e Facebook, per le sedute della V Commissione del 12 e 13 ottobre 2026. Le query hanno combinato organo, date, orario e temi distintivi: regolamento sulla gestione e valorizzazione dei beni comunali e disciplinare per interventi sulla rete stradale. Anche al controllo serale successivo alla seduta del 12 ottobre e precedente a quella del 13 non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alle singole sedute. Gli ordini del giorno ufficiali sono disponibili e non viene ricostruita un'agenda editoriale.",
     articles: [],
     media: [],
   };
@@ -689,7 +691,7 @@ const councilOctober9ContextResearch: CouncilSessionV0ContextResearch = {
   status: "reviewed_matches",
   checkedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
   searchNote:
-    "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, LameziaTerme.it, Lamezia Oggi, La Novità Online, il Lametino, Corriere della Calabria, Gazzetta del Sud, Calabria Diretta News e risultati indicizzati, inclusi canali YouTube e Facebook, per il Consiglio comunale convocato il 9 ottobre 2026 alle 09:30 e proseguito in seconda convocazione il 12 ottobre alle 10:30. Diciannove articoli originali sono collegati come `same_session`: quattro annunci del 6 ottobre, quattro resoconti del 9 ottobre, due resoconti del 10 ottobre, sei articoli del 10 ottobre sulla nota USB Taxi che annuncia la presenza al Consiglio del 12 ottobre e tre approfondimenti dell'11 ottobre che collegano espressamente la prima convocazione alla prosecuzione del 12 ottobre. I sei articoli USB riprendono la stessa iniziativa e non sono conferme indipendenti. Tutti restano fonti editoriali e non valorizzano campi ufficiali, presenze, votazioni o risultati. La pubblicazione istituzionale 2026/3263 attesta invece la mancanza del numero legale e il rinvio dei 18 punti non discussi e votati alla seconda convocazione del 12 ottobre alle 10:30. Sette collegamenti audiovisivi editoriali sono stati verificati. Per il 9 ottobre, le dirette YouTube e Facebook di City One, rispettivamente di 4:17:09 e 4:13:05, e la diretta Facebook di LameziaTerme.it di 3:52:52 restano `possible_same_session` e `live_stream`; l'estratto Facebook di LameziaTerme.it di 1:00 resta `possible_same_session` e `excerpt`; la conferenza stampa del centrosinistra di 12:27 è `same_session` e `interview`. Per il 12 ottobre, City One ha pubblicato due URL YouTube con lo stesso titolo esplicito: il primo tentativo di 48 secondi risulta rimosso dall'autore ed è `unavailable`; la diretta principale, iniziata alle 11:10 locali, è terminata ed è disponibile come replay di 5:24:50. Entrambi restano `possible_same_session` e `live_stream` perché titolo, organo e data coincidono senza un punto distintivo o il numero Albo. Nessun contenuto editoriale prova completezza, presenze, votazioni o risultati. Il portale istituzionale ConsigliCloud mostrava «No meetings found», quindi non è stato valorizzato alcuno streaming o registrazione istituzionale. L'ordine del giorno ufficiale resta quello dell'allegato istituzionale e non viene ricostruita un'agenda editoriale; la ricerca resta aperta fino al termine della finestra prevista.",
+    "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, LameziaTerme.it, Lamezia Oggi, La Novità Online, il Lametino, Corriere della Calabria, Gazzetta del Sud, Calabria Diretta News e risultati indicizzati, inclusi canali YouTube e Facebook, per il Consiglio comunale convocato il 9 ottobre 2026 alle 09:30 e proseguito in seconda convocazione il 12 ottobre alle 10:30. Venti articoli originali sono collegati come `same_session`: quattro annunci del 6 ottobre, quattro resoconti del 9 ottobre, due resoconti del 10 ottobre, sei articoli del 10 ottobre sulla nota USB Taxi che annuncia la presenza al Consiglio del 12 ottobre, tre approfondimenti dell'11 ottobre che collegano espressamente la prima convocazione alla prosecuzione del 12 ottobre e un resoconto del 12 ottobre riferito alla seconda convocazione. I sei articoli USB riprendono la stessa iniziativa e non sono conferme indipendenti. Tutti restano fonti editoriali e non valorizzano campi ufficiali, presenze, votazioni o risultati. La pubblicazione istituzionale 2026/3263 attesta invece la mancanza del numero legale e il rinvio dei 18 punti non discussi e votati alla seconda convocazione del 12 ottobre alle 10:30. Sette collegamenti audiovisivi editoriali sono stati verificati. Per il 9 ottobre, le dirette YouTube e Facebook di City One, rispettivamente di 4:17:09 e 4:13:05, e la diretta Facebook di LameziaTerme.it di 3:52:52 restano `possible_same_session` e `live_stream`; l'estratto Facebook di LameziaTerme.it di 1:00 resta `possible_same_session` e `excerpt`; la conferenza stampa del centrosinistra di 12:27 è `same_session` e `interview`. Per il 12 ottobre, City One ha pubblicato due URL YouTube con lo stesso titolo esplicito: il primo tentativo di 48 secondi risulta rimosso dall'autore ed è `unavailable`; la diretta principale, iniziata alle 11:10 locali, è terminata ed è disponibile come replay di 5:24:50. Entrambi restano `possible_same_session` e `live_stream` perché titolo, organo e data coincidono senza un punto distintivo o il numero Albo. Nessun contenuto editoriale prova completezza, presenze, votazioni o risultati. Il portale istituzionale ConsigliCloud mostrava «No meetings found», quindi non è stato valorizzato alcuno streaming o registrazione istituzionale. L'ordine del giorno ufficiale resta quello dell'allegato istituzionale e non viene ricostruita un'agenda editoriale; la ricerca resta aperta fino al termine della finestra prevista.",
   articles: [
     {
       title: "Convocato il Consiglio Comunale per venerdì 9 ottobre 2026",
@@ -897,6 +899,17 @@ const councilOctober9ContextResearch: CouncilSessionV0ContextResearch = {
       relationship: "same_session",
       relevanceNote:
         "L'articolo identifica la seduta del 9 ottobre sospesa per mancanza del numero legale e la seconda convocazione del 12 ottobre per mozioni e interrogazioni. Resta una fonte editoriale e non certifica presenze, votazioni, deliberazioni, risultati o completezza.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Lamezia, dal Consiglio comunale via libera a quattro debiti di bilancio",
+      url: COUNCIL_OCTOBER_12_REPORT_LAMETINO_URL,
+      publisher: "il Lametino",
+      publishedAt: "2026-10-12",
+      relationship: "same_session",
+      relevanceNote:
+        "Il resoconto identifica la seconda convocazione del Consiglio del 12 ottobre e richiama punti distintivi dell'ordine del giorno ufficiale, inclusi debiti fuori bilancio, mozioni e interrogazioni. Resta una fonte editoriale: non valorizza i campi ufficiali e non certifica presenze, votazioni, deliberazioni, risultati o completezza della seduta.",
       reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
     },
   ],
@@ -2543,7 +2556,7 @@ const councilOctober9Session: CouncilSessionV0 = {
       'La sede indicata è la Sala Consiliare "Renato Luisi", in via Sen. Arturo Perugini.',
       "L'avviso ufficiale 2026/3263 attesta lo svolgimento parziale e la sospensione per mancanza del numero legale, con passaggio alla seconda convocazione dei 18 punti non discussi e votati; non costituisce un verbale completo.",
       "Streaming istituzionale, registrazione istituzionale e verbale sono indicati come non rilevati, non come inesistenti.",
-      "I diciannove articoli collegati, inclusi sei resoconti tra il 9 e il 10 ottobre, sei articoli sulla nota USB Taxi relativa al 12 ottobre e tre approfondimenti dell'11 ottobre, restano fonti editoriali e non valorizzano campi, presenze, votazioni o risultati ufficiali.",
+      "I venti articoli collegati, inclusi sei resoconti tra il 9 e il 10 ottobre, sei articoli sulla nota USB Taxi relativa al 12 ottobre, tre approfondimenti dell'11 ottobre e un resoconto del 12 ottobre sulla seconda convocazione, restano fonti editoriali e non valorizzano campi, presenze, votazioni o risultati ufficiali.",
       "I sette collegamenti audiovisivi di City One e LameziaTerme.it, inclusi cinque live stream, un estratto e un'intervista, sono fonti editoriali esterne: non certificano programmazione istituzionale, completezza, presenze, votazioni o risultati.",
     ],
     sourceStatus: "parziale",
