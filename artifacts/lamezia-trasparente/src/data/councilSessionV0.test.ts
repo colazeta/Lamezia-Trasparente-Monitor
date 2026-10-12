@@ -368,7 +368,7 @@ describe("councilSessionV0", () => {
         }),
         contextResearch: expect.objectContaining({
           status: "reviewed_matches",
-          checkedAt: "2026-10-11T22:17:04Z",
+          checkedAt: "2026-10-12T09:37:19Z",
           articles: expect.arrayContaining([
             expect.objectContaining({
               publisher: "City One",
@@ -438,10 +438,9 @@ describe("councilSessionV0", () => {
               publisher: "Calabria Diretta News",
               publishedAt: "2026-10-10",
               relationship: "same_session",
-              url: expect.stringContaining(
-                "stallo-sul-nuovo-regolamento",
-              ),
-            }),            expect.objectContaining({
+              url: expect.stringContaining("stallo-sul-nuovo-regolamento"),
+            }),
+            expect.objectContaining({
               title:
                 "Taxi a Lamezia, USB proclama lo stato di agitazione dopo i rinvii",
               publisher: "LameziaTerme.it",
@@ -549,6 +548,24 @@ describe("councilSessionV0", () => {
               availability: "replay_available",
               url: expect.stringContaining("1423909363164071"),
             }),
+            expect.objectContaining({
+              title: "Diretta consiglio comunale del 12 Ottobre 2026",
+              publisher: "City One",
+              publishedAt: "2026-10-12",
+              relationship: "possible_same_session",
+              mediaType: "live_stream",
+              availability: "replay_available",
+              url: "https://www.youtube.com/watch?v=cO_x2MgOatg",
+            }),
+            expect.objectContaining({
+              title: "Diretta consiglio comunale del 12 Ottobre 2026",
+              publisher: "City One",
+              publishedAt: "2026-10-12",
+              relationship: "possible_same_session",
+              mediaType: "live_stream",
+              availability: "live",
+              url: "https://www.youtube.com/watch?v=38oLusBfODw",
+            }),
           ],
         }),
       }),
@@ -572,9 +589,9 @@ describe("councilSessionV0", () => {
       /non sono emersi collegamenti editoriali/i,
     );
     expect(council?.contextResearch.articles).toHaveLength(19);
-    expect(council?.contextResearch.media).toHaveLength(5);
+    expect(council?.contextResearch.media).toHaveLength(7);
     expect(council?.contextResearch.searchNote).toMatch(
-      /Parallel Search.*diciannove articoli.*USB Taxi.*tre approfondimenti.*non sono conferme indipendenti.*2026\/3263.*18 punti.*cinque collegamenti audiovisivi.*City One.*LameziaTerme\.it.*possible_same_session.*live_stream.*excerpt.*same_session.*interview.*replay_available/is,
+      /Parallel Search.*diciannove articoli.*USB Taxi.*tre approfondimenti.*non sono conferme indipendenti.*2026\/3263.*18 punti.*sette collegamenti audiovisivi.*City One.*LameziaTerme\.it.*possible_same_session.*live_stream.*excerpt.*same_session.*interview.*12 ottobre.*48 secondi.*replay.*11:10.*live/is,
     );
     expect(council?.liveStreaming.value).toBeNull();
     expect(council?.recording.value).toBeNull();
@@ -612,7 +629,7 @@ describe("councilSessionV0", () => {
       expect(session.contextResearch).toEqual(
         expect.objectContaining({
           status: "checked_no_match",
-          checkedAt: "2026-10-09T15:32:27Z",
+          checkedAt: "2026-10-12T09:37:19Z",
           articles: [],
           media: [],
         }),
