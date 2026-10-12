@@ -368,7 +368,7 @@ describe("councilSessionV0", () => {
         }),
         contextResearch: expect.objectContaining({
           status: "reviewed_matches",
-          checkedAt: "2026-10-12T15:53:26Z",
+          checkedAt: "2026-10-12T21:30:32Z",
           articles: expect.arrayContaining([
             expect.objectContaining({
               publisher: "City One",
@@ -500,6 +500,17 @@ describe("councilSessionV0", () => {
                 "593af877-017f-4027-bf99-67e88e418fb9",
               ),
             }),
+            expect.objectContaining({
+              title: expect.stringContaining(
+                "via libera a quattro debiti di bilancio",
+              ),
+              publisher: "il Lametino",
+              publishedAt: "2026-10-12",
+              relationship: "same_session",
+              url: expect.stringContaining(
+                "dal-consiglio-comunale-via-libera-a-quattro-debiti-di-bilancio",
+              ),
+            }),
           ]),
           media: [
             expect.objectContaining({
@@ -583,15 +594,15 @@ describe("councilSessionV0", () => {
       /Sala Consiliare.*Renato Luisi.*via Sen\. Arturo Perugini/i,
     );
     expect(council?.dataLimits.value?.join(" ")).toMatch(
-      /diciannove articoli.*fonti editoriali.*non valorizzano.*risultati ufficiali/i,
+      /venti articoli.*resoconto del 12 ottobre.*fonti editoriali.*non valorizzano.*risultati ufficiali/i,
     );
     expect(council?.dataLimits.value?.join(" ")).not.toMatch(
       /non sono emersi collegamenti editoriali/i,
     );
-    expect(council?.contextResearch.articles).toHaveLength(19);
+    expect(council?.contextResearch.articles).toHaveLength(20);
     expect(council?.contextResearch.media).toHaveLength(7);
     expect(council?.contextResearch.searchNote).toMatch(
-      /Parallel Search.*diciannove articoli.*USB Taxi.*tre approfondimenti.*non sono conferme indipendenti.*2026\/3263.*18 punti.*sette collegamenti audiovisivi.*City One.*LameziaTerme\.it.*possible_same_session.*live_stream.*excerpt.*same_session.*interview.*12 ottobre.*48 secondi.*rimosso.*unavailable.*11:10.*replay.*5:24:50/is,
+      /Parallel Search.*venti articoli.*USB Taxi.*tre approfondimenti.*resoconto del 12 ottobre.*non sono conferme indipendenti.*2026\/3263.*18 punti.*sette collegamenti audiovisivi.*City One.*LameziaTerme\.it.*possible_same_session.*live_stream.*excerpt.*same_session.*interview.*12 ottobre.*48 secondi.*rimosso.*unavailable.*11:10.*replay.*5:24:50/is,
     );
     expect(council?.liveStreaming.value).toBeNull();
     expect(council?.recording.value).toBeNull();
@@ -629,7 +640,7 @@ describe("councilSessionV0", () => {
       expect(session.contextResearch).toEqual(
         expect.objectContaining({
           status: "checked_no_match",
-          checkedAt: "2026-10-12T15:53:26Z",
+          checkedAt: "2026-10-12T21:30:32Z",
           articles: [],
           media: [],
         }),
