@@ -368,7 +368,7 @@ describe("councilSessionV0", () => {
         }),
         contextResearch: expect.objectContaining({
           status: "reviewed_matches",
-          checkedAt: "2026-10-12T09:37:19Z",
+          checkedAt: "2026-10-12T15:53:26Z",
           articles: expect.arrayContaining([
             expect.objectContaining({
               publisher: "City One",
@@ -554,7 +554,7 @@ describe("councilSessionV0", () => {
               publishedAt: "2026-10-12",
               relationship: "possible_same_session",
               mediaType: "live_stream",
-              availability: "replay_available",
+              availability: "unavailable",
               url: "https://www.youtube.com/watch?v=cO_x2MgOatg",
             }),
             expect.objectContaining({
@@ -563,7 +563,7 @@ describe("councilSessionV0", () => {
               publishedAt: "2026-10-12",
               relationship: "possible_same_session",
               mediaType: "live_stream",
-              availability: "live",
+              availability: "replay_available",
               url: "https://www.youtube.com/watch?v=38oLusBfODw",
             }),
           ],
@@ -591,7 +591,7 @@ describe("councilSessionV0", () => {
     expect(council?.contextResearch.articles).toHaveLength(19);
     expect(council?.contextResearch.media).toHaveLength(7);
     expect(council?.contextResearch.searchNote).toMatch(
-      /Parallel Search.*diciannove articoli.*USB Taxi.*tre approfondimenti.*non sono conferme indipendenti.*2026\/3263.*18 punti.*sette collegamenti audiovisivi.*City One.*LameziaTerme\.it.*possible_same_session.*live_stream.*excerpt.*same_session.*interview.*12 ottobre.*48 secondi.*replay.*11:10.*live/is,
+      /Parallel Search.*diciannove articoli.*USB Taxi.*tre approfondimenti.*non sono conferme indipendenti.*2026\/3263.*18 punti.*sette collegamenti audiovisivi.*City One.*LameziaTerme\.it.*possible_same_session.*live_stream.*excerpt.*same_session.*interview.*12 ottobre.*48 secondi.*rimosso.*unavailable.*11:10.*replay.*5:24:50/is,
     );
     expect(council?.liveStreaming.value).toBeNull();
     expect(council?.recording.value).toBeNull();
@@ -629,7 +629,7 @@ describe("councilSessionV0", () => {
       expect(session.contextResearch).toEqual(
         expect.objectContaining({
           status: "checked_no_match",
-          checkedAt: "2026-10-12T09:37:19Z",
+          checkedAt: "2026-10-12T15:53:26Z",
           articles: [],
           media: [],
         }),
