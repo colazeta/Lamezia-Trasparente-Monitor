@@ -649,7 +649,7 @@ describe("councilSessionV0", () => {
       expect(session.contextResearch).toEqual(
         expect.objectContaining({
           status: "checked_no_match",
-          checkedAt: "2026-10-13T03:57:48Z",
+          checkedAt: "2026-10-13T09:58:28Z",
           articles: [],
           media: [],
         }),
