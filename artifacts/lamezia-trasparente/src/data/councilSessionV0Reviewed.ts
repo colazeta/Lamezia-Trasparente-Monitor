@@ -179,7 +179,7 @@ const COMMISSION_V_REU_CONTEXT_RESEARCHED_AT = "2026-09-28T15:27:08Z";
 const COMMISSION_IV_STREET_ART_CONTEXT_RESEARCHED_AT = "2026-09-29T04:07:44Z";
 const OCTOBER_7_RESEARCHED_AT = "2026-10-07T10:16:27Z";
 const COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT = "2026-10-13T03:57:48Z";
-const OCTOBER_12_13_COMMISSION_RESEARCHED_AT = "2026-10-13T03:57:48Z";
+const OCTOBER_12_13_COMMISSION_RESEARCHED_AT = "2026-10-13T09:58:28Z";
 const MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT = "2026-10-07T15:48:24Z";
 const MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT = "2026-09-12T21:51:17Z";
 const SCHOOL_TRANSPORT_CONTEXT_RESEARCHED_AT = "2026-09-14T10:13:39Z";
@@ -684,7 +684,7 @@ const october12To13CommissionContextResearch: CouncilSessionV0ContextResearch =
     status: "checked_no_match",
     checkedAt: OCTOBER_12_13_COMMISSION_RESEARCHED_AT,
     searchNote:
-      "Ricerca ripetuta tra il 12 e il 13 ottobre con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, il Lametino e risultati indicizzati, inclusi canali YouTube e Facebook, per le sedute della V Commissione del 12 e 13 ottobre 2026. Le query hanno combinato organo, date, orario e temi distintivi: regolamento sulla gestione e valorizzazione dei beni comunali e disciplinare per interventi sulla rete stradale. Anche al controllo precedente all'orario della seduta del 13 ottobre non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alle singole sedute. Gli ordini del giorno ufficiali sono disponibili e non viene ricostruita un'agenda editoriale.",
+      "Ricerca ripetuta tra il 12 e il 13 ottobre con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, il Lametino e risultati indicizzati, inclusi canali YouTube e Facebook, per le sedute della V Commissione del 12 e 13 ottobre 2026. Le query hanno combinato organo, date, orario e temi distintivi: regolamento sulla gestione e valorizzazione dei beni comunali e disciplinare per interventi sulla rete stradale. Anche al primo controllo successivo all'orario della seduta del 13 ottobre non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alle singole sedute. Gli ordini del giorno ufficiali sono disponibili e non viene ricostruita un'agenda editoriale.",
     articles: [],
     media: [],
   };
