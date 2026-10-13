@@ -368,7 +368,7 @@ describe("councilSessionV0", () => {
         }),
         contextResearch: expect.objectContaining({
           status: "reviewed_matches",
-          checkedAt: "2026-10-13T16:13:36Z",
+          checkedAt: "2026-10-13T21:29:51Z",
           articles: expect.arrayContaining([
             expect.objectContaining({
               publisher: "City One",
@@ -522,6 +522,17 @@ describe("councilSessionV0", () => {
                 "dopo-il-no-alla-mozione-su-timpone",
               ),
             }),
+            expect.objectContaining({
+              title: expect.stringContaining(
+                "Rione Timpone: il nostro impegno continua",
+              ),
+              publisher: "City One",
+              publishedAt: "2026-10-13",
+              relationship: "agenda_item",
+              url: expect.stringContaining(
+                "rione-timpone-il-nostro-impegno-continua",
+              ),
+            }),
           ]),
           media: [
             expect.objectContaining({
@@ -614,15 +625,15 @@ describe("councilSessionV0", () => {
       /Sala Consiliare.*Renato Luisi.*via Sen\. Arturo Perugini/i,
     );
     expect(council?.dataLimits.value?.join(" ")).toMatch(
-      /ventuno articoli.*resoconto del 12 ottobre.*articolo del 13 ottobre.*agenda_item.*Timpone.*fonti editoriali.*non valorizzano.*risultati ufficiali/i,
+      /ventidue articoli.*resoconto del 12 ottobre.*due articoli del 13 ottobre.*agenda_item.*Timpone.*fonti editoriali.*non valorizzano.*risultati ufficiali/i,
     );
     expect(council?.dataLimits.value?.join(" ")).not.toMatch(
       /non sono emersi collegamenti editoriali/i,
     );
-    expect(council?.contextResearch.articles).toHaveLength(21);
+    expect(council?.contextResearch.articles).toHaveLength(22);
     expect(council?.contextResearch.media).toHaveLength(8);
     expect(council?.contextResearch.searchNote).toMatch(
-      /Parallel Search.*ventuno articoli.*venti come `same_session`.*USB Taxi.*tre approfondimenti.*resoconto del 12 ottobre.*articolo del 13 ottobre.*`agenda_item`.*Timpone.*non sono conferme indipendenti.*2026\/3263.*18 punti.*otto collegamenti audiovisivi.*City One.*LameziaTerme\.it.*possible_same_session.*live_stream.*excerpt.*same_session.*interview.*12 ottobre.*48 secondi.*rimosso.*unavailable.*11:10.*replay.*5:24:50.*Facebook.*replay distinto/is,
+      /Parallel Search.*ventidue articoli.*venti come `same_session`.*USB Taxi.*tre approfondimenti.*resoconto del 12 ottobre.*due articoli del 13 ottobre.*`agenda_item`.*Timpone.*City One.*il Lametino.*stessa nota.*non sono conferme indipendenti.*2026\/3263.*18 punti.*otto collegamenti audiovisivi.*City One.*LameziaTerme\.it.*possible_same_session.*live_stream.*excerpt.*same_session.*interview.*12 ottobre.*48 secondi.*rimosso.*unavailable.*11:10.*replay.*5:24:50.*Facebook.*replay distinto/is,
     );
     expect(council?.liveStreaming.value).toBeNull();
     expect(council?.recording.value).toBeNull();
