@@ -368,7 +368,7 @@ describe("councilSessionV0", () => {
         }),
         contextResearch: expect.objectContaining({
           status: "reviewed_matches",
-          checkedAt: "2026-10-12T21:30:32Z",
+          checkedAt: "2026-10-13T03:57:48Z",
           articles: expect.arrayContaining([
             expect.objectContaining({
               publisher: "City One",
@@ -577,6 +577,15 @@ describe("councilSessionV0", () => {
               availability: "replay_available",
               url: "https://www.youtube.com/watch?v=38oLusBfODw",
             }),
+            expect.objectContaining({
+              title: "Consiglio comunale del 12 ottobre 2026",
+              publisher: "City One",
+              publishedAt: "2026-10-12",
+              relationship: "possible_same_session",
+              mediaType: "live_stream",
+              availability: "replay_available",
+              url: expect.stringContaining("1639489530950538"),
+            }),
           ],
         }),
       }),
@@ -600,9 +609,9 @@ describe("councilSessionV0", () => {
       /non sono emersi collegamenti editoriali/i,
     );
     expect(council?.contextResearch.articles).toHaveLength(20);
-    expect(council?.contextResearch.media).toHaveLength(7);
+    expect(council?.contextResearch.media).toHaveLength(8);
     expect(council?.contextResearch.searchNote).toMatch(
-      /Parallel Search.*venti articoli.*USB Taxi.*tre approfondimenti.*resoconto del 12 ottobre.*non sono conferme indipendenti.*2026\/3263.*18 punti.*sette collegamenti audiovisivi.*City One.*LameziaTerme\.it.*possible_same_session.*live_stream.*excerpt.*same_session.*interview.*12 ottobre.*48 secondi.*rimosso.*unavailable.*11:10.*replay.*5:24:50/is,
+      /Parallel Search.*venti articoli.*USB Taxi.*tre approfondimenti.*resoconto del 12 ottobre.*non sono conferme indipendenti.*2026\/3263.*18 punti.*otto collegamenti audiovisivi.*City One.*LameziaTerme\.it.*possible_same_session.*live_stream.*excerpt.*same_session.*interview.*12 ottobre.*48 secondi.*rimosso.*unavailable.*11:10.*replay.*5:24:50.*Facebook.*replay distinto/is,
     );
     expect(council?.liveStreaming.value).toBeNull();
     expect(council?.recording.value).toBeNull();
@@ -640,7 +649,7 @@ describe("councilSessionV0", () => {
       expect(session.contextResearch).toEqual(
         expect.objectContaining({
           status: "checked_no_match",
-          checkedAt: "2026-10-12T21:30:32Z",
+          checkedAt: "2026-10-13T03:57:48Z",
           articles: [],
           media: [],
         }),
