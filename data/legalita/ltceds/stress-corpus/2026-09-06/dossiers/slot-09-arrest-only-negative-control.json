@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0",
+  "corpus_id": "ltceds-stress-corpus-2026-09-06",
+  "corpus_slot": 9,
+  "case_key": "PILOT-EXCLUDED-2025-09-27-ARREST-ONLY-IN-LAMEZIA",
+  "status": "review_mode_regression_control",
+  "candidate_kind": "NEGATIVE_CONTROL",
+  "source_state": "already_reviewed_pilot_exclusion",
+  "retrieval_date": "2026-09-06",
+  "sources": [
+    {
+      "repository_path": "data/legalita/ltceds/pilot/2026-09-05/manifest.json",
+      "source_type": "internal_review_manifest",
+      "source_role": "authoritative_project_exclusion_decision",
+      "supported_scope": "Lamezia documented as interception/arrest area, not as occurrence location"
+    }
+  ],
+  "supported_facts": [
+    "The prior pilot review identified Lamezia Terme as interception/arrest geography rather than the place where the underlying fraud/robbery occurred.",
+    "No independent occurrence evidence currently supports treating the underlying crime as a Lamezia Terme EVENT."
+  ],
+  "event_identity_analysis": {
+    "lamezia_event_candidate": false,
+    "preferred_model": "negative_control",
+    "rationale": "Procedural geography is not occurrence geography."
+  },
+  "temporal_analysis": {
+    "procedural_date": "2025-09-27",
+    "occurrence_date_for_lamezia": null,
+    "caution": "The procedural date must not become an event occurrence date."
+  },
+  "geography_analysis": {
+    "documented_lamezia_role": "arrest_or_interception",
+    "occurrence_location": "not_established_in_lamezia",
+    "public_geometry_ready": false,
+    "map_as_lamezia_event": false
+  },
+  "offence_analysis": {
+    "classification_needed_for_negative_control": false,
+    "caution": "Offence plausibility cannot compensate for missing occurrence geography."
+  },
+  "privacy_and_publication": {
+    "person_identity_in_dossier": false,
+    "auto_publish": false
+  },
+  "recommended_resolution": "Retain permanently as a regression control proving that arrest/interception points cannot generate a Lamezia criminal EVENT marker.",
+  "review_decision": "negative_control",
+  "publication_blockers": [
+    "No source establishes the underlying criminal occurrence in Lamezia Terme."
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "schema_version": "1.0",
+  "cycle_id": "ltceds-stress-resolution-01",
+  "corpus_id": "ltceds-stress-corpus-2026-09-06",
+  "date": "2026-09-06",
+  "scope_slots": [5, 6, 7, 8, 9, 10],
+  "research_method": {
+    "discovery_engine": "Parallel Search",
+    "source_hierarchy": [
+      "judicial/law-enforcement/public-authority primary",
+      "direct institutional communiqué reproductions",
+      "press secondary for discovery/corroboration",
+      "internal prior review decisions"
+    ],
+    "rules": [
+      "Do not upgrade a secondary reproduction to primary merely because it quotes or closely reproduces institutional wording.",
+      "Do not create EVENT identity from an operation, arrest, proceeding or aggregate count.",
+      "Do not create a reviewed-event bundle with an approved human-review decision on behalf of the reviewer."
+    ]
+  },
+  "outcomes": [
+    {
+      "slot": 5,
+      "case_key": "2025-05-17-JOKER-TWO-COMMERCIAL-FIRES",
+      "candidate_kind": "TWO_EVENT_CANDIDATES_LINKED_SERIES",
+      "decision": "needs_more_evidence",
+      "source_state": "primary_source_not_resolved",
+      "identity_result": "two explicitly distinguished fire/damage episodes against two commercial targets; operation label is not an EVENT",
+      "next_gate": "resolve primary occurrence source and occurrence-level locations"
+    },
+    {
+      "slot": 6,
+      "case_key": "2025-SHATTER-27-AUTONOMOUS-EVENTS",
+      "candidate_kind": "EVENT_CLUSTER",
+      "decision": "cluster",
+      "source_state": "carabinieri_derived_reporting_primary_url_not_resolved",
+      "identity_result": "reported_event_count=27; no synthetic member IDs; investigation seed window 2025-02-28/2025-03-01 must remain distinct from unresolved cluster-wide member dates",
+      "next_gate": "resolve individual members only from occurrence-level evidence"
+    },
+    {
+      "slot": 7,
+      "case_key": "2026-01-11-VIA-DEL-PROGRESSO-ADJACENT-BURGLARIES",
+      "candidate_kind": "CONTINUOUS_EPISODE_CANDIDATE",
+      "decision": "needs_more_evidence",
+      "source_state": "carabinieri_derived_reporting_primary_url_not_resolved",
+      "identity_result": "one continuous criminal episode is currently preferred over two EVENT IDs because the targets are adjacent and the sequence is reported as uninterrupted",
+      "next_gate": "resolve primary occurrence source; retain residential geoprivacy review"
+    },
+    {
+      "slot": 8,
+      "case_key": "2026-06-18-ARTEMIS-II",
+      "candidate_kind": "SOURCE_OPERATION_NOT_EVENT",
+      "decision": "decomposition_required",
+      "source_state": "primary_institutional_source_verified",
+      "identity_result": "official operation/proceeding source establishes multiple alleged offence families and schemes but not a complete occurrence-by-occurrence event list",
+      "next_gate": "obtain occurrence-level judicial/prosecutorial material before EVENT creation"
+    },
+    {
+      "slot": 9,
+      "case_key": "PILOT-EXCLUDED-2025-09-27-ARREST-ONLY-IN-LAMEZIA",
+      "candidate_kind": "NEGATIVE_CONTROL",
+      "decision": "negative_control",
+      "source_state": "already_reviewed_pilot_exclusion",
+      "identity_result": "Lamezia arrest/interception geography does not establish Lamezia occurrence geography",
+      "next_gate": "none unless independent occurrence evidence emerges"
+    },
+    {
+      "slot": 10,
+      "case_key": "1989-09-29-MERCATO-COPERTO-NICASTRO-HOMICIDE",
+      "candidate_kind": "HISTORICAL_EVENT_CANDIDATE",
+      "decision": "needs_more_evidence",
+      "source_state": "historical_locator_corroborated_primary_judicial_source_not_resolved",
+      "identity_result": "secondary judicial reporting consistently supports 1989-09-29 and the covered market of Nicastro; 2023/2026 judgments are procedural history, not new EVENTs",
+      "next_gate": "resolve case-specific primary judgment/archive and historical place geometry"
+    }
+  ],
+  "counts": {
+    "slots_reviewed": 6,
+    "primary_source_verified": 1,
+    "negative_controls_confirmed": 1,
+    "event_cluster_required": 1,
+    "operation_not_event_confirmed": 1,
+    "continuous_episode_candidates": 1,
+    "two_event_series_candidates": 1,
+    "new_real_reviewed_bundles_approved": 0,
+    "new_real_compiler_dry_runs": 0
+  },
+  "compiler_status": {
+    "new_real_case_dry_run": "not_executed",
+    "reason": "The reviewed-bundle contract encodes an actual human/editor review decision. No synthetic 'approved' decision is minted for real cases solely to exercise the compiler.",
+    "next_step": "After source resolution and an explicit human review decision, validate the resulting reviewed bundle and run compile:ltceds-reviewed in dry-run mode before any write."
+  },
+  "standard_findings": [
+    {
+      "finding_id": "CLUSTER-SCOPE-001",
+      "status": "schema_gap_candidate",
+      "component": "EVENT_CLUSTER",
+      "observation": "Shatter demonstrates that a source can provide an exact aggregate event count plus a known investigation seed occurrence window and broad areas, without proving that every cluster member occurred in that seed window.",
+      "risk_if_unmodelled": "A curator may incorrectly assign the seed date/window to the entire cluster or manufacture a representative map point.",
+      "provisional_rule": "Keep reported_event_count and member identity separate; store seed window/aggregate geography as source-scoped assertions or cluster-scope metadata, never as a synthetic EVENT occurrence date/point.",
+      "schema_change_now": false,
+      "decision_trigger": "Promote to a schema revision if the same pattern recurs in additional series/cluster slots."
+    },
+    {
+      "finding_id": "CONTINUITY-001",
+      "status": "model_validated",
+      "component": "EVENT identity",
+      "observation": "Adjacent multiple targets can remain one continuous_episode when time, place and criminal transaction are uninterrupted.",
+      "schema_change_now": false
+    },
+    {
+      "finding_id": "SOURCE-GRANULARITY-001",
+      "status": "model_validated",
+      "component": "SOURCE/JUSTICE_CASE versus EVENT",
+      "observation": "A high-authority primary source can still be too coarse to create an EVENT. Artemis II validates the separation between source authority and event-level granularity.",
+      "schema_change_now": false
+    },
+    {
+      "finding_id": "HISTORICAL-PROCEDURE-001",
+      "status": "model_validated",
+      "component": "historical EVENT/procedural history",
+      "observation": "Later judgments must remain procedural developments attached to the 1989 event rather than redefining its occurrence date or minting new crime events.",
+      "schema_change_now": false
+    }
+  ],
+  "cycle_conclusion": "keep_1.0-draft.1_with_one_cluster_scope_gap_under_observation",
+  "publication_policy": "no_auto_publish"
+}
