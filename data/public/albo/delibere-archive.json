@@ -1,23 +1,23 @@
 {
-  "generated_at": "2026-09-03T18:34:57.880Z",
+  "generated_at": "2026-10-17T10:34:43.029Z",
   "source": "Albo Pretorio Comune di Lamezia Terme",
   "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
   "verification_status": "official_source_acquired",
   "coverage": {
     "first_observed_at": "2026-06-25T14:07:05.864Z",
-    "last_observed_at": "2026-09-03T18:34:57.880Z",
+    "last_observed_at": "2026-10-17T10:34:43.029Z",
     "first_act_date": "2026-06-10",
-    "last_act_date": "2026-08-24"
+    "last_act_date": "2026-10-08"
   },
   "counts": {
-    "total": 79,
-    "giunta": 43,
+    "total": 84,
+    "giunta": 48,
     "consiglio": 36,
     "altro": 0,
-    "publishable": 40,
+    "publishable": 45,
     "minimised": 13,
     "metadata_only": 26,
-    "archived_documents": 6
+    "archived_documents": 5
   },
   "known_limits": [
     "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
@@ -32,6 +32,523 @@
     "Lamezia Trasparente Monitor non sostituisce l'Albo Pretorio ufficiale: pubblicazioni, termini, allegati e contenuti vanno verificati sulla fonte istituzionale."
   ],
   "items": [
+    {
+      "id": "albo-2026-3249",
+      "public_id": "albo-2026-3249",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-10-17T10:34:43.029Z",
+      "publication_number": "2026/3249",
+      "publication_start": "2026-10-08",
+      "publication_end": "2026-10-23",
+      "office": "SETTORE ECONOMICO FINANZIARIO",
+      "act_type": "DELIBERAZIONE DI GIUNTA",
+      "act_number": "246",
+      "act_date": "2026-10-08",
+      "content_hash": "d022b46f932042148b1afa9d5d356b05d8cc908387dca01e51da144cef871d0a",
+      "subject": "CCDI 2026 del personale del comparto. Autorizzazione al Presidente della delegazione trattante di parte pubblica per la sottoscrizione definitiva.",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_3249_12_ALLEG?ente=00301390795",
+      "public_note": null,
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "low",
+      "public_visibility": "publishable",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "bilancio_finanze",
+          "label": "Bilancio, finanze e tributi",
+          "description": "Contabilita, bilancio, finanze, tributi e gestione economica.",
+          "confidence": "high",
+          "basis": "office"
+        },
+        "act_category": {
+          "id": "deliberazioni",
+          "label": "Deliberazioni",
+          "description": "Deliberazioni di giunta o di altri organi deliberativi.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "complete_public_record",
+        "status": "current"
+      },
+      "deliberation_body": "giunta",
+      "presentation": {
+        "display_title": "CCDI 2026 del personale del comparto. Autorizzazione al Presidente della delegazione trattante di parte pubblica per la sottoscrizione definitiva.",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "ccdi 2026 del personale del comparto autorizzazione al presidente della delegazione trattante di parte pubblica per la sottoscrizione definitiva",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": null,
+          "theme_label": null,
+          "confidence": null,
+          "basis": "fallback",
+          "rule_id": null,
+          "evidence": [],
+          "null_reason": "not_classified",
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+      ],
+      "first_observed_at": "2026-10-17T10:34:43.029Z",
+      "last_observed_at": "2026-10-17T10:34:43.029Z",
+      "archived_document": {
+        "id": "albo-2026-3249",
+        "publication_number": "2026/3249",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-17T10:34:43.029Z",
+        "public_visibility": "publishable",
+        "privacy_risk": "low",
+        "verification_status": "official_source_acquired",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_3249_12_ALLEG?ente=00301390795",
+        "preservation_status": "archived",
+        "reason": "eligible_low_risk_publishable_pdf",
+        "storage_path": "data/public/albo/documents/2026/c4041edc46a40dfef0845c4a9851b30e1b2db81ec17f894bdc30048746fbdc35.pdf",
+        "sha256": "c4041edc46a40dfef0845c4a9851b30e1b2db81ec17f894bdc30048746fbdc35",
+        "size_bytes": 885865,
+        "content_type": "application/pdf",
+        "verified_at": "2026-10-17T10:34:43.029Z"
+      }
+    },
+    {
+      "id": "albo-2026-3248",
+      "public_id": "albo-2026-3248",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-10-17T10:34:43.029Z",
+      "publication_number": "2026/3248",
+      "publication_start": "2026-10-08",
+      "publication_end": "2026-10-23",
+      "office": "SETTORE ECONOMICO FINANZIARIO",
+      "act_type": "DELIBERAZIONE DI GIUNTA",
+      "act_number": "245",
+      "act_date": "2026-10-08",
+      "content_hash": "657b3f7b135cf4d97ef3e4d0a84e518ef64811b03a22bd9ef6c7fc69ecfea9e6",
+      "subject": "Variazione d'urgenza art. 175 c. 4 Bilancio 2026-2028",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_3248_12_ALLEG?ente=00301390795",
+      "public_note": null,
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "low",
+      "public_visibility": "publishable",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "bilancio_finanze",
+          "label": "Bilancio, finanze e tributi",
+          "description": "Contabilita, bilancio, finanze, tributi e gestione economica.",
+          "confidence": "high",
+          "basis": "office"
+        },
+        "act_category": {
+          "id": "deliberazioni",
+          "label": "Deliberazioni",
+          "description": "Deliberazioni di giunta o di altri organi deliberativi.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "complete_public_record",
+        "status": "current"
+      },
+      "deliberation_body": "giunta",
+      "presentation": {
+        "display_title": "Variazione d'urgenza art. 175 c. 4 Bilancio 2026-2028",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "variazione d urgenza art 175 c 4 bilancio 2026 2028",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": null,
+          "theme_label": null,
+          "confidence": null,
+          "basis": "fallback",
+          "rule_id": null,
+          "evidence": [],
+          "null_reason": "not_classified",
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+      ],
+      "first_observed_at": "2026-10-17T10:34:43.029Z",
+      "last_observed_at": "2026-10-17T10:34:43.029Z",
+      "archived_document": {
+        "id": "albo-2026-3248",
+        "publication_number": "2026/3248",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-17T10:34:43.029Z",
+        "public_visibility": "publishable",
+        "privacy_risk": "low",
+        "verification_status": "official_source_acquired",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_3248_12_ALLEG?ente=00301390795",
+        "preservation_status": "archived",
+        "reason": "eligible_low_risk_publishable_pdf",
+        "storage_path": "data/public/albo/documents/2026/9232cde4729ba9d4eb6cd3fb9c65e203e4de04c5028a15da8b8e70df7f42938a.pdf",
+        "sha256": "9232cde4729ba9d4eb6cd3fb9c65e203e4de04c5028a15da8b8e70df7f42938a",
+        "size_bytes": 870779,
+        "content_type": "application/pdf",
+        "verified_at": "2026-10-17T10:34:43.029Z"
+      }
+    },
+    {
+      "id": "albo-2026-3247",
+      "public_id": "albo-2026-3247",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-10-17T10:34:43.029Z",
+      "publication_number": "2026/3247",
+      "publication_start": "2026-10-08",
+      "publication_end": "2026-10-23",
+      "office": "SETTORE ECONOMICO FINANZIARIO",
+      "act_type": "DELIBERAZIONE DI GIUNTA",
+      "act_number": "244",
+      "act_date": "2026-10-08",
+      "content_hash": "139619651b1e2569be9c30d33d9418e08dbedce422d270ff781f3c51409504bb",
+      "subject": "Variazione urgente al bilancio 2026 2028 art. 175 c. 4, c. 5 e c. 5-bis D. Lgs. 267/2000",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_3247_10_ALLEG?ente=00301390795",
+      "public_note": null,
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "low",
+      "public_visibility": "publishable",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "bilancio_finanze",
+          "label": "Bilancio, finanze e tributi",
+          "description": "Contabilita, bilancio, finanze, tributi e gestione economica.",
+          "confidence": "high",
+          "basis": "office"
+        },
+        "act_category": {
+          "id": "deliberazioni",
+          "label": "Deliberazioni",
+          "description": "Deliberazioni di giunta o di altri organi deliberativi.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "complete_public_record",
+        "status": "current"
+      },
+      "deliberation_body": "giunta",
+      "presentation": {
+        "display_title": "Variazione urgente al bilancio 2026 2028 art. 175 c. 4, c. 5 e c. 5-bis D. Lgs. 267/2000",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "variazione urgente al bilancio 2026 2028 art 175 c 4 c 5 e c 5 bis d lgs 267 2000",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": null,
+          "theme_label": null,
+          "confidence": null,
+          "basis": "fallback",
+          "rule_id": null,
+          "evidence": [],
+          "null_reason": "not_classified",
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+      ],
+      "first_observed_at": "2026-10-17T10:34:43.029Z",
+      "last_observed_at": "2026-10-17T10:34:43.029Z",
+      "archived_document": {
+        "id": "albo-2026-3247",
+        "publication_number": "2026/3247",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-17T10:34:43.029Z",
+        "public_visibility": "publishable",
+        "privacy_risk": "low",
+        "verification_status": "official_source_acquired",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_3247_10_ALLEG?ente=00301390795",
+        "preservation_status": "archived",
+        "reason": "eligible_low_risk_publishable_pdf",
+        "storage_path": "data/public/albo/documents/2026/53198a1c4f4378d280e38ecf1a6daa8abd415d19f1392ed9327620b165ba9b37.pdf",
+        "sha256": "53198a1c4f4378d280e38ecf1a6daa8abd415d19f1392ed9327620b165ba9b37",
+        "size_bytes": 981519,
+        "content_type": "application/pdf",
+        "verified_at": "2026-10-17T10:34:43.029Z"
+      }
+    },
+    {
+      "id": "albo-2026-3220",
+      "public_id": "albo-2026-3220",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-10-17T10:34:43.029Z",
+      "publication_number": "2026/3220",
+      "publication_start": "2026-10-06",
+      "publication_end": "2026-10-21",
+      "office": "SETTORE ECONOMICO FINANZIARIO",
+      "act_type": "DELIBERAZIONE DI GIUNTA",
+      "act_number": "243",
+      "act_date": "2026-10-06",
+      "content_hash": "bbd8c41ab09ab5faddc91fb3912d305b00ad6f3b2c81319463341f6f0a7651f8",
+      "subject": "INTEGRAZIONE PROFILI PROFESSIONALI IN APPLICAZIONE DEL CCNL 16 NOVEMBRE 2022",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_3220_10_ALLEG?ente=00301390795",
+      "public_note": null,
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "low",
+      "public_visibility": "publishable",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "bilancio_finanze",
+          "label": "Bilancio, finanze e tributi",
+          "description": "Contabilita, bilancio, finanze, tributi e gestione economica.",
+          "confidence": "high",
+          "basis": "office"
+        },
+        "act_category": {
+          "id": "deliberazioni",
+          "label": "Deliberazioni",
+          "description": "Deliberazioni di giunta o di altri organi deliberativi.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "complete_public_record",
+        "status": "current"
+      },
+      "deliberation_body": "giunta",
+      "presentation": {
+        "display_title": "Integrazione profili professionali in applicazione del ccnl 16 novembre 2022",
+        "action_id": null,
+        "action_label": null,
+        "search_text": "integrazione profili professionali in applicazione del ccnl 16 novembre 2022 integrazione profili professionali in applicazione del ccnl 16 novembre 2022",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "standardised_automatically",
+          "transformations": [
+            "sentence_case"
+          ],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": null,
+          "theme_label": null,
+          "confidence": null,
+          "basis": "fallback",
+          "rule_id": null,
+          "evidence": [],
+          "null_reason": "not_classified",
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+      ],
+      "first_observed_at": "2026-10-17T10:34:43.029Z",
+      "last_observed_at": "2026-10-17T10:34:43.029Z",
+      "archived_document": {
+        "id": "albo-2026-3220",
+        "publication_number": "2026/3220",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-17T10:34:43.029Z",
+        "public_visibility": "publishable",
+        "privacy_risk": "low",
+        "verification_status": "official_source_acquired",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_3220_10_ALLEG?ente=00301390795",
+        "preservation_status": "archived",
+        "reason": "eligible_low_risk_publishable_pdf",
+        "storage_path": "data/public/albo/documents/2026/abaee2bd0b13a3c2a48f9ca8f1e42001eff60ce44dd967eb74ae18d7bae79f38.pdf",
+        "sha256": "abaee2bd0b13a3c2a48f9ca8f1e42001eff60ce44dd967eb74ae18d7bae79f38",
+        "size_bytes": 930489,
+        "content_type": "application/pdf",
+        "verified_at": "2026-10-17T10:34:43.029Z"
+      }
+    },
+    {
+      "id": "albo-2026-3219",
+      "public_id": "albo-2026-3219",
+      "source": "Albo Pretorio Comune di Lamezia Terme",
+      "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+      "retrieved_at": "2026-10-17T10:34:43.029Z",
+      "publication_number": "2026/3219",
+      "publication_start": "2026-10-06",
+      "publication_end": "2026-10-21",
+      "office": "SETTORE ECONOMICO FINANZIARIO",
+      "act_type": "DELIBERAZIONE DI GIUNTA",
+      "act_number": "242",
+      "act_date": "2026-10-06",
+      "content_hash": "3ba99679aa224a0da813cf8ded021def4b069aea8faf6f3566cf4e53a9027cef",
+      "subject": "Approvazione schema bilancio consolidato esercizio 2025",
+      "document_url": "https://albo.tinnvision.cloud/allegati/2026_3219_9_ALLEG?ente=00301390795",
+      "public_note": null,
+      "verification_status": "official_source_acquired",
+      "privacy_risk": "low",
+      "public_visibility": "publishable",
+      "classification": {
+        "dictionary_version": "2026-08-22-a",
+        "sector": {
+          "id": "bilancio_finanze",
+          "label": "Bilancio, finanze e tributi",
+          "description": "Contabilita, bilancio, finanze, tributi e gestione economica.",
+          "confidence": "high",
+          "basis": "office"
+        },
+        "act_category": {
+          "id": "deliberazioni",
+          "label": "Deliberazioni",
+          "description": "Deliberazioni di giunta o di altri organi deliberativi.",
+          "confidence": "high",
+          "basis": "act_type"
+        }
+      },
+      "privacy_attestation": {
+        "schema_version": "albo-privacy-policy-attestation.v1",
+        "policy_version": "albo-privacy-policy.2026-08-30.1",
+        "assessment_basis": "complete_public_record",
+        "status": "current"
+      },
+      "deliberation_body": "giunta",
+      "presentation": {
+        "display_title": "Approvazione schema bilancio consolidato esercizio 2025",
+        "action_id": "approvazione",
+        "action_label": "Approvazione",
+        "search_text": "approvazione schema bilancio consolidato esercizio 2025",
+        "standardisation": {
+          "schema_version": "publication-standardisation.v1",
+          "profile_id": "albo-public-title-it",
+          "profile_version": "2026-08-30.2",
+          "input_field": "subject",
+          "input_field_preserved": true,
+          "status": "unchanged",
+          "transformations": [],
+          "layout_flags": [],
+          "review_reasons": []
+        },
+        "area_theme": {
+          "schema_version": "publication-area-theme.v1",
+          "taxonomy_id": "municipal-public-act-area-theme-it",
+          "taxonomy_version": "2026-08-30.1",
+          "theme_id": null,
+          "theme_label": null,
+          "confidence": null,
+          "basis": "fallback",
+          "rule_id": null,
+          "evidence": [],
+          "null_reason": "not_classified",
+          "override": null
+        }
+      },
+      "known_limits": [
+        "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+        "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+        "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+        "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+        "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+        "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+      ],
+      "first_observed_at": "2026-10-17T10:34:43.029Z",
+      "last_observed_at": "2026-10-17T10:34:43.029Z",
+      "archived_document": {
+        "id": "albo-2026-3219",
+        "publication_number": "2026/3219",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-17T10:34:43.029Z",
+        "public_visibility": "publishable",
+        "privacy_risk": "low",
+        "verification_status": "official_source_acquired",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_3219_9_ALLEG?ente=00301390795",
+        "preservation_status": "archived",
+        "reason": "eligible_low_risk_publishable_pdf",
+        "storage_path": "data/public/albo/documents/2026/1dd123c7391319595486f90e6742ceba8a1750647b41fdb935d71d466051f2d4.pdf",
+        "sha256": "1dd123c7391319595486f90e6742ceba8a1750647b41fdb935d71d466051f2d4",
+        "size_bytes": 1111622,
+        "content_type": "application/pdf",
+        "verified_at": "2026-10-17T10:34:43.029Z"
+      }
+    },
     {
       "id": "albo-2026-2753",
       "public_id": "albo-2026-2753",
@@ -215,24 +732,7 @@
       ],
       "first_observed_at": "2026-08-24T11:40:17.244Z",
       "last_observed_at": "2026-09-03T18:34:57.880Z",
-      "archived_document": {
-        "id": "albo-2026-2751",
-        "publication_number": "2026/2751",
-        "source": "Albo Pretorio Comune di Lamezia Terme",
-        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-        "retrieved_at": "2026-09-03T18:34:57.880Z",
-        "public_visibility": "publishable",
-        "privacy_risk": "low",
-        "verification_status": "official_source_acquired",
-        "document_url": "https://albo.tinnvision.cloud/allegati/2026_2751_16_ALLEG?ente=00301390795",
-        "preservation_status": "archived",
-        "reason": "eligible_low_risk_publishable_pdf",
-        "storage_path": "data/public/albo/documents/2026/b02f6768f54f8a9096b21adc7ce1f434bf69ae455dfce05d7124f0e9568b5908.pdf",
-        "sha256": "b02f6768f54f8a9096b21adc7ce1f434bf69ae455dfce05d7124f0e9568b5908",
-        "size_bytes": 1532866,
-        "content_type": "application/pdf",
-        "verified_at": "2026-09-03T18:34:57.880Z"
-      }
+      "archived_document": null
     },
     {
       "id": "albo-2026-2749",
@@ -408,24 +908,7 @@
       ],
       "first_observed_at": "2026-09-01T16:34:40.060Z",
       "last_observed_at": "2026-09-03T18:34:57.880Z",
-      "archived_document": {
-        "id": "albo-2026-2830",
-        "publication_number": "2026/2830",
-        "source": "Albo Pretorio Comune di Lamezia Terme",
-        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-        "retrieved_at": "2026-09-03T18:34:57.880Z",
-        "public_visibility": "publishable",
-        "privacy_risk": "low",
-        "verification_status": "official_source_acquired",
-        "document_url": "https://albo.tinnvision.cloud/allegati/2026_2830_13_ALLEG?ente=00301390795",
-        "preservation_status": "archived",
-        "reason": "eligible_low_risk_publishable_pdf",
-        "storage_path": "data/public/albo/documents/2026/4a68a39c72ad72032f60d956a05b70a8b6eadeef2a9972800f281dbe0edb214c.pdf",
-        "sha256": "4a68a39c72ad72032f60d956a05b70a8b6eadeef2a9972800f281dbe0edb214c",
-        "size_bytes": 1386053,
-        "content_type": "application/pdf",
-        "verified_at": "2026-09-03T18:34:57.880Z"
-      }
+      "archived_document": null
     },
     {
       "id": "albo-2026-2829",
@@ -513,24 +996,7 @@
       ],
       "first_observed_at": "2026-09-01T16:34:40.060Z",
       "last_observed_at": "2026-09-03T18:34:57.880Z",
-      "archived_document": {
-        "id": "albo-2026-2829",
-        "publication_number": "2026/2829",
-        "source": "Albo Pretorio Comune di Lamezia Terme",
-        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-        "retrieved_at": "2026-09-03T18:34:57.880Z",
-        "public_visibility": "publishable",
-        "privacy_risk": "low",
-        "verification_status": "official_source_acquired",
-        "document_url": "https://albo.tinnvision.cloud/allegati/2026_2829_19_ALLEG?ente=00301390795",
-        "preservation_status": "archived",
-        "reason": "eligible_low_risk_publishable_pdf",
-        "storage_path": "data/public/albo/documents/2026/c520a61b989b9d54bffd4f84a8dc12b43723e553b83dda97f2dda91786e17d02.pdf",
-        "sha256": "c520a61b989b9d54bffd4f84a8dc12b43723e553b83dda97f2dda91786e17d02",
-        "size_bytes": 1273313,
-        "content_type": "application/pdf",
-        "verified_at": "2026-09-03T18:34:57.880Z"
-      }
+      "archived_document": null
     },
     {
       "id": "albo-2026-2828",
@@ -626,24 +1092,7 @@
       ],
       "first_observed_at": "2026-09-01T16:34:40.060Z",
       "last_observed_at": "2026-09-03T18:34:57.880Z",
-      "archived_document": {
-        "id": "albo-2026-2828",
-        "publication_number": "2026/2828",
-        "source": "Albo Pretorio Comune di Lamezia Terme",
-        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-        "retrieved_at": "2026-09-03T18:34:57.880Z",
-        "public_visibility": "publishable",
-        "privacy_risk": "low",
-        "verification_status": "official_source_acquired",
-        "document_url": "https://albo.tinnvision.cloud/allegati/2026_2828_11_ALLEG?ente=00301390795",
-        "preservation_status": "archived",
-        "reason": "eligible_low_risk_publishable_pdf",
-        "storage_path": "data/public/albo/documents/2026/e177180d5b0c5afc8fb87c362ed518bfc4127b68fad2434a39a60ec31812f4c8.pdf",
-        "sha256": "e177180d5b0c5afc8fb87c362ed518bfc4127b68fad2434a39a60ec31812f4c8",
-        "size_bytes": 722947,
-        "content_type": "application/pdf",
-        "verified_at": "2026-09-03T18:34:57.880Z"
-      }
+      "archived_document": null
     },
     {
       "id": "albo-2026-2827",
@@ -915,24 +1364,7 @@
       ],
       "first_observed_at": "2026-09-01T16:34:40.060Z",
       "last_observed_at": "2026-09-03T18:34:57.880Z",
-      "archived_document": {
-        "id": "albo-2026-2825",
-        "publication_number": "2026/2825",
-        "source": "Albo Pretorio Comune di Lamezia Terme",
-        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-        "retrieved_at": "2026-09-03T18:34:57.880Z",
-        "public_visibility": "publishable",
-        "privacy_risk": "low",
-        "verification_status": "official_source_acquired",
-        "document_url": "https://albo.tinnvision.cloud/allegati/2026_2825_14_ALLEG?ente=00301390795",
-        "preservation_status": "archived",
-        "reason": "eligible_low_risk_publishable_pdf",
-        "storage_path": "data/public/albo/documents/2026/6e58c3d5a9c8baa69c8d603ea0bcffba4fbac36885733cb33e8ef9d410c012b1.pdf",
-        "sha256": "6e58c3d5a9c8baa69c8d603ea0bcffba4fbac36885733cb33e8ef9d410c012b1",
-        "size_bytes": 1257676,
-        "content_type": "application/pdf",
-        "verified_at": "2026-09-03T18:34:57.880Z"
-      }
+      "archived_document": null
     },
     {
       "id": "albo-2026-2824",
@@ -1202,24 +1634,7 @@
       ],
       "first_observed_at": "2026-09-01T16:34:40.060Z",
       "last_observed_at": "2026-09-03T18:34:57.880Z",
-      "archived_document": {
-        "id": "albo-2026-2822",
-        "publication_number": "2026/2822",
-        "source": "Albo Pretorio Comune di Lamezia Terme",
-        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-        "retrieved_at": "2026-09-03T18:34:57.880Z",
-        "public_visibility": "publishable",
-        "privacy_risk": "low",
-        "verification_status": "official_source_acquired",
-        "document_url": "https://albo.tinnvision.cloud/allegati/2026_2822_19_ALLEG?ente=00301390795",
-        "preservation_status": "archived",
-        "reason": "eligible_low_risk_publishable_pdf",
-        "storage_path": "data/public/albo/documents/2026/1baf2a53b55964d3ee9df9e34a6d0cc03e1a2ba46941358235f4c848ef431ec1.pdf",
-        "sha256": "1baf2a53b55964d3ee9df9e34a6d0cc03e1a2ba46941358235f4c848ef431ec1",
-        "size_bytes": 1357458,
-        "content_type": "application/pdf",
-        "verified_at": "2026-09-03T18:34:57.880Z"
-      }
+      "archived_document": null
     },
     {
       "id": "albo-2026-2821",
