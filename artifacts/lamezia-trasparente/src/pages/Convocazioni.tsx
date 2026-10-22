@@ -76,6 +76,9 @@ const ALL_ORGANI = "all";
 const reviewedCommissionSummary = summarizeReviewedCommissions(
   councilSessionV0ReviewedRecords,
 );
+const editorialSignalCount = councilSessionV0ReviewedRecords.filter(
+  (session) => !session.provenance,
+).length;
 
 type CoverageFilterKey = "report" | "votes" | "acts";
 
@@ -256,7 +259,7 @@ export function Convocazioni() {
         findItems={[
           "Sedute caricate, filtri per organo e macrotema e copertura documentale disponibile.",
           "Ordini del giorno, resoconti, votazioni e atti collegati quando rilevati.",
-          "Prime schede fonte-centriche da avvisi ufficiali del Consiglio e delle Commissioni.",
+          "Schede fonte-centriche da avvisi ufficiali e, separatamente, segnali editoriali ancora da verificare.",
         ]}
         missingItems={[
           "Sincronizzazione stabile e verificata con tutte le fonti istituzionali delle sedute.",
@@ -281,12 +284,17 @@ export function Convocazioni() {
               id="reviewed-sessions-title"
               className="font-display text-2xl font-bold tracking-tight"
             >
-              Prime schede da fonte ufficiale
+              Schede verificate e segnali editoriali
             </h2>
             <p className="mt-1 max-w-3xl text-sm leading-relaxed text-muted-foreground">
               Tranche iniziale: una seduta del Consiglio confermata da fonte
               istituzionale successiva e {reviewedCommissionSummary}. La
-              selezione non costituisce una copertura storica completa.
+              selezione include inoltre {editorialSignalCount}{" "}
+              {editorialSignalCount === 1
+                ? "segnalazione editoriale"
+                : "segnalazioni editoriali"}{" "}
+              senza fonte istituzionale acquisita e non costituisce una
+              copertura storica completa.
             </p>
           </div>
         </div>

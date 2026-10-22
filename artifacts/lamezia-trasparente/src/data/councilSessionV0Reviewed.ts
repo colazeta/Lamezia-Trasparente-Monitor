@@ -66,6 +66,10 @@ const SERRA_ANNUNZIATA_LAMETINO_URL =
   "https://www.lametino.it/ultime/lamezia-consigliera-serratore-presenta-mozione-su-rifiuti-e-sicurezza-in-localita-serra-e-annunziata.html";
 const COMMISSION_I_MOTION_LAMETINO_URL =
   "https://www.lametino.it/ultime/lamezia-mozioni-di-sfiducia-contro-cristiano-e-villella-tensioni-nelle-commissioni-consiliari.html";
+const COMMISSION_I_OCTOBER_22_LAMETINO_URL =
+  "https://www.lametino.it/ultime/lamezia-consiglieri-di-opposizione-lavori-fermi-in-i-commissione-citta-non-puo-continuare-a-pagare-scontri-nel-centrodestra.html";
+const MUNICIPAL_ALBO_DOCUMENTS_URL =
+  "https://www.comune.lamezia-terme.cz.it/it/documenti_pubblici/atti-di-albo-pretorio";
 const VIA_TRENTO_ROADWORKS_LAMETINO_URL =
   "https://www.lametino.it/ultimora/lamezia-lavori-di-bitumazione-in-via-trento-limitazione-della-circolazione-stradale-il-25-settembre.html";
 const COMMISSION_V_REU_LAMETINO_URL =
@@ -2720,7 +2724,133 @@ const councilVerifiedSession: CouncilSessionV0 = {
   },
 };
 
+const commissionIOctober22EditorialSession: CouncilSessionV0 = {
+  id: "editorial-commissione-i-sfiducia-presidente-2026-10",
+  kind: "commission",
+  isDemoFixture: false,
+  contextResearch: {
+    status: "reviewed_matches",
+    checkedAt: "2026-10-23T00:06:00+02:00",
+    searchNote:
+      "Parallel Search e la verifica diretta di Comune, Albo, testate locali e canali audiovisivi indicizzati hanno individuato un solo articolo sufficientemente preciso. Il testo identifica esplicitamente una seduta della I Commissione e il tema discusso, ma la data di pubblicazione è usata soltanto per la ricerca: non viene presentata come data ufficiale della seduta. Non è stato acquisito un atto istituzionale; data, ora, sede, ordine del giorno, svolgimento ed esiti restano non verificati.",
+    articles: [
+      {
+        title:
+          "Lamezia, consiglieri di opposizione: ‘Lavori fermi in I Commissione, città non può continuare a pagare scontri nel centrodestra’",
+        url: COMMISSION_I_OCTOBER_22_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-10-22",
+        relationship: "same_session",
+        relevanceNote:
+          "L'articolo descrive esplicitamente una seduta a porte chiuse della I Commissione e la collega alla mozione di sfiducia nei confronti del presidente. È una fonte editoriale: non certifica convocazione, data e ora ufficiali, svolgimento, votazioni, esiti o completezza.",
+        reviewedAt: "2026-10-23T00:06:00+02:00",
+      },
+    ],
+    media: [],
+    editorialAgenda: [
+      {
+        title:
+          "Mozione di sfiducia nei confronti del presidente della I Commissione",
+        sourceUrls: [COMMISSION_I_OCTOBER_22_LAMETINO_URL],
+        confidence: "medium",
+        reason:
+          "Il tema è indicato espressamente nell'unica fonte editoriale precisa individuata, ma non è disponibile un ordine del giorno istituzionale. La voce descrive soltanto un tema emerso dalla copertura e non implica trattazione, voto o esito.",
+      },
+    ],
+  },
+  title: {
+    key: "title",
+    label: "Titolo",
+    value:
+      "I Commissione consiliare permanente — seduta segnalata dalla copertura",
+    sourceStatus: "da_verificare",
+    limit:
+      "L'organo è indicato da una fonte editoriale; manca una pubblicazione istituzionale che consenta di verificare la denominazione e la seduta.",
+  },
+  scheduledAt: {
+    key: "scheduledAt",
+    label: "Data e ora",
+    value: null,
+    sourceStatus: "da_verificare",
+    limit:
+      "Data e ora non sono disponibili da una fonte istituzionale. La data dell'articolo non viene usata come data della seduta.",
+  },
+  sessionStatus: {
+    key: "sessionStatus",
+    label: "Stato seduta",
+    value: "non_verificata",
+    sourceStatus: "da_verificare",
+    limit:
+      "La copertura editoriale non certifica convocazione, svolgimento, chiusura, rinvio o altro esito ufficiale.",
+  },
+  agenda: {
+    key: "agenda",
+    label: "Ordine del giorno",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Ordine del giorno istituzionale non acquisito. Il tema riportato dalla stampa è esposto soltanto nella sezione separata “Temi emersi dalla copertura”.",
+  },
+  sourceLink: {
+    key: "sourceLink",
+    label: "Fonte",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Non è stata individuata una pubblicazione istituzionale associabile con precisione alla seduta.",
+  },
+  liveStreaming: {
+    key: "liveStreaming",
+    label: "Streaming live",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Nessuna diretta istituzionale associabile con precisione è stata individuata.",
+  },
+  recording: {
+    key: "recording",
+    label: "Registrazione",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Nessuna registrazione istituzionale associabile con precisione è stata individuata.",
+  },
+  minutesOrReport: {
+    key: "minutesOrReport",
+    label: "Verbale o resoconto",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Nessun verbale o resoconto istituzionale associabile con precisione è stato individuato.",
+  },
+  lastCheckedAt: {
+    key: "lastCheckedAt",
+    label: "Ultimo controllo",
+    value: "2026-10-23T00:06:00+02:00",
+    sourceStatus: "verificato",
+    sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
+    limit:
+      "Indica quando sono state ricontrollate le fonti, non una conferma istituzionale della seduta.",
+  },
+  dataLimits: {
+    key: "dataLimits",
+    label: "Limiti del dato",
+    value: [
+      "La data di pubblicazione dell'articolo non viene presentata come data ufficiale della seduta.",
+      "Non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione alla seduta; il nuovo Albo dinamico ha inoltre restituito un blocco applicativo durante il controllo diretto.",
+      "Data, ora, sede, ordine del giorno, stato, streaming, registrazione e verbale restano non verificati o non rilevati secondo il campo.",
+      "L'articolo collegato è una fonte editoriale e non certifica programmazione, svolgimento, completezza, presenze, votazioni o risultati.",
+      "Il tema riportato dalla copertura resta nell'agenda editoriale separata e dovrà essere riconciliato se emergerà un atto istituzionale.",
+    ],
+    sourceStatus: "parziale",
+    sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
+    limit:
+      "Scheda prudenziale basata su una corrispondenza editoriale esplicita; tutti i campi ufficiali restano separati e non confermati.",
+  },
+};
+
 export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
+  commissionIOctober22EditorialSession,
   septemberCommissionSession({
     id: "albo-2026-3262-commissione-v-2026-10-13",
     title: "V Commissione consiliare permanente — seduta del 13 ottobre 2026",

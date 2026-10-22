@@ -58,6 +58,9 @@ function formatPublishedDate(value: string | null) {
 function sourceReviewLabel(
   status: CouncilSessionV0SourceReviewStatus | undefined,
 ) {
+  if (!status) {
+    return "Solo copertura editoriale";
+  }
   if (status === "reviewed_against_official_attachment") {
     return "Allegato ufficiale controllato";
   }
@@ -70,6 +73,9 @@ function sourceReviewLabel(
 function sourceReviewDescription(
   status: CouncilSessionV0SourceReviewStatus | undefined,
 ) {
+  if (!status) {
+    return "Fonte istituzionale non ancora acquisita; la copertura editoriale resta separata dai campi ufficiali";
+  }
   if (status === "reviewed_against_official_attachment") {
     return "Metadati e allegato ufficiale controllati";
   }
@@ -186,6 +192,36 @@ export function CouncilSessionV0Notice({
     );
   }
 
+  if (!session.provenance) {
+    return (
+      <div className="rounded-2xl border border-amber-300/50 bg-amber-50 p-4 text-amber-950 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-100">
+        <div className="flex gap-3">
+          <AlertTriangle
+            className="mt-0.5 h-5 w-5 shrink-0"
+            aria-hidden="true"
+          />
+          <div className="space-y-1 text-sm leading-relaxed">
+            <p className="font-semibold">
+              Segnalazione da copertura editoriale
+            </p>
+            <p>
+              Non è stata acquisita una fonte istituzionale associabile con
+              precisione. Data, ora, ordine del giorno e stato non sono dati
+              ufficialmente verificati.
+            </p>
+            {!compact && (
+              <p>
+                L&apos;articolo collegato serve soltanto a documentare il
+                contesto e non prova programmazione, svolgimento, votazioni o
+                risultati.
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="rounded-2xl border border-brand/30 bg-brand/5 p-4">
       <div className="flex gap-3">
@@ -270,14 +306,16 @@ export function CouncilSessionV0SummaryCard({
       <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
         {isDemo
           ? "Esempio tecnico privo di valore informativo reale."
-          : session.provenance?.sourceReviewStatus === "official_metadata_only"
-            ? "Avviso individuato nell'Albo; data, ora e ordine del giorno restano da verificare."
-            : session.provenance?.sourceReviewStatus ===
-                "reviewed_against_later_official_source"
-              ? hasVerifiedScheduledAt && hasVerifiedAgenda
-                ? "Data, ora e ordine del giorno sono stati verificati sull'allegato ufficiale; una fonte istituzionale successiva aggiorna lo stato della seduta."
-                : "Una fonte istituzionale successiva conferma data e svolgimento; orario e ordine del giorno completo non sono disponibili."
-              : "Data, ora e ordine del giorno sono stati confrontati con l'allegato ufficiale archiviato."}
+          : !session.provenance
+            ? "La scheda registra soltanto una copertura editoriale; data, ora, ordine del giorno e stato restano da verificare su fonte istituzionale."
+            : session.provenance.sourceReviewStatus === "official_metadata_only"
+              ? "Avviso individuato nell'Albo; data, ora e ordine del giorno restano da verificare."
+              : session.provenance?.sourceReviewStatus ===
+                  "reviewed_against_later_official_source"
+                ? hasVerifiedScheduledAt && hasVerifiedAgenda
+                  ? "Data, ora e ordine del giorno sono stati verificati sull'allegato ufficiale; una fonte istituzionale successiva aggiorna lo stato della seduta."
+                  : "Una fonte istituzionale successiva conferma data e svolgimento; orario e ordine del giorno completo non sono disponibili."
+                : "Data, ora e ordine del giorno sono stati confrontati con l'allegato ufficiale archiviato."}
       </p>
       <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
         <div>
@@ -460,7 +498,9 @@ export function CouncilSessionV0Detail({
               />
               {isDemo
                 ? "Esempio tecnico: non descrive una seduta reale."
-                : session.sessionStatus.value === "svolta" &&
+                : !session.provenance
+                  ? "La copertura editoriale non prova lo svolgimento della seduta."
+                  : session.sessionStatus.value === "svolta" &&
                     session.sessionStatus.sourceStatus === "verificato"
                   ? "Una fonte istituzionale successiva conferma la seduta."
                   : session.sessionStatus.value === "sospesa" &&
@@ -881,7 +921,7 @@ export function CouncilSessionV0Detail({
               <li>Non certifica copertura storica né una seduta effettiva.</li>
               <li>Serve esclusivamente a verificare struttura e copy.</li>
             </ul>
-          ) : (
+          ) : session.provenance ? (
             <dl className="grid gap-4 text-sm md:grid-cols-2">
               <div>
                 <dt className="font-semibold text-foreground">
@@ -913,6 +953,31 @@ export function CouncilSessionV0Detail({
                   {sourceReviewDescription(
                     session.provenance?.sourceReviewStatus,
                   )}
+                </dd>
+              </div>
+            </dl>
+          ) : (
+            <dl className="grid gap-4 text-sm md:grid-cols-2">
+              <div>
+                <dt className="font-semibold text-foreground">
+                  Provenienza istituzionale
+                </dt>
+                <dd className="mt-1 text-muted-foreground">Non acquisita</dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-foreground">
+                  Ultimo controllo
+                </dt>
+                <dd className="mt-1 text-muted-foreground">
+                  {formatDate(session.lastCheckedAt.value)}
+                </dd>
+              </div>
+              <div className="md:col-span-2">
+                <dt className="font-semibold text-foreground">
+                  Stato della fonte
+                </dt>
+                <dd className="mt-1 text-muted-foreground">
+                  {sourceReviewDescription(undefined)}
                 </dd>
               </div>
             </dl>

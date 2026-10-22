@@ -198,17 +198,25 @@ describe("councilSessionV0", () => {
   });
 
   it("publishes source-traceable records for both council and commission notices", () => {
-    expect(councilSessionV0ReviewedRecords).toHaveLength(60);
+    expect(councilSessionV0ReviewedRecords).toHaveLength(61);
     expect(
       new Set(councilSessionV0ReviewedRecords.map((item) => item.kind)),
     ).toEqual(new Set(["council", "commission"]));
 
     for (const session of councilSessionV0ReviewedRecords) {
       expect(session.isDemoFixture).toBe(false);
-      expect(session.provenance?.noticeId).toMatch(/^albo-2026-/);
-      expect(session.provenance?.publicationNumber).toMatch(/^2026\//);
-      expect(session.provenance?.sourceUrl).toContain("albo.tinnvision.cloud");
-      expect(session.provenance?.sourceContentHash).toMatch(/^[a-f0-9]{64}$/);
+      if (session.provenance) {
+        expect(session.provenance.noticeId).toMatch(/^albo-2026-/);
+        expect(session.provenance.publicationNumber).toMatch(/^2026\//);
+        expect(session.provenance.sourceUrl).toContain("albo.tinnvision.cloud");
+        expect(session.provenance.sourceContentHash).toMatch(/^[a-f0-9]{64}$/);
+      } else {
+        expect(session.id).toBe(
+          "editorial-commissione-i-sfiducia-presidente-2026-10",
+        );
+        expect(session.scheduledAt.value).toBeNull();
+        expect(session.scheduledAt.sourceStatus).toBe("da_verificare");
+      }
       expect(session.lastCheckedAt.value).toBeTruthy();
       expect(["reviewed_matches", "checked_no_match"]).toContain(
         session.contextResearch.status,
@@ -238,6 +246,36 @@ describe("councilSessionV0", () => {
         expect(Date.parse(media.reviewedAt)).not.toBeNaN();
       }
     }
+  });
+
+  it("keeps the October I Commission editorial signal separate from official fields", () => {
+    const session = findCouncilSessionV0ReviewedRecord(
+      "editorial-commissione-i-sfiducia-presidente-2026-10",
+    );
+
+    expect(session?.provenance).toBeUndefined();
+    expect(session?.scheduledAt.value).toBeNull();
+    expect(session?.sessionStatus.value).toBe("non_verificata");
+    expect(session?.agenda.value).toBeNull();
+    expect(session?.sourceLink.value).toBeNull();
+    expect(session?.liveStreaming.value).toBeNull();
+    expect(session?.recording.value).toBeNull();
+    expect(session?.contextResearch.articles).toHaveLength(1);
+    expect(session?.contextResearch.articles[0]).toMatchObject({
+      publisher: "il Lametino",
+      publishedAt: "2026-10-22",
+      relationship: "same_session",
+    });
+    expect(session?.contextResearch.editorialAgenda).toEqual([
+      expect.objectContaining({
+        title:
+          "Mozione di sfiducia nei confronti del presidente della I Commissione",
+        confidence: "medium",
+      }),
+    ]);
+    expect(session?.scheduledAt.limit).toMatch(
+      /data dell'articolo non viene usata come data della seduta/i,
+    );
   });
 
   it("enriches the council record from a later official source without inventing time or agenda", () => {
