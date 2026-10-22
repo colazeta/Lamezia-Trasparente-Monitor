@@ -58,6 +58,9 @@ function formatPublishedDate(value: string | null) {
 function sourceReviewLabel(
   status: CouncilSessionV0SourceReviewStatus | undefined,
 ) {
+  if (!status) {
+    return "Solo copertura editoriale";
+  }
   if (status === "reviewed_against_official_attachment") {
     return "Allegato ufficiale controllato";
   }
@@ -70,6 +73,9 @@ function sourceReviewLabel(
 function sourceReviewDescription(
   status: CouncilSessionV0SourceReviewStatus | undefined,
 ) {
+  if (!status) {
+    return "Fonte istituzionale non ancora acquisita; la copertura editoriale resta separata dai campi ufficiali";
+  }
   if (status === "reviewed_against_official_attachment") {
     return "Metadati e allegato ufficiale controllati";
   }
@@ -270,14 +276,16 @@ export function CouncilSessionV0SummaryCard({
       <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
         {isDemo
           ? "Esempio tecnico privo di valore informativo reale."
-          : session.provenance?.sourceReviewStatus === "official_metadata_only"
-            ? "Avviso individuato nell'Albo; data, ora e ordine del giorno restano da verificare."
-            : session.provenance?.sourceReviewStatus ===
-                "reviewed_against_later_official_source"
-              ? hasVerifiedScheduledAt && hasVerifiedAgenda
-                ? "Data, ora e ordine del giorno sono stati verificati sull'allegato ufficiale; una fonte istituzionale successiva aggiorna lo stato della seduta."
-                : "Una fonte istituzionale successiva conferma data e svolgimento; orario e ordine del giorno completo non sono disponibili."
-              : "Data, ora e ordine del giorno sono stati confrontati con l'allegato ufficiale archiviato."}
+          : !session.provenance
+            ? "La scheda registra soltanto una copertura editoriale; data, ora, ordine del giorno e stato restano da verificare su fonte istituzionale."
+            : session.provenance.sourceReviewStatus === "official_metadata_only"
+              ? "Avviso individuato nell'Albo; data, ora e ordine del giorno restano da verificare."
+              : session.provenance?.sourceReviewStatus ===
+                  "reviewed_against_later_official_source"
+                ? hasVerifiedScheduledAt && hasVerifiedAgenda
+                  ? "Data, ora e ordine del giorno sono stati verificati sull'allegato ufficiale; una fonte istituzionale successiva aggiorna lo stato della seduta."
+                  : "Una fonte istituzionale successiva conferma data e svolgimento; orario e ordine del giorno completo non sono disponibili."
+                : "Data, ora e ordine del giorno sono stati confrontati con l'allegato ufficiale archiviato."}
       </p>
       <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
         <div>
