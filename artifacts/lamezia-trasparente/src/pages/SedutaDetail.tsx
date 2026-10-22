@@ -139,7 +139,9 @@ export function SedutaDetail() {
             description={
               staticSession.isDemoFixture
                 ? "Fixture dimostrativa per verificare il formato minimo di una scheda seduta. Non rappresenta una convocazione reale."
-                : "Scheda fonte-centrica di una convocazione del Consiglio o di una Commissione consiliare, con provenienza, stato di verifica e limiti del dato."
+                : staticSession.provenance
+                  ? "Scheda fonte-centrica di una convocazione del Consiglio o di una Commissione consiliare, con provenienza, stato di verifica e limiti del dato."
+                  : "Segnalazione editoriale su una possibile seduta consiliare: fonte istituzionale non acquisita e dati ufficiali ancora da verificare."
             }
             path={`/convocazioni/${staticSession.id}`}
             type="article"

@@ -16,10 +16,12 @@ describe("summarizeReviewedCommissions", () => {
         {
           kind: "commission",
           title: { value: "V Commissione consiliare permanente — seduta" },
+          provenance: {},
         },
         {
           kind: "commission",
           title: { value: "Commissione speciale — seduta di prova" },
+          provenance: {},
         },
       ]),
     ).toBe(
