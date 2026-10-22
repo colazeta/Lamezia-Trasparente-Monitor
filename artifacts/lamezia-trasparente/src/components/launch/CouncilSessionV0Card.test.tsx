@@ -47,6 +47,15 @@ describe("CouncilSessionV0Card", () => {
     expect(
       screen.getByText(/Fonte istituzionale non ancora acquisita/i),
     ).toBeInTheDocument();
+    expect(
+      screen.getByText(/copertura editoriale non prova lo svolgimento/i),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Provenienza istituzionale")).toBeInTheDocument();
+    expect(screen.getByText("Non acquisita")).toBeInTheDocument();
+    expect(screen.queryByText("Pubblicazione Albo")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/La convocazione non prova lo svolgimento/i),
+    ).not.toBeInTheDocument();
   });
 
   it("renders the officially confirmed council date without inventing a time", () => {
