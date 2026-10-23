@@ -172,6 +172,8 @@ const COUNCIL_OCTOBER_13_TIMPONE_CITY_ONE_URL =
   "https://cityonelamezia.it/2026/10/13/rione-timpone-il-nostro-impegno-continua-nonostante-il-voto-contrario-alla-mozione/";
 const COMMISSION_V_OCTOBER_23_ASSETS_LAMETINO_URL =
   "https://www.lametino.it/ultime/lamezia-nuove-regole-per-il-patrimonio-immobiliare-comunale-approvato-regolamento-acquisizione-gestione-e-valorizzazione-dei-beni.html";
+const COMMISSION_V_OCTOBER_23_ASSETS_CITY_ONE_URL =
+  "https://cityonelamezia.it/2026/10/23/patrimonio-immobiliare-comunale-a-lamezia-la-quinta-commissione-approva-il-nuovo-regolamento/";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
 const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
 const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-27T21:49:11Z";
@@ -193,7 +195,7 @@ const OCTOBER_7_RESEARCHED_AT = "2026-10-07T10:16:27Z";
 const COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT = "2026-10-14T15:44:57Z";
 const OCTOBER_12_13_COMMISSION_SOURCE_REVIEWED_AT = "2026-10-13T09:58:28Z";
 const OCTOBER_12_13_COMMISSION_CONTEXT_RESEARCHED_AT =
-  "2026-10-23T11:51:52+02:00";
+  "2026-10-23T17:27:41+02:00";
 const MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT = "2026-10-07T15:48:24Z";
 const MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT = "2026-09-12T21:51:17Z";
 const SCHOOL_TRANSPORT_CONTEXT_RESEARCHED_AT = "2026-09-14T10:13:39Z";
@@ -697,7 +699,7 @@ const october12CommissionContextResearch: CouncilSessionV0ContextResearch = {
   status: "reviewed_matches",
   checkedAt: OCTOBER_12_13_COMMISSION_CONTEXT_RESEARCHED_AT,
   searchNote:
-    "Ricerca ripetuta con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, il Lametino e risultati indicizzati, inclusi canali YouTube e Facebook, per la V Commissione del 12 ottobre 2026. È emerso un articolo de il Lametino pubblicato il 23 ottobre, oltre la finestra ordinaria di sette giorni, che nomina la V Commissione e tratta precisamente il regolamento sull'acquisizione, gestione e valorizzazione dei beni immobili comunali. La pagina non indica la data della riunione: il collegamento resta quindi `agenda_item`, non `same_session`, e non prova svolgimento, trattazione, voto, approvazione o risultato istituzionale della seduta. Il nuovo Albo dinamico ha restituito un blocco applicativo durante il controllo diretto e non è emersa una nuova fonte istituzionale; data, ora, ordine del giorno e altri campi ufficiali restano invariati.",
+    "Ricerca ripetuta con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, il Lametino e risultati indicizzati, inclusi canali YouTube e Facebook, per la V Commissione del 12 ottobre 2026. Sono emersi due articoli pubblicati il 23 ottobre, oltre la finestra ordinaria di sette giorni, che nominano la V Commissione e trattano precisamente il regolamento sull'acquisizione, gestione e valorizzazione dei beni immobili comunali. City One attribuisce la fonte a Mimmo Gianturco e riprende contenuti sostanzialmente coincidenti con il Lametino: i due collegamenti non sono conferme indipendenti. Nessuna pagina indica la data della riunione; entrambi restano quindi `agenda_item`, non `same_session`, e non provano svolgimento, trattazione, voto, approvazione o risultato istituzionale della seduta. Il nuovo Albo dinamico ha restituito un blocco applicativo durante il controllo diretto e non è emersa una nuova fonte istituzionale; data, ora, ordine del giorno e altri campi ufficiali restano invariati.",
   articles: [
     {
       title:
@@ -710,6 +712,17 @@ const october12CommissionContextResearch: CouncilSessionV0ContextResearch = {
         "L'articolo nomina la V Commissione e riguarda precisamente il regolamento sull'acquisizione, gestione e valorizzazione dei beni immobili comunali, coincidente con il punto ufficiale del 12 ottobre. È stato pubblicato undici giorni dopo e non indica la data della riunione: non prova che si riferisca alla stessa seduta né certifica svolgimento, trattazione, voto, approvazione o risultato istituzionale.",
       reviewedAt: OCTOBER_12_13_COMMISSION_CONTEXT_RESEARCHED_AT,
     },
+    {
+      title:
+        "Patrimonio immobiliare comunale, a Lamezia la quinta Commissione approva il nuovo regolamento",
+      url: COMMISSION_V_OCTOBER_23_ASSETS_CITY_ONE_URL,
+      publisher: "City One",
+      publishedAt: "2026-10-23",
+      relationship: "agenda_item",
+      relevanceNote:
+        "L'articolo nomina la V Commissione e riguarda precisamente il regolamento sull'acquisizione, gestione e valorizzazione dei beni immobili comunali, coincidente con il punto ufficiale del 12 ottobre. È pubblicato undici giorni dopo, non indica la data della riunione e attribuisce la fonte a Mimmo Gianturco; riprende contenuti sostanzialmente coincidenti con il Lametino e non costituisce una conferma indipendente né certifica svolgimento, trattazione, voto, approvazione o risultato istituzionale.",
+      reviewedAt: OCTOBER_12_13_COMMISSION_CONTEXT_RESEARCHED_AT,
+    },
   ],
   media: [],
 };
@@ -718,7 +731,7 @@ const october13CommissionContextResearch: CouncilSessionV0ContextResearch = {
   status: "checked_no_match",
   checkedAt: OCTOBER_12_13_COMMISSION_CONTEXT_RESEARCHED_AT,
   searchNote:
-    "Ricerca ripetuta con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, il Lametino e risultati indicizzati, inclusi canali YouTube e Facebook, per la V Commissione del 13 ottobre 2026 e il disciplinare per interventi sulla rete stradale. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione. L'articolo de il Lametino del 23 ottobre riguarda invece il distinto regolamento sui beni comunali in agenda il 12 ottobre e non viene trasferito a questa scheda. Il nuovo Albo dinamico ha restituito un blocco applicativo durante il controllo diretto; i campi ufficiali restano invariati.",
+    "Ricerca ripetuta con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, il Lametino e risultati indicizzati, inclusi canali YouTube e Facebook, per la V Commissione del 13 ottobre 2026 e il disciplinare per interventi sulla rete stradale. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione. I due articoli del 23 ottobre riguardano invece il distinto regolamento sui beni comunali in agenda il 12 ottobre e non vengono trasferiti a questa scheda. Il nuovo Albo dinamico ha restituito un blocco applicativo durante il controllo diretto; i campi ufficiali restano invariati.",
   articles: [],
   media: [],
 };
