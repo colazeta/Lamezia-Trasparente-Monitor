@@ -717,15 +717,46 @@ describe("councilSessionV0", () => {
           sourceReviewStatus: "reviewed_against_official_attachment",
         }),
       );
-      expect(session.contextResearch).toEqual(
-        expect.objectContaining({
-          status: "checked_no_match",
-          checkedAt: "2026-10-13T09:58:28Z",
-          articles: [],
-          media: [],
-        }),
-      );
     }
+
+    const october12Session = sessions.find(
+      (session) => session.scheduledAt.value === "2026-10-12T09:00:00+02:00",
+    );
+    expect(october12Session?.contextResearch).toEqual(
+      expect.objectContaining({
+        status: "reviewed_matches",
+        checkedAt: "2026-10-23T11:51:52+02:00",
+        articles: [
+          expect.objectContaining({
+            title:
+              "Lamezia, nuove regole per il patrimonio immobiliare comunale: approvato regolamento acquisizione, gestione e valorizzazione dei beni",
+            url: "https://www.lametino.it/ultime/lamezia-nuove-regole-per-il-patrimonio-immobiliare-comunale-approvato-regolamento-acquisizione-gestione-e-valorizzazione-dei-beni.html",
+            publisher: "il Lametino",
+            publishedAt: "2026-10-23",
+            relationship: "agenda_item",
+          }),
+        ],
+        media: [],
+      }),
+    );
+    expect(october12Session?.contextResearch?.searchNote).toMatch(
+      /oltre la finestra ordinaria.*non indica la data.*`agenda_item`.*non `same_session`.*non prova.*approvazione.*Albo dinamico.*blocco applicativo/is,
+    );
+
+    const october13Session = sessions.find(
+      (session) => session.scheduledAt.value === "2026-10-13T09:00:00+02:00",
+    );
+    expect(october13Session?.contextResearch).toEqual(
+      expect.objectContaining({
+        status: "checked_no_match",
+        checkedAt: "2026-10-23T11:51:52+02:00",
+        articles: [],
+        media: [],
+      }),
+    );
+    expect(october13Session?.contextResearch?.searchNote).toMatch(
+      /disciplinare.*rete stradale.*Non sono emersi.*articolo.*23 ottobre.*distinto regolamento sui beni comunali.*12 ottobre/is,
+    );
   });
 
   it("expands the reviewed VI Commission calendar into two sourced occurrences", () => {
