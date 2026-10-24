@@ -198,17 +198,25 @@ describe("councilSessionV0", () => {
   });
 
   it("publishes source-traceable records for both council and commission notices", () => {
-    expect(councilSessionV0ReviewedRecords).toHaveLength(60);
+    expect(councilSessionV0ReviewedRecords).toHaveLength(61);
     expect(
       new Set(councilSessionV0ReviewedRecords.map((item) => item.kind)),
     ).toEqual(new Set(["council", "commission"]));
 
     for (const session of councilSessionV0ReviewedRecords) {
       expect(session.isDemoFixture).toBe(false);
-      expect(session.provenance?.noticeId).toMatch(/^albo-2026-/);
-      expect(session.provenance?.publicationNumber).toMatch(/^2026\//);
-      expect(session.provenance?.sourceUrl).toContain("albo.tinnvision.cloud");
-      expect(session.provenance?.sourceContentHash).toMatch(/^[a-f0-9]{64}$/);
+      if (session.provenance) {
+        expect(session.provenance.noticeId).toMatch(/^albo-2026-/);
+        expect(session.provenance.publicationNumber).toMatch(/^2026\//);
+        expect(session.provenance.sourceUrl).toContain("albo.tinnvision.cloud");
+        expect(session.provenance.sourceContentHash).toMatch(/^[a-f0-9]{64}$/);
+      } else {
+        expect(session.id).toBe(
+          "editorial-commissione-i-sfiducia-presidente-2026-10",
+        );
+        expect(session.scheduledAt.value).toBeNull();
+        expect(session.scheduledAt.sourceStatus).toBe("da_verificare");
+      }
       expect(session.lastCheckedAt.value).toBeTruthy();
       expect(["reviewed_matches", "checked_no_match"]).toContain(
         session.contextResearch.status,
@@ -238,6 +246,36 @@ describe("councilSessionV0", () => {
         expect(Date.parse(media.reviewedAt)).not.toBeNaN();
       }
     }
+  });
+
+  it("keeps the October I Commission editorial signal separate from official fields", () => {
+    const session = findCouncilSessionV0ReviewedRecord(
+      "editorial-commissione-i-sfiducia-presidente-2026-10",
+    );
+
+    expect(session?.provenance).toBeUndefined();
+    expect(session?.scheduledAt.value).toBeNull();
+    expect(session?.sessionStatus.value).toBe("non_verificata");
+    expect(session?.agenda.value).toBeNull();
+    expect(session?.sourceLink.value).toBeNull();
+    expect(session?.liveStreaming.value).toBeNull();
+    expect(session?.recording.value).toBeNull();
+    expect(session?.contextResearch.articles).toHaveLength(1);
+    expect(session?.contextResearch.articles[0]).toMatchObject({
+      publisher: "il Lametino",
+      publishedAt: "2026-10-22",
+      relationship: "same_session",
+    });
+    expect(session?.contextResearch.editorialAgenda).toEqual([
+      expect.objectContaining({
+        title:
+          "Mozione di sfiducia nei confronti del presidente della I Commissione",
+        confidence: "medium",
+      }),
+    ]);
+    expect(session?.scheduledAt.limit).toMatch(
+      /data dell'articolo non viene usata come data della seduta/i,
+    );
   });
 
   it("enriches the council record from a later official source without inventing time or agenda", () => {
@@ -368,7 +406,7 @@ describe("councilSessionV0", () => {
         }),
         contextResearch: expect.objectContaining({
           status: "reviewed_matches",
-          checkedAt: "2026-10-13T03:57:48Z",
+          checkedAt: "2026-10-14T15:44:57Z",
           articles: expect.arrayContaining([
             expect.objectContaining({
               publisher: "City One",
@@ -511,6 +549,39 @@ describe("councilSessionV0", () => {
                 "dal-consiglio-comunale-via-libera-a-quattro-debiti-di-bilancio",
               ),
             }),
+            expect.objectContaining({
+              title: expect.stringContaining(
+                "bocciate mozioni minoranza",
+              ),
+              publisher: "NtaCalabria",
+              publishedAt: "2026-10-13",
+              relationship: "same_session",
+              url: expect.stringContaining(
+                "consiglio-comunale-a-lamezia-bocciate-mozioni-minoranza",
+              ),
+            }),
+            expect.objectContaining({
+              title: expect.stringContaining(
+                "dopo il no alla mozione su Timpone",
+              ),
+              publisher: "il Lametino",
+              publishedAt: "2026-10-13",
+              relationship: "agenda_item",
+              url: expect.stringContaining(
+                "dopo-il-no-alla-mozione-su-timpone",
+              ),
+            }),
+            expect.objectContaining({
+              title: expect.stringContaining(
+                "Rione Timpone: il nostro impegno continua",
+              ),
+              publisher: "City One",
+              publishedAt: "2026-10-13",
+              relationship: "agenda_item",
+              url: expect.stringContaining(
+                "rione-timpone-il-nostro-impegno-continua",
+              ),
+            }),
           ]),
           media: [
             expect.objectContaining({
@@ -603,15 +674,15 @@ describe("councilSessionV0", () => {
       /Sala Consiliare.*Renato Luisi.*via Sen\. Arturo Perugini/i,
     );
     expect(council?.dataLimits.value?.join(" ")).toMatch(
-      /venti articoli.*resoconto del 12 ottobre.*fonti editoriali.*non valorizzano.*risultati ufficiali/i,
+      /ventitré articoli.*resoconto del 12 ottobre.*NtaCalabria.*due articoli del 13 ottobre.*agenda_item.*Timpone.*fonti editoriali.*non valorizzano.*risultati ufficiali/i,
     );
     expect(council?.dataLimits.value?.join(" ")).not.toMatch(
       /non sono emersi collegamenti editoriali/i,
     );
-    expect(council?.contextResearch.articles).toHaveLength(20);
+    expect(council?.contextResearch.articles).toHaveLength(23);
     expect(council?.contextResearch.media).toHaveLength(8);
     expect(council?.contextResearch.searchNote).toMatch(
-      /Parallel Search.*venti articoli.*USB Taxi.*tre approfondimenti.*resoconto del 12 ottobre.*non sono conferme indipendenti.*2026\/3263.*18 punti.*otto collegamenti audiovisivi.*City One.*LameziaTerme\.it.*possible_same_session.*live_stream.*excerpt.*same_session.*interview.*12 ottobre.*48 secondi.*rimosso.*unavailable.*11:10.*replay.*5:24:50.*Facebook.*replay distinto/is,
+      /Parallel Search.*ventitré articoli.*ventuno come `same_session`.*USB Taxi.*tre approfondimenti.*resoconto del 12 ottobre.*NtaCalabria.*due articoli del 13 ottobre.*`agenda_item`.*Timpone.*City One.*il Lametino.*stessa nota.*non sono conferme indipendenti.*2026\/3263.*18 punti.*otto collegamenti audiovisivi.*City One.*LameziaTerme\.it.*possible_same_session.*live_stream.*excerpt.*same_session.*interview.*12 ottobre.*48 secondi.*rimosso.*unavailable.*11:10.*replay.*5:24:50.*Facebook.*replay distinto/is,
     );
     expect(council?.liveStreaming.value).toBeNull();
     expect(council?.recording.value).toBeNull();
@@ -646,15 +717,57 @@ describe("councilSessionV0", () => {
           sourceReviewStatus: "reviewed_against_official_attachment",
         }),
       );
-      expect(session.contextResearch).toEqual(
-        expect.objectContaining({
-          status: "checked_no_match",
-          checkedAt: "2026-10-13T03:57:48Z",
-          articles: [],
-          media: [],
-        }),
-      );
     }
+
+    const october12Session = sessions.find(
+      (session) => session.scheduledAt.value === "2026-10-12T09:00:00+02:00",
+    );
+    expect(october12Session?.contextResearch).toEqual(
+      expect.objectContaining({
+        status: "reviewed_matches",
+        checkedAt: "2026-10-23T17:27:41+02:00",
+        articles: [
+          expect.objectContaining({
+            title:
+              "Lamezia, nuove regole per il patrimonio immobiliare comunale: approvato regolamento acquisizione, gestione e valorizzazione dei beni",
+            url: "https://www.lametino.it/ultime/lamezia-nuove-regole-per-il-patrimonio-immobiliare-comunale-approvato-regolamento-acquisizione-gestione-e-valorizzazione-dei-beni.html",
+            publisher: "il Lametino",
+            publishedAt: "2026-10-23",
+            relationship: "agenda_item",
+          }),
+          expect.objectContaining({
+            title:
+              "Patrimonio immobiliare comunale, a Lamezia la quinta Commissione approva il nuovo regolamento",
+            url: "https://cityonelamezia.it/2026/10/23/patrimonio-immobiliare-comunale-a-lamezia-la-quinta-commissione-approva-il-nuovo-regolamento/",
+            publisher: "City One",
+            publishedAt: "2026-10-23",
+            relationship: "agenda_item",
+            relevanceNote: expect.stringMatching(
+              /Mimmo Gianturco.*non costituisce una conferma indipendente.*né certifica.*approvazione/is,
+            ),
+          }),
+        ],
+        media: [],
+      }),
+    );
+    expect(october12Session?.contextResearch?.searchNote).toMatch(
+      /due articoli.*oltre la finestra ordinaria.*City One.*Mimmo Gianturco.*non sono conferme indipendenti.*Nessuna pagina indica la data.*`agenda_item`.*non `same_session`.*non provano.*approvazione.*Albo dinamico.*blocco applicativo/is,
+    );
+
+    const october13Session = sessions.find(
+      (session) => session.scheduledAt.value === "2026-10-13T09:00:00+02:00",
+    );
+    expect(october13Session?.contextResearch).toEqual(
+      expect.objectContaining({
+        status: "checked_no_match",
+        checkedAt: "2026-10-23T17:27:41+02:00",
+        articles: [],
+        media: [],
+      }),
+    );
+    expect(october13Session?.contextResearch?.searchNote).toMatch(
+      /disciplinare.*rete stradale.*Non sono emersi.*due articoli.*23 ottobre.*distinto regolamento sui beni comunali.*12 ottobre/is,
+    );
   });
 
   it("expands the reviewed VI Commission calendar into two sourced occurrences", () => {

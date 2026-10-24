@@ -66,6 +66,10 @@ const SERRA_ANNUNZIATA_LAMETINO_URL =
   "https://www.lametino.it/ultime/lamezia-consigliera-serratore-presenta-mozione-su-rifiuti-e-sicurezza-in-localita-serra-e-annunziata.html";
 const COMMISSION_I_MOTION_LAMETINO_URL =
   "https://www.lametino.it/ultime/lamezia-mozioni-di-sfiducia-contro-cristiano-e-villella-tensioni-nelle-commissioni-consiliari.html";
+const COMMISSION_I_OCTOBER_22_LAMETINO_URL =
+  "https://www.lametino.it/ultime/lamezia-consiglieri-di-opposizione-lavori-fermi-in-i-commissione-citta-non-puo-continuare-a-pagare-scontri-nel-centrodestra.html";
+const MUNICIPAL_ALBO_DOCUMENTS_URL =
+  "https://www.comune.lamezia-terme.cz.it/it/documenti_pubblici/atti-di-albo-pretorio";
 const VIA_TRENTO_ROADWORKS_LAMETINO_URL =
   "https://www.lametino.it/ultimora/lamezia-lavori-di-bitumazione-in-via-trento-limitazione-della-circolazione-stradale-il-25-settembre.html";
 const COMMISSION_V_REU_LAMETINO_URL =
@@ -160,6 +164,16 @@ const COUNCIL_OCTOBER_11_GAZZETTA_CONTEXT_URL =
   "https://catanzaro.gazzettadelsud.it/articoli/politica/2026/10/11/lamezia-laffondo-del-centrosinistra-maggioranza-senza-numeri-593af877-017f-4027-bf99-67e88e418fb9/";
 const COUNCIL_OCTOBER_12_REPORT_LAMETINO_URL =
   "https://www.lametino.it/ultime/lamezia-dal-consiglio-comunale-via-libera-a-quattro-debiti-di-bilancio.html";
+const COUNCIL_OCTOBER_13_NTACALABRIA_REPORT_URL =
+  "https://www.ntacalabria.it/politica/consiglio-comunale-a-lamezia-bocciate-mozioni-minoranza.html";
+const COUNCIL_OCTOBER_13_TIMPONE_LAMETINO_URL =
+  "https://www.lametino.it/ultime/lamezia-cristiano-e-villella-dopo-il-no-alla-mozione-su-timpone-andremo-avanti-per-i-cittadini.html";
+const COUNCIL_OCTOBER_13_TIMPONE_CITY_ONE_URL =
+  "https://cityonelamezia.it/2026/10/13/rione-timpone-il-nostro-impegno-continua-nonostante-il-voto-contrario-alla-mozione/";
+const COMMISSION_V_OCTOBER_23_ASSETS_LAMETINO_URL =
+  "https://www.lametino.it/ultime/lamezia-nuove-regole-per-il-patrimonio-immobiliare-comunale-approvato-regolamento-acquisizione-gestione-e-valorizzazione-dei-beni.html";
+const COMMISSION_V_OCTOBER_23_ASSETS_CITY_ONE_URL =
+  "https://cityonelamezia.it/2026/10/23/patrimonio-immobiliare-comunale-a-lamezia-la-quinta-commissione-approva-il-nuovo-regolamento/";
 const SOURCE_REVIEWED_AT = "2026-08-22T12:10:49Z";
 const CONTEXT_RESEARCHED_AT = "2026-08-23T10:48:08Z";
 const COUNCIL_CONTEXT_RESEARCHED_AT = "2026-08-27T21:49:11Z";
@@ -178,8 +192,10 @@ const VIA_TRENTO_ROADWORKS_CONTEXT_RESEARCHED_AT = "2026-09-24T09:59:02Z";
 const COMMISSION_V_REU_CONTEXT_RESEARCHED_AT = "2026-09-28T15:27:08Z";
 const COMMISSION_IV_STREET_ART_CONTEXT_RESEARCHED_AT = "2026-09-29T04:07:44Z";
 const OCTOBER_7_RESEARCHED_AT = "2026-10-07T10:16:27Z";
-const COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT = "2026-10-13T03:57:48Z";
-const OCTOBER_12_13_COMMISSION_RESEARCHED_AT = "2026-10-13T03:57:48Z";
+const COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT = "2026-10-14T15:44:57Z";
+const OCTOBER_12_13_COMMISSION_SOURCE_REVIEWED_AT = "2026-10-13T09:58:28Z";
+const OCTOBER_12_13_COMMISSION_CONTEXT_RESEARCHED_AT =
+  "2026-10-23T17:27:41+02:00";
 const MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT = "2026-10-07T15:48:24Z";
 const MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT = "2026-09-12T21:51:17Z";
 const SCHOOL_TRANSPORT_CONTEXT_RESEARCHED_AT = "2026-09-14T10:13:39Z";
@@ -679,21 +695,52 @@ const october1To6CommissionContextResearch: CouncilSessionV0ContextResearch = {
   media: [],
 };
 
-const october12To13CommissionContextResearch: CouncilSessionV0ContextResearch =
-  {
-    status: "checked_no_match",
-    checkedAt: OCTOBER_12_13_COMMISSION_RESEARCHED_AT,
-    searchNote:
-      "Ricerca ripetuta tra il 12 e il 13 ottobre con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, il Lametino e risultati indicizzati, inclusi canali YouTube e Facebook, per le sedute della V Commissione del 12 e 13 ottobre 2026. Le query hanno combinato organo, date, orario e temi distintivi: regolamento sulla gestione e valorizzazione dei beni comunali e disciplinare per interventi sulla rete stradale. Anche al controllo precedente all'orario della seduta del 13 ottobre non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alle singole sedute. Gli ordini del giorno ufficiali sono disponibili e non viene ricostruita un'agenda editoriale.",
-    articles: [],
-    media: [],
-  };
+const october12CommissionContextResearch: CouncilSessionV0ContextResearch = {
+  status: "reviewed_matches",
+  checkedAt: OCTOBER_12_13_COMMISSION_CONTEXT_RESEARCHED_AT,
+  searchNote:
+    "Ricerca ripetuta con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, il Lametino e risultati indicizzati, inclusi canali YouTube e Facebook, per la V Commissione del 12 ottobre 2026. Sono emersi due articoli pubblicati il 23 ottobre, oltre la finestra ordinaria di sette giorni, che nominano la V Commissione e trattano precisamente il regolamento sull'acquisizione, gestione e valorizzazione dei beni immobili comunali. City One attribuisce la fonte a Mimmo Gianturco e riprende contenuti sostanzialmente coincidenti con il Lametino: i due collegamenti non sono conferme indipendenti. Nessuna pagina indica la data della riunione; entrambi restano quindi `agenda_item`, non `same_session`, e non provano svolgimento, trattazione, voto, approvazione o risultato istituzionale della seduta. Il nuovo Albo dinamico ha restituito un blocco applicativo durante il controllo diretto e non è emersa una nuova fonte istituzionale; data, ora, ordine del giorno e altri campi ufficiali restano invariati.",
+  articles: [
+    {
+      title:
+        "Lamezia, nuove regole per il patrimonio immobiliare comunale: approvato regolamento acquisizione, gestione e valorizzazione dei beni",
+      url: COMMISSION_V_OCTOBER_23_ASSETS_LAMETINO_URL,
+      publisher: "il Lametino",
+      publishedAt: "2026-10-23",
+      relationship: "agenda_item",
+      relevanceNote:
+        "L'articolo nomina la V Commissione e riguarda precisamente il regolamento sull'acquisizione, gestione e valorizzazione dei beni immobili comunali, coincidente con il punto ufficiale del 12 ottobre. È stato pubblicato undici giorni dopo e non indica la data della riunione: non prova che si riferisca alla stessa seduta né certifica svolgimento, trattazione, voto, approvazione o risultato istituzionale.",
+      reviewedAt: OCTOBER_12_13_COMMISSION_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Patrimonio immobiliare comunale, a Lamezia la quinta Commissione approva il nuovo regolamento",
+      url: COMMISSION_V_OCTOBER_23_ASSETS_CITY_ONE_URL,
+      publisher: "City One",
+      publishedAt: "2026-10-23",
+      relationship: "agenda_item",
+      relevanceNote:
+        "L'articolo nomina la V Commissione e riguarda precisamente il regolamento sull'acquisizione, gestione e valorizzazione dei beni immobili comunali, coincidente con il punto ufficiale del 12 ottobre. È pubblicato undici giorni dopo, non indica la data della riunione e attribuisce la fonte a Mimmo Gianturco; riprende contenuti sostanzialmente coincidenti con il Lametino e non costituisce una conferma indipendente né certifica svolgimento, trattazione, voto, approvazione o risultato istituzionale.",
+      reviewedAt: OCTOBER_12_13_COMMISSION_CONTEXT_RESEARCHED_AT,
+    },
+  ],
+  media: [],
+};
+
+const october13CommissionContextResearch: CouncilSessionV0ContextResearch = {
+  status: "checked_no_match",
+  checkedAt: OCTOBER_12_13_COMMISSION_CONTEXT_RESEARCHED_AT,
+  searchNote:
+    "Ricerca ripetuta con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, il Lametino e risultati indicizzati, inclusi canali YouTube e Facebook, per la V Commissione del 13 ottobre 2026 e il disciplinare per interventi sulla rete stradale. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione. I due articoli del 23 ottobre riguardano invece il distinto regolamento sui beni comunali in agenda il 12 ottobre e non vengono trasferiti a questa scheda. Il nuovo Albo dinamico ha restituito un blocco applicativo durante il controllo diretto; i campi ufficiali restano invariati.",
+  articles: [],
+  media: [],
+};
 
 const councilOctober9ContextResearch: CouncilSessionV0ContextResearch = {
   status: "reviewed_matches",
   checkedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
   searchNote:
-    "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, LameziaTerme.it, Lamezia Oggi, La Novità Online, il Lametino, Corriere della Calabria, Gazzetta del Sud, Calabria Diretta News e risultati indicizzati, inclusi canali YouTube e Facebook, per il Consiglio comunale convocato il 9 ottobre 2026 alle 09:30 e proseguito in seconda convocazione il 12 ottobre alle 10:30. Venti articoli originali sono collegati come `same_session`: quattro annunci del 6 ottobre, quattro resoconti del 9 ottobre, due resoconti del 10 ottobre, sei articoli del 10 ottobre sulla nota USB Taxi che annuncia la presenza al Consiglio del 12 ottobre, tre approfondimenti dell'11 ottobre che collegano espressamente la prima convocazione alla prosecuzione del 12 ottobre e un resoconto del 12 ottobre riferito alla seconda convocazione. I sei articoli USB riprendono la stessa iniziativa e non sono conferme indipendenti. Tutti restano fonti editoriali e non valorizzano campi ufficiali, presenze, votazioni o risultati. La pubblicazione istituzionale 2026/3263 attesta invece la mancanza del numero legale e il rinvio dei 18 punti non discussi e votati alla seconda convocazione del 12 ottobre alle 10:30. Otto collegamenti audiovisivi editoriali sono stati verificati. Per il 9 ottobre, le dirette YouTube e Facebook di City One, rispettivamente di 4:17:09 e 4:13:05, e la diretta Facebook di LameziaTerme.it di 3:52:52 restano `possible_same_session` e `live_stream`; l'estratto Facebook di LameziaTerme.it di 1:00 resta `possible_same_session` e `excerpt`; la conferenza stampa del centrosinistra di 12:27 è `same_session` e `interview`. Per il 12 ottobre, City One ha pubblicato due URL YouTube con lo stesso titolo esplicito: il primo tentativo di 48 secondi risulta rimosso dall'autore ed è `unavailable`; la diretta principale, iniziata alle 11:10 locali, è terminata ed è disponibile come replay di 5:24:50. La pagina Facebook originale dello stesso editore conserva inoltre un replay distinto con titolo che identifica organo e data. I tre URL del 12 ottobre restano `possible_same_session` e `live_stream` perché non espongono un punto distintivo o il numero Albo. Nessun contenuto editoriale prova completezza, presenze, votazioni o risultati. Il portale istituzionale ConsigliCloud mostrava «No meetings found», quindi non è stato valorizzato alcuno streaming o registrazione istituzionale. L'ordine del giorno ufficiale resta quello dell'allegato istituzionale e non viene ricostruita un'agenda editoriale; la ricerca resta aperta fino al termine della finestra prevista.",
+    "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, LameziaTerme.it, Lamezia Oggi, La Novità Online, il Lametino, Corriere della Calabria, Gazzetta del Sud, Calabria Diretta News, NtaCalabria e risultati indicizzati, inclusi canali YouTube e Facebook, per il Consiglio comunale convocato il 9 ottobre 2026 alle 09:30 e proseguito in seconda convocazione il 12 ottobre alle 10:30. Ventitré articoli originali sono collegati: ventuno come `same_session` — quattro annunci del 6 ottobre, quattro resoconti del 9 ottobre, due resoconti del 10 ottobre, sei articoli del 10 ottobre sulla nota USB Taxi che annuncia la presenza al Consiglio del 12 ottobre, tre approfondimenti dell'11 ottobre che collegano espressamente la prima convocazione alla prosecuzione del 12 ottobre, un resoconto del 12 ottobre e il resoconto NtaCalabria del 13 ottobre riferiti alla seconda convocazione — e due articoli del 13 ottobre come `agenda_item`, perché riguardano precisamente la mozione sul rione Timpone presente nell'ordine del giorno e discussa nella seconda convocazione. Gli articoli di City One e de il Lametino sul rione Timpone riprendono la stessa nota dei proponenti e non sono conferme indipendenti, come non lo sono i sei articoli USB che riprendono la medesima iniziativa. Tutti restano fonti editoriali e non valorizzano campi ufficiali, presenze, votazioni o risultati. La pubblicazione istituzionale 2026/3263 attesta invece la mancanza del numero legale e il rinvio dei 18 punti non discussi e votati alla seconda convocazione del 12 ottobre alle 10:30. Otto collegamenti audiovisivi editoriali sono stati verificati. Per il 9 ottobre, le dirette YouTube e Facebook di City One, rispettivamente di 4:17:09 e 4:13:05, e la diretta Facebook di LameziaTerme.it di 3:52:52 restano `possible_same_session` e `live_stream`; l'estratto Facebook di LameziaTerme.it di 1:00 resta `possible_same_session` e `excerpt`; la conferenza stampa del centrosinistra di 12:27 è `same_session` e `interview`. Per il 12 ottobre, City One ha pubblicato due URL YouTube con lo stesso titolo esplicito: il primo tentativo di 48 secondi risulta rimosso dall'autore ed è `unavailable`; la diretta principale, iniziata alle 11:10 locali, è terminata ed è disponibile come replay di 5:24:50. La pagina Facebook originale dello stesso editore conserva inoltre un replay distinto con titolo che identifica organo e data. I tre URL del 12 ottobre restano `possible_same_session` e `live_stream` perché non espongono un punto distintivo o il numero Albo. Nessun contenuto editoriale prova completezza, presenze, votazioni o risultati. Il portale istituzionale ConsigliCloud mostrava «No meetings found», quindi non è stato valorizzato alcuno streaming o registrazione istituzionale. L'ordine del giorno ufficiale resta quello dell'allegato istituzionale e non viene ricostruita un'agenda editoriale; la ricerca resta aperta fino al termine della finestra prevista.",
   articles: [
     {
       title: "Convocato il Consiglio Comunale per venerdì 9 ottobre 2026",
@@ -912,6 +959,38 @@ const councilOctober9ContextResearch: CouncilSessionV0ContextResearch = {
       relationship: "same_session",
       relevanceNote:
         "Il resoconto identifica la seconda convocazione del Consiglio del 12 ottobre e richiama punti distintivi dell'ordine del giorno ufficiale, inclusi debiti fuori bilancio, mozioni e interrogazioni. Resta una fonte editoriale: non valorizza i campi ufficiali e non certifica presenze, votazioni, deliberazioni, risultati o completezza della seduta.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title: "Consiglio comunale a Lamezia, bocciate mozioni minoranza",
+      url: COUNCIL_OCTOBER_13_NTACALABRIA_REPORT_URL,
+      publisher: "NtaCalabria",
+      publishedAt: "2026-10-13",
+      relationship: "same_session",
+      relevanceNote:
+        "Il resoconto identifica la ripresa dei lavori interrotti nella prima convocazione e richiama punti distintivi della seconda convocazione del 12 ottobre: quattro debiti fuori bilancio, tre mozioni e undici interrogazioni. Resta una fonte editoriale: non valorizza i campi ufficiali e non certifica presenze, votazioni, deliberazioni, risultati o completezza della seduta.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        'Lamezia, Cristiano e Villella dopo il no alla mozione su Timpone: "Andremo avanti per i cittadini"',
+      url: COUNCIL_OCTOBER_13_TIMPONE_LAMETINO_URL,
+      publisher: "il Lametino",
+      publishedAt: "2026-10-13",
+      relationship: "agenda_item",
+      relevanceNote:
+        "L'articolo pubblica una nota dei proponenti sulla mozione relativa al rione Timpone e richiama espressamente il confronto avvenuto in Consiglio, collegandosi con precisione a un punto dell'ordine del giorno ufficiale della seconda convocazione. È contesto editoriale post-seduta: non valorizza campi ufficiali e non certifica presenze, votazioni, deliberazioni, risultati o completezza della seduta.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Rione Timpone: il nostro impegno continua, nonostante il voto contrario alla mozione",
+      url: COUNCIL_OCTOBER_13_TIMPONE_CITY_ONE_URL,
+      publisher: "City One",
+      publishedAt: "2026-10-13",
+      relationship: "agenda_item",
+      relevanceNote:
+        "L'articolo pubblica la stessa nota dei proponenti già ripresa da il Lametino sulla mozione relativa al rione Timpone e richiama espressamente il confronto avvenuto in Consiglio. È un collegamento editoriale distinto, non una conferma indipendente, e non valorizza campi ufficiali né certifica presenze, votazioni, deliberazioni, risultati o completezza della seduta.",
       reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
     },
   ],
@@ -1752,7 +1831,7 @@ const commissionVOctober12And13Notice = lateSeptemberNotice({
     "77c48da9bd24ef016efb6d91aee2111faaadfaaad94195f3ef7f8c01ac799928",
   documentSha256:
     "162b92486574751b01024336f282ec58496ae951bbec08c455d42480f2cf2cce",
-  reviewedAt: OCTOBER_12_13_COMMISSION_RESEARCHED_AT,
+  reviewedAt: OCTOBER_12_13_COMMISSION_SOURCE_REVIEWED_AT,
 });
 
 const councilOctober9DocumentUrl =
@@ -2570,7 +2649,7 @@ const councilOctober9Session: CouncilSessionV0 = {
       'La sede indicata è la Sala Consiliare "Renato Luisi", in via Sen. Arturo Perugini.',
       "L'avviso ufficiale 2026/3263 attesta lo svolgimento parziale e la sospensione per mancanza del numero legale, con passaggio alla seconda convocazione dei 18 punti non discussi e votati; non costituisce un verbale completo.",
       "Streaming istituzionale, registrazione istituzionale e verbale sono indicati come non rilevati, non come inesistenti.",
-      "I venti articoli collegati, inclusi sei resoconti tra il 9 e il 10 ottobre, sei articoli sulla nota USB Taxi relativa al 12 ottobre, tre approfondimenti dell'11 ottobre e un resoconto del 12 ottobre sulla seconda convocazione, restano fonti editoriali e non valorizzano campi, presenze, votazioni o risultati ufficiali.",
+      "I ventitré articoli collegati, inclusi sei resoconti tra il 9 e il 10 ottobre, sei articoli sulla nota USB Taxi relativa al 12 ottobre, tre approfondimenti dell'11 ottobre, un resoconto del 12 ottobre e il resoconto NtaCalabria del 13 ottobre sulla seconda convocazione, oltre a due articoli del 13 ottobre classificati `agenda_item` sulla stessa nota relativa alla mozione per il rione Timpone, restano fonti editoriali e non valorizzano campi, presenze, votazioni o risultati ufficiali.",
       "Gli otto collegamenti audiovisivi di City One e LameziaTerme.it, inclusi sei live stream, un estratto e un'intervista, sono fonti editoriali esterne: non certificano programmazione istituzionale, completezza, presenze, votazioni o risultati.",
     ],
     sourceStatus: "parziale",
@@ -2682,7 +2761,133 @@ const councilVerifiedSession: CouncilSessionV0 = {
   },
 };
 
+const commissionIOctober22EditorialSession: CouncilSessionV0 = {
+  id: "editorial-commissione-i-sfiducia-presidente-2026-10",
+  kind: "commission",
+  isDemoFixture: false,
+  contextResearch: {
+    status: "reviewed_matches",
+    checkedAt: "2026-10-23T00:06:00+02:00",
+    searchNote:
+      "Parallel Search e la verifica diretta di Comune, Albo, testate locali e canali audiovisivi indicizzati hanno individuato un solo articolo sufficientemente preciso. Il testo identifica esplicitamente una seduta della I Commissione e il tema discusso, ma la data di pubblicazione è usata soltanto per la ricerca: non viene presentata come data ufficiale della seduta. Non è stato acquisito un atto istituzionale; data, ora, sede, ordine del giorno, svolgimento ed esiti restano non verificati.",
+    articles: [
+      {
+        title:
+          "Lamezia, consiglieri di opposizione: ‘Lavori fermi in I Commissione, città non può continuare a pagare scontri nel centrodestra’",
+        url: COMMISSION_I_OCTOBER_22_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-10-22",
+        relationship: "same_session",
+        relevanceNote:
+          "L'articolo descrive esplicitamente una seduta a porte chiuse della I Commissione e la collega alla mozione di sfiducia nei confronti del presidente. È una fonte editoriale: non certifica convocazione, data e ora ufficiali, svolgimento, votazioni, esiti o completezza.",
+        reviewedAt: "2026-10-23T00:06:00+02:00",
+      },
+    ],
+    media: [],
+    editorialAgenda: [
+      {
+        title:
+          "Mozione di sfiducia nei confronti del presidente della I Commissione",
+        sourceUrls: [COMMISSION_I_OCTOBER_22_LAMETINO_URL],
+        confidence: "medium",
+        reason:
+          "Il tema è indicato espressamente nell'unica fonte editoriale precisa individuata, ma non è disponibile un ordine del giorno istituzionale. La voce descrive soltanto un tema emerso dalla copertura e non implica trattazione, voto o esito.",
+      },
+    ],
+  },
+  title: {
+    key: "title",
+    label: "Titolo",
+    value:
+      "I Commissione consiliare permanente — seduta segnalata dalla copertura",
+    sourceStatus: "da_verificare",
+    limit:
+      "L'organo è indicato da una fonte editoriale; manca una pubblicazione istituzionale che consenta di verificare la denominazione e la seduta.",
+  },
+  scheduledAt: {
+    key: "scheduledAt",
+    label: "Data e ora",
+    value: null,
+    sourceStatus: "da_verificare",
+    limit:
+      "Data e ora non sono disponibili da una fonte istituzionale. La data dell'articolo non viene usata come data della seduta.",
+  },
+  sessionStatus: {
+    key: "sessionStatus",
+    label: "Stato seduta",
+    value: "non_verificata",
+    sourceStatus: "da_verificare",
+    limit:
+      "La copertura editoriale non certifica convocazione, svolgimento, chiusura, rinvio o altro esito ufficiale.",
+  },
+  agenda: {
+    key: "agenda",
+    label: "Ordine del giorno",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Ordine del giorno istituzionale non acquisito. Il tema riportato dalla stampa è esposto soltanto nella sezione separata “Temi emersi dalla copertura”.",
+  },
+  sourceLink: {
+    key: "sourceLink",
+    label: "Fonte",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Non è stata individuata una pubblicazione istituzionale associabile con precisione alla seduta.",
+  },
+  liveStreaming: {
+    key: "liveStreaming",
+    label: "Streaming live",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Nessuna diretta istituzionale associabile con precisione è stata individuata.",
+  },
+  recording: {
+    key: "recording",
+    label: "Registrazione",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Nessuna registrazione istituzionale associabile con precisione è stata individuata.",
+  },
+  minutesOrReport: {
+    key: "minutesOrReport",
+    label: "Verbale o resoconto",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Nessun verbale o resoconto istituzionale associabile con precisione è stato individuato.",
+  },
+  lastCheckedAt: {
+    key: "lastCheckedAt",
+    label: "Ultimo controllo",
+    value: "2026-10-23T00:06:00+02:00",
+    sourceStatus: "verificato",
+    sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
+    limit:
+      "Indica quando sono state ricontrollate le fonti, non una conferma istituzionale della seduta.",
+  },
+  dataLimits: {
+    key: "dataLimits",
+    label: "Limiti del dato",
+    value: [
+      "La data di pubblicazione dell'articolo non viene presentata come data ufficiale della seduta.",
+      "Non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione alla seduta; il nuovo Albo dinamico ha inoltre restituito un blocco applicativo durante il controllo diretto.",
+      "Data, ora, sede, ordine del giorno, stato, streaming, registrazione e verbale restano non verificati o non rilevati secondo il campo.",
+      "L'articolo collegato è una fonte editoriale e non certifica programmazione, svolgimento, completezza, presenze, votazioni o risultati.",
+      "Il tema riportato dalla copertura resta nell'agenda editoriale separata e dovrà essere riconciliato se emergerà un atto istituzionale.",
+    ],
+    sourceStatus: "parziale",
+    sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
+    limit:
+      "Scheda prudenziale basata su una corrispondenza editoriale esplicita; tutti i campi ufficiali restano separati e non confermati.",
+  },
+};
+
 export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
+  commissionIOctober22EditorialSession,
   septemberCommissionSession({
     id: "albo-2026-3262-commissione-v-2026-10-13",
     title: "V Commissione consiliare permanente — seduta del 13 ottobre 2026",
@@ -2690,7 +2895,7 @@ export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
     agenda: roadNetworkWorksRulesAgenda,
     candidate: commissionVOctober12And13Notice.candidate,
     provenance: commissionVOctober12And13Notice.provenance,
-    contextResearch: october12To13CommissionContextResearch,
+    contextResearch: october13CommissionContextResearch,
     sourceLinkLabel: "Apri il calendario ufficiale della V Commissione",
     calendarSummary:
       "La stessa convocazione programma due sedute della V Commissione, il 12 e il 13 ottobre 2026 alle 09:00.",
@@ -2702,7 +2907,7 @@ export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
     agenda: municipalAssetsRegulationAgenda,
     candidate: commissionVOctober12And13Notice.candidate,
     provenance: commissionVOctober12And13Notice.provenance,
-    contextResearch: october12To13CommissionContextResearch,
+    contextResearch: october12CommissionContextResearch,
     sourceLinkLabel: "Apri il calendario ufficiale della V Commissione",
     calendarSummary:
       "La stessa convocazione programma due sedute della V Commissione, il 12 e il 13 ottobre 2026 alle 09:00.",

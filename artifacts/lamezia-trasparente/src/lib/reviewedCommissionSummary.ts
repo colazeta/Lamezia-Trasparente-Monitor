@@ -1,6 +1,7 @@
 interface ReviewedSessionSummaryInput {
   kind: "council" | "commission";
   title: { value: string | null };
+  provenance?: unknown;
 }
 
 type CommissionGroup = string;
@@ -64,7 +65,7 @@ export function summarizeReviewedCommissions(
   records: readonly ReviewedSessionSummaryInput[],
 ): string {
   const commissionRecords = records.filter(
-    (record) => record.kind === "commission",
+    (record) => record.kind === "commission" && record.provenance !== undefined,
   );
   const counts = new Map<CommissionGroup, number>();
 

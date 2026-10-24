@@ -14,6 +14,50 @@ function reviewedRecord(id: string) {
 }
 
 describe("CouncilSessionV0Card", () => {
+  it("labels an editorial-only signal without implying official metadata", () => {
+    const session = reviewedRecord(
+      "editorial-commissione-i-sfiducia-presidente-2026-10",
+    );
+
+    const { rerender } = render(
+      <CouncilSessionV0SummaryCard session={session} />,
+    );
+
+    expect(screen.getByText("Solo copertura editoriale")).toBeInTheDocument();
+    expect(screen.getByText("Data da verificare")).toBeInTheDocument();
+    expect(
+      screen.getByText(/registra soltanto una copertura editoriale/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText(/Metadati ufficiali disponibili/i),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", { name: /Fonte ufficiale/i }),
+    ).not.toBeInTheDocument();
+
+    rerender(<CouncilSessionV0Detail session={session} />);
+    expect(
+      screen.getByRole("heading", { name: "Temi emersi dalla copertura" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", {
+        name: /Lavori fermi in I Commissione/i,
+      }),
+    ).toHaveAttribute("href", expect.stringContaining("lametino.it"));
+    expect(
+      screen.getByText(/Fonte istituzionale non ancora acquisita/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/copertura editoriale non prova lo svolgimento/i),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Provenienza istituzionale")).toBeInTheDocument();
+    expect(screen.getByText("Non acquisita")).toBeInTheDocument();
+    expect(screen.queryByText("Pubblicazione Albo")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/La convocazione non prova lo svolgimento/i),
+    ).not.toBeInTheDocument();
+  });
+
   it("renders the officially confirmed council date without inventing a time", () => {
     const session = reviewedRecord("albo-2026-2673-consiglio-comunale");
 

@@ -571,7 +571,7 @@ export function HomeInstitutionalSessions() {
           />
           <InstitutionalSessionsHomeCard
             title="Commissioni consiliari"
-            description="Sedute delle Commissioni con date e orari controllati nelle rispettive convocazioni ufficiali."
+            description="Sedute delle Commissioni: date e orari sono mostrati solo quando verificati nelle convocazioni ufficiali; altrimenti restano esplicitamente da verificare."
             icon={CalendarClock}
             sessions={commissionHomeSessions}
           />
@@ -597,7 +597,11 @@ function InstitutionalSessionsHomeCard({
       .map((session) => session.provenance?.sourceReviewStatus)
       .filter(Boolean),
   );
-  const hasMixedSourceReview = sourceReviewStatuses.size > 1;
+  const hasEditorialOnlySessions = sessions.some(
+    (session) => !session.provenance,
+  );
+  const hasMixedSourceReview =
+    sourceReviewStatuses.size > 1 || hasEditorialOnlySessions;
   const attachmentReviewed = sourceReviewStatuses.has(
     "reviewed_against_official_attachment",
   );
@@ -704,7 +708,7 @@ function InstitutionalSessionsHomeCard({
 
         <div className="mt-auto border-t border-border bg-muted/20 px-4 py-3 text-xs leading-5 text-muted-foreground">
           {publicationNumbers.length > 0
-            ? `Fonte: Albo Pretorio · ${publicationNumbers.length === 1 ? "pubblicazione" : "pubblicazioni"} ${publicationNumbers.join(", ")}`
+            ? `${hasEditorialOnlySessions ? "Fonti: Albo Pretorio e copertura editoriale separata" : "Fonte: Albo Pretorio"} · ${publicationNumbers.length === 1 ? "pubblicazione" : "pubblicazioni"} ${publicationNumbers.join(", ")}`
             : "Nessuna scheda revisionata disponibile."}
         </div>
       </CardContent>
