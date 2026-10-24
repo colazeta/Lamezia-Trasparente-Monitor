@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-03T18:34:57.880Z",
+  "generated_at": "2026-10-24T14:28:57.445Z",
   "source": "Albo Pretorio Comune di Lamezia Terme",
   "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-  "retrieved_at": "2026-09-03T18:34:57.880Z",
+  "retrieved_at": "2026-10-24T14:28:57.445Z",
   "verification_status": "official_source_acquired",
   "known_limits": [
     "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
@@ -224,24 +224,2665 @@
     ]
   },
   "counts": {
-    "acquired": 140,
-    "new": 2,
-    "changed": 1,
-    "removed": 0,
-    "unchanged": 137,
-    "publishable": 103,
-    "minimised": 13,
-    "metadata_only": 22,
-    "excluded": 2
+    "acquired": 30,
+    "new": 30,
+    "changed": 0,
+    "removed": 140,
+    "unchanged": 0,
+    "publishable": 25,
+    "minimised": 3,
+    "metadata_only": 2,
+    "excluded": 0
   },
   "diff_baseline": {
     "status": "public_safe",
     "public_safe": true,
-    "previous_retrieved_at": "2026-09-03T14:58:56.569Z",
+    "previous_retrieved_at": "2026-09-03T18:34:57.880Z",
     "note": "Diff derived from committed public/albo/latest.json; safe for scheduled public runs and limited to public-safe fields."
   },
   "diff": {
     "new": [
+      {
+        "id": "albo-2026-3270",
+        "public_id": "albo-2026-3270",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-24T14:28:57.445Z",
+        "publication_number": "2026/3270",
+        "publication_start": "2026-10-19",
+        "publication_end": "2026-11-03",
+        "office": "SETTORE GESTIONE E VALORIZZAZIONE DEL PATRIMONIO E DEL TERRITORIO COMUNALE",
+        "act_type": "DETERMINAZIONE DIRIGENZIALE",
+        "act_number": "1463",
+        "act_date": "2026-09-10",
+        "content_hash": "d116f4bcb187152d179b4861aa218ae4f3c743d84fe127983a0cd368cf68edc9",
+        "subject": "PNRR M5C 2.3 I 3.1 Sport e Inclusione. CLUSTER 2. Intervento RISTRUTTURAZIONE EDILIZIA, RIGENERAZIONE E MANUTENZIONE DELLO STADIO R.RIGA. CUP: C83I22000170006. CIG: 9900453047.Liquidazione incentivo ex art. 113 del D.Lgs 50/2016",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_3270_7_ALLEG?ente=00301390795",
+        "public_note": null,
+        "verification_status": "official_source_acquired",
+        "privacy_risk": "low",
+        "public_visibility": "publishable",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "patrimonio_territorio",
+            "label": "Patrimonio e territorio comunale",
+            "description": "Gestione e valorizzazione del patrimonio comunale e del territorio comunale.",
+            "confidence": "high",
+            "basis": "office"
+          },
+          "act_category": {
+            "id": "determinazioni",
+            "label": "Determinazioni dirigenziali",
+            "description": "Determinazioni, liquidazioni, affidamenti e altri atti gestionali dirigenziali.",
+            "confidence": "high",
+            "basis": "act_type"
+          }
+        },
+        "privacy_attestation": {
+          "schema_version": "albo-privacy-policy-attestation.v1",
+          "policy_version": "albo-privacy-policy.2026-08-30.1",
+          "assessment_basis": "source_record",
+          "status": "current"
+        },
+        "presentation": {
+          "display_title": "PNRR M5C 2.3 I 3.1 Sport e Inclusione. CLUSTER 2. Intervento RISTRUTTURAZIONE EDILIZIA, RIGENERAZIONE E MANUTENZIONE DELLO STADIO R.RIGA. CUP: C83I22000170006. CIG: 9900453047.Liquidazione incentivo ex art. 113 del D.Lgs 50/2016",
+          "action_id": null,
+          "action_label": null,
+          "search_text": "pnrr m5c 2 3 i 3 1 sport e inclusione cluster 2 intervento ristrutturazione edilizia rigenerazione e manutenzione dello stadio r riga cup c83i22000170006 cig 9900453047 liquidazione incentivo ex art 113 del d lgs 50 2016",
+          "standardisation": {
+            "schema_version": "publication-standardisation.v1",
+            "profile_id": "albo-public-title-it",
+            "profile_version": "2026-08-30.2",
+            "input_field": "subject",
+            "input_field_preserved": true,
+            "status": "unchanged",
+            "transformations": [],
+            "layout_flags": [
+              "display_title_too_long"
+            ],
+            "review_reasons": []
+          },
+          "area_theme": {
+            "schema_version": "publication-area-theme.v1",
+            "taxonomy_id": "municipal-public-act-area-theme-it",
+            "taxonomy_version": "2026-08-30.1",
+            "theme_id": "cultura_sport_turismo",
+            "theme_label": "Cultura, sport, turismo ed eventi",
+            "confidence": "high",
+            "basis": "deterministic_rule",
+            "rule_id": "sport-facilities",
+            "evidence": [
+              {
+                "rule_id": "sport-facilities",
+                "input_field": "subject",
+                "matched_terms": [
+                  "sport e inclusione",
+                  "stadio"
+                ]
+              }
+            ],
+            "null_reason": null,
+            "override": null
+          }
+        },
+        "known_limits": [
+          "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+          "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+          "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+          "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+          "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+          "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+        ]
+      },
+      {
+        "id": "albo-2026-3265",
+        "public_id": "albo-2026-3265",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-24T14:28:57.445Z",
+        "publication_number": "2026/3265",
+        "publication_start": "2026-10-09",
+        "publication_end": "2026-10-24",
+        "office": "SETTORE SERVIZI ALLA PERSONA",
+        "act_type": "DETERMINAZIONE DIRIGENZIALE",
+        "act_number": "1566",
+        "act_date": "2026-10-09",
+        "content_hash": "b6c4fc9f2fc359a3ca7cfc17f2345903a58d4d59b100c6cf4fa1563e9b7288b5",
+        "subject": "Avviso pubblico per la costituzione di un partenariato per la co-progettazione operativa e successiva gestione di un progetto da presentare “Semi Di Libertà...” approvazione atti e individuazione progetto selezionato",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_3265_6_ALLEG?ente=00301390795",
+        "public_note": null,
+        "verification_status": "official_source_acquired",
+        "privacy_risk": "low",
+        "public_visibility": "publishable",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "servizi_persona",
+            "label": "Servizi alla persona",
+            "description": "Servizi sociali, welfare e interventi rivolti alla persona.",
+            "confidence": "high",
+            "basis": "office"
+          },
+          "act_category": {
+            "id": "determinazioni",
+            "label": "Determinazioni dirigenziali",
+            "description": "Determinazioni, liquidazioni, affidamenti e altri atti gestionali dirigenziali.",
+            "confidence": "high",
+            "basis": "act_type"
+          }
+        },
+        "privacy_attestation": {
+          "schema_version": "albo-privacy-policy-attestation.v1",
+          "policy_version": "albo-privacy-policy.2026-08-30.1",
+          "assessment_basis": "source_record",
+          "status": "current"
+        },
+        "presentation": {
+          "display_title": "Avviso pubblico per la costituzione di un partenariato per la co-progettazione operativa e successiva gestione di un progetto da presentare “Semi Di Libertà...” approvazione atti e individuazione progetto selezionato",
+          "action_id": null,
+          "action_label": null,
+          "search_text": "avviso pubblico per la costituzione di un partenariato per la co progettazione operativa e successiva gestione di un progetto da presentare semi di liberta approvazione atti e individuazione progetto selezionato",
+          "standardisation": {
+            "schema_version": "publication-standardisation.v1",
+            "profile_id": "albo-public-title-it",
+            "profile_version": "2026-08-30.2",
+            "input_field": "subject",
+            "input_field_preserved": true,
+            "status": "unchanged",
+            "transformations": [],
+            "layout_flags": [
+              "display_title_too_long"
+            ],
+            "review_reasons": []
+          },
+          "area_theme": {
+            "schema_version": "publication-area-theme.v1",
+            "taxonomy_id": "municipal-public-act-area-theme-it",
+            "taxonomy_version": "2026-08-30.1",
+            "theme_id": "lavori_infrastrutture",
+            "theme_label": "Lavori pubblici e infrastrutture",
+            "confidence": "medium",
+            "basis": "deterministic_rule",
+            "rule_id": "public-works-general",
+            "evidence": [
+              {
+                "rule_id": "public-works-general",
+                "input_field": "subject",
+                "matched_terms": [
+                  "progettazione"
+                ]
+              }
+            ],
+            "null_reason": null,
+            "override": null
+          }
+        },
+        "known_limits": [
+          "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+          "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+          "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+          "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+          "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+          "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+        ]
+      },
+      {
+        "id": "albo-2026-3264",
+        "public_id": "albo-2026-3264",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-24T14:28:57.445Z",
+        "publication_number": "2026/3264",
+        "publication_start": "2026-10-09",
+        "publication_end": "2026-10-24",
+        "office": "SETTORE VIGILANZA E SICUREZZA URBANA",
+        "act_type": "ORDINANZA",
+        "act_number": "43",
+        "act_date": "2026-10-09",
+        "content_hash": "944489278760acb1bb46bdfc41ffbdde08c2fe7764c8755e879efa0cf85c1ad8",
+        "subject": "Chiusura scuole di ogni ordine e grado e degli Asili Nido comunali e privati per allerta meteo - livello arancione per il giorno 10 Ottobre 2026",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_3264_3_ALLEG?ente=00301390795",
+        "public_note": null,
+        "verification_status": "official_source_acquired",
+        "privacy_risk": "low",
+        "public_visibility": "publishable",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "vigilanza_sicurezza",
+            "label": "Vigilanza e sicurezza urbana",
+            "description": "Polizia locale, sicurezza urbana, viabilita e ordinanze di vigilanza.",
+            "confidence": "high",
+            "basis": "office"
+          },
+          "act_category": {
+            "id": "ordinanze",
+            "label": "Ordinanze",
+            "description": "Ordinanze e provvedimenti ordinatori.",
+            "confidence": "high",
+            "basis": "act_type"
+          }
+        },
+        "privacy_attestation": {
+          "schema_version": "albo-privacy-policy-attestation.v1",
+          "policy_version": "albo-privacy-policy.2026-08-30.1",
+          "assessment_basis": "source_record",
+          "status": "current"
+        },
+        "presentation": {
+          "display_title": "Chiusura scuole di ogni ordine e grado e degli Asili Nido comunali e privati per allerta meteo - livello arancione per il giorno 10 Ottobre 2026",
+          "action_id": null,
+          "action_label": null,
+          "search_text": "chiusura scuole di ogni ordine e grado e degli asili nido comunali e privati per allerta meteo livello arancione per il giorno 10 ottobre 2026",
+          "standardisation": {
+            "schema_version": "publication-standardisation.v1",
+            "profile_id": "albo-public-title-it",
+            "profile_version": "2026-08-30.2",
+            "input_field": "subject",
+            "input_field_preserved": true,
+            "status": "unchanged",
+            "transformations": [],
+            "layout_flags": [],
+            "review_reasons": []
+          },
+          "area_theme": {
+            "schema_version": "publication-area-theme.v1",
+            "taxonomy_id": "municipal-public-act-area-theme-it",
+            "taxonomy_version": "2026-08-30.1",
+            "theme_id": "scuola_educazione",
+            "theme_label": "Scuola, educazione e infanzia",
+            "confidence": "high",
+            "basis": "deterministic_rule",
+            "rule_id": "education-facilities",
+            "evidence": [
+              {
+                "rule_id": "education-facilities",
+                "input_field": "subject",
+                "matched_terms": [
+                  "asili nido"
+                ]
+              }
+            ],
+            "null_reason": null,
+            "override": null
+          }
+        },
+        "known_limits": [
+          "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+          "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+          "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+          "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+          "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+          "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+        ]
+      },
+      {
+        "id": "albo-2026-3261",
+        "public_id": "albo-2026-3261",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-24T14:28:57.445Z",
+        "publication_number": "2026/3261",
+        "publication_start": "2026-10-09",
+        "publication_end": "2026-10-24",
+        "office": "PREFETTURA DI CATANZARO UFFICIO TERRITORIALE DEL GOVERNO",
+        "act_type": "ORDINANZA",
+        "act_number": null,
+        "act_date": null,
+        "content_hash": "c0125b9df87ed3b2628d697be55876c8b51ff1ec23db4f64b94d18bb4e2684cc",
+        "subject": "Comune di Niscemi - esumazioni ordinarie comuni scaduti 2026",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_3261_1_X?ente=00301390795",
+        "public_note": null,
+        "verification_status": "official_source_acquired",
+        "privacy_risk": "low",
+        "public_visibility": "publishable",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "altri_enti",
+            "label": "Altri enti e soggetti esterni",
+            "description": "Pubblicazioni provenienti da altri enti pubblici o soggetti esterni al Comune.",
+            "confidence": "medium",
+            "basis": "office"
+          },
+          "act_category": {
+            "id": "ordinanze",
+            "label": "Ordinanze",
+            "description": "Ordinanze e provvedimenti ordinatori.",
+            "confidence": "high",
+            "basis": "act_type"
+          }
+        },
+        "privacy_attestation": {
+          "schema_version": "albo-privacy-policy-attestation.v1",
+          "policy_version": "albo-privacy-policy.2026-08-30.1",
+          "assessment_basis": "source_record",
+          "status": "current"
+        },
+        "presentation": {
+          "display_title": "Comune di Niscemi - esumazioni ordinarie comuni scaduti 2026",
+          "action_id": null,
+          "action_label": null,
+          "search_text": "comune di niscemi esumazioni ordinarie comuni scaduti 2026",
+          "standardisation": {
+            "schema_version": "publication-standardisation.v1",
+            "profile_id": "albo-public-title-it",
+            "profile_version": "2026-08-30.2",
+            "input_field": "subject",
+            "input_field_preserved": true,
+            "status": "unchanged",
+            "transformations": [],
+            "layout_flags": [],
+            "review_reasons": []
+          },
+          "area_theme": {
+            "schema_version": "publication-area-theme.v1",
+            "taxonomy_id": "municipal-public-act-area-theme-it",
+            "taxonomy_version": "2026-08-30.1",
+            "theme_id": null,
+            "theme_label": null,
+            "confidence": null,
+            "basis": "fallback",
+            "rule_id": null,
+            "evidence": [],
+            "null_reason": "not_classified",
+            "override": null
+          }
+        },
+        "known_limits": [
+          "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+          "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+          "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+          "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+          "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+          "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+        ]
+      },
+      {
+        "id": "albo-2026-3260",
+        "public_id": "albo-2026-3260",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-24T14:28:57.445Z",
+        "publication_number": "2026/3260",
+        "publication_start": "2026-10-09",
+        "publication_end": "2026-10-24",
+        "office": "SETTORE ECONOMICO FINANZIARIO",
+        "act_type": "DETERMINAZIONE DIRIGENZIALE",
+        "act_number": "1556",
+        "act_date": "2026-10-07",
+        "content_hash": "89c08ad2a92fda5de4e7001239b6e9972e7edc236297e9275176086584a39a65",
+        "subject": "Approvazione rendiconto economale III° trimestre 2026",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_3260_10_ALLEG?ente=00301390795",
+        "public_note": null,
+        "verification_status": "official_source_acquired",
+        "privacy_risk": "low",
+        "public_visibility": "publishable",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "bilancio_finanze",
+            "label": "Bilancio, finanze e tributi",
+            "description": "Contabilita, bilancio, finanze, tributi e gestione economica.",
+            "confidence": "high",
+            "basis": "office"
+          },
+          "act_category": {
+            "id": "determinazioni",
+            "label": "Determinazioni dirigenziali",
+            "description": "Determinazioni, liquidazioni, affidamenti e altri atti gestionali dirigenziali.",
+            "confidence": "high",
+            "basis": "act_type"
+          }
+        },
+        "privacy_attestation": {
+          "schema_version": "albo-privacy-policy-attestation.v1",
+          "policy_version": "albo-privacy-policy.2026-08-30.1",
+          "assessment_basis": "source_record",
+          "status": "current"
+        },
+        "presentation": {
+          "display_title": "Approvazione rendiconto economale III° trimestre 2026",
+          "action_id": "approvazione",
+          "action_label": "Approvazione",
+          "search_text": "approvazione rendiconto economale iii trimestre 2026",
+          "standardisation": {
+            "schema_version": "publication-standardisation.v1",
+            "profile_id": "albo-public-title-it",
+            "profile_version": "2026-08-30.2",
+            "input_field": "subject",
+            "input_field_preserved": true,
+            "status": "unchanged",
+            "transformations": [],
+            "layout_flags": [],
+            "review_reasons": []
+          },
+          "area_theme": {
+            "schema_version": "publication-area-theme.v1",
+            "taxonomy_id": "municipal-public-act-area-theme-it",
+            "taxonomy_version": "2026-08-30.1",
+            "theme_id": null,
+            "theme_label": null,
+            "confidence": null,
+            "basis": "fallback",
+            "rule_id": null,
+            "evidence": [],
+            "null_reason": "not_classified",
+            "override": null
+          }
+        },
+        "known_limits": [
+          "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+          "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+          "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+          "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+          "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+          "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+        ]
+      },
+      {
+        "id": "albo-2026-3258",
+        "public_id": "albo-2026-3258",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-24T14:28:57.445Z",
+        "publication_number": "2026/3258",
+        "publication_start": "2026-10-09",
+        "publication_end": "2026-10-29",
+        "office": null,
+        "act_type": null,
+        "act_number": null,
+        "act_date": null,
+        "subject": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
+        "document_url": null,
+        "public_note": "Record limitato al metadato minimo.",
+        "verification_status": "official_source_acquired",
+        "privacy_risk": "high",
+        "public_visibility": "metadata_only",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "elettorale",
+            "label": "Elettorale",
+            "description": "Atti e comunicazioni riferiti a procedimenti elettorali.",
+            "confidence": "high",
+            "basis": "office_and_act_type"
+          },
+          "act_category": {
+            "id": "notifiche_depositi",
+            "label": "Notifiche e depositi",
+            "description": "Notifiche, depositi, avvisi di deposito e pubblicazioni ex codice di procedura civile.",
+            "confidence": "high",
+            "basis": "act_type"
+          }
+        },
+        "privacy_attestation": {
+          "schema_version": "albo-privacy-policy-attestation.v1",
+          "policy_version": "albo-privacy-policy.2026-08-30.1",
+          "assessment_basis": "source_record",
+          "status": "current"
+        },
+        "presentation": {
+          "display_title": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
+          "action_id": null,
+          "action_label": null,
+          "search_text": "metadato minimo oggetto non ripubblicato per prudenza privacy",
+          "standardisation": {
+            "schema_version": "publication-standardisation.v1",
+            "profile_id": "albo-public-title-it",
+            "profile_version": "2026-08-30.2",
+            "input_field": "subject",
+            "input_field_preserved": true,
+            "status": "unchanged",
+            "transformations": [],
+            "layout_flags": [],
+            "review_reasons": []
+          },
+          "area_theme": {
+            "schema_version": "publication-area-theme.v1",
+            "taxonomy_id": "municipal-public-act-area-theme-it",
+            "taxonomy_version": "2026-08-30.1",
+            "theme_id": null,
+            "theme_label": null,
+            "confidence": null,
+            "basis": "fallback",
+            "rule_id": null,
+            "evidence": [],
+            "null_reason": "input_withheld_for_privacy",
+            "override": null
+          }
+        },
+        "known_limits": [
+          "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+          "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+          "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+          "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+          "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+          "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF.",
+          "Allegato/documento non incluso negli export strutturati Tinnvision o non disponibile tramite dettaglio ufficiale.",
+          "Oggetto non ripubblicato integralmente nel layer pubblico per prudenza privacy.",
+          "Regola automatica prudenziale: notifiche e depositi procedurali pubblicati solo in forma minima."
+        ]
+      },
+      {
+        "id": "albo-2026-3257",
+        "public_id": "albo-2026-3257",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-24T14:28:57.445Z",
+        "publication_number": "2026/3257",
+        "publication_start": "2026-10-09",
+        "publication_end": "2026-10-24",
+        "office": "ARSAC",
+        "act_type": "ESITO DI GARA",
+        "act_number": null,
+        "act_date": null,
+        "content_hash": "f1992110ff39f0142e0c30f0e56f5eab14b5db155c2da161d0401cda1f45a2c0",
+        "subject": "Esito di asta pubblica",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_3257_1_P?ente=00301390795",
+        "public_note": null,
+        "verification_status": "official_source_acquired",
+        "privacy_risk": "low",
+        "public_visibility": "publishable",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "non_classificato",
+            "label": "Non classificato",
+            "description": "Record non ricondotto con sufficiente certezza a un settore del dizionario.",
+            "confidence": "low",
+            "basis": "fallback"
+          },
+          "act_category": {
+            "id": "non_classificato",
+            "label": "Non classificato",
+            "description": "Tipologia non ricondotta con sufficiente certezza a una famiglia del dizionario.",
+            "confidence": "low",
+            "basis": "fallback"
+          }
+        },
+        "privacy_attestation": {
+          "schema_version": "albo-privacy-policy-attestation.v1",
+          "policy_version": "albo-privacy-policy.2026-08-30.1",
+          "assessment_basis": "source_record",
+          "status": "current"
+        },
+        "presentation": {
+          "display_title": "Esito di asta pubblica",
+          "action_id": null,
+          "action_label": null,
+          "search_text": "esito di asta pubblica",
+          "standardisation": {
+            "schema_version": "publication-standardisation.v1",
+            "profile_id": "albo-public-title-it",
+            "profile_version": "2026-08-30.2",
+            "input_field": "subject",
+            "input_field_preserved": true,
+            "status": "unchanged",
+            "transformations": [],
+            "layout_flags": [],
+            "review_reasons": []
+          },
+          "area_theme": {
+            "schema_version": "publication-area-theme.v1",
+            "taxonomy_id": "municipal-public-act-area-theme-it",
+            "taxonomy_version": "2026-08-30.1",
+            "theme_id": "patrimonio_economia",
+            "theme_label": "Patrimonio e attività economiche",
+            "confidence": "high",
+            "basis": "deterministic_rule",
+            "rule_id": "patrimony-assets",
+            "evidence": [
+              {
+                "rule_id": "patrimony-assets",
+                "input_field": "subject",
+                "matched_terms": [
+                  "asta pubblica"
+                ]
+              }
+            ],
+            "null_reason": null,
+            "override": null
+          }
+        },
+        "known_limits": [
+          "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+          "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+          "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+          "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+          "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+          "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+        ]
+      },
+      {
+        "id": "albo-2026-3256",
+        "public_id": "albo-2026-3256",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-24T14:28:57.445Z",
+        "publication_number": "2026/3256",
+        "publication_start": "2026-10-09",
+        "publication_end": "2026-10-24",
+        "office": null,
+        "act_type": null,
+        "act_number": "1565",
+        "act_date": "2026-10-09",
+        "subject": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+        "document_url": null,
+        "public_note": "Record pubblicato con minimizzazione automatica.",
+        "verification_status": "official_source_acquired",
+        "privacy_risk": "medium",
+        "public_visibility": "publishable_with_minimisation",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "patrimonio_territorio",
+            "label": "Patrimonio e territorio comunale",
+            "description": "Gestione e valorizzazione del patrimonio comunale e del territorio comunale.",
+            "confidence": "high",
+            "basis": "office"
+          },
+          "act_category": {
+            "id": "determinazioni",
+            "label": "Determinazioni dirigenziali",
+            "description": "Determinazioni, liquidazioni, affidamenti e altri atti gestionali dirigenziali.",
+            "confidence": "high",
+            "basis": "act_type"
+          }
+        },
+        "privacy_attestation": {
+          "schema_version": "albo-privacy-policy-attestation.v1",
+          "policy_version": "albo-privacy-policy.2026-08-30.1",
+          "assessment_basis": "source_record",
+          "status": "current"
+        },
+        "presentation": {
+          "display_title": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+          "action_id": null,
+          "action_label": null,
+          "search_text": "oggetto minimizzato per prudenza privacy consultare la fonte ufficiale",
+          "standardisation": {
+            "schema_version": "publication-standardisation.v1",
+            "profile_id": "albo-public-title-it",
+            "profile_version": "2026-08-30.2",
+            "input_field": "subject",
+            "input_field_preserved": true,
+            "status": "unchanged",
+            "transformations": [],
+            "layout_flags": [],
+            "review_reasons": []
+          },
+          "area_theme": {
+            "schema_version": "publication-area-theme.v1",
+            "taxonomy_id": "municipal-public-act-area-theme-it",
+            "taxonomy_version": "2026-08-30.1",
+            "theme_id": null,
+            "theme_label": null,
+            "confidence": null,
+            "basis": "fallback",
+            "rule_id": null,
+            "evidence": [],
+            "null_reason": "input_withheld_for_privacy",
+            "override": null
+          }
+        },
+        "known_limits": [
+          "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+          "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+          "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+          "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+          "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+          "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF.",
+          "Allegato/documento non incluso negli export strutturati Tinnvision o non disponibile tramite dettaglio ufficiale.",
+          "Oggetto non ripubblicato integralmente nel layer pubblico per prudenza privacy.",
+          "Regola automatica prudenziale: oggetto minimizzato per possibile presenza di dati personali o contenzioso."
+        ]
+      },
+      {
+        "id": "albo-2026-3255",
+        "public_id": "albo-2026-3255",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-24T14:28:57.445Z",
+        "publication_number": "2026/3255",
+        "publication_start": "2026-10-09",
+        "publication_end": "2026-10-24",
+        "office": null,
+        "act_type": null,
+        "act_number": "1557",
+        "act_date": "2026-10-06",
+        "subject": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+        "document_url": null,
+        "public_note": "Record pubblicato con minimizzazione automatica.",
+        "verification_status": "official_source_acquired",
+        "privacy_risk": "medium",
+        "public_visibility": "publishable_with_minimisation",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "avvocatura_contenzioso",
+            "label": "Avvocatura e contenzioso",
+            "description": "Atti dell'avvocatura, contenzioso, liti e procedimenti legali dell'ente.",
+            "confidence": "high",
+            "basis": "office"
+          },
+          "act_category": {
+            "id": "determinazioni",
+            "label": "Determinazioni dirigenziali",
+            "description": "Determinazioni, liquidazioni, affidamenti e altri atti gestionali dirigenziali.",
+            "confidence": "high",
+            "basis": "act_type"
+          }
+        },
+        "privacy_attestation": {
+          "schema_version": "albo-privacy-policy-attestation.v1",
+          "policy_version": "albo-privacy-policy.2026-08-30.1",
+          "assessment_basis": "source_record",
+          "status": "current"
+        },
+        "presentation": {
+          "display_title": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+          "action_id": null,
+          "action_label": null,
+          "search_text": "oggetto minimizzato per prudenza privacy consultare la fonte ufficiale",
+          "standardisation": {
+            "schema_version": "publication-standardisation.v1",
+            "profile_id": "albo-public-title-it",
+            "profile_version": "2026-08-30.2",
+            "input_field": "subject",
+            "input_field_preserved": true,
+            "status": "unchanged",
+            "transformations": [],
+            "layout_flags": [],
+            "review_reasons": []
+          },
+          "area_theme": {
+            "schema_version": "publication-area-theme.v1",
+            "taxonomy_id": "municipal-public-act-area-theme-it",
+            "taxonomy_version": "2026-08-30.1",
+            "theme_id": null,
+            "theme_label": null,
+            "confidence": null,
+            "basis": "fallback",
+            "rule_id": null,
+            "evidence": [],
+            "null_reason": "input_withheld_for_privacy",
+            "override": null
+          }
+        },
+        "known_limits": [
+          "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+          "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+          "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+          "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+          "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+          "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF.",
+          "Allegato/documento non incluso negli export strutturati Tinnvision o non disponibile tramite dettaglio ufficiale.",
+          "Oggetto non ripubblicato integralmente nel layer pubblico per prudenza privacy.",
+          "Regola automatica prudenziale: oggetto minimizzato per possibile presenza di dati personali o contenzioso."
+        ]
+      },
+      {
+        "id": "albo-2026-3254",
+        "public_id": "albo-2026-3254",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-24T14:28:57.445Z",
+        "publication_number": "2026/3254",
+        "publication_start": "2026-10-09",
+        "publication_end": "2026-10-24",
+        "office": null,
+        "act_type": null,
+        "act_number": "1519",
+        "act_date": "2026-09-25",
+        "subject": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+        "document_url": null,
+        "public_note": "Record pubblicato con minimizzazione automatica.",
+        "verification_status": "official_source_acquired",
+        "privacy_risk": "medium",
+        "public_visibility": "publishable_with_minimisation",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "avvocatura_contenzioso",
+            "label": "Avvocatura e contenzioso",
+            "description": "Atti dell'avvocatura, contenzioso, liti e procedimenti legali dell'ente.",
+            "confidence": "high",
+            "basis": "office"
+          },
+          "act_category": {
+            "id": "determinazioni",
+            "label": "Determinazioni dirigenziali",
+            "description": "Determinazioni, liquidazioni, affidamenti e altri atti gestionali dirigenziali.",
+            "confidence": "high",
+            "basis": "act_type"
+          }
+        },
+        "privacy_attestation": {
+          "schema_version": "albo-privacy-policy-attestation.v1",
+          "policy_version": "albo-privacy-policy.2026-08-30.1",
+          "assessment_basis": "source_record",
+          "status": "current"
+        },
+        "presentation": {
+          "display_title": "Oggetto minimizzato per prudenza privacy; consultare la fonte ufficiale.",
+          "action_id": null,
+          "action_label": null,
+          "search_text": "oggetto minimizzato per prudenza privacy consultare la fonte ufficiale",
+          "standardisation": {
+            "schema_version": "publication-standardisation.v1",
+            "profile_id": "albo-public-title-it",
+            "profile_version": "2026-08-30.2",
+            "input_field": "subject",
+            "input_field_preserved": true,
+            "status": "unchanged",
+            "transformations": [],
+            "layout_flags": [],
+            "review_reasons": []
+          },
+          "area_theme": {
+            "schema_version": "publication-area-theme.v1",
+            "taxonomy_id": "municipal-public-act-area-theme-it",
+            "taxonomy_version": "2026-08-30.1",
+            "theme_id": null,
+            "theme_label": null,
+            "confidence": null,
+            "basis": "fallback",
+            "rule_id": null,
+            "evidence": [],
+            "null_reason": "input_withheld_for_privacy",
+            "override": null
+          }
+        },
+        "known_limits": [
+          "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+          "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+          "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+          "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+          "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+          "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF.",
+          "Allegato/documento non incluso negli export strutturati Tinnvision o non disponibile tramite dettaglio ufficiale.",
+          "Oggetto non ripubblicato integralmente nel layer pubblico per prudenza privacy.",
+          "Regola automatica prudenziale: oggetto minimizzato per possibile presenza di dati personali o contenzioso."
+        ]
+      },
+      {
+        "id": "albo-2026-3253",
+        "public_id": "albo-2026-3253",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-24T14:28:57.445Z",
+        "publication_number": "2026/3253",
+        "publication_start": "2026-10-09",
+        "publication_end": "2026-10-24",
+        "office": "SETTORE VIGILANZA E SICUREZZA URBANA",
+        "act_type": "ORDINANZA",
+        "act_number": "255",
+        "act_date": "2026-10-09",
+        "content_hash": "e2b7a68b8026b8747ef89982ac136015e7b56d00fedf7d09f204207dd6bfb601",
+        "subject": "Modifica temporanea della circolazione stradale in occasione dei lavori di rifacimento del manto stradale in P.zza garibaldi, Via G. Marconi e Via G. Matteotti dal 09 al 16 ottobre c.a.",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_3253_1_ALLEG?ente=00301390795",
+        "public_note": null,
+        "verification_status": "official_source_acquired",
+        "privacy_risk": "low",
+        "public_visibility": "publishable",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "vigilanza_sicurezza",
+            "label": "Vigilanza e sicurezza urbana",
+            "description": "Polizia locale, sicurezza urbana, viabilita e ordinanze di vigilanza.",
+            "confidence": "high",
+            "basis": "office"
+          },
+          "act_category": {
+            "id": "ordinanze",
+            "label": "Ordinanze",
+            "description": "Ordinanze e provvedimenti ordinatori.",
+            "confidence": "high",
+            "basis": "act_type"
+          }
+        },
+        "privacy_attestation": {
+          "schema_version": "albo-privacy-policy-attestation.v1",
+          "policy_version": "albo-privacy-policy.2026-08-30.1",
+          "assessment_basis": "source_record",
+          "status": "current"
+        },
+        "presentation": {
+          "display_title": "Modifica temporanea della circolazione stradale in occasione dei lavori di rifacimento del manto stradale in P.zza garibaldi, Via G. Marconi e Via G. Matteotti dal 09 al 16 ottobre c.a.",
+          "action_id": null,
+          "action_label": null,
+          "search_text": "modifica temporanea della circolazione stradale in occasione dei lavori di rifacimento del manto stradale in p zza garibaldi via g marconi e via g matteotti dal 09 al 16 ottobre c a",
+          "standardisation": {
+            "schema_version": "publication-standardisation.v1",
+            "profile_id": "albo-public-title-it",
+            "profile_version": "2026-08-30.2",
+            "input_field": "subject",
+            "input_field_preserved": true,
+            "status": "unchanged",
+            "transformations": [],
+            "layout_flags": [
+              "display_title_too_long"
+            ],
+            "review_reasons": []
+          },
+          "area_theme": {
+            "schema_version": "publication-area-theme.v1",
+            "taxonomy_id": "municipal-public-act-area-theme-it",
+            "taxonomy_version": "2026-08-30.1",
+            "theme_id": "mobilita_sicurezza",
+            "theme_label": "Mobilità e sicurezza urbana",
+            "confidence": "high",
+            "basis": "deterministic_rule",
+            "rule_id": "mobility-circulation",
+            "evidence": [
+              {
+                "rule_id": "mobility-circulation",
+                "input_field": "subject",
+                "matched_terms": [
+                  "modifica temporanea della circolazione",
+                  "circolazione stradale"
+                ]
+              }
+            ],
+            "null_reason": null,
+            "override": null
+          }
+        },
+        "known_limits": [
+          "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+          "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+          "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+          "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+          "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+          "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+        ]
+      },
+      {
+        "id": "albo-2026-3252",
+        "public_id": "albo-2026-3252",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-24T14:28:57.445Z",
+        "publication_number": "2026/3252",
+        "publication_start": "2026-10-09",
+        "publication_end": "2026-10-24",
+        "office": "SETTORE VIGILANZA E SICUREZZA URBANA",
+        "act_type": "ORDINANZA",
+        "act_number": "254",
+        "act_date": "2026-10-09",
+        "content_hash": "2e32fa3cb8098b25a131440366279106b24a98405b506b39071a3911a5b2b06e",
+        "subject": "Modifica temporanea della circolazione stradale dal 12 al 16 Ottobre c.a. in occasione della sistemazione della pavimentazione in sanpietrini su Via Mons. Moietta.",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_3252_1_ALLEG?ente=00301390795",
+        "public_note": null,
+        "verification_status": "official_source_acquired",
+        "privacy_risk": "low",
+        "public_visibility": "publishable",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "vigilanza_sicurezza",
+            "label": "Vigilanza e sicurezza urbana",
+            "description": "Polizia locale, sicurezza urbana, viabilita e ordinanze di vigilanza.",
+            "confidence": "high",
+            "basis": "office"
+          },
+          "act_category": {
+            "id": "ordinanze",
+            "label": "Ordinanze",
+            "description": "Ordinanze e provvedimenti ordinatori.",
+            "confidence": "high",
+            "basis": "act_type"
+          }
+        },
+        "privacy_attestation": {
+          "schema_version": "albo-privacy-policy-attestation.v1",
+          "policy_version": "albo-privacy-policy.2026-08-30.1",
+          "assessment_basis": "source_record",
+          "status": "current"
+        },
+        "presentation": {
+          "display_title": "Modifica temporanea della circolazione stradale dal 12 al 16 Ottobre c.a. in occasione della sistemazione della pavimentazione in sanpietrini su Via Mons. Moietta.",
+          "action_id": null,
+          "action_label": null,
+          "search_text": "modifica temporanea della circolazione stradale dal 12 al 16 ottobre c a in occasione della sistemazione della pavimentazione in sanpietrini su via mons moietta",
+          "standardisation": {
+            "schema_version": "publication-standardisation.v1",
+            "profile_id": "albo-public-title-it",
+            "profile_version": "2026-08-30.2",
+            "input_field": "subject",
+            "input_field_preserved": true,
+            "status": "unchanged",
+            "transformations": [],
+            "layout_flags": [],
+            "review_reasons": []
+          },
+          "area_theme": {
+            "schema_version": "publication-area-theme.v1",
+            "taxonomy_id": "municipal-public-act-area-theme-it",
+            "taxonomy_version": "2026-08-30.1",
+            "theme_id": "mobilita_sicurezza",
+            "theme_label": "Mobilità e sicurezza urbana",
+            "confidence": "high",
+            "basis": "deterministic_rule",
+            "rule_id": "mobility-circulation",
+            "evidence": [
+              {
+                "rule_id": "mobility-circulation",
+                "input_field": "subject",
+                "matched_terms": [
+                  "modifica temporanea della circolazione",
+                  "circolazione stradale"
+                ]
+              }
+            ],
+            "null_reason": null,
+            "override": null
+          }
+        },
+        "known_limits": [
+          "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+          "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+          "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+          "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+          "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+          "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+        ]
+      },
+      {
+        "id": "albo-2026-3251",
+        "public_id": "albo-2026-3251",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-24T14:28:57.445Z",
+        "publication_number": "2026/3251",
+        "publication_start": "2026-10-09",
+        "publication_end": "2026-10-24",
+        "office": "SETTORE VIGILANZA E SICUREZZA URBANA",
+        "act_type": "ORDINANZA",
+        "act_number": "253",
+        "act_date": "2026-10-09",
+        "content_hash": "9409cb69c64f065c17762aa3c309f06de0b8b4bb62957082738826bd0f408cca",
+        "subject": "Modifica temporanea della circolazione stradale dal 12 al 17 Ottobre c.a. in P.zza della Repubblica e in Via L. Cerminara dal 12 al 17 Ottobre 2026 per lavori di manutenzione ad un fabbricato di civile abitazione.",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_3251_1_ALLEG?ente=00301390795",
+        "public_note": null,
+        "verification_status": "official_source_acquired",
+        "privacy_risk": "low",
+        "public_visibility": "publishable",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "vigilanza_sicurezza",
+            "label": "Vigilanza e sicurezza urbana",
+            "description": "Polizia locale, sicurezza urbana, viabilita e ordinanze di vigilanza.",
+            "confidence": "high",
+            "basis": "office"
+          },
+          "act_category": {
+            "id": "ordinanze",
+            "label": "Ordinanze",
+            "description": "Ordinanze e provvedimenti ordinatori.",
+            "confidence": "high",
+            "basis": "act_type"
+          }
+        },
+        "privacy_attestation": {
+          "schema_version": "albo-privacy-policy-attestation.v1",
+          "policy_version": "albo-privacy-policy.2026-08-30.1",
+          "assessment_basis": "source_record",
+          "status": "current"
+        },
+        "presentation": {
+          "display_title": "Modifica temporanea della circolazione stradale dal 12 al 17 Ottobre c.a. in P.zza della Repubblica e in Via L. Cerminara dal 12 al 17 Ottobre 2026 per lavori di manutenzione ad un fabbricato di civile abitazione.",
+          "action_id": null,
+          "action_label": null,
+          "search_text": "modifica temporanea della circolazione stradale dal 12 al 17 ottobre c a in p zza della repubblica e in via l cerminara dal 12 al 17 ottobre 2026 per lavori di manutenzione ad un fabbricato di civile abitazione",
+          "standardisation": {
+            "schema_version": "publication-standardisation.v1",
+            "profile_id": "albo-public-title-it",
+            "profile_version": "2026-08-30.2",
+            "input_field": "subject",
+            "input_field_preserved": true,
+            "status": "unchanged",
+            "transformations": [],
+            "layout_flags": [
+              "display_title_too_long"
+            ],
+            "review_reasons": []
+          },
+          "area_theme": {
+            "schema_version": "publication-area-theme.v1",
+            "taxonomy_id": "municipal-public-act-area-theme-it",
+            "taxonomy_version": "2026-08-30.1",
+            "theme_id": "mobilita_sicurezza",
+            "theme_label": "Mobilità e sicurezza urbana",
+            "confidence": "high",
+            "basis": "deterministic_rule",
+            "rule_id": "mobility-circulation",
+            "evidence": [
+              {
+                "rule_id": "mobility-circulation",
+                "input_field": "subject",
+                "matched_terms": [
+                  "modifica temporanea della circolazione",
+                  "circolazione stradale"
+                ]
+              }
+            ],
+            "null_reason": null,
+            "override": null
+          }
+        },
+        "known_limits": [
+          "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+          "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+          "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+          "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+          "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+          "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+        ]
+      },
+      {
+        "id": "albo-2026-3234",
+        "public_id": "albo-2026-3234",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-24T14:28:57.445Z",
+        "publication_number": "2026/3234",
+        "publication_start": "2026-10-06",
+        "publication_end": "2026-10-26",
+        "office": null,
+        "act_type": null,
+        "act_number": null,
+        "act_date": null,
+        "subject": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
+        "document_url": null,
+        "public_note": "Record limitato al metadato minimo.",
+        "verification_status": "official_source_acquired",
+        "privacy_risk": "high",
+        "public_visibility": "metadata_only",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "servizi_cittadino_demografici",
+            "label": "Servizi al cittadino e demografici",
+            "description": "Anagrafe, stato civile, leva, elettorale e servizi demografici al cittadino.",
+            "confidence": "high",
+            "basis": "office_and_act_type"
+          },
+          "act_category": {
+            "id": "notifiche_depositi",
+            "label": "Notifiche e depositi",
+            "description": "Notifiche, depositi, avvisi di deposito e pubblicazioni ex codice di procedura civile.",
+            "confidence": "high",
+            "basis": "act_type"
+          }
+        },
+        "privacy_attestation": {
+          "schema_version": "albo-privacy-policy-attestation.v1",
+          "policy_version": "albo-privacy-policy.2026-08-30.1",
+          "assessment_basis": "source_record",
+          "status": "current"
+        },
+        "presentation": {
+          "display_title": "Metadato minimo; oggetto non ripubblicato per prudenza privacy.",
+          "action_id": null,
+          "action_label": null,
+          "search_text": "metadato minimo oggetto non ripubblicato per prudenza privacy",
+          "standardisation": {
+            "schema_version": "publication-standardisation.v1",
+            "profile_id": "albo-public-title-it",
+            "profile_version": "2026-08-30.2",
+            "input_field": "subject",
+            "input_field_preserved": true,
+            "status": "unchanged",
+            "transformations": [],
+            "layout_flags": [],
+            "review_reasons": []
+          },
+          "area_theme": {
+            "schema_version": "publication-area-theme.v1",
+            "taxonomy_id": "municipal-public-act-area-theme-it",
+            "taxonomy_version": "2026-08-30.1",
+            "theme_id": null,
+            "theme_label": null,
+            "confidence": null,
+            "basis": "fallback",
+            "rule_id": null,
+            "evidence": [],
+            "null_reason": "input_withheld_for_privacy",
+            "override": null
+          }
+        },
+        "known_limits": [
+          "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+          "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+          "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+          "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+          "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+          "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF.",
+          "Allegato/documento non incluso negli export strutturati Tinnvision o non disponibile tramite dettaglio ufficiale.",
+          "Oggetto non ripubblicato integralmente nel layer pubblico per prudenza privacy.",
+          "Regola automatica prudenziale: notifiche e depositi procedurali pubblicati solo in forma minima."
+        ]
+      },
+      {
+        "id": "albo-2026-3233",
+        "public_id": "albo-2026-3233",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-24T14:28:57.445Z",
+        "publication_number": "2026/3233",
+        "publication_start": "2026-10-06",
+        "publication_end": "2026-10-25",
+        "office": "ADISSMULTISERVICE",
+        "act_type": "AVVISO PUBBLICO",
+        "act_number": null,
+        "act_date": null,
+        "content_hash": "2b75bde324edbe40bf6f883989535de34b2bae88021b0ed3f26998c61a764825",
+        "subject": "avviso su sito internet ufficiale - AVVISO ESPLORATIVO",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_3233_2_X?ente=00301390795",
+        "public_note": null,
+        "verification_status": "official_source_acquired",
+        "privacy_risk": "low",
+        "public_visibility": "publishable",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "non_classificato",
+            "label": "Non classificato",
+            "description": "Record non ricondotto con sufficiente certezza a un settore del dizionario.",
+            "confidence": "low",
+            "basis": "fallback"
+          },
+          "act_category": {
+            "id": "avvisi",
+            "label": "Avvisi",
+            "description": "Avvisi pubblici e comunicazioni pubblicate all'Albo.",
+            "confidence": "high",
+            "basis": "act_type"
+          }
+        },
+        "privacy_attestation": {
+          "schema_version": "albo-privacy-policy-attestation.v1",
+          "policy_version": "albo-privacy-policy.2026-08-30.1",
+          "assessment_basis": "source_record",
+          "status": "current"
+        },
+        "presentation": {
+          "display_title": "Avviso su sito internet ufficiale - AVVISO ESPLORATIVO",
+          "action_id": null,
+          "action_label": null,
+          "search_text": "avviso su sito internet ufficiale avviso esplorativo avviso su sito internet ufficiale avviso esplorativo",
+          "standardisation": {
+            "schema_version": "publication-standardisation.v1",
+            "profile_id": "albo-public-title-it",
+            "profile_version": "2026-08-30.2",
+            "input_field": "subject",
+            "input_field_preserved": true,
+            "status": "standardised_automatically",
+            "transformations": [
+              "capitalise_initial"
+            ],
+            "layout_flags": [],
+            "review_reasons": []
+          },
+          "area_theme": {
+            "schema_version": "publication-area-theme.v1",
+            "taxonomy_id": "municipal-public-act-area-theme-it",
+            "taxonomy_version": "2026-08-30.1",
+            "theme_id": null,
+            "theme_label": null,
+            "confidence": null,
+            "basis": "fallback",
+            "rule_id": null,
+            "evidence": [],
+            "null_reason": "not_classified",
+            "override": null
+          }
+        },
+        "known_limits": [
+          "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+          "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+          "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+          "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+          "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+          "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+        ]
+      },
+      {
+        "id": "albo-2026-3200",
+        "public_id": "albo-2026-3200",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-24T14:28:57.445Z",
+        "publication_number": "2026/3200",
+        "publication_start": "2026-10-02",
+        "publication_end": "2026-11-01",
+        "office": "SETTORE ECONOMICO FINANZIARIO - ENTRATE COMUNALI (TRIBUTI COMUNALI, TARI, PUBBLICHE AFFISSIONI, ONERI URBANISTICI, MULTE E SANZIONI)",
+        "act_type": "AVVISO",
+        "act_number": null,
+        "act_date": null,
+        "content_hash": "a0f9600e4b35578778d6a437a550a0ab3d7fedd7ac824f45871a1142eaed581d",
+        "subject": "Presa d'atto dell'elenco degli oggetti rinvenuti e fatti pervenire all'ente nel mese di settembre 2026",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_3200_4_X?ente=00301390795",
+        "public_note": null,
+        "verification_status": "official_source_acquired",
+        "privacy_risk": "low",
+        "public_visibility": "publishable",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "bilancio_finanze",
+            "label": "Bilancio, finanze e tributi",
+            "description": "Contabilita, bilancio, finanze, tributi e gestione economica.",
+            "confidence": "high",
+            "basis": "office"
+          },
+          "act_category": {
+            "id": "avvisi",
+            "label": "Avvisi",
+            "description": "Avvisi pubblici e comunicazioni pubblicate all'Albo.",
+            "confidence": "high",
+            "basis": "act_type"
+          }
+        },
+        "privacy_attestation": {
+          "schema_version": "albo-privacy-policy-attestation.v1",
+          "policy_version": "albo-privacy-policy.2026-08-30.1",
+          "assessment_basis": "source_record",
+          "status": "current"
+        },
+        "presentation": {
+          "display_title": "Presa d'atto dell'elenco degli oggetti rinvenuti e fatti pervenire all'ente nel mese di settembre 2026",
+          "action_id": "presa_atto",
+          "action_label": "Presa d'atto",
+          "search_text": "presa d atto dell elenco degli oggetti rinvenuti e fatti pervenire all ente nel mese di settembre 2026",
+          "standardisation": {
+            "schema_version": "publication-standardisation.v1",
+            "profile_id": "albo-public-title-it",
+            "profile_version": "2026-08-30.2",
+            "input_field": "subject",
+            "input_field_preserved": true,
+            "status": "unchanged",
+            "transformations": [],
+            "layout_flags": [],
+            "review_reasons": []
+          },
+          "area_theme": {
+            "schema_version": "publication-area-theme.v1",
+            "taxonomy_id": "municipal-public-act-area-theme-it",
+            "taxonomy_version": "2026-08-30.1",
+            "theme_id": "servizi_civici",
+            "theme_label": "Servizi civici e cimiteriali",
+            "confidence": "high",
+            "basis": "deterministic_rule",
+            "rule_id": "civic-services",
+            "evidence": [
+              {
+                "rule_id": "civic-services",
+                "input_field": "subject",
+                "matched_terms": [
+                  "oggetti rinvenuti"
+                ]
+              }
+            ],
+            "null_reason": null,
+            "override": null
+          }
+        },
+        "known_limits": [
+          "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+          "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+          "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+          "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+          "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+          "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+        ]
+      },
+      {
+        "id": "albo-2026-3183",
+        "public_id": "albo-2026-3183",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-24T14:28:57.445Z",
+        "publication_number": "2026/3183",
+        "publication_start": "2026-10-02",
+        "publication_end": "2026-12-01",
+        "office": "SETTORE GESTIONE E VALORIZZAZIONE DEL PATRIMONIO E DEL TERRITORIO COMUNALE - UFFICIO GESTIONE E VALORIZZAZIONE DEL PATRIMONIO E DEL TERRITORIO COMUNALE",
+        "act_type": "AVVISO ENTI VARI",
+        "act_number": null,
+        "act_date": null,
+        "content_hash": "c8d6545e7b54e10e16a257ff1bc83b77c606b87c0d591cb929e743dc29b2628c",
+        "subject": "Decreto di vincolo, unitamente ai suoi allegati dell'Immobile di proprietà della Diocesi di Lamezia Terme (CZ) denominato “Chiesa di Santa Caterina” sito in località Nicastro- Sambiase, via P. Celi snc, identificato catastalmente al foglio n. 19, part. B. Decreto Legislativo 42/2004 - Verifica dell’interesse culturale del patrimonio immobiliare.",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_3183_1_X?ente=00301390795",
+        "public_note": null,
+        "verification_status": "official_source_acquired",
+        "privacy_risk": "low",
+        "public_visibility": "publishable",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "patrimonio_territorio",
+            "label": "Patrimonio e territorio comunale",
+            "description": "Gestione e valorizzazione del patrimonio comunale e del territorio comunale.",
+            "confidence": "high",
+            "basis": "office"
+          },
+          "act_category": {
+            "id": "avvisi",
+            "label": "Avvisi",
+            "description": "Avvisi pubblici e comunicazioni pubblicate all'Albo.",
+            "confidence": "high",
+            "basis": "act_type"
+          }
+        },
+        "privacy_attestation": {
+          "schema_version": "albo-privacy-policy-attestation.v1",
+          "policy_version": "albo-privacy-policy.2026-08-30.1",
+          "assessment_basis": "source_record",
+          "status": "current"
+        },
+        "presentation": {
+          "display_title": "Decreto di vincolo, unitamente ai suoi allegati dell'Immobile di proprietà della Diocesi di Lamezia Terme (CZ) denominato “Chiesa di Santa Caterina” sito in località Nicastro- Sambiase, via P. Celi snc, identificato catastalmente al foglio n. 19, part. B. Decreto Legislativo 42/2004 - Verifica dell'interesse culturale del patrimonio immobiliare.",
+          "action_id": null,
+          "action_label": null,
+          "search_text": "decreto di vincolo unitamente ai suoi allegati dell immobile di proprieta della diocesi di lamezia terme cz denominato chiesa di santa caterina sito in localita nicastro sambiase via p celi snc identificato catastalmente al foglio n 19 part b decreto legislativo 42 2004 verifica dell interesse culturale del patrimonio immobiliare",
+          "standardisation": {
+            "schema_version": "publication-standardisation.v1",
+            "profile_id": "albo-public-title-it",
+            "profile_version": "2026-08-30.2",
+            "input_field": "subject",
+            "input_field_preserved": true,
+            "status": "standardised_automatically",
+            "transformations": [
+              "normalise_apostrophes"
+            ],
+            "layout_flags": [
+              "display_title_too_long"
+            ],
+            "review_reasons": []
+          },
+          "area_theme": {
+            "schema_version": "publication-area-theme.v1",
+            "taxonomy_id": "municipal-public-act-area-theme-it",
+            "taxonomy_version": "2026-08-30.1",
+            "theme_id": null,
+            "theme_label": null,
+            "confidence": null,
+            "basis": "fallback",
+            "rule_id": null,
+            "evidence": [],
+            "null_reason": "not_classified",
+            "override": null
+          }
+        },
+        "known_limits": [
+          "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+          "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+          "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+          "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+          "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+          "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+        ]
+      },
+      {
+        "id": "albo-2026-3182",
+        "public_id": "albo-2026-3182",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-24T14:28:57.445Z",
+        "publication_number": "2026/3182",
+        "publication_start": "2026-10-01",
+        "publication_end": "2026-10-31",
+        "office": "SETTORE GOVERNO DEL TERRITORIO - PIANIFICAZIONE TERRITORIALE ED URBANISTICA",
+        "act_type": "AVVISO RILASCIO PERMESSO DI COSTRUIRE",
+        "act_number": null,
+        "act_date": null,
+        "content_hash": "6470a957f56c9f9505c5b8d5327d91e54fa2d6ca735079aebd0f2463fce12000",
+        "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo n. 12375",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_3182_2_P?ente=00301390795",
+        "public_note": null,
+        "verification_status": "official_source_acquired",
+        "privacy_risk": "low",
+        "public_visibility": "publishable",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "governo_territorio",
+            "label": "Governo del territorio e urbanistica",
+            "description": "Urbanistica, pianificazione territoriale, edilizia e atti tecnici collegati al territorio.",
+            "confidence": "high",
+            "basis": "office_and_act_type"
+          },
+          "act_category": {
+            "id": "edilizia_urbanistica",
+            "label": "Edilizia e urbanistica",
+            "description": "Permessi di costruire, avvisi edilizi e atti urbanistici.",
+            "confidence": "high",
+            "basis": "act_type"
+          }
+        },
+        "privacy_attestation": {
+          "schema_version": "albo-privacy-policy-attestation.v1",
+          "policy_version": "albo-privacy-policy.2026-08-30.1",
+          "assessment_basis": "source_record",
+          "status": "current"
+        },
+        "presentation": {
+          "display_title": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo n. 12375",
+          "action_id": null,
+          "action_label": null,
+          "search_text": "avviso di rilascio di concessione edilizia in sanatoria condono fascicolo n 12375",
+          "standardisation": {
+            "schema_version": "publication-standardisation.v1",
+            "profile_id": "albo-public-title-it",
+            "profile_version": "2026-08-30.2",
+            "input_field": "subject",
+            "input_field_preserved": true,
+            "status": "unchanged",
+            "transformations": [],
+            "layout_flags": [],
+            "review_reasons": []
+          },
+          "area_theme": {
+            "schema_version": "publication-area-theme.v1",
+            "taxonomy_id": "municipal-public-act-area-theme-it",
+            "taxonomy_version": "2026-08-30.1",
+            "theme_id": "territorio_edilizia",
+            "theme_label": "Urbanistica, edilizia e territorio",
+            "confidence": "high",
+            "basis": "deterministic_rule",
+            "rule_id": "building-permits",
+            "evidence": [
+              {
+                "rule_id": "building-permits",
+                "input_field": "subject",
+                "matched_terms": [
+                  "concessione edilizia",
+                  "condono",
+                  "sanatoria"
+                ]
+              }
+            ],
+            "null_reason": null,
+            "override": null
+          }
+        },
+        "known_limits": [
+          "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+          "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+          "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+          "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+          "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+          "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+        ]
+      },
+      {
+        "id": "albo-2026-3181",
+        "public_id": "albo-2026-3181",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-24T14:28:57.445Z",
+        "publication_number": "2026/3181",
+        "publication_start": "2026-10-01",
+        "publication_end": "2026-11-30",
+        "office": "SETTORE GESTIONE E VALORIZZAZIONE DEL PATRIMONIO E DEL TERRITORIO COMUNALE - UFFICIO GESTIONE E VALORIZZAZIONE DEL PATRIMONIO E DEL TERRITORIO COMUNALE",
+        "act_type": "AVVISO ENTI VARI",
+        "act_number": null,
+        "act_date": null,
+        "content_hash": "80a3d0c5212b490d90404a9fd14bd06f8c9651da37b21d3edbf68b931b145100",
+        "subject": "Decreto di vincolo, unitamente ai suoi allegati dell'Immobile di proprietà della Parrocchia B.V. Addolorata Pietà denominato “Chiesetta Pietà” sito in località Nicastro- Sambiase, via G. Marconi snc, identificato catastalmente al foglio 15, part. n.1156. Decreto Legislativo 42/2004 - Verifica dell’interesse culturale del patrimonio immobiliare.",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_3181_2_X?ente=00301390795",
+        "public_note": null,
+        "verification_status": "official_source_acquired",
+        "privacy_risk": "low",
+        "public_visibility": "publishable",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "patrimonio_territorio",
+            "label": "Patrimonio e territorio comunale",
+            "description": "Gestione e valorizzazione del patrimonio comunale e del territorio comunale.",
+            "confidence": "high",
+            "basis": "office"
+          },
+          "act_category": {
+            "id": "avvisi",
+            "label": "Avvisi",
+            "description": "Avvisi pubblici e comunicazioni pubblicate all'Albo.",
+            "confidence": "high",
+            "basis": "act_type"
+          }
+        },
+        "privacy_attestation": {
+          "schema_version": "albo-privacy-policy-attestation.v1",
+          "policy_version": "albo-privacy-policy.2026-08-30.1",
+          "assessment_basis": "source_record",
+          "status": "current"
+        },
+        "presentation": {
+          "display_title": "Decreto di vincolo, unitamente ai suoi allegati dell'Immobile di proprietà della Parrocchia B.V. Addolorata Pietà denominato “Chiesetta Pietà” sito in località Nicastro- Sambiase, via G. Marconi snc, identificato catastalmente al foglio 15, part. n.1156. Decreto Legislativo 42/2004 - Verifica dell'interesse culturale del patrimonio immobiliare.",
+          "action_id": null,
+          "action_label": null,
+          "search_text": "decreto di vincolo unitamente ai suoi allegati dell immobile di proprieta della parrocchia b v addolorata pieta denominato chiesetta pieta sito in localita nicastro sambiase via g marconi snc identificato catastalmente al foglio 15 part n 1156 decreto legislativo 42 2004 verifica dell interesse culturale del patrimonio immobiliare",
+          "standardisation": {
+            "schema_version": "publication-standardisation.v1",
+            "profile_id": "albo-public-title-it",
+            "profile_version": "2026-08-30.2",
+            "input_field": "subject",
+            "input_field_preserved": true,
+            "status": "standardised_automatically",
+            "transformations": [
+              "normalise_apostrophes"
+            ],
+            "layout_flags": [
+              "display_title_too_long"
+            ],
+            "review_reasons": []
+          },
+          "area_theme": {
+            "schema_version": "publication-area-theme.v1",
+            "taxonomy_id": "municipal-public-act-area-theme-it",
+            "taxonomy_version": "2026-08-30.1",
+            "theme_id": null,
+            "theme_label": null,
+            "confidence": null,
+            "basis": "fallback",
+            "rule_id": null,
+            "evidence": [],
+            "null_reason": "not_classified",
+            "override": null
+          }
+        },
+        "known_limits": [
+          "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+          "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+          "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+          "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+          "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+          "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+        ]
+      },
+      {
+        "id": "albo-2026-3180",
+        "public_id": "albo-2026-3180",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-24T14:28:57.445Z",
+        "publication_number": "2026/3180",
+        "publication_start": "2026-10-01",
+        "publication_end": "2026-11-30",
+        "office": "SETTORE GESTIONE E VALORIZZAZIONE DEL PATRIMONIO E DEL TERRITORIO COMUNALE - UFFICIO GESTIONE E VALORIZZAZIONE DEL PATRIMONIO E DEL TERRITORIO COMUNALE",
+        "act_type": "AVVISO ENTI VARI",
+        "act_number": null,
+        "act_date": null,
+        "content_hash": "0dec2b3c7f8437769d9161b125527ce395d374ac592050b686240d7099adc690",
+        "subject": "Decreto di vincolo, unitamente ai suoi allegati dell'Immobile di proprietà della Parrocchia Santi Nicola e Lucia denominato “Chiesa Santi Nicola e Lucia” sito in località Nicastro- Sambiase (CZ), via S. Lucia snc, identificato catastalmente al foglio n. 9, part. C. Decreto Legislativo 42/2004 - Verifica dell’interesse culturale del patrimonio immobiliare.",
+        "document_url": null,
+        "public_note": null,
+        "verification_status": "official_source_acquired",
+        "privacy_risk": "low",
+        "public_visibility": "publishable",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "patrimonio_territorio",
+            "label": "Patrimonio e territorio comunale",
+            "description": "Gestione e valorizzazione del patrimonio comunale e del territorio comunale.",
+            "confidence": "high",
+            "basis": "office"
+          },
+          "act_category": {
+            "id": "avvisi",
+            "label": "Avvisi",
+            "description": "Avvisi pubblici e comunicazioni pubblicate all'Albo.",
+            "confidence": "high",
+            "basis": "act_type"
+          }
+        },
+        "privacy_attestation": {
+          "schema_version": "albo-privacy-policy-attestation.v1",
+          "policy_version": "albo-privacy-policy.2026-08-30.1",
+          "assessment_basis": "source_record",
+          "status": "current"
+        },
+        "presentation": {
+          "display_title": "Decreto di vincolo, unitamente ai suoi allegati dell'Immobile di proprietà della Parrocchia Santi Nicola e Lucia denominato “Chiesa Santi Nicola e Lucia” sito in località Nicastro- Sambiase (CZ), via S. Lucia snc, identificato catastalmente al foglio n. 9, part. C. Decreto Legislativo 42/2004 - Verifica dell'interesse culturale del patrimonio immobiliare.",
+          "action_id": null,
+          "action_label": null,
+          "search_text": "decreto di vincolo unitamente ai suoi allegati dell immobile di proprieta della parrocchia santi nicola e lucia denominato chiesa santi nicola e lucia sito in localita nicastro sambiase cz via s lucia snc identificato catastalmente al foglio n 9 part c decreto legislativo 42 2004 verifica dell interesse culturale del patrimonio immobiliare",
+          "standardisation": {
+            "schema_version": "publication-standardisation.v1",
+            "profile_id": "albo-public-title-it",
+            "profile_version": "2026-08-30.2",
+            "input_field": "subject",
+            "input_field_preserved": true,
+            "status": "standardised_automatically",
+            "transformations": [
+              "normalise_apostrophes"
+            ],
+            "layout_flags": [
+              "display_title_too_long"
+            ],
+            "review_reasons": []
+          },
+          "area_theme": {
+            "schema_version": "publication-area-theme.v1",
+            "taxonomy_id": "municipal-public-act-area-theme-it",
+            "taxonomy_version": "2026-08-30.1",
+            "theme_id": null,
+            "theme_label": null,
+            "confidence": null,
+            "basis": "fallback",
+            "rule_id": null,
+            "evidence": [],
+            "null_reason": "not_classified",
+            "override": null
+          }
+        },
+        "known_limits": [
+          "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+          "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+          "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+          "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+          "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+          "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF.",
+          "Allegato/documento non incluso negli export strutturati Tinnvision o non disponibile tramite dettaglio ufficiale."
+        ]
+      },
+      {
+        "id": "albo-2026-3179",
+        "public_id": "albo-2026-3179",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-24T14:28:57.445Z",
+        "publication_number": "2026/3179",
+        "publication_start": "2026-10-01",
+        "publication_end": "2026-11-30",
+        "office": "SETTORE GESTIONE E VALORIZZAZIONE DEL PATRIMONIO E DEL TERRITORIO COMUNALE - UFFICIO GESTIONE E VALORIZZAZIONE DEL PATRIMONIO E DEL TERRITORIO COMUNALE",
+        "act_type": "AVVISO ENTI VARI",
+        "act_number": null,
+        "act_date": null,
+        "content_hash": "c8b97e7f2d60e579a34be8962c65692b592b0098a0d6d7954b74e91f85eeec57",
+        "subject": "Decreto di vincolo, unitamente ai suoi allegati dell'Immobile di proprietà della Diocesi di Lamezia Terme (CZ) denominato “Chiesa di Santa Caterina” sito in località Nicastro- Sambiase, via P. Celi snc, identificato catastalmente al foglio n. 19, part. B. Decreto Legislativo 42/2004 - Verifica dell’interesse culturale del patrimonio immobiliare.",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_3179_2_X?ente=00301390795",
+        "public_note": null,
+        "verification_status": "official_source_acquired",
+        "privacy_risk": "low",
+        "public_visibility": "publishable",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "patrimonio_territorio",
+            "label": "Patrimonio e territorio comunale",
+            "description": "Gestione e valorizzazione del patrimonio comunale e del territorio comunale.",
+            "confidence": "high",
+            "basis": "office"
+          },
+          "act_category": {
+            "id": "avvisi",
+            "label": "Avvisi",
+            "description": "Avvisi pubblici e comunicazioni pubblicate all'Albo.",
+            "confidence": "high",
+            "basis": "act_type"
+          }
+        },
+        "privacy_attestation": {
+          "schema_version": "albo-privacy-policy-attestation.v1",
+          "policy_version": "albo-privacy-policy.2026-08-30.1",
+          "assessment_basis": "source_record",
+          "status": "current"
+        },
+        "presentation": {
+          "display_title": "Decreto di vincolo, unitamente ai suoi allegati dell'Immobile di proprietà della Diocesi di Lamezia Terme (CZ) denominato “Chiesa di Santa Caterina” sito in località Nicastro- Sambiase, via P. Celi snc, identificato catastalmente al foglio n. 19, part. B. Decreto Legislativo 42/2004 - Verifica dell'interesse culturale del patrimonio immobiliare.",
+          "action_id": null,
+          "action_label": null,
+          "search_text": "decreto di vincolo unitamente ai suoi allegati dell immobile di proprieta della diocesi di lamezia terme cz denominato chiesa di santa caterina sito in localita nicastro sambiase via p celi snc identificato catastalmente al foglio n 19 part b decreto legislativo 42 2004 verifica dell interesse culturale del patrimonio immobiliare",
+          "standardisation": {
+            "schema_version": "publication-standardisation.v1",
+            "profile_id": "albo-public-title-it",
+            "profile_version": "2026-08-30.2",
+            "input_field": "subject",
+            "input_field_preserved": true,
+            "status": "standardised_automatically",
+            "transformations": [
+              "normalise_apostrophes"
+            ],
+            "layout_flags": [
+              "display_title_too_long"
+            ],
+            "review_reasons": []
+          },
+          "area_theme": {
+            "schema_version": "publication-area-theme.v1",
+            "taxonomy_id": "municipal-public-act-area-theme-it",
+            "taxonomy_version": "2026-08-30.1",
+            "theme_id": null,
+            "theme_label": null,
+            "confidence": null,
+            "basis": "fallback",
+            "rule_id": null,
+            "evidence": [],
+            "null_reason": "not_classified",
+            "override": null
+          }
+        },
+        "known_limits": [
+          "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+          "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+          "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+          "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+          "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+          "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+        ]
+      },
+      {
+        "id": "albo-2026-3144",
+        "public_id": "albo-2026-3144",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-24T14:28:57.445Z",
+        "publication_number": "2026/3144",
+        "publication_start": "2026-09-29",
+        "publication_end": "2026-10-29",
+        "office": "SETTORE GOVERNO DEL TERRITORIO - PIANIFICAZIONE TERRITORIALE ED URBANISTICA",
+        "act_type": "AVVISO RILASCIO PERMESSO DI COSTRUIRE",
+        "act_number": null,
+        "act_date": null,
+        "content_hash": "4ca112353047e3d02b13b4126f61c9265037d36278eb631bd4f8fb287c9df937",
+        "subject": "AVVISO DI RILASCIO - Permesso di Costruire n. 33_ Ditta_Tropea",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_3144_1_X?ente=00301390795",
+        "public_note": null,
+        "verification_status": "official_source_acquired",
+        "privacy_risk": "low",
+        "public_visibility": "publishable",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "governo_territorio",
+            "label": "Governo del territorio e urbanistica",
+            "description": "Urbanistica, pianificazione territoriale, edilizia e atti tecnici collegati al territorio.",
+            "confidence": "high",
+            "basis": "office_and_act_type"
+          },
+          "act_category": {
+            "id": "edilizia_urbanistica",
+            "label": "Edilizia e urbanistica",
+            "description": "Permessi di costruire, avvisi edilizi e atti urbanistici.",
+            "confidence": "high",
+            "basis": "act_type"
+          }
+        },
+        "privacy_attestation": {
+          "schema_version": "albo-privacy-policy-attestation.v1",
+          "policy_version": "albo-privacy-policy.2026-08-30.1",
+          "assessment_basis": "source_record",
+          "status": "current"
+        },
+        "presentation": {
+          "display_title": "AVVISO DI RILASCIO - Permesso di Costruire n. 33_ Ditta_Tropea",
+          "action_id": null,
+          "action_label": null,
+          "search_text": "avviso di rilascio permesso di costruire n 33 ditta tropea",
+          "standardisation": {
+            "schema_version": "publication-standardisation.v1",
+            "profile_id": "albo-public-title-it",
+            "profile_version": "2026-08-30.2",
+            "input_field": "subject",
+            "input_field_preserved": true,
+            "status": "unchanged",
+            "transformations": [],
+            "layout_flags": [],
+            "review_reasons": []
+          },
+          "area_theme": {
+            "schema_version": "publication-area-theme.v1",
+            "taxonomy_id": "municipal-public-act-area-theme-it",
+            "taxonomy_version": "2026-08-30.1",
+            "theme_id": "territorio_edilizia",
+            "theme_label": "Urbanistica, edilizia e territorio",
+            "confidence": "high",
+            "basis": "deterministic_rule",
+            "rule_id": "building-permits",
+            "evidence": [
+              {
+                "rule_id": "building-permits",
+                "input_field": "subject",
+                "matched_terms": [
+                  "permesso di costruire"
+                ]
+              }
+            ],
+            "null_reason": null,
+            "override": null
+          }
+        },
+        "known_limits": [
+          "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+          "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+          "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+          "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+          "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+          "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+        ]
+      },
+      {
+        "id": "albo-2026-3143",
+        "public_id": "albo-2026-3143",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-24T14:28:57.445Z",
+        "publication_number": "2026/3143",
+        "publication_start": "2026-09-29",
+        "publication_end": "2026-10-29",
+        "office": "SETTORE GOVERNO DEL TERRITORIO - PIANIFICAZIONE TERRITORIALE ED URBANISTICA",
+        "act_type": "AVVISO RILASCIO PERMESSO DI COSTRUIRE",
+        "act_number": null,
+        "act_date": null,
+        "content_hash": "cc3317fd8b56904aa5d5c6397644e47a69d5ce091d3d7626441af773fa3ae2a4",
+        "subject": "AVVISO DI RILASCIO - Permesso di Costruire n. 32_ Ditta Mastroianni_Rocca",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_3143_1_X?ente=00301390795",
+        "public_note": null,
+        "verification_status": "official_source_acquired",
+        "privacy_risk": "low",
+        "public_visibility": "publishable",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "governo_territorio",
+            "label": "Governo del territorio e urbanistica",
+            "description": "Urbanistica, pianificazione territoriale, edilizia e atti tecnici collegati al territorio.",
+            "confidence": "high",
+            "basis": "office_and_act_type"
+          },
+          "act_category": {
+            "id": "edilizia_urbanistica",
+            "label": "Edilizia e urbanistica",
+            "description": "Permessi di costruire, avvisi edilizi e atti urbanistici.",
+            "confidence": "high",
+            "basis": "act_type"
+          }
+        },
+        "privacy_attestation": {
+          "schema_version": "albo-privacy-policy-attestation.v1",
+          "policy_version": "albo-privacy-policy.2026-08-30.1",
+          "assessment_basis": "source_record",
+          "status": "current"
+        },
+        "presentation": {
+          "display_title": "AVVISO DI RILASCIO - Permesso di Costruire n. 32_ Ditta Mastroianni_Rocca",
+          "action_id": null,
+          "action_label": null,
+          "search_text": "avviso di rilascio permesso di costruire n 32 ditta mastroianni rocca",
+          "standardisation": {
+            "schema_version": "publication-standardisation.v1",
+            "profile_id": "albo-public-title-it",
+            "profile_version": "2026-08-30.2",
+            "input_field": "subject",
+            "input_field_preserved": true,
+            "status": "unchanged",
+            "transformations": [],
+            "layout_flags": [],
+            "review_reasons": []
+          },
+          "area_theme": {
+            "schema_version": "publication-area-theme.v1",
+            "taxonomy_id": "municipal-public-act-area-theme-it",
+            "taxonomy_version": "2026-08-30.1",
+            "theme_id": "territorio_edilizia",
+            "theme_label": "Urbanistica, edilizia e territorio",
+            "confidence": "high",
+            "basis": "deterministic_rule",
+            "rule_id": "building-permits",
+            "evidence": [
+              {
+                "rule_id": "building-permits",
+                "input_field": "subject",
+                "matched_terms": [
+                  "permesso di costruire"
+                ]
+              }
+            ],
+            "null_reason": null,
+            "override": null
+          }
+        },
+        "known_limits": [
+          "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+          "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+          "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+          "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+          "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+          "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+        ]
+      },
+      {
+        "id": "albo-2026-3142",
+        "public_id": "albo-2026-3142",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-24T14:28:57.445Z",
+        "publication_number": "2026/3142",
+        "publication_start": "2026-09-29",
+        "publication_end": "2026-10-29",
+        "office": "SETTORE GOVERNO DEL TERRITORIO - PIANIFICAZIONE TERRITORIALE ED URBANISTICA",
+        "act_type": "AVVISO RILASCIO PERMESSO DI COSTRUIRE",
+        "act_number": null,
+        "act_date": null,
+        "content_hash": "d9fc8e7db8350088e4a767c3a63fda5ad61b030da747e6e6721f6e5eb64f9729",
+        "subject": "AVVISO DI RILASCIO - Permesso di Costruire n. 31_ Ditta Spalliera",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_3142_1_X?ente=00301390795",
+        "public_note": null,
+        "verification_status": "official_source_acquired",
+        "privacy_risk": "low",
+        "public_visibility": "publishable",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "governo_territorio",
+            "label": "Governo del territorio e urbanistica",
+            "description": "Urbanistica, pianificazione territoriale, edilizia e atti tecnici collegati al territorio.",
+            "confidence": "high",
+            "basis": "office_and_act_type"
+          },
+          "act_category": {
+            "id": "edilizia_urbanistica",
+            "label": "Edilizia e urbanistica",
+            "description": "Permessi di costruire, avvisi edilizi e atti urbanistici.",
+            "confidence": "high",
+            "basis": "act_type"
+          }
+        },
+        "privacy_attestation": {
+          "schema_version": "albo-privacy-policy-attestation.v1",
+          "policy_version": "albo-privacy-policy.2026-08-30.1",
+          "assessment_basis": "source_record",
+          "status": "current"
+        },
+        "presentation": {
+          "display_title": "AVVISO DI RILASCIO - Permesso di Costruire n. 31_ Ditta Spalliera",
+          "action_id": null,
+          "action_label": null,
+          "search_text": "avviso di rilascio permesso di costruire n 31 ditta spalliera",
+          "standardisation": {
+            "schema_version": "publication-standardisation.v1",
+            "profile_id": "albo-public-title-it",
+            "profile_version": "2026-08-30.2",
+            "input_field": "subject",
+            "input_field_preserved": true,
+            "status": "unchanged",
+            "transformations": [],
+            "layout_flags": [],
+            "review_reasons": []
+          },
+          "area_theme": {
+            "schema_version": "publication-area-theme.v1",
+            "taxonomy_id": "municipal-public-act-area-theme-it",
+            "taxonomy_version": "2026-08-30.1",
+            "theme_id": "territorio_edilizia",
+            "theme_label": "Urbanistica, edilizia e territorio",
+            "confidence": "high",
+            "basis": "deterministic_rule",
+            "rule_id": "building-permits",
+            "evidence": [
+              {
+                "rule_id": "building-permits",
+                "input_field": "subject",
+                "matched_terms": [
+                  "permesso di costruire"
+                ]
+              }
+            ],
+            "null_reason": null,
+            "override": null
+          }
+        },
+        "known_limits": [
+          "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+          "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+          "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+          "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+          "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+          "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+        ]
+      },
+      {
+        "id": "albo-2026-3141",
+        "public_id": "albo-2026-3141",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-24T14:28:57.445Z",
+        "publication_number": "2026/3141",
+        "publication_start": "2026-09-29",
+        "publication_end": "2026-10-29",
+        "office": "SETTORE GOVERNO DEL TERRITORIO - PIANIFICAZIONE TERRITORIALE ED URBANISTICA",
+        "act_type": "AVVISO RILASCIO PERMESSO DI COSTRUIRE",
+        "act_number": null,
+        "act_date": null,
+        "content_hash": "8b5b55df6fcc7c1b12f3925a09676f43ff471c2f7ae4597d1305c4b75083e1d8",
+        "subject": "AVVISO DI RILASCIO - Permesso di Costruire n. 30_ Ditta Omega Costruzioni",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_3141_1_X?ente=00301390795",
+        "public_note": null,
+        "verification_status": "official_source_acquired",
+        "privacy_risk": "low",
+        "public_visibility": "publishable",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "governo_territorio",
+            "label": "Governo del territorio e urbanistica",
+            "description": "Urbanistica, pianificazione territoriale, edilizia e atti tecnici collegati al territorio.",
+            "confidence": "high",
+            "basis": "office_and_act_type"
+          },
+          "act_category": {
+            "id": "edilizia_urbanistica",
+            "label": "Edilizia e urbanistica",
+            "description": "Permessi di costruire, avvisi edilizi e atti urbanistici.",
+            "confidence": "high",
+            "basis": "act_type"
+          }
+        },
+        "privacy_attestation": {
+          "schema_version": "albo-privacy-policy-attestation.v1",
+          "policy_version": "albo-privacy-policy.2026-08-30.1",
+          "assessment_basis": "source_record",
+          "status": "current"
+        },
+        "presentation": {
+          "display_title": "AVVISO DI RILASCIO - Permesso di Costruire n. 30_ Ditta Omega Costruzioni",
+          "action_id": null,
+          "action_label": null,
+          "search_text": "avviso di rilascio permesso di costruire n 30 ditta omega costruzioni",
+          "standardisation": {
+            "schema_version": "publication-standardisation.v1",
+            "profile_id": "albo-public-title-it",
+            "profile_version": "2026-08-30.2",
+            "input_field": "subject",
+            "input_field_preserved": true,
+            "status": "unchanged",
+            "transformations": [],
+            "layout_flags": [],
+            "review_reasons": []
+          },
+          "area_theme": {
+            "schema_version": "publication-area-theme.v1",
+            "taxonomy_id": "municipal-public-act-area-theme-it",
+            "taxonomy_version": "2026-08-30.1",
+            "theme_id": "territorio_edilizia",
+            "theme_label": "Urbanistica, edilizia e territorio",
+            "confidence": "high",
+            "basis": "deterministic_rule",
+            "rule_id": "building-permits",
+            "evidence": [
+              {
+                "rule_id": "building-permits",
+                "input_field": "subject",
+                "matched_terms": [
+                  "permesso di costruire"
+                ]
+              }
+            ],
+            "null_reason": null,
+            "override": null
+          }
+        },
+        "known_limits": [
+          "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+          "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+          "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+          "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+          "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+          "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+        ]
+      },
+      {
+        "id": "albo-2026-3140",
+        "public_id": "albo-2026-3140",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-24T14:28:57.445Z",
+        "publication_number": "2026/3140",
+        "publication_start": "2026-09-29",
+        "publication_end": "2026-10-29",
+        "office": "SETTORE GOVERNO DEL TERRITORIO - PIANIFICAZIONE TERRITORIALE ED URBANISTICA",
+        "act_type": "AVVISO RILASCIO PERMESSO DI COSTRUIRE",
+        "act_number": null,
+        "act_date": null,
+        "content_hash": "b14e3236810b941b3d386005d9e93ce5b77d0dc46e7e8cb0f196a2c6800bcfd9",
+        "subject": "AVVISO DI RILASCIO - Permesso di Costruire n. 29_ Ditta_Guzzo P_",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_3140_1_X?ente=00301390795",
+        "public_note": null,
+        "verification_status": "official_source_acquired",
+        "privacy_risk": "low",
+        "public_visibility": "publishable",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "governo_territorio",
+            "label": "Governo del territorio e urbanistica",
+            "description": "Urbanistica, pianificazione territoriale, edilizia e atti tecnici collegati al territorio.",
+            "confidence": "high",
+            "basis": "office_and_act_type"
+          },
+          "act_category": {
+            "id": "edilizia_urbanistica",
+            "label": "Edilizia e urbanistica",
+            "description": "Permessi di costruire, avvisi edilizi e atti urbanistici.",
+            "confidence": "high",
+            "basis": "act_type"
+          }
+        },
+        "privacy_attestation": {
+          "schema_version": "albo-privacy-policy-attestation.v1",
+          "policy_version": "albo-privacy-policy.2026-08-30.1",
+          "assessment_basis": "source_record",
+          "status": "current"
+        },
+        "presentation": {
+          "display_title": "AVVISO DI RILASCIO - Permesso di Costruire n. 29_ Ditta_Guzzo P_",
+          "action_id": null,
+          "action_label": null,
+          "search_text": "avviso di rilascio permesso di costruire n 29 ditta guzzo p",
+          "standardisation": {
+            "schema_version": "publication-standardisation.v1",
+            "profile_id": "albo-public-title-it",
+            "profile_version": "2026-08-30.2",
+            "input_field": "subject",
+            "input_field_preserved": true,
+            "status": "unchanged",
+            "transformations": [],
+            "layout_flags": [],
+            "review_reasons": []
+          },
+          "area_theme": {
+            "schema_version": "publication-area-theme.v1",
+            "taxonomy_id": "municipal-public-act-area-theme-it",
+            "taxonomy_version": "2026-08-30.1",
+            "theme_id": "territorio_edilizia",
+            "theme_label": "Urbanistica, edilizia e territorio",
+            "confidence": "high",
+            "basis": "deterministic_rule",
+            "rule_id": "building-permits",
+            "evidence": [
+              {
+                "rule_id": "building-permits",
+                "input_field": "subject",
+                "matched_terms": [
+                  "permesso di costruire"
+                ]
+              }
+            ],
+            "null_reason": null,
+            "override": null
+          }
+        },
+        "known_limits": [
+          "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+          "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+          "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+          "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+          "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+          "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+        ]
+      },
+      {
+        "id": "albo-2026-3128",
+        "public_id": "albo-2026-3128",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-24T14:28:57.445Z",
+        "publication_number": "2026/3128",
+        "publication_start": "2026-09-28",
+        "publication_end": "2026-10-28",
+        "office": "SETTORE GOVERNO DEL TERRITORIO - PIANIFICAZIONE TERRITORIALE ED URBANISTICA",
+        "act_type": "AVVISO RILASCIO PERMESSO DI COSTRUIRE",
+        "act_number": null,
+        "act_date": null,
+        "content_hash": "baf97bba7c3d2b9815d4b8b65eae57ee71796db646bc6cdc87d59f74e8b1db22",
+        "subject": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 6249",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_3128_2_P?ente=00301390795",
+        "public_note": null,
+        "verification_status": "official_source_acquired",
+        "privacy_risk": "low",
+        "public_visibility": "publishable",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "governo_territorio",
+            "label": "Governo del territorio e urbanistica",
+            "description": "Urbanistica, pianificazione territoriale, edilizia e atti tecnici collegati al territorio.",
+            "confidence": "high",
+            "basis": "office_and_act_type"
+          },
+          "act_category": {
+            "id": "edilizia_urbanistica",
+            "label": "Edilizia e urbanistica",
+            "description": "Permessi di costruire, avvisi edilizi e atti urbanistici.",
+            "confidence": "high",
+            "basis": "act_type"
+          }
+        },
+        "privacy_attestation": {
+          "schema_version": "albo-privacy-policy-attestation.v1",
+          "policy_version": "albo-privacy-policy.2026-08-30.1",
+          "assessment_basis": "source_record",
+          "status": "current"
+        },
+        "presentation": {
+          "display_title": "Avviso di rilascio di Concessione edilizia in sanatoria (condono) Fascicolo N. 6249",
+          "action_id": null,
+          "action_label": null,
+          "search_text": "avviso di rilascio di concessione edilizia in sanatoria condono fascicolo n 6249",
+          "standardisation": {
+            "schema_version": "publication-standardisation.v1",
+            "profile_id": "albo-public-title-it",
+            "profile_version": "2026-08-30.2",
+            "input_field": "subject",
+            "input_field_preserved": true,
+            "status": "unchanged",
+            "transformations": [],
+            "layout_flags": [],
+            "review_reasons": []
+          },
+          "area_theme": {
+            "schema_version": "publication-area-theme.v1",
+            "taxonomy_id": "municipal-public-act-area-theme-it",
+            "taxonomy_version": "2026-08-30.1",
+            "theme_id": "territorio_edilizia",
+            "theme_label": "Urbanistica, edilizia e territorio",
+            "confidence": "high",
+            "basis": "deterministic_rule",
+            "rule_id": "building-permits",
+            "evidence": [
+              {
+                "rule_id": "building-permits",
+                "input_field": "subject",
+                "matched_terms": [
+                  "concessione edilizia",
+                  "condono",
+                  "sanatoria"
+                ]
+              }
+            ],
+            "null_reason": null,
+            "override": null
+          }
+        },
+        "known_limits": [
+          "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+          "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+          "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+          "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+          "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+          "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+        ]
+      },
+      {
+        "id": "albo-2026-3126",
+        "public_id": "albo-2026-3126",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-24T14:28:57.445Z",
+        "publication_number": "2026/3126",
+        "publication_start": "2026-09-28",
+        "publication_end": "2026-10-28",
+        "office": "SETTORE GOVERNO DEL TERRITORIO - UFFICIO GOVERNO DEL TERRITORIO",
+        "act_type": "AVVISO",
+        "act_number": null,
+        "act_date": null,
+        "content_hash": "a06effe27b7512b1c426e6cbe53a72317d49e064f8520f8c566772a4876533b5",
+        "subject": "PUBBLICAZIONE DI RELAZIONE DI ACCERTAMENTO DEMANIALE (Art. 5, comma 6, Reg. Att. n. 15/2024 della L.R. n. 18/2007 concernente “Norme in materia di usi civici”)",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_3126_2_X?ente=00301390795",
+        "public_note": null,
+        "verification_status": "official_source_acquired",
+        "privacy_risk": "low",
+        "public_visibility": "publishable",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "governo_territorio",
+            "label": "Governo del territorio e urbanistica",
+            "description": "Urbanistica, pianificazione territoriale, edilizia e atti tecnici collegati al territorio.",
+            "confidence": "high",
+            "basis": "office_and_act_type"
+          },
+          "act_category": {
+            "id": "avvisi",
+            "label": "Avvisi",
+            "description": "Avvisi pubblici e comunicazioni pubblicate all'Albo.",
+            "confidence": "high",
+            "basis": "act_type"
+          }
+        },
+        "privacy_attestation": {
+          "schema_version": "albo-privacy-policy-attestation.v1",
+          "policy_version": "albo-privacy-policy.2026-08-30.1",
+          "assessment_basis": "source_record",
+          "status": "current"
+        },
+        "presentation": {
+          "display_title": "PUBBLICAZIONE DI RELAZIONE DI ACCERTAMENTO DEMANIALE (Art. 5, comma 6, Reg. Att. n. 15/2024 della L.R. n. 18/2007 concernente “Norme in materia di usi civici”)",
+          "action_id": null,
+          "action_label": null,
+          "search_text": "pubblicazione di relazione di accertamento demaniale art 5 comma 6 reg att n 15 2024 della l r n 18 2007 concernente norme in materia di usi civici",
+          "standardisation": {
+            "schema_version": "publication-standardisation.v1",
+            "profile_id": "albo-public-title-it",
+            "profile_version": "2026-08-30.2",
+            "input_field": "subject",
+            "input_field_preserved": true,
+            "status": "unchanged",
+            "transformations": [],
+            "layout_flags": [],
+            "review_reasons": []
+          },
+          "area_theme": {
+            "schema_version": "publication-area-theme.v1",
+            "taxonomy_id": "municipal-public-act-area-theme-it",
+            "taxonomy_version": "2026-08-30.1",
+            "theme_id": null,
+            "theme_label": null,
+            "confidence": null,
+            "basis": "fallback",
+            "rule_id": null,
+            "evidence": [],
+            "null_reason": "not_classified",
+            "override": null
+          }
+        },
+        "known_limits": [
+          "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+          "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+          "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+          "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+          "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+          "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+        ]
+      },
+      {
+        "id": "albo-2026-3095",
+        "public_id": "albo-2026-3095",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-24T14:28:57.445Z",
+        "publication_number": "2026/3095",
+        "publication_start": "2026-09-25",
+        "publication_end": "2026-10-25",
+        "office": "COMUNE DI PLATANIA",
+        "act_type": "AVVISO",
+        "act_number": null,
+        "act_date": null,
+        "content_hash": "6785336c6da1e7ad9503fe767f92dd9cd9b52fa64793c8a4640ea7946cac9cb5",
+        "subject": "ERRATA CORRIGE Locandina cerimonia PREMIO PLATANIA - BORGO DELLE RADICI Edizione 2026",
+        "document_url": null,
+        "public_note": null,
+        "verification_status": "official_source_acquired",
+        "privacy_risk": "low",
+        "public_visibility": "publishable",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "altri_enti",
+            "label": "Altri enti e soggetti esterni",
+            "description": "Pubblicazioni provenienti da altri enti pubblici o soggetti esterni al Comune.",
+            "confidence": "medium",
+            "basis": "office"
+          },
+          "act_category": {
+            "id": "avvisi",
+            "label": "Avvisi",
+            "description": "Avvisi pubblici e comunicazioni pubblicate all'Albo.",
+            "confidence": "high",
+            "basis": "act_type"
+          }
+        },
+        "privacy_attestation": {
+          "schema_version": "albo-privacy-policy-attestation.v1",
+          "policy_version": "albo-privacy-policy.2026-08-30.1",
+          "assessment_basis": "source_record",
+          "status": "current"
+        },
+        "presentation": {
+          "display_title": "ERRATA CORRIGE Locandina cerimonia PREMIO PLATANIA - BORGO DELLE RADICI Edizione 2026",
+          "action_id": null,
+          "action_label": null,
+          "search_text": "errata corrige locandina cerimonia premio platania borgo delle radici edizione 2026",
+          "standardisation": {
+            "schema_version": "publication-standardisation.v1",
+            "profile_id": "albo-public-title-it",
+            "profile_version": "2026-08-30.2",
+            "input_field": "subject",
+            "input_field_preserved": true,
+            "status": "unchanged",
+            "transformations": [],
+            "layout_flags": [],
+            "review_reasons": []
+          },
+          "area_theme": {
+            "schema_version": "publication-area-theme.v1",
+            "taxonomy_id": "municipal-public-act-area-theme-it",
+            "taxonomy_version": "2026-08-30.1",
+            "theme_id": null,
+            "theme_label": null,
+            "confidence": null,
+            "basis": "fallback",
+            "rule_id": null,
+            "evidence": [],
+            "null_reason": "not_classified",
+            "override": null
+          }
+        },
+        "known_limits": [
+          "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+          "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+          "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+          "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+          "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+          "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF.",
+          "Allegato/documento non incluso negli export strutturati Tinnvision o non disponibile tramite dettaglio ufficiale."
+        ]
+      },
+      {
+        "id": "albo-2026-3088",
+        "public_id": "albo-2026-3088",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-10-24T14:28:57.445Z",
+        "publication_number": "2026/3088",
+        "publication_start": "2026-09-25",
+        "publication_end": "2026-10-25",
+        "office": "SETTORE TECNICO - UFFICIO TECNICO",
+        "act_type": "AVVISO",
+        "act_number": null,
+        "act_date": null,
+        "content_hash": "40463fb68e6363593d34b7b33c6060ded82bf5a5e46aeff90fc45f4fc826b907",
+        "subject": "Adeguamento sismico scuola dell’infanzia e primaria E Borrello. FSC 2014/2020 Accordi interistituzionali – Patti per il Sud – Patto per lo sviluppo della Regione Calabria. Avviso ad opponendum",
+        "document_url": "https://albo.tinnvision.cloud/allegati/2026_3088_1_P?ente=00301390795",
+        "public_note": null,
+        "verification_status": "official_source_acquired",
+        "privacy_risk": "low",
+        "public_visibility": "publishable",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "governo_territorio",
+            "label": "Governo del territorio e urbanistica",
+            "description": "Urbanistica, pianificazione territoriale, edilizia e atti tecnici collegati al territorio.",
+            "confidence": "high",
+            "basis": "office_and_act_type"
+          },
+          "act_category": {
+            "id": "avvisi",
+            "label": "Avvisi",
+            "description": "Avvisi pubblici e comunicazioni pubblicate all'Albo.",
+            "confidence": "high",
+            "basis": "act_type"
+          }
+        },
+        "privacy_attestation": {
+          "schema_version": "albo-privacy-policy-attestation.v1",
+          "policy_version": "albo-privacy-policy.2026-08-30.1",
+          "assessment_basis": "source_record",
+          "status": "current"
+        },
+        "presentation": {
+          "display_title": "Adeguamento sismico scuola dell'infanzia e primaria E Borrello. FSC 2014/2020 Accordi interistituzionali – Patti per il Sud – Patto per lo sviluppo della Regione Calabria. Avviso ad opponendum",
+          "action_id": null,
+          "action_label": null,
+          "search_text": "adeguamento sismico scuola dell infanzia e primaria e borrello fsc 2014 2020 accordi interistituzionali patti per il sud patto per lo sviluppo della regione calabria avviso ad opponendum",
+          "standardisation": {
+            "schema_version": "publication-standardisation.v1",
+            "profile_id": "albo-public-title-it",
+            "profile_version": "2026-08-30.2",
+            "input_field": "subject",
+            "input_field_preserved": true,
+            "status": "standardised_automatically",
+            "transformations": [
+              "normalise_apostrophes"
+            ],
+            "layout_flags": [
+              "display_title_too_long"
+            ],
+            "review_reasons": []
+          },
+          "area_theme": {
+            "schema_version": "publication-area-theme.v1",
+            "taxonomy_id": "municipal-public-act-area-theme-it",
+            "taxonomy_version": "2026-08-30.1",
+            "theme_id": "scuola_educazione",
+            "theme_label": "Scuola, educazione e infanzia",
+            "confidence": "high",
+            "basis": "deterministic_rule",
+            "rule_id": "education-facilities",
+            "evidence": [
+              {
+                "rule_id": "education-facilities",
+                "input_field": "subject",
+                "matched_terms": [
+                  "scuola dell infanzia"
+                ]
+              }
+            ],
+            "null_reason": null,
+            "override": null
+          }
+        },
+        "known_limits": [
+          "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+          "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+          "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+          "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+          "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+          "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
+        ]
+      }
+    ],
+    "changed": [],
+    "removed": [
       {
         "id": "albo-2026-2854",
         "public_id": "albo-2026-2854",
@@ -366,7 +3007,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -415,183 +3056,7 @@
           "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
           "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
         ]
-      }
-    ],
-    "changed": [
-      {
-        "before": {
-          "id": "albo-2026-2843",
-          "public_id": "albo-2026-2843",
-          "source": "Albo Pretorio Comune di Lamezia Terme",
-          "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-          "retrieved_at": "2026-09-03T14:58:56.569Z",
-          "publication_number": "2026/2843",
-          "publication_start": "2026-09-02",
-          "publication_end": "2026-09-17",
-          "office": "SETTORE ECONOMICO FINANZIARIO",
-          "act_type": "DETERMINAZIONE DIRIGENZIALE",
-          "act_number": "1377",
-          "act_date": "2026-08-12",
-          "content_hash": "1c6f7b9337cbf26c064854c9fc8caccc796b29ab05e7b91f501acdc2bf42ec96",
-          "subject": "Liquidazione fattura numero FPA 89/26 del 31/08/2026 emessa dalla Società Atelier Ascioti S.r.l., a seguito della fornitura di 1 toga forense per Avvocato Cassazionista. CIG. BBD3830D1B",
-          "document_url": "https://albo.tinnvision.cloud/allegati/2026_2843_14_ALLEG?ente=00301390795",
-          "public_note": null,
-          "verification_status": "official_source_acquired",
-          "privacy_risk": "low",
-          "public_visibility": "publishable",
-          "classification": {
-            "dictionary_version": "2026-08-22-a",
-            "sector": {
-              "id": "bilancio_finanze",
-              "label": "Bilancio, finanze e tributi",
-              "description": "Contabilita, bilancio, finanze, tributi e gestione economica.",
-              "confidence": "high",
-              "basis": "office"
-            },
-            "act_category": {
-              "id": "determinazioni",
-              "label": "Determinazioni dirigenziali",
-              "description": "Determinazioni, liquidazioni, affidamenti e altri atti gestionali dirigenziali.",
-              "confidence": "high",
-              "basis": "act_type"
-            }
-          },
-          "privacy_attestation": {
-            "schema_version": "albo-privacy-policy-attestation.v1",
-            "policy_version": "albo-privacy-policy.2026-08-30.1",
-            "assessment_basis": "complete_public_record",
-            "status": "current"
-          },
-          "presentation": {
-            "display_title": "Liquidazione fattura numero FPA 89/26 del 31/08/2026 emessa dalla Società Atelier Ascioti S.r.l., a seguito della fornitura di 1 toga forense per Avvocato Cassazionista. CIG. BBD3830D1B",
-            "action_id": null,
-            "action_label": null,
-            "search_text": "liquidazione fattura numero fpa 89 26 del 31 08 2026 emessa dalla societa atelier ascioti s r l a seguito della fornitura di 1 toga forense per avvocato cassazionista cig bbd3830d1b",
-            "standardisation": {
-              "schema_version": "publication-standardisation.v1",
-              "profile_id": "albo-public-title-it",
-              "profile_version": "2026-08-30.2",
-              "input_field": "subject",
-              "input_field_preserved": true,
-              "status": "unchanged",
-              "transformations": [],
-              "layout_flags": [
-                "display_title_too_long"
-              ],
-              "review_reasons": []
-            },
-            "area_theme": {
-              "schema_version": "publication-area-theme.v1",
-              "taxonomy_id": "municipal-public-act-area-theme-it",
-              "taxonomy_version": "2026-08-30.1",
-              "theme_id": null,
-              "theme_label": null,
-              "confidence": null,
-              "basis": "fallback",
-              "rule_id": null,
-              "evidence": [],
-              "null_reason": "not_classified",
-              "override": null
-            }
-          },
-          "known_limits": [
-            "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
-            "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
-            "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
-            "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
-            "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
-            "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF."
-          ]
-        },
-        "after": {
-          "id": "albo-2026-2843",
-          "public_id": "albo-2026-2843",
-          "source": "Albo Pretorio Comune di Lamezia Terme",
-          "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
-          "retrieved_at": "2026-09-03T18:34:57.880Z",
-          "publication_number": "2026/2843",
-          "publication_start": "2026-09-02",
-          "publication_end": "2026-09-17",
-          "office": "SETTORE ECONOMICO FINANZIARIO",
-          "act_type": "DETERMINAZIONE DIRIGENZIALE",
-          "act_number": "1377",
-          "act_date": "2026-08-12",
-          "content_hash": "6d7413bc52ad97eb5d2c84fca5a8e241233622ff164cf3b10de632fcedf75c4c",
-          "subject": "Liquidazione fattura numero FPA 89/26 del 31/08/2026 emessa dalla Società Atelier Ascioti S.r.l., a seguito della fornitura di 1 toga forense per Avvocato Cassazionista. CIG. BBD3830D1B",
-          "document_url": null,
-          "public_note": null,
-          "verification_status": "official_source_acquired",
-          "privacy_risk": "low",
-          "public_visibility": "publishable",
-          "classification": {
-            "dictionary_version": "2026-08-22-a",
-            "sector": {
-              "id": "bilancio_finanze",
-              "label": "Bilancio, finanze e tributi",
-              "description": "Contabilita, bilancio, finanze, tributi e gestione economica.",
-              "confidence": "high",
-              "basis": "office"
-            },
-            "act_category": {
-              "id": "determinazioni",
-              "label": "Determinazioni dirigenziali",
-              "description": "Determinazioni, liquidazioni, affidamenti e altri atti gestionali dirigenziali.",
-              "confidence": "high",
-              "basis": "act_type"
-            }
-          },
-          "privacy_attestation": {
-            "schema_version": "albo-privacy-policy-attestation.v1",
-            "policy_version": "albo-privacy-policy.2026-08-30.1",
-            "assessment_basis": "source_record",
-            "status": "current"
-          },
-          "presentation": {
-            "display_title": "Liquidazione fattura numero FPA 89/26 del 31/08/2026 emessa dalla Società Atelier Ascioti S.r.l., a seguito della fornitura di 1 toga forense per Avvocato Cassazionista. CIG. BBD3830D1B",
-            "action_id": null,
-            "action_label": null,
-            "search_text": "liquidazione fattura numero fpa 89 26 del 31 08 2026 emessa dalla societa atelier ascioti s r l a seguito della fornitura di 1 toga forense per avvocato cassazionista cig bbd3830d1b",
-            "standardisation": {
-              "schema_version": "publication-standardisation.v1",
-              "profile_id": "albo-public-title-it",
-              "profile_version": "2026-08-30.2",
-              "input_field": "subject",
-              "input_field_preserved": true,
-              "status": "unchanged",
-              "transformations": [],
-              "layout_flags": [
-                "display_title_too_long"
-              ],
-              "review_reasons": []
-            },
-            "area_theme": {
-              "schema_version": "publication-area-theme.v1",
-              "taxonomy_id": "municipal-public-act-area-theme-it",
-              "taxonomy_version": "2026-08-30.1",
-              "theme_id": null,
-              "theme_label": null,
-              "confidence": null,
-              "basis": "fallback",
-              "rule_id": null,
-              "evidence": [],
-              "null_reason": "not_classified",
-              "override": null
-            }
-          },
-          "known_limits": [
-            "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
-            "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
-            "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
-            "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
-            "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
-            "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF.",
-            "Allegato/documento non incluso negli export strutturati Tinnvision o non disponibile tramite dettaglio ufficiale."
-          ]
-        }
-      }
-    ],
-    "removed": [],
-    "unchanged": [
+      },
       {
         "id": "albo-2026-2852",
         "public_id": "albo-2026-2852",
@@ -884,7 +3349,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -977,7 +3442,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -1069,7 +3534,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -1153,7 +3618,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -1237,7 +3702,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -1323,7 +3788,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -1374,6 +3839,91 @@
         ]
       },
       {
+        "id": "albo-2026-2843",
+        "public_id": "albo-2026-2843",
+        "source": "Albo Pretorio Comune di Lamezia Terme",
+        "source_url": "https://albo.tinnvision.cloud/?ente=00301390795",
+        "retrieved_at": "2026-09-03T18:34:57.880Z",
+        "publication_number": "2026/2843",
+        "publication_start": "2026-09-02",
+        "publication_end": "2026-09-17",
+        "office": "SETTORE ECONOMICO FINANZIARIO",
+        "act_type": "DETERMINAZIONE DIRIGENZIALE",
+        "act_number": "1377",
+        "act_date": "2026-08-12",
+        "content_hash": "6d7413bc52ad97eb5d2c84fca5a8e241233622ff164cf3b10de632fcedf75c4c",
+        "subject": "Liquidazione fattura numero FPA 89/26 del 31/08/2026 emessa dalla Società Atelier Ascioti S.r.l., a seguito della fornitura di 1 toga forense per Avvocato Cassazionista. CIG. BBD3830D1B",
+        "document_url": null,
+        "public_note": null,
+        "verification_status": "official_source_acquired",
+        "privacy_risk": "low",
+        "public_visibility": "publishable",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "bilancio_finanze",
+            "label": "Bilancio, finanze e tributi",
+            "description": "Contabilita, bilancio, finanze, tributi e gestione economica.",
+            "confidence": "high",
+            "basis": "office"
+          },
+          "act_category": {
+            "id": "determinazioni",
+            "label": "Determinazioni dirigenziali",
+            "description": "Determinazioni, liquidazioni, affidamenti e altri atti gestionali dirigenziali.",
+            "confidence": "high",
+            "basis": "act_type"
+          }
+        },
+        "privacy_attestation": {
+          "schema_version": "albo-privacy-policy-attestation.v1",
+          "policy_version": "albo-privacy-policy.2026-08-30.1",
+          "assessment_basis": "complete_public_record",
+          "status": "current"
+        },
+        "presentation": {
+          "display_title": "Liquidazione fattura numero FPA 89/26 del 31/08/2026 emessa dalla Società Atelier Ascioti S.r.l., a seguito della fornitura di 1 toga forense per Avvocato Cassazionista. CIG. BBD3830D1B",
+          "action_id": null,
+          "action_label": null,
+          "search_text": "liquidazione fattura numero fpa 89 26 del 31 08 2026 emessa dalla societa atelier ascioti s r l a seguito della fornitura di 1 toga forense per avvocato cassazionista cig bbd3830d1b",
+          "standardisation": {
+            "schema_version": "publication-standardisation.v1",
+            "profile_id": "albo-public-title-it",
+            "profile_version": "2026-08-30.2",
+            "input_field": "subject",
+            "input_field_preserved": true,
+            "status": "unchanged",
+            "transformations": [],
+            "layout_flags": [
+              "display_title_too_long"
+            ],
+            "review_reasons": []
+          },
+          "area_theme": {
+            "schema_version": "publication-area-theme.v1",
+            "taxonomy_id": "municipal-public-act-area-theme-it",
+            "taxonomy_version": "2026-08-30.1",
+            "theme_id": null,
+            "theme_label": null,
+            "confidence": null,
+            "basis": "fallback",
+            "rule_id": null,
+            "evidence": [],
+            "null_reason": "not_classified",
+            "override": null
+          }
+        },
+        "known_limits": [
+          "Tranche A acquisisce l'elenco degli atti correnti esposto dalla fonte ufficiale, senza dichiarare completezza storica.",
+          "I PDF sono archiviati solo per record pubblicabili a basso rischio; allegati e PDF non sono analizzati, interpretati o sottoposti a OCR.",
+          "Gli export Tinnvision possono non includere URL diretti agli allegati; quando disponibile, il monitor usa il dettaglio ufficiale Tinnvision solo per individuare PDF HTTPS a basso rischio.",
+          "La classificazione privacy e' prudenziale e automatica; i casi sensibili richiedono revisione umana prima di esposizioni piu' ricche.",
+          "Quando gli export strutturati non includono URL diretti, il monitor prova il dettaglio ufficiale Tinnvision solo per record pubblicabili a basso rischio.",
+          "Classificazione civica automatica basata su dizionario: settore e tipologia sono derivati da ufficio/provenienza e tipo atto, senza interpretare il contenuto dei PDF.",
+          "Allegato/documento non incluso negli export strutturati Tinnvision o non disponibile tramite dettaglio ufficiale."
+        ]
+      },
+      {
         "id": "albo-2026-2842",
         "public_id": "albo-2026-2842",
         "source": "Albo Pretorio Comune di Lamezia Terme",
@@ -1413,7 +3963,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -1497,7 +4047,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -1581,7 +4131,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -1671,7 +4221,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -1921,7 +4471,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -2087,7 +4637,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -2169,7 +4719,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -2335,7 +4885,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "deliberation_body": "consiglio",
@@ -2420,7 +4970,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "deliberation_body": "consiglio",
@@ -2505,7 +5055,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "deliberation_body": "consiglio",
@@ -2768,7 +5318,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "deliberation_body": "consiglio",
@@ -3031,7 +5581,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "deliberation_body": "consiglio",
@@ -3717,7 +6267,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -3801,7 +6351,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -3893,7 +6443,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -3985,7 +6535,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -4077,7 +6627,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -4169,7 +6719,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -4261,7 +6811,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -4353,7 +6903,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -4445,7 +6995,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -4537,7 +7087,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -4629,7 +7179,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -4721,7 +7271,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -4813,7 +7363,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -4907,7 +7457,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -4999,7 +7549,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -5091,7 +7641,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -5173,7 +7723,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -5257,7 +7807,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -5350,7 +7900,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -5442,7 +7992,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -5534,7 +8084,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -5626,7 +8176,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -5718,7 +8268,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -5978,7 +8528,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -6070,7 +8620,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -6244,7 +8794,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -6328,7 +8878,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -6412,7 +8962,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -6496,7 +9046,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -6578,7 +9128,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -6671,7 +9221,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -6764,7 +9314,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -7023,7 +9573,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -7201,7 +9751,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -7375,7 +9925,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -7550,7 +10100,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -7644,7 +10194,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -7735,7 +10285,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -7826,7 +10376,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -8002,7 +10552,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -8096,7 +10646,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -8274,7 +10824,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -8366,7 +10916,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -8458,7 +11008,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -8549,7 +11099,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -8641,7 +11191,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -8732,7 +11282,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -8823,7 +11373,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -8914,7 +11464,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -9006,7 +11556,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -9183,7 +11733,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "deliberation_body": "giunta",
@@ -9362,7 +11912,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -9453,7 +12003,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -9545,7 +12095,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -9807,7 +12357,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -9899,7 +12449,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -9991,7 +12541,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -10083,7 +12633,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -10173,7 +12723,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -10266,7 +12816,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -10362,7 +12912,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -10453,7 +13003,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -10547,7 +13097,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -10639,7 +13189,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -10732,7 +13282,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -10827,7 +13377,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -10917,7 +13467,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -11009,7 +13559,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -11103,7 +13653,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -11197,7 +13747,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -11288,7 +13838,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -11380,7 +13930,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -11472,7 +14022,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -11648,7 +14198,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -11740,7 +14290,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -11832,7 +14382,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -11924,7 +14474,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -12016,7 +14566,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -12108,7 +14658,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -12284,7 +14834,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -12375,7 +14925,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -12467,7 +15017,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -12559,7 +15109,7 @@
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
-          "assessment_basis": "source_record",
+          "assessment_basis": "complete_public_record",
           "status": "current"
         },
         "presentation": {
@@ -12621,6 +15171,23 @@
         "verification_status": "official_source_acquired",
         "privacy_risk": "high",
         "public_visibility": "do_not_publish",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "non_classificato",
+            "label": "Non classificato",
+            "description": "Record non ricondotto con sufficiente certezza a un settore del dizionario.",
+            "confidence": "low",
+            "basis": "fallback"
+          },
+          "act_category": {
+            "id": "non_classificato",
+            "label": "Non classificato",
+            "description": "Tipologia non ricondotta con sufficiente certezza a una famiglia del dizionario.",
+            "confidence": "low",
+            "basis": "fallback"
+          }
+        },
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
@@ -12651,6 +15218,23 @@
         "verification_status": "official_source_acquired",
         "privacy_risk": "high",
         "public_visibility": "do_not_publish",
+        "classification": {
+          "dictionary_version": "2026-08-22-a",
+          "sector": {
+            "id": "non_classificato",
+            "label": "Non classificato",
+            "description": "Record non ricondotto con sufficiente certezza a un settore del dizionario.",
+            "confidence": "low",
+            "basis": "fallback"
+          },
+          "act_category": {
+            "id": "non_classificato",
+            "label": "Non classificato",
+            "description": "Tipologia non ricondotta con sufficiente certezza a una famiglia del dizionario.",
+            "confidence": "low",
+            "basis": "fallback"
+          }
+        },
         "privacy_attestation": {
           "schema_version": "albo-privacy-policy-attestation.v1",
           "policy_version": "albo-privacy-policy.2026-08-30.1",
@@ -12670,6 +15254,7 @@
         ],
         "exclusion_reason": "Record escluso dal layer pubblico per prudenza privacy automatica."
       }
-    ]
+    ],
+    "unchanged": []
   }
 }
