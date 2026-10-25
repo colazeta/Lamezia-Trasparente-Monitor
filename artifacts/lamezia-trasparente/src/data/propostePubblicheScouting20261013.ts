@@ -30,7 +30,7 @@ export const SCOUTED_PUBLIC_PROPOSALS_20261013 = [
     lastUpdated: "2026-10-12",
     events: [
       {
-        id: "vescio-viabilita-richiesta-sopralluoghi-cronoprogramma-20261012",
+        id: "vescio-viabilita-richiesta-sopralluoghi-cronoprogramma-2026-10-12",
         date: "2026-10-12",
         type: "emersione",
         title: "Vescio richiede sopralluoghi e tempi per la manutenzione di strade e percorsi",
@@ -71,7 +71,7 @@ export const SCOUTED_PUBLIC_PROPOSALS_20261013 = [
     lastUpdated: "2026-10-10",
     events: [
       {
-        id: "usb-taxi-regolamento-sollecito-20261010",
+        id: "usb-taxi-regolamento-sollecito-2026-10-10",
         date: "2026-10-10",
         type: "emersione",
         title: "USB Taxi sollecita la conclusione del percorso regolamentare",
@@ -112,7 +112,7 @@ export const SCOUTED_PUBLIC_PROPOSALS_20261013 = [
     lastUpdated: "2026-10-12",
     events: [
       {
-        id: "sant-eufemia-comitato-annuncia-studio-autonomia-20261012",
+        id: "sant-eufemia-comitato-annuncia-studio-autonomia-2026-10-12",
         date: "2026-10-12",
         type: "emersione",
         title: "Annunciato il percorso per uno studio sull'autonomia comunale",
