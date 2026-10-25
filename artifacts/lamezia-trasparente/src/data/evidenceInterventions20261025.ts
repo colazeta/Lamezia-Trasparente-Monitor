@@ -26,7 +26,7 @@ export const EVIDENCE_INTERVENTIONS_2026_10_25: readonly EvidenceIntervention[] 
   ],
   "tools": [
     "mappatura degli incidenti geocodificati",
-    "prioritizzazione di 124 scuole con elevata incidentalità nella prima fase valutata",
+    "prioritizzazione iniziale di 124 scuole; 30 tracts con interventi sufficientemente completati nella specificazione principale 2014",
     "attraversamenti ad alta visibilità",
     "rallentatori e traffic calming",
     "semafori pedonali e attraversamento dedicato",
@@ -34,7 +34,7 @@ export const EVIDENCE_INTERVENTIONS_2026_10_25: readonly EvidenceIntervention[] 
   ],
   "territorialScale": "Tratti stradali e intersezioni presso scuole; selezione e coordinamento a scala cittadina",
   "interventionStatus": "Programma avviato e interventi stradali realizzati; NYC DDC documenta prosecuzione e ampliamento a 135 scuole prioritarie nella ricognizione del 2016. Non verificata la permanenza nel 2026 della medesima configurazione amministrativa.",
-  "evaluationMethod": "Studio osservazionale territoriale pre/post con aree di controllo (Pediatrics 2013); successiva analisi Bayesian changepoint e difference-in-differences con Poisson sovradisperso (Injury Epidemiology 2014), su incidenti pedonali geocodificati 2001–2010. Analisi di costo-efficacia Markov (AJPH 2014) separata dalla stima d'impatto.",
+  "evaluationMethod": "Studio osservazionale territoriale pre/post con aree di controllo (Pediatrics 2013); successiva analisi Bayesian changepoint e difference-in-differences con Poisson sovradisperso (Injury Epidemiology 2014), su incidenti pedonali geocodificati 2001–2010. Analisi di costo-efficacia Markov (AJPH 2014) separata dalla stima d'impatto. La specificazione principale del secondo studio confronta 30 tracts di intervento con aree non trattate; altri 94 tracts con lavori ancora incompleti/incerti sono esclusi dall'analisi principale.",
   "comparator": "Census tracts con scuole non interessate dal programma, osservati negli stessi periodi e negli stessi orari scolastici; nel secondo studio anche tracts con interventi programmati/incompleti.",
   "outcomes": [
     "infortuni pedonali dei minori durante 07:00–09:00 e 14:00–16:00 nei giorni scolastici",
@@ -52,7 +52,8 @@ export const EVIDENCE_INTERVENTIONS_2026_10_25: readonly EvidenceIntervention[] 
     "Lo studio 2014 usa DiD e changepoint, ma l'intervallo al 95% del coefficiente DiD include l'assenza di effetto, nonostante la riduzione descrittiva osservata.",
     "Il pacchetto combina infrastrutture, regolazione ed educazione; non consente di attribuire l'effetto a un singolo elemento.",
     "Le proiezioni economiche dipendono da un modello Markov, da benefici ipotizzati persistenti per 50 anni e da costi USA del 2013, non costituiscono risparmio comunale osservato.",
-    "La numerosità delle lesioni e i tassi di mobilità possono essere molto diversi in un comune italiano di minori dimensioni."
+    "La numerosità delle lesioni e i tassi di mobilità possono essere molto diversi in un comune italiano di minori dimensioni.",
+    "Delle 124 scuole inizialmente selezionate, l'analisi changepoint principale identifica 30 census tracts con interventi sufficientemente attuati; 94 tracts previsti o incompleti sono esclusi, limitando la potenza statistica e la generalizzabilità."
   ],
   "unintendedEffects": "Le valutazioni non quantificano compiutamente spostamenti di traffico sugli assi circostanti, tempi per gli automobilisti o possibili impatti sul parcheggio; da misurare esplicitamente in una sperimentazione locale.",
   "primarySource": {
@@ -106,6 +107,10 @@ export const EVIDENCE_INTERVENTIONS_2026_10_25: readonly EvidenceIntervention[] 
     {
       "date": "2026-10-25",
       "note": "Prima verifica e inserimento. Conservata la differenza fra il −44% pre/post e il DiD con IC95% comprendente lo zero; benefici monetari separati come modellizzazione."
+    },
+    {
+      "date": "2026-10-25",
+      "note": "Precisato il perimetro analitico della seconda valutazione: 30 tracts con interventi implementati e 94 tracts incompleti/esclusi."
     }
   ]
 }
