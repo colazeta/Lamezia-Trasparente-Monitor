@@ -29,7 +29,7 @@ export const SCOUTED_PUBLIC_PROPOSALS_20261023 = [
     lastUpdated: "2026-10-23",
     events: [
       {
-        id: "stadi-renda-riga-pd-chiede-verifiche-cronoprogramma-20261023",
+        id: "stadi-renda-riga-pd-chiede-verifiche-cronoprogramma-2026-10-23",
         date: "2026-10-23",
         type: "emersione",
         title: "Il gruppo PD chiede verifiche procedurali e un cronoprogramma per gli stadi",
