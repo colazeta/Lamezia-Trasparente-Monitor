@@ -70,7 +70,7 @@ describe("October civic scouting — same-ID end-to-end gates", () => {
       expect(proposal.status).toBe("proposta_emersa");
       expect(proposal.events.map((event) => event.type)).toEqual(["emersione"]);
       expect(new Set(proposal.events.map((event) => event.id)).size).toBe(proposal.events.length);
-      expect(proposal.events.every((event) => /^\\d{4}-\\d{2}-\\d{2}$/.test(event.date))).toBe(true);
+      expect(proposal.events.every((event) => /^\d{4}-\d{2}-\d{2}$/.test(event.date))).toBe(true);
       expect(proposal.events.every((event) => Boolean(event.sourceUrl))).toBe(true);
 
       const canonical = getCanonicalProposalPresentation(proposal);
