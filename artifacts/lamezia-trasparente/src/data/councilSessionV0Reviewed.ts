@@ -68,6 +68,8 @@ const COMMISSION_I_MOTION_LAMETINO_URL =
   "https://www.lametino.it/ultime/lamezia-mozioni-di-sfiducia-contro-cristiano-e-villella-tensioni-nelle-commissioni-consiliari.html";
 const COMMISSION_I_OCTOBER_22_LAMETINO_URL =
   "https://www.lametino.it/ultime/lamezia-consiglieri-di-opposizione-lavori-fermi-in-i-commissione-citta-non-puo-continuare-a-pagare-scontri-nel-centrodestra.html";
+const COMMISSION_II_OCTOBER_26_LAMETINO_URL =
+  "https://www.lametino.it/ultime/lamezia-settimana-cruciale-per-la-commissione-bilancio-prima-del-consiglio-su-piano-di-riequilibrio-e-consolidato.html";
 const MUNICIPAL_ALBO_DOCUMENTS_URL =
   "https://www.comune.lamezia-terme.cz.it/it/documenti_pubblici/atti-di-albo-pretorio";
 const VIA_TRENTO_ROADWORKS_LAMETINO_URL =
@@ -2886,7 +2888,153 @@ const commissionIOctober22EditorialSession: CouncilSessionV0 = {
   },
 };
 
+const commissionIIOctoberEditorialCycle: CouncilSessionV0 = {
+  id: "editorial-commissione-ii-ciclo-bilancio-2026-10",
+  kind: "commission",
+  isDemoFixture: false,
+  contextResearch: {
+    status: "reviewed_matches",
+    checkedAt: "2026-10-26T23:40:00+01:00",
+    searchNote:
+      "Parallel Search e la verifica diretta di Comune, Albo, testate locali e canali audiovisivi indicizzati hanno individuato un articolo sufficientemente preciso sul calendario di un ciclo della II Commissione. Il nuovo Albo dinamico non ha restituito un atto istituzionale acquisibile o indicizzato: le date e gli orari riportati dalla stampa restano soltanto indizi di ricerca e non sono presentati come dati ufficiali delle sedute. Organo, programmazione, sede, ordine del giorno, svolgimento ed esiti restano da verificare su fonte istituzionale.",
+    articles: [
+      {
+        title:
+          "Lamezia, settimana cruciale per la Commissione bilancio prima del Consiglio su Piano di riequilibrio e Consolidato",
+        url: COMMISSION_II_OCTOBER_26_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-10-26",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "L'articolo attribuisce alla II Commissione un calendario su tre giornate e riporta temi finanziari distintivi, dichiarando di ricavarli da un avviso di convocazione. Poiché l'atto istituzionale originale non è stato acquisito, il collegamento resta possibile e non certifica convocazione, date, orari, ordine del giorno, svolgimento, votazioni o esiti.",
+        reviewedAt: "2026-10-26T23:40:00+01:00",
+      },
+    ],
+    media: [],
+    editorialAgenda: [
+      {
+        title: "Relazione sul Piano di riequilibrio finanziario pluriennale",
+        sourceUrls: [COMMISSION_II_OCTOBER_26_LAMETINO_URL],
+        confidence: "medium",
+        reason:
+          "Il tema è riportato espressamente dall'unica fonte editoriale precisa individuata. In assenza dell'avviso istituzionale resta un tema emerso dalla copertura e non prova iscrizione all'ordine del giorno, trattazione o esito.",
+      },
+      {
+        title: "Bilancio consolidato dell'esercizio 2025",
+        sourceUrls: [COMMISSION_II_OCTOBER_26_LAMETINO_URL],
+        confidence: "medium",
+        reason:
+          "La testata associa il tema alla proposta di deliberazione consiliare n. 2711 del 5 ottobre 2026, ma l'atto di convocazione non è stato acquisito e il riferimento non viene trasferito nei campi ufficiali.",
+      },
+      {
+        title: "Ratifica di variazioni al Bilancio 2026–2028",
+        sourceUrls: [COMMISSION_II_OCTOBER_26_LAMETINO_URL],
+        confidence: "medium",
+        reason:
+          "La fonte editoriale cita due proposte di ratifica collegate a deliberazioni di Giunta; senza l'avviso originale il tema resta separato dall'ordine del giorno ufficiale e non implica esame o voto.",
+      },
+      {
+        title: "Debiti fuori bilancio derivanti da sentenze esecutive",
+        sourceUrls: [COMMISSION_II_OCTOBER_26_LAMETINO_URL],
+        confidence: "medium",
+        reason:
+          "Il tema compare nella copertura editoriale, che non consente di stabilire numero e completezza delle proposte né di inferire trattazione, votazioni o risultati.",
+      },
+    ],
+  },
+  title: {
+    key: "title",
+    label: "Titolo",
+    value:
+      "II Commissione consiliare permanente — ciclo segnalato dalla copertura",
+    sourceStatus: "da_verificare",
+    limit:
+      "L'organo e il ciclo di lavori sono indicati da una fonte editoriale; manca una pubblicazione istituzionale acquisita che consenta di verificare convocazione e singole sedute.",
+  },
+  scheduledAt: {
+    key: "scheduledAt",
+    label: "Data e ora",
+    value: null,
+    sourceStatus: "da_verificare",
+    limit:
+      "Date e orari non sono disponibili da una fonte istituzionale acquisita. Il calendario riportato dall'articolo viene usato soltanto per la ricerca e non come dato ufficiale delle sedute.",
+  },
+  sessionStatus: {
+    key: "sessionStatus",
+    label: "Stato seduta",
+    value: "non_verificata",
+    sourceStatus: "da_verificare",
+    limit:
+      "La copertura editoriale non certifica convocazione, programmazione, svolgimento, chiusura, rinvio o altro esito ufficiale.",
+  },
+  agenda: {
+    key: "agenda",
+    label: "Ordine del giorno",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Ordine del giorno istituzionale non acquisito. Gli argomenti riportati dalla stampa sono esposti soltanto nella sezione separata “Temi emersi dalla copertura”.",
+  },
+  sourceLink: {
+    key: "sourceLink",
+    label: "Fonte",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Non è stata acquisita una pubblicazione istituzionale associabile con precisione al ciclo di sedute segnalato.",
+  },
+  liveStreaming: {
+    key: "liveStreaming",
+    label: "Streaming live",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Nessuna diretta istituzionale associabile con precisione è stata individuata.",
+  },
+  recording: {
+    key: "recording",
+    label: "Registrazione",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Nessuna registrazione istituzionale associabile con precisione è stata individuata.",
+  },
+  minutesOrReport: {
+    key: "minutesOrReport",
+    label: "Verbale o resoconto",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Nessun verbale o resoconto istituzionale associabile con precisione è stato individuato.",
+  },
+  lastCheckedAt: {
+    key: "lastCheckedAt",
+    label: "Ultimo controllo",
+    value: "2026-10-26T23:40:00+01:00",
+    sourceStatus: "verificato",
+    sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
+    limit:
+      "Indica quando sono state ricontrollate le fonti, non una conferma istituzionale del ciclo di sedute.",
+  },
+  dataLimits: {
+    key: "dataLimits",
+    label: "Limiti del dato",
+    value: [
+      "Le date e gli orari pubblicati dalla testata non vengono presentati come dati ufficiali delle sedute.",
+      "Non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione al ciclo; il nuovo Albo dinamico non ha restituito un atto utile durante il controllo diretto.",
+      "Date, orari, sede, ordine del giorno, stato, streaming, registrazione e verbale restano non verificati o non rilevati secondo il campo.",
+      "L'articolo collegato è una fonte editoriale e non certifica programmazione, svolgimento, completezza, presenze, votazioni o risultati.",
+      "I temi riportati dalla copertura restano nell'agenda editoriale separata e dovranno essere riconciliati se emergerà un atto istituzionale.",
+    ],
+    sourceStatus: "parziale",
+    sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
+    limit:
+      "Scheda prudenziale basata su una corrispondenza editoriale esplicita; tutti i campi ufficiali restano separati e non confermati.",
+  },
+};
+
 export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
+  commissionIIOctoberEditorialCycle,
   commissionIOctober22EditorialSession,
   septemberCommissionSession({
     id: "albo-2026-3262-commissione-v-2026-10-13",
