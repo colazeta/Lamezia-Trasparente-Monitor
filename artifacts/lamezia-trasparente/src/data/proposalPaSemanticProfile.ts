@@ -231,6 +231,18 @@ const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
     mappingNote:
       "La richiesta riguarda l'operatività e l'organico della Polizia Locale come funzione di sicurezza pubblica locale. Le modalità di reclutamento restano facet operative e non introducono una tassonomia tematica parallela.",
   },
+  "Ambiente e bonifica amianto": {
+    primary: ps("11"),
+    secondary: [ps("2")],
+    mappingNote:
+      "Censimento e gestione delle situazioni di rischio amianto nell’ambiente come materia primaria; salute come classificazione secondaria, non come assegnazione di competenza istituzionale.",
+  },
+  "Sicurezza stradale e controllo della velocità": {
+    primary: ps("4"),
+    secondary: [ps("8")],
+    mappingNote:
+      "Controlli della velocità e sicurezza della circolazione come mobilità e trasporti; sicurezza pubblica come classificazione analitica secondaria, non come attribuzione di competenza.",
+  },
   "Trasparenza e partecipazione democratica": {
     primary: eu("GOVE"),
     mappingNote:
