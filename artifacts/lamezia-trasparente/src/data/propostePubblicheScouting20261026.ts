@@ -35,7 +35,7 @@ export const SCOUTED_PUBLIC_PROPOSALS_20261026 = [
       "La piattaforma Change.org identifica il Comitato di Lamezia quale promotore, il Tavolo NO AD quale co-promotore, e riporta la creazione il 10 agosto 2026. La richiesta concreta è diretta alla Regione Calabria, non al Comune di Lamezia. Il 25 ottobre il Lametino pubblica una nota sull'assemblea del 24 ottobre e riferisce firme raccolte fra i presenti; il numero non è accertato. Una petizione online e le firme raccolte non equivalgono a deposito istituzionale, presa in carico, accoglimento o attuazione. Le affermazioni costituzionali e sanitarie contenute nel testo sono posizioni dei promotori, non conclusioni del monitor. La classificazione GOVE è un concetto ufficiale UE già adottato per il tema della partecipazione; non è attribuita alcuna competenza regionale senza autonoma base giuridica.",
     evidenceLevel: "fonte_social_verificabile",
     firstSeen: "2026-08-10",
-    lastUpdated: "2026-10-25",
+    lastUpdated: "2026-10-24",
     events: [
       {
         id: "preintese-petizione-online-avviata",
