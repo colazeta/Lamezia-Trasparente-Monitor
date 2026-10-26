@@ -75,7 +75,7 @@ export const EVIDENCE_INTERVENTIONS_2026_10_26: readonly EvidenceIntervention[] 
       {
         "label": "Federal Reserve Bank of Minneapolis — pre-analysis plan",
         "url": "https://www.minneapolisfed.org/research/community-development-working-papers/evaluation-plan-minneapolis-guaranteed-basic-income-pilot",
-        "citation": "Goodman-Bacon, A., Nunn, R. e Palmer, V. (2023), Evaluation Plan: Minneapolis Guaranteed Basic Income Pilot; preregistrato AEA RCT Registry #11369."
+        "citation": "Goodman-Bacon, A., Nunn, R. e Palmer, V. (2023), Evaluation Plan: Minneapolis Guaranteed Basic Income Pilot; preregistrato AEA RCT Registry, trial 11369."
       }
     ],
     "lastVerifiedAt": "2026-10-26",
