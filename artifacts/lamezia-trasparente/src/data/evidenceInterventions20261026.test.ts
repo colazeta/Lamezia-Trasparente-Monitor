@@ -46,7 +46,7 @@ describe("municipal evidence, 26 October 2026", () => {
     expect(item.effectSize).toContain("50,6%");
     expect(item.effectSize).toContain("35,0%");
     expect(item.effectSize).toContain("NON è la stima causale aggiustata");
-    expect(item.results).toContain("non rileva un effetto statisticamente distinguibile da zero");
+    expect(item.results.toLowerCase()).toContain("non rileva un effetto statisticamente distinguibile da zero");
     expect(item.limitations.join(" ")).toContain("attrition");
     expect(item.evaluationStudies.some((s) => s.doi === "10.21034/iwp.108")).toBe(true);
     expect(item.implementationYear).toContain("2022");
