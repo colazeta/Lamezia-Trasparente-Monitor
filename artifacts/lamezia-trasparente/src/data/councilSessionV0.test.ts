@@ -198,7 +198,7 @@ describe("councilSessionV0", () => {
   });
 
   it("publishes source-traceable records for both council and commission notices", () => {
-    expect(councilSessionV0ReviewedRecords).toHaveLength(61);
+    expect(councilSessionV0ReviewedRecords).toHaveLength(62);
     expect(
       new Set(councilSessionV0ReviewedRecords.map((item) => item.kind)),
     ).toEqual(new Set(["council", "commission"]));
@@ -211,9 +211,12 @@ describe("councilSessionV0", () => {
         expect(session.provenance.sourceUrl).toContain("albo.tinnvision.cloud");
         expect(session.provenance.sourceContentHash).toMatch(/^[a-f0-9]{64}$/);
       } else {
-        expect(session.id).toBe(
-          "editorial-commissione-i-sfiducia-presidente-2026-10",
-        );
+        expect(
+          new Set([
+            "editorial-commissione-i-sfiducia-presidente-2026-10",
+            "editorial-commissione-ii-ciclo-bilancio-2026-10",
+          ]),
+        ).toContain(session.id);
         expect(session.scheduledAt.value).toBeNull();
         expect(session.scheduledAt.sourceStatus).toBe("da_verificare");
       }
@@ -246,6 +249,39 @@ describe("councilSessionV0", () => {
         expect(Date.parse(media.reviewedAt)).not.toBeNaN();
       }
     }
+  });
+
+  it("keeps the October II Commission cycle editorial-only until an official notice is acquired", () => {
+    const session = findCouncilSessionV0ReviewedRecord(
+      "editorial-commissione-ii-ciclo-bilancio-2026-10",
+    );
+
+    expect(session?.provenance).toBeUndefined();
+    expect(session?.scheduledAt.value).toBeNull();
+    expect(session?.sessionStatus.value).toBe("non_verificata");
+    expect(session?.agenda.value).toBeNull();
+    expect(session?.sourceLink.value).toBeNull();
+    expect(session?.liveStreaming.value).toBeNull();
+    expect(session?.recording.value).toBeNull();
+    expect(session?.contextResearch.articles).toEqual([
+      expect.objectContaining({
+        publisher: "il Lametino",
+        publishedAt: "2026-10-26",
+        relationship: "possible_same_session",
+      }),
+    ]);
+    expect(session?.contextResearch.media).toEqual([]);
+    expect(session?.contextResearch.editorialAgenda).toHaveLength(4);
+    expect(session?.contextResearch.editorialAgenda?.[0]).toMatchObject({
+      title: "Relazione sul Piano di riequilibrio finanziario pluriennale",
+      confidence: "medium",
+    });
+    expect(session?.scheduledAt.limit).toMatch(
+      /calendario.*soltanto per la ricerca/i,
+    );
+    expect(session?.dataLimits.value?.join(" ")).toMatch(
+      /non certifica programmazione, svolgimento/i,
+    );
   });
 
   it("keeps the October I Commission editorial signal separate from official fields", () => {
@@ -550,9 +586,7 @@ describe("councilSessionV0", () => {
               ),
             }),
             expect.objectContaining({
-              title: expect.stringContaining(
-                "bocciate mozioni minoranza",
-              ),
+              title: expect.stringContaining("bocciate mozioni minoranza"),
               publisher: "NtaCalabria",
               publishedAt: "2026-10-13",
               relationship: "same_session",
