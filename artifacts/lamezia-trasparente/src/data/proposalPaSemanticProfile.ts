@@ -195,6 +195,11 @@ const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
     primary: ps("4"),
     secondary: [ps("8")],
   },
+  "Ambiente e servizi idrici": {
+    primary: ps("11"),
+    mappingNote:
+      "La ricognizione e programmazione degli interventi sulla rete idrica ricade nella materia ufficiale Ambiente. L'infrastruttura non viene riclassificata automaticamente come urbanistica, né la materia definisce competenze istituzionali.",
+  },
   "Sanità e rete ospedaliera": {
     primary: ps("2"),
   },
