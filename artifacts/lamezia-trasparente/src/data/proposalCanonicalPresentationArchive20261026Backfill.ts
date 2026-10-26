@@ -30,7 +30,7 @@ const BACKFILL_CANONICAL: Record<string, CanonicalProposalPresentation> = {
     title: "Verifiche di sicurezza e controlli della velocità in due strade",
     request:
       "Valutare la sicurezza stradale in via dei Bizantini e via Savutano e l'opportunità di controlli della velocità, nel rispetto delle condizioni normative applicabili.",
-    actionTypes: ["monitoraggio", "organizzazione"],
+    actionTypes: ["prevenzione_rischio", "organizzazione"],
     measures: [
       "Verificare le condizioni di sicurezza delle due strade e le segnalazioni ricevute.",
       "Valutare l'eventuale installazione di un dispositivo fisso di rilevazione della velocità, soltanto se giuridicamente consentita.",
