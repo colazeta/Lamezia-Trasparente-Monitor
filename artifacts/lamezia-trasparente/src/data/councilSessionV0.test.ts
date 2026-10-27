@@ -269,6 +269,11 @@ describe("councilSessionV0", () => {
         publishedAt: "2026-10-26",
         relationship: "possible_same_session",
       }),
+      expect.objectContaining({
+        publisher: "LameziaInforma",
+        publishedAt: "2026-10-25",
+        relationship: "agenda_item",
+      }),
     ]);
     expect(session?.contextResearch.media).toEqual([]);
     expect(session?.contextResearch.editorialAgenda).toHaveLength(4);
@@ -280,7 +285,10 @@ describe("councilSessionV0", () => {
       /calendario.*soltanto per la ricerca/i,
     );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
-      /non certifica programmazione, svolgimento/i,
+      /non certificano programmazione, svolgimento/i,
+    );
+    expect(session?.dataLimits.value?.join(" ")).toMatch(
+      /non sono pienamente coerenti sulla cronologia/i,
     );
   });
 
