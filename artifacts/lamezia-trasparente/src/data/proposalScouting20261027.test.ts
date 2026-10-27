@@ -48,7 +48,7 @@ describe("Scouting Nicotera — 27 October 2026 — same-proposal-ID end-to-end 
     expect(canonical.proposalId).toBe(proposalId);
     expect(canonical.title.length).toBeGreaterThan(15);
     expect(canonical.request.length).toBeGreaterThan(20);
-    expect(canonical.measures).toHaveLength(4);
+    expect(canonical.measures).toHaveLength(7);
     expect(canonical.measures.every((item) => item.length > 30)).toBe(true);
     expect(canonical.actionTypes.length).toBeGreaterThan(0);
 

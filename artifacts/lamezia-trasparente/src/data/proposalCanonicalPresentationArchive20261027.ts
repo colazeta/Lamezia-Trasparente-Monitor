@@ -18,8 +18,11 @@ const CANONICAL_20261027: Record<string, CanonicalProposalPresentation> = {
     measures: [
       "Cessare gli incarichi e i rapporti di lavoro collegati allo staff politico del sindaco, secondo le modalità legalmente applicabili.",
       "Non conferire nuovi incarichi né rinnovare contratti per gli uffici di supporto politico indicati nella mozione.",
-      "Destinare prioritariamente gli eventuali risparmi effettivamente disponibili al rafforzamento dei servizi sociali rivolti alle persone con disabilità.",
-      "Valutare l'impiego delle risorse liberate per contenere la TARI a carico delle famiglie e delle attività produttive.",
+      "Quantificare formalmente i risparmi annui conseguibili e trasmettere una relazione al Consiglio comunale.",
+      "Destinare prioritariamente gli eventuali risparmi effettivamente disponibili al rafforzamento dei servizi sociali per le persone fragili e con disabilità.",
+      "Valutare l'impiego delle risorse liberate per mitigare la TARI a carico delle famiglie e delle attività produttive.",
+      "Valutare in subordine l'utilizzo delle risorse liberate a sostegno degli equilibri del piano di riequilibrio finanziario pluriennale.",
+      "Riferire al Consiglio comunale sulle misure adottate o programmate entro 30 giorni dall'eventuale approvazione della mozione.",
     ],
     expectedOutcome:
       "Rendere valutabile una diversa allocazione delle risorse comunali, senza presumere la disponibilità dei risparmi, la riduzione dei tributi o l'attuazione degli interventi richiesti.",
