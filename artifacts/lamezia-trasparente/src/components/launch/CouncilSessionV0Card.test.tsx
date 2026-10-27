@@ -52,6 +52,11 @@ describe("CouncilSessionV0Card", () => {
       expect.stringContaining("lameziaoggi.it"),
     );
     expect(
+      screen.getByRole("link", {
+        name: /scontro politico sulla sfiducia a Cristiano/i,
+      }),
+    ).toHaveAttribute("href", expect.stringContaining("ntacalabria.it"));
+    expect(
       screen.getByText(/Fonte istituzionale non ancora acquisita/i),
     ).toBeInTheDocument();
     expect(

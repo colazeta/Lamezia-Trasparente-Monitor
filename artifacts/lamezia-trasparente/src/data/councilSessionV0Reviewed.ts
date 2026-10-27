@@ -70,6 +70,8 @@ const COMMISSION_I_OCTOBER_22_LAMETINO_URL =
   "https://www.lametino.it/ultime/lamezia-consiglieri-di-opposizione-lavori-fermi-in-i-commissione-citta-non-puo-continuare-a-pagare-scontri-nel-centrodestra.html";
 const COMMISSION_I_OCTOBER_22_LAMEZIA_OGGI_URL =
   "https://www.lameziaoggi.it/lamezia-terme/2026/10/22/lamezia-consiglieri-di-opposizione-lavori-fermi-in-i-commissione-citta-non-puo-essere-compromessa/";
+const COMMISSION_I_OCTOBER_23_NTACALABRIA_URL =
+  "https://www.ntacalabria.it/lamezia-terme/a-lamezia-terme-scontro-politico-sulla-sfiducia-a-cristiano.html";
 const COMMISSION_II_OCTOBER_26_LAMETINO_URL =
   "https://www.lametino.it/ultime/lamezia-settimana-cruciale-per-la-commissione-bilancio-prima-del-consiglio-su-piano-di-riequilibrio-e-consolidato.html";
 const COMMISSION_II_OCTOBER_25_LAMEZIAINFORMA_URL =
@@ -2773,9 +2775,9 @@ const commissionIOctober22EditorialSession: CouncilSessionV0 = {
   isDemoFixture: false,
   contextResearch: {
     status: "reviewed_matches",
-    checkedAt: "2026-10-27T11:55:00+01:00",
+    checkedAt: "2026-10-27T18:15:00+01:00",
     searchNote:
-      "Parallel Search e la verifica diretta di Comune, Albo, testate locali e canali audiovisivi indicizzati hanno individuato due articoli sufficientemente precisi. Entrambi identificano esplicitamente una seduta della I Commissione e il tema discusso, ma riproducono la stessa nota dei consiglieri e non costituiscono conferme indipendenti. La data di pubblicazione è usata soltanto per la ricerca e non viene presentata come data ufficiale della seduta. Non è stato acquisito un atto istituzionale; data, ora, sede, ordine del giorno, svolgimento ed esiti restano non verificati.",
+      "Parallel Search e la verifica diretta di Comune, Albo, testate locali e canali audiovisivi indicizzati hanno individuato tre articoli sufficientemente precisi. Tutti identificano la I Commissione e la mozione di sfiducia al presidente, ma dipendono dalla stessa nota dei consiglieri e non costituiscono conferme indipendenti. NtaCalabria descrive editorialmente una mancata sfiducia: l'affermazione non viene usata per valorizzare svolgimento, votazione o esito. Le date di pubblicazione sono usate soltanto per la ricerca e non vengono presentate come data ufficiale della seduta. Non è stato acquisito un atto istituzionale; data, ora, sede, ordine del giorno, svolgimento ed esiti restano non verificati.",
     articles: [
       {
         title:
@@ -2786,7 +2788,7 @@ const commissionIOctober22EditorialSession: CouncilSessionV0 = {
         relationship: "same_session",
         relevanceNote:
           "L'articolo descrive esplicitamente una seduta a porte chiuse della I Commissione e la collega alla mozione di sfiducia nei confronti del presidente. È una fonte editoriale: non certifica convocazione, data e ora ufficiali, svolgimento, votazioni, esiti o completezza.",
-        reviewedAt: "2026-10-27T11:55:00+01:00",
+        reviewedAt: "2026-10-27T18:15:00+01:00",
       },
       {
         title:
@@ -2797,7 +2799,17 @@ const commissionIOctober22EditorialSession: CouncilSessionV0 = {
         relationship: "same_session",
         relevanceNote:
           "L'articolo identifica una seduta a porte chiuse della I Commissione e la mozione di sfiducia nei confronti del presidente. Riproduce la stessa nota dei consiglieri già pubblicata da il Lametino e non costituisce una conferma indipendente; non certifica convocazione, data e ora ufficiali, svolgimento, votazioni, esiti o completezza.",
-        reviewedAt: "2026-10-27T11:55:00+01:00",
+        reviewedAt: "2026-10-27T18:15:00+01:00",
+      },
+      {
+        title: "A Lamezia Terme scontro politico sulla sfiducia a Cristiano",
+        url: COMMISSION_I_OCTOBER_23_NTACALABRIA_URL,
+        publisher: "NtaCalabria",
+        publishedAt: "2026-10-23",
+        relationship: "same_session",
+        relevanceNote:
+          "L'articolo identifica la seduta del giorno precedente della I Commissione, il presidente Massimo Cristiano, la mozione di sfiducia e gli stessi quattro consiglieri citati dalle fonti del 22 ottobre. Parafrasa la medesima nota e non costituisce una conferma indipendente. La sua affermazione sulla mancata sfiducia resta editoriale e non certifica convocazione, svolgimento, votazione, esito o completezza.",
+        reviewedAt: "2026-10-27T18:15:00+01:00",
       },
     ],
     media: [],
@@ -2808,10 +2820,11 @@ const commissionIOctober22EditorialSession: CouncilSessionV0 = {
         sourceUrls: [
           COMMISSION_I_OCTOBER_22_LAMETINO_URL,
           COMMISSION_I_OCTOBER_22_LAMEZIA_OGGI_URL,
+          COMMISSION_I_OCTOBER_23_NTACALABRIA_URL,
         ],
         confidence: "medium",
         reason:
-          "Il tema è indicato espressamente da due articoli che riproducono la stessa nota dei consiglieri e non sono conferme indipendenti; non è disponibile un ordine del giorno istituzionale. La voce descrive soltanto un tema emerso dalla copertura e non implica trattazione, voto o esito.",
+          "Il tema è indicato espressamente da tre articoli che dipendono dalla stessa nota dei consiglieri e non sono conferme indipendenti; non è disponibile un ordine del giorno istituzionale. La voce descrive soltanto un tema emerso dalla copertura e non implica trattazione, voto o esito.",
       },
     ],
   },
@@ -2883,7 +2896,7 @@ const commissionIOctober22EditorialSession: CouncilSessionV0 = {
   lastCheckedAt: {
     key: "lastCheckedAt",
     label: "Ultimo controllo",
-    value: "2026-10-27T11:55:00+01:00",
+    value: "2026-10-27T18:15:00+01:00",
     sourceStatus: "verificato",
     sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
     limit:
@@ -2897,7 +2910,8 @@ const commissionIOctober22EditorialSession: CouncilSessionV0 = {
       "Non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione alla seduta; il nuovo Albo dinamico ha inoltre restituito un blocco applicativo durante il controllo diretto.",
       "Data, ora, sede, ordine del giorno, stato, streaming, registrazione e verbale restano non verificati o non rilevati secondo il campo.",
       "Gli articoli collegati sono fonti editoriali e non certificano programmazione, svolgimento, completezza, presenze, votazioni o risultati.",
-      "I due articoli riproducono la stessa nota dei consiglieri e non vengono trattati come conferme indipendenti della seduta o del suo esito.",
+      "I tre articoli dipendono dalla stessa nota dei consiglieri e non vengono trattati come conferme indipendenti della seduta o del suo esito.",
+      "L'affermazione editoriale di NtaCalabria sulla mancata sfiducia non viene usata per inferire una votazione o un risultato ufficiale.",
       "Il tema riportato dalla copertura resta nell'agenda editoriale separata e dovrà essere riconciliato se emergerà un atto istituzionale.",
     ],
     sourceStatus: "parziale",
