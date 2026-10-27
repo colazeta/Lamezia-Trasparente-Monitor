@@ -5,7 +5,7 @@
     "source": "Città di Lamezia Terme — Attuazione Misure PNRR",
     "source_url": "https://www.comune.lamezia-terme.cz.it/it/attuazione-misure-pnrr",
     "source_type": "official_municipal_project_pages",
-    "materialized_at": "2026-09-03T11:10:38.924Z",
+    "materialized_at": "2026-10-27T04:59:16.208Z",
     "source_index_hash": "be25970bf1061b2275430bde868d6f04e9ae57277de67cd68fc2803ac8ecccb0",
     "opencup_source": "OpenCUP — Sistema CUP",
     "opencup_source_url": "https://www.opencup.gov.it/portale/web/opencup/home",
@@ -64,8 +64,8 @@
     "projects_with_amount": 30,
     "projects_with_opencup": 30,
     "projects_without_opencup": 0,
-    "projects_with_opencup_fresh": 30,
-    "projects_with_opencup_stale": 0,
+    "projects_with_opencup_fresh": 0,
+    "projects_with_opencup_stale": 30,
     "projects_pending_opencup": 0,
     "projects_with_opencup_total_cost": 28,
     "projects_with_opencup_public_funding": 28,
@@ -225,10 +225,10 @@
         "source_record_hash": "085230d8a8b1c972bebb72b92ed0dec6f9f833fdd6571b55e022547b38639530"
       },
       "opencup_acquisition": {
-        "status": "fresh",
+        "status": "stale",
         "acquired_at": "2026-09-01T05:31:15.965Z",
-        "status_observed_at": "2026-09-01T06:20:34.137Z",
-        "fallback_used": false
+        "status_observed_at": "2026-10-27T04:59:16.208Z",
+        "fallback_used": true
       },
       "albo_evidence_ids": []
     },
@@ -366,10 +366,10 @@
         "source_record_hash": "34899f0f54ae4d60906f398d3e5f3bbdab4e29856032b74a5fd15a2138861fea"
       },
       "opencup_acquisition": {
-        "status": "fresh",
+        "status": "stale",
         "acquired_at": "2026-09-01T06:13:49.692Z",
-        "status_observed_at": "2026-09-01T06:20:34.137Z",
-        "fallback_used": false
+        "status_observed_at": "2026-10-27T04:59:16.208Z",
+        "fallback_used": true
       },
       "albo_evidence_ids": []
     },
@@ -471,10 +471,10 @@
         "source_record_hash": "529d155dffbd908559b224133707de7427f095ea85f5eb374856323689ea04cd"
       },
       "opencup_acquisition": {
-        "status": "fresh",
+        "status": "stale",
         "acquired_at": "2026-09-01T05:31:15.965Z",
-        "status_observed_at": "2026-09-01T06:20:34.137Z",
-        "fallback_used": false
+        "status_observed_at": "2026-10-27T04:59:16.208Z",
+        "fallback_used": true
       },
       "albo_evidence_ids": []
     },
@@ -624,10 +624,10 @@
         "source_record_hash": "abbb3a15c00756c46d5767794fcd77504590f54c46d7caedaaf48b4efa39e8ed"
       },
       "opencup_acquisition": {
-        "status": "fresh",
+        "status": "stale",
         "acquired_at": "2026-09-01T05:31:15.965Z",
-        "status_observed_at": "2026-09-01T06:20:34.137Z",
-        "fallback_used": false
+        "status_observed_at": "2026-10-27T04:59:16.208Z",
+        "fallback_used": true
       },
       "albo_evidence_ids": []
     },
@@ -1125,10 +1125,10 @@
         "source_record_hash": "288735b454c55d240f4fb8152885f1f5558e02e8102c4f69995e41e54e772dd2"
       },
       "opencup_acquisition": {
-        "status": "fresh",
+        "status": "stale",
         "acquired_at": "2026-09-01T06:13:49.692Z",
-        "status_observed_at": "2026-09-01T06:20:34.137Z",
-        "fallback_used": false
+        "status_observed_at": "2026-10-27T04:59:16.208Z",
+        "fallback_used": true
       },
       "albo_evidence_ids": [
         "albo-2026-2762"
@@ -1244,10 +1244,10 @@
         "source_record_hash": "61e5cc95d09262fed1e1545621dd8d319bf0e33681905727defd81c5c60d9282"
       },
       "opencup_acquisition": {
-        "status": "fresh",
+        "status": "stale",
         "acquired_at": "2026-09-01T05:31:15.965Z",
-        "status_observed_at": "2026-09-01T06:20:34.137Z",
-        "fallback_used": false
+        "status_observed_at": "2026-10-27T04:59:16.208Z",
+        "fallback_used": true
       },
       "albo_evidence_ids": []
     },
@@ -1505,10 +1505,10 @@
         "source_record_hash": "aca883fc03e34ccc4209e663b5d621782e4a960d533720a2186d2aff16981fdd"
       },
       "opencup_acquisition": {
-        "status": "fresh",
+        "status": "stale",
         "acquired_at": "2026-09-01T06:13:49.692Z",
-        "status_observed_at": "2026-09-01T06:20:34.137Z",
-        "fallback_used": false
+        "status_observed_at": "2026-10-27T04:59:16.208Z",
+        "fallback_used": true
       },
       "albo_evidence_ids": []
     },
@@ -1802,10 +1802,10 @@
         "source_record_hash": "81e11cb362dea33e936e8535707409c5a232ec2a652fdaf69e03eb0b9d6cfbb2"
       },
       "opencup_acquisition": {
-        "status": "fresh",
+        "status": "stale",
         "acquired_at": "2026-09-01T06:13:49.692Z",
-        "status_observed_at": "2026-09-01T06:20:34.137Z",
-        "fallback_used": false
+        "status_observed_at": "2026-10-27T04:59:16.208Z",
+        "fallback_used": true
       },
       "albo_evidence_ids": [
         "albo-2026-2735",
@@ -2054,10 +2054,10 @@
         "source_record_hash": "f21882fde8099f43a2e9db7a79f5b9509c3a85d1fb4f5b3d269fb8588bc91d8b"
       },
       "opencup_acquisition": {
-        "status": "fresh",
+        "status": "stale",
         "acquired_at": "2026-09-01T06:13:49.692Z",
-        "status_observed_at": "2026-09-01T06:20:34.137Z",
-        "fallback_used": false
+        "status_observed_at": "2026-10-27T04:59:16.208Z",
+        "fallback_used": true
       },
       "albo_evidence_ids": []
     },
@@ -2291,10 +2291,10 @@
         "source_record_hash": "392899be2b47af639b4adb3be9c2a4f6f9623c9885886b5c793cfe6793c50b85"
       },
       "opencup_acquisition": {
-        "status": "fresh",
+        "status": "stale",
         "acquired_at": "2026-09-01T06:13:49.692Z",
-        "status_observed_at": "2026-09-01T06:20:34.137Z",
-        "fallback_used": false
+        "status_observed_at": "2026-10-27T04:59:16.208Z",
+        "fallback_used": true
       },
       "albo_evidence_ids": [
         "albo-2026-2725"
@@ -2638,10 +2638,10 @@
         "source_record_hash": "4e5151a677c34007e90210970da6172cf45f16f6e0247444ed03e7ecb13d54c4"
       },
       "opencup_acquisition": {
-        "status": "fresh",
+        "status": "stale",
         "acquired_at": "2026-09-01T06:13:49.692Z",
-        "status_observed_at": "2026-09-01T06:20:34.137Z",
-        "fallback_used": false
+        "status_observed_at": "2026-10-27T04:59:16.208Z",
+        "fallback_used": true
       },
       "albo_evidence_ids": []
     },
@@ -2947,10 +2947,10 @@
         "source_record_hash": "6a780c148eb0d1f647a36c2dafd67f782d961d500537058b9df91b3208aa4c06"
       },
       "opencup_acquisition": {
-        "status": "fresh",
+        "status": "stale",
         "acquired_at": "2026-09-01T05:31:15.965Z",
-        "status_observed_at": "2026-09-01T06:20:34.137Z",
-        "fallback_used": false
+        "status_observed_at": "2026-10-27T04:59:16.208Z",
+        "fallback_used": true
       },
       "albo_evidence_ids": [
         "albo-2026-2765",
@@ -3103,10 +3103,10 @@
         "source_record_hash": "d44d99debac24ca97d565622dc1dc4f17ddc1d779d2dad6060c1793cf54c759e"
       },
       "opencup_acquisition": {
-        "status": "fresh",
+        "status": "stale",
         "acquired_at": "2026-09-03T11:10:38.924Z",
-        "status_observed_at": "2026-09-03T11:10:38.924Z",
-        "fallback_used": false
+        "status_observed_at": "2026-10-27T04:59:16.208Z",
+        "fallback_used": true
       },
       "albo_evidence_ids": []
     },
@@ -3220,10 +3220,10 @@
         "source_record_hash": "2012f28139b8300428b41b2c6a8c815eb00b3409c0fab8508a41123b93e10cbb"
       },
       "opencup_acquisition": {
-        "status": "fresh",
+        "status": "stale",
         "acquired_at": "2026-09-01T05:31:15.965Z",
-        "status_observed_at": "2026-09-01T06:20:34.137Z",
-        "fallback_used": false
+        "status_observed_at": "2026-10-27T04:59:16.208Z",
+        "fallback_used": true
       },
       "albo_evidence_ids": []
     },
@@ -3373,10 +3373,10 @@
         "source_record_hash": "c185f176fec3a15895968cb02fc50f26a1b7837f5575d4fc03fd7ff6db9ea690"
       },
       "opencup_acquisition": {
-        "status": "fresh",
+        "status": "stale",
         "acquired_at": "2026-09-01T05:31:15.965Z",
-        "status_observed_at": "2026-09-01T06:20:34.137Z",
-        "fallback_used": false
+        "status_observed_at": "2026-10-27T04:59:16.208Z",
+        "fallback_used": true
       },
       "albo_evidence_ids": []
     },
@@ -3550,10 +3550,10 @@
         "source_record_hash": "f2af10bc04c4b373e0bbe3bb5411dd4edc0e0eea2d0eb9498169e8cfd6e2f3ef"
       },
       "opencup_acquisition": {
-        "status": "fresh",
+        "status": "stale",
         "acquired_at": "2026-09-01T05:31:15.965Z",
-        "status_observed_at": "2026-09-01T06:20:34.137Z",
-        "fallback_used": false
+        "status_observed_at": "2026-10-27T04:59:16.208Z",
+        "fallback_used": true
       },
       "albo_evidence_ids": []
     },
@@ -3691,10 +3691,10 @@
         "source_record_hash": "864a6e20d6d08fc1e8e69a0271b5ca496ef9cf6c19094939b6793a01e5a40f1d"
       },
       "opencup_acquisition": {
-        "status": "fresh",
+        "status": "stale",
         "acquired_at": "2026-09-01T05:31:15.965Z",
-        "status_observed_at": "2026-09-01T06:20:34.137Z",
-        "fallback_used": false
+        "status_observed_at": "2026-10-27T04:59:16.208Z",
+        "fallback_used": true
       },
       "albo_evidence_ids": []
     },
@@ -3832,10 +3832,10 @@
         "source_record_hash": "798d32c1344edd0de0c221e2f322be4c5a5376df1094209d5e38ef0410d52a7d"
       },
       "opencup_acquisition": {
-        "status": "fresh",
+        "status": "stale",
         "acquired_at": "2026-09-01T05:31:15.965Z",
-        "status_observed_at": "2026-09-01T06:20:34.137Z",
-        "fallback_used": false
+        "status_observed_at": "2026-10-27T04:59:16.208Z",
+        "fallback_used": true
       },
       "albo_evidence_ids": []
     },
@@ -3985,10 +3985,10 @@
         "source_record_hash": "c60e6d5408d93fef3f8b65c520443b3de52fee427ecea6c91a892b3912a54efe"
       },
       "opencup_acquisition": {
-        "status": "fresh",
+        "status": "stale",
         "acquired_at": "2026-09-01T05:31:15.965Z",
-        "status_observed_at": "2026-09-01T06:20:34.137Z",
-        "fallback_used": false
+        "status_observed_at": "2026-10-27T04:59:16.208Z",
+        "fallback_used": true
       },
       "albo_evidence_ids": []
     },
@@ -4102,10 +4102,10 @@
         "source_record_hash": "a05cb4b06e6ead5a62640a67e00ffcf1d969313f5f029ef5ddaf79e0ea8b5418"
       },
       "opencup_acquisition": {
-        "status": "fresh",
+        "status": "stale",
         "acquired_at": "2026-09-01T05:31:15.965Z",
-        "status_observed_at": "2026-09-01T06:20:34.137Z",
-        "fallback_used": false
+        "status_observed_at": "2026-10-27T04:59:16.208Z",
+        "fallback_used": true
       },
       "albo_evidence_ids": []
     },
@@ -4435,10 +4435,10 @@
         "source_record_hash": "a598572b601547e1406213d34127ea7b0bf5f5d3b41b70a5633a08e58e50b77e"
       },
       "opencup_acquisition": {
-        "status": "fresh",
+        "status": "stale",
         "acquired_at": "2026-09-01T05:31:15.965Z",
-        "status_observed_at": "2026-09-01T06:20:34.137Z",
-        "fallback_used": false
+        "status_observed_at": "2026-10-27T04:59:16.208Z",
+        "fallback_used": true
       },
       "albo_evidence_ids": []
     },
@@ -4600,10 +4600,10 @@
         "source_record_hash": "e638b43a4a939f9bedbb8b39d07691c06e0c88330880a8ba92f4394df24ea869"
       },
       "opencup_acquisition": {
-        "status": "fresh",
+        "status": "stale",
         "acquired_at": "2026-09-01T05:31:15.965Z",
-        "status_observed_at": "2026-09-01T06:20:34.137Z",
-        "fallback_used": false
+        "status_observed_at": "2026-10-27T04:59:16.208Z",
+        "fallback_used": true
       },
       "albo_evidence_ids": [
         "albo-2026-2849",
@@ -4708,10 +4708,10 @@
         "source_record_hash": "740b217b648329d56ec2785a988579756df6317add3a6f00a402f1db89442706"
       },
       "opencup_acquisition": {
-        "status": "fresh",
+        "status": "stale",
         "acquired_at": "2026-09-01T05:31:15.965Z",
-        "status_observed_at": "2026-09-01T06:20:34.137Z",
-        "fallback_used": false
+        "status_observed_at": "2026-10-27T04:59:16.208Z",
+        "fallback_used": true
       },
       "albo_evidence_ids": []
     },
@@ -4813,10 +4813,10 @@
         "source_record_hash": "d3293b1fe7e88a5c5a6eb67bb7d8e5194c113e44a36d0599ace5c697d8ad68aa"
       },
       "opencup_acquisition": {
-        "status": "fresh",
+        "status": "stale",
         "acquired_at": "2026-09-01T05:31:15.965Z",
-        "status_observed_at": "2026-09-01T06:20:34.137Z",
-        "fallback_used": false
+        "status_observed_at": "2026-10-27T04:59:16.208Z",
+        "fallback_used": true
       },
       "albo_evidence_ids": []
     },
@@ -4966,10 +4966,10 @@
         "source_record_hash": "8495cd313ee5347f88366b949e092e9a89c94d18ec4911ba2d6f6c23381d5aa1"
       },
       "opencup_acquisition": {
-        "status": "fresh",
+        "status": "stale",
         "acquired_at": "2026-09-01T06:13:49.692Z",
-        "status_observed_at": "2026-09-01T06:20:34.137Z",
-        "fallback_used": false
+        "status_observed_at": "2026-10-27T04:59:16.208Z",
+        "fallback_used": true
       },
       "albo_evidence_ids": [
         "albo-2026-2732",
@@ -5098,10 +5098,10 @@
         "source_record_hash": "ecedf60c408e823e290413a5eadc3ca31a0401235cb0caa6bc33a809bb3e2a89"
       },
       "opencup_acquisition": {
-        "status": "fresh",
+        "status": "stale",
         "acquired_at": "2026-09-01T05:31:15.965Z",
-        "status_observed_at": "2026-09-01T06:20:34.137Z",
-        "fallback_used": false
+        "status_observed_at": "2026-10-27T04:59:16.208Z",
+        "fallback_used": true
       },
       "albo_evidence_ids": []
     },
@@ -5239,10 +5239,10 @@
         "source_record_hash": "ca1445787722fd1921a2538cbe2a676185d37923f86d12c90b602b3d369c754c"
       },
       "opencup_acquisition": {
-        "status": "fresh",
+        "status": "stale",
         "acquired_at": "2026-09-01T05:31:15.965Z",
-        "status_observed_at": "2026-09-01T06:20:34.137Z",
-        "fallback_used": false
+        "status_observed_at": "2026-10-27T04:59:16.208Z",
+        "fallback_used": true
       },
       "albo_evidence_ids": [
         "albo-2026-2729"
@@ -5358,10 +5358,10 @@
         "source_record_hash": "3ef4b892b2ce88527e1863a967df94a8bed6f116c7d357c64af34e7060eab9d2"
       },
       "opencup_acquisition": {
-        "status": "fresh",
+        "status": "stale",
         "acquired_at": "2026-09-01T05:31:15.965Z",
-        "status_observed_at": "2026-09-01T06:20:34.137Z",
-        "fallback_used": false
+        "status_observed_at": "2026-10-27T04:59:16.208Z",
+        "fallback_used": true
       },
       "albo_evidence_ids": []
     },
@@ -5595,10 +5595,10 @@
         "source_record_hash": "15df3b0effddab8a48aad25a49bf60b3796c9f80883647873be4147da8987f07"
       },
       "opencup_acquisition": {
-        "status": "fresh",
+        "status": "stale",
         "acquired_at": "2026-09-01T05:31:15.965Z",
-        "status_observed_at": "2026-09-01T06:20:34.137Z",
-        "fallback_used": false
+        "status_observed_at": "2026-10-27T04:59:16.208Z",
+        "fallback_used": true
       },
       "albo_evidence_ids": [
         "albo-2026-2723"
@@ -5954,10 +5954,10 @@
         "source_record_hash": "ded886677f69c9c97f5c568617ce7c8831a19d5014d2e7a11f096fff665d01cc"
       },
       "opencup_acquisition": {
-        "status": "fresh",
+        "status": "stale",
         "acquired_at": "2026-09-01T06:13:49.692Z",
-        "status_observed_at": "2026-09-01T06:20:34.137Z",
-        "fallback_used": false
+        "status_observed_at": "2026-10-27T04:59:16.208Z",
+        "fallback_used": true
       },
       "albo_evidence_ids": []
     }
