@@ -27,6 +27,24 @@ const CANONICAL_20261027: Record<string, CanonicalProposalPresentation> = {
     expectedOutcome:
       "Rendere valutabile una diversa allocazione delle risorse comunali, senza presumere la disponibilità dei risparmi, la riduzione dei tributi o l'attuazione degli interventi richiesti.",
   },
+  "via-della-vittoria-manutenzione-deflusso-cristiano-villella-2026": {
+    proposalId: "via-della-vittoria-manutenzione-deflusso-cristiano-villella-2026",
+    version: "1.0",
+    title: "Manutenzione e gestione delle acque meteoriche in via della Vittoria",
+    request:
+      "Chiedere verifiche tecniche e interventi di manutenzione della strada, sicurezza della circolazione e deflusso delle acque meteoriche nell'area di via della Vittoria, Nicastro.",
+    actionTypes: ["prevenzione_rischio", "organizzazione", "trasparenza"],
+    measures: [
+      "Verificare lo stato del manto stradale di via della Vittoria e programmare il ripristino dei tratti che risultino deteriorati.",
+      "Valutare interventi di controllo e segnalazione per il rispetto del limite di velocità di 30 km/h indicato nella richiesta.",
+      "Effettuare sopralluoghi sui marciapiedi e sulle segnalazioni di vegetazione, rifiuti e altre criticità nell'area interessata.",
+      "Accertare lo stato del canale di scolo delle acque meteoriche e verificare tecnicamente l'eventuale ostruzione e le sue cause.",
+      "Programmare l'eventuale ripristino del deflusso delle acque, qualora le verifiche tecniche ne attestino la necessità.",
+      "Fornire una risposta scritta e orale in Consiglio comunale sugli interventi valutati e sulle relative tempistiche.",
+    ],
+    expectedOutcome:
+      "Disporre di accertamenti e possibili interventi motivati sulle criticità segnalate, senza presumere responsabilità, cause degli allagamenti, disponibilità dei lavori o efficacia già dimostrata.",
+  },
 };
 
 export function getCanonicalProposalPresentation(
