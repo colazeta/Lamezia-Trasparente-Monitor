@@ -243,6 +243,12 @@ const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
     mappingNote:
       "Controlli della velocità e sicurezza della circolazione come mobilità e trasporti; sicurezza pubblica come classificazione analitica secondaria, non come attribuzione di competenza.",
   },
+  "Finanze comunali e riallocazione delle risorse": {
+    primary: ps("9"),
+    secondary: [ps("2")],
+    mappingNote:
+      "La misura riguarda la riallocazione di risorse comunali e le conseguenze su tributi e tariffe: materia primaria ufficiale Tributi, finanze e contravvenzioni. I servizi sociali indicati fra le destinazioni sono secondari. L'oggetto non determina competenze istituzionali.",
+  },
   "Trasparenza e partecipazione democratica": {
     primary: eu("GOVE"),
     mappingNote:
