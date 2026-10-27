@@ -39,11 +39,18 @@ describe("CouncilSessionV0Card", () => {
     expect(
       screen.getByRole("heading", { name: "Temi emersi dalla copertura" }),
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole("link", {
-        name: /Lavori fermi in I Commissione/i,
-      }),
-    ).toHaveAttribute("href", expect.stringContaining("lametino.it"));
+    const coverageLinks = screen.getAllByRole("link", {
+      name: /Lavori fermi in I Commissione/i,
+    });
+    expect(coverageLinks).toHaveLength(2);
+    expect(coverageLinks[0]).toHaveAttribute(
+      "href",
+      expect.stringContaining("lametino.it"),
+    );
+    expect(coverageLinks[1]).toHaveAttribute(
+      "href",
+      expect.stringContaining("lameziaoggi.it"),
+    );
     expect(
       screen.getByText(/Fonte istituzionale non ancora acquisita/i),
     ).toBeInTheDocument();
@@ -179,7 +186,9 @@ describe("CouncilSessionV0Card", () => {
       ),
     ).toBeInTheDocument();
     expect(
-      screen.queryByText(/orario e ordine del giorno completo non sono disponibili/i),
+      screen.queryByText(
+        /orario e ordine del giorno completo non sono disponibili/i,
+      ),
     ).not.toBeInTheDocument();
   });
 

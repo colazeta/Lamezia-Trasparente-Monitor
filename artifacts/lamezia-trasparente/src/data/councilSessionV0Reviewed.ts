@@ -68,6 +68,8 @@ const COMMISSION_I_MOTION_LAMETINO_URL =
   "https://www.lametino.it/ultime/lamezia-mozioni-di-sfiducia-contro-cristiano-e-villella-tensioni-nelle-commissioni-consiliari.html";
 const COMMISSION_I_OCTOBER_22_LAMETINO_URL =
   "https://www.lametino.it/ultime/lamezia-consiglieri-di-opposizione-lavori-fermi-in-i-commissione-citta-non-puo-continuare-a-pagare-scontri-nel-centrodestra.html";
+const COMMISSION_I_OCTOBER_22_LAMEZIA_OGGI_URL =
+  "https://www.lameziaoggi.it/lamezia-terme/2026/10/22/lamezia-consiglieri-di-opposizione-lavori-fermi-in-i-commissione-citta-non-puo-essere-compromessa/";
 const COMMISSION_II_OCTOBER_26_LAMETINO_URL =
   "https://www.lametino.it/ultime/lamezia-settimana-cruciale-per-la-commissione-bilancio-prima-del-consiglio-su-piano-di-riequilibrio-e-consolidato.html";
 const COMMISSION_II_OCTOBER_25_LAMEZIAINFORMA_URL =
@@ -2771,9 +2773,9 @@ const commissionIOctober22EditorialSession: CouncilSessionV0 = {
   isDemoFixture: false,
   contextResearch: {
     status: "reviewed_matches",
-    checkedAt: "2026-10-23T00:06:00+02:00",
+    checkedAt: "2026-10-27T11:55:00+01:00",
     searchNote:
-      "Parallel Search e la verifica diretta di Comune, Albo, testate locali e canali audiovisivi indicizzati hanno individuato un solo articolo sufficientemente preciso. Il testo identifica esplicitamente una seduta della I Commissione e il tema discusso, ma la data di pubblicazione è usata soltanto per la ricerca: non viene presentata come data ufficiale della seduta. Non è stato acquisito un atto istituzionale; data, ora, sede, ordine del giorno, svolgimento ed esiti restano non verificati.",
+      "Parallel Search e la verifica diretta di Comune, Albo, testate locali e canali audiovisivi indicizzati hanno individuato due articoli sufficientemente precisi. Entrambi identificano esplicitamente una seduta della I Commissione e il tema discusso, ma riproducono la stessa nota dei consiglieri e non costituiscono conferme indipendenti. La data di pubblicazione è usata soltanto per la ricerca e non viene presentata come data ufficiale della seduta. Non è stato acquisito un atto istituzionale; data, ora, sede, ordine del giorno, svolgimento ed esiti restano non verificati.",
     articles: [
       {
         title:
@@ -2784,7 +2786,18 @@ const commissionIOctober22EditorialSession: CouncilSessionV0 = {
         relationship: "same_session",
         relevanceNote:
           "L'articolo descrive esplicitamente una seduta a porte chiuse della I Commissione e la collega alla mozione di sfiducia nei confronti del presidente. È una fonte editoriale: non certifica convocazione, data e ora ufficiali, svolgimento, votazioni, esiti o completezza.",
-        reviewedAt: "2026-10-23T00:06:00+02:00",
+        reviewedAt: "2026-10-27T11:55:00+01:00",
+      },
+      {
+        title:
+          "Lamezia, consiglieri di opposizione: “Lavori fermi in I Commissione, città non può essere compromessa”",
+        url: COMMISSION_I_OCTOBER_22_LAMEZIA_OGGI_URL,
+        publisher: "Lamezia Oggi",
+        publishedAt: "2026-10-22",
+        relationship: "same_session",
+        relevanceNote:
+          "L'articolo identifica una seduta a porte chiuse della I Commissione e la mozione di sfiducia nei confronti del presidente. Riproduce la stessa nota dei consiglieri già pubblicata da il Lametino e non costituisce una conferma indipendente; non certifica convocazione, data e ora ufficiali, svolgimento, votazioni, esiti o completezza.",
+        reviewedAt: "2026-10-27T11:55:00+01:00",
       },
     ],
     media: [],
@@ -2792,10 +2805,13 @@ const commissionIOctober22EditorialSession: CouncilSessionV0 = {
       {
         title:
           "Mozione di sfiducia nei confronti del presidente della I Commissione",
-        sourceUrls: [COMMISSION_I_OCTOBER_22_LAMETINO_URL],
+        sourceUrls: [
+          COMMISSION_I_OCTOBER_22_LAMETINO_URL,
+          COMMISSION_I_OCTOBER_22_LAMEZIA_OGGI_URL,
+        ],
         confidence: "medium",
         reason:
-          "Il tema è indicato espressamente nell'unica fonte editoriale precisa individuata, ma non è disponibile un ordine del giorno istituzionale. La voce descrive soltanto un tema emerso dalla copertura e non implica trattazione, voto o esito.",
+          "Il tema è indicato espressamente da due articoli che riproducono la stessa nota dei consiglieri e non sono conferme indipendenti; non è disponibile un ordine del giorno istituzionale. La voce descrive soltanto un tema emerso dalla copertura e non implica trattazione, voto o esito.",
       },
     ],
   },
@@ -2867,7 +2883,7 @@ const commissionIOctober22EditorialSession: CouncilSessionV0 = {
   lastCheckedAt: {
     key: "lastCheckedAt",
     label: "Ultimo controllo",
-    value: "2026-10-23T00:06:00+02:00",
+    value: "2026-10-27T11:55:00+01:00",
     sourceStatus: "verificato",
     sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
     limit:
@@ -2880,7 +2896,8 @@ const commissionIOctober22EditorialSession: CouncilSessionV0 = {
       "La data di pubblicazione dell'articolo non viene presentata come data ufficiale della seduta.",
       "Non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione alla seduta; il nuovo Albo dinamico ha inoltre restituito un blocco applicativo durante il controllo diretto.",
       "Data, ora, sede, ordine del giorno, stato, streaming, registrazione e verbale restano non verificati o non rilevati secondo il campo.",
-      "L'articolo collegato è una fonte editoriale e non certifica programmazione, svolgimento, completezza, presenze, votazioni o risultati.",
+      "Gli articoli collegati sono fonti editoriali e non certificano programmazione, svolgimento, completezza, presenze, votazioni o risultati.",
+      "I due articoli riproducono la stessa nota dei consiglieri e non vengono trattati come conferme indipendenti della seduta o del suo esito.",
       "Il tema riportato dalla copertura resta nell'agenda editoriale separata e dovrà essere riconciliato se emergerà un atto istituzionale.",
     ],
     sourceStatus: "parziale",
