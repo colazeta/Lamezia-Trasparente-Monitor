@@ -76,6 +76,8 @@ const COMMISSION_II_OCTOBER_26_LAMETINO_URL =
   "https://www.lametino.it/ultime/lamezia-settimana-cruciale-per-la-commissione-bilancio-prima-del-consiglio-su-piano-di-riequilibrio-e-consolidato.html";
 const COMMISSION_II_OCTOBER_25_LAMEZIAINFORMA_URL =
   "https://www.lameziainforma.it/politica/2026/10/25/oltre-a-consolidato-2025-e-piano-di-riequilibrio-malumori-politici-e-question-time-ricorsivi-in-via-perugini/69907/amp/";
+const COMMISSION_II_OCTOBER_27_NTACALABRIA_URL =
+  "https://www.ntacalabria.it/lamezia-terme/a-lamezia-terme-bilancio-consolidato-e-riequilibrio.html";
 const MUNICIPAL_ALBO_DOCUMENTS_URL =
   "https://www.comune.lamezia-terme.cz.it/it/documenti_pubblici/atti-di-albo-pretorio";
 const VIA_TRENTO_ROADWORKS_LAMETINO_URL =
@@ -2927,9 +2929,9 @@ const commissionIIOctoberEditorialCycle: CouncilSessionV0 = {
   isDemoFixture: false,
   contextResearch: {
     status: "reviewed_matches",
-    checkedAt: "2026-10-27T06:25:00+01:00",
+    checkedAt: "2026-10-27T23:42:00+01:00",
     searchNote:
-      "Parallel Search e la verifica diretta di Comune, Albo, testate locali e canali audiovisivi indicizzati hanno individuato due articoli pertinenti ai lavori della II Commissione. LameziaInforma del 25 ottobre collega Bilancio consolidato e Piano di riequilibrio alla Commissione, ma non identifica una seduta e presenta una ricostruzione cronologica non pienamente coerente con il calendario pubblicato da il Lametino il giorno successivo. Il nuovo Albo dinamico non ha restituito un atto istituzionale acquisibile o indicizzato: date e orari riportati dalla stampa restano soltanto indizi di ricerca. Organo, programmazione, sede, ordine del giorno, svolgimento ed esiti restano da verificare su fonte istituzionale.",
+      "Parallel Search e la verifica diretta di Comune, Albo, testate locali e canali audiovisivi indicizzati hanno individuato tre articoli pertinenti ai lavori della II Commissione. LameziaInforma del 25 ottobre e NtaCalabria del 27 ottobre descrivono il Bilancio consolidato come già esaminato dalla Commissione, ma non identificano una singola seduta e non costituiscono conferme indipendenti del calendario pubblicato da il Lametino il 26 ottobre. Il nuovo Albo dinamico non ha restituito un atto istituzionale acquisibile o indicizzato: date e orari riportati dalla stampa restano soltanto indizi di ricerca. Organo, programmazione, sede, ordine del giorno, svolgimento ed esiti restano da verificare su fonte istituzionale.",
     articles: [
       {
         title:
@@ -2953,6 +2955,16 @@ const commissionIIOctoberEditorialCycle: CouncilSessionV0 = {
           "L'articolo collega espressamente Bilancio consolidato 2025 e genesi del Piano di riequilibrio ai lavori della II Commissione, ma non identifica una singola seduta. La formulazione secondo cui i temi sarebbero già passati in Commissione non è corroborata da un atto istituzionale acquisito e non è pienamente coerente con il calendario editoriale pubblicato il giorno successivo; non prova trattazione, voto o esito.",
         reviewedAt: "2026-10-27T06:25:00+01:00",
       },
+      {
+        title: "A Lamezia Terme bilancio consolidato e riequilibrio",
+        url: COMMISSION_II_OCTOBER_27_NTACALABRIA_URL,
+        publisher: "NtaCalabria",
+        publishedAt: "2026-10-27",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo associa il Bilancio consolidato 2025 e il Piano di riequilibrio alla seconda Commissione, ma non identifica una singola seduta. Ripete la ricostruzione secondo cui il consolidato sarebbe già stato esaminato e non costituisce una conferma indipendente della programmazione, della trattazione o di eventuali esiti.",
+        reviewedAt: "2026-10-27T23:42:00+01:00",
+      },
     ],
     media: [],
     editorialAgenda: [
@@ -2961,6 +2973,7 @@ const commissionIIOctoberEditorialCycle: CouncilSessionV0 = {
         sourceUrls: [
           COMMISSION_II_OCTOBER_26_LAMETINO_URL,
           COMMISSION_II_OCTOBER_25_LAMEZIAINFORMA_URL,
+          COMMISSION_II_OCTOBER_27_NTACALABRIA_URL,
         ],
         confidence: "medium",
         reason:
@@ -2971,6 +2984,7 @@ const commissionIIOctoberEditorialCycle: CouncilSessionV0 = {
         sourceUrls: [
           COMMISSION_II_OCTOBER_26_LAMETINO_URL,
           COMMISSION_II_OCTOBER_25_LAMEZIAINFORMA_URL,
+          COMMISSION_II_OCTOBER_27_NTACALABRIA_URL,
         ],
         confidence: "medium",
         reason:
@@ -3060,7 +3074,7 @@ const commissionIIOctoberEditorialCycle: CouncilSessionV0 = {
   lastCheckedAt: {
     key: "lastCheckedAt",
     label: "Ultimo controllo",
-    value: "2026-10-27T06:25:00+01:00",
+    value: "2026-10-27T23:42:00+01:00",
     sourceStatus: "verificato",
     sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
     limit:
@@ -3074,7 +3088,7 @@ const commissionIIOctoberEditorialCycle: CouncilSessionV0 = {
       "Non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione al ciclo; il nuovo Albo dinamico non ha restituito un atto utile durante il controllo diretto.",
       "Date, orari, sede, ordine del giorno, stato, streaming, registrazione e verbale restano non verificati o non rilevati secondo il campo.",
       "Gli articoli collegati sono fonti editoriali e non certificano programmazione, svolgimento, completezza, presenze, votazioni o risultati.",
-      "Le due fonti editoriali non sono pienamente coerenti sulla cronologia del Bilancio consolidato e non vengono usate per stabilire se il tema fosse già passato o ancora da esaminare in Commissione.",
+      "Le tre fonti editoriali non sono pienamente coerenti sulla cronologia del Bilancio consolidato e non vengono usate per stabilire se il tema fosse già passato o ancora da esaminare in Commissione; NtaCalabria ripete la ricostruzione di LameziaInforma senza identificare una singola seduta.",
       "I temi riportati dalla copertura restano nell'agenda editoriale separata e dovranno essere riconciliati se emergerà un atto istituzionale.",
     ],
     sourceStatus: "parziale",
