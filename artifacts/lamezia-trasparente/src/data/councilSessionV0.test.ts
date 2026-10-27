@@ -304,7 +304,7 @@ describe("councilSessionV0", () => {
     expect(session?.sourceLink.value).toBeNull();
     expect(session?.liveStreaming.value).toBeNull();
     expect(session?.recording.value).toBeNull();
-    expect(session?.contextResearch.articles).toHaveLength(2);
+    expect(session?.contextResearch.articles).toHaveLength(3);
     expect(session?.contextResearch.articles[0]).toMatchObject({
       publisher: "il Lametino",
       publishedAt: "2026-10-22",
@@ -313,6 +313,14 @@ describe("councilSessionV0", () => {
     expect(session?.contextResearch.articles[1]).toMatchObject({
       publisher: "Lamezia Oggi",
       publishedAt: "2026-10-22",
+      relationship: "same_session",
+      relevanceNote: expect.stringContaining(
+        "non costituisce una conferma indipendente",
+      ),
+    });
+    expect(session?.contextResearch.articles[2]).toMatchObject({
+      publisher: "NtaCalabria",
+      publishedAt: "2026-10-23",
       relationship: "same_session",
       relevanceNote: expect.stringContaining(
         "non costituisce una conferma indipendente",
@@ -330,6 +338,9 @@ describe("councilSessionV0", () => {
     );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /non vengono trattati come conferme indipendenti/i,
+    );
+    expect(session?.dataLimits.value?.join(" ")).toMatch(
+      /non viene usata per inferire una votazione o un risultato ufficiale/i,
     );
   });
 
