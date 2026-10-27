@@ -243,6 +243,18 @@ const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
     mappingNote:
       "Controlli della velocità e sicurezza della circolazione come mobilità e trasporti; sicurezza pubblica come classificazione analitica secondaria, non come attribuzione di competenza.",
   },
+  "Manutenzione della viabilità e drenaggio urbano": {
+    primary: ps("4"),
+    secondary: [ps("11"), ps("8")],
+    mappingNote:
+      "La richiesta principale riguarda circolazione e manutenzione della strada, materia ufficiale Mobilità e trasporti. Acque meteoriche e prevenzione dei rischi sono classificazioni analitiche secondarie Ambiente e Giustizia e sicurezza pubblica. Nessuna competenza istituzionale viene inferita dalle materie.",
+  },
+  "Finanze comunali e riallocazione delle risorse": {
+    primary: ps("9"),
+    secondary: [ps("2")],
+    mappingNote:
+      "La misura riguarda la riallocazione di risorse comunali e le conseguenze su tributi e tariffe: materia primaria ufficiale Tributi, finanze e contravvenzioni. I servizi sociali indicati fra le destinazioni sono secondari. L'oggetto non determina competenze istituzionali.",
+  },
   "Trasparenza e partecipazione democratica": {
     primary: eu("GOVE"),
     mappingNote:
