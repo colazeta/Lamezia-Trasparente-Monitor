@@ -274,6 +274,11 @@ describe("councilSessionV0", () => {
         publishedAt: "2026-10-25",
         relationship: "agenda_item",
       }),
+      expect.objectContaining({
+        publisher: "NtaCalabria",
+        publishedAt: "2026-10-27",
+        relationship: "agenda_item",
+      }),
     ]);
     expect(session?.contextResearch.media).toEqual([]);
     expect(session?.contextResearch.editorialAgenda).toHaveLength(4);
@@ -289,6 +294,9 @@ describe("councilSessionV0", () => {
     );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /non sono pienamente coerenti sulla cronologia/i,
+    );
+    expect(session?.dataLimits.value?.join(" ")).toMatch(
+      /NtaCalabria ripete la ricostruzione.*senza identificare una singola seduta/i,
     );
   });
 
