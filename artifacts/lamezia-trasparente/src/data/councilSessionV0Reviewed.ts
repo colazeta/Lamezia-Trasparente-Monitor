@@ -1,6 +1,3 @@
-Warning: truncated output (original token count: 51501)
-Total output lines: 3784
-
 import {
   identifyInstitutionalSessionCandidate,
   type InstitutionalSessionCandidate,
@@ -1467,7 +1464,166 @@ const commissionViSeptemberCandidate = requireCandidate({
     "935417af6dfd7f23abf125c15655a0e031e5e85ec4331dab4131ccca493d9eec",
   verification_status: "official_source_acquired",
   privacy_risk: "low",
-  publi…1501 tokens truncated…sh:
+  public_visibility: "publishable",
+});
+
+const commissionIvLaterCandidate = requireCandidate({
+  id: "albo-2026-2860",
+  source: "Albo Pretorio Comune di Lamezia Terme",
+  source_url: OFFICIAL_ALBO_URL,
+  retrieved_at: SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  publication_number: "2026/2860",
+  publication_start: "2026-09-04",
+  publication_end: "2026-09-11",
+  act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+  subject:
+    "Convocazione 4° Commissione Consiliare Permanente. Calendario lavori.",
+  document_url: COMMISSION_IV_LATER_NOTICE_URL,
+  content_hash:
+    "422e104e5b17eb72bcb036b6c4816cbc1ee7c1ac77a6b9f080c1a9c66b4c3f20",
+  verification_status: "official_source_acquired",
+  privacy_risk: "low",
+  public_visibility: "publishable",
+});
+
+const commissionsIiiIvJointCandidate = requireCandidate({
+  id: "albo-2026-2861",
+  source: "Albo Pretorio Comune di Lamezia Terme",
+  source_url: OFFICIAL_ALBO_URL,
+  retrieved_at: SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  publication_number: "2026/2861",
+  publication_start: "2026-09-04",
+  publication_end: "2026-09-11",
+  act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+  subject: "Convocazione congiunta 3° e 4° Commissione Consiliare Permanente.",
+  document_url: COMMISSIONS_III_IV_JOINT_NOTICE_URL,
+  content_hash:
+    "1035de7c0cd5355d2d68dfeef8833c838d9e2a8a3ae5e4338f8abd3b5c7f90f7",
+  verification_status: "official_source_acquired",
+  privacy_risk: "low",
+  public_visibility: "publishable",
+});
+
+const commissionIiiGuarantorCandidate = requireCandidate({
+  id: "albo-2026-2879",
+  source: "Albo Pretorio Comune di Lamezia Terme",
+  source_url: OFFICIAL_ALBO_URL,
+  retrieved_at: MID_SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  publication_number: "2026/2879",
+  publication_start: "2026-09-09",
+  publication_end: "2026-09-16",
+  act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+  subject: "Convocazione 3° Commissione Consiliare Permanente.",
+  document_url: COMMISSION_III_GUARANTOR_NOTICE_URL,
+  content_hash:
+    "04f12caf167315030334618ea41d7e5091cf271b75baf33da58cccb1e35326c9",
+  verification_status: "official_source_acquired",
+  privacy_risk: "low",
+  public_visibility: "publishable",
+});
+
+const commissionIvMidSeptemberCandidate = requireCandidate({
+  id: "albo-2026-2925",
+  source: "Albo Pretorio Comune di Lamezia Terme",
+  source_url: OFFICIAL_ALBO_URL,
+  retrieved_at: MID_SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  publication_number: "2026/2925",
+  publication_start: "2026-09-11",
+  publication_end: "2026-09-18",
+  act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+  subject:
+    "Convocazione 4° Commissione Consiliare Permanente. Calendario lavori.",
+  document_url: COMMISSION_IV_MID_SEPTEMBER_NOTICE_URL,
+  content_hash:
+    "5a9d168246b9a4ed62e13c53e6a1106415f2c5d7c8825ea8d439ce165deaa500",
+  verification_status: "official_source_acquired",
+  privacy_risk: "low",
+  public_visibility: "publishable",
+});
+
+const commissionIiiMidSeptemberCandidate = requireCandidate({
+  id: "albo-2026-2926",
+  source: "Albo Pretorio Comune di Lamezia Terme",
+  source_url: OFFICIAL_ALBO_URL,
+  retrieved_at: MID_SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  publication_number: "2026/2926",
+  publication_start: "2026-09-11",
+  publication_end: "2026-09-18",
+  act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+  subject:
+    "Convocazione 3° Commissione Consiliare Permanente. Calendario lavori.",
+  document_url: COMMISSION_III_MID_SEPTEMBER_NOTICE_URL,
+  content_hash:
+    "fc6d1aaf789ee6902f85d537cd5b8dde937ea9e62573eacf8c75fd84d0c14117",
+  verification_status: "official_source_acquired",
+  privacy_risk: "low",
+  public_visibility: "publishable",
+});
+
+const commissionVSeptember17Notice = lateSeptemberNotice({
+  publicationNumber: "2026/2953",
+  publicationStart: "2026-09-15",
+  publicationEnd: "2026-09-22",
+  subject: "Convocazione 5° Commissione Consiliare Permante.",
+  sourceContentHash:
+    "a0847f430a5d647392679397388a437ab59552a0c8703b1b53c7b1d7ad43e451",
+  documentSha256:
+    "57731fbea7c4cdd31d8ff82175a0f84fc4fb053c0d71cb073d00ce38b33c74b5",
+});
+
+const commissionIiSeptemberCalendarNotice = lateSeptemberNotice({
+  publicationNumber: "2026/2959",
+  publicationStart: "2026-09-15",
+  publicationEnd: "2026-09-22",
+  subject:
+    "Convocazione 2° Commissione Consiliare Permanente. Calendario lavori.",
+  sourceContentHash:
+    "91111c510f5fd5aa973bd579d24a595d3cf54e0ebb4a66fee237c167b599c237",
+  documentSha256:
+    "674f8c685f04e85674e4530e180cc45bca76b0256d06397040c2a024afb8f440",
+});
+
+const commissionIiiSeptember18Notice = lateSeptemberNotice({
+  publicationNumber: "2026/2960",
+  publicationStart: "2026-09-15",
+  publicationEnd: "2026-09-22",
+  subject: "Convocazione 3° Commissione Consiliare Permanente.",
+  sourceContentHash:
+    "30980bcc9f5acb9173fe1bab42601c7999edfa30e72e0341ac8143c11fb59317",
+  documentSha256:
+    "f311abbc9e4c6e3d0b9cfe4d4d0225548be713cef74686ec2556148e8c1901e5",
+});
+
+const commissionISeptemberCalendarNotice = lateSeptemberNotice({
+  publicationNumber: "2026/2971",
+  publicationStart: "2026-09-16",
+  publicationEnd: "2026-09-23",
+  subject:
+    "Convocazione 1° Commissione Consiliare Permanente. Calendario lavori.",
+  sourceContentHash:
+    "6db758ff5ddab2f37c7db4442641b0e75481ddfd9b201d9738a7579cd414c1f5",
+  documentSha256:
+    "08f1075950b3e90994c2c5353cb0b1dc0992a4c6f4d55b27ba2e5ddcb99f5c40",
+});
+
+const commissionIvSeptemberCalendarNotice = lateSeptemberNotice({
+  publicationNumber: "2026/2981",
+  publicationStart: "2026-09-17",
+  publicationEnd: "2026-09-24",
+  subject:
+    "Convocazione 4° Commissione Consiliare Permanente. Calendario lavori.",
+  sourceContentHash:
+    "a6a45d08d063c993b69995557a4a82417c4fba918de3315260a189bb2a78c38f",
+  documentSha256:
+    "588fe94ce804d0f1699cb42f41eee4390e4ecb3f3fab21379b100b5c84e3e4eb",
+});
+
+const commissionVSeptember21Notice = lateSeptemberNotice({
+  publicationNumber: "2026/2986",
+  publicationStart: "2026-09-17",
+  publicationEnd: "2026-09-24",
+  subject: "Convocazione 5° Commissione Consiliare Permanente.",
+  sourceContentHash:
     "6b5898f02ec82e8f3a587c49491033d0945396b9589c5d1584da4d2002205ca6",
   documentSha256:
     "b23e5a278fa5550657c3804e2a60a37ad09a1bdad2efcff6a7ece4f68a6b15e1",
