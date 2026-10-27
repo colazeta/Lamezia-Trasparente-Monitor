@@ -304,11 +304,19 @@ describe("councilSessionV0", () => {
     expect(session?.sourceLink.value).toBeNull();
     expect(session?.liveStreaming.value).toBeNull();
     expect(session?.recording.value).toBeNull();
-    expect(session?.contextResearch.articles).toHaveLength(1);
+    expect(session?.contextResearch.articles).toHaveLength(2);
     expect(session?.contextResearch.articles[0]).toMatchObject({
       publisher: "il Lametino",
       publishedAt: "2026-10-22",
       relationship: "same_session",
+    });
+    expect(session?.contextResearch.articles[1]).toMatchObject({
+      publisher: "Lamezia Oggi",
+      publishedAt: "2026-10-22",
+      relationship: "same_session",
+      relevanceNote: expect.stringContaining(
+        "non costituisce una conferma indipendente",
+      ),
     });
     expect(session?.contextResearch.editorialAgenda).toEqual([
       expect.objectContaining({
@@ -319,6 +327,9 @@ describe("councilSessionV0", () => {
     ]);
     expect(session?.scheduledAt.limit).toMatch(
       /data dell'articolo non viene usata come data della seduta/i,
+    );
+    expect(session?.dataLimits.value?.join(" ")).toMatch(
+      /non vengono trattati come conferme indipendenti/i,
     );
   });
 
