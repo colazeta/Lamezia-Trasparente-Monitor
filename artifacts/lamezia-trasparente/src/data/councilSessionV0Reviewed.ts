@@ -70,6 +70,8 @@ const COMMISSION_I_OCTOBER_22_LAMETINO_URL =
   "https://www.lametino.it/ultime/lamezia-consiglieri-di-opposizione-lavori-fermi-in-i-commissione-citta-non-puo-continuare-a-pagare-scontri-nel-centrodestra.html";
 const COMMISSION_II_OCTOBER_26_LAMETINO_URL =
   "https://www.lametino.it/ultime/lamezia-settimana-cruciale-per-la-commissione-bilancio-prima-del-consiglio-su-piano-di-riequilibrio-e-consolidato.html";
+const COMMISSION_II_OCTOBER_25_LAMEZIAINFORMA_URL =
+  "https://www.lameziainforma.it/politica/2026/10/25/oltre-a-consolidato-2025-e-piano-di-riequilibrio-malumori-politici-e-question-time-ricorsivi-in-via-perugini/69907/amp/";
 const MUNICIPAL_ALBO_DOCUMENTS_URL =
   "https://www.comune.lamezia-terme.cz.it/it/documenti_pubblici/atti-di-albo-pretorio";
 const VIA_TRENTO_ROADWORKS_LAMETINO_URL =
@@ -2894,9 +2896,9 @@ const commissionIIOctoberEditorialCycle: CouncilSessionV0 = {
   isDemoFixture: false,
   contextResearch: {
     status: "reviewed_matches",
-    checkedAt: "2026-10-26T23:40:00+01:00",
+    checkedAt: "2026-10-27T06:25:00+01:00",
     searchNote:
-      "Parallel Search e la verifica diretta di Comune, Albo, testate locali e canali audiovisivi indicizzati hanno individuato un articolo sufficientemente preciso sul calendario di un ciclo della II Commissione. Il nuovo Albo dinamico non ha restituito un atto istituzionale acquisibile o indicizzato: le date e gli orari riportati dalla stampa restano soltanto indizi di ricerca e non sono presentati come dati ufficiali delle sedute. Organo, programmazione, sede, ordine del giorno, svolgimento ed esiti restano da verificare su fonte istituzionale.",
+      "Parallel Search e la verifica diretta di Comune, Albo, testate locali e canali audiovisivi indicizzati hanno individuato due articoli pertinenti ai lavori della II Commissione. LameziaInforma del 25 ottobre collega Bilancio consolidato e Piano di riequilibrio alla Commissione, ma non identifica una seduta e presenta una ricostruzione cronologica non pienamente coerente con il calendario pubblicato da il Lametino il giorno successivo. Il nuovo Albo dinamico non ha restituito un atto istituzionale acquisibile o indicizzato: date e orari riportati dalla stampa restano soltanto indizi di ricerca. Organo, programmazione, sede, ordine del giorno, svolgimento ed esiti restano da verificare su fonte istituzionale.",
     articles: [
       {
         title:
@@ -2907,24 +2909,41 @@ const commissionIIOctoberEditorialCycle: CouncilSessionV0 = {
         relationship: "possible_same_session",
         relevanceNote:
           "L'articolo attribuisce alla II Commissione un calendario su tre giornate e riporta temi finanziari distintivi, dichiarando di ricavarli da un avviso di convocazione. Poiché l'atto istituzionale originale non è stato acquisito, il collegamento resta possibile e non certifica convocazione, date, orari, ordine del giorno, svolgimento, votazioni o esiti.",
-        reviewedAt: "2026-10-26T23:40:00+01:00",
+        reviewedAt: "2026-10-27T06:25:00+01:00",
+      },
+      {
+        title:
+          "Oltre a consolidato 2025 e piano di riequilibrio, malumori politici e question time ricorsivi in via Perugini",
+        url: COMMISSION_II_OCTOBER_25_LAMEZIAINFORMA_URL,
+        publisher: "LameziaInforma",
+        publishedAt: "2026-10-25",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo collega espressamente Bilancio consolidato 2025 e genesi del Piano di riequilibrio ai lavori della II Commissione, ma non identifica una singola seduta. La formulazione secondo cui i temi sarebbero già passati in Commissione non è corroborata da un atto istituzionale acquisito e non è pienamente coerente con il calendario editoriale pubblicato il giorno successivo; non prova trattazione, voto o esito.",
+        reviewedAt: "2026-10-27T06:25:00+01:00",
       },
     ],
     media: [],
     editorialAgenda: [
       {
         title: "Relazione sul Piano di riequilibrio finanziario pluriennale",
-        sourceUrls: [COMMISSION_II_OCTOBER_26_LAMETINO_URL],
+        sourceUrls: [
+          COMMISSION_II_OCTOBER_26_LAMETINO_URL,
+          COMMISSION_II_OCTOBER_25_LAMEZIAINFORMA_URL,
+        ],
         confidence: "medium",
         reason:
-          "Il tema è riportato espressamente dall'unica fonte editoriale precisa individuata. In assenza dell'avviso istituzionale resta un tema emerso dalla copertura e non prova iscrizione all'ordine del giorno, trattazione o esito.",
+          "Il tema è riportato espressamente da entrambe le fonti editoriali, ma la loro cronologia non è pienamente coerente. In assenza dell'avviso istituzionale resta un tema emerso dalla copertura e non prova iscrizione all'ordine del giorno, trattazione o esito.",
       },
       {
         title: "Bilancio consolidato dell'esercizio 2025",
-        sourceUrls: [COMMISSION_II_OCTOBER_26_LAMETINO_URL],
+        sourceUrls: [
+          COMMISSION_II_OCTOBER_26_LAMETINO_URL,
+          COMMISSION_II_OCTOBER_25_LAMEZIAINFORMA_URL,
+        ],
         confidence: "medium",
         reason:
-          "La testata associa il tema alla proposta di deliberazione consiliare n. 2711 del 5 ottobre 2026, ma l'atto di convocazione non è stato acquisito e il riferimento non viene trasferito nei campi ufficiali.",
+          "Entrambe le testate associano il tema alla II Commissione, ma la fonte del 25 ottobre lo descrive come già passato mentre quella del 26 lo colloca nel calendario successivo. L'atto di convocazione non è stato acquisito e nessun riferimento viene trasferito nei campi ufficiali.",
       },
       {
         title: "Ratifica di variazioni al Bilancio 2026–2028",
@@ -3010,7 +3029,7 @@ const commissionIIOctoberEditorialCycle: CouncilSessionV0 = {
   lastCheckedAt: {
     key: "lastCheckedAt",
     label: "Ultimo controllo",
-    value: "2026-10-26T23:40:00+01:00",
+    value: "2026-10-27T06:25:00+01:00",
     sourceStatus: "verificato",
     sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
     limit:
@@ -3023,7 +3042,8 @@ const commissionIIOctoberEditorialCycle: CouncilSessionV0 = {
       "Le date e gli orari pubblicati dalla testata non vengono presentati come dati ufficiali delle sedute.",
       "Non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione al ciclo; il nuovo Albo dinamico non ha restituito un atto utile durante il controllo diretto.",
       "Date, orari, sede, ordine del giorno, stato, streaming, registrazione e verbale restano non verificati o non rilevati secondo il campo.",
-      "L'articolo collegato è una fonte editoriale e non certifica programmazione, svolgimento, completezza, presenze, votazioni o risultati.",
+      "Gli articoli collegati sono fonti editoriali e non certificano programmazione, svolgimento, completezza, presenze, votazioni o risultati.",
+      "Le due fonti editoriali non sono pienamente coerenti sulla cronologia del Bilancio consolidato e non vengono usate per stabilire se il tema fosse già passato o ancora da esaminare in Commissione.",
       "I temi riportati dalla copertura restano nell'agenda editoriale separata e dovranno essere riconciliati se emergerà un atto istituzionale.",
     ],
     sourceStatus: "parziale",
