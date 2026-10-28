@@ -154,6 +154,11 @@ const eu = (code: OfficialFallbackDataThemeCode): ProposalPaSubjectRef => ({
 });
 
 const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
+  "Sicurezza pubblica e organici del Commissariato": {
+    primary: ps("8"),
+    mappingNote:
+      "L\u0027organico del Commissariato di Polizia di Stato attiene alla sicurezza pubblica; la classificazione non assegna competenze istituzionali.",
+  },
   "Sicurezza e decoro urbano": {
     primary: ps("8"),
     secondary: [ps("5")],
