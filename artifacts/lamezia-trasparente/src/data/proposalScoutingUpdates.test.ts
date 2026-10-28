@@ -58,7 +58,7 @@ describe("incremental proposal scouting updates", () => {
       (proposal) => proposal.id === PROGETTO_VITA_ID,
     );
     expect(matches).toHaveLength(1);
-    expect(matches[0].lastUpdated).toBe("2026-08-14");
+    expect(matches[0].lastUpdated).toBe("2026-10-26");
     expect(
       matches[0].events.some(
         (event) =>
