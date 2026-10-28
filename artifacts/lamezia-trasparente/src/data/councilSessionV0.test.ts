@@ -279,6 +279,11 @@ describe("councilSessionV0", () => {
         publishedAt: "2026-10-27",
         relationship: "agenda_item",
       }),
+      expect.objectContaining({
+        publisher: "Gazzetta del Sud",
+        publishedAt: "2026-10-27",
+        relationship: "agenda_item",
+      }),
     ]);
     expect(session?.contextResearch.media).toEqual([]);
     expect(session?.contextResearch.editorialAgenda).toHaveLength(4);
@@ -296,7 +301,7 @@ describe("councilSessionV0", () => {
       /non sono pienamente coerenti sulla cronologia/i,
     );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
-      /NtaCalabria ripete la ricostruzione.*senza identificare una singola seduta/i,
+      /Gazzetta del Sud aggiunge una copertura distinta.*non identifica una singola seduta/i,
     );
   });
 
