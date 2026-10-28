@@ -198,7 +198,7 @@ describe("councilSessionV0", () => {
   });
 
   it("publishes source-traceable records for both council and commission notices", () => {
-    expect(councilSessionV0ReviewedRecords).toHaveLength(62);
+    expect(councilSessionV0ReviewedRecords).toHaveLength(63);
     expect(
       new Set(councilSessionV0ReviewedRecords.map((item) => item.kind)),
     ).toEqual(new Set(["council", "commission"]));
@@ -213,6 +213,7 @@ describe("councilSessionV0", () => {
       } else {
         expect(
           new Set([
+            "editorial-consiglio-aperto-scordovillo-2026-11",
             "editorial-commissione-i-sfiducia-presidente-2026-10",
             "editorial-commissione-ii-ciclo-bilancio-2026-10",
           ]),
@@ -249,6 +250,42 @@ describe("councilSessionV0", () => {
         expect(Date.parse(media.reviewedAt)).not.toBeNaN();
       }
     }
+  });
+
+  it("keeps the Scordovillo open-council signal editorial-only until an official notice is acquired", () => {
+    const session = findCouncilSessionV0ReviewedRecord(
+      "editorial-consiglio-aperto-scordovillo-2026-11",
+    );
+
+    expect(session?.provenance).toBeUndefined();
+    expect(session?.kind).toBe("council");
+    expect(session?.scheduledAt.value).toBeNull();
+    expect(session?.sessionStatus.value).toBe("non_verificata");
+    expect(session?.agenda.value).toBeNull();
+    expect(session?.sourceLink.value).toBeNull();
+    expect(session?.liveStreaming.value).toBeNull();
+    expect(session?.recording.value).toBeNull();
+    expect(session?.contextResearch.articles).toEqual([
+      expect.objectContaining({
+        publisher: "Gazzetta del Sud",
+        publishedAt: "2026-10-28",
+        relationship: "possible_same_session",
+      }),
+    ]);
+    expect(session?.contextResearch.media).toEqual([]);
+    expect(session?.contextResearch.editorialAgenda).toEqual([
+      expect.objectContaining({
+        title:
+          "Superamento dell'insediamento di Scordovillo e ricollocazione dei residenti",
+        confidence: "medium",
+      }),
+    ]);
+    expect(session?.scheduledAt.limit).toMatch(
+      /16 novembre.*soltanto per la ricerca/i,
+    );
+    expect(session?.dataLimits.value?.join(" ")).toMatch(
+      /non certifica programmazione, svolgimento/i,
+    );
   });
 
   it("keeps the October II Commission cycle editorial-only until an official notice is acquired", () => {

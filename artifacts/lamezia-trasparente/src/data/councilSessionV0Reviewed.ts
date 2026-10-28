@@ -80,6 +80,8 @@ const COMMISSION_II_OCTOBER_27_NTACALABRIA_URL =
   "https://www.ntacalabria.it/lamezia-terme/a-lamezia-terme-bilancio-consolidato-e-riequilibrio.html";
 const COMMISSION_II_OCTOBER_27_GAZZETTA_URL =
   "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2026/10/27/lamezia-consolidato-e-piano-di-riequilibrio-infiammano-lautunno-politico-0d9cc6d7-3b68-449b-8f5a-e166a8faad22/";
+const SCORDOVILLO_OPEN_COUNCIL_OCTOBER_28_GAZZETTA_URL =
+  "https://catanzaro.gazzettadelsud.it/articoli/politica/2026/10/28/lamezia-consiglio-comunale-aperto-sullo-sgombero-di-scordovillo-18a052db-3c86-4127-9b75-a085d97241e1/";
 const MUNICIPAL_ALBO_DOCUMENTS_URL =
   "https://www.comune.lamezia-terme.cz.it/it/documenti_pubblici/atti-di-albo-pretorio";
 const VIA_TRENTO_ROADWORKS_LAMETINO_URL =
@@ -2925,6 +2927,130 @@ const commissionIOctober22EditorialSession: CouncilSessionV0 = {
   },
 };
 
+const scordovilloOpenCouncilEditorialSignal: CouncilSessionV0 = {
+  id: "editorial-consiglio-aperto-scordovillo-2026-11",
+  kind: "council",
+  isDemoFixture: false,
+  contextResearch: {
+    status: "reviewed_matches",
+    checkedAt: "2026-10-28T23:31:00+01:00",
+    searchNote:
+      "Parallel Search e la verifica diretta di Comune, pagina istituzionale del Consiglio, Albo corrente, Albo storico, testate locali e canali audiovisivi indicizzati hanno individuato un articolo di Gazzetta del Sud del 28 ottobre che segnala un possibile Consiglio comunale aperto su Scordovillo e riferisce la data del 16 novembre sulla base di dichiarazioni social di un consigliere. Non è stata acquisita una convocazione, un avviso o un allegato istituzionale associabile: la data resta soltanto un indizio per i prossimi controlli e non viene pubblicata come data ufficiale della seduta.",
+    articles: [
+      {
+        title:
+          "Lamezia, consiglio comunale aperto sullo sgombero di Scordovillo",
+        url: SCORDOVILLO_OPEN_COUNCIL_OCTOBER_28_GAZZETTA_URL,
+        publisher: "Gazzetta del Sud",
+        publishedAt: "2026-10-28",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "L'articolo identifica l'organo, il formato aperto e il tema distintivo, ma attribuisce la data del 16 novembre a dichiarazioni social di un consigliere. In assenza dell'atto istituzionale il collegamento resta possibile e non certifica convocazione, data, ora, sede, ordine del giorno, svolgimento, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-10-28T23:31:00+01:00",
+      },
+    ],
+    media: [],
+    editorialAgenda: [
+      {
+        title:
+          "Superamento dell'insediamento di Scordovillo e ricollocazione dei residenti",
+        sourceUrls: [SCORDOVILLO_OPEN_COUNCIL_OCTOBER_28_GAZZETTA_URL],
+        confidence: "medium",
+        reason:
+          "Il tema è il centro esplicito della copertura editoriale, ma non è stato acquisito un ordine del giorno istituzionale. Resta quindi un tema emerso dalla copertura e non prova iscrizione, trattazione, partecipazione o esito.",
+      },
+    ],
+  },
+  title: {
+    key: "title",
+    label: "Titolo",
+    value: "Consiglio comunale aperto su Scordovillo — segnalazione editoriale",
+    sourceStatus: "da_verificare",
+    limit:
+      "Organo, formato e tema sono indicati da una fonte editoriale; manca una pubblicazione istituzionale acquisita che consenta di verificare la convocazione.",
+  },
+  scheduledAt: {
+    key: "scheduledAt",
+    label: "Data e ora",
+    value: null,
+    sourceStatus: "da_verificare",
+    limit:
+      "La data del 16 novembre è riportata dalla testata sulla base di dichiarazioni social e viene usata soltanto per la ricerca. Non è disponibile da una fonte istituzionale acquisita e non viene presentata come data ufficiale della seduta.",
+  },
+  sessionStatus: {
+    key: "sessionStatus",
+    label: "Stato seduta",
+    value: "non_verificata",
+    sourceStatus: "da_verificare",
+    limit:
+      "La copertura editoriale non certifica convocazione, programmazione, svolgimento, chiusura, rinvio o altro esito ufficiale.",
+  },
+  agenda: {
+    key: "agenda",
+    label: "Ordine del giorno",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Ordine del giorno istituzionale non acquisito. Il tema riportato dalla stampa è esposto soltanto nella sezione separata “Temi emersi dalla copertura”.",
+  },
+  sourceLink: {
+    key: "sourceLink",
+    label: "Fonte",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Non è stata acquisita una pubblicazione istituzionale associabile con precisione al Consiglio aperto segnalato.",
+  },
+  liveStreaming: {
+    key: "liveStreaming",
+    label: "Streaming live",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Nessuna diretta istituzionale associabile con precisione è stata individuata.",
+  },
+  recording: {
+    key: "recording",
+    label: "Registrazione",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Nessuna registrazione istituzionale associabile con precisione è stata individuata.",
+  },
+  minutesOrReport: {
+    key: "minutesOrReport",
+    label: "Verbale o resoconto",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Nessun verbale o resoconto istituzionale associabile con precisione è stato individuato.",
+  },
+  lastCheckedAt: {
+    key: "lastCheckedAt",
+    label: "Ultimo controllo",
+    value: "2026-10-28T23:31:00+01:00",
+    sourceStatus: "verificato",
+    sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
+    limit:
+      "Indica quando sono state ricontrollate le fonti, non una conferma istituzionale della seduta segnalata.",
+  },
+  dataLimits: {
+    key: "dataLimits",
+    label: "Limiti del dato",
+    value: [
+      "La data del 16 novembre non è stata verificata su una fonte istituzionale e non viene presentata come data ufficiale della seduta.",
+      "Non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione al Consiglio aperto segnalato; il nuovo Albo dinamico ha restituito soltanto la pagina generale durante il controllo diretto.",
+      "Data, ora, sede, ordine del giorno, stato, streaming, registrazione e verbale restano non verificati o non rilevati secondo il campo.",
+      "L'articolo collegato è una fonte editoriale e non certifica programmazione, svolgimento, completezza, partecipanti, votazioni o risultati.",
+      "Il tema riportato dalla copertura resta nell'agenda editoriale separata e dovrà essere riconciliato se emergerà un atto istituzionale.",
+    ],
+    sourceStatus: "parziale",
+    sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
+    limit:
+      "Scheda prudenziale basata su una corrispondenza editoriale esplicita; tutti i campi ufficiali restano separati e non confermati.",
+  },
+};
+
 const commissionIIOctoberEditorialCycle: CouncilSessionV0 = {
   id: "editorial-commissione-ii-ciclo-bilancio-2026-10",
   kind: "commission",
@@ -3114,6 +3240,7 @@ const commissionIIOctoberEditorialCycle: CouncilSessionV0 = {
 };
 
 export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
+  scordovilloOpenCouncilEditorialSignal,
   commissionIIOctoberEditorialCycle,
   commissionIOctober22EditorialSession,
   septemberCommissionSession({
