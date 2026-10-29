@@ -362,7 +362,7 @@ describe("councilSessionV0", () => {
     expect(session?.sourceLink.value).toBeNull();
     expect(session?.liveStreaming.value).toBeNull();
     expect(session?.recording.value).toBeNull();
-    expect(session?.contextResearch.articles).toHaveLength(4);
+    expect(session?.contextResearch.articles).toHaveLength(5);
     expect(session?.contextResearch.articles[0]).toMatchObject({
       publisher: "il Lametino",
       publishedAt: "2026-10-22",
@@ -392,6 +392,14 @@ describe("councilSessionV0", () => {
         "non costituisce una conferma indipendente",
       ),
     });
+    expect(session?.contextResearch.articles[4]).toMatchObject({
+      publisher: "Gazzetta del Sud",
+      publishedAt: "2026-10-23",
+      relationship: "same_session",
+      relevanceNote: expect.stringContaining(
+        "non certifica convocazione",
+      ),
+    });
     expect(session?.contextResearch.editorialAgenda).toEqual([
       expect.objectContaining({
         title:
@@ -403,10 +411,10 @@ describe("councilSessionV0", () => {
       /data dell'articolo non viene usata come data della seduta/i,
     );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
-      /non vengono trattati come conferme indipendenti/i,
+      /non vengono trattati come conferme istituzionali indipendenti/i,
     );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
-      /non viene usata per inferire una votazione o un risultato ufficiale/i,
+      /non vengono usate per inferire una votazione o un risultato ufficiale/i,
     );
   });
 
