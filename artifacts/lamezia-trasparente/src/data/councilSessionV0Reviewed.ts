@@ -82,6 +82,8 @@ const COMMISSION_II_OCTOBER_27_NTACALABRIA_URL =
   "https://www.ntacalabria.it/lamezia-terme/a-lamezia-terme-bilancio-consolidato-e-riequilibrio.html";
 const COMMISSION_II_OCTOBER_27_GAZZETTA_URL =
   "https://catanzaro.gazzettadelsud.it/articoli/cronaca/2026/10/27/lamezia-consolidato-e-piano-di-riequilibrio-infiammano-lautunno-politico-0d9cc6d7-3b68-449b-8f5a-e166a8faad22/";
+const COMMISSION_II_OCTOBER_27_ITALY_TODAY_URL =
+  "https://italytoday.net/lamezia-consolidato-e-piano-di-riequilibrio-infiammano-lautunno-politico/";
 const SCORDOVILLO_OPEN_COUNCIL_OCTOBER_28_GAZZETTA_URL =
   "https://catanzaro.gazzettadelsud.it/articoli/politica/2026/10/28/lamezia-consiglio-comunale-aperto-sullo-sgombero-di-scordovillo-18a052db-3c86-4127-9b75-a085d97241e1/";
 const MUNICIPAL_ALBO_DOCUMENTS_URL =
@@ -3084,9 +3086,9 @@ const commissionIIOctoberEditorialCycle: CouncilSessionV0 = {
   isDemoFixture: false,
   contextResearch: {
     status: "reviewed_matches",
-    checkedAt: "2026-10-28T11:56:00+01:00",
+    checkedAt: "2026-10-29T17:55:00+01:00",
     searchNote:
-      "Parallel Search e la verifica diretta di Comune, Albo, testate locali e canali audiovisivi indicizzati hanno individuato quattro articoli pertinenti ai lavori della II Commissione. LameziaInforma del 25 ottobre, NtaCalabria del 27 ottobre e Gazzetta del Sud del 27 ottobre descrivono il Bilancio consolidato come già esaminato dalla Commissione, ma non identificano una singola seduta e non verificano su fonte istituzionale il calendario pubblicato da il Lametino il 26 ottobre. Il nuovo Albo dinamico non ha restituito un atto istituzionale acquisibile o indicizzato: date e orari riportati dalla stampa restano soltanto indizi di ricerca. Organo, programmazione, sede, ordine del giorno, svolgimento ed esiti restano da verificare su fonte istituzionale.",
+      "Parallel Search e la verifica diretta di Comune, Albo, testate locali e canali audiovisivi indicizzati hanno individuato cinque articoli pertinenti ai lavori della II Commissione. LameziaInforma del 25 ottobre, NtaCalabria del 27 ottobre e Gazzetta del Sud del 27 ottobre descrivono il Bilancio consolidato come già esaminato dalla Commissione, ma non identificano una singola seduta e non verificano su fonte istituzionale il calendario pubblicato da il Lametino il 26 ottobre. Italy Today ripubblica il 27 ottobre titolo e passaggi dell'articolo di Gazzetta del Sud, esponendo la fonte originale: viene conservato come collegamento distinto ma non come conferma indipendente. Il nuovo Albo dinamico non ha restituito un atto istituzionale acquisibile o indicizzato: date e orari riportati dalla stampa restano soltanto indizi di ricerca. Organo, programmazione, sede, ordine del giorno, svolgimento ed esiti restano da verificare su fonte istituzionale.",
     articles: [
       {
         title:
@@ -3131,6 +3133,17 @@ const commissionIIOctoberEditorialCycle: CouncilSessionV0 = {
           "L'articolo associa il Bilancio consolidato 2025 e il Piano di riequilibrio ai lavori della II Commissione, ma non identifica una singola seduta. La formulazione secondo cui il consolidato sarebbe già passato in Commissione resta una ricostruzione editoriale e non prova programmazione, trattazione, voto o esito ufficiale.",
         reviewedAt: "2026-10-28T11:56:00+01:00",
       },
+      {
+        title:
+          "Lamezia, consolidato e Piano di riequilibrio “infiammano” l’autunno politico",
+        url: COMMISSION_II_OCTOBER_27_ITALY_TODAY_URL,
+        publisher: "Italy Today",
+        publishedAt: "2026-10-27",
+        relationship: "agenda_item",
+        relevanceNote:
+          "La pagina ripubblica titolo e passaggi dell'articolo di Gazzetta del Sud e ne espone il link come fonte originale. Associa Bilancio consolidato 2025 e Piano di riequilibrio alla II Commissione, ma non identifica una singola seduta: è un collegamento distinto, non una conferma indipendente, e non prova programmazione, trattazione, voto o esito ufficiale.",
+        reviewedAt: "2026-10-29T17:55:00+01:00",
+      },
     ],
     media: [],
     editorialAgenda: [
@@ -3141,6 +3154,7 @@ const commissionIIOctoberEditorialCycle: CouncilSessionV0 = {
           COMMISSION_II_OCTOBER_25_LAMEZIAINFORMA_URL,
           COMMISSION_II_OCTOBER_27_NTACALABRIA_URL,
           COMMISSION_II_OCTOBER_27_GAZZETTA_URL,
+          COMMISSION_II_OCTOBER_27_ITALY_TODAY_URL,
         ],
         confidence: "medium",
         reason:
@@ -3153,6 +3167,7 @@ const commissionIIOctoberEditorialCycle: CouncilSessionV0 = {
           COMMISSION_II_OCTOBER_25_LAMEZIAINFORMA_URL,
           COMMISSION_II_OCTOBER_27_NTACALABRIA_URL,
           COMMISSION_II_OCTOBER_27_GAZZETTA_URL,
+          COMMISSION_II_OCTOBER_27_ITALY_TODAY_URL,
         ],
         confidence: "medium",
         reason:
@@ -3242,7 +3257,7 @@ const commissionIIOctoberEditorialCycle: CouncilSessionV0 = {
   lastCheckedAt: {
     key: "lastCheckedAt",
     label: "Ultimo controllo",
-    value: "2026-10-28T11:56:00+01:00",
+    value: "2026-10-29T17:55:00+01:00",
     sourceStatus: "verificato",
     sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
     limit:
@@ -3256,7 +3271,7 @@ const commissionIIOctoberEditorialCycle: CouncilSessionV0 = {
       "Non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione al ciclo; il nuovo Albo dinamico non ha restituito un atto utile durante il controllo diretto.",
       "Date, orari, sede, ordine del giorno, stato, streaming, registrazione e verbale restano non verificati o non rilevati secondo il campo.",
       "Gli articoli collegati sono fonti editoriali e non certificano programmazione, svolgimento, completezza, presenze, votazioni o risultati.",
-      "Le quattro fonti editoriali non sono pienamente coerenti sulla cronologia del Bilancio consolidato e non vengono usate per stabilire se il tema fosse già passato o ancora da esaminare in Commissione; NtaCalabria ripete la ricostruzione di LameziaInforma, mentre Gazzetta del Sud aggiunge una copertura distinta ma non identifica una singola seduta né fornisce prova istituzionale.",
+      "Le cinque pagine editoriali non sono pienamente coerenti sulla cronologia del Bilancio consolidato e non vengono usate per stabilire se il tema fosse già passato o ancora da esaminare in Commissione; NtaCalabria ripete la ricostruzione di LameziaInforma, mentre Italy Today ripubblica Gazzetta del Sud e non costituisce una conferma indipendente. Nessuna delle fonti identifica una singola seduta o fornisce prova istituzionale.",
       "I temi riportati dalla copertura restano nell'agenda editoriale separata e dovranno essere riconciliati se emergerà un atto istituzionale.",
     ],
     sourceStatus: "parziale",
