@@ -411,10 +411,10 @@ describe("councilSessionV0", () => {
       /data dell'articolo non viene usata come data della seduta/i,
     );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
-      /non vengono trattati come conferme indipendenti/i,
+      /non vengono trattati come conferme istituzionali indipendenti/i,
     );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
-      /non viene usata per inferire una votazione o un risultato ufficiale/i,
+      /non vengono usate per inferire una votazione o un risultato ufficiale/i,
     );
   });
 
