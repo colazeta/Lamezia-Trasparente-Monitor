@@ -208,6 +208,12 @@ const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
   "Sanità e rete ospedaliera": {
     primary: ps("2"),
   },
+  "Manutenzione stradale del rione Cafaldo": {
+    primary: ps("4"),
+    secondary: [ps("8")],
+    mappingNote:
+      "Il rifacimento del manto stradale riguarda Mobilità e trasporti; i rischi per la circolazione sono classificati anche in Giustizia e sicurezza pubblica. Il mapping non determina la competenza dell’ente destinatario.",
+  },
   "Scuola, clima e sicurezza": {
     primary: ps("1"),
     secondary: [ps("8")],
