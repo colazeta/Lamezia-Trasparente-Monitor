@@ -839,7 +839,7 @@ describe("councilSessionV0", () => {
     expect(october12Session?.contextResearch).toEqual(
       expect.objectContaining({
         status: "reviewed_matches",
-        checkedAt: "2026-10-23T17:27:41+02:00",
+        checkedAt: "2026-10-29T05:34:00+01:00",
         articles: [
           expect.objectContaining({
             title:
@@ -860,12 +860,23 @@ describe("councilSessionV0", () => {
               /Mimmo Gianturco.*non costituisce una conferma indipendente.*né certifica.*approvazione/is,
             ),
           }),
+          expect.objectContaining({
+            title:
+              "Lamezia Terme | Nuove regole per gli immobili comunali, più trasparenza e valorizzazione del patrimonio",
+            url: "https://lanovitaonline.it/lamezia-terme-nuove-regole-per-gli-immobili-comunali-piu-trasparenza-e-valorizzazione-del-patrimonio/",
+            publisher: "La Novità Online",
+            publishedAt: "2026-10-23",
+            relationship: "agenda_item",
+            relevanceNote: expect.stringMatching(
+              /non indica la data.*Lametino e City One.*non costituisce una conferma indipendente.*né certifica.*approvazione/is,
+            ),
+          }),
         ],
         media: [],
       }),
     );
     expect(october12Session?.contextResearch?.searchNote).toMatch(
-      /due articoli.*oltre la finestra ordinaria.*City One.*Mimmo Gianturco.*non sono conferme indipendenti.*Nessuna pagina indica la data.*`agenda_item`.*non `same_session`.*non provano.*approvazione.*Albo dinamico.*blocco applicativo/is,
+      /tre articoli.*oltre la finestra ordinaria.*City One.*La Novità Online.*stessa comunicazione.*non sono conferme indipendenti.*Nessuna pagina indica la data.*`agenda_item`.*non `same_session`.*non provano.*approvazione.*Albo dinamico.*blocco applicativo/is,
     );
 
     const october13Session = sessions.find(
@@ -874,13 +885,13 @@ describe("councilSessionV0", () => {
     expect(october13Session?.contextResearch).toEqual(
       expect.objectContaining({
         status: "checked_no_match",
-        checkedAt: "2026-10-23T17:27:41+02:00",
+        checkedAt: "2026-10-29T05:34:00+01:00",
         articles: [],
         media: [],
       }),
     );
     expect(october13Session?.contextResearch?.searchNote).toMatch(
-      /disciplinare.*rete stradale.*Non sono emersi.*due articoli.*23 ottobre.*distinto regolamento sui beni comunali.*12 ottobre/is,
+      /disciplinare.*rete stradale.*Non sono emersi.*tre articoli.*23 ottobre.*distinto regolamento sui beni comunali.*12 ottobre/is,
     );
   });
 
