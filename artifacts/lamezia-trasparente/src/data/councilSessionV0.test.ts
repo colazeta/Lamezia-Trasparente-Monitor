@@ -321,6 +321,14 @@ describe("councilSessionV0", () => {
         publishedAt: "2026-10-27",
         relationship: "agenda_item",
       }),
+      expect.objectContaining({
+        publisher: "Italy Today",
+        publishedAt: "2026-10-27",
+        relationship: "agenda_item",
+        relevanceNote: expect.stringContaining(
+          "non una conferma indipendente",
+        ),
+      }),
     ]);
     expect(session?.contextResearch.media).toEqual([]);
     expect(session?.contextResearch.editorialAgenda).toHaveLength(4);
@@ -338,7 +346,7 @@ describe("councilSessionV0", () => {
       /non sono pienamente coerenti sulla cronologia/i,
     );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
-      /Gazzetta del Sud aggiunge una copertura distinta.*non identifica una singola seduta/i,
+      /Italy Today ripubblica Gazzetta del Sud.*non costituisce una conferma indipendente/i,
     );
   });
 
