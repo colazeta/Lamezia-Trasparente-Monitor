@@ -362,7 +362,7 @@ describe("councilSessionV0", () => {
     expect(session?.sourceLink.value).toBeNull();
     expect(session?.liveStreaming.value).toBeNull();
     expect(session?.recording.value).toBeNull();
-    expect(session?.contextResearch.articles).toHaveLength(5);
+    expect(session?.contextResearch.articles).toHaveLength(6);
     expect(session?.contextResearch.articles[0]).toMatchObject({
       publisher: "il Lametino",
       publishedAt: "2026-10-22",
@@ -399,6 +399,12 @@ describe("councilSessionV0", () => {
       relevanceNote: expect.stringContaining(
         "non certifica convocazione",
       ),
+    });
+    expect(session?.contextResearch.articles[5]).toMatchObject({
+      publisher: "LameziaTerme.it",
+      publishedAt: "2026-10-22",
+      relationship: "same_session",
+      relevanceNote: expect.stringContaining("Comunicato Stampa"),
     });
     expect(session?.contextResearch.editorialAgenda).toEqual([
       expect.objectContaining({
