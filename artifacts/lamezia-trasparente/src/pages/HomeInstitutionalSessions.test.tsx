@@ -56,11 +56,11 @@ describe("HomeInstitutionalSessions", () => {
     expect(screen.getByText(/11 agosto 2026/i)).toBeInTheDocument();
     expect(screen.getByText(/10 agosto 2026/i)).toBeInTheDocument();
     expect(screen.getAllByText(/Ricerca contestuale eseguita/i)).toHaveLength(
-      63,
+      64,
     );
     expect(
       screen.getAllByText(/Stato della seduta non verificato/i),
-    ).toHaveLength(61);
+    ).toHaveLength(62);
     expect(screen.getByText(/Seduta sospesa/i)).toBeInTheDocument();
     expect(screen.getByText(/Seduta svolta/i)).toBeInTheDocument();
     expect(
@@ -73,7 +73,7 @@ describe("HomeInstitutionalSessions", () => {
     expect(
       screen.getByText(/Le date riportate nelle convocazioni sono verificate/i),
     ).toBeInTheDocument();
-    expect(screen.getAllByText(/Data e ora da verificare/i)).toHaveLength(3);
+    expect(screen.getAllByText(/Data e ora da verificare/i)).toHaveLength(4);
     expect(
       screen.getByText(
         /pubblicazioni 2026\/3262, 2026\/3190, 2026\/3197, 2026\/3198, 2026\/3152, 2026\/3157, 2026\/3151, 2026\/3129, 2026\/3127, 2026\/3090, 2026\/3091, 2026\/3089, 2026\/3097, 2026\/3011, 2026\/3043, 2026\/3012, 2026\/3001, 2026\/2986, 2026\/2960, 2026\/2981, 2026\/2959, 2026\/2971, 2026\/2953, 2026\/2925, 2026\/2926, 2026\/2879, 2026\/2860, 2026\/2859, 2026\/2861, 2026\/2840, 2026\/2788, 2026\/2648/i,
@@ -89,7 +89,7 @@ describe("HomeInstitutionalSessions", () => {
     expect(screen.getAllByText(/6 articoli · 0 video/i)).toHaveLength(2);
     expect(screen.getByText(/4 articoli · 0 video/i)).toBeInTheDocument();
     expect(screen.getAllByText(/3 articoli · 0 video/i)).toHaveLength(2);
-    expect(screen.getAllByText(/2 articoli · 0 video/i)).toHaveLength(3);
+    expect(screen.getAllByText(/2 articoli · 0 video/i)).toHaveLength(4);
     expect(screen.getAllByText(/1 articolo · 0 video/i)).toHaveLength(6);
     expect(screen.getAllByText(/0 articoli · 0 video/i)).toHaveLength(47);
     expect(
@@ -119,6 +119,7 @@ describe("HomeInstitutionalSessions", () => {
       .map((item) => item.closest("a")?.getAttribute("href"));
     expect(editorialLinks).toEqual(
       expect.arrayContaining([
+        "/convocazioni/editorial-consiglio-bilancio-riequilibrio-2026-11",
         "/convocazioni/editorial-consiglio-aperto-scordovillo-2026-11",
         "/convocazioni/editorial-commissione-ii-ciclo-bilancio-2026-10",
         "/convocazioni/editorial-commissione-i-sfiducia-presidente-2026-10",

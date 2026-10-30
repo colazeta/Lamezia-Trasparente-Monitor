@@ -92,6 +92,10 @@ const COMMISSION_II_OCTOBER_27_TV6ONAIR_URL =
   "https://tv6onair.com/tv6onair-lamezia-solidificato-e-piano-in-riequilibrio-infiammano-lautunno-politico/";
 const SCORDOVILLO_OPEN_COUNCIL_OCTOBER_28_GAZZETTA_URL =
   "https://catanzaro.gazzettadelsud.it/articoli/politica/2026/10/28/lamezia-consiglio-comunale-aperto-sullo-sgombero-di-scordovillo-18a052db-3c86-4127-9b75-a085d97241e1/";
+const SCORDOVILLO_OPEN_COUNCIL_OCTOBER_30_TV6ONAIR_URL =
+  "https://tv6onair.com/tv6onair-lamezia-insegnamento-schiuso-sullo-che-scordovillo/";
+const COUNCIL_NOVEMBER_3_LAMETINO_URL =
+  "https://www.lametino.it/ultime/lamezia-il-3-novembre-consiglio-comunale-fra-i-punti-approvazione-del-bilancio-consolidato-e-del-piano-di-riequilibrio.html";
 const MUNICIPAL_ALBO_DOCUMENTS_URL =
   "https://www.comune.lamezia-terme.cz.it/it/documenti_pubblici/atti-di-albo-pretorio";
 const VIA_TRENTO_ROADWORKS_LAMETINO_URL =
@@ -2992,9 +2996,9 @@ const scordovilloOpenCouncilEditorialSignal: CouncilSessionV0 = {
   isDemoFixture: false,
   contextResearch: {
     status: "reviewed_matches",
-    checkedAt: "2026-10-28T23:31:00+01:00",
+    checkedAt: "2026-10-30T23:27:00+01:00",
     searchNote:
-      "Parallel Search e la verifica diretta di Comune, pagina istituzionale del Consiglio, Albo corrente, Albo storico, testate locali e canali audiovisivi indicizzati hanno individuato un articolo di Gazzetta del Sud del 28 ottobre che segnala un possibile Consiglio comunale aperto su Scordovillo e riferisce la data del 16 novembre sulla base di dichiarazioni social di un consigliere. Non è stata acquisita una convocazione, un avviso o un allegato istituzionale associabile: la data resta soltanto un indizio per i prossimi controlli e non viene pubblicata come data ufficiale della seduta.",
+      "Parallel Search e la verifica diretta di Comune, pagina istituzionale del Consiglio, Albo corrente, Albo storico, testate locali e canali audiovisivi indicizzati hanno individuato l'articolo originale di Gazzetta del Sud del 28 ottobre, che segnala un possibile Consiglio comunale aperto su Scordovillo e riferisce la data del 16 novembre sulla base di dichiarazioni social di un consigliere, e una ripubblicazione TV6onAir del 30 ottobre che espone il collegamento alla fonte originale. Il mirror è conservato per tracciabilità ma non costituisce una conferma indipendente. Non è stata acquisita una convocazione, un avviso o un allegato istituzionale associabile: la data resta soltanto un indizio per i prossimi controlli e non viene pubblicata come data ufficiale della seduta.",
     articles: [
       {
         title:
@@ -3007,13 +3011,26 @@ const scordovilloOpenCouncilEditorialSignal: CouncilSessionV0 = {
           "L'articolo identifica l'organo, il formato aperto e il tema distintivo, ma attribuisce la data del 16 novembre a dichiarazioni social di un consigliere. In assenza dell'atto istituzionale il collegamento resta possibile e non certifica convocazione, data, ora, sede, ordine del giorno, svolgimento, partecipanti, votazioni o esiti.",
         reviewedAt: "2026-10-28T23:31:00+01:00",
       },
+      {
+        title: "TV6onAIR – Lamezia, insegnamento schiuso sullo che Scordovillo",
+        url: SCORDOVILLO_OPEN_COUNCIL_OCTOBER_30_TV6ONAIR_URL,
+        publisher: "TV6onAir",
+        publishedAt: "2026-10-30",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "La pagina ripubblica la copertura di Gazzetta del Sud ed espone il collegamento alla fonte originale. È conservata per tracciabilità, ma non è una conferma indipendente e non certifica convocazione, data, ora, sede, ordine del giorno, svolgimento, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-10-30T23:27:00+01:00",
+      },
     ],
     media: [],
     editorialAgenda: [
       {
         title:
           "Superamento dell'insediamento di Scordovillo e ricollocazione dei residenti",
-        sourceUrls: [SCORDOVILLO_OPEN_COUNCIL_OCTOBER_28_GAZZETTA_URL],
+        sourceUrls: [
+          SCORDOVILLO_OPEN_COUNCIL_OCTOBER_28_GAZZETTA_URL,
+          SCORDOVILLO_OPEN_COUNCIL_OCTOBER_30_TV6ONAIR_URL,
+        ],
         confidence: "medium",
         reason:
           "Il tema è il centro esplicito della copertura editoriale, ma non è stato acquisito un ordine del giorno istituzionale. Resta quindi un tema emerso dalla copertura e non prova iscrizione, trattazione, partecipazione o esito.",
@@ -3087,7 +3104,7 @@ const scordovilloOpenCouncilEditorialSignal: CouncilSessionV0 = {
   lastCheckedAt: {
     key: "lastCheckedAt",
     label: "Ultimo controllo",
-    value: "2026-10-28T23:31:00+01:00",
+    value: "2026-10-30T23:27:00+01:00",
     sourceStatus: "verificato",
     sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
     limit:
@@ -3100,8 +3117,154 @@ const scordovilloOpenCouncilEditorialSignal: CouncilSessionV0 = {
       "La data del 16 novembre non è stata verificata su una fonte istituzionale e non viene presentata come data ufficiale della seduta.",
       "Non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione al Consiglio aperto segnalato; il nuovo Albo dinamico ha restituito soltanto la pagina generale durante il controllo diretto.",
       "Data, ora, sede, ordine del giorno, stato, streaming, registrazione e verbale restano non verificati o non rilevati secondo il campo.",
-      "L'articolo collegato è una fonte editoriale e non certifica programmazione, svolgimento, completezza, partecipanti, votazioni o risultati.",
+      "Gli articoli collegati sono fonti editoriali e non certificano programmazione, svolgimento, completezza, partecipanti, votazioni o risultati; TV6onAir ripubblica Gazzetta del Sud e non costituisce una conferma indipendente.",
       "Il tema riportato dalla copertura resta nell'agenda editoriale separata e dovrà essere riconciliato se emergerà un atto istituzionale.",
+    ],
+    sourceStatus: "parziale",
+    sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
+    limit:
+      "Scheda prudenziale basata su una corrispondenza editoriale esplicita; tutti i campi ufficiali restano separati e non confermati.",
+  },
+};
+
+const councilNovember3EditorialSignal: CouncilSessionV0 = {
+  id: "editorial-consiglio-bilancio-riequilibrio-2026-11",
+  kind: "council",
+  isDemoFixture: false,
+  contextResearch: {
+    status: "reviewed_matches",
+    checkedAt: "2026-10-30T23:27:00+01:00",
+    searchNote:
+      "Parallel Search e la verifica diretta di Comune, pagina istituzionale del Consiglio, Albo corrente, Albo storico, testate locali e canali audiovisivi indicizzati hanno individuato un articolo de il Lametino del 30 ottobre che segnala un possibile Consiglio comunale il 3 novembre, con eventuale seconda convocazione il 4 novembre, e riporta temi finanziari distintivi. Non è stata acquisita una convocazione, una designazione, un avviso o un allegato istituzionale associabile: date, orari e numero dei punti restano soltanto indizi per i prossimi controlli e non vengono pubblicati come dati ufficiali della seduta.",
+    articles: [
+      {
+        title:
+          "Lamezia, il 3 novembre Consiglio comunale. Fra i punti approvazione del Bilancio consolidato e del Piano di riequilibrio",
+        url: COUNCIL_NOVEMBER_3_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-10-30",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "L'articolo identifica l'organo e riferisce date, orari e temi distintivi, ma non è un atto istituzionale. In assenza della convocazione originale il collegamento resta possibile e non certifica programmazione, data, ora, sede, ordine del giorno, svolgimento, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-10-30T23:27:00+01:00",
+      },
+    ],
+    media: [],
+    editorialAgenda: [
+      {
+        title: "Bilancio consolidato 2025 e variazioni al Bilancio 2026–2028",
+        sourceUrls: [COUNCIL_NOVEMBER_3_LAMETINO_URL],
+        confidence: "medium",
+        reason:
+          "La copertura editoriale associa questi temi al possibile Consiglio, ma non è stato acquisito l'ordine del giorno istituzionale. Non prova iscrizione, trattazione, voto o esito.",
+      },
+      {
+        title: "Piano di riequilibrio finanziario pluriennale",
+        sourceUrls: [COUNCIL_NOVEMBER_3_LAMETINO_URL],
+        confidence: "medium",
+        reason:
+          "Il tema è esplicito nella copertura editoriale, ma non è stato acquisito l'ordine del giorno istituzionale. Non prova iscrizione, trattazione, voto o esito.",
+      },
+      {
+        title: "Piano delle alienazioni e valorizzazioni immobiliari 2027",
+        sourceUrls: [COUNCIL_NOVEMBER_3_LAMETINO_URL],
+        confidence: "medium",
+        reason:
+          "La testata collega il tema al possibile Consiglio e al bilancio 2027–2029; senza l'atto istituzionale resta un tema emerso dalla copertura e non prova iscrizione, trattazione, voto o esito.",
+      },
+      {
+        title:
+          "Debiti fuori bilancio e mozioni su emergenza idrica, viabilità, risorse dello staff e sicurezza urbana",
+        sourceUrls: [COUNCIL_NOVEMBER_3_LAMETINO_URL],
+        confidence: "medium",
+        reason:
+          "I temi sono riepilogati dalla fonte editoriale, ma non è stato acquisito l'ordine del giorno istituzionale. Non provano iscrizione, trattazione, voto o esito.",
+      },
+    ],
+  },
+  title: {
+    key: "title",
+    label: "Titolo",
+    value:
+      "Consiglio comunale su Bilancio consolidato e Piano di riequilibrio — segnalazione editoriale",
+    sourceStatus: "da_verificare",
+    limit:
+      "Organo e temi sono indicati da una fonte editoriale; manca una pubblicazione istituzionale acquisita che consenta di verificare la convocazione.",
+  },
+  scheduledAt: {
+    key: "scheduledAt",
+    label: "Data e ora",
+    value: null,
+    sourceStatus: "da_verificare",
+    limit:
+      "Il 3 novembre alle 10:30 e l'eventuale seconda convocazione del 4 novembre alle 11:30 sono riportati dalla testata e vengono usati soltanto per la ricerca. Non sono disponibili da una fonte istituzionale acquisita e non vengono presentati come dati ufficiali della seduta.",
+  },
+  sessionStatus: {
+    key: "sessionStatus",
+    label: "Stato seduta",
+    value: "non_verificata",
+    sourceStatus: "da_verificare",
+    limit:
+      "La copertura editoriale non certifica convocazione, programmazione, svolgimento, chiusura, rinvio o altro esito ufficiale.",
+  },
+  agenda: {
+    key: "agenda",
+    label: "Ordine del giorno",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Ordine del giorno istituzionale non acquisito. Gli argomenti riportati dalla stampa sono esposti soltanto nella sezione separata “Temi emersi dalla copertura”.",
+  },
+  sourceLink: {
+    key: "sourceLink",
+    label: "Fonte",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Non è stata acquisita una pubblicazione istituzionale associabile con precisione al Consiglio segnalato.",
+  },
+  liveStreaming: {
+    key: "liveStreaming",
+    label: "Streaming live",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Nessuna diretta istituzionale associabile con precisione è stata individuata.",
+  },
+  recording: {
+    key: "recording",
+    label: "Registrazione",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Nessuna registrazione istituzionale associabile con precisione è stata individuata.",
+  },
+  minutesOrReport: {
+    key: "minutesOrReport",
+    label: "Verbale o resoconto",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Nessun verbale o resoconto istituzionale associabile con precisione è stato individuato.",
+  },
+  lastCheckedAt: {
+    key: "lastCheckedAt",
+    label: "Ultimo controllo",
+    value: "2026-10-30T23:27:00+01:00",
+    sourceStatus: "verificato",
+    sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
+    limit:
+      "Indica quando sono state ricontrollate le fonti, non una conferma istituzionale della seduta segnalata.",
+  },
+  dataLimits: {
+    key: "dataLimits",
+    label: "Limiti del dato",
+    value: [
+      "Il 3 e il 4 novembre, gli orari e i venti punti riportati dalla testata non sono stati verificati su una fonte istituzionale e non vengono presentati come dati ufficiali della seduta.",
+      "Non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione al Consiglio segnalato; il nuovo Albo dinamico ha bloccato l'accesso automatizzato durante il controllo diretto e l'Albo storico non contiene atti successivi al passaggio di piattaforma.",
+      "Data, ora, sede, ordine del giorno, stato, streaming, registrazione e verbale restano non verificati o non rilevati secondo il campo.",
+      "L'articolo collegato è una fonte editoriale e non certifica programmazione, svolgimento, completezza, partecipanti, votazioni o risultati.",
+      "I temi riportati dalla copertura restano nell'agenda editoriale separata e dovranno essere riconciliati se emergerà un atto istituzionale.",
     ],
     sourceStatus: "parziale",
     sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
@@ -3325,6 +3488,7 @@ const commissionIIOctoberEditorialCycle: CouncilSessionV0 = {
 };
 
 export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
+  councilNovember3EditorialSignal,
   scordovilloOpenCouncilEditorialSignal,
   commissionIIOctoberEditorialCycle,
   commissionIOctober22EditorialSession,
