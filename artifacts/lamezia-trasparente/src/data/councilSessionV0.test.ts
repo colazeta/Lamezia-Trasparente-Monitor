@@ -198,7 +198,7 @@ describe("councilSessionV0", () => {
   });
 
   it("publishes source-traceable records for both council and commission notices", () => {
-    expect(councilSessionV0ReviewedRecords).toHaveLength(63);
+    expect(councilSessionV0ReviewedRecords).toHaveLength(64);
     expect(
       new Set(councilSessionV0ReviewedRecords.map((item) => item.kind)),
     ).toEqual(new Set(["council", "commission"]));
@@ -213,6 +213,7 @@ describe("councilSessionV0", () => {
       } else {
         expect(
           new Set([
+            "editorial-consiglio-bilancio-riequilibrio-2026-11",
             "editorial-consiglio-aperto-scordovillo-2026-11",
             "editorial-commissione-i-sfiducia-presidente-2026-10",
             "editorial-commissione-ii-ciclo-bilancio-2026-10",
@@ -271,6 +272,15 @@ describe("councilSessionV0", () => {
         publishedAt: "2026-10-28",
         relationship: "possible_same_session",
       }),
+      expect.objectContaining({
+        publisher: "TV6onAir",
+        publishedAt: "2026-10-30",
+        relationship: "possible_same_session",
+        url: expect.stringContaining("tv6onair.com"),
+        relevanceNote: expect.stringMatching(
+          /non è una conferma indipendente/i,
+        ),
+      }),
     ]);
     expect(session?.contextResearch.media).toEqual([]);
     expect(session?.contextResearch.editorialAgenda).toEqual([
@@ -282,6 +292,36 @@ describe("councilSessionV0", () => {
     ]);
     expect(session?.scheduledAt.limit).toMatch(
       /16 novembre.*soltanto per la ricerca/i,
+    );
+    expect(session?.dataLimits.value?.join(" ")).toMatch(
+      /non certific(?:a|ano) programmazione, svolgimento/i,
+    );
+  });
+
+  it("keeps the November Council signal editorial-only until an official notice is acquired", () => {
+    const session = findCouncilSessionV0ReviewedRecord(
+      "editorial-consiglio-bilancio-riequilibrio-2026-11",
+    );
+
+    expect(session?.provenance).toBeUndefined();
+    expect(session?.kind).toBe("council");
+    expect(session?.scheduledAt.value).toBeNull();
+    expect(session?.sessionStatus.value).toBe("non_verificata");
+    expect(session?.agenda.value).toBeNull();
+    expect(session?.sourceLink.value).toBeNull();
+    expect(session?.liveStreaming.value).toBeNull();
+    expect(session?.recording.value).toBeNull();
+    expect(session?.contextResearch.articles).toEqual([
+      expect.objectContaining({
+        publisher: "il Lametino",
+        publishedAt: "2026-10-30",
+        relationship: "possible_same_session",
+      }),
+    ]);
+    expect(session?.contextResearch.media).toEqual([]);
+    expect(session?.contextResearch.editorialAgenda?.length).toBeGreaterThan(0);
+    expect(session?.scheduledAt.limit).toMatch(
+      /3 novembre.*4 novembre.*soltanto per la ricerca/i,
     );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /non certifica programmazione, svolgimento/i,
@@ -325,9 +365,7 @@ describe("councilSessionV0", () => {
         publisher: "Italy Today",
         publishedAt: "2026-10-27",
         relationship: "agenda_item",
-        relevanceNote: expect.stringContaining(
-          "non una conferma indipendente",
-        ),
+        relevanceNote: expect.stringContaining("non una conferma indipendente"),
       }),
       expect.objectContaining({
         publisher: "TV6onAir",
@@ -403,9 +441,7 @@ describe("councilSessionV0", () => {
       publisher: "Gazzetta del Sud",
       publishedAt: "2026-10-23",
       relationship: "same_session",
-      relevanceNote: expect.stringContaining(
-        "non certifica convocazione",
-      ),
+      relevanceNote: expect.stringContaining("non certifica convocazione"),
     });
     expect(session?.contextResearch.articles[5]).toMatchObject({
       publisher: "LameziaTerme.it",
