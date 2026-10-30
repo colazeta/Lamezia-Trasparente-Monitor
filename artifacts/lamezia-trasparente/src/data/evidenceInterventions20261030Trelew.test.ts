@@ -54,6 +54,6 @@ describe("municipal evidence archive: Trelew recycling RCT, 30 October 2026", ()
     expect(item.limitations.join(" ")).toContain("reddito medio-alto");
     expect(item.unintendedEffects).toContain("esposizioni fuori orario");
     expect(item.lameziaAdaptation).toContain("Lamezia Multiservizi");
-    expect(item.lameziaAdaptation).toContain("differenziata");
+    expect(item.lameziaAdaptation).toContain("frazione/mastello/giorno/orario");
   });
 });
