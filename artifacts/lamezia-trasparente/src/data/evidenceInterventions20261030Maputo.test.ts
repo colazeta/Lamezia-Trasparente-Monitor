@@ -79,7 +79,7 @@ describe("municipal evidence archive: Maputo household waste segregation RCT", (
     expect(item.implementability).toBe("medio_termine");
     expect(item.limitations.join(" ")).toContain("Costo-efficacia bassa");
     expect(item.lameziaAdaptation).toContain("Lamezia Multiservizi");
-    expect(item.lameziaAdaptation).toContain("contaminazione");
+    expect(item.lameziaAdaptation).toContain("impurità");
     expect(item.revisionHistory).toHaveLength(1);
   });
 });
