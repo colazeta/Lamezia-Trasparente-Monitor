@@ -329,6 +329,13 @@ describe("councilSessionV0", () => {
           "non una conferma indipendente",
         ),
       }),
+      expect.objectContaining({
+        publisher: "TV6onAir",
+        publishedAt: "2026-10-27",
+        relationship: "agenda_item",
+        url: expect.stringContaining("tv6onair.com"),
+        relevanceNote: expect.stringContaining("non una conferma indipendente"),
+      }),
     ]);
     expect(session?.contextResearch.media).toEqual([]);
     expect(session?.contextResearch.editorialAgenda).toHaveLength(4);
@@ -346,7 +353,7 @@ describe("councilSessionV0", () => {
       /non sono pienamente coerenti sulla cronologia/i,
     );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
-      /Italy Today ripubblica Gazzetta del Sud.*non costituisce una conferma indipendente/i,
+      /Italy Today e TV6onAir ripubblicano Gazzetta del Sud.*non costituiscono conferme indipendenti/i,
     );
   });
 
