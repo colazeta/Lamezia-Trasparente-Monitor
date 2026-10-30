@@ -16,7 +16,6 @@ export const EVIDENCE_INTERVENTIONS_2026_10_30_TRELEW: readonly EvidenceInterven
   "primaryArea": "rifiuti_pulizia_urbana",
   "secondaryAreas": [
     "ambiente_clima_energia",
-    "digitalizzazione_servizi_online",
     "capacita_amministrativa_personale"
   ],
   "interventionTypes": [
