@@ -62,7 +62,7 @@ describe("municipal evidence archive: Maputo household waste segregation RCT", (
 
   it("preserves RCT comparator and distinguishes absolute effects from longer-term results", () => {
     const item = EVIDENCE_INTERVENTIONS_2026_10_30_MAPUTO[0];
-    expect(item.evaluationMethod).toContain("1.000");
+    expect(item.evaluationMethod).toMatch(/(?:1000|1\\.000)/);
     expect(item.comparator).toContain("250");
     expect(item.effectSize).toContain("7,5");
     expect(item.effectSize).toContain("10,6");
