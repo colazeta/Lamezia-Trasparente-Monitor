@@ -72,7 +72,7 @@ describe("municipal evidence archive, 30 October 2026", () => {
     expect(item.effectSize).toContain("−0,460");
     expect(item.effectSize).toContain("−0,507");
     expect(item.effectSize).toContain("sette mesi");
-    expect(item.results).toContain("non si può attribuire");
+    expect(item.results.toLowerCase()).toContain("non si può attribuire");
     expect(item.limitations.join(" ")).toContain("non randomizzata");
   });
 
