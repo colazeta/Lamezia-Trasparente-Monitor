@@ -166,10 +166,10 @@ const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
       "L'accesso alle strutture per lo sport ricade in Cultura e tempo libero; Catasto e urbanistica è secondaria per il contesto degli impianti. Non si presume proprietà, competenza o disponibilità dei locali.",
   },
   "Educazione alla legalità e iniziative di sensibilizzazione": {
-    primary: ps("8"),
-    secondary: [ps("1")],
+    primary: ps("1"),
+    secondary: [ps("8")],
     mappingNote:
-      "La finalità di legalità e sicurezza pubblica è primaria; le iniziative formative rivolte ai giovani sono secondarie come Educazione e formazione. Le materie non determinano la competenza istituzionale.",
+      "La misura principale concretamente richiesta riguarda attività di educazione e sensibilizzazione dei giovani (Educazione e formazione); legalità e sicurezza pubblica sono materie secondarie. La classificazione non assegna la competenza a scuola, Comune o altri destinatari.",
   },
   "Trattamento economico e indennità della Polizia di Frontiera": {
     primary: ps("3"),

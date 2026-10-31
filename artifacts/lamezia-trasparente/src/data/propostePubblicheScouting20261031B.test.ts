@@ -14,7 +14,7 @@ import { getProposalGeography, isProposalGeoreferenced } from "./proposalGeograp
 const rows = [
   { id: "riequilibrio-piano-revoca-mascaro-2026", primary: "9", secondary: [], firstSeen: "2026-07-20", events: 2 },
   { id: "palestre-allenamento-raffaele-arpaia-lamezia-2026", primary: "10", secondary: ["5"], firstSeen: "2026-10-30", events: 1 },
-  { id: "educazione-legalita-mozione-fdi-lamezia-2026", primary: "8", secondary: ["1"], firstSeen: "2026-10-30", events: 1 },
+  { id: "educazione-legalita-mozione-fdi-lamezia-2026", primary: "1", secondary: ["8"], firstSeen: "2026-10-30", events: 1 },
 ] as const;
 
 describe("Scouting 31 ottobre B — gate end-to-end del medesimo insieme di proposal ID", () => {
