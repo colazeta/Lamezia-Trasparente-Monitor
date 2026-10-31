@@ -81,10 +81,12 @@ describe("proposte civiche", () => {
     ).toBeInTheDocument();
   });
 
-  it("non manifesta nel filtro l'intera tassonomia backend se una materia non è usata", () => {
+  it("mostra solo materie primarie effettivamente utilizzate, conservando le altre nel backend", () => {
     renderProposteCiviche();
 
-    expect(screen.queryByRole("option", { name: "Vita lavorativa" })).not.toBeInTheDocument();
+    // Vita lavorativa è ora una materia primaria utilizzata dalla proposta SAP
+    // sull'indennità della Polizia di Frontiera: deve essere selezionabile.
+    expect(screen.getByRole("option", { name: "Vita lavorativa" })).toBeInTheDocument();
     expect(screen.queryByRole("option", { name: "Agricoltura e pesca" })).not.toBeInTheDocument();
     expect(screen.queryByRole("option", { name: "Appalti pubblici" })).not.toBeInTheDocument();
   });
