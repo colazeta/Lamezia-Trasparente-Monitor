@@ -154,6 +154,12 @@ const eu = (code: OfficialFallbackDataThemeCode): ProposalPaSubjectRef => ({
 });
 
 const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
+  "Trattamento economico e indennità della Polizia di Frontiera": {
+    primary: ps("3"),
+    secondary: [ps("8")],
+    mappingNote:
+      "L'indennità richiesta riguarda principalmente il trattamento economico del personale (Vita lavorativa); la sicurezza pubblica è materia secondaria. Il mapping non attribuisce la competenza sull'indennità al destinatario del SAP.",
+  },
   "Sicurezza pubblica e organici del Commissariato": {
     primary: ps("8"),
     mappingNote:
