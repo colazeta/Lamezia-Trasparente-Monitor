@@ -96,6 +96,10 @@ const SCORDOVILLO_OPEN_COUNCIL_OCTOBER_30_TV6ONAIR_URL =
   "https://tv6onair.com/tv6onair-lamezia-insegnamento-schiuso-sullo-che-scordovillo/";
 const COUNCIL_NOVEMBER_3_LAMETINO_URL =
   "https://www.lametino.it/ultime/lamezia-il-3-novembre-consiglio-comunale-fra-i-punti-approvazione-del-bilancio-consolidato-e-del-piano-di-riequilibrio.html";
+const COUNCIL_NOVEMBER_3_AUDITORS_LAMETINO_URL =
+  "https://www.lametino.it/ultimora/lamezia-parere-favorevole-dei-revisori-al-piano-di-riequilibrio-ma-condizionato-da-severo-monitoraggio-trimestrale.html";
+const COUNCIL_NOVEMBER_3_MASCARO_LAMETINO_URL =
+  "https://www.lametino.it/ultimora/lamezia-mascaro-dubbi-su-legittimita-piano-di-riequilibrio-invito-a-revocare-la-delibera.html";
 const MUNICIPAL_ALBO_DOCUMENTS_URL =
   "https://www.comune.lamezia-terme.cz.it/it/documenti_pubblici/atti-di-albo-pretorio";
 const VIA_TRENTO_ROADWORKS_LAMETINO_URL =
@@ -3133,9 +3137,9 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
   isDemoFixture: false,
   contextResearch: {
     status: "reviewed_matches",
-    checkedAt: "2026-10-30T23:27:00+01:00",
+    checkedAt: "2026-10-31T05:46:00+01:00",
     searchNote:
-      "Parallel Search e la verifica diretta di Comune, pagina istituzionale del Consiglio, Albo corrente, Albo storico, testate locali e canali audiovisivi indicizzati hanno individuato un articolo de il Lametino del 30 ottobre che segnala un possibile Consiglio comunale il 3 novembre, con eventuale seconda convocazione il 4 novembre, e riporta temi finanziari distintivi. Non è stata acquisita una convocazione, una designazione, un avviso o un allegato istituzionale associabile: date, orari e numero dei punti restano soltanto indizi per i prossimi controlli e non vengono pubblicati come dati ufficiali della seduta.",
+      "Parallel Search e la verifica diretta di Comune, pagina istituzionale del Consiglio, Albo corrente, Albo storico, testate locali e canali audiovisivi indicizzati hanno individuato tre articoli de il Lametino del 30 ottobre: il primo segnala un possibile Consiglio comunale il 3 novembre, con eventuale seconda convocazione il 4 novembre, e riporta temi finanziari distintivi; gli altri due approfondiscono il Piano di riequilibrio attraverso il parere attribuito al Collegio dei Revisori e i rilievi attribuiti all'ex sindaco Paolo Mascaro, collegandoli esplicitamente al possibile passaggio consiliare del 3 novembre. Non è stata acquisita una convocazione, una designazione, un avviso, il parere originale dei Revisori o un allegato istituzionale associabile: date, orari, numero dei punti, contenuto degli atti e posizioni riportate restano elementi editoriali per i prossimi controlli e non vengono pubblicati come dati ufficiali della seduta.",
     articles: [
       {
         title:
@@ -3147,6 +3151,28 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
         relevanceNote:
           "L'articolo identifica l'organo e riferisce date, orari e temi distintivi, ma non è un atto istituzionale. In assenza della convocazione originale il collegamento resta possibile e non certifica programmazione, data, ora, sede, ordine del giorno, svolgimento, partecipanti, votazioni o esiti.",
         reviewedAt: "2026-10-30T23:27:00+01:00",
+      },
+      {
+        title:
+          "Lamezia, parere favorevole dei Revisori al Piano di riequilibrio ma condizionato da severo monitoraggio trimestrale",
+        url: COUNCIL_NOVEMBER_3_AUDITORS_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-10-30",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo collega esplicitamente al possibile Consiglio del 3 novembre il parere attribuito al Collegio dei Revisori e il monitoraggio trimestrale del Piano di riequilibrio. È una fonte editoriale: senza il parere originale o l'ordine del giorno istituzionale non certifica contenuto dell'atto, iscrizione, trattazione, voto, esito o programmazione della seduta.",
+        reviewedAt: "2026-10-31T05:46:00+01:00",
+      },
+      {
+        title:
+          'Lamezia, Mascaro: "Dubbi su legittimità Piano di riequilibrio. Invito a revocare la delibera"',
+        url: COUNCIL_NOVEMBER_3_MASCARO_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-10-30",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo riferisce un documento critico attribuito all'ex sindaco Paolo Mascaro e lo collega esplicitamente al Piano di riequilibrio che la testata indica in Aula il 3 novembre. È una fonte editoriale: non certifica il documento originale, l'iscrizione del tema, la programmazione della seduta, la trattazione, il voto o l'esito.",
+        reviewedAt: "2026-10-31T05:46:00+01:00",
       },
     ],
     media: [],
@@ -3160,10 +3186,14 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
       },
       {
         title: "Piano di riequilibrio finanziario pluriennale",
-        sourceUrls: [COUNCIL_NOVEMBER_3_LAMETINO_URL],
+        sourceUrls: [
+          COUNCIL_NOVEMBER_3_LAMETINO_URL,
+          COUNCIL_NOVEMBER_3_AUDITORS_LAMETINO_URL,
+          COUNCIL_NOVEMBER_3_MASCARO_LAMETINO_URL,
+        ],
         confidence: "medium",
         reason:
-          "Il tema è esplicito nella copertura editoriale, ma non è stato acquisito l'ordine del giorno istituzionale. Non prova iscrizione, trattazione, voto o esito.",
+          "Il tema è esplicito nelle tre fonti editoriali, comprese la ricostruzione del parere attribuito ai Revisori e i rilievi attribuiti a Paolo Mascaro, ma non sono stati acquisiti l'ordine del giorno, il parere o il documento originali. Le fonti non provano iscrizione, contenuto degli atti, trattazione, voto o esito.",
       },
       {
         title: "Piano delle alienazioni e valorizzazioni immobiliari 2027",
@@ -3250,7 +3280,7 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
   lastCheckedAt: {
     key: "lastCheckedAt",
     label: "Ultimo controllo",
-    value: "2026-10-30T23:27:00+01:00",
+    value: "2026-10-31T05:46:00+01:00",
     sourceStatus: "verificato",
     sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
     limit:
@@ -3263,7 +3293,7 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
       "Il 3 e il 4 novembre, gli orari e i venti punti riportati dalla testata non sono stati verificati su una fonte istituzionale e non vengono presentati come dati ufficiali della seduta.",
       "Non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione al Consiglio segnalato; il nuovo Albo dinamico ha bloccato l'accesso automatizzato durante il controllo diretto e l'Albo storico non contiene atti successivi al passaggio di piattaforma.",
       "Data, ora, sede, ordine del giorno, stato, streaming, registrazione e verbale restano non verificati o non rilevati secondo il campo.",
-      "L'articolo collegato è una fonte editoriale e non certifica programmazione, svolgimento, completezza, partecipanti, votazioni o risultati.",
+      "I tre articoli collegati sono fonti editoriali e non certificano programmazione, svolgimento, completezza, contenuto degli atti, partecipanti, votazioni o risultati.",
       "I temi riportati dalla copertura restano nell'agenda editoriale separata e dovranno essere riconciliati se emergerà un atto istituzionale.",
     ],
     sourceStatus: "parziale",

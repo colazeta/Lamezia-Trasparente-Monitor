@@ -317,6 +317,18 @@ describe("councilSessionV0", () => {
         publishedAt: "2026-10-30",
         relationship: "possible_same_session",
       }),
+      expect.objectContaining({
+        publisher: "il Lametino",
+        publishedAt: "2026-10-30",
+        relationship: "agenda_item",
+        url: expect.stringContaining("parere-favorevole-dei-revisori"),
+      }),
+      expect.objectContaining({
+        publisher: "il Lametino",
+        publishedAt: "2026-10-30",
+        relationship: "agenda_item",
+        url: expect.stringContaining("mascaro-dubbi-su-legittimita"),
+      }),
     ]);
     expect(session?.contextResearch.media).toEqual([]);
     expect(session?.contextResearch.editorialAgenda?.length).toBeGreaterThan(0);
@@ -324,7 +336,7 @@ describe("councilSessionV0", () => {
       /3 novembre.*4 novembre.*soltanto per la ricerca/i,
     );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
-      /non certifica programmazione, svolgimento/i,
+      /non certific(?:a|ano) programmazione, svolgimento/i,
     );
   });
 
