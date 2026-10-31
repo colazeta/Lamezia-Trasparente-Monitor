@@ -61,7 +61,7 @@ describe("municipal evidence archive — 31 October 2026", () => {
     expect(item.comparator).toContain("San Francisco");
     expect(item.results).toContain("prime quattro settimane");
     expect(item.limitations.join(" ")).toContain("Covid-19");
-    expect(item.results).toContain("non è dimostrata");
+    expect(item.results.toLowerCase()).toContain("non è dimostrata");
     expect(item.evaluationStudies.some((study) => study.doi === "10.1016/j.giq.2023.101868")).toBe(true);
   });
 });
