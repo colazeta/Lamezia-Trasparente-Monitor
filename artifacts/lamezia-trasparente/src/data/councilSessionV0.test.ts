@@ -329,6 +329,13 @@ describe("councilSessionV0", () => {
         relationship: "agenda_item",
         url: expect.stringContaining("mascaro-dubbi-su-legittimita"),
       }),
+      expect.objectContaining({
+        publisher: "City One",
+        publishedAt: "2026-10-30",
+        relationship: "agenda_item",
+        url: expect.stringContaining("nessuno-squilibrio-strutturale"),
+        relevanceNote: expect.stringMatching(/non è una conferma indipendente/i),
+      }),
     ]);
     expect(session?.contextResearch.media).toEqual([]);
     expect(session?.contextResearch.editorialAgenda?.length).toBeGreaterThan(0);
