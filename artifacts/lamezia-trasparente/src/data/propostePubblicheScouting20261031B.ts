@@ -28,7 +28,7 @@ export const SCOUTED_PUBLIC_PROPOSALS_20261031_B = [
     status: "proposta_emersa",
     linkedActs: [],
     verificationNote:
-      "Il 20 luglio il Lametino ha pubblicato una lettera integrale attribuita a Mascaro con richiesta di rettifica e approfondimento delle cifre prima del voto. Il 30 ottobre lo stesso giornale riassume un nuovo documento di 18 pagine, riferito come inviato ai componenti degli organi comunali: non ne è stato acquisito l'originale né una prova ufficiale di protocollo o di ricezione. Le contestazioni sul disavanzo e gli effetti delle norme sono attribuite a Mascaro e non sono convalidate. La prevista seduta del 3 novembre è riferita dalla stampa e non qui registrata come calendarizzazione istituzionale formalmente verificata della proposta. Nessun recepimento, revoca o attuazione verificato; competenza not_assessed e destinatario distinto.",
+      "Il 20 luglio il Lametino ha pubblicato una lettera integrale attribuita a Mascaro con richiesta di rettifica e approfondimento delle cifre prima del voto. Il 30 ottobre il Lametino riassume un nuovo documento di 18 pagine, dichiarato inviato agli organi comunali. Il 31 ottobre Reportageonline pubblica il testo integrale di una memoria attribuita a Paolo Mascaro e datata 30 ottobre 2026 (https://www.reportageonline.it/lamezia-piano-di-riequilibrio-mascaro-invita-a-revocare-la-delibera-rilievi-critici-in-ordine-allevidente-inesistenza-dei-presupposti-inerenti-il-ricorso-alla-procedura-di-riequilibr/); se ne possono verificare direttamente le richieste, ma la riproduzione giornalistica non autentica l'originale né prova protocollo o ricezione da parte del Comune. La memoria chiede una motivazione esplicita sui presupposti del riequilibrio, revisione della massa passiva e informativa al MEF, nonché in via principale la non prosecuzione della delibera n. 61 del 21 luglio, in subordine clausole di rimodulazione. Le contestazioni sul disavanzo e gli effetti delle norme sono attribuite a Mascaro e non sono convalidate. La prevista seduta del 3 novembre è riferita dalla stampa e non qui registrata come calendarizzazione istituzionale formalmente verificata della proposta. Nessun recepimento, revoca o attuazione verificato; competenza not_assessed e destinatario distinto.",
     evidenceLevel: "fonte_stampa",
     firstSeen: "2026-07-20",
     lastUpdated: "2026-10-30",
@@ -50,7 +50,7 @@ export const SCOUTED_PUBLIC_PROPOSALS_20261031_B = [
         type: "aggiornamento",
         title: "Mascaro propone revoca della delibera o rimodulazione del piano",
         summary:
-          "Secondo il resoconto giornalistico del nuovo documento, il promotore chiede in via principale la revoca della delibera di adesione e l'uso degli strumenti ordinari, oppure in subordine una rimodulazione delle passività con salvaguardie. Non è prova che il Consiglio abbia accolto la richiesta.",
+          "La pubblicazione del Lametino del 30 ottobre e la riproduzione del testo datato 30 ottobre, pubblicata da Reportageonline il 31, documentano la richiesta di non dare seguito alla delibera di adesione e ripianare con strumenti ordinari, o in alternativa di rivedere le passività e introdurre salvaguardie. Le valutazioni contabili restano opinioni dell'autore. Non è prova di accoglimento consiliare.",
         sourceLabel: "il Lametino, 30 ottobre 2026",
         sourceUrl: "https://www.lametino.it/ultimora/lamezia-mascaro-dubbi-su-legittimita-piano-di-riequilibrio-invito-a-revocare-la-delibera.html",
         evidenceLevel: "fonte_stampa",

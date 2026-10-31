@@ -16,9 +16,11 @@ const CANONICAL_20261031_B: Record<string, CanonicalProposalPresentation> = {
       "Riesaminare il ricorso al riequilibrio finanziario pluriennale, revocando la deliberazione di adesione oppure, in subordine, rimodulando il piano secondo la proposta di Mascaro.",
     actionTypes: ["regolazione", "trasparenza", "organizzazione"],
     measures: [
-      "Riesaminare i presupposti e le poste contabili utilizzate per la decisione sul riequilibrio.",
-      "Valutare la revoca della deliberazione di adesione e l'eventuale impiego degli strumenti ordinari di ripiano.",
-      "In alternativa, valutare una rimodulazione della massa passiva e clausole di salvaguardia, tenendo conto dei futuri chiarimenti ministeriali richiamati dal promotore.",
+      "Accertare e motivare i presupposti dello squilibrio strutturale e l'eventuale insufficienza degli strumenti ordinari di riequilibrio.",
+      "Riesaminare e aggiornare le poste della massa passiva alla luce delle variazioni documentate.",
+      "Richiedere al Ministero dell'Economia e delle Finanze, anche tramite ANCI, un'informativa sul tavolo tecnico relativo al Fondo anticipazioni di liquidità richiamato nella memoria.",
+      "Valutare, in via principale, di non dare seguito alla deliberazione di adesione al riequilibrio, ricorrendo se possibile agli strumenti ordinari di ripiano.",
+      "In subordine, valutare una rimodulazione della massa passiva e clausole di salvaguardia riferite agli sviluppi normativi e contabili.",
     ],
     expectedOutcome:
       "Sottoporre la scelta di finanza comunale a un riesame, senza presumere che le valutazioni contabili del promotore siano corrette né che le alternative siano già praticabili.",
