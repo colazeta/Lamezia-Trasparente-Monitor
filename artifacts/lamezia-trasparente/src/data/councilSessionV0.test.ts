@@ -334,7 +334,24 @@ describe("councilSessionV0", () => {
         publishedAt: "2026-10-30",
         relationship: "agenda_item",
         url: expect.stringContaining("nessuno-squilibrio-strutturale"),
-        relevanceNote: expect.stringMatching(/non è una conferma indipendente/i),
+        relevanceNote: expect.stringMatching(
+          /non è una conferma indipendente/i,
+        ),
+      }),
+      expect.objectContaining({
+        publisher: "Gazzetta del Sud",
+        publishedAt: "2026-10-31",
+        relationship: "possible_same_session",
+        url: expect.stringContaining("appuntamento-decisivo-per-lente"),
+      }),
+      expect.objectContaining({
+        publisher: "TV6onAir",
+        publishedAt: "2026-10-31",
+        relationship: "possible_same_session",
+        url: expect.stringContaining("colloquio-attraverso-lente"),
+        relevanceNote: expect.stringMatching(
+          /non costituisce una conferma indipendente/i,
+        ),
       }),
     ]);
     expect(session?.contextResearch.media).toEqual([]);
