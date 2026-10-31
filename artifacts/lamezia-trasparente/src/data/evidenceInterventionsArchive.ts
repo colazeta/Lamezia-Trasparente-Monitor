@@ -52,6 +52,7 @@ import { EVIDENCE_INTERVENTIONS_2026_10_30 } from "./evidenceInterventions202610
 import { EVIDENCE_INTERVENTIONS_2026_10_30_GERMANY } from "./evidenceInterventions20261030Germany";
 import { EVIDENCE_INTERVENTIONS_2026_10_30_TRELEW } from "./evidenceInterventions20261030Trelew";
 import { EVIDENCE_INTERVENTIONS_2026_10_30_MAPUTO } from "./evidenceInterventions20261030Maputo";
+import { EVIDENCE_INTERVENTIONS_2026_10_31 } from "./evidenceInterventions20261031";
 import { applyEvidenceInterventionUpdates20260914 } from "./evidenceInterventionUpdates20260914";
 import { applyEvidenceInterventionUpdates20260919 } from "./evidenceInterventionUpdates20260919";
 
@@ -114,6 +115,7 @@ const EVIDENCE_INTERVENTIONS_BEFORE_2026_09_14_UPDATES: readonly EvidenceInterve
   ...EVIDENCE_INTERVENTIONS_2026_10_30_GERMANY,
   ...EVIDENCE_INTERVENTIONS_2026_10_30_TRELEW,
   ...EVIDENCE_INTERVENTIONS_2026_10_30_MAPUTO,
+  ...EVIDENCE_INTERVENTIONS_2026_10_31,
 ];
 
 function deduplicateEvidenceInterventions(
