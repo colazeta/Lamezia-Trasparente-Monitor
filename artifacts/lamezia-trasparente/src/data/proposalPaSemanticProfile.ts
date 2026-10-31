@@ -154,6 +154,23 @@ const eu = (code: OfficialFallbackDataThemeCode): ProposalPaSubjectRef => ({
 });
 
 const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
+  "Bilancio comunale e riequilibrio finanziario": {
+    primary: ps("9"),
+    mappingNote:
+      "La revoca o rimodulazione del piano di riequilibrio finanziario riguarda Tributi, finanze e contravvenzioni. La materia non costituisce un assessment di competenza del destinatario.",
+  },
+  "Accesso agli impianti sportivi e alle palestre": {
+    primary: ps("10"),
+    secondary: [ps("5")],
+    mappingNote:
+      "L'accesso alle strutture per lo sport ricade in Cultura e tempo libero; Catasto e urbanistica è secondaria per il contesto degli impianti. Non si presume proprietà, competenza o disponibilità dei locali.",
+  },
+  "Educazione alla legalità e iniziative di sensibilizzazione": {
+    primary: ps("1"),
+    secondary: [ps("8")],
+    mappingNote:
+      "La misura principale concretamente richiesta riguarda attività di educazione e sensibilizzazione dei giovani (Educazione e formazione); legalità e sicurezza pubblica sono materie secondarie. La classificazione non assegna la competenza a scuola, Comune o altri destinatari.",
+  },
   "Trattamento economico e indennità della Polizia di Frontiera": {
     primary: ps("3"),
     secondary: [ps("8")],
