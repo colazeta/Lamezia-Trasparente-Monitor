@@ -102,6 +102,10 @@ const COUNCIL_NOVEMBER_3_MASCARO_LAMETINO_URL =
   "https://www.lametino.it/ultimora/lamezia-mascaro-dubbi-su-legittimita-piano-di-riequilibrio-invito-a-revocare-la-delibera.html";
 const COUNCIL_NOVEMBER_3_MASCARO_CITY_ONE_URL =
   "https://cityonelamezia.it/2026/10/30/conti-del-comune-mascaro-attacca-nessuno-squilibrio-strutturale/";
+const COUNCIL_NOVEMBER_3_GAZZETTA_URL =
+  "https://catanzaro.gazzettadelsud.it/articoli/politica/2026/10/31/comune-di-lamezia-terme-consolidato-e-piano-di-riequilibrio-appuntamento-decisivo-per-lente-d647362e-31d0-4e1e-a40d-39d6c1eee2cf/";
+const COUNCIL_NOVEMBER_3_TV6ONAIR_URL =
+  "https://tv6onair.com/tv6onair-comune-per-lamezia-terme-cementato-e-piano-per-riequilibrio-colloquio-attraverso-lente/";
 const MUNICIPAL_ALBO_DOCUMENTS_URL =
   "https://www.comune.lamezia-terme.cz.it/it/documenti_pubblici/atti-di-albo-pretorio";
 const VIA_TRENTO_ROADWORKS_LAMETINO_URL =
@@ -3139,9 +3143,9 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
   isDemoFixture: false,
   contextResearch: {
     status: "reviewed_matches",
-    checkedAt: "2026-10-31T11:28:00+01:00",
+    checkedAt: "2026-10-31T17:21:00+01:00",
     searchNote:
-      "Parallel Search e la verifica diretta di Comune, pagina istituzionale del Consiglio, Albo corrente, Albo storico, testate locali e canali audiovisivi indicizzati hanno individuato quattro articoli del 30 ottobre: il primo articolo de il Lametino segnala un possibile Consiglio comunale il 3 novembre, con eventuale seconda convocazione il 4 novembre, e riporta temi finanziari distintivi; un secondo articolo approfondisce il parere attribuito al Collegio dei Revisori; il Lametino e City One pubblicano inoltre due versioni della stessa nota critica attribuita all'ex sindaco Paolo Mascaro sul Piano di riequilibrio. City One non associa autonomamente la nota al possibile Consiglio e non costituisce una conferma indipendente. Non è stata acquisita una convocazione, una designazione, un avviso, il parere originale dei Revisori o un allegato istituzionale associabile: date, orari, numero dei punti, contenuto degli atti e posizioni riportate restano elementi editoriali per i prossimi controlli e non vengono pubblicati come dati ufficiali della seduta.",
+      "Parallel Search e la verifica diretta di Comune, pagina istituzionale del Consiglio, Albo corrente, Albo storico, testate locali e canali audiovisivi indicizzati hanno individuato sei articoli: quattro fonti del 30 ottobre già collegate e, il 31 ottobre, un articolo originale di Gazzetta del Sud con organo, data, orari e temi distintivi e una ripubblicazione TV6onAir che espone Gazzetta del Sud come fonte. Gazzetta del Sud resta una fonte editoriale, mentre TV6onAir non costituisce una conferma indipendente. Non è stata acquisita una convocazione, una designazione, un avviso, il parere originale dei Revisori o un allegato istituzionale associabile: date, orari, numero dei punti, contenuto degli atti e posizioni riportate restano elementi editoriali per i prossimi controlli e non vengono pubblicati come dati ufficiali della seduta.",
     articles: [
       {
         title:
@@ -3187,15 +3191,41 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
           "City One riproduce integralmente la stessa nota critica attribuita all'ex sindaco Paolo Mascaro sul Piano di riequilibrio già coperta da il Lametino. Non associa autonomamente il documento al possibile Consiglio del 3 novembre e non è una conferma indipendente; il collegamento resta tematico e non certifica il documento originale, l'iscrizione, la programmazione, la trattazione, il voto o l'esito.",
         reviewedAt: "2026-10-31T11:28:00+01:00",
       },
+      {
+        title:
+          "Comune di Lamezia Terme, consolidato e Piano di riequilibrio: appuntamento decisivo per l’Ente",
+        url: COUNCIL_NOVEMBER_3_GAZZETTA_URL,
+        publisher: "Gazzetta del Sud",
+        publishedAt: "2026-10-31",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "L'articolo identifica il Consiglio comunale, il 3 novembre alle 10:30, l'eventuale seconda convocazione del 4 novembre alle 11:30 e temi finanziari distintivi. È una fonte editoriale: senza la convocazione o l'ordine del giorno istituzionale non certifica programmazione, data, ora, sede, completezza, trattazione, voto o esito.",
+        reviewedAt: "2026-10-31T17:21:00+01:00",
+      },
+      {
+        title:
+          "TV6onAIR – Comune per Lamezia Terme, cementato e Piano per riequilibrio: colloquio attraverso l’Ente",
+        url: COUNCIL_NOVEMBER_3_TV6ONAIR_URL,
+        publisher: "TV6onAir",
+        publishedAt: "2026-10-31",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "TV6onAir ripubblica la copertura del Consiglio indicato per il 3 novembre ed espone Gazzetta del Sud come fonte originale. Il collegamento è conservato per tracciabilità ma non costituisce una conferma indipendente né prova istituzionale di convocazione, data, ora, ordine del giorno, svolgimento, voto o esito.",
+        reviewedAt: "2026-10-31T17:21:00+01:00",
+      },
     ],
     media: [],
     editorialAgenda: [
       {
         title: "Bilancio consolidato 2025 e variazioni al Bilancio 2026–2028",
-        sourceUrls: [COUNCIL_NOVEMBER_3_LAMETINO_URL],
+        sourceUrls: [
+          COUNCIL_NOVEMBER_3_LAMETINO_URL,
+          COUNCIL_NOVEMBER_3_GAZZETTA_URL,
+          COUNCIL_NOVEMBER_3_TV6ONAIR_URL,
+        ],
         confidence: "medium",
         reason:
-          "La copertura editoriale associa questi temi al possibile Consiglio, ma non è stato acquisito l'ordine del giorno istituzionale. Non prova iscrizione, trattazione, voto o esito.",
+          "La copertura editoriale associa questi temi al possibile Consiglio; TV6onAir ripubblica Gazzetta del Sud e non è una conferma indipendente. Non è stato acquisito l'ordine del giorno istituzionale e le fonti non provano iscrizione, trattazione, voto o esito.",
       },
       {
         title: "Piano di riequilibrio finanziario pluriennale",
@@ -3204,10 +3234,12 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
           COUNCIL_NOVEMBER_3_AUDITORS_LAMETINO_URL,
           COUNCIL_NOVEMBER_3_MASCARO_LAMETINO_URL,
           COUNCIL_NOVEMBER_3_MASCARO_CITY_ONE_URL,
+          COUNCIL_NOVEMBER_3_GAZZETTA_URL,
+          COUNCIL_NOVEMBER_3_TV6ONAIR_URL,
         ],
         confidence: "medium",
         reason:
-          "Il tema è esplicito nelle quattro fonti editoriali, comprese la ricostruzione del parere attribuito ai Revisori e due versioni della stessa nota attribuita a Paolo Mascaro. City One non è una conferma indipendente e non collega autonomamente la nota alla possibile seduta; non sono stati acquisiti l'ordine del giorno, il parere o il documento originali. Le fonti non provano iscrizione, contenuto degli atti, trattazione, voto o esito.",
+          "Il tema è esplicito nelle sei fonti editoriali, comprese la ricostruzione del parere attribuito ai Revisori e due versioni della stessa nota attribuita a Paolo Mascaro. City One non collega autonomamente la nota alla possibile seduta e TV6onAir ripubblica Gazzetta del Sud: non sono conferme indipendenti. Non sono stati acquisiti l'ordine del giorno, il parere o il documento originali e le fonti non provano iscrizione, contenuto degli atti, trattazione, voto o esito.",
       },
       {
         title: "Piano delle alienazioni e valorizzazioni immobiliari 2027",
@@ -3219,7 +3251,10 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
       {
         title:
           "Debiti fuori bilancio e mozioni su emergenza idrica, viabilità, risorse dello staff e sicurezza urbana",
-        sourceUrls: [COUNCIL_NOVEMBER_3_LAMETINO_URL],
+        sourceUrls: [
+          COUNCIL_NOVEMBER_3_LAMETINO_URL,
+          COUNCIL_NOVEMBER_3_GAZZETTA_URL,
+        ],
         confidence: "medium",
         reason:
           "I temi sono riepilogati dalla fonte editoriale, ma non è stato acquisito l'ordine del giorno istituzionale. Non provano iscrizione, trattazione, voto o esito.",
@@ -3294,7 +3329,7 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
   lastCheckedAt: {
     key: "lastCheckedAt",
     label: "Ultimo controllo",
-    value: "2026-10-31T11:28:00+01:00",
+    value: "2026-10-31T17:21:00+01:00",
     sourceStatus: "verificato",
     sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
     limit:
@@ -3307,7 +3342,7 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
       "Il 3 e il 4 novembre, gli orari e i venti punti riportati dalla testata non sono stati verificati su una fonte istituzionale e non vengono presentati come dati ufficiali della seduta.",
       "Non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione al Consiglio segnalato; il nuovo Albo dinamico ha bloccato l'accesso automatizzato durante il controllo diretto e l'Albo storico non contiene atti successivi al passaggio di piattaforma.",
       "Data, ora, sede, ordine del giorno, stato, streaming, registrazione e verbale restano non verificati o non rilevati secondo il campo.",
-      "I quattro articoli collegati sono fonti editoriali e non certificano programmazione, svolgimento, completezza, contenuto degli atti, partecipanti, votazioni o risultati; City One e il Lametino dipendono dalla stessa nota attribuita a Paolo Mascaro e non sono conferme indipendenti.",
+      "I sei articoli collegati sono fonti editoriali e non certificano programmazione, svolgimento, completezza, contenuto degli atti, partecipanti, votazioni o risultati; City One e il Lametino dipendono dalla stessa nota attribuita a Paolo Mascaro, mentre TV6onAir ripubblica Gazzetta del Sud, e non sono conferme indipendenti.",
       "I temi riportati dalla copertura restano nell'agenda editoriale separata e dovranno essere riconciliati se emergerà un atto istituzionale.",
     ],
     sourceStatus: "parziale",
