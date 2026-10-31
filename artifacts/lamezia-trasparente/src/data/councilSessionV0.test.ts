@@ -353,6 +353,25 @@ describe("councilSessionV0", () => {
           /non costituisce una conferma indipendente/i,
         ),
       }),
+      expect.objectContaining({
+        publisher: "LameziaTerme.it",
+        publishedAt: "2026-10-31",
+        relationship: "agenda_item",
+        relevanceNote: expect.stringMatching(/Comunicato Stampa/i),
+      }),
+      expect.objectContaining({
+        publisher: "il Lametino",
+        publishedAt: "2026-10-31",
+        relationship: "agenda_item",
+        url: expect.stringContaining("lamezia-merita-trasparenza"),
+        relevanceNote: expect.stringMatching(/non una conferma indipendente/i),
+      }),
+      expect.objectContaining({
+        publisher: "Corriere di Lamezia",
+        publishedAt: "2026-10-31",
+        relationship: "agenda_item",
+        relevanceNote: expect.stringMatching(/non una conferma indipendente/i),
+      }),
     ]);
     expect(session?.contextResearch.media).toEqual([]);
     expect(session?.contextResearch.editorialAgenda?.length).toBeGreaterThan(0);
@@ -410,6 +429,29 @@ describe("councilSessionV0", () => {
         url: expect.stringContaining("tv6onair.com"),
         relevanceNote: expect.stringContaining("non una conferma indipendente"),
       }),
+      expect.objectContaining({
+        publisher: "LameziaTerme.it",
+        publishedAt: "2026-10-31",
+        relationship: "possible_same_session",
+        relevanceNote: expect.stringMatching(/Comunicato Stampa/i),
+      }),
+      expect.objectContaining({
+        publisher: "il Lametino",
+        publishedAt: "2026-10-31",
+        relationship: "possible_same_session",
+        url: expect.stringContaining("lamezia-merita-trasparenza"),
+        relevanceNote: expect.stringMatching(
+          /non è una conferma indipendente/i,
+        ),
+      }),
+      expect.objectContaining({
+        publisher: "Corriere di Lamezia",
+        publishedAt: "2026-10-31",
+        relationship: "possible_same_session",
+        relevanceNote: expect.stringMatching(
+          /non è una conferma indipendente/i,
+        ),
+      }),
     ]);
     expect(session?.contextResearch.media).toEqual([]);
     expect(session?.contextResearch.editorialAgenda).toHaveLength(4);
@@ -427,7 +469,7 @@ describe("councilSessionV0", () => {
       /non sono pienamente coerenti sulla cronologia/i,
     );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
-      /Italy Today e TV6onAir ripubblicano Gazzetta del Sud.*non costituiscono conferme indipendenti/i,
+      /Italy Today e TV6onAir ripubblicano Gazzetta del Sud.*LameziaTerme.it, il Lametino e Corriere di Lamezia riproducono la stessa nota.*non costituiscono conferme indipendenti/i,
     );
   });
 
