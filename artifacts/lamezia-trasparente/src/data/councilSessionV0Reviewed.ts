@@ -90,6 +90,12 @@ const COMMISSION_II_OCTOBER_27_ITALY_TODAY_URL =
   "https://italytoday.net/lamezia-consolidato-e-piano-di-riequilibrio-infiammano-lautunno-politico/";
 const COMMISSION_II_OCTOBER_27_TV6ONAIR_URL =
   "https://tv6onair.com/tv6onair-lamezia-solidificato-e-piano-in-riequilibrio-infiammano-lautunno-politico/";
+const PROGETTO_CIVICO_OCTOBER_31_LAMEZIATERME_URL =
+  "https://www.lameziaterme.it/lamezia-progetto-civico-attacca-sul-riequilibrio-dove-finita-politica/";
+const PROGETTO_CIVICO_OCTOBER_31_LAMETINO_URL =
+  "https://www.lametino.it/ultimora/piano-di-riequilibrio-progetto-civico-italia-lamezia-merita-trasparenza.html";
+const PROGETTO_CIVICO_OCTOBER_31_CORRIERE_LAMEZIA_URL =
+  "https://www.corrieredilamezia.it/politica/2026_10_31/progetto-civico-italia-lamezia-terme-piano-di-riequilibrio-le-decisioni-non-si-prendono-piu-nei-luoghi-della-politica-ma-dove-e-finita-la-politica_67991/";
 const SCORDOVILLO_OPEN_COUNCIL_OCTOBER_28_GAZZETTA_URL =
   "https://catanzaro.gazzettadelsud.it/articoli/politica/2026/10/28/lamezia-consiglio-comunale-aperto-sullo-sgombero-di-scordovillo-18a052db-3c86-4127-9b75-a085d97241e1/";
 const SCORDOVILLO_OPEN_COUNCIL_OCTOBER_30_TV6ONAIR_URL =
@@ -3143,9 +3149,9 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
   isDemoFixture: false,
   contextResearch: {
     status: "reviewed_matches",
-    checkedAt: "2026-10-31T17:21:00+01:00",
+    checkedAt: "2026-10-31T23:43:00+01:00",
     searchNote:
-      "Parallel Search e la verifica diretta di Comune, pagina istituzionale del Consiglio, Albo corrente, Albo storico, testate locali e canali audiovisivi indicizzati hanno individuato sei articoli: quattro fonti del 30 ottobre già collegate e, il 31 ottobre, un articolo originale di Gazzetta del Sud con organo, data, orari e temi distintivi e una ripubblicazione TV6onAir che espone Gazzetta del Sud come fonte. Gazzetta del Sud resta una fonte editoriale, mentre TV6onAir non costituisce una conferma indipendente. Non è stata acquisita una convocazione, una designazione, un avviso, il parere originale dei Revisori o un allegato istituzionale associabile: date, orari, numero dei punti, contenuto degli atti e posizioni riportate restano elementi editoriali per i prossimi controlli e non vengono pubblicati come dati ufficiali della seduta.",
+      "Parallel Search e la verifica diretta di Comune, pagina istituzionale del Consiglio, Albo corrente, Albo storico, testate locali e canali audiovisivi indicizzati hanno individuato nove articoli: sei fonti già collegate e, il 31 ottobre, tre versioni della stessa nota di Progetto Civico Italia. La nota riferisce che il Piano di riequilibrio sarà portato direttamente in Consiglio, ma non identifica il 3 novembre: le tre pagine sono quindi collegate soltanto come `agenda_item`. LameziaTerme.it etichetta il testo “Comunicato Stampa”; il Lametino e Corriere di Lamezia riproducono la stessa nota e non costituiscono conferme indipendenti. Non è stata acquisita una convocazione, una designazione, un avviso, il parere originale dei Revisori o un allegato istituzionale associabile: date, orari, numero dei punti, contenuto degli atti, svolgimento e posizioni riportate restano elementi editoriali per i prossimi controlli e non vengono pubblicati come dati ufficiali della seduta.",
     articles: [
       {
         title:
@@ -3213,6 +3219,39 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
           "TV6onAir ripubblica la copertura del Consiglio indicato per il 3 novembre ed espone Gazzetta del Sud come fonte originale. Il collegamento è conservato per tracciabilità ma non costituisce una conferma indipendente né prova istituzionale di convocazione, data, ora, ordine del giorno, svolgimento, voto o esito.",
         reviewedAt: "2026-10-31T17:21:00+01:00",
       },
+      {
+        title:
+          "Lamezia, Progetto Civico attacca sul riequilibrio: «Dove è finita la politica?»",
+        url: PROGETTO_CIVICO_OCTOBER_31_LAMEZIATERME_URL,
+        publisher: "LameziaTerme.it",
+        publishedAt: "2026-10-31",
+        relationship: "agenda_item",
+        relevanceNote:
+          "La pagina, etichettata “Comunicato Stampa”, riproduce una nota di Progetto Civico Italia secondo cui il Piano di riequilibrio sarà portato direttamente in Consiglio. Non indica il 3 novembre e non certifica convocazione, programmazione, iscrizione, trattazione, voto o esito; il collegamento riguarda soltanto il tema emerso dalla copertura.",
+        reviewedAt: "2026-10-31T23:43:00+01:00",
+      },
+      {
+        title:
+          'Piano di riequilibrio, Progetto Civico Italia: "Lamezia merita trasparenza"',
+        url: PROGETTO_CIVICO_OCTOBER_31_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-10-31",
+        relationship: "agenda_item",
+        relevanceNote:
+          "Il Lametino riproduce la stessa nota di Progetto Civico Italia pubblicata da LameziaTerme.it. La nota preannuncia un passaggio del Piano in Consiglio ma non indica il 3 novembre: è un collegamento tematico, non una conferma indipendente né prova di convocazione, programmazione, iscrizione, trattazione, voto o esito.",
+        reviewedAt: "2026-10-31T23:43:00+01:00",
+      },
+      {
+        title:
+          "Progetto Civico Italia Lamezia Terme, Piano di riequilibrio: “Le decisioni non si prendono più nei luoghi della politica. Ma dove è finita la Politica?”",
+        url: PROGETTO_CIVICO_OCTOBER_31_CORRIERE_LAMEZIA_URL,
+        publisher: "Corriere di Lamezia",
+        publishedAt: "2026-10-31",
+        relationship: "agenda_item",
+        relevanceNote:
+          "Corriere di Lamezia riproduce la stessa nota di Progetto Civico Italia. La nota preannuncia un passaggio del Piano in Consiglio ma non indica il 3 novembre: è un collegamento tematico, non una conferma indipendente né prova di convocazione, programmazione, iscrizione, trattazione, voto o esito.",
+        reviewedAt: "2026-10-31T23:43:00+01:00",
+      },
     ],
     media: [],
     editorialAgenda: [
@@ -3236,10 +3275,13 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
           COUNCIL_NOVEMBER_3_MASCARO_CITY_ONE_URL,
           COUNCIL_NOVEMBER_3_GAZZETTA_URL,
           COUNCIL_NOVEMBER_3_TV6ONAIR_URL,
+          PROGETTO_CIVICO_OCTOBER_31_LAMEZIATERME_URL,
+          PROGETTO_CIVICO_OCTOBER_31_LAMETINO_URL,
+          PROGETTO_CIVICO_OCTOBER_31_CORRIERE_LAMEZIA_URL,
         ],
         confidence: "medium",
         reason:
-          "Il tema è esplicito nelle sei fonti editoriali, comprese la ricostruzione del parere attribuito ai Revisori e due versioni della stessa nota attribuita a Paolo Mascaro. City One non collega autonomamente la nota alla possibile seduta e TV6onAir ripubblica Gazzetta del Sud: non sono conferme indipendenti. Non sono stati acquisiti l'ordine del giorno, il parere o il documento originali e le fonti non provano iscrizione, contenuto degli atti, trattazione, voto o esito.",
+          "Il tema è esplicito nelle nove fonti editoriali. City One e il Lametino dipendono dalla stessa nota attribuita a Paolo Mascaro, TV6onAir ripubblica Gazzetta del Sud e le tre pagine del 31 ottobre riproducono la stessa nota di Progetto Civico Italia: non sono conferme indipendenti. La nuova nota non identifica il 3 novembre. Non sono stati acquisiti l'ordine del giorno, il parere o i documenti originali e le fonti non provano iscrizione, contenuto degli atti, trattazione, voto o esito.",
       },
       {
         title: "Piano delle alienazioni e valorizzazioni immobiliari 2027",
@@ -3329,7 +3371,7 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
   lastCheckedAt: {
     key: "lastCheckedAt",
     label: "Ultimo controllo",
-    value: "2026-10-31T17:21:00+01:00",
+    value: "2026-10-31T23:43:00+01:00",
     sourceStatus: "verificato",
     sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
     limit:
@@ -3342,7 +3384,7 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
       "Il 3 e il 4 novembre, gli orari e i venti punti riportati dalla testata non sono stati verificati su una fonte istituzionale e non vengono presentati come dati ufficiali della seduta.",
       "Non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione al Consiglio segnalato; il nuovo Albo dinamico ha bloccato l'accesso automatizzato durante il controllo diretto e l'Albo storico non contiene atti successivi al passaggio di piattaforma.",
       "Data, ora, sede, ordine del giorno, stato, streaming, registrazione e verbale restano non verificati o non rilevati secondo il campo.",
-      "I sei articoli collegati sono fonti editoriali e non certificano programmazione, svolgimento, completezza, contenuto degli atti, partecipanti, votazioni o risultati; City One e il Lametino dipendono dalla stessa nota attribuita a Paolo Mascaro, mentre TV6onAir ripubblica Gazzetta del Sud, e non sono conferme indipendenti.",
+      "I nove articoli collegati sono fonti editoriali e non certificano programmazione, svolgimento, completezza, contenuto degli atti, partecipanti, votazioni o risultati; City One e il Lametino dipendono dalla stessa nota attribuita a Paolo Mascaro, TV6onAir ripubblica Gazzetta del Sud e LameziaTerme.it, il Lametino e Corriere di Lamezia riproducono la stessa nota di Progetto Civico Italia, quindi non sono conferme indipendenti.",
       "I temi riportati dalla copertura restano nell'agenda editoriale separata e dovranno essere riconciliati se emergerà un atto istituzionale.",
     ],
     sourceStatus: "parziale",
@@ -3358,9 +3400,9 @@ const commissionIIOctoberEditorialCycle: CouncilSessionV0 = {
   isDemoFixture: false,
   contextResearch: {
     status: "reviewed_matches",
-    checkedAt: "2026-10-30T12:17:00+01:00",
+    checkedAt: "2026-10-31T23:43:00+01:00",
     searchNote:
-      "Parallel Search e la verifica diretta di Comune, Albo, testate locali e canali audiovisivi indicizzati hanno individuato sei articoli pertinenti ai lavori della II Commissione. LameziaInforma del 25 ottobre, NtaCalabria del 27 ottobre e Gazzetta del Sud del 27 ottobre descrivono il Bilancio consolidato come già esaminato dalla Commissione, ma non identificano una singola seduta e non verificano su fonte istituzionale il calendario pubblicato da il Lametino il 26 ottobre. Italy Today e TV6onAir ripubblicano il 27 ottobre la copertura di Gazzetta del Sud ed espongono la fonte originale: sono conservati come collegamenti distinti ma non come conferme indipendenti. Il nuovo Albo dinamico non ha restituito un atto istituzionale acquisibile o indicizzato: date e orari riportati dalla stampa restano soltanto indizi di ricerca. Organo, programmazione, sede, ordine del giorno, svolgimento ed esiti restano da verificare su fonte istituzionale.",
+      "Parallel Search e la verifica diretta di Comune, Albo, testate locali e canali audiovisivi indicizzati hanno individuato nove articoli pertinenti ai lavori della II Commissione. Alle sei fonti già collegate si aggiungono tre versioni della stessa nota di Progetto Civico Italia del 31 ottobre: identificano la Commissione Bilancio, riferiscono il venir meno del numero legale e usano “ieri” per collocare i lavori, ma non forniscono una data istituzionalmente verificata. Sono quindi `possible_same_session`; LameziaTerme.it etichetta il testo “Comunicato Stampa”, mentre il Lametino e Corriere di Lamezia riproducono la stessa nota e non costituiscono conferme indipendenti. Il nuovo Albo dinamico non ha restituito un atto istituzionale acquisibile o indicizzato: date e orari riportati dalla stampa restano soltanto indizi di ricerca. Organo, programmazione, sede, ordine del giorno, svolgimento, numero legale ed esiti restano da verificare su fonte istituzionale.",
     articles: [
       {
         title:
@@ -3427,6 +3469,39 @@ const commissionIIOctoberEditorialCycle: CouncilSessionV0 = {
           "La pagina ripubblica la copertura di Gazzetta del Sud e ne espone il collegamento come fonte originale. Associa Bilancio consolidato 2025 e Piano di riequilibrio alla II Commissione, ma non identifica una singola seduta: è un mirror distinto per tracciabilità, non una conferma indipendente, e non prova convocazione del Consiglio, programmazione, trattazione, voto o esito ufficiale.",
         reviewedAt: "2026-10-30T12:17:00+01:00",
       },
+      {
+        title:
+          "Lamezia, Progetto Civico attacca sul riequilibrio: «Dove è finita la politica?»",
+        url: PROGETTO_CIVICO_OCTOBER_31_LAMEZIATERME_URL,
+        publisher: "LameziaTerme.it",
+        publishedAt: "2026-10-31",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "La pagina, etichettata “Comunicato Stampa”, riproduce una nota di Progetto Civico Italia sui lavori della Commissione Bilancio e sul venir meno del numero legale. Il riferimento relativo a “ieri” non viene presentato come data della seduta; senza convocazione o resoconto istituzionale il collegamento resta possibile e non certifica programmazione, svolgimento, numero legale, voto o esito.",
+        reviewedAt: "2026-10-31T23:43:00+01:00",
+      },
+      {
+        title:
+          'Piano di riequilibrio, Progetto Civico Italia: "Lamezia merita trasparenza"',
+        url: PROGETTO_CIVICO_OCTOBER_31_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-10-31",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "Il Lametino riproduce la stessa nota di Progetto Civico Italia sui lavori della Commissione Bilancio. Il riferimento relativo a “ieri” non viene presentato come data della seduta; la pagina non è una conferma indipendente e non certifica programmazione, svolgimento, numero legale, voto o esito.",
+        reviewedAt: "2026-10-31T23:43:00+01:00",
+      },
+      {
+        title:
+          "Progetto Civico Italia Lamezia Terme, Piano di riequilibrio: “Le decisioni non si prendono più nei luoghi della politica. Ma dove è finita la Politica?”",
+        url: PROGETTO_CIVICO_OCTOBER_31_CORRIERE_LAMEZIA_URL,
+        publisher: "Corriere di Lamezia",
+        publishedAt: "2026-10-31",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "Corriere di Lamezia riproduce la stessa nota di Progetto Civico Italia sui lavori della Commissione Bilancio. Il riferimento relativo a “ieri” non viene presentato come data della seduta; la pagina non è una conferma indipendente e non certifica programmazione, svolgimento, numero legale, voto o esito.",
+        reviewedAt: "2026-10-31T23:43:00+01:00",
+      },
     ],
     media: [],
     editorialAgenda: [
@@ -3439,10 +3514,13 @@ const commissionIIOctoberEditorialCycle: CouncilSessionV0 = {
           COMMISSION_II_OCTOBER_27_GAZZETTA_URL,
           COMMISSION_II_OCTOBER_27_ITALY_TODAY_URL,
           COMMISSION_II_OCTOBER_27_TV6ONAIR_URL,
+          PROGETTO_CIVICO_OCTOBER_31_LAMEZIATERME_URL,
+          PROGETTO_CIVICO_OCTOBER_31_LAMETINO_URL,
+          PROGETTO_CIVICO_OCTOBER_31_CORRIERE_LAMEZIA_URL,
         ],
         confidence: "medium",
         reason:
-          "Il tema è riportato espressamente dalle fonti editoriali, ma la loro cronologia non è pienamente coerente. In assenza dell'avviso istituzionale resta un tema emerso dalla copertura e non prova iscrizione all'ordine del giorno, trattazione o esito.",
+          "Il tema è riportato espressamente dalle fonti editoriali, ma la loro cronologia non è pienamente coerente. Le tre pagine del 31 ottobre riproducono la stessa nota di Progetto Civico Italia e non costituiscono conferme indipendenti. In assenza dell'avviso istituzionale resta un tema emerso dalla copertura e non prova iscrizione all'ordine del giorno, trattazione, numero legale o esito.",
       },
       {
         title: "Bilancio consolidato dell'esercizio 2025",
@@ -3542,7 +3620,7 @@ const commissionIIOctoberEditorialCycle: CouncilSessionV0 = {
   lastCheckedAt: {
     key: "lastCheckedAt",
     label: "Ultimo controllo",
-    value: "2026-10-30T12:17:00+01:00",
+    value: "2026-10-31T23:43:00+01:00",
     sourceStatus: "verificato",
     sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
     limit:
@@ -3556,7 +3634,7 @@ const commissionIIOctoberEditorialCycle: CouncilSessionV0 = {
       "Non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione al ciclo; il nuovo Albo dinamico non ha restituito un atto utile durante il controllo diretto.",
       "Date, orari, sede, ordine del giorno, stato, streaming, registrazione e verbale restano non verificati o non rilevati secondo il campo.",
       "Gli articoli collegati sono fonti editoriali e non certificano programmazione, svolgimento, completezza, presenze, votazioni o risultati.",
-      "Le sei pagine editoriali non sono pienamente coerenti sulla cronologia del Bilancio consolidato e non vengono usate per stabilire se il tema fosse già passato o ancora da esaminare in Commissione; NtaCalabria ripete la ricostruzione di LameziaInforma, mentre Italy Today e TV6onAir ripubblicano Gazzetta del Sud e non costituiscono conferme indipendenti. Nessuna delle fonti identifica una singola seduta o fornisce prova istituzionale.",
+      "Le nove pagine editoriali non sono pienamente coerenti sulla cronologia del Bilancio consolidato e non vengono usate per stabilire se il tema fosse già passato o ancora da esaminare in Commissione; NtaCalabria ripete la ricostruzione di LameziaInforma, Italy Today e TV6onAir ripubblicano Gazzetta del Sud, mentre LameziaTerme.it, il Lametino e Corriere di Lamezia riproducono la stessa nota di Progetto Civico Italia. Queste pagine non costituiscono conferme indipendenti; nessuna fonte fornisce prova istituzionale di una singola seduta, del numero legale o di un esito.",
       "I temi riportati dalla copertura restano nell'agenda editoriale separata e dovranno essere riconciliati se emergerà un atto istituzionale.",
     ],
     sourceStatus: "parziale",
