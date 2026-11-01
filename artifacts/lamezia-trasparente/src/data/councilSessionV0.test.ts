@@ -381,6 +381,80 @@ describe("councilSessionV0", () => {
         relationship: "agenda_item",
         relevanceNote: expect.stringMatching(/non una conferma indipendente/i),
       }),
+      expect.objectContaining({
+        publisher: "il Lametino",
+        publishedAt: "2026-10-30",
+        relationship: "agenda_item",
+        url: expect.stringContaining("fratelli-ditalia-lamezia-presenta"),
+      }),
+      expect.objectContaining({
+        publisher: "LameziaTerme.it",
+        publishedAt: "2026-10-30",
+        relationship: "agenda_item",
+        relevanceNote: expect.stringMatching(/Comunicato Stampa/i),
+      }),
+      expect.objectContaining({
+        publisher: "City One",
+        publishedAt: "2026-10-30",
+        relationship: "agenda_item",
+        relevanceNote: expect.stringMatching(
+          /non costituisce una conferma indipendente/i,
+        ),
+      }),
+      expect.objectContaining({
+        publisher: "IlDispaccio",
+        publishedAt: "2026-10-30",
+        relationship: "agenda_item",
+        relevanceNote: expect.stringMatching(
+          /non costituisce una conferma indipendente/i,
+        ),
+      }),
+      expect.objectContaining({
+        publisher: "La Novità Online",
+        publishedAt: "2026-10-30",
+        relationship: "agenda_item",
+        relevanceNote: expect.stringMatching(
+          /non costituisce una conferma indipendente/i,
+        ),
+      }),
+      expect.objectContaining({
+        publisher: "Corriere di Lamezia",
+        publishedAt: "2026-10-30",
+        relationship: "agenda_item",
+        relevanceNote: expect.stringMatching(
+          /non costituisce una conferma indipendente/i,
+        ),
+      }),
+      expect.objectContaining({
+        publisher: "il Lametino",
+        publishedAt: "2026-10-31",
+        relationship: "agenda_item",
+        url: expect.stringContaining("legalita-non-vuol-dire-propaganda"),
+      }),
+      expect.objectContaining({
+        publisher: "City One",
+        publishedAt: "2026-10-31",
+        relationship: "agenda_item",
+        relevanceNote: expect.stringMatching(
+          /non costituisce una conferma indipendente/i,
+        ),
+      }),
+      expect.objectContaining({
+        publisher: "La Novità Online",
+        publishedAt: "2026-10-31",
+        relationship: "agenda_item",
+        relevanceNote: expect.stringMatching(
+          /non costituisce una conferma indipendente/i,
+        ),
+      }),
+      expect.objectContaining({
+        publisher: "City One",
+        publishedAt: "2026-11-01",
+        relationship: "agenda_item",
+        relevanceNote: expect.stringMatching(
+          /comunicato stampa.*non costituisce una conferma indipendente/i,
+        ),
+      }),
     ]);
     expect(session?.contextResearch.media).toEqual([]);
     expect(session?.contextResearch.editorialAgenda?.length).toBeGreaterThan(0);

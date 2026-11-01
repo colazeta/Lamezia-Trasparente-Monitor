@@ -154,6 +154,12 @@ const eu = (code: OfficialFallbackDataThemeCode): ProposalPaSubjectRef => ({
 });
 
 const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
+  "Coordinamento turistico e imposta di soggiorno": {
+    primary: ps("7"),
+    secondary: [ps("9"), ps("4"), ps("10")],
+    mappingNote:
+      "La misura principale riguarda il coordinamento dei servizi di accoglienza e della destinazione turistica (Turismo). Imposta di soggiorno, collegamenti e servizi culturali sono materie ufficiali secondarie per analisi e audit. Il mapping non attribuisce competenze al Comune, al Sindaco o agli altri destinatari.",
+  },
   "Bilancio comunale e riequilibrio finanziario": {
     primary: ps("9"),
     mappingNote:
