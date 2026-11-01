@@ -22,7 +22,7 @@ describe("Scouting 27 October: Progetto di Vita existing ID — shared integrity
     expect(proposals).toHaveLength(1);
     expect(proposal.promoterId).toBe("una-citta-dove-vivere-bene");
     expect(proposal.firstSeen).toBe("2026-06-04");
-    expect(proposal.lastUpdated).toBe("2026-10-26");
+    expect(proposal.lastUpdated).toBe("2026-10-30");
     expect(proposal.institutionalRecipient).toContain("Comune di Lamezia Terme");
     expect(proposal.linkedActs).toContain("Mozione consiliare prot. n. 47464/2026");
     expect(proposal.events.some((event) => event.id === "progetto-vita-informativa-amministrazione-14-agosto")).toBe(true);
