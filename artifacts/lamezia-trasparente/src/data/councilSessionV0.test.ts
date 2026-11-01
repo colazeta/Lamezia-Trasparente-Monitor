@@ -354,6 +354,15 @@ describe("councilSessionV0", () => {
         ),
       }),
       expect.objectContaining({
+        publisher: "Italy Today",
+        publishedAt: "2026-10-31",
+        relationship: "possible_same_session",
+        url: expect.stringContaining("appuntamento-decisivo-per-lente"),
+        relevanceNote: expect.stringMatching(
+          /non costituisce una conferma indipendente/i,
+        ),
+      }),
+      expect.objectContaining({
         publisher: "LameziaTerme.it",
         publishedAt: "2026-10-31",
         relationship: "agenda_item",
