@@ -114,6 +114,26 @@ const COUNCIL_NOVEMBER_3_TV6ONAIR_URL =
   "https://tv6onair.com/tv6onair-comune-per-lamezia-terme-cementato-e-piano-per-riequilibrio-colloquio-attraverso-lente/";
 const COUNCIL_NOVEMBER_3_ITALY_TODAY_URL =
   "https://italytoday.net/comune-di-lamezia-terme-consolidato-e-piano-di-riequilibrio-appuntamento-decisivo-per-lente/";
+const COUNCIL_NOVEMBER_3_FDI_LAMETINO_URL =
+  "https://www.lametino.it/ultime/fratelli-ditalia-lamezia-presenta-una-mozione-a-sostegno-delle-forze-dellordine-contro-ogni-forma-di-violenza-e-intimidazione.html";
+const COUNCIL_NOVEMBER_3_FDI_LAMEZIATERME_URL =
+  "https://www.lameziaterme.it/fratelli-italia-lamezia-mozione-sostegno-delle-forze-ordine/";
+const COUNCIL_NOVEMBER_3_FDI_CITY_ONE_URL =
+  "https://cityonelamezia.it/2026/10/30/lamezia-terme-fratelli-ditalia-presenta-una-mozione-a-sostegno-delle-forze-dellordine/";
+const COUNCIL_NOVEMBER_3_FDI_IL_DISPACCIO_URL =
+  "https://ildispaccio.it/calabria/catanzaro/2026/10/30/fratelli-ditalia-lamezia-terme-presenta-una-mozione-a-sostegno-delle-forze-dellordine-e-contro-ogni-forma-di-violenza-e-intimidazione";
+const COUNCIL_NOVEMBER_3_FDI_LA_NOVITA_URL =
+  "https://lanovitaonline.it/lamezia-terme-fratelli-ditalia-porta-in-consiglio-una-mozione-a-sostegno-delle-forze-dellordine/";
+const COUNCIL_NOVEMBER_3_FDI_CORRIERE_URL =
+  "https://www.corrieredilamezia.it/politica/2026_10_30/fratelli-ditalia-lamezia-terme-presenta-una-mozione-a-sostegno-delle-forze-dellordine-e-contro-ogni-forma-di-violenza-e-intimidazione_67966/";
+const COUNCIL_NOVEMBER_3_MASI_LAMETINO_URL =
+  "https://www.lametino.it/ultime/lamezia-masi-pd-legalita-non-vuol-dire-propaganda-basta-criminalizzare-lavoratori-e-studenti.html";
+const COUNCIL_NOVEMBER_3_MASI_CITY_ONE_URL =
+  "https://cityonelamezia.it/2026/10/31/masi-a-fdi-legalita-non-vuol-dire-propaganda-basta-criminalizzare-lavoratori-e-studenti/";
+const COUNCIL_NOVEMBER_3_MASI_LA_NOVITA_URL =
+  "https://lanovitaonline.it/lamezia-il-pd-attacca-fratelli-ditalia-legalita-non-vuol-dire-propaganda-basta-criminalizzare-lavoratori-e-studenti/";
+const COUNCIL_NOVEMBER_3_PROGETTO_CIVICO_CITY_ONE_URL =
+  "https://cityonelamezia.it/2026/11/01/piano-di-riequilibrio-le-decisioni-non-si-prendono-piu-nei-luoghi-della-politica-ma-dove-e-finita-la-politica/";
 const MUNICIPAL_ALBO_DOCUMENTS_URL =
   "https://www.comune.lamezia-terme.cz.it/it/documenti_pubblici/atti-di-albo-pretorio";
 const VIA_TRENTO_ROADWORKS_LAMETINO_URL =
@@ -3151,9 +3171,9 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
   isDemoFixture: false,
   contextResearch: {
     status: "reviewed_matches",
-    checkedAt: "2026-11-01T06:09:00+01:00",
+    checkedAt: "2026-11-02T00:13:00+01:00",
     searchNote:
-      "Parallel Search e la verifica diretta di Comune, pagina istituzionale del Consiglio, Albo corrente, Albo storico, testate locali e canali audiovisivi indicizzati hanno individuato dieci articoli. Alla copertura già collegata si aggiunge Italy Today, che ripubblica titolo e passaggi dell'articolo di Gazzetta del Sud sul possibile Consiglio del 3 novembre ed espone quella pagina come fonte originale. È conservato come `possible_same_session`, ma non costituisce una conferma indipendente. Le tre versioni della nota di Progetto Civico Italia restano invece `agenda_item`, perché riferiscono che il Piano sarà portato in Consiglio senza identificare il 3 novembre. Non è stata acquisita una convocazione, una designazione, un avviso, il parere originale dei Revisori o un allegato istituzionale associabile: date, orari, numero dei punti, contenuto degli atti, svolgimento e posizioni riportate restano elementi editoriali per i prossimi controlli e non vengono pubblicati come dati ufficiali della seduta.",
+      "Parallel Search e la verifica diretta di Comune, pagina istituzionale del Consiglio, Albo corrente, Albo storico, testate locali e canali audiovisivi indicizzati hanno individuato venti articoli. Dieci nuove pagine documentano due note politiche e una ripubblicazione: sei testate riproducono la nota di Fratelli d'Italia sulla mozione a sostegno delle Forze dell'Ordine, tre riproducono la replica del consigliere PD Gennarino Masi e City One ripubblica la nota di Progetto Civico Italia sul Piano di riequilibrio. Sono tutte conservate come `agenda_item`: soltanto l'articolo generale de il Lametino associa una mozione FdI con temi distintivi al possibile Consiglio del 3 novembre, mentre le nuove pagine non identificano autonomamente quella seduta e non costituiscono conferme indipendenti. Non è stata acquisita una convocazione, una designazione, un avviso, il parere originale dei Revisori o un allegato istituzionale associabile: date, orari, numero dei punti, contenuto degli atti, svolgimento e posizioni riportate restano elementi editoriali per i prossimi controlli e non vengono pubblicati come dati ufficiali della seduta.",
     articles: [
       {
         title:
@@ -3265,6 +3285,116 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
           "Corriere di Lamezia riproduce la stessa nota di Progetto Civico Italia. La nota preannuncia un passaggio del Piano in Consiglio ma non indica il 3 novembre: è un collegamento tematico, non una conferma indipendente né prova di convocazione, programmazione, iscrizione, trattazione, voto o esito.",
         reviewedAt: "2026-10-31T23:43:00+01:00",
       },
+      {
+        title:
+          "Fratelli d’Italia Lamezia presenta mozione a sostegno delle Forze dell’Ordine e contro ogni forma di violenza e intimidazione",
+        url: COUNCIL_NOVEMBER_3_FDI_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-10-30",
+        relationship: "agenda_item",
+        relevanceNote:
+          "La pagina riproduce una nota di Fratelli d'Italia sulla mozione che l'articolo generale de il Lametino riepiloga fra i temi del possibile Consiglio del 3 novembre. Non identifica autonomamente quella seduta e non certifica protocollo, iscrizione, programmazione, trattazione, voto o esito.",
+        reviewedAt: "2026-11-02T00:13:00+01:00",
+      },
+      {
+        title:
+          "Fratelli d’Italia Lamezia: mozione a sostegno delle Forze dell’Ordine",
+        url: COUNCIL_NOVEMBER_3_FDI_LAMEZIATERME_URL,
+        publisher: "LameziaTerme.it",
+        publishedAt: "2026-10-30",
+        relationship: "agenda_item",
+        relevanceNote:
+          "La pagina, etichettata “Comunicato Stampa”, riproduce la stessa nota di Fratelli d'Italia già pubblicata da il Lametino. È conservata per tracciabilità ma non costituisce una conferma indipendente né prova di protocollo, iscrizione, programmazione, trattazione, voto o esito.",
+        reviewedAt: "2026-11-02T00:13:00+01:00",
+      },
+      {
+        title:
+          "Lamezia Terme, Fratelli d’Italia presenta una mozione a sostegno delle Forze dell’Ordine",
+        url: COUNCIL_NOVEMBER_3_FDI_CITY_ONE_URL,
+        publisher: "City One",
+        publishedAt: "2026-10-30",
+        relationship: "agenda_item",
+        relevanceNote:
+          "City One riproduce la stessa nota di Fratelli d'Italia. Il collegamento è conservato per tracciabilità ma non costituisce una conferma indipendente né prova di protocollo, iscrizione, programmazione, trattazione, voto o esito.",
+        reviewedAt: "2026-11-02T00:13:00+01:00",
+      },
+      {
+        title:
+          "Fratelli d’Italia Lamezia Terme presenta una mozione a sostegno delle Forze dell’Ordine e contro ogni forma di violenza e intimidazione",
+        url: COUNCIL_NOVEMBER_3_FDI_IL_DISPACCIO_URL,
+        publisher: "IlDispaccio",
+        publishedAt: "2026-10-30",
+        relationship: "agenda_item",
+        relevanceNote:
+          "IlDispaccio riproduce la stessa nota di Fratelli d'Italia. Il collegamento è conservato per tracciabilità ma non costituisce una conferma indipendente né prova di protocollo, iscrizione, programmazione, trattazione, voto o esito.",
+        reviewedAt: "2026-11-02T00:13:00+01:00",
+      },
+      {
+        title:
+          "Lamezia Terme | Fratelli d’Italia porta in Consiglio una mozione a sostegno delle Forze dell’Ordine",
+        url: COUNCIL_NOVEMBER_3_FDI_LA_NOVITA_URL,
+        publisher: "La Novità Online",
+        publishedAt: "2026-10-30",
+        relationship: "agenda_item",
+        relevanceNote:
+          "La Novità Online riproduce la stessa nota di Fratelli d'Italia. Il collegamento è conservato per tracciabilità ma non costituisce una conferma indipendente né prova di protocollo, iscrizione, programmazione, trattazione, voto o esito.",
+        reviewedAt: "2026-11-02T00:13:00+01:00",
+      },
+      {
+        title:
+          "Fratelli d’Italia Lamezia Terme presenta una mozione a sostegno delle Forze dell’Ordine e contro ogni forma di violenza e intimidazione",
+        url: COUNCIL_NOVEMBER_3_FDI_CORRIERE_URL,
+        publisher: "Corriere di Lamezia",
+        publishedAt: "2026-10-30",
+        relationship: "agenda_item",
+        relevanceNote:
+          "Corriere di Lamezia riproduce la stessa nota di Fratelli d'Italia. Il collegamento è conservato per tracciabilità ma non costituisce una conferma indipendente né prova di protocollo, iscrizione, programmazione, trattazione, voto o esito.",
+        reviewedAt: "2026-11-02T00:13:00+01:00",
+      },
+      {
+        title:
+          'Lamezia, Masi (Pd): "Legalità non vuol dire propaganda: basta criminalizzare lavoratori e studenti"',
+        url: COUNCIL_NOVEMBER_3_MASI_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-10-31",
+        relationship: "agenda_item",
+        relevanceNote:
+          "La pagina riproduce la replica attribuita al consigliere PD Gennarino Masi alla nota di Fratelli d'Italia. Non identifica il 3 novembre e il collegamento resta tematico: non prova iscrizione, programmazione, trattazione, voto o esito.",
+        reviewedAt: "2026-11-02T00:13:00+01:00",
+      },
+      {
+        title:
+          "Masi a FDI: Legalità non vuol dire propaganda, basta criminalizzare lavoratori e studenti",
+        url: COUNCIL_NOVEMBER_3_MASI_CITY_ONE_URL,
+        publisher: "City One",
+        publishedAt: "2026-10-31",
+        relationship: "agenda_item",
+        relevanceNote:
+          "City One riproduce la stessa replica attribuita a Gennarino Masi e indica quest'ultimo come fonte. Il collegamento è conservato per tracciabilità ma non costituisce una conferma indipendente né prova di iscrizione, programmazione, trattazione, voto o esito.",
+        reviewedAt: "2026-11-02T00:13:00+01:00",
+      },
+      {
+        title:
+          "Lamezia | Il PD attacca Fratelli d’Italia: «Legalità non vuol dire propaganda, basta criminalizzare lavoratori e studenti»",
+        url: COUNCIL_NOVEMBER_3_MASI_LA_NOVITA_URL,
+        publisher: "La Novità Online",
+        publishedAt: "2026-10-31",
+        relationship: "agenda_item",
+        relevanceNote:
+          "La Novità Online riproduce la stessa replica attribuita a Gennarino Masi. Il collegamento è conservato per tracciabilità ma non costituisce una conferma indipendente né prova di iscrizione, programmazione, trattazione, voto o esito.",
+        reviewedAt: "2026-11-02T00:13:00+01:00",
+      },
+      {
+        title:
+          "Piano di riequilibrio: le decisioni non si prendono più nei luoghi della politica. Ma dove è finita la Politica?",
+        url: COUNCIL_NOVEMBER_3_PROGETTO_CIVICO_CITY_ONE_URL,
+        publisher: "City One",
+        publishedAt: "2026-11-01",
+        relationship: "agenda_item",
+        relevanceNote:
+          "City One presenta esplicitamente la pagina come comunicato stampa di Progetto Civico Italia e riproduce la stessa nota già collegata da tre testate. Non identifica il 3 novembre e non costituisce una conferma indipendente né prova di convocazione, iscrizione, trattazione, voto o esito.",
+        reviewedAt: "2026-11-02T00:13:00+01:00",
+      },
     ],
     media: [],
     editorialAgenda: [
@@ -3293,10 +3423,11 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
           PROGETTO_CIVICO_OCTOBER_31_LAMEZIATERME_URL,
           PROGETTO_CIVICO_OCTOBER_31_LAMETINO_URL,
           PROGETTO_CIVICO_OCTOBER_31_CORRIERE_LAMEZIA_URL,
+          COUNCIL_NOVEMBER_3_PROGETTO_CIVICO_CITY_ONE_URL,
         ],
         confidence: "medium",
         reason:
-          "Il tema è esplicito nelle dieci fonti editoriali. City One e il Lametino dipendono dalla stessa nota attribuita a Paolo Mascaro, TV6onAir e Italy Today ripubblicano Gazzetta del Sud e le tre pagine del 31 ottobre riproducono la stessa nota di Progetto Civico Italia: non sono conferme indipendenti. La nuova nota non identifica il 3 novembre. Non sono stati acquisiti l'ordine del giorno, il parere o i documenti originali e le fonti non provano iscrizione, contenuto degli atti, trattazione, voto o esito.",
+          "Il tema è esplicito nelle undici fonti editoriali collegate. City One e il Lametino dipendono dalla stessa nota attribuita a Paolo Mascaro, TV6onAir e Italy Today ripubblicano Gazzetta del Sud e le quattro pagine sulla posizione di Progetto Civico Italia dipendono dalla medesima nota: non sono conferme indipendenti. Queste ultime non identificano il 3 novembre. Non sono stati acquisiti l'ordine del giorno, il parere o i documenti originali e le fonti non provano iscrizione, contenuto degli atti, trattazione, voto o esito.",
       },
       {
         title: "Piano delle alienazioni e valorizzazioni immobiliari 2027",
@@ -3311,10 +3442,19 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
         sourceUrls: [
           COUNCIL_NOVEMBER_3_LAMETINO_URL,
           COUNCIL_NOVEMBER_3_GAZZETTA_URL,
+          COUNCIL_NOVEMBER_3_FDI_LAMETINO_URL,
+          COUNCIL_NOVEMBER_3_FDI_LAMEZIATERME_URL,
+          COUNCIL_NOVEMBER_3_FDI_CITY_ONE_URL,
+          COUNCIL_NOVEMBER_3_FDI_IL_DISPACCIO_URL,
+          COUNCIL_NOVEMBER_3_FDI_LA_NOVITA_URL,
+          COUNCIL_NOVEMBER_3_FDI_CORRIERE_URL,
+          COUNCIL_NOVEMBER_3_MASI_LAMETINO_URL,
+          COUNCIL_NOVEMBER_3_MASI_CITY_ONE_URL,
+          COUNCIL_NOVEMBER_3_MASI_LA_NOVITA_URL,
         ],
         confidence: "medium",
         reason:
-          "I temi sono riepilogati dalla fonte editoriale, ma non è stato acquisito l'ordine del giorno istituzionale. Non provano iscrizione, trattazione, voto o esito.",
+          "L'articolo generale de il Lametino riepiloga fra i temi del possibile Consiglio una mozione FdI con elementi distintivi coerenti con la nota ripubblicata da sei testate; tre pagine riproducono la replica attribuita a Gennarino Masi. Queste ripubblicazioni non identificano autonomamente il 3 novembre e non sono conferme indipendenti. Non è stato acquisito l'ordine del giorno istituzionale e le fonti non provano protocollo, iscrizione, trattazione, voto o esito.",
       },
     ],
   },
@@ -3386,7 +3526,7 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
   lastCheckedAt: {
     key: "lastCheckedAt",
     label: "Ultimo controllo",
-    value: "2026-11-01T06:09:00+01:00",
+    value: "2026-11-02T00:13:00+01:00",
     sourceStatus: "verificato",
     sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
     limit:
@@ -3399,7 +3539,7 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
       "Il 3 e il 4 novembre, gli orari e i venti punti riportati dalla testata non sono stati verificati su una fonte istituzionale e non vengono presentati come dati ufficiali della seduta.",
       "Non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione al Consiglio segnalato; il nuovo Albo dinamico ha bloccato l'accesso automatizzato durante il controllo diretto e l'Albo storico non contiene atti successivi al passaggio di piattaforma.",
       "Data, ora, sede, ordine del giorno, stato, streaming, registrazione e verbale restano non verificati o non rilevati secondo il campo.",
-      "I dieci articoli collegati sono fonti editoriali e non certificano programmazione, svolgimento, completezza, contenuto degli atti, partecipanti, votazioni o risultati; City One e il Lametino dipendono dalla stessa nota attribuita a Paolo Mascaro, TV6onAir e Italy Today ripubblicano Gazzetta del Sud e LameziaTerme.it, il Lametino e Corriere di Lamezia riproducono la stessa nota di Progetto Civico Italia, quindi non sono conferme indipendenti.",
+      "I venti articoli collegati sono fonti editoriali e non certificano programmazione, svolgimento, completezza, contenuto degli atti, partecipanti, votazioni o risultati; più pagine riproducono le medesime note attribuite a Paolo Mascaro, Progetto Civico Italia, Fratelli d'Italia o Gennarino Masi, mentre TV6onAir e Italy Today ripubblicano Gazzetta del Sud, quindi non sono conferme indipendenti.",
       "I temi riportati dalla copertura restano nell'agenda editoriale separata e dovranno essere riconciliati se emergerà un atto istituzionale.",
     ],
     sourceStatus: "parziale",
