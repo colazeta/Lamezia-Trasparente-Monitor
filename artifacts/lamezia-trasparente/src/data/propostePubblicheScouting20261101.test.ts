@@ -88,3 +88,42 @@ describe("Scouting 1 novembre — gate end-to-end Federalberghi, medesimo propos
     expect(isProposalGeoreferenced(PROPOSAL_ID)).toBe(false);
   });
 });
+
+describe("Sviluppo ATS del 30 ottobre — stesso ID Progetto di Vita", () => {
+  const PROGETTO_VITA_ID = "politiche-sociali-progetto-vita-2026";
+  const EVENT_ID = "progetto-vita-ats-avviso-tavoli-permanenti-30-ottobre";
+
+  it("aggiorna la timeline esistente senza duplicare proposte o attribuire effetti", () => {
+    const matches = PUBLIC_PROPOSALS.filter((p) => p.id === PROGETTO_VITA_ID);
+    expect(matches).toHaveLength(1);
+    const proposal = matches[0]!;
+    expect(proposal.promoterId).toBe("una-citta-dove-vivere-bene");
+    expect(proposal.lastUpdated).toBe("2026-10-30");
+    const events = proposal.events.filter((event) => event.id === EVENT_ID);
+    expect(events).toHaveLength(1);
+    const event = events[0]!;
+    expect(event.date).toBe("2026-10-30");
+    expect(event.type).toBe("aggiornamento");
+    expect(event.evidenceLevel).toBe("fonte_ufficiale");
+    expect(event.sourceUrl).toContain("comune.lamezia-terme.cz.it");
+    expect(proposal.linkedActs.some((act) => act.includes("1656"))).toBe(true);
+    expect(proposal.verificationNote).toContain("non si deduce l'origine");
+    expect(proposal.events.every((entry) => entry.id !== EVENT_ID || entry.type !== "recepimento")).toBe(true);
+  });
+
+  it("conserva canone, materia ufficiale, destinatario e geografia sul medesimo ID", () => {
+    const proposal = PUBLIC_PROPOSALS.find((p) => p.id === PROGETTO_VITA_ID)!;
+    const canonical = getCanonicalProposalPresentation(proposal);
+    expect(canonical.proposalId).toBe(PROGETTO_VITA_ID);
+    expect(getCanonicalProposalPresentationIds()).toContain(PROGETTO_VITA_ID);
+    const primary = getProposalPrimaryPaSubject(proposal);
+    expect(primary.source).toBe("schema.gov.it / AgID");
+    expect(primary.code).toBe("2");
+    const assessment = getProposalInstitutionalCompetence(proposal);
+    expect(assessment.sourceAddressee).toBe(proposal.institutionalRecipient);
+    expect(assessment.publicAddressee).toBeTruthy();
+    expect(getProposalGeography(PROGETTO_VITA_ID)).toBeDefined();
+    const state = getProposalInstitutionalState(proposal);
+    expect(state.implementation).toBe("none");
+  });
+});

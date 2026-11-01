@@ -7,6 +7,7 @@ import { applyScoutingUpdates20260907 } from "./proposalScoutingUpdates20260907"
 import { applyScoutingUpdates20260909 } from "./proposalScoutingUpdates20260909";
 import { applyScoutingUpdates20260912 } from "./proposalScoutingUpdates20260912";
 import { applyScoutingUpdates20261027ProjectVita } from "./proposalScoutingUpdates20261027ProjectVita";
+import { applyScoutingUpdates20261101 } from "./proposalScoutingUpdates20261101";
 import { SCOUTED_PUBLIC_PROPOSALS } from "./propostePubblicheScouting";
 import { SCOUTED_PUBLIC_PROPOSALS_20260903 } from "./propostePubblicheScouting20260903";
 import { SCOUTED_PUBLIC_PROPOSALS_20260904 } from "./propostePubblicheScouting20260904";
@@ -187,7 +188,7 @@ const UPDATED_EXISTING_PUBLIC_PROPOSALS_20260912 =
 export const PUBLIC_PROPOSALS = [
   ...UPDATED_EXISTING_PUBLIC_PROPOSALS_20260912.map(
     applyScoutingUpdates20261027ProjectVita,
-  ),
+  ).map(applyScoutingUpdates20261101),
   ...UPDATED_SCOUTED_PUBLIC_PROPOSALS_20260904_20260909,
   ...UPDATED_SCOUTED_PUBLIC_PROPOSALS_20260906_20260909,
   ...UPDATED_SCOUTED_PUBLIC_PROPOSALS_20260908,
