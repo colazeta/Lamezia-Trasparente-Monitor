@@ -37,6 +37,6 @@ describe("Madrid Central LEZ and educational outcomes: 1 November 2026", () => {
     expect(item.limitations.join(" ")).toContain("10 scuole");
     expect(item.limitations.join(" ")).toContain("COVID-19");
     expect(item.unintendedEffects).toContain("commerciale");
-    expect(item.lameziaAdaptation).toContain("PGTU");
+    expect(item.lameziaAdaptation).toContain("Piano Generale del Traffico Urbano");
   });
 });
