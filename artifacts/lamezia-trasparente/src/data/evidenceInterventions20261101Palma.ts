@@ -34,7 +34,7 @@ export const EVIDENCE_INTERVENTIONS_2026_11_01_PALMA: readonly EvidenceIntervent
       "lettera di feedback sperimentata separatamente nel 2020, senza beneficio addizionale robusto nel lungo periodo"
     ],
     "territorialScale": "Quartieri selezionati nella città; trattamento individuale a livello di nucleo familiare, con servizi municipali e contenitori condivisi già attivi.",
-    "interventionStatus": "Campagna/intervento sperimentale effettivamente realizzato nel 2019; esiti osservati per circa quattro anni e pubblicati nel maggio 2025. EMAYA documenta il servizio di organico, ma non è verificato che l'offerta sistematica di pledge rimanga una politica operativa nel 2026.",
+    "interventionStatus": "Campagna/intervento sperimentale effettivamente realizzato nel 2019; esiti osservati per circa quattro anni e pubblicati nel maggio 2025. EMAYA documenta il servizio di organico, ma non è verificato che l'offerta sistematica di pledge rimanga una politica operativa nel 2026. Nel 2026 la municipalità ha annunciato la sostituzione della precedente Tarjeta Ciudadana collegata agli utenti con una Tarjeta Llave non associata a dati personali per l'accesso ai contenitori; l'infrastruttura di tracciamento individuale utilizzata nella ricerca del 2019 NON è il modello operativo da replicare.",
     "evaluationMethod": "Esperimento sul campo a assegnazione quasi-randomizzata (NON RCT con randomizzazione formale): alternanza in ordine di arrivo dei partecipanti ai punti informativi (zipper strategy). Stima intention-to-treat dell'offerta di impegno, con verifiche di equilibrio pre-trattamento, dati individuali di apertura dei contenitori e regressioni longitudinali; controllo successivo di un feedback randomizzato con disegno 2×2 nel 2020. Studio peer-reviewed in PNAS (2025).",
     "comparator": "709 nuclei reclutati nella stessa campagna, informati dagli stessi educatori e dotati dello stesso kit, ma non invitati a sottoscrivere un impegno; 810 nuclei ricevettero l'offerta. Il confronto non è con cittadini privi di servizio e non identifica l'effetto della campagna o dei contenitori in sé.",
     "outcomes": [
@@ -55,9 +55,10 @@ export const EVIDENCE_INTERVENTIONS_2026_11_01_PALMA: readonly EvidenceIntervent
       "Outcome misurato tramite apertura del contenitore: non si osservano quantità, purezza del materiale, compost effettivo o riduzione del rifiuto residuo.",
       "Il pledge è offerto durante un'interazione personale con educatori, dopo informazioni e kit: l'effetto di un modulo inviato massivamente o online senza mediazione non è verificato.",
       "Lo studio non misura una riduzione di costi di servizio o emissioni, né l'effetto netto sulla produzione di rifiuti o l'equità di accesso.",
-      "L'uso di identificativi personali e tessere urbane per tracciare conferimenti richiede un rigoroso esame di necessità, proporzionalità, base giuridica e protezione dei dati nel contesto italiano."
+      "L'uso di identificativi personali e tessere urbane per tracciare conferimenti richiede un rigoroso esame di necessità, proporzionalità, base giuridica e protezione dei dati nel contesto italiano.",
+      "Rilievo giuridico concreto emerso successivamente: l'AEPD spagnola, con risoluzione PS-00329-2024 del 18 dicembre 2025 (nota ufficiale esplicativa 25 giugno 2026, https://www.aepd.es/informes-y-resoluciones/criterios-juridicos-aepd/sistemas-municipales-gestion-residuos-mediante-tarjeta-ciudadana), ha considerato non conforme al RGPD il sistema municipale storico di aperture tracciate con numeri di Tarjeta Ciudadana associati a tempo e luogo per mancanza di base giuridica, adeguata informazione, registrazione trattamenti, limite di conservazione e DPIA. Il rilievo concerne il sistema comunale di trattamento dei dati, non equivale a invalidare l'effetto comportamentale stimato o ad affermare illecito il consenso alla sperimentazione."
     ],
-    "unintendedEffects": "Non emergono effetti indesiderati causalmente dimostrati sull'uso dei contenitori. Possibili rischi non misurati: pressione sociale nella sottoscrizione, esclusione di cittadini senza tessera o meno raggiunti dalla campagna, scorretto conferimento, possibili effetti di sostituzione fra frazioni e impatti sulla privacy del tracciamento. Il feedback aggiuntivo non ha mostrato un beneficio duraturo, quindi non va assunto efficace.",
+    "unintendedEffects": "Non emergono effetti indesiderati causalmente dimostrati sull'uso dei contenitori. Possibili rischi non misurati: pressione sociale nella sottoscrizione, esclusione di cittadini senza tessera o meno raggiunti dalla campagna, scorretto conferimento, possibili effetti di sostituzione fra frazioni e impatti sulla privacy del tracciamento. Il feedback aggiuntivo non ha mostrato un beneficio duraturo, quindi non va assunto efficace. RISCHIO EFFETTIVAMENTE ACCERTATO NELLA INFRASTRUTTURA STORICA: AEPD, risoluzione PS-00329-2024 (18 dicembre 2025) e nota ufficiale del 25 giugno 2026, https://www.aepd.es/informes-y-resoluciones/criterios-juridicos-aepd/sistemas-municipales-gestion-residuos-mediante-tarjeta-ciudadana : registrazione identificabile degli accessi ai contenitori in violazione di diversi obblighi del RGPD. Distinguere questo esito giuridico relativo al tracciamento dalla valutazione dell'efficacia dell'offerta di pledge. EMAYA ha annunciato nel 2026 una Tarjeta Llave sostitutiva non associata ai dati personali.",
     "primarySource": {
       "label": "EMAYA (azienda municipale di Palma) — sistema ufficiale di raccolta dell'organico e attività degli educatori ambientali",
       "url": "https://www.emaya.es/residuos-y-limpieza/residuos/recollida-de-mat%C3%A8ria-org%C3%A0nica"
@@ -76,7 +77,7 @@ export const EVIDENCE_INTERVENTIONS_2026_11_01_PALMA: readonly EvidenceIntervent
       }
     ],
     "lastVerifiedAt": "2026-11-01",
-    "transferabilityItaly": "Alta per l'offerta volontaria di impegno come componente aggiuntiva di campagne di sensibilizzazione sulla raccolta separata: non altera obblighi TARI, calendari o contratti del servizio e può essere testata con metodi a basso costo. La componente tecnologica originaria di tessera urbana e tracciamento identificabile non deve essere replicata automaticamente: applicare GDPR e principi di minimizzazione, protezione dati e alternativa non digitale; evitare coercizione e promesse di riduzione dei kg o dei costi non verificata.",
+    "transferabilityItaly": "Alta per l'offerta volontaria di impegno come componente aggiuntiva di campagne di sensibilizzazione sulla raccolta separata: non altera obblighi TARI, calendari o contratti del servizio e può essere testata con metodi a basso costo. La componente tecnologica originaria di tessera urbana e tracciamento identificabile non deve essere replicata automaticamente: applicare GDPR e principi di minimizzazione, protezione dati e alternativa non digitale; evitare coercizione e promesse di riduzione dei kg o dei costi non verificata. Non si tratta solo di un rischio astratto: il modello storico Palma di tracciamento tramite Tarjeta Ciudadana è stato oggetto di accertamento AEPD PS-00329-2024, secondo la nota istituzionale del 25 giugno 2026; per l'Italia evitare l'identificazione individuale delle aperture dei contenitori e disegnare una misurazione alternativa, pertinente e proporzionata.",
     "lameziaAdaptation": "Con Lamezia Multiservizi, selezionare 2–4 zone porta a porta comparabili per dati disponibili e criticità nell'organico. Agli utenti di entrambe le condizioni offrire istruzioni visive e kit già disponibili; durante incontri pubblici e punti mobili proporre casualmente ad alcuni nuclei un impegno volontario semplice, da firmare o sottoscrivere senza alcuna sanzione. Registrare soltanto adesioni e misure aggregate o campionarie di qualità dei conferimenti, con informazione privacy e base giuridica adeguata; evitare collegamento a tessere personali. Valutare la quota di nuclei attivi con una misura lecita, impurità dell'organico, kg raccolti e rifiuto residuo rispetto a zone/gruppi di confronto a 1, 3, 6 e 12 mesi; stimare il costo marginale, controllando spillover e adesione volontaria. Non confondere il programma con il compostaggio domestico e la riduzione TARI dal 2027.",
     "implementability": "medio_termine",
     "capacityDataNeeds": [
@@ -104,12 +105,19 @@ export const EVIDENCE_INTERVENTIONS_2026_11_01_PALMA: readonly EvidenceIntervent
       "dati amministrativi",
       "persistenza quattro anni",
       "nudging",
-      "privacy"
+      "privacy",
+      "AEPD PS-00329-2024",
+      "Tarjeta Llave 2026",
+      "protezione dati"
     ],
     "revisionHistory": [
       {
         "date": "2026-11-01",
         "note": "Nuovo caso verificato direttamente su PNAS 2025 (testo e tabelle), registrazione AEA e documentazione primaria EMAYA. Evidenziati assegnazione alternata NON randomizzazione formale, squilibrio di linkage, risultato sulle aperture anziché kg, follow-up quadriennale, assenza di costo-beneficio e vincoli di privacy italiani."
+      },
+      {
+        "date": "2026-11-01",
+        "note": "Integrazione dopo verifica diretta della nota AEPD (25 giugno 2026, risoluzione PS-00329-2024) e delle informazioni sulla sostituzione della tessera d'accesso nel 2026; esplicitata la non conformità RGPD del tracciamento storico senza attribuire allo studio scientifico la medesima conclusione."
       }
     ]
   }
