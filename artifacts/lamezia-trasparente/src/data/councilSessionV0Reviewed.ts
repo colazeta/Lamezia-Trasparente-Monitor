@@ -112,6 +112,8 @@ const COUNCIL_NOVEMBER_3_GAZZETTA_URL =
   "https://catanzaro.gazzettadelsud.it/articoli/politica/2026/10/31/comune-di-lamezia-terme-consolidato-e-piano-di-riequilibrio-appuntamento-decisivo-per-lente-d647362e-31d0-4e1e-a40d-39d6c1eee2cf/";
 const COUNCIL_NOVEMBER_3_TV6ONAIR_URL =
   "https://tv6onair.com/tv6onair-comune-per-lamezia-terme-cementato-e-piano-per-riequilibrio-colloquio-attraverso-lente/";
+const COUNCIL_NOVEMBER_3_ITALY_TODAY_URL =
+  "https://italytoday.net/comune-di-lamezia-terme-consolidato-e-piano-di-riequilibrio-appuntamento-decisivo-per-lente/";
 const MUNICIPAL_ALBO_DOCUMENTS_URL =
   "https://www.comune.lamezia-terme.cz.it/it/documenti_pubblici/atti-di-albo-pretorio";
 const VIA_TRENTO_ROADWORKS_LAMETINO_URL =
@@ -3149,9 +3151,9 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
   isDemoFixture: false,
   contextResearch: {
     status: "reviewed_matches",
-    checkedAt: "2026-10-31T23:43:00+01:00",
+    checkedAt: "2026-11-01T06:09:00+01:00",
     searchNote:
-      "Parallel Search e la verifica diretta di Comune, pagina istituzionale del Consiglio, Albo corrente, Albo storico, testate locali e canali audiovisivi indicizzati hanno individuato nove articoli: sei fonti già collegate e, il 31 ottobre, tre versioni della stessa nota di Progetto Civico Italia. La nota riferisce che il Piano di riequilibrio sarà portato direttamente in Consiglio, ma non identifica il 3 novembre: le tre pagine sono quindi collegate soltanto come `agenda_item`. LameziaTerme.it etichetta il testo “Comunicato Stampa”; il Lametino e Corriere di Lamezia riproducono la stessa nota e non costituiscono conferme indipendenti. Non è stata acquisita una convocazione, una designazione, un avviso, il parere originale dei Revisori o un allegato istituzionale associabile: date, orari, numero dei punti, contenuto degli atti, svolgimento e posizioni riportate restano elementi editoriali per i prossimi controlli e non vengono pubblicati come dati ufficiali della seduta.",
+      "Parallel Search e la verifica diretta di Comune, pagina istituzionale del Consiglio, Albo corrente, Albo storico, testate locali e canali audiovisivi indicizzati hanno individuato dieci articoli. Alla copertura già collegata si aggiunge Italy Today, che ripubblica titolo e passaggi dell'articolo di Gazzetta del Sud sul possibile Consiglio del 3 novembre ed espone quella pagina come fonte originale. È conservato come `possible_same_session`, ma non costituisce una conferma indipendente. Le tre versioni della nota di Progetto Civico Italia restano invece `agenda_item`, perché riferiscono che il Piano sarà portato in Consiglio senza identificare il 3 novembre. Non è stata acquisita una convocazione, una designazione, un avviso, il parere originale dei Revisori o un allegato istituzionale associabile: date, orari, numero dei punti, contenuto degli atti, svolgimento e posizioni riportate restano elementi editoriali per i prossimi controlli e non vengono pubblicati come dati ufficiali della seduta.",
     articles: [
       {
         title:
@@ -3221,6 +3223,17 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
       },
       {
         title:
+          "Comune di Lamezia Terme, consolidato e Piano di riequilibrio: appuntamento decisivo per l’Ente",
+        url: COUNCIL_NOVEMBER_3_ITALY_TODAY_URL,
+        publisher: "Italy Today",
+        publishedAt: "2026-10-31",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "Italy Today ripubblica titolo e passaggi della copertura sul Consiglio indicato per il 3 novembre ed espone Gazzetta del Sud come fonte originale. La data è conservata prudenzialmente dal riferimento relativo “23 ore fa” mostrato il 1° novembre. Il collegamento è distinto per tracciabilità, ma non costituisce una conferma indipendente né prova istituzionale di convocazione, data, ora, ordine del giorno, svolgimento, voto o esito.",
+        reviewedAt: "2026-11-01T06:09:00+01:00",
+      },
+      {
+        title:
           "Lamezia, Progetto Civico attacca sul riequilibrio: «Dove è finita la politica?»",
         url: PROGETTO_CIVICO_OCTOBER_31_LAMEZIATERME_URL,
         publisher: "LameziaTerme.it",
@@ -3261,10 +3274,11 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
           COUNCIL_NOVEMBER_3_LAMETINO_URL,
           COUNCIL_NOVEMBER_3_GAZZETTA_URL,
           COUNCIL_NOVEMBER_3_TV6ONAIR_URL,
+          COUNCIL_NOVEMBER_3_ITALY_TODAY_URL,
         ],
         confidence: "medium",
         reason:
-          "La copertura editoriale associa questi temi al possibile Consiglio; TV6onAir ripubblica Gazzetta del Sud e non è una conferma indipendente. Non è stato acquisito l'ordine del giorno istituzionale e le fonti non provano iscrizione, trattazione, voto o esito.",
+          "La copertura editoriale associa questi temi al possibile Consiglio; TV6onAir e Italy Today ripubblicano Gazzetta del Sud e non sono conferme indipendenti. Non è stato acquisito l'ordine del giorno istituzionale e le fonti non provano iscrizione, trattazione, voto o esito.",
       },
       {
         title: "Piano di riequilibrio finanziario pluriennale",
@@ -3275,13 +3289,14 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
           COUNCIL_NOVEMBER_3_MASCARO_CITY_ONE_URL,
           COUNCIL_NOVEMBER_3_GAZZETTA_URL,
           COUNCIL_NOVEMBER_3_TV6ONAIR_URL,
+          COUNCIL_NOVEMBER_3_ITALY_TODAY_URL,
           PROGETTO_CIVICO_OCTOBER_31_LAMEZIATERME_URL,
           PROGETTO_CIVICO_OCTOBER_31_LAMETINO_URL,
           PROGETTO_CIVICO_OCTOBER_31_CORRIERE_LAMEZIA_URL,
         ],
         confidence: "medium",
         reason:
-          "Il tema è esplicito nelle nove fonti editoriali. City One e il Lametino dipendono dalla stessa nota attribuita a Paolo Mascaro, TV6onAir ripubblica Gazzetta del Sud e le tre pagine del 31 ottobre riproducono la stessa nota di Progetto Civico Italia: non sono conferme indipendenti. La nuova nota non identifica il 3 novembre. Non sono stati acquisiti l'ordine del giorno, il parere o i documenti originali e le fonti non provano iscrizione, contenuto degli atti, trattazione, voto o esito.",
+          "Il tema è esplicito nelle dieci fonti editoriali. City One e il Lametino dipendono dalla stessa nota attribuita a Paolo Mascaro, TV6onAir e Italy Today ripubblicano Gazzetta del Sud e le tre pagine del 31 ottobre riproducono la stessa nota di Progetto Civico Italia: non sono conferme indipendenti. La nuova nota non identifica il 3 novembre. Non sono stati acquisiti l'ordine del giorno, il parere o i documenti originali e le fonti non provano iscrizione, contenuto degli atti, trattazione, voto o esito.",
       },
       {
         title: "Piano delle alienazioni e valorizzazioni immobiliari 2027",
@@ -3371,7 +3386,7 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
   lastCheckedAt: {
     key: "lastCheckedAt",
     label: "Ultimo controllo",
-    value: "2026-10-31T23:43:00+01:00",
+    value: "2026-11-01T06:09:00+01:00",
     sourceStatus: "verificato",
     sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
     limit:
@@ -3384,7 +3399,7 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
       "Il 3 e il 4 novembre, gli orari e i venti punti riportati dalla testata non sono stati verificati su una fonte istituzionale e non vengono presentati come dati ufficiali della seduta.",
       "Non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione al Consiglio segnalato; il nuovo Albo dinamico ha bloccato l'accesso automatizzato durante il controllo diretto e l'Albo storico non contiene atti successivi al passaggio di piattaforma.",
       "Data, ora, sede, ordine del giorno, stato, streaming, registrazione e verbale restano non verificati o non rilevati secondo il campo.",
-      "I nove articoli collegati sono fonti editoriali e non certificano programmazione, svolgimento, completezza, contenuto degli atti, partecipanti, votazioni o risultati; City One e il Lametino dipendono dalla stessa nota attribuita a Paolo Mascaro, TV6onAir ripubblica Gazzetta del Sud e LameziaTerme.it, il Lametino e Corriere di Lamezia riproducono la stessa nota di Progetto Civico Italia, quindi non sono conferme indipendenti.",
+      "I dieci articoli collegati sono fonti editoriali e non certificano programmazione, svolgimento, completezza, contenuto degli atti, partecipanti, votazioni o risultati; City One e il Lametino dipendono dalla stessa nota attribuita a Paolo Mascaro, TV6onAir e Italy Today ripubblicano Gazzetta del Sud e LameziaTerme.it, il Lametino e Corriere di Lamezia riproducono la stessa nota di Progetto Civico Italia, quindi non sono conferme indipendenti.",
       "I temi riportati dalla copertura restano nell'agenda editoriale separata e dovranno essere riconciliati se emergerà un atto istituzionale.",
     ],
     sourceStatus: "parziale",
