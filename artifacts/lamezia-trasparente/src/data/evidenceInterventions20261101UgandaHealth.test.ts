@@ -62,7 +62,7 @@ describe("Ugandan district clinic accountability RCT (2026-11-01)", () => {
     expect(entry.effectSize).toContain("376 centri");
     expect(entry.results).toContain("2026");
     expect(entry.evaluationStudies.map((s) => s.doi)).toContain("10.1086/736577");
-    expect(entry.limitations.join(" ")).toContain("controstante");
+    expect(entry.limitations.join(" ")).toContain("contrastante");
     expect(entry.authority).toContain("ONG");
     expect(entry.lameziaAdaptation).toContain("ASP Catanzaro");
   });
