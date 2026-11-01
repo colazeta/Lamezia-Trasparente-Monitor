@@ -51,7 +51,7 @@ describe("municipal evidence archive: Palma EMAYA biowaste pledge 2019", () => {
     expect(item.effectSize).toContain("3,11");
     expect(item.effectSize).toContain("4,49");
     expect(item.effectSize).toContain("210");
-    expect(item.effectSize).toContain("non");
+    expect(item.effectSize).toContain("Non sono percentuali");
     expect(item.outcomes.join(" ")).toContain("NON misurati");
     expect(item.limitations.join(" ")).toContain("80,88%");
   });
