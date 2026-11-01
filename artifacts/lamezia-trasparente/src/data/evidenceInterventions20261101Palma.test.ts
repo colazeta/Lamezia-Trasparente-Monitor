@@ -22,7 +22,7 @@ describe("municipal evidence archive: Palma EMAYA biowaste pledge 2019", () => {
     expect(Object.keys(item).sort()).toEqual([...fields].sort());
     expect(item.id).toBe("palma-emaya-biowaste-pledge-2019-quasi-random-longitudinal");
     expect(EVIDENCE_INTERVENTIONS.filter((row) => row.id === item.id)).toHaveLength(1);
-    expect(item.revisionHistory).toHaveLength(1);
+    expect(item.revisionHistory).toHaveLength(2);
     expect(item.lastVerifiedAt).toBe("2026-11-01");
   });
 
@@ -59,6 +59,9 @@ describe("municipal evidence archive: Palma EMAYA biowaste pledge 2019", () => {
   it("guards against unsupported kg/cost claims and privacy-unsafe replication", () => {
     expect(item.results).toContain("non sui kg");
     expect(item.unintendedEffects).toContain("privacy");
+    expect(item.unintendedEffects).toContain("PS-00329-2024");
+    expect(item.limitations.join(" ")).toContain("AEPD");
+    expect(item.transferabilityItaly).toContain("25 giugno 2026");
     expect(item.transferabilityItaly).toContain("GDPR");
     expect(item.lameziaAdaptation).toContain("Lamezia Multiservizi");
     expect(item.lameziaAdaptation).toContain("senza alcuna sanzione");
