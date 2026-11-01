@@ -21,6 +21,7 @@ export function applyScoutingUpdates20261101(
 
   return {
     ...proposal,
+    periodLabel: "Giugno–ottobre 2026",
     lastUpdated: "2026-10-30",
     linkedActs: Array.from(
       new Set([
