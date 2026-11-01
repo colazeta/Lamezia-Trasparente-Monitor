@@ -58,8 +58,8 @@ export const EVIDENCE_INTERVENTIONS_2026_11_01: readonly EvidenceIntervention[] 
     ],
     "unintendedEffects": "Lo studio non documenta aumenti significativi di NO₂ ai siti esterni monitorati, ma la copertura è incompleta e non esclude spostamenti del traffico altrove. Rischio distributivo plausibile: oneri relativamente elevati per persone con auto vecchie e minore capacità economica; lo studio non quantifica tale impatto né effetti sulle attività commerciali.",
     "primarySource": {
-      "label": "Birmingham City Council — Charging Order e avvio ufficiale della Clean Air Zone (5 maggio 2021)",
-      "url": "https://www.birmingham.gov.uk/news/article/864/birmingham_clean_air_zone_charging_order_published_ahead_of_1_june_2021_launch_date"
+      "label": "Birmingham City Council / Brum Breathes — Charging Order ufficiale 2021",
+      "url": "https://www.brumbreathes.co.uk/info/32/charges-operation/35/clean-air-zone-charging-order"
     },
     "evaluationStudies": [
       {
