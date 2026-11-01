@@ -50,7 +50,7 @@ describe("evidence archive intake: Birmingham CAZ (2026-11-01)", () => {
     expect(item.effectSize).toContain("−11,9%");
     expect(item.effectSize).toContain("PM₂,₅");
     expect(item.effectSize).toContain("NON");
-    expect(item.results).toContain("prime sette mesi");
+    expect(item.results).toContain("primi sette mesi");
     expect(item.limitations.join(" ")).toContain("non randomizzato");
     expect(item.limitations.join(" ")).toContain("pandemiche");
     expect(item.unintendedEffects).toContain("distributivo");
