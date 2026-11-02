@@ -55,6 +55,7 @@ import { EVIDENCE_INTERVENTIONS_2026_10_30_MAPUTO } from "./evidenceIntervention
 import { EVIDENCE_INTERVENTIONS_2026_11_01 } from "./evidenceInterventions20261101";
 import { EVIDENCE_INTERVENTIONS_2026_11_01_PALMA } from "./evidenceInterventions20261101Palma";
 import { EVIDENCE_INTERVENTIONS_2026_11_01_MADRID } from "./evidenceInterventions20261101Madrid";
+import { EVIDENCE_INTERVENTIONS_2026_11_02 } from "./evidenceInterventions20261102";
 import { applyEvidenceInterventionUpdates20260914 } from "./evidenceInterventionUpdates20260914";
 import { applyEvidenceInterventionUpdates20260919 } from "./evidenceInterventionUpdates20260919";
 
@@ -120,6 +121,7 @@ const EVIDENCE_INTERVENTIONS_BEFORE_2026_09_14_UPDATES: readonly EvidenceInterve
   ...EVIDENCE_INTERVENTIONS_2026_11_01,
   ...EVIDENCE_INTERVENTIONS_2026_11_01_PALMA,
   ...EVIDENCE_INTERVENTIONS_2026_11_01_MADRID,
+  ...EVIDENCE_INTERVENTIONS_2026_11_02,
 ];
 
 function deduplicateEvidenceInterventions(
