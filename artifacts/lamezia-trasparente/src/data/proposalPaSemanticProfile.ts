@@ -154,6 +154,18 @@ const eu = (code: OfficialFallbackDataThemeCode): ProposalPaSubjectRef => ({
 });
 
 const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
+  "Accessibilità e funzionalità dei servizi ospedalieri": {
+    primary: ps("2"),
+    secondary: [ps("5")],
+    mappingNote:
+      "La richiesta è prevalentemente riferita alla funzionalità e all'accessibilità di servizi sanitari: Salute, benessere e assistenza è materia primaria ufficiale. Catasto e urbanistica resta classificazione secondaria per gli impianti dell'edificio; la materia non stabilisce chi sia istituzionalmente competente.",
+  },
+  "Accessibilità della sede municipale": {
+    primary: ps("5"),
+    secondary: [ps("2")],
+    mappingNote:
+      "L'intervento materiale di accessibilità della sede pubblica ricade nella materia ufficiale Catasto e urbanistica, con Salute, benessere e assistenza secondaria per l'attenzione alle persone con difficoltà motorie. Nessuna competenza istituzionale è inferita dal luogo o dal destinatario.",
+  },
   "Coordinamento turistico e imposta di soggiorno": {
     primary: ps("7"),
     secondary: [ps("9"), ps("4"), ps("10")],
