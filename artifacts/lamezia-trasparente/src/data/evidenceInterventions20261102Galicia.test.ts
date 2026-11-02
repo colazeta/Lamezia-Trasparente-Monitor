@@ -25,7 +25,7 @@ describe("Galicia seven-city integrated child inclusion trial, 2026-11-02", () =
     expect(item.population).toContain("1.862");
     expect(item.evaluationMethod).toContain("sette città");
     expect(item.effectSize).toContain("+0,13");
-    expect(item.effectSize).toContain("+0,25");
+    expect(item.effectSize).toContain("+0,19–0,25");
     expect(item.effectSize).toContain("deviazioni standard");
     expect(item.results).toContain("Non sono identificati effetti medi robusti");
     expect(item.limitations.join(" ")).toContain("rurali");
