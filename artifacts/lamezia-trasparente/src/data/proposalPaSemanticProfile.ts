@@ -154,6 +154,15 @@ const eu = (code: OfficialFallbackDataThemeCode): ProposalPaSubjectRef => ({
 });
 
 const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
+  "Manutenzione dei corsi d'acqua e prevenzione idrogeologica": {
+    primary: ps("11"),
+    secondary: [ps("8")],
+    mappingNote: "La richiesta di manutenzione dei corpi idrici ricade nella materia ufficiale Ambiente, con Giustizia e sicurezza pubblica come classificazione analitica secondaria per il rischio. Il mapping non attribuisce competenze istituzionali.",
+  },
+  "Co-programmazione del welfare e Terzo Settore": {
+    primary: ps("2"),
+    mappingNote: "Il contenuto riguarda la programmazione partecipata di servizi sociali: la materia ufficiale Salute, benessere e assistenza è primaria. Il coordinamento è una facet operativa, non una categoria tematica né una prova di competenza.",
+  },
   "Accessibilità e funzionalità dei servizi ospedalieri": {
     primary: ps("2"),
     secondary: [ps("5")],
