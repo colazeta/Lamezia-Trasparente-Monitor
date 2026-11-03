@@ -59,6 +59,7 @@ import { EVIDENCE_INTERVENTIONS_2026_11_02 } from "./evidenceInterventions202611
 import { EVIDENCE_INTERVENTIONS_2026_11_03 } from "./evidenceInterventions20261103";
 import { applyEvidenceInterventionUpdates20260914 } from "./evidenceInterventionUpdates20260914";
 import { applyEvidenceInterventionUpdates20260919 } from "./evidenceInterventionUpdates20260919";
+import { applyEvidenceInterventionUpdates20261103 } from "./evidenceInterventionUpdates20261103";
 
 export {
   EVIDENCE_AREA_LABELS,
@@ -164,7 +165,8 @@ const DEDUPLICATED_EVIDENCE_INTERVENTIONS = deduplicateEvidenceInterventions(
 export const EVIDENCE_INTERVENTIONS: readonly EvidenceIntervention[] =
   DEDUPLICATED_EVIDENCE_INTERVENTIONS
     .map(applyEvidenceInterventionUpdates20260914)
-    .map(applyEvidenceInterventionUpdates20260919);
+    .map(applyEvidenceInterventionUpdates20260919)
+    .map(applyEvidenceInterventionUpdates20261103);
 
 export function getEvidenceCountries() {
   return Array.from(new Set(EVIDENCE_INTERVENTIONS.map((item) => item.country))).sort((a, b) =>
