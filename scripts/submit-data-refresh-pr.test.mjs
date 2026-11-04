@@ -55,3 +55,33 @@ test("refresh proposes a branch and dispatches checks without changing protected
     rmSync(root, { recursive: true, force: true });
   }
 });
+
+test("blocked PR creation preserves one orphan branch and a retry recovers it without another commit", () => {
+  const root=mkdtempSync(path.join(tmpdir(),"lamezia-blocked-refresh-"));
+  try {
+    const cwd=path.join(root,"work"),bin=path.join(root,"bin");mkdirSync(cwd);mkdirSync(bin);
+    const git=(...args)=>execFileSync("git",args,{cwd,encoding:"utf8",stdio:"pipe"}).trim();
+    git("init","--bare",path.join(root,"remote.git"));git("init","-b","main");
+    git("config","user.name","Test");git("config","user.email","test@example.invalid");
+    const snapshot="artifacts/lamezia-trasparente/src/data/generated/lameziaClimateDaily.json";
+    mkdirSync(path.dirname(path.join(cwd,snapshot)),{recursive:true});writeFileSync(path.join(cwd,snapshot),"{}\n");
+    git("add",".");git("commit","-m","baseline");git("remote","add","origin",path.join(root,"remote.git"));git("push","origin","main");
+    const base=git("rev-parse","HEAD"),summary=path.join(root,"summary");
+    writeFileSync(path.join(bin,"gh"),'#!/bin/sh\ncase "$*" in\n *"--state all"*) echo 0;;\n "pr create"*) echo "GitHub Actions is not permitted to create pull requests" >&2; exit 1;;\nesac\n',{mode:0o755});
+    const env={...process.env,PATH:`${bin}:${process.env.PATH}`,GH_TOKEN:"fixture",GITHUB_REPOSITORY:"test/project",GITHUB_RUN_ID:"100",GITHUB_STEP_SUMMARY:summary};
+    writeFileSync(path.join(cwd,snapshot),'{"first":true}\n');
+    assert.throws(()=>execFileSync("bash",[script,"climate","Refresh",snapshot],{cwd,env,stdio:"pipe"}));
+    const preserved=git("ls-remote","--heads","origin","refs/heads/data/refresh-climate-*");
+    assert.equal(preserved.split("\n").length,1);const head=preserved.split(/\s+/)[0];
+    git("switch","main");writeFileSync(path.join(cwd,snapshot),'{"second":true}\n');
+    assert.throws(()=>execFileSync("bash",[script,"climate","Refresh",snapshot],{cwd,env:{...env,GITHUB_RUN_ID:"101"},stdio:"pipe"}));
+    assert.equal(git("ls-remote","--heads","origin","refs/heads/data/refresh-climate-*"),preserved);
+    assert.equal(git("rev-parse","HEAD"),base);assert.equal(git("rev-parse","data/refresh-climate-100-1"),head);
+    assert.match(readFileSync(summary,"utf8"),/Refresh delivery blocked/);
+    // Once policy is repaired the same branch can be proposed and checked.
+    writeFileSync(path.join(bin,"gh"),'#!/bin/sh\ncase "$*" in\n *"--state all"*) echo 0;;\n "pr create"*) echo "https://github.com/test/project/pull/123";;\nesac\n',{mode:0o755});
+    const result=execFileSync("bash",[script,"climate","Refresh",snapshot],{cwd,env:{...env,GITHUB_RUN_ID:"102"},encoding:"utf8",stdio:["ignore","pipe","pipe"]});
+    assert.match(result,/Recovering preserved climate proposal/);
+    assert.equal(git("ls-remote","--heads","origin","refs/heads/data/refresh-climate-*"),preserved);
+  } finally {rmSync(root,{recursive:true,force:true});}
+});
