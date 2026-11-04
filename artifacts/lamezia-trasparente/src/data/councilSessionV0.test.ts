@@ -455,6 +455,53 @@ describe("councilSessionV0", () => {
           /comunicato stampa.*non costituisce una conferma indipendente/i,
         ),
       }),
+      expect.objectContaining({
+        publisher: "il Lametino",
+        publishedAt: "2026-11-03",
+        relationship: "same_session",
+        url: expect.stringContaining("consiglio-comunale-approva"),
+        relevanceNote: expect.stringMatching(/fonte editoriale/i),
+      }),
+      expect.objectContaining({
+        publisher: "ANSA",
+        publishedAt: "2026-11-03",
+        relationship: "same_session",
+        relevanceNote: expect.stringMatching(
+          /non una pubblicazione istituzionale/i,
+        ),
+      }),
+      expect.objectContaining({
+        publisher: "LameziaTerme.it",
+        publishedAt: "2026-11-04",
+        relationship: "same_session",
+        relevanceNote: expect.stringMatching(
+          /non costituisce una conferma indipendente/i,
+        ),
+      }),
+      expect.objectContaining({
+        publisher: "Calabria7",
+        publishedAt: "2026-11-03",
+        relationship: "same_session",
+        relevanceNote: expect.stringMatching(
+          /non costituisce una conferma indipendente/i,
+        ),
+      }),
+      expect.objectContaining({
+        publisher: "ReggioTV",
+        publishedAt: "2026-11-03",
+        relationship: "same_session",
+        relevanceNote: expect.stringMatching(
+          /non costituisce una conferma indipendente/i,
+        ),
+      }),
+      expect.objectContaining({
+        publisher: "Calabria Tribune",
+        publishedAt: "2026-11-04",
+        relationship: "same_session",
+        relevanceNote: expect.stringMatching(
+          /non costituisce una conferma indipendente/i,
+        ),
+      }),
     ]);
     expect(session?.contextResearch.media).toEqual([]);
     expect(session?.contextResearch.editorialAgenda?.length).toBeGreaterThan(0);
