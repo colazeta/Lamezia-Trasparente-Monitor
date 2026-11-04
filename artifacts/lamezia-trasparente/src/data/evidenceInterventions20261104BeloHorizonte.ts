@@ -37,7 +37,7 @@ export const EVIDENCE_INTERVENTIONS_2026_11_04_BELO_HORIZONTE: readonly Evidence
   ],
   "territorialScale": "Quartieri e isolati all'interno di una metropoli; cluster randomisation stratificata per sottodistretto e densità delle imprese.",
   "interventionStatus": "Sperimentazione completata nel 2012. Il sistema di licenze municipali ALF è tuttora operativo con procedure molto diverse e successive semplificazioni (PBH 2025); la campagna specifica non è presentata come attualmente attiva.",
-  "evaluationMethod": "Randomized field experiment a due livelli: 605 isolati randomizzati a controlli, comunicazione e baseline; assegnazione ulteriore individuale. Stima intention-to-treat (ITT) su esiti amministrativi, errori standard clusterizzati; LATE mediante assegnazione come strumento per visita effettiva. Analisi di spillover, aggiustamenti per test multipli e controlli sui tassi di risposta.",
+  "evaluationMethod": "Randomized field experiment a due livelli: 605 isolati randomizzati a controllo, comunicazione e ispezione; assegnazione ulteriore individuale. Stima intention-to-treat (ITT) su esiti amministrativi, errori standard clusterizzati; LATE mediante assegnazione come strumento per visita effettiva. Analisi di spillover, aggiustamenti per test multipli e controlli sui tassi di risposta.",
   "comparator": "Imprese in 201 isolati di controllo e sottogruppi non trattati nello stesso periodo; per comunicazione/offerta gratuita confronto su imprese che avevano risposto alla survey baseline, per ispezioni confronto sulla più ampia lista originaria pesata.",
   "outcomes": [
     "nuove licenze municipali ALF (match certo o probabile)",
