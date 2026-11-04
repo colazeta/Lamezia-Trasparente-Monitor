@@ -471,6 +471,15 @@ describe("councilSessionV0", () => {
         ),
       }),
       expect.objectContaining({
+        publisher: "EsseTV News",
+        publishedAt: "2026-11-03",
+        relationship: "same_session",
+        url: expect.stringContaining("essetvnews.it/2026/11/03"),
+        relevanceNote: expect.stringMatching(
+          /non costituisce una conferma indipendente/i,
+        ),
+      }),
+      expect.objectContaining({
         publisher: "LameziaTerme.it",
         publishedAt: "2026-11-04",
         relationship: "same_session",

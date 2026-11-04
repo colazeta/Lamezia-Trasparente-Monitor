@@ -148,6 +148,8 @@ const COUNCIL_NOVEMBER_3_REPORT_ANSA_URL =
   "https://www.ansa.it/calabria/notizie/2026/11/03/il-consiglio-comunale-di-lamezia-approva-il-piano-di-riequilibrio_9ec0c0d9-1469-428d-b394-557dc25388d6.html";
 const COUNCIL_NOVEMBER_3_REPORT_LAMEZIATERME_URL =
   "https://www.lameziaterme.it/consiglio-comunale-lamezia-approva-piano-riequilibrio/";
+const COUNCIL_NOVEMBER_3_REPORT_ESSETV_URL =
+  "https://www.essetvnews.it/2026/11/03/il-consiglio-comunale-di-lamezia-approva-il-piano-di-riequilibrio/";
 const COUNCIL_NOVEMBER_3_REPORT_CALABRIA7_URL =
   "https://calabria7.news/politica/il-comune-di-lamezia-prova-a-scongiurare-il-dissesto-piano-decennale-per-il-risanamento-decisivo-il-parere-della-corte-dei-conti/";
 const COUNCIL_NOVEMBER_3_REPORT_REGGIOTV_URL =
@@ -3191,9 +3193,9 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
   isDemoFixture: false,
   contextResearch: {
     status: "reviewed_matches",
-    checkedAt: "2026-11-04T17:46:00+01:00",
+    checkedAt: "2026-11-05T00:04:00+01:00",
     searchNote:
-      "Parallel Search e la verifica diretta di Comune, pagina istituzionale del Consiglio, Albo corrente, Albo storico, testate locali e canali audiovisivi indicizzati hanno individuato trenta articoli. Due approfondimenti del 1° novembre di Gazzetta del Sud e NtaCalabria identificano il Consiglio del 3 novembre e il Piano di riequilibrio ma restano `possible_same_session`; NtaCalabria riprende la stessa ricostruzione e non costituisce una conferma indipendente. Due anticipazioni del 3 novembre di Gazzetta del Sud e Italy Today identificano esplicitamente il Consiglio della stessa mattina e i temi finanziari distintivi e vengono collegate come `same_session`; Italy Today espone Gazzetta del Sud come fonte originale. Si aggiungono ai sei resoconti già collegati come `same_session`, quattro dei quali riprendono in tutto o in parte il dispaccio ANSA. Tutte le pagine restano fonti editoriali: programmazione, votazioni, risultati e svolgimento riportati non vengono trasferiti nei campi ufficiali. Il controllo diretto del 4 novembre non ha individuato una convocazione, una designazione, un avviso, il parere originale dei Revisori, un allegato istituzionale o un contenuto audiovisivo associabile; date, orari, numero dei punti, contenuto degli atti, svolgimento e posizioni riportate restano elementi editoriali e non vengono pubblicati come dati ufficiali della seduta.",
+      "Parallel Search e la verifica diretta di Comune, pagina istituzionale del Consiglio, Albo corrente, Albo storico, testate locali e canali audiovisivi indicizzati hanno individuato trentuno articoli. Il controllo del 5 novembre ha aggiunto il resoconto di EsseTV News, classificato `same_session`: riproduce titolo e contenuto del resoconto di LameziaTerme.it e non costituisce una conferma indipendente. Due approfondimenti del 1° novembre di Gazzetta del Sud e NtaCalabria identificano il Consiglio del 3 novembre e il Piano di riequilibrio ma restano `possible_same_session`; NtaCalabria riprende la stessa ricostruzione e non costituisce una conferma indipendente. Due anticipazioni del 3 novembre di Gazzetta del Sud e Italy Today identificano esplicitamente il Consiglio della stessa mattina e i temi finanziari distintivi e vengono collegate come `same_session`; Italy Today espone Gazzetta del Sud come fonte originale. Tutte le pagine restano fonti editoriali: programmazione, votazioni, risultati e svolgimento riportati non vengono trasferiti nei campi ufficiali. Il controllo diretto del 5 novembre non ha individuato una convocazione, una designazione, un avviso, il parere originale dei Revisori, un allegato istituzionale o un contenuto audiovisivo associabile; date, orari, numero dei punti, contenuto degli atti, svolgimento e posizioni riportate restano elementi editoriali e non vengono pubblicati come dati ufficiali della seduta.",
     articles: [
       {
         title:
@@ -3440,6 +3442,17 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
       {
         title:
           "Il Consiglio comunale di Lamezia approva il Piano di riequilibrio",
+        url: COUNCIL_NOVEMBER_3_REPORT_ESSETV_URL,
+        publisher: "EsseTV News",
+        publishedAt: "2026-11-03",
+        relationship: "same_session",
+        relevanceNote:
+          "EsseTV News riproduce titolo e contenuto del resoconto già pubblicato da LameziaTerme.it. Il collegamento è conservato per tracciabilità ma non costituisce una conferma indipendente o istituzionale né certifica convocazione, ordine del giorno, svolgimento, votazioni o risultati.",
+        reviewedAt: "2026-11-05T00:04:00+01:00",
+      },
+      {
+        title:
+          "Il Consiglio comunale di Lamezia approva il Piano di riequilibrio",
         url: COUNCIL_NOVEMBER_3_REPORT_LAMEZIATERME_URL,
         publisher: "LameziaTerme.it",
         publishedAt: "2026-11-04",
@@ -3558,6 +3571,7 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
           COUNCIL_NOVEMBER_3_REPORT_LAMETINO_URL,
           COUNCIL_NOVEMBER_3_REPORT_ANSA_URL,
           COUNCIL_NOVEMBER_3_REPORT_LAMEZIATERME_URL,
+          COUNCIL_NOVEMBER_3_REPORT_ESSETV_URL,
           COUNCIL_NOVEMBER_3_REPORT_CALABRIA7_URL,
           COUNCIL_NOVEMBER_3_REPORT_REGGIOTV_URL,
           COUNCIL_NOVEMBER_3_REPORT_CALABRIA_TRIBUNE_URL,
@@ -3568,7 +3582,7 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
         ],
         confidence: "medium",
         reason:
-          "Il tema è esplicito nelle ventuno fonti editoriali collegate. Sei resoconti successivi e due anticipazioni della stessa mattina identificano il Consiglio, ma più pagine riprendono il dispaccio ANSA o articoli di Gazzetta del Sud; le altre comprendono ulteriori note e ripubblicazioni non indipendenti. Non sono stati acquisiti l'ordine del giorno, il parere o i documenti originali: le fonti non provano ufficialmente iscrizione, contenuto degli atti, trattazione, voto o esito.",
+          "Il tema è esplicito nelle ventidue fonti editoriali collegate. I resoconti successivi e le due anticipazioni della stessa mattina identificano il Consiglio, ma più pagine riprendono il dispaccio ANSA, articoli di Gazzetta del Sud o, nel caso di EsseTV News, il resoconto di LameziaTerme.it; le altre comprendono ulteriori note e ripubblicazioni non indipendenti. Non sono stati acquisiti l'ordine del giorno, il parere o i documenti originali: le fonti non provano ufficialmente iscrizione, contenuto degli atti, trattazione, voto o esito.",
       },
       {
         title: "Piano delle alienazioni e valorizzazioni immobiliari 2027",
@@ -3667,7 +3681,7 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
   lastCheckedAt: {
     key: "lastCheckedAt",
     label: "Ultimo controllo",
-    value: "2026-11-04T17:46:00+01:00",
+    value: "2026-11-05T00:04:00+01:00",
     sourceStatus: "verificato",
     sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
     limit:
@@ -3678,9 +3692,9 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
     label: "Limiti del dato",
     value: [
       "Il 3 e il 4 novembre, gli orari e i venti punti riportati dalla testata non sono stati verificati su una fonte istituzionale e non vengono presentati come dati ufficiali della seduta.",
-      "Non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione al Consiglio segnalato; il 4 novembre il nuovo Albo dinamico ha restituito soltanto quattro avvisi culturali nella ricerca d'archivio dal 25 ottobre, mentre l'Albo storico non contiene atti successivi al passaggio di piattaforma.",
+      "Non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione al Consiglio segnalato; il 5 novembre il nuovo Albo dinamico ha restituito soltanto quattro avvisi culturali nella ricerca d'archivio dal 25 ottobre, mentre l'Albo storico non contiene atti successivi al passaggio di piattaforma.",
       "Data, ora, sede, ordine del giorno, stato, streaming, registrazione e verbale restano non verificati o non rilevati secondo il campo.",
-      "I trenta articoli collegati sono fonti editoriali e non certificano programmazione, svolgimento, completezza, contenuto degli atti, partecipanti, votazioni o risultati; più pagine riproducono le medesime note, articoli o dispacci e non sono conferme indipendenti. I resoconti e le anticipazioni della stessa mattina identificano la stessa seduta, ma la programmazione, le votazioni e gli esiti che riportano non vengono trasferiti nei campi ufficiali.",
+      "I trentuno articoli collegati sono fonti editoriali e non certificano programmazione, svolgimento, completezza, contenuto degli atti, partecipanti, votazioni o risultati; più pagine riproducono le medesime note, articoli o dispacci e non sono conferme indipendenti. I resoconti e le anticipazioni della stessa mattina identificano la stessa seduta, ma la programmazione, le votazioni e gli esiti che riportano non vengono trasferiti nei campi ufficiali.",
       "I temi riportati dalla copertura restano nell'agenda editoriale separata e dovranno essere riconciliati se emergerà un atto istituzionale.",
     ],
     sourceStatus: "parziale",
