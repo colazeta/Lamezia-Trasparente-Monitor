@@ -4,14 +4,14 @@ set -euo pipefail
 kind="$1"
 title="$2"
 shift 2
-case "$kind" in albo|pnrr|anac|civic) ;; *) echo "Unsupported refresh kind" >&2; exit 1 ;; esac
+case "$kind" in albo|pnrr|anac|civic|climate|opendata) ;; *) echo "Unsupported refresh kind" >&2; exit 1 ;; esac
 : "${GH_TOKEN:?GitHub token required}"
 : "${GITHUB_REPOSITORY:?Repository required}"
 : "${GITHUB_RUN_ID:?Workflow run required}"
 
 for snapshot_path in "$@"; do
   case "$kind:$snapshot_path" in
-    albo:data/public/albo|albo:data/public/albo/*|pnrr:artifacts/lamezia-trasparente/src/data/generated/lameziaPnrrProjects.json|anac:data/public/contracts/anac-bdncp/latest.json|anac:data/public/contracts/anac-authority/latest.json|civic:data/public/canonical/civic-snapshot.json|civic:artifacts/lamezia-trasparente/src/data/generated/canonicalAlboSupport.json|civic:architecture/current-data-inventory.json) ;;
+    opendata:artifacts/lamezia-trasparente/src/data/generated/lameziaAirTrafficMonthly.delta.json|opendata:artifacts/lamezia-trasparente/src/data/generated/lameziaAirTrafficMonthly.metadata.json|opendata:artifacts/lamezia-trasparente/src/data/generated/lameziaDemographicTrend.json|opendata:artifacts/lamezia-trasparente/src/data/generated/lameziaForeignResidentsAgeSex.json|opendata:artifacts/lamezia-trasparente/src/data/generated/lameziaFamiliesChildren.json|opendata:artifacts/lamezia-trasparente/src/data/generated/lameziaOpenDataSeriesStatus.json|climate:artifacts/lamezia-trasparente/src/data/generated/lameziaClimateDaily.json|climate:artifacts/lamezia-trasparente/src/data/generated/lameziaClimateDaily.metadata.json|climate:artifacts/lamezia-trasparente/src/data/generated/lameziaOpenDataSeriesStatus.json|albo:data/public/albo|albo:data/public/albo/*|pnrr:artifacts/lamezia-trasparente/src/data/generated/lameziaPnrrProjects.json|anac:data/public/contracts/anac-bdncp/latest.json|anac:data/public/contracts/anac-authority/latest.json|civic:data/public/canonical/civic-snapshot.json|civic:artifacts/lamezia-trasparente/src/data/generated/canonicalAlboSupport.json|civic:architecture/current-data-inventory.json) ;;
     *) echo "Unexpected refresh path: $snapshot_path" >&2; exit 1 ;;
   esac
 done
@@ -31,16 +31,31 @@ if [[ -n "$pending_url" ]]; then
   fi
   exit 0
 fi
-git config user.name "github-actions[bot]"
-git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-branch="data/refresh-${kind}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT:-1}"
-git switch -c "$branch"
-git commit -m "$title"
-git push origin "HEAD:refs/heads/$branch"
+# A pushed branch can survive a failed PR-creation attempt. Recover that exact
+# proposal before writing another branch, without overwriting its source evidence.
+remote_refs="$(git ls-remote --heads origin "refs/heads/data/refresh-${kind}-*")"
+branch=""
+while IFS= read -r candidate; do
+  [[ -n "$candidate" ]] || continue
+  candidate="${candidate#refs/heads/}"
+  prior_prs="$(gh pr list --repo "$GITHUB_REPOSITORY" --state all --head "$candidate" --json number --jq 'length')"
+  if [[ "$prior_prs" == "0" ]]; then branch="$candidate"; break; fi
+done < <(printf '%s\n' "$remote_refs" | awk '{print $2}' | sort -r)
+if [[ -n "$branch" ]]; then
+  echo "::notice::Recovering preserved $kind proposal branch: $branch"
+else
+  git config user.name "github-actions[bot]"
+  git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+  branch="data/refresh-${kind}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT:-1}"
+  git switch -c "$branch"
+  git commit -m "$title"
+  git push origin "HEAD:refs/heads/$branch"
+fi
 body_file="$(mktemp)"
 trap 'rm -f "$body_file"' EXIT
 issue_number=1649
 if [[ "$kind" == "civic" ]]; then issue_number=1655; fi
+if [[ "$kind" == "climate" || "$kind" == "opendata" ]]; then issue_number=1803; fi
 cat > "$body_file" <<EOF
 Related to #$issue_number.
 
@@ -52,7 +67,14 @@ Validation: the acquisition workflow completed its preceding checks; CI,
 PR hook guard and static fallback smoke are explicitly dispatched for this head.
 Review the source changes and required checks before merging. No protected-main bypass.
 EOF
-pr_url="$(gh pr create --repo "$GITHUB_REPOSITORY" --base main --head "$branch" --title "$title" --body-file "$body_file")"
+if ! pr_url="$(gh pr create --repo "$GITHUB_REPOSITORY" --base main --head "$branch" --title "$title" --body-file "$body_file")"; then
+  compare_url="https://github.com/$GITHUB_REPOSITORY/compare/main...$branch"
+  echo "::error::PR creation failed; the proposal remains on $branch. Check the repository Actions PR-creation policy."
+  if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
+    printf '### Refresh delivery blocked\n\nPreserved branch: `%s`\n\nReview: %s\n\nNo snapshot was published and main was not modified.\n' "$branch" "$compare_url" >> "$GITHUB_STEP_SUMMARY"
+  fi
+  exit 1
+fi
 pr_number="${pr_url##*/}"
 [[ "$pr_number" =~ ^[0-9]+$ ]] || { echo "Invalid PR response" >&2; exit 1; }
 # GITHUB_TOKEN writes do not trigger ordinary push/pull_request workflows.

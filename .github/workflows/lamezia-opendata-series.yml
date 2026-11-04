@@ -6,6 +6,7 @@ on:
     # 06:10 UTC follows the dedicated climate refresh and checks all other series daily.
     - cron: "10 6 * * *"
   push:
+    branches: [main]
     paths: &refresh_paths
       - ".github/workflows/lamezia-opendata-series.yml"
       - "scripts/refresh-lamezia-opendata-series.mjs"
@@ -22,6 +23,8 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
+  actions: write
 
 concurrency:
   group: lamezia-opendata-series-refresh-${{ github.ref }}
@@ -105,25 +108,17 @@ jobs:
           }
           NODE
 
-      - name: Commit changed public series
+      - name: Propose changed public series through protected-main review
         if: github.event_name != 'pull_request'
         shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git add \
-            artifacts/lamezia-trasparente/src/data/generated/lameziaAirTrafficMonthly.delta.json \
-            artifacts/lamezia-trasparente/src/data/generated/lameziaAirTrafficMonthly.metadata.json \
-            artifacts/lamezia-trasparente/src/data/generated/lameziaDemographicTrend.json \
-            artifacts/lamezia-trasparente/src/data/generated/lameziaForeignResidentsAgeSex.json \
-            artifacts/lamezia-trasparente/src/data/generated/lameziaFamiliesChildren.json \
-            artifacts/lamezia-trasparente/src/data/generated/lameziaOpenDataSeriesStatus.json
-
-          if git diff --cached --quiet; then
-            echo "All monitored Open Data series already match their official sources."
-            exit 0
-          fi
-
-          git commit -m "Refresh Lamezia Open Data series"
-          git push
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          bash scripts/submit-data-refresh-pr.sh opendata
+          "Refresh Lamezia Open Data series"
+          artifacts/lamezia-trasparente/src/data/generated/lameziaAirTrafficMonthly.delta.json
+          artifacts/lamezia-trasparente/src/data/generated/lameziaAirTrafficMonthly.metadata.json
+          artifacts/lamezia-trasparente/src/data/generated/lameziaDemographicTrend.json
+          artifacts/lamezia-trasparente/src/data/generated/lameziaForeignResidentsAgeSex.json
+          artifacts/lamezia-trasparente/src/data/generated/lameziaFamiliesChildren.json
+          artifacts/lamezia-trasparente/src/data/generated/lameziaOpenDataSeriesStatus.json
