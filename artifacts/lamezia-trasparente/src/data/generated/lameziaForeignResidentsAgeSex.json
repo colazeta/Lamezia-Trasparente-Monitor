@@ -15,7 +15,7 @@
     "dataset_title": "Comune di Lamezia Terme - Stranieri per Sesso ed Eta'",
     "resource_id": "55ffccd6-5ed9-4633-a592-53dab719620b",
     "resource_name": "Comune di Lamezia Terme - Stranieri per Sesso ed Eta' csv",
-    "resource_hash": "6472a34b5cfeed9044c7ca69750a1c26",
+    "resource_hash": "ac8e5d1b313c7a20d40d5c34843e98e9",
     "holder_name": "Comune di Lamezia Terme",
     "holder_identifier": "c_m208",
     "publisher_name": "Comune di Lamezia Terme",
@@ -25,20 +25,20 @@
     "license_type": "https://w3id.org/italia/controlled-vocabulary/licences/A21_CCBY40",
     "frequency": "WEEKLY",
     "metadata_created": "2025-03-05T07:41:15.429Z",
-    "metadata_modified": "2026-09-01T03:33:47.791Z",
-    "resource_last_modified": "2026-08-30T16:07:07.000Z",
-    "generated_at": "2026-09-01T11:34:04.041Z",
+    "metadata_modified": "2026-11-04T01:09:45.230Z",
+    "resource_last_modified": "2026-11-03T17:09:05.000Z",
+    "generated_at": "2026-11-04T14:34:11.639Z",
     "first_year": 2025,
     "latest_year": 2025,
     "years": [
       2025
     ],
     "rows": 19,
-    "latest_total": 6616,
+    "latest_total": 6615,
     "latest_male_total": 3826,
-    "latest_female_total": 2790,
+    "latest_female_total": 2789,
     "latest_children_total": 926,
-    "latest_working_age_total": 5281,
+    "latest_working_age_total": 5280,
     "latest_senior_total": 409,
     "update_policy": "Aggiornamento settimanale dal Portale OpenData del Comune di Lamezia Terme quando la risorsa CSV pubblica cambia.",
     "caveat": "Distribuzione aggregata per sesso e classi d'eta pubblicata dal portale comunale: non contiene elenchi nominativi e non sostituisce una validazione statistica indipendente."
@@ -52,5 +52,5 @@
     "share_of_year",
     "age_group"
   ],
-  "age_rows": "2025|00-04|127|117|244|0.0369|0-14\n2025|05-09|184|152|336|0.0508|0-14\n2025|10-14|183|163|346|0.0523|0-14\n2025|15-19|197|145|342|0.0517|15-64\n2025|20-24|355|129|484|0.0732|15-64\n2025|25-29|462|171|633|0.0957|15-64\n2025|30-34|438|210|648|0.0979|15-64\n2025|35-39|463|298|761|0.115|15-64\n2025|40-44|408|302|710|0.1073|15-64\n2025|45-49|302|281|583|0.0881|15-64\n2025|50-54|254|242|496|0.075|15-64\n2025|55-59|168|197|365|0.0552|15-64\n2025|60-64|115|144|259|0.0391|15-64\n2025|65-69|88|116|204|0.0308|65+\n2025|70-74|43|60|103|0.0156|65+\n2025|75-79|20|36|56|0.0085|65+\n2025|80-84|10|15|25|0.0038|65+\n2025|85-89|1|9|10|0.0015|65+\n2025|90 e piu|8|3|11|0.0017|65+"
+  "age_rows": "2025|00-04|127|117|244|0.0369|0-14\n2025|05-09|184|152|336|0.0508|0-14\n2025|10-14|183|163|346|0.0523|0-14\n2025|15-19|197|144|341|0.0515|15-64\n2025|20-24|355|129|484|0.0732|15-64\n2025|25-29|462|171|633|0.0957|15-64\n2025|30-34|438|210|648|0.098|15-64\n2025|35-39|463|298|761|0.115|15-64\n2025|40-44|408|302|710|0.1073|15-64\n2025|45-49|302|281|583|0.0881|15-64\n2025|50-54|254|242|496|0.075|15-64\n2025|55-59|168|197|365|0.0552|15-64\n2025|60-64|115|144|259|0.0392|15-64\n2025|65-69|88|116|204|0.0308|65+\n2025|70-74|43|60|103|0.0156|65+\n2025|75-79|20|36|56|0.0085|65+\n2025|80-84|10|15|25|0.0038|65+\n2025|85-89|1|9|10|0.0015|65+\n2025|90 e piu|8|3|11|0.0017|65+"
 }

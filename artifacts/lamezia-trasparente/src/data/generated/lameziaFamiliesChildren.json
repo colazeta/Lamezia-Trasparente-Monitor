@@ -15,7 +15,7 @@
     "dataset_title": "Comune di Lamezia Terme - Famiglie per Numero Figli",
     "resource_id": "c29d86df-a1ad-48f7-a702-1c74abcf2946",
     "resource_name": "Comune di Lamezia Terme - Famiglie per Numero Figli csv",
-    "resource_hash": "6781a6ddfe1be0d8351caa3647ae6997",
+    "resource_hash": "3011df4736a5ad295d43c8a98961b4e1",
     "holder_name": "Comune di Lamezia Terme",
     "holder_identifier": "c_m208",
     "publisher_name": "Comune di Lamezia Terme",
@@ -25,14 +25,14 @@
     "license_type": "https://w3id.org/italia/controlled-vocabulary/licences/A21_CCBY40",
     "frequency": "WEEKLY",
     "metadata_created": "2025-03-05T07:40:17.538Z",
-    "metadata_modified": "2026-09-01T03:18:53.755Z",
-    "resource_last_modified": "2026-08-30T16:08:13.000Z",
-    "generated_at": "2026-09-01T11:34:05.959Z",
+    "metadata_modified": "2026-11-04T01:14:02.943Z",
+    "resource_last_modified": "2026-11-03T17:07:38.000Z",
+    "generated_at": "2026-11-04T14:34:13.319Z",
     "rows": 6,
-    "total_families_with_children": 13358,
-    "one_child_families": 6762,
-    "two_children_families": 5229,
-    "three_or_more_children_families": 1367,
+    "total_families_with_children": 13344,
+    "one_child_families": 6748,
+    "two_children_families": 5233,
+    "three_or_more_children_families": 1363,
     "update_policy": "Aggiornamento settimanale dal Portale OpenData del Comune di Lamezia Terme quando la risorsa CSV pubblica cambia.",
     "caveat": "Distribuzione aggregata pubblicata dal portale comunale. Il CSV non espone l'anno di riferimento e non include esplicitamente le famiglie senza figli; la scheda rappresenta la risorsa corrente acquisita."
   },
@@ -43,5 +43,5 @@
     "share_of_total",
     "cumulative_families"
   ],
-  "family_children_rows": "1|1|6762|0.5062|6762\n2|2|5229|0.3915|11991\n3|3|1150|0.0861|13141\n4|4|172|0.0129|13313\n5|5|31|0.0023|13344\n6 o piu|6|14|0.001|13358"
+  "family_children_rows": "1|1|6748|0.5057|6748\n2|2|5233|0.3922|11981\n3|3|1148|0.086|13129\n4|4|173|0.013|13302\n5|5|27|0.002|13329\n6 o piu|6|15|0.0011|13344"
 }
