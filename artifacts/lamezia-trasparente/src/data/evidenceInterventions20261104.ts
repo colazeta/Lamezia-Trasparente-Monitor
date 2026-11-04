@@ -22,7 +22,6 @@ export const EVIDENCE_INTERVENTIONS_2026_11_04: readonly EvidenceIntervention[] 
   ],
   "interventionTypes": [
     "modifica_organizzativa_processo",
-    "partnership_pubblico_privato_terzo_settore",
     "procurement_contract_design",
     "targeting_data_analytics"
   ],
