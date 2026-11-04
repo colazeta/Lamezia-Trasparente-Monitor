@@ -22,13 +22,12 @@ export const EVIDENCE_INTERVENTIONS_2026_11_04: readonly EvidenceIntervention[] 
   ],
   "interventionTypes": [
     "modifica_organizzativa_processo",
-    "procurement_contract_design",
-    "targeting_data_analytics"
+    "servizio_diretto"
   ],
   "tools": [
     "accordi e governance intercomunale in base alla Lei 11.107/2005",
     "gestione associata di servizi di raccolta/trattamento/smaltimento",
-    "dati amministrativi SNIS, DATASUS/SINAN, Tesoro nazionale (STN)",
+    "registri di adesione dei comuni e governance consortile",
     "monitoraggio di spesa e indicatori sanitari per municipalità"
   ],
   "territorialScale": "Intercomunale / consortile, con outcome misurati a livello di singolo comune.",
