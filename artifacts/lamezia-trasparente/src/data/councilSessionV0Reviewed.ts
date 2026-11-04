@@ -134,6 +134,18 @@ const COUNCIL_NOVEMBER_3_MASI_LA_NOVITA_URL =
   "https://lanovitaonline.it/lamezia-il-pd-attacca-fratelli-ditalia-legalita-non-vuol-dire-propaganda-basta-criminalizzare-lavoratori-e-studenti/";
 const COUNCIL_NOVEMBER_3_PROGETTO_CIVICO_CITY_ONE_URL =
   "https://cityonelamezia.it/2026/11/01/piano-di-riequilibrio-le-decisioni-non-si-prendono-piu-nei-luoghi-della-politica-ma-dove-e-finita-la-politica/";
+const COUNCIL_NOVEMBER_3_REPORT_LAMETINO_URL =
+  "https://www.lametino.it/ultime/lamezia-il-consiglio-comunale-approva-il-piano-di-riequilibrio-10-anni-per-risanare-lente.html";
+const COUNCIL_NOVEMBER_3_REPORT_ANSA_URL =
+  "https://www.ansa.it/calabria/notizie/2026/11/03/il-consiglio-comunale-di-lamezia-approva-il-piano-di-riequilibrio_9ec0c0d9-1469-428d-b394-557dc25388d6.html";
+const COUNCIL_NOVEMBER_3_REPORT_LAMEZIATERME_URL =
+  "https://www.lameziaterme.it/consiglio-comunale-lamezia-approva-piano-riequilibrio/";
+const COUNCIL_NOVEMBER_3_REPORT_CALABRIA7_URL =
+  "https://calabria7.news/politica/il-comune-di-lamezia-prova-a-scongiurare-il-dissesto-piano-decennale-per-il-risanamento-decisivo-il-parere-della-corte-dei-conti/";
+const COUNCIL_NOVEMBER_3_REPORT_REGGIOTV_URL =
+  "https://origin.reggiotv.it/notizie/attualita/136987/lamezia-terme-il-consiglio-comunale-approva-il-piano-di-riequilibrio-finanziario";
+const COUNCIL_NOVEMBER_3_REPORT_CALABRIA_TRIBUNE_URL =
+  "https://www.calabriatribune.it/2026/11/03/lamezia-terme-approvato-il-piano-di-riequilibrio-dal-consiglio-comunale/";
 const MUNICIPAL_ALBO_DOCUMENTS_URL =
   "https://www.comune.lamezia-terme.cz.it/it/documenti_pubblici/atti-di-albo-pretorio";
 const VIA_TRENTO_ROADWORKS_LAMETINO_URL =
@@ -3171,9 +3183,9 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
   isDemoFixture: false,
   contextResearch: {
     status: "reviewed_matches",
-    checkedAt: "2026-11-02T00:13:00+01:00",
+    checkedAt: "2026-11-04T12:00:00+01:00",
     searchNote:
-      "Parallel Search e la verifica diretta di Comune, pagina istituzionale del Consiglio, Albo corrente, Albo storico, testate locali e canali audiovisivi indicizzati hanno individuato venti articoli. Dieci nuove pagine documentano due note politiche e una ripubblicazione: sei testate riproducono la nota di Fratelli d'Italia sulla mozione a sostegno delle Forze dell'Ordine, tre riproducono la replica del consigliere PD Gennarino Masi e City One ripubblica la nota di Progetto Civico Italia sul Piano di riequilibrio. Sono tutte conservate come `agenda_item`: soltanto l'articolo generale de il Lametino associa una mozione FdI con temi distintivi al possibile Consiglio del 3 novembre, mentre le nuove pagine non identificano autonomamente quella seduta e non costituiscono conferme indipendenti. Non è stata acquisita una convocazione, una designazione, un avviso, il parere originale dei Revisori o un allegato istituzionale associabile: date, orari, numero dei punti, contenuto degli atti, svolgimento e posizioni riportate restano elementi editoriali per i prossimi controlli e non vengono pubblicati come dati ufficiali della seduta.",
+      "Parallel Search e la verifica diretta di Comune, pagina istituzionale del Consiglio, Albo corrente, Albo storico, testate locali e canali audiovisivi indicizzati hanno individuato ventisei articoli. Sei resoconti pubblicati il 3 e 4 novembre identificano esplicitamente il Consiglio comunale e il Piano di riequilibrio e vengono collegati come `same_session`; LameziaTerme.it, ReggioTV, Calabria7 e Calabria Tribune riprendono in tutto o in parte il dispaccio ANSA e non costituiscono conferme indipendenti. I resoconti restano fonti editoriali: votazioni, risultati e svolgimento riportati non vengono trasferiti nei campi ufficiali. Il controllo diretto del 4 novembre non ha individuato una convocazione, una designazione, un avviso, il parere originale dei Revisori, un allegato istituzionale o un contenuto audiovisivo associabile; date, orari, numero dei punti, contenuto degli atti, svolgimento e posizioni riportate restano elementi editoriali e non vengono pubblicati come dati ufficiali della seduta.",
     articles: [
       {
         title:
@@ -3395,6 +3407,72 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
           "City One presenta esplicitamente la pagina come comunicato stampa di Progetto Civico Italia e riproduce la stessa nota già collegata da tre testate. Non identifica il 3 novembre e non costituisce una conferma indipendente né prova di convocazione, iscrizione, trattazione, voto o esito.",
         reviewedAt: "2026-11-02T00:13:00+01:00",
       },
+      {
+        title:
+          "Lamezia, il Consiglio comunale approva il Piano di riequilibrio: 10 anni per risanare l'Ente",
+        url: COUNCIL_NOVEMBER_3_REPORT_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-11-03",
+        relationship: "same_session",
+        relevanceNote:
+          "Il resoconto identifica esplicitamente il Consiglio comunale, il Piano di riequilibrio e altri temi distintivi già associati alla seduta segnalata. Resta una fonte editoriale: le votazioni, lo svolgimento e gli esiti riportati non vengono trasferiti nei campi ufficiali.",
+        reviewedAt: "2026-11-04T12:00:00+01:00",
+      },
+      {
+        title:
+          "Il Consiglio comunale di Lamezia approva il Piano di riequilibrio",
+        url: COUNCIL_NOVEMBER_3_REPORT_ANSA_URL,
+        publisher: "ANSA",
+        publishedAt: "2026-11-03",
+        relationship: "same_session",
+        relevanceNote:
+          "Il dispaccio identifica esplicitamente il Consiglio comunale e il Piano di riequilibrio, con corrispondenza ai temi distintivi della seduta segnalata. È una fonte editoriale di agenzia, non una pubblicazione istituzionale: votazioni, svolgimento ed esiti riportati non valorizzano i campi ufficiali.",
+        reviewedAt: "2026-11-04T12:00:00+01:00",
+      },
+      {
+        title:
+          "Il Consiglio comunale di Lamezia approva il Piano di riequilibrio",
+        url: COUNCIL_NOVEMBER_3_REPORT_LAMEZIATERME_URL,
+        publisher: "LameziaTerme.it",
+        publishedAt: "2026-11-04",
+        relationship: "same_session",
+        relevanceNote:
+          "La pagina riproduce il dispaccio ANSA sul Consiglio comunale e sul Piano di riequilibrio. È conservata per tracciabilità ma non costituisce una conferma indipendente o istituzionale; votazioni, svolgimento ed esiti riportati non valorizzano i campi ufficiali.",
+        reviewedAt: "2026-11-04T12:00:00+01:00",
+      },
+      {
+        title:
+          "Il Comune di Lamezia prova a scongiurare il dissesto, piano decennale per il risanamento: decisivo il parere della Corte dei conti",
+        url: COUNCIL_NOVEMBER_3_REPORT_CALABRIA7_URL,
+        publisher: "Calabria7",
+        publishedAt: "2026-11-03",
+        relationship: "same_session",
+        relevanceNote:
+          "Il resoconto identifica il Consiglio comunale e il Piano di riequilibrio, riprendendo il nucleo informativo del dispaccio ANSA. Non costituisce una conferma indipendente o istituzionale; votazioni, svolgimento ed esiti riportati non valorizzano i campi ufficiali.",
+        reviewedAt: "2026-11-04T12:00:00+01:00",
+      },
+      {
+        title:
+          "Lamezia Terme, il Consiglio comunale approva il Piano di riequilibrio finanziario",
+        url: COUNCIL_NOVEMBER_3_REPORT_REGGIOTV_URL,
+        publisher: "ReggioTV",
+        publishedAt: "2026-11-03",
+        relationship: "same_session",
+        relevanceNote:
+          "La pagina riproduce in misura sostanziale il dispaccio ANSA sul Consiglio comunale e sul Piano di riequilibrio. È conservata per tracciabilità ma non costituisce una conferma indipendente o istituzionale; votazioni, svolgimento ed esiti riportati non valorizzano i campi ufficiali.",
+        reviewedAt: "2026-11-04T12:00:00+01:00",
+      },
+      {
+        title:
+          "Lamezia Terme, approvato il Piano di riequilibrio dal Consiglio Comunale",
+        url: COUNCIL_NOVEMBER_3_REPORT_CALABRIA_TRIBUNE_URL,
+        publisher: "Calabria Tribune",
+        publishedAt: "2026-11-04",
+        relationship: "same_session",
+        relevanceNote:
+          "Il resoconto identifica il Consiglio comunale e il Piano di riequilibrio e riprende la medesima ricostruzione editoriale diffusa da ANSA. Non costituisce una conferma indipendente o istituzionale; votazioni, svolgimento ed esiti riportati non valorizzano i campi ufficiali.",
+        reviewedAt: "2026-11-04T12:00:00+01:00",
+      },
     ],
     media: [],
     editorialAgenda: [
@@ -3424,10 +3502,16 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
           PROGETTO_CIVICO_OCTOBER_31_LAMETINO_URL,
           PROGETTO_CIVICO_OCTOBER_31_CORRIERE_LAMEZIA_URL,
           COUNCIL_NOVEMBER_3_PROGETTO_CIVICO_CITY_ONE_URL,
+          COUNCIL_NOVEMBER_3_REPORT_LAMETINO_URL,
+          COUNCIL_NOVEMBER_3_REPORT_ANSA_URL,
+          COUNCIL_NOVEMBER_3_REPORT_LAMEZIATERME_URL,
+          COUNCIL_NOVEMBER_3_REPORT_CALABRIA7_URL,
+          COUNCIL_NOVEMBER_3_REPORT_REGGIOTV_URL,
+          COUNCIL_NOVEMBER_3_REPORT_CALABRIA_TRIBUNE_URL,
         ],
         confidence: "medium",
         reason:
-          "Il tema è esplicito nelle undici fonti editoriali collegate. City One e il Lametino dipendono dalla stessa nota attribuita a Paolo Mascaro, TV6onAir e Italy Today ripubblicano Gazzetta del Sud e le quattro pagine sulla posizione di Progetto Civico Italia dipendono dalla medesima nota: non sono conferme indipendenti. Queste ultime non identificano il 3 novembre. Non sono stati acquisiti l'ordine del giorno, il parere o i documenti originali e le fonti non provano iscrizione, contenuto degli atti, trattazione, voto o esito.",
+          "Il tema è esplicito nelle diciassette fonti editoriali collegate. I sei resoconti successivi identificano il Consiglio, ma quattro riprendono in tutto o in parte il dispaccio ANSA; le altre pagine comprendono ulteriori note e ripubblicazioni non indipendenti. Non sono stati acquisiti l'ordine del giorno, il parere o i documenti originali: le fonti non provano ufficialmente iscrizione, contenuto degli atti, trattazione, voto o esito.",
       },
       {
         title: "Piano delle alienazioni e valorizzazioni immobiliari 2027",
@@ -3526,7 +3610,7 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
   lastCheckedAt: {
     key: "lastCheckedAt",
     label: "Ultimo controllo",
-    value: "2026-11-02T00:13:00+01:00",
+    value: "2026-11-04T12:00:00+01:00",
     sourceStatus: "verificato",
     sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
     limit:
@@ -3539,7 +3623,7 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
       "Il 3 e il 4 novembre, gli orari e i venti punti riportati dalla testata non sono stati verificati su una fonte istituzionale e non vengono presentati come dati ufficiali della seduta.",
       "Non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione al Consiglio segnalato; il nuovo Albo dinamico ha bloccato l'accesso automatizzato durante il controllo diretto e l'Albo storico non contiene atti successivi al passaggio di piattaforma.",
       "Data, ora, sede, ordine del giorno, stato, streaming, registrazione e verbale restano non verificati o non rilevati secondo il campo.",
-      "I venti articoli collegati sono fonti editoriali e non certificano programmazione, svolgimento, completezza, contenuto degli atti, partecipanti, votazioni o risultati; più pagine riproducono le medesime note attribuite a Paolo Mascaro, Progetto Civico Italia, Fratelli d'Italia o Gennarino Masi, mentre TV6onAir e Italy Today ripubblicano Gazzetta del Sud, quindi non sono conferme indipendenti.",
+      "I ventisei articoli collegati sono fonti editoriali e non certificano programmazione, svolgimento, completezza, contenuto degli atti, partecipanti, votazioni o risultati; più pagine riproducono le medesime note o dispacci e non sono conferme indipendenti. I resoconti successivi identificano la stessa seduta, ma le votazioni e gli esiti che riportano non vengono trasferiti nei campi ufficiali.",
       "I temi riportati dalla copertura restano nell'agenda editoriale separata e dovranno essere riconciliati se emergerà un atto istituzionale.",
     ],
     sourceStatus: "parziale",
