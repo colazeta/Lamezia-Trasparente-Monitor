@@ -4,14 +4,14 @@ set -euo pipefail
 kind="$1"
 title="$2"
 shift 2
-case "$kind" in albo|pnrr|anac|civic|climate) ;; *) echo "Unsupported refresh kind" >&2; exit 1 ;; esac
+case "$kind" in albo|pnrr|anac|civic|climate|opendata) ;; *) echo "Unsupported refresh kind" >&2; exit 1 ;; esac
 : "${GH_TOKEN:?GitHub token required}"
 : "${GITHUB_REPOSITORY:?Repository required}"
 : "${GITHUB_RUN_ID:?Workflow run required}"
 
 for snapshot_path in "$@"; do
   case "$kind:$snapshot_path" in
-    climate:artifacts/lamezia-trasparente/src/data/generated/lameziaClimateDaily.json|climate:artifacts/lamezia-trasparente/src/data/generated/lameziaClimateDaily.metadata.json|climate:artifacts/lamezia-trasparente/src/data/generated/lameziaOpenDataSeriesStatus.json|albo:data/public/albo|albo:data/public/albo/*|pnrr:artifacts/lamezia-trasparente/src/data/generated/lameziaPnrrProjects.json|anac:data/public/contracts/anac-bdncp/latest.json|anac:data/public/contracts/anac-authority/latest.json|civic:data/public/canonical/civic-snapshot.json|civic:artifacts/lamezia-trasparente/src/data/generated/canonicalAlboSupport.json|civic:architecture/current-data-inventory.json) ;;
+    opendata:artifacts/lamezia-trasparente/src/data/generated/lameziaAirTrafficMonthly.delta.json|opendata:artifacts/lamezia-trasparente/src/data/generated/lameziaAirTrafficMonthly.metadata.json|opendata:artifacts/lamezia-trasparente/src/data/generated/lameziaDemographicTrend.json|opendata:artifacts/lamezia-trasparente/src/data/generated/lameziaForeignResidentsAgeSex.json|opendata:artifacts/lamezia-trasparente/src/data/generated/lameziaFamiliesChildren.json|opendata:artifacts/lamezia-trasparente/src/data/generated/lameziaOpenDataSeriesStatus.json|climate:artifacts/lamezia-trasparente/src/data/generated/lameziaClimateDaily.json|climate:artifacts/lamezia-trasparente/src/data/generated/lameziaClimateDaily.metadata.json|climate:artifacts/lamezia-trasparente/src/data/generated/lameziaOpenDataSeriesStatus.json|albo:data/public/albo|albo:data/public/albo/*|pnrr:artifacts/lamezia-trasparente/src/data/generated/lameziaPnrrProjects.json|anac:data/public/contracts/anac-bdncp/latest.json|anac:data/public/contracts/anac-authority/latest.json|civic:data/public/canonical/civic-snapshot.json|civic:artifacts/lamezia-trasparente/src/data/generated/canonicalAlboSupport.json|civic:architecture/current-data-inventory.json) ;;
     *) echo "Unexpected refresh path: $snapshot_path" >&2; exit 1 ;;
   esac
 done
@@ -55,7 +55,7 @@ body_file="$(mktemp)"
 trap 'rm -f "$body_file"' EXIT
 issue_number=1649
 if [[ "$kind" == "civic" ]]; then issue_number=1655; fi
-if [[ "$kind" == "climate" ]]; then issue_number=1803; fi
+if [[ "$kind" == "climate" || "$kind" == "opendata" ]]; then issue_number=1803; fi
 cat > "$body_file" <<EOF
 Related to #$issue_number.
 

@@ -176,7 +176,9 @@ export function assertMultiSourceContractsDataset(dataset, datasetPath) {
   }
 
   const authority = dataset.authorityDiscovery;
+  const referenceYear = new Date(authority.generatedAt).getUTCFullYear();
   if (
+    !Number.isInteger(referenceYear) ||
     authority.targetAuthority?.taxId !== reconciliation.authorityTaxId ||
     authority.targetAuthority?.label !== reconciliation.authorityLabel ||
     authority.status !== reconciliation.authorityDiscoveryStatus ||
@@ -186,8 +188,10 @@ export function assertMultiSourceContractsDataset(dataset, datasetPath) {
     !Array.isArray(authority.completedPeriods) ||
     !Array.isArray(authority.records) ||
     authority.records.length !== reconciliation.anacAuthorityCigs ||
-    authority.requestedYears.length !== reconciliation.requestedYears ||
-    authority.completedYears.length !== reconciliation.completedYears
+    authority.requestedYears.filter((year) => year < referenceYear).length !==
+      reconciliation.requestedYears ||
+    authority.completedYears.filter((year) => year < referenceYear).length !==
+      reconciliation.completedYears
   ) {
     throw new Error(
       `ANAC authority discovery and reconciliation disagree: ${datasetPath}`,
