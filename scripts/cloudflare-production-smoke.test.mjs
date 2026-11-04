@@ -84,3 +84,27 @@ test("workflow keeps the live smoke post-deploy and exact expected SHA as its ba
   assert.match(workflow, /Smoke public contracts and organi routes/);
   assert.match(workflow, /--attempts 60 --delay-ms 10000/);
 });
+
+test("ANAC smoke compares closed-year coverage and accepts a requested current year", async () => {
+  const { assertMultiSourceContractsDataset } = await import("./lib/contractsDatasetValidation.mjs");
+  const { buildMultiSourceContractsDataset } = await import("../artifacts/lamezia-trasparente/src/lib/multiSourceContractsDataset.ts");
+  const { createPendingAnacAuthorityDiscoverySnapshot } = await import("../artifacts/lamezia-trasparente/src/lib/anacAuthorityDiscovery.ts");
+  const { createPendingAnacBdncpSnapshot } = await import("../artifacts/lamezia-trasparente/src/lib/anacBdncpSync.ts");
+  const authority = createPendingAnacAuthorityDiscoverySnapshot("2026-11-04T00:00:00.000Z");
+  authority.status = "degraded";
+  authority.lastAttemptAt = authority.generatedAt;
+  authority.failureCategory = "source-unavailable";
+  authority.requestedYears = [2024, 2025, 2026];
+  authority.completedYears = [2024];
+  const dataset = buildMultiSourceContractsDataset({ items: [] }, createPendingAnacBdncpSnapshot(), authority);
+  assert.equal(dataset.reconciliation.requestedYears, 2);
+  assert.equal(dataset.reconciliation.completedYears, 1);
+  assert.doesNotThrow(() => assertMultiSourceContractsDataset(dataset, "synthetic"));
+  const wrong = structuredClone(dataset);
+  wrong.authorityDiscovery.completedYears.push(2025);
+  assert.throws(() => assertMultiSourceContractsDataset(wrong, "synthetic"), /discovery and reconciliation disagree/);
+  const miscounted = structuredClone(dataset);
+  miscounted.reconciliation.requestedYears = 3;
+  miscounted.coverage.authorityRequestedYears = 3;
+  assert.throws(() => assertMultiSourceContractsDataset(miscounted, "synthetic"), /discovery and reconciliation disagree/);
+});
