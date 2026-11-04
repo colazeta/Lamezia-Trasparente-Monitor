@@ -8,6 +8,8 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
+  actions: write
 
 concurrency:
   group: lamezia-climate-data-refresh
@@ -55,22 +57,14 @@ jobs:
           node scripts/build-lamezia-climate-data.mjs
           node scripts/build-lamezia-opendata-series-status.mjs
 
-      - name: Commit updated climate dataset
+      - name: Propose updated climate dataset through protected-main review
         if: steps.rome_morning.outputs.should_run == 'true'
         shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git add \
-            artifacts/lamezia-trasparente/src/data/generated/lameziaClimateDaily.json \
-            artifacts/lamezia-trasparente/src/data/generated/lameziaClimateDaily.metadata.json \
-            artifacts/lamezia-trasparente/src/data/generated/lameziaOpenDataSeriesStatus.json
-
-          if git diff --cached --quiet; then
-            echo "No Lamezia climate data changes to commit."
-            exit 0
-          fi
-
-          git commit -m "Update Lamezia climate data"
-          git push
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          bash scripts/submit-data-refresh-pr.sh climate
+          "Update Lamezia climate data"
+          artifacts/lamezia-trasparente/src/data/generated/lameziaClimateDaily.json
+          artifacts/lamezia-trasparente/src/data/generated/lameziaClimateDaily.metadata.json
+          artifacts/lamezia-trasparente/src/data/generated/lameziaOpenDataSeriesStatus.json
