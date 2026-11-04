@@ -502,6 +502,38 @@ describe("councilSessionV0", () => {
           /non costituisce una conferma indipendente/i,
         ),
       }),
+      expect.objectContaining({
+        publisher: "Gazzetta del Sud",
+        publishedAt: "2026-11-01",
+        relationship: "possible_same_session",
+        url: expect.stringContaining("futuro-finanziario-incerto"),
+        relevanceNote: expect.stringMatching(/fonte editoriale/i),
+      }),
+      expect.objectContaining({
+        publisher: "NtaCalabria",
+        publishedAt: "2026-11-01",
+        relationship: "possible_same_session",
+        url: expect.stringContaining("futuro-finanziario-incerto"),
+        relevanceNote: expect.stringMatching(
+          /non costituisce una conferma indipendente/i,
+        ),
+      }),
+      expect.objectContaining({
+        publisher: "Gazzetta del Sud",
+        publishedAt: "2026-11-03",
+        relationship: "same_session",
+        url: expect.stringContaining("5021e998-ea08-40ba-b4af-28e423312b32"),
+        relevanceNote: expect.stringMatching(/fonte editoriale/i),
+      }),
+      expect.objectContaining({
+        publisher: "Italy Today",
+        publishedAt: "2026-11-03",
+        relationship: "same_session",
+        url: expect.stringContaining("voto-che-ipoteca-il-futuro"),
+        relevanceNote: expect.stringMatching(
+          /non costituisce una conferma indipendente/i,
+        ),
+      }),
     ]);
     expect(session?.contextResearch.media).toEqual([]);
     expect(session?.contextResearch.editorialAgenda?.length).toBeGreaterThan(0);

@@ -114,6 +114,14 @@ const COUNCIL_NOVEMBER_3_TV6ONAIR_URL =
   "https://tv6onair.com/tv6onair-comune-per-lamezia-terme-cementato-e-piano-per-riequilibrio-colloquio-attraverso-lente/";
 const COUNCIL_NOVEMBER_3_ITALY_TODAY_URL =
   "https://italytoday.net/comune-di-lamezia-terme-consolidato-e-piano-di-riequilibrio-appuntamento-decisivo-per-lente/";
+const COUNCIL_NOVEMBER_3_FINANCIAL_GAZZETTA_URL =
+  "https://catanzaro.gazzettadelsud.it/articoli/politica/2026/11/01/comune-di-lamezia-futuro-finanziario-incerto-tra-disavanzo-e-nodi-ancora-irrisolti-dc4fb2c5-ef12-40b5-aa5b-40e65ee573c8/";
+const COUNCIL_NOVEMBER_3_FINANCIAL_NTACALABRIA_URL =
+  "https://www.ntacalabria.it/lamezia-terme/futuro-finanziario-incerto-a-lamezia-terme-per-il-comune.html";
+const COUNCIL_NOVEMBER_3_VOTE_GAZZETTA_URL =
+  "https://catanzaro.gazzettadelsud.it/articoli/politica/2026/11/03/lamezia-consiglio-comunale-sul-bilancio-oggi-il-voto-che-ipoteca-il-futuro-della-citta-5021e998-ea08-40ba-b4af-28e423312b32/";
+const COUNCIL_NOVEMBER_3_VOTE_ITALY_TODAY_URL =
+  "https://italytoday.net/lamezia-consiglio-comunale-sul-bilancio-oggi-il-voto-che-ipoteca-il-futuro-della-citta/";
 const COUNCIL_NOVEMBER_3_FDI_LAMETINO_URL =
   "https://www.lametino.it/ultime/fratelli-ditalia-lamezia-presenta-una-mozione-a-sostegno-delle-forze-dellordine-contro-ogni-forma-di-violenza-e-intimidazione.html";
 const COUNCIL_NOVEMBER_3_FDI_LAMEZIATERME_URL =
@@ -3183,9 +3191,9 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
   isDemoFixture: false,
   contextResearch: {
     status: "reviewed_matches",
-    checkedAt: "2026-11-04T12:00:00+01:00",
+    checkedAt: "2026-11-04T17:46:00+01:00",
     searchNote:
-      "Parallel Search e la verifica diretta di Comune, pagina istituzionale del Consiglio, Albo corrente, Albo storico, testate locali e canali audiovisivi indicizzati hanno individuato ventisei articoli. Sei resoconti pubblicati il 3 e 4 novembre identificano esplicitamente il Consiglio comunale e il Piano di riequilibrio e vengono collegati come `same_session`; LameziaTerme.it, ReggioTV, Calabria7 e Calabria Tribune riprendono in tutto o in parte il dispaccio ANSA e non costituiscono conferme indipendenti. I resoconti restano fonti editoriali: votazioni, risultati e svolgimento riportati non vengono trasferiti nei campi ufficiali. Il controllo diretto del 4 novembre non ha individuato una convocazione, una designazione, un avviso, il parere originale dei Revisori, un allegato istituzionale o un contenuto audiovisivo associabile; date, orari, numero dei punti, contenuto degli atti, svolgimento e posizioni riportate restano elementi editoriali e non vengono pubblicati come dati ufficiali della seduta.",
+      "Parallel Search e la verifica diretta di Comune, pagina istituzionale del Consiglio, Albo corrente, Albo storico, testate locali e canali audiovisivi indicizzati hanno individuato trenta articoli. Due approfondimenti del 1° novembre di Gazzetta del Sud e NtaCalabria identificano il Consiglio del 3 novembre e il Piano di riequilibrio ma restano `possible_same_session`; NtaCalabria riprende la stessa ricostruzione e non costituisce una conferma indipendente. Due anticipazioni del 3 novembre di Gazzetta del Sud e Italy Today identificano esplicitamente il Consiglio della stessa mattina e i temi finanziari distintivi e vengono collegate come `same_session`; Italy Today espone Gazzetta del Sud come fonte originale. Si aggiungono ai sei resoconti già collegati come `same_session`, quattro dei quali riprendono in tutto o in parte il dispaccio ANSA. Tutte le pagine restano fonti editoriali: programmazione, votazioni, risultati e svolgimento riportati non vengono trasferiti nei campi ufficiali. Il controllo diretto del 4 novembre non ha individuato una convocazione, una designazione, un avviso, il parere originale dei Revisori, un allegato istituzionale o un contenuto audiovisivo associabile; date, orari, numero dei punti, contenuto degli atti, svolgimento e posizioni riportate restano elementi editoriali e non vengono pubblicati come dati ufficiali della seduta.",
     articles: [
       {
         title:
@@ -3473,6 +3481,49 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
           "Il resoconto identifica il Consiglio comunale e il Piano di riequilibrio e riprende la medesima ricostruzione editoriale diffusa da ANSA. Non costituisce una conferma indipendente o istituzionale; votazioni, svolgimento ed esiti riportati non valorizzano i campi ufficiali.",
         reviewedAt: "2026-11-04T12:00:00+01:00",
       },
+      {
+        title:
+          "Comune di Lamezia, futuro finanziario incerto. Tra disavanzo e nodi ancora irrisolti",
+        url: COUNCIL_NOVEMBER_3_FINANCIAL_GAZZETTA_URL,
+        publisher: "Gazzetta del Sud",
+        publishedAt: "2026-11-01",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "L'articolo originale collega esplicitamente il Piano di riequilibrio al successivo Consiglio del 3 novembre e descrive criticità attribuite al parere dei Revisori. Resta una fonte editoriale: non certifica convocazione, programmazione, contenuto dell'atto, iscrizione, trattazione, voto o esito.",
+        reviewedAt: "2026-11-04T17:46:00+01:00",
+      },
+      {
+        title: "Futuro finanziario incerto a Lamezia Terme per il comune",
+        url: COUNCIL_NOVEMBER_3_FINANCIAL_NTACALABRIA_URL,
+        publisher: "NtaCalabria",
+        publishedAt: "2026-11-01",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "NtaCalabria collega esplicitamente il Piano di riequilibrio al Consiglio del 3 novembre, ma riprende la stessa ricostruzione pubblicata da Gazzetta del Sud. È conservata per tracciabilità e non costituisce una conferma indipendente o istituzionale di convocazione, programmazione, contenuto dell'atto, iscrizione, trattazione, voto o esito.",
+        reviewedAt: "2026-11-04T17:46:00+01:00",
+      },
+      {
+        title:
+          "Lamezia, Consiglio comunale sul bilancio: oggi il voto che ipoteca il futuro della città",
+        url: COUNCIL_NOVEMBER_3_VOTE_GAZZETTA_URL,
+        publisher: "Gazzetta del Sud",
+        publishedAt: "2026-11-03",
+        relationship: "same_session",
+        relevanceNote:
+          "L'articolo originale identifica esplicitamente il Consiglio comunale della stessa mattina, il Consuntivo 2025 e il Piano di riequilibrio pluriennale. È una fonte editoriale: non certifica convocazione, ordine del giorno ufficiale, svolgimento, votazioni o risultati e non valorizza i relativi campi ufficiali.",
+        reviewedAt: "2026-11-04T17:46:00+01:00",
+      },
+      {
+        title:
+          "Lamezia, Consiglio comunale sul bilancio: oggi il voto che ipoteca il futuro della città",
+        url: COUNCIL_NOVEMBER_3_VOTE_ITALY_TODAY_URL,
+        publisher: "Italy Today",
+        publishedAt: "2026-11-03",
+        relationship: "same_session",
+        relevanceNote:
+          "Italy Today ripubblica titolo e passaggi dell'anticipazione sul Consiglio della stessa mattina ed espone Gazzetta del Sud come fonte originale. Il collegamento è conservato per tracciabilità ma non costituisce una conferma indipendente o istituzionale né certifica convocazione, ordine del giorno, svolgimento, votazioni o risultati.",
+        reviewedAt: "2026-11-04T17:46:00+01:00",
+      },
     ],
     media: [],
     editorialAgenda: [
@@ -3483,6 +3534,8 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
           COUNCIL_NOVEMBER_3_GAZZETTA_URL,
           COUNCIL_NOVEMBER_3_TV6ONAIR_URL,
           COUNCIL_NOVEMBER_3_ITALY_TODAY_URL,
+          COUNCIL_NOVEMBER_3_VOTE_GAZZETTA_URL,
+          COUNCIL_NOVEMBER_3_VOTE_ITALY_TODAY_URL,
         ],
         confidence: "medium",
         reason:
@@ -3508,10 +3561,14 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
           COUNCIL_NOVEMBER_3_REPORT_CALABRIA7_URL,
           COUNCIL_NOVEMBER_3_REPORT_REGGIOTV_URL,
           COUNCIL_NOVEMBER_3_REPORT_CALABRIA_TRIBUNE_URL,
+          COUNCIL_NOVEMBER_3_FINANCIAL_GAZZETTA_URL,
+          COUNCIL_NOVEMBER_3_FINANCIAL_NTACALABRIA_URL,
+          COUNCIL_NOVEMBER_3_VOTE_GAZZETTA_URL,
+          COUNCIL_NOVEMBER_3_VOTE_ITALY_TODAY_URL,
         ],
         confidence: "medium",
         reason:
-          "Il tema è esplicito nelle diciassette fonti editoriali collegate. I sei resoconti successivi identificano il Consiglio, ma quattro riprendono in tutto o in parte il dispaccio ANSA; le altre pagine comprendono ulteriori note e ripubblicazioni non indipendenti. Non sono stati acquisiti l'ordine del giorno, il parere o i documenti originali: le fonti non provano ufficialmente iscrizione, contenuto degli atti, trattazione, voto o esito.",
+          "Il tema è esplicito nelle ventuno fonti editoriali collegate. Sei resoconti successivi e due anticipazioni della stessa mattina identificano il Consiglio, ma più pagine riprendono il dispaccio ANSA o articoli di Gazzetta del Sud; le altre comprendono ulteriori note e ripubblicazioni non indipendenti. Non sono stati acquisiti l'ordine del giorno, il parere o i documenti originali: le fonti non provano ufficialmente iscrizione, contenuto degli atti, trattazione, voto o esito.",
       },
       {
         title: "Piano delle alienazioni e valorizzazioni immobiliari 2027",
@@ -3610,7 +3667,7 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
   lastCheckedAt: {
     key: "lastCheckedAt",
     label: "Ultimo controllo",
-    value: "2026-11-04T12:00:00+01:00",
+    value: "2026-11-04T17:46:00+01:00",
     sourceStatus: "verificato",
     sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
     limit:
@@ -3621,9 +3678,9 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
     label: "Limiti del dato",
     value: [
       "Il 3 e il 4 novembre, gli orari e i venti punti riportati dalla testata non sono stati verificati su una fonte istituzionale e non vengono presentati come dati ufficiali della seduta.",
-      "Non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione al Consiglio segnalato; il nuovo Albo dinamico ha bloccato l'accesso automatizzato durante il controllo diretto e l'Albo storico non contiene atti successivi al passaggio di piattaforma.",
+      "Non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione al Consiglio segnalato; il 4 novembre il nuovo Albo dinamico ha restituito soltanto quattro avvisi culturali nella ricerca d'archivio dal 25 ottobre, mentre l'Albo storico non contiene atti successivi al passaggio di piattaforma.",
       "Data, ora, sede, ordine del giorno, stato, streaming, registrazione e verbale restano non verificati o non rilevati secondo il campo.",
-      "I ventisei articoli collegati sono fonti editoriali e non certificano programmazione, svolgimento, completezza, contenuto degli atti, partecipanti, votazioni o risultati; più pagine riproducono le medesime note o dispacci e non sono conferme indipendenti. I resoconti successivi identificano la stessa seduta, ma le votazioni e gli esiti che riportano non vengono trasferiti nei campi ufficiali.",
+      "I trenta articoli collegati sono fonti editoriali e non certificano programmazione, svolgimento, completezza, contenuto degli atti, partecipanti, votazioni o risultati; più pagine riproducono le medesime note, articoli o dispacci e non sono conferme indipendenti. I resoconti e le anticipazioni della stessa mattina identificano la stessa seduta, ma la programmazione, le votazioni e gli esiti che riportano non vengono trasferiti nei campi ufficiali.",
       "I temi riportati dalla copertura restano nell'agenda editoriale separata e dovranno essere riconciliati se emergerà un atto istituzionale.",
     ],
     sourceStatus: "parziale",
