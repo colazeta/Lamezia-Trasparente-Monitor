@@ -12,7 +12,7 @@ import {
 import { getProposalGeography, isProposalGeoreferenced } from "./proposalGeography";
 
 const rows = [
-  { id: "riequilibrio-piano-revoca-mascaro-2026", primary: "9", secondary: [], firstSeen: "2026-07-20", events: 2 },
+  { id: "riequilibrio-piano-revoca-mascaro-2026", primary: "9", secondary: [], firstSeen: "2026-07-20", events: 3 },
   { id: "palestre-allenamento-raffaele-arpaia-lamezia-2026", primary: "10", secondary: ["5"], firstSeen: "2026-10-30", events: 1 },
   { id: "educazione-legalita-mozione-fdi-lamezia-2026", primary: "1", secondary: ["8"], firstSeen: "2026-10-30", events: 1 },
 ] as const;
@@ -35,9 +35,14 @@ describe("Scouting 31 ottobre B — gate end-to-end del medesimo insieme di prop
       expect(p.evidenceLevel).toBe("fonte_stampa");
       expect(p.sourceUrl).toContain("lametino.it");
       expect(p.firstSeen).toBe(row.firstSeen);
-      expect(p.lastUpdated).toBe("2026-10-30");
+      expect(p.lastUpdated).toBe(row.id === rows[0].id ? "2026-11-03" : "2026-10-30");
       expect(p.verificationNote).toContain("not_assessed");
-      expect(p.linkedActs).toEqual([]);
+      if (row.id === rows[0].id) {
+        expect(p.linkedActs).toHaveLength(1);
+        expect(p.linkedActs[0]).toContain("3/11/2026");
+      } else {
+        expect(p.linkedActs).toEqual([]);
+      }
       expect(p.events).toHaveLength(row.events);
       expect(new Set(p.events.map((event) => event.id)).size).toBe(p.events.length);
       expect(p.events.every((event) => event.sourceUrl && event.evidenceLevel)).toBe(true);
@@ -83,7 +88,9 @@ describe("Scouting 31 ottobre B — gate end-to-end del medesimo insieme di prop
 
   it("conserva una timeline unica per Mascaro e non confonde la richiesta Arpaia con MTL", () => {
     const m = PUBLIC_PROPOSALS.find((p) => p.id === rows[0].id)!;
-    expect(m.events.map((e) => e.date)).toEqual(["2026-07-20", "2026-10-30"]);
+    expect(m.events.map((e) => e.date)).toEqual(["2026-07-20", "2026-10-30", "2026-11-03"]);
+    expect(m.events.at(-1)?.type).toBe("aggiornamento");
+    expect(m.events.at(-1)?.sourceUrl).toContain("ansa.it");
     const sport = PUBLIC_PROPOSALS.find((p) => p.id === rows[1].id)!;
     const mtl = PUBLIC_PROPOSALS.find((p) => p.id === "palasparti-riapertura-manutenzione-mtl-2026")!;
     expect(sport.promoterId).not.toBe(mtl.promoterId);
