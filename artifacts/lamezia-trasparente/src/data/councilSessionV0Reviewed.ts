@@ -156,6 +156,8 @@ const COUNCIL_NOVEMBER_3_REPORT_REGGIOTV_URL =
   "https://origin.reggiotv.it/notizie/attualita/136987/lamezia-terme-il-consiglio-comunale-approva-il-piano-di-riequilibrio-finanziario";
 const COUNCIL_NOVEMBER_3_REPORT_CALABRIA_TRIBUNE_URL =
   "https://www.calabriatribune.it/2026/11/03/lamezia-terme-approvato-il-piano-di-riequilibrio-dal-consiglio-comunale/";
+const COUNCIL_NOVEMBER_3_VESCIO_FACEBOOK_VIDEO_URL =
+  "https://www.facebook.com/100063686725609/videos/1134845932760709/";
 const MUNICIPAL_ALBO_DOCUMENTS_URL =
   "https://www.comune.lamezia-terme.cz.it/it/documenti_pubblici/atti-di-albo-pretorio";
 const VIA_TRENTO_ROADWORKS_LAMETINO_URL =
@@ -3193,9 +3195,9 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
   isDemoFixture: false,
   contextResearch: {
     status: "reviewed_matches",
-    checkedAt: "2026-11-05T00:04:00+01:00",
+    checkedAt: "2026-11-05T05:41:00+01:00",
     searchNote:
-      "Parallel Search e la verifica diretta di Comune, pagina istituzionale del Consiglio, Albo corrente, Albo storico, testate locali e canali audiovisivi indicizzati hanno individuato trentuno articoli. Il controllo del 5 novembre ha aggiunto il resoconto di EsseTV News, classificato `same_session`: riproduce titolo e contenuto del resoconto di LameziaTerme.it e non costituisce una conferma indipendente. Due approfondimenti del 1° novembre di Gazzetta del Sud e NtaCalabria identificano il Consiglio del 3 novembre e il Piano di riequilibrio ma restano `possible_same_session`; NtaCalabria riprende la stessa ricostruzione e non costituisce una conferma indipendente. Due anticipazioni del 3 novembre di Gazzetta del Sud e Italy Today identificano esplicitamente il Consiglio della stessa mattina e i temi finanziari distintivi e vengono collegate come `same_session`; Italy Today espone Gazzetta del Sud come fonte originale. Tutte le pagine restano fonti editoriali: programmazione, votazioni, risultati e svolgimento riportati non vengono trasferiti nei campi ufficiali. Il controllo diretto del 5 novembre non ha individuato una convocazione, una designazione, un avviso, il parere originale dei Revisori, un allegato istituzionale o un contenuto audiovisivo associabile; date, orari, numero dei punti, contenuto degli atti, svolgimento e posizioni riportate restano elementi editoriali e non vengono pubblicati come dati ufficiali della seduta.",
+      "Parallel Search e la verifica diretta di Comune, pagina istituzionale del Consiglio, Albo corrente, Albo storico, testate locali e canali audiovisivi indicizzati hanno individuato trentuno articoli e un estratto video. Il controllo del 5 novembre ha verificato sulla pagina Facebook originale un video di Lidia Vescio pubblicato il 3 novembre alle 18:13: titolo e descrizione identificano il Consiglio della stessa giornata e il Piano di riequilibrio fino al 2035, quindi il collegamento è `same_session`, `excerpt` e `replay_available`. Resta un contenuto politico editoriale e non certifica programmazione, completezza, votazioni o risultati. Lo stesso controllo diretto non ha individuato una convocazione, una designazione, un avviso, il parere originale dei Revisori o un allegato istituzionale; Comune e Albo mostravano ancora soltanto le pubblicazioni già rilevate. Il precedente controllo ha aggiunto il resoconto di EsseTV News, classificato `same_session`, ma la pagina riproduce titolo e contenuto del resoconto di LameziaTerme.it e non costituisce una conferma indipendente. Tutte le pagine restano fonti editoriali: date, orari, numero dei punti, contenuto degli atti, svolgimento e posizioni riportate non vengono pubblicati come dati ufficiali della seduta.",
     articles: [
       {
         title:
@@ -3538,7 +3540,20 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
         reviewedAt: "2026-11-04T17:46:00+01:00",
       },
     ],
-    media: [],
+    media: [
+      {
+        title: "Lamezia, dieci anni di riequilibrio. Il PD dice no",
+        url: COUNCIL_NOVEMBER_3_VESCIO_FACEBOOK_VIDEO_URL,
+        publisher: "Lidia Vescio",
+        publishedAt: "2026-11-03",
+        relationship: "same_session",
+        mediaType: "excerpt",
+        availability: "replay_available",
+        relevanceNote:
+          "La pagina Facebook originale, pubblicata il 3 novembre 2026 alle 18:13, identifica nel titolo e nella descrizione il Consiglio comunale della stessa giornata, il Piano di riequilibrio e l'orizzonte fino al 2035. È un estratto politico editoriale esterno: non certifica convocazione, ordine del giorno ufficiale, completezza, svolgimento, votazioni o risultati e non valorizza i campi ufficiali di streaming o registrazione.",
+        reviewedAt: "2026-11-05T05:41:00+01:00",
+      },
+    ],
     editorialAgenda: [
       {
         title: "Bilancio consolidato 2025 e variazioni al Bilancio 2026–2028",
@@ -3681,7 +3696,7 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
   lastCheckedAt: {
     key: "lastCheckedAt",
     label: "Ultimo controllo",
-    value: "2026-11-05T00:04:00+01:00",
+    value: "2026-11-05T05:41:00+01:00",
     sourceStatus: "verificato",
     sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
     limit:
@@ -3694,7 +3709,7 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
       "Il 3 e il 4 novembre, gli orari e i venti punti riportati dalla testata non sono stati verificati su una fonte istituzionale e non vengono presentati come dati ufficiali della seduta.",
       "Non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione al Consiglio segnalato; il 5 novembre il nuovo Albo dinamico ha restituito soltanto quattro avvisi culturali nella ricerca d'archivio dal 25 ottobre, mentre l'Albo storico non contiene atti successivi al passaggio di piattaforma.",
       "Data, ora, sede, ordine del giorno, stato, streaming, registrazione e verbale restano non verificati o non rilevati secondo il campo.",
-      "I trentuno articoli collegati sono fonti editoriali e non certificano programmazione, svolgimento, completezza, contenuto degli atti, partecipanti, votazioni o risultati; più pagine riproducono le medesime note, articoli o dispacci e non sono conferme indipendenti. I resoconti e le anticipazioni della stessa mattina identificano la stessa seduta, ma la programmazione, le votazioni e gli esiti che riportano non vengono trasferiti nei campi ufficiali.",
+      "I trentuno articoli e l'estratto video collegati sono fonti editoriali e non certificano programmazione, svolgimento, completezza, contenuto degli atti, partecipanti, votazioni o risultati; più pagine riproducono le medesime note, articoli o dispacci e non sono conferme indipendenti. Il video espone una posizione politica sulla seduta e sul Piano di riequilibrio, ma non valorizza i campi ufficiali di streaming o registrazione.",
       "I temi riportati dalla copertura restano nell'agenda editoriale separata e dovranno essere riconciliati se emergerà un atto istituzionale.",
     ],
     sourceStatus: "parziale",
