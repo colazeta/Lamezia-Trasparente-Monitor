@@ -81,7 +81,7 @@ export const EVIDENCE_INTERVENTIONS_2026_11_05_NEW_ORLEANS_HNP: readonly Evidenc
       ],
       "lastVerifiedAt": "2026-11-05",
       "transferabilityItaly": "Buona per processi di mappatura, priorità manutentive e interventi leggeri su immobili/terreni pubblici o legittimamente accessibili; meno trasferibile la dimensione dell'effetto sulla violenza familiare. Per proprietà private il Comune deve rispettare normativa italiana, procedimento e poteri effettivi: nessun accesso o modifica senza titolo.",
-      "lameziaAdaptation": "Partire dall'Ordinanza comunale n. 36 del 7 luglio 2026 sulle aree private: costruire un registro territoriale di situazioni segnalate e verificabili; distinguere proprietà comunali e private e graduare priorità per salute, fruibilità, prossimità a scuole e servizi, non per etichette sociali. Sperimentare su un gruppo di micro-aree pubbliche comparabili pulizia, piccolo verde e manutenzione programmata, coinvolgendo residenti e Lamezia Multiservizi secondo competenze e appalti. Confrontare tempestività delle manutenzioni, nuove segnalazioni, uso degli spazi e sicurezza percepita, senza promettere riduzioni di violenza domestica; per eventuali dati su violenza usare soltanto aggregazioni legalmente accessibili e cooperazione con autorità competenti.",
+      "lameziaAdaptation": "Usare come baseline documentale l'Ordinanza comunale n. 36 del 7 luglio 2026 su pulizia e manutenzione delle aree private, che stabiliva adempimenti entro il 31 ottobre 2026: alla data odierna il suo periodo espresso è terminato; NON assumere la sua vigenza o poteri di accesso dopo tale data senza verifica di ulteriori atti e della disciplina ordinaria. Originale: https://lamezia-terme-api.municipiumapp.it/s3/3458/allegati/uff-ambiente/ordinanza-n-36-del-07-07-2026.pdf . Costruire inventario di lotti e aree abbandonate con titolarità verificata; per un pilota partire da micro-aree pubbliche comparabili, con pulizia, verde leggero, manutenzione, coinvolgimento di residenti e Lamezia Multiservizi entro competenze e contratti. Valutare segnalazioni, tempi di soluzione, manutenzione ripetuta, uso dello spazio e sicurezza percepita. Non prevedere di misurare violenza familiare su dati identificativi di soggetti vulnerabili: solo indicatori aggregati legalmente accessibili con autorità competenti.",
       "implementability": "medio_termine",
       "capacityDataNeeds": [
         "mappa georeferenziata delle aree e informazioni sulla proprietà",
@@ -90,7 +90,8 @@ export const EVIDENCE_INTERVENTIONS_2026_11_05_NEW_ORLEANS_HNP: readonly Evidenc
         "cronologia segnalazioni, ordinanze, lavori e manutenzioni",
         "budget per manutenzione ricorrente e partner operativi",
         "protocollo di valutazione con aree comparabili e misure non stigmatizzanti",
-        "garanzie GDPR e competenze delle autorità per eventuali indicatori di violenza"
+        "garanzie GDPR e competenze delle autorità per eventuali indicatori di violenza",
+        "verifica dell'eventuale rinnovo/sostituzione dell'Ordinanza n. 36/2026 dopo la scadenza espressa del 31 ottobre 2026"
       ],
       "tags": [
         "New Orleans",
@@ -116,6 +117,10 @@ export const EVIDENCE_INTERVENTIONS_2026_11_05_NEW_ORLEANS_HNP: readonly Evidenc
         {
           "date": "2026-11-05",
           "note": "Rafforzata la verifica usando la metodologia completa open access di Theall et al. 2025: assegnazione randomizzata di 194 cluster in 23 quartieri, 101 trattati/93 controlli, interventi dal gennaio 2020 al dicembre 2022 e manutenzione continua soltanto per 135/296 immobili. Queste informazioni qualificano l'abstract AJPH 2026 senza inventarne i dettagli non accessibili."
+        },
+        {
+          "date": "2026-11-05",
+          "note": "Verificato l'originale PDF dell'Ordinanza n. 36 del 7 luglio 2026 (pp. 2–3) e precisata la scadenza espressa al 31 ottobre 2026; non presunta alcuna proroga né poteri comunali oltre legge."
         }
       ]
     }
