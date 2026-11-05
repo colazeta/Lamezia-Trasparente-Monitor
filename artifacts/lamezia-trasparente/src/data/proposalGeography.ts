@@ -16,6 +16,7 @@ import { SCOUTED_PROPOSAL_GEOGRAPHY_20261102 } from "./proposalGeographyScouting
 import { SCOUTED_PROPOSAL_GEOGRAPHY_20261103 } from "./proposalGeographyScouting20261103";
 import { SCOUTED_PROPOSAL_GEOGRAPHY_20261104 } from "./proposalGeographyScouting20261104";
 import { SCOUTED_PROPOSAL_GEOGRAPHY_20261105 } from "./proposalGeographyScouting20261105";
+import { SCOUTED_PROPOSAL_GEOGRAPHY_20261105_BACKFILL } from "./proposalGeographyScouting20261105Backfill";
 
 export type {
   ProposalGeoArea,
@@ -53,6 +54,7 @@ export const PROPOSAL_GEOGRAPHY: Record<string, core.ProposalGeography> = {
   ...SCOUTED_PROPOSAL_GEOGRAPHY_20261103,
   ...SCOUTED_PROPOSAL_GEOGRAPHY_20261104,
   ...SCOUTED_PROPOSAL_GEOGRAPHY_20261105,
+  ...SCOUTED_PROPOSAL_GEOGRAPHY_20261105_BACKFILL,
 };
 
 export function getProposalGeography(
