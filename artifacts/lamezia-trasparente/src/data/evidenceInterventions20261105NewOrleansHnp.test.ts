@@ -38,6 +38,9 @@ describe("Municipal evidence 2026-11-05 — New Orleans Healthy Neighborhoods Pr
   it("does not confuse relative changes, randomized clusters and citywide violence", () => {
     expect(record.evaluationMethod).toContain("Cluster randomized controlled trial");
     expect(record.evaluationMethod).toContain("23 quartieri");
+    expect(record.evaluationMethod).toContain("194 cluster");
+    expect(record.evaluationMethod).toContain("101 cluster trattati e 93 controlli");
+    expect(record.costsRequirements).toContain("135/296");
     expect(record.effectSize).toContain("−40%");
     expect(record.effectSize).toContain("−16%");
     expect(record.effectSize).toContain("−11%");
