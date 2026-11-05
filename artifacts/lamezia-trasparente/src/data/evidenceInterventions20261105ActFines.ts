@@ -72,11 +72,6 @@ export const EVIDENCE_INTERVENTIONS_2026_11_05_ACT_FINES: readonly EvidenceInter
       "label": "IZA Discussion Paper 14252 — testo integrale della versione precedente, tabelle e appendici",
       "url": "https://docs.iza.org/dp14252.pdf",
       "citation": "Sinning, M. & Zhang, Y. (2021), Social Norms or Enforcement? A Natural Field Experiment to Improve Traffic and Parking Fine Compliance, IZA Discussion Paper 14252."
-    },
-    {
-      "label": "ACT Government — modalità di pagamento/rateizzazione/rimedi",
-      "url": "https://www.accesscanberra.act.gov.au/driving-transport-and-parking/traffic-and-parking/ways-to-pay-a-fine-infringement",
-      "citation": "Access Canberra, Ways to pay a fine (infringement), documentazione amministrativa consultata il 5 novembre 2026."
     }
   ],
   "lastVerifiedAt": "2026-11-05",
