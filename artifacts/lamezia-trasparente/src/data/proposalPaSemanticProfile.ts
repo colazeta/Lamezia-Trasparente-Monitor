@@ -181,6 +181,17 @@ const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
     mappingNote:
       "La misura principale riguarda il coordinamento dei servizi di accoglienza e della destinazione turistica (Turismo). Imposta di soggiorno, collegamenti e servizi culturali sono materie ufficiali secondarie per analisi e audit. Il mapping non attribuisce competenze al Comune, al Sindaco o agli altri destinatari.",
   },
+  "Trasparenza e partecipazione sull'imposta di soggiorno": {
+    primary: ps("9"),
+    secondary: [ps("7")],
+    mappingNote:
+      "La richiesta principale riguarda verificabilità dei presupposti informativi e trasparenza nell'impiego degli introiti di un tributo (materia ufficiale Tributi, finanze e contravvenzioni). Turismo è materia secondaria, distinta dalla facet trasparenza. Il mapping non prova che il Comune abbia introdotto l'imposta né attribuisce competenza istituzionale.",
+  },
+  "Organizzazione dell'orario scolastico": {
+    primary: ps("1"),
+    mappingNote:
+      "Il riesame della distribuzione settimanale dell'orario didattico attiene a Educazione e formazione. La materia ufficiale non identifica la competenza di scuola, Consiglio d'Istituto o Comune e non equivale a una decisione sull'orario.",
+  },
   "Bilancio comunale e riequilibrio finanziario": {
     primary: ps("9"),
     mappingNote:
