@@ -59,6 +59,7 @@ import { EVIDENCE_INTERVENTIONS_2026_11_02 } from "./evidenceInterventions202611
 import { EVIDENCE_INTERVENTIONS_2026_11_03 } from "./evidenceInterventions20261103";
 import { EVIDENCE_INTERVENTIONS_2026_11_04 } from "./evidenceInterventions20261104";
 import { EVIDENCE_INTERVENTIONS_2026_11_04_BELO_HORIZONTE } from "./evidenceInterventions20261104BeloHorizonte";
+import { EVIDENCE_INTERVENTIONS_2026_11_05_NEW_ORLEANS_HNP } from "./evidenceInterventions20261105NewOrleansHnp";
 import { applyEvidenceInterventionUpdates20260914 } from "./evidenceInterventionUpdates20260914";
 import { applyEvidenceInterventionUpdates20260919 } from "./evidenceInterventionUpdates20260919";
 
@@ -128,6 +129,7 @@ const EVIDENCE_INTERVENTIONS_BEFORE_2026_09_14_UPDATES: readonly EvidenceInterve
   ...EVIDENCE_INTERVENTIONS_2026_11_03,
   ...EVIDENCE_INTERVENTIONS_2026_11_04,
   ...EVIDENCE_INTERVENTIONS_2026_11_04_BELO_HORIZONTE,
+  ...EVIDENCE_INTERVENTIONS_2026_11_05_NEW_ORLEANS_HNP,
 ];
 
 function deduplicateEvidenceInterventions(
