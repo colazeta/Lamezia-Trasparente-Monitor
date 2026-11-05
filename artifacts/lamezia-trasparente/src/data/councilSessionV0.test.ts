@@ -544,7 +544,19 @@ describe("councilSessionV0", () => {
         ),
       }),
     ]);
-    expect(session?.contextResearch.media).toEqual([]);
+    expect(session?.contextResearch.media).toEqual([
+      expect.objectContaining({
+        publisher: "Lidia Vescio",
+        publishedAt: "2026-11-03",
+        relationship: "same_session",
+        mediaType: "excerpt",
+        availability: "replay_available",
+        url: expect.stringContaining("1134845932760709"),
+        relevanceNote: expect.stringMatching(
+          /non certifica convocazione.*completezza.*votazioni.*risultati/i,
+        ),
+      }),
+    ]);
     expect(session?.contextResearch.editorialAgenda?.length).toBeGreaterThan(0);
     expect(session?.scheduledAt.limit).toMatch(
       /3 novembre.*4 novembre.*soltanto per la ricerca/i,
