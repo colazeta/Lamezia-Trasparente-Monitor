@@ -29,7 +29,7 @@ export const EVIDENCE_INTERVENTIONS_2026_11_06_BARCELONA_GREEN_CORRIDORS: readon
     "tools": [
       "riqualificazione di assi stradali e incroci con interventi di verde e arredo",
       "modifica degli schemi di accesso e moderazione velocità",
-      "osservazione pre/post (2022/2024) con griglia a otto dimensioni su scala 0–10",
+      "osservazione pre/post (2022/2024) con griglia a otto dimensioni su scala 1–10",
       "difference-in-differences con due sezioni di via València",
       "mappe e registri comunali per riscontro delle trasformazioni fisiche"
     ],
@@ -38,7 +38,7 @@ export const EVIDENCE_INTERVENTIONS_2026_11_06_BARCELONA_GREEN_CORRIDORS: readon
     "evaluationMethod": "Studio quasi-sperimentale con confronto pre (2022) / post (2024), rilevazione osservazionale sulla qualità degli spazi e stime difference-in-differences a livello di sezioni stradali/piazze. Solo una strada di controllo con due sezioni; strumento ad hoc non precedentemente validato, alcuni item soggettivi; nessuna assegnazione casuale né lunga serie temporale per verificare parallel trends.",
     "comparator": "Due sezioni della via València, vicina e con caratteristiche dichiarate simili, confrontate con sette sezioni di quattro strade trasformate e quattro piazze; osservazioni ante e post nello stesso intervallo temporale (2022 vs 2024).",
     "outcomes": [
-      "punteggio osservazionale 0–10 per verde/aree naturali",
+      "punteggio osservazionale 1–10 per verde/aree naturali",
       "qualità architettonica e accessibilità osservata",
       "manutenzione e pulizia",
       "sicurezza percepita/osservata della strada (NON incidenti misurati)",
@@ -46,7 +46,7 @@ export const EVIDENCE_INTERVENTIONS_2026_11_06_BARCELONA_GREEN_CORRIDORS: readon
       "dimensioni non significativamente migliorate: dotazioni, comfort e aspetti sociali nel confronto DiD"
     ],
     "results": "Rispetto alla strada di confronto aumentano significativamente i punteggi osservazionali delle aree naturali, della manutenzione/pulizia, delle caratteristiche architettoniche, della sicurezza e delle caratteristiche ambientali. Il confronto DiD non identifica miglioramenti significativi per dotazioni, attrattività/comfort e aspetti sociali. Il disegno non rileva effetti sanitari effettivi, tassi di sinistri o riduzioni misurate dell'inquinamento; la scala usata è di valutazione dello spazio e non una misura fisica.",
-    "effectSize": "DiD su scala osservazionale 0–10: aree naturali +4,94 punti (IC95% 3,66–6,23); manutenzione/pulizia +2,55 (0,25–4,86); caratteristiche architettoniche +2,28 (0,08–4,48); sicurezza +1,61 (0,30–2,93); condizioni ambientali +1,00 (0,25–1,75). Non significativi: dotazioni +1,63 (−0,36–3,62), comfort/attrattività +1,61 (−0,44–3,65), aspetti sociali +1,20 (−1,32–3,72). Dati dal Table 3, Novoa et al. 2026. Il paper descrive inoltre +85% di spazio pedonale e +68% di alberi nella trasformazione, valori progettuali/di realizzazione, NON effetti DiD.",
+    "effectSize": "DiD su scala osservazionale 1–10: aree naturali +4,94 punti (IC95% 3,66–6,23); manutenzione/pulizia +2,55 (0,25–4,86); caratteristiche architettoniche +2,28 (0,08–4,48); sicurezza +1,61 (0,30–2,93); condizioni ambientali +1,00 (0,25–1,75). Non significativi: dotazioni +1,63 (−0,36–3,62), comfort/attrattività +1,61 (−0,44–3,65), aspetti sociali +1,20 (−1,32–3,72). Dati dal Table 3, Novoa et al. 2026. Il paper descrive inoltre +85% di spazio pedonale e +68% di alberi nella trasformazione, valori progettuali/di realizzazione, NON effetti DiD.",
     "evidenceStrength": "moderata",
     "costsRequirements": "Opere civili, accessibilità e pavimentazione, alberi e manutenzione, segnaletica e riorganizzazione traffico; coordinamento urbanistica/viabilità/verde, consultazione con residenti e commercianti, monitoraggio GIS e ripartizione dei costi di manutenzione. Lo studio non offre costo consuntivo verificato per metro quadro né analisi costi-benefici; è un intervento infrastrutturale, non un quick win finanziario.",
     "limitations": [
