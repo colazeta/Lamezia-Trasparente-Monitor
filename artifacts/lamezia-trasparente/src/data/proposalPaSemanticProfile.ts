@@ -154,6 +154,18 @@ const eu = (code: OfficialFallbackDataThemeCode): ProposalPaSubjectRef => ({
 });
 
 const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
+  "Manutenzione e sicurezza della viabilità nelle contrade": {
+    primary: ps("4"),
+    secondary: [ps("8")],
+    mappingNote:
+      "La richiesta principale riguarda verifiche e manutenzione della rete viaria (Mobilità e trasporti); la possibile incidenza sulla sicurezza della circolazione è classificata come seconda materia ufficiale. Nessuna competenza è inferita da tema, luogo o destinatario.",
+  },
+  "Sicurezza e accessibilità degli ingressi scolastici": {
+    primary: ps("8"),
+    secondary: [ps("1"), ps("4")],
+    mappingNote:
+      "La misura principale richiesta è il presidio e il controllo dell'area scolastica (Giustizia e sicurezza pubblica). Educazione e formazione e Mobilità e trasporti sono secondarie per contesto e gestione dell'accesso veicolare. L'eventuale ripartizione delle competenze fra soggetti pubblici non è inferita.",
+  },
   "Manutenzione dei corsi d'acqua e prevenzione idrogeologica": {
     primary: ps("11"),
     secondary: [ps("8")],
