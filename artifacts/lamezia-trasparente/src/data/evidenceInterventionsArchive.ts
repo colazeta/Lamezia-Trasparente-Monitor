@@ -61,6 +61,7 @@ import { EVIDENCE_INTERVENTIONS_2026_11_04 } from "./evidenceInterventions202611
 import { EVIDENCE_INTERVENTIONS_2026_11_04_BELO_HORIZONTE } from "./evidenceInterventions20261104BeloHorizonte";
 import { EVIDENCE_INTERVENTIONS_2026_11_05_MECHELEN } from "./evidenceInterventions20261105Mechelen";
 import { EVIDENCE_INTERVENTIONS_2026_11_06_RIO_CEP } from "./evidenceInterventions20261106RioCep";
+import { EVIDENCE_INTERVENTIONS_2026_11_06_PMAT } from "./evidenceInterventions20261106Pmat";
 import { applyEvidenceInterventionUpdates20260914 } from "./evidenceInterventionUpdates20260914";
 import { applyEvidenceInterventionUpdates20260919 } from "./evidenceInterventionUpdates20260919";
 
@@ -132,6 +133,7 @@ const EVIDENCE_INTERVENTIONS_BEFORE_2026_09_14_UPDATES: readonly EvidenceInterve
   ...EVIDENCE_INTERVENTIONS_2026_11_04_BELO_HORIZONTE,
   ...EVIDENCE_INTERVENTIONS_2026_11_05_MECHELEN,
   ...EVIDENCE_INTERVENTIONS_2026_11_06_RIO_CEP,
+  ...EVIDENCE_INTERVENTIONS_2026_11_06_PMAT,
 ];
 
 function deduplicateEvidenceInterventions(
