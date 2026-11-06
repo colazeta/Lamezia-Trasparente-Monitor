@@ -63,6 +63,7 @@ import { EVIDENCE_INTERVENTIONS_2026_11_05_MECHELEN } from "./evidenceInterventi
 import { EVIDENCE_INTERVENTIONS_2026_11_06_RIO_CEP } from "./evidenceInterventions20261106RioCep";
 import { EVIDENCE_INTERVENTIONS_2026_11_06_PMAT } from "./evidenceInterventions20261106Pmat";
 import { EVIDENCE_INTERVENTIONS_2026_11_06_MAYORS_RESEARCH } from "./evidenceInterventions20261106MayorsResearch";
+import { EVIDENCE_INTERVENTIONS_2026_11_06_BARCELONA_GREEN_CORRIDORS } from "./evidenceInterventions20261106BarcelonaGreenCorridors";
 import { applyEvidenceInterventionUpdates20260914 } from "./evidenceInterventionUpdates20260914";
 import { applyEvidenceInterventionUpdates20260919 } from "./evidenceInterventionUpdates20260919";
 
@@ -136,6 +137,7 @@ const EVIDENCE_INTERVENTIONS_BEFORE_2026_09_14_UPDATES: readonly EvidenceInterve
   ...EVIDENCE_INTERVENTIONS_2026_11_06_RIO_CEP,
   ...EVIDENCE_INTERVENTIONS_2026_11_06_PMAT,
   ...EVIDENCE_INTERVENTIONS_2026_11_06_MAYORS_RESEARCH,
+  ...EVIDENCE_INTERVENTIONS_2026_11_06_BARCELONA_GREEN_CORRIDORS,
 ];
 
 function deduplicateEvidenceInterventions(
