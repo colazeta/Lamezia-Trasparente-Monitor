@@ -158,6 +158,8 @@ const COUNCIL_NOVEMBER_3_REPORT_CALABRIA_TRIBUNE_URL =
   "https://www.calabriatribune.it/2026/11/03/lamezia-terme-approvato-il-piano-di-riequilibrio-dal-consiglio-comunale/";
 const COUNCIL_NOVEMBER_3_VESCIO_FACEBOOK_VIDEO_URL =
   "https://www.facebook.com/100063686725609/videos/1134845932760709/";
+const COUNCIL_NOVEMBER_3_LO_MORO_LAMETINO_URL =
+  "https://www.lametino.it/ultime/lamezia-lo-moro-su-piano-di-riequilibrio-scelta-grave-che-meritava-maggiore-coraggio-e-trasparenza.html";
 const MUNICIPAL_ALBO_DOCUMENTS_URL =
   "https://www.comune.lamezia-terme.cz.it/it/documenti_pubblici/atti-di-albo-pretorio";
 const VIA_TRENTO_ROADWORKS_LAMETINO_URL =
@@ -3195,9 +3197,9 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
   isDemoFixture: false,
   contextResearch: {
     status: "reviewed_matches",
-    checkedAt: "2026-11-05T05:41:00+01:00",
+    checkedAt: "2026-11-07T11:38:00+01:00",
     searchNote:
-      "Parallel Search e la verifica diretta di Comune, pagina istituzionale del Consiglio, Albo corrente, Albo storico, testate locali e canali audiovisivi indicizzati hanno individuato trentuno articoli e un estratto video. Il controllo del 5 novembre ha verificato sulla pagina Facebook originale un video di Lidia Vescio pubblicato il 3 novembre alle 18:13: titolo e descrizione identificano il Consiglio della stessa giornata e il Piano di riequilibrio fino al 2035, quindi il collegamento è `same_session`, `excerpt` e `replay_available`. Resta un contenuto politico editoriale e non certifica programmazione, completezza, votazioni o risultati. Lo stesso controllo diretto non ha individuato una convocazione, una designazione, un avviso, il parere originale dei Revisori o un allegato istituzionale; Comune e Albo mostravano ancora soltanto le pubblicazioni già rilevate. Il precedente controllo ha aggiunto il resoconto di EsseTV News, classificato `same_session`, ma la pagina riproduce titolo e contenuto del resoconto di LameziaTerme.it e non costituisce una conferma indipendente. Tutte le pagine restano fonti editoriali: date, orari, numero dei punti, contenuto degli atti, svolgimento e posizioni riportate non vengono pubblicati come dati ufficiali della seduta.",
+      "Parallel Search e la verifica diretta delle pagine originali hanno individuato trentadue articoli e un estratto video. Il controllo del 7 novembre ha aggiunto l'articolo de il Lametino del 6 novembre con la posizione politica della consigliera Doris Lo Moro: la pagina identifica esplicitamente il Consiglio comunale del 3 novembre e il Piano di riequilibrio, quindi il collegamento è `same_session`. È una fonte editoriale e non certifica convocazione, ordine del giorno ufficiale, completezza, svolgimento, votazioni o risultati. Il controllo diretto delle novità del Comune e dell'Albo non ha individuato una convocazione, una designazione, un avviso, il parere originale dei Revisori o un allegato istituzionale; il Comune non mostrava nuove pubblicazioni consiliari e l'Albo restituiva ancora soltanto i quattro avvisi patrimoniali già rilevati. Restano acquisiti anche l'estratto video di Lidia Vescio e il resoconto di EsseTV News, entrambi editoriali e senza effetti sui campi ufficiali. Date, orari, numero dei punti, contenuto degli atti, svolgimento e posizioni riportate non vengono pubblicati come dati ufficiali della seduta.",
     articles: [
       {
         title:
@@ -3539,6 +3541,17 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
           "Italy Today ripubblica titolo e passaggi dell'anticipazione sul Consiglio della stessa mattina ed espone Gazzetta del Sud come fonte originale. Il collegamento è conservato per tracciabilità ma non costituisce una conferma indipendente o istituzionale né certifica convocazione, ordine del giorno, svolgimento, votazioni o risultati.",
         reviewedAt: "2026-11-04T17:46:00+01:00",
       },
+      {
+        title:
+          'Lamezia, Lo Moro su Piano di riequilibrio: "Scelta grave che meritava maggiore coraggio e trasparenza"',
+        url: COUNCIL_NOVEMBER_3_LO_MORO_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-11-06",
+        relationship: "same_session",
+        relevanceNote:
+          "La pagina originale identifica esplicitamente il Consiglio comunale di Lamezia del 3 novembre e il Piano di riequilibrio decennale, riportando la posizione politica della consigliera Doris Lo Moro. È una fonte editoriale: non certifica convocazione, ordine del giorno ufficiale, completezza, svolgimento, votazioni o risultati.",
+        reviewedAt: "2026-11-07T11:38:00+01:00",
+      },
     ],
     media: [
       {
@@ -3696,7 +3709,7 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
   lastCheckedAt: {
     key: "lastCheckedAt",
     label: "Ultimo controllo",
-    value: "2026-11-05T05:41:00+01:00",
+    value: "2026-11-07T11:38:00+01:00",
     sourceStatus: "verificato",
     sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
     limit:
@@ -3707,9 +3720,9 @@ const councilNovember3EditorialSignal: CouncilSessionV0 = {
     label: "Limiti del dato",
     value: [
       "Il 3 e il 4 novembre, gli orari e i venti punti riportati dalla testata non sono stati verificati su una fonte istituzionale e non vengono presentati come dati ufficiali della seduta.",
-      "Non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione al Consiglio segnalato; il 5 novembre il nuovo Albo dinamico ha restituito soltanto quattro avvisi culturali nella ricerca d'archivio dal 25 ottobre, mentre l'Albo storico non contiene atti successivi al passaggio di piattaforma.",
+      "Non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione al Consiglio segnalato; il 7 novembre il nuovo Albo dinamico ha restituito soltanto quattro avvisi patrimoniali nella ricerca d'archivio dal 25 ottobre, mentre l'Albo storico non contiene atti successivi al passaggio di piattaforma.",
       "Data, ora, sede, ordine del giorno, stato, streaming, registrazione e verbale restano non verificati o non rilevati secondo il campo.",
-      "I trentuno articoli e l'estratto video collegati sono fonti editoriali e non certificano programmazione, svolgimento, completezza, contenuto degli atti, partecipanti, votazioni o risultati; più pagine riproducono le medesime note, articoli o dispacci e non sono conferme indipendenti. Il video espone una posizione politica sulla seduta e sul Piano di riequilibrio, ma non valorizza i campi ufficiali di streaming o registrazione.",
+      "I trentadue articoli e l'estratto video collegati sono fonti editoriali e non certificano programmazione, svolgimento, completezza, contenuto degli atti, partecipanti, votazioni o risultati; più pagine riproducono le medesime note, articoli o dispacci e non sono conferme indipendenti. Il video espone una posizione politica sulla seduta e sul Piano di riequilibrio, ma non valorizza i campi ufficiali di streaming o registrazione.",
       "I temi riportati dalla copertura restano nell'agenda editoriale separata e dovranno essere riconciliati se emergerà un atto istituzionale.",
     ],
     sourceStatus: "parziale",
