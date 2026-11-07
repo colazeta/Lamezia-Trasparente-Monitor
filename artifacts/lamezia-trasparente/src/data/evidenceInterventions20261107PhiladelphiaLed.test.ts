@@ -44,7 +44,7 @@ describe("municipal evidence 2026-11-07 — Philadelphia LED streetlights", () =
 
   it("preserves distinctions between observational DiD, outcome and projected financing", () => {
     expect(record.evidenceStrength).toBe("moderata");
-    expect(record.evaluationMethod).toContain("difference");
+    expect(record.evaluationMethod).toContain("differenze-nelle-differenze");
     expect(record.evaluationMethod).toContain("Nessuna allocazione randomizzata");
     expect(record.effectSize).toContain("−15,21%");
     expect(record.effectSize).toContain("−20,98%");
