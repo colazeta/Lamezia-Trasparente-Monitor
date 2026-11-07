@@ -543,6 +543,15 @@ describe("councilSessionV0", () => {
           /non costituisce una conferma indipendente/i,
         ),
       }),
+      expect.objectContaining({
+        publisher: "il Lametino",
+        publishedAt: "2026-11-06",
+        relationship: "same_session",
+        url: expect.stringContaining("lamezia-lo-moro-su-piano-di-riequilibrio"),
+        relevanceNote: expect.stringMatching(
+          /fonte editoriale.*non certifica convocazione.*ordine del giorno ufficiale.*completezza.*svolgimento.*votazioni.*risultati/i,
+        ),
+      }),
     ]);
     expect(session?.contextResearch.media).toEqual([
       expect.objectContaining({
