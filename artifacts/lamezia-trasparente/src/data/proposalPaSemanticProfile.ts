@@ -154,6 +154,22 @@ const eu = (code: OfficialFallbackDataThemeCode): ProposalPaSubjectRef => ({
 });
 
 const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
+  "Manutenzione e sicurezza dei loculi cimiteriali": {
+    primary: ps("5"),
+    secondary: [ps("2"), ps("8")],
+    mappingNote:
+      "La richiesta principale riguarda accertamenti e manutenzione di strutture cimiteriali: Catasto e urbanistica è la materia nazionale prevalente. Salute, benessere e assistenza e Giustizia e sicurezza pubblica sono secondarie analitiche per possibili profili igienico-sanitari e di incolumità, non per competenze accertate. Destinatario e competenza sono campi separati: not_assessed.",
+  },
+  "Decentramento istituzionale e partecipazione territoriale": {
+    primary: eu("GOVE"),
+    mappingNote:
+      "La materia riguarda l'organizzazione istituzionale e il decentramento della rappresentanza, non contemplati con sufficiente precisione nelle 15 Materie dei servizi pubblici AgID. Si impiega la risorsa interoperabile ufficiale EU Data Theme GOVE, senza estensione LT e senza dedurre competenza o fattibilità ai sensi del TUEL.",
+  },
+  "Cerimoniale pubblico e memoria istituzionale": {
+    primary: eu("GOVE"),
+    mappingNote:
+      "Il cerimoniale comunale e le regole di memoria istituzionale attengono alla governance pubblica, non a uno specifico servizio delle 15 Materie AgID; classificazione ufficiale EU Data Theme GOVE. Nessuna competenza o adozione di regolamento è dedotta dal destinatario; not_assessed.",
+  },
   "Manutenzione e sicurezza della viabilità nelle contrade": {
     primary: ps("4"),
     secondary: [ps("8")],
