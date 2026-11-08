@@ -134,6 +134,12 @@ function recordRecent(href: string) {
   }
 }
 
+type CivicSearchState =
+  | { status: "idle" }
+  | { status: "loading"; query: string }
+  | { status: "ready"; query: string; results: CivicSearchResult[] }
+  | { status: "error"; query: string };
+
 interface CommandPaletteProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -143,10 +149,20 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
   const [, navigate] = useLocation();
   const [recents, setRecents] = useState<RecentEntry[]>([]);
   const [query, setQuery] = useState("");
-  const [civicResults, setCivicResults] = useState<CivicSearchResult[]>([]);
-  const [civicSearchStatus, setCivicSearchStatus] = useState<
-    "idle" | "loading" | "ready" | "error"
-  >("idle");
+  const [civicSearch, setCivicSearch] = useState<CivicSearchState>({
+    status: "idle",
+  });
+  const normalizedQuery = query.trim();
+  // An effect starts the search, but render already rejects the previous query's results.
+  const currentSearch: CivicSearchState =
+    !open || normalizedQuery.length < MIN_CIVIC_QUERY_LENGTH
+      ? { status: "idle" }
+      : civicSearch.status !== "idle" && civicSearch.query === normalizedQuery
+        ? civicSearch
+        : { status: "loading", query: normalizedQuery };
+  const civicSearchStatus = currentSearch.status;
+  const civicResults =
+    currentSearch.status === "ready" ? currentSearch.results : [];
 
   useEffect(() => {
     if (open) {
@@ -155,34 +171,32 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
     }
 
     setQuery("");
-    setCivicResults([]);
-    setCivicSearchStatus("idle");
+    setCivicSearch({ status: "idle" });
   }, [open]);
 
   useEffect(() => {
     const normalizedQuery = query.trim();
     if (!open || normalizedQuery.length < MIN_CIVIC_QUERY_LENGTH) {
-      setCivicResults([]);
-      setCivicSearchStatus("idle");
+      setCivicSearch({ status: "idle" });
       return;
     }
 
     let active = true;
-    setCivicSearchStatus("loading");
+    setCivicSearch({ status: "loading", query: normalizedQuery });
 
     const timeout = window.setTimeout(() => {
       import("@/lib/civicSearchIndex")
         .then(({ searchCivicIndex }) => {
           if (!active) return;
-          setCivicResults(
-            searchCivicIndex(normalizedQuery, CIVIC_SEARCH_LIMIT),
-          );
-          setCivicSearchStatus("ready");
+          setCivicSearch({
+            status: "ready",
+            query: normalizedQuery,
+            results: searchCivicIndex(normalizedQuery, CIVIC_SEARCH_LIMIT),
+          });
         })
         .catch(() => {
           if (!active) return;
-          setCivicResults([]);
-          setCivicSearchStatus("error");
+          setCivicSearch({ status: "error", query: normalizedQuery });
         });
     }, 120);
 

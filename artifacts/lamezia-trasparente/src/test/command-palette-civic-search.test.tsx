@@ -42,6 +42,12 @@ describe("CommandPalette civic search", () => {
     ).toBeInTheDocument();
     fireEvent.change(input, { target: { value: "zzzzinesistente" } });
     expect(
+      screen.queryByText(/Consiglio comunale aperto su Scordovillo/),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByText("Ricerca nell'indice civico..."),
+    ).toBeInTheDocument();
+    expect(
       await screen.findByText(/Nessuna corrispondenza nell’indice/),
     ).toBeInTheDocument();
     expect(

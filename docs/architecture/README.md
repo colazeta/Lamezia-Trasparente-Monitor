@@ -6,6 +6,7 @@ La documentazione ha uno scopo operativo: rendere verificabile da maintainer, re
 
 ## Documenti
 
+- [`state-machines.md`](state-machines.md) — audit dei cicli di stato di web, mobile, API e agenti, con invarianti e inventario JSON rigenerabile.
 - [`integrations-overview.md`](integrations-overview.md) — architettura logica delle integrazioni, pipeline dati, controlli e regole di pubblicazione.
 - [`publication-standardisation.md`](publication-standardisation.md) — confine versionato tra dato acquisito e presentazione pubblica, con regole di preservazione della fonte, minimizzazione e revisione.
 - [`semantic-ontology.md`](semantic-ontology.md) — profilo semantico federato per entità, relazioni e domini, con OntoPiA come riferimento primario per la PA italiana e mapping verso SEMIC/W3C/OGC, ePO/OCDS, BODS e FollowTheMoney.

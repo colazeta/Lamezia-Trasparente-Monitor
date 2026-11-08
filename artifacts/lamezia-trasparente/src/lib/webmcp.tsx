@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useReducer } from "react";
 import { useLocation } from "wouter";
 
 type ToolInput = Record<string, unknown>;
@@ -35,10 +35,46 @@ export type WebMcpActivity = {
   items: WebMcpActivityItem[];
 };
 
+export type WebMcpExecutionState =
+  | { status: "idle" }
+  | { status: "dismissed"; requestId: number }
+  | { status: "running"; requestId: number; tool: string; label: string }
+  | { status: "succeeded"; requestId: number; activity: WebMcpActivity }
+  | { status: "failed"; requestId: number; tool: string; label: string };
+
+type ExecutionEvent =
+  | Exclude<WebMcpExecutionState, { status: "idle" } | { status: "dismissed" }>
+  | { status: "dismiss" };
+
+// Dismissal belongs to a request; its later completion must not reopen the panel.
+export function webMcpExecutionReducer(
+  state: WebMcpExecutionState,
+  event: ExecutionEvent,
+): WebMcpExecutionState {
+  if (event.status === "dismiss") {
+    return state.status === "idle"
+      ? state
+      : { status: "dismissed", requestId: state.requestId };
+  }
+  if (state.status !== "idle") {
+    if (event.requestId < state.requestId) return state;
+    if (
+      event.requestId === state.requestId &&
+      (state.status !== "running" || event.status === "running")
+    )
+      return state;
+  }
+  return event;
+}
+
 type ToolDependencies = {
   navigate: (path: string) => void;
   fetchImpl?: typeof fetch;
   onActivity?: (activity: WebMcpActivity) => void;
+  onExecutionState?: (
+    state: Exclude<ExecutionEvent, { status: "dismiss" }>,
+  ) => void;
+  signal?: AbortSignal;
 };
 
 const READ_ONLY_ANNOTATIONS = {
@@ -82,18 +118,26 @@ function resultCountFrom(result: unknown) {
   }
 
   const rows = resultRowsFrom(result);
-  return rows.length > 0 ? rows.length : null;
+  return Array.isArray(record.data) || Array.isArray(record.projects)
+    ? rows.length
+    : null;
 }
 
 function firstText(...values: unknown[]) {
   for (const value of values) {
-    const text = asString(value);
+    const text =
+      typeof value === "number" && Number.isFinite(value)
+        ? String(value)
+        : asString(value);
     if (text) return text;
   }
   return "Record pubblico";
 }
 
-function activityItemsFrom(tool: string, result: unknown): WebMcpActivityItem[] {
+function activityItemsFrom(
+  tool: string,
+  result: unknown,
+): WebMcpActivityItem[] {
   return resultRowsFrom(result)
     .slice(0, ACTIVITY_PREVIEW_LIMIT)
     .map((value) => {
@@ -115,7 +159,8 @@ function activityItemsFrom(tool: string, result: unknown): WebMcpActivityItem[] 
         const id = firstText(record.publicId, record.id);
         return {
           label,
-          href: id !== "Record pubblico" ? `/albo/${encodeURIComponent(id)}` : null,
+          href:
+            id !== "Record pubblico" ? `/albo/${encodeURIComponent(id)}` : null,
         };
       }
 
@@ -131,7 +176,9 @@ function activityItemsFrom(tool: string, result: unknown): WebMcpActivityItem[] 
       }
 
       if (tool === "explore_pnrr_projects") {
-        const cup = asString(record.cup).replace(/[^a-z0-9]/gi, "").toUpperCase();
+        const cup = asString(record.cup)
+          .replace(/[^a-z0-9]/gi, "")
+          .toUpperCase();
         return {
           label,
           href: cup ? `/pnrr/${encodeURIComponent(cup)}` : null,
@@ -144,7 +191,8 @@ function activityItemsFrom(tool: string, result: unknown): WebMcpActivityItem[] 
 }
 
 function pageSizeFrom(value: unknown) {
-  const numeric = typeof value === "number" ? Math.trunc(value) : DEFAULT_PAGE_SIZE;
+  const numeric =
+    typeof value === "number" ? Math.trunc(value) : DEFAULT_PAGE_SIZE;
   return Math.min(MAX_PAGE_SIZE, Math.max(1, numeric || DEFAULT_PAGE_SIZE));
 }
 
@@ -194,8 +242,7 @@ function resultPayload(
     tool,
     uiPath,
     apiPath,
-    note:
-      "Read-only civic data. Verify dates, legal effect and source documents on the linked public interface before drawing conclusions.",
+    note: "Read-only civic data. Verify dates, legal effect and source documents on the linked public interface before drawing conclusions.",
     result,
   });
 }
@@ -212,7 +259,7 @@ function reportActivity(
   });
 }
 
-export function createWebMcpTools({
+function buildWebMcpTools({
   navigate,
   fetchImpl = fetch,
   onActivity,
@@ -230,7 +277,8 @@ export function createWebMcpTools({
           q: {
             type: "string",
             maxLength: 200,
-            description: "Parole chiave da cercare nell'oggetto o nella tipologia dell'atto.",
+            description:
+              "Parole chiave da cercare nell'oggetto o nella tipologia dell'atto.",
           },
           pageSize: {
             type: "integer",
@@ -323,11 +371,20 @@ export function createWebMcpTools({
 
         reportActivity(
           onActivity,
-          { tool: "filter_public_contracts", label: "Filtro contratti", uiPath },
+          {
+            tool: "filter_public_contracts",
+            label: "Filtro contratti",
+            uiPath,
+          },
           result,
         );
         navigate(uiPath);
-        return resultPayload("filter_public_contracts", uiPath, apiPath, result);
+        return resultPayload(
+          "filter_public_contracts",
+          uiPath,
+          apiPath,
+          result,
+        );
       },
     },
     {
@@ -409,7 +466,11 @@ export function createWebMcpTools({
         if (resource === "document") {
           const encoded = encodeURIComponent(id);
           const apiPath = `/api/public/v1/documents/${encoded}`;
-          const result = await fetchPublicJson(apiPath, new URLSearchParams(), fetchImpl);
+          const result = await fetchPublicJson(
+            apiPath,
+            new URLSearchParams(),
+            fetchImpl,
+          );
           const uiPath = `/albo/${encoded}`;
           onActivity?.({
             tool: "inspect_civic_record",
@@ -425,7 +486,11 @@ export function createWebMcpTools({
         if (resource === "contract") {
           const encoded = encodeURIComponent(id);
           const apiPath = `/api/public/v1/contracts/${encoded}`;
-          const result = await fetchPublicJson(apiPath, new URLSearchParams(), fetchImpl);
+          const result = await fetchPublicJson(
+            apiPath,
+            new URLSearchParams(),
+            fetchImpl,
+          );
           const uiPath = `/contratti/${encoded}`;
           onActivity?.({
             tool: "inspect_civic_record",
@@ -450,6 +515,12 @@ export function createWebMcpTools({
           apiParams,
           fetchImpl,
         );
+        const match = resultRowsFrom(result).some((row) => {
+          const record = asRecord(row);
+          return asString(record?.cup).toUpperCase() === cup;
+        });
+        if (!match)
+          throw new Error("PNRR record not found for the requested CUP");
         const uiPath = `/pnrr/${encodeURIComponent(cup)}`;
         onActivity?.({
           tool: "inspect_civic_record",
@@ -465,12 +536,77 @@ export function createWebMcpTools({
   ];
 }
 
+/** Each tool call keeps its result, but only the latest-started call owns the UI. */
+export function createWebMcpTools(
+  dependencies: ToolDependencies,
+): WebMcpTool[] {
+  let latestRequestId = 0;
+  return buildWebMcpTools(dependencies).map((definition, toolIndex) => ({
+    ...definition,
+    execute: async (input) => {
+      const requestId = ++latestRequestId;
+      const { signal, onExecutionState } = dependencies;
+      signal?.throwIfAborted();
+      const ownsUi = () => requestId === latestRequestId && !signal?.aborted;
+      const label = definition.title ?? definition.name;
+      onExecutionState?.({
+        status: "running",
+        requestId,
+        tool: definition.name,
+        label,
+      });
+      let activity: WebMcpActivity | undefined;
+      let uiApplied = false;
+      const fetchImpl = dependencies.fetchImpl ?? fetch;
+      const scopedTools = buildWebMcpTools({
+        ...dependencies,
+        fetchImpl: async (url, init) => {
+          const response = await fetchImpl(url, {
+            ...init,
+            ...(signal ? { signal } : {}),
+          });
+          signal?.throwIfAborted();
+          return response;
+        },
+        onActivity: (next) => {
+          activity = next;
+        },
+        navigate: (path) => {
+          if (!ownsUi()) return;
+          dependencies.navigate(path);
+          uiApplied = true;
+        },
+      });
+      try {
+        const raw = await scopedTools[toolIndex].execute(input);
+        signal?.throwIfAborted();
+        if (ownsUi() && activity) {
+          dependencies.onActivity?.(activity);
+          onExecutionState?.({ status: "succeeded", requestId, activity });
+        }
+        // Additive field: agents can distinguish returned data from an applied navigation.
+        return JSON.stringify({ ...JSON.parse(String(raw)), uiApplied });
+      } catch (error) {
+        if (ownsUi()) {
+          onExecutionState?.({
+            status: "failed",
+            requestId,
+            tool: definition.name,
+            label,
+          });
+        }
+        throw error;
+      }
+    },
+  }));
+}
+
 export async function registerWebMcpTools(
   modelContext: WebMcpModelContext,
   dependencies: ToolDependencies,
   signal?: AbortSignal,
 ) {
-  const tools = createWebMcpTools(dependencies);
+  const tools = createWebMcpTools({ ...dependencies, signal });
   await Promise.all(
     tools.map((tool) =>
       Promise.resolve(modelContext.registerTool(tool, { signal })),
@@ -481,8 +617,8 @@ export async function registerWebMcpTools(
 function isModelContext(value: unknown): value is WebMcpModelContext {
   return Boolean(
     value &&
-      typeof value === "object" &&
-      typeof (value as WebMcpModelContext).registerTool === "function",
+    typeof value === "object" &&
+    typeof (value as WebMcpModelContext).registerTool === "function",
   );
 }
 
@@ -506,7 +642,9 @@ function getModelContext() {
 
 export function WebMcpBridge() {
   const [, navigate] = useLocation();
-  const [activity, setActivity] = useState<WebMcpActivity | null>(null);
+  const [execution, dispatch] = useReducer(webMcpExecutionReducer, {
+    status: "idle",
+  });
 
   useEffect(() => {
     const modelContext = getModelContext();
@@ -515,7 +653,7 @@ export function WebMcpBridge() {
     const controller = new AbortController();
     void registerWebMcpTools(
       modelContext,
-      { navigate, onActivity: setActivity },
+      { navigate, onExecutionState: dispatch },
       controller.signal,
     ).catch((error) => {
       if (!controller.signal.aborted) {
@@ -526,11 +664,14 @@ export function WebMcpBridge() {
     return () => controller.abort();
   }, [navigate]);
 
-  if (!activity) return null;
+  if (execution.status === "idle" || execution.status === "dismissed")
+    return null;
+  const activity = execution.status === "succeeded" ? execution.activity : null;
 
   return (
     <aside
       className="fixed bottom-4 left-4 right-4 z-[80] mx-auto max-w-2xl rounded-xl border border-border bg-card/95 p-4 text-card-foreground shadow-lg backdrop-blur sm:left-auto sm:w-[30rem]"
+      data-state={execution.status}
       aria-live="polite"
       aria-label="Attività WebMCP"
     >
@@ -539,15 +680,31 @@ export function WebMcpBridge() {
           <p className="text-xs font-bold uppercase tracking-wide text-primary">
             Assistente WebMCP · sola lettura
           </p>
-          <p className="mt-1 text-sm font-semibold">{activity.label}</p>
-          <p className="mt-1 break-all text-xs leading-5 text-muted-foreground">
-            Vista aperta: {activity.uiPath}
-            {activity.resultCount !== null
-              ? ` · ${activity.resultCount} record disponibili`
-              : ""}
+          <p className="mt-1 text-sm font-semibold">
+            {execution.status === "succeeded"
+              ? execution.activity.label
+              : execution.label}
           </p>
+          {execution.status === "running" && (
+            <p role="status" className="mt-1 text-sm">
+              Ricerca nei dati pubblici in corso…
+            </p>
+          )}
+          {execution.status === "failed" && (
+            <p role="alert" className="mt-1 text-sm">
+              Richiesta non completata. Puoi riprovare tramite l’assistente.
+            </p>
+          )}
+          {activity && (
+            <p className="mt-1 break-all text-xs leading-5 text-muted-foreground">
+              Vista aperta: {activity.uiPath}
+              {activity.resultCount !== null
+                ? ` · ${activity.resultCount} record disponibili`
+                : ""}
+            </p>
+          )}
 
-          {activity.items.length > 0 && (
+          {activity && activity.items.length > 0 && (
             <div className="mt-3 space-y-2">
               <p className="text-xs font-semibold text-foreground">
                 Primi risultati della ricerca dell’assistente
@@ -581,7 +738,7 @@ export function WebMcpBridge() {
         </div>
         <button
           type="button"
-          onClick={() => setActivity(null)}
+          onClick={() => dispatch({ status: "dismiss" })}
           className="shrink-0 rounded-md border border-border px-2 py-1 text-xs font-semibold text-muted-foreground hover:text-foreground"
           aria-label="Chiudi avviso WebMCP"
         >

@@ -1,0 +1,7105 @@
+{
+  "schemaVersion": 1,
+  "scope": "Tracked-style source trees: artifacts, lib, scripts; excludes dependencies, build outputs, generated directories, tests and fixtures. Static candidates require semantic review; dynamically computed or external/provider-owned machines may be absent.",
+  "regenerate": "node scripts/architecture/stateMachineInventory.mjs --write",
+  "scannedFiles": 964,
+  "candidateFiles": 258,
+  "evidenceCount": 1161,
+  "entries": [
+    {
+      "file": "artifacts/api-server/scripts/assert_change_sentinel_event.mjs",
+      "evidence": [
+        {
+          "line": 41,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/scripts/docling_pdf_baseline.mjs",
+      "evidence": [
+        {
+          "line": 27,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        },
+        {
+          "line": 50,
+          "kind": "state-discriminant",
+          "symbol": "status: \"failed\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/app.ts",
+      "evidence": [
+        {
+          "line": 51,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/lib/anacContracts.ts",
+      "evidence": [
+        {
+          "line": 449,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        },
+        {
+          "line": 459,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        },
+        {
+          "line": 483,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        },
+        {
+          "line": 489,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/lib/attuazionePnrr.ts",
+      "evidence": [
+        {
+          "line": 258,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        },
+        {
+          "line": 268,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        },
+        {
+          "line": 295,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        },
+        {
+          "line": 301,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/lib/briefs.ts",
+      "evidence": [
+        {
+          "line": 37,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        },
+        {
+          "line": 159,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\" | \"busy\" | \"failed\""
+        },
+        {
+          "line": 161,
+          "kind": "state-discriminant",
+          "symbol": "status: \"busy\""
+        },
+        {
+          "line": 167,
+          "kind": "state-discriminant",
+          "symbol": "status: \"failed\""
+        },
+        {
+          "line": 177,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/lib/changeSentinel.ts",
+      "evidence": [
+        {
+          "line": 69,
+          "kind": "state-discriminant",
+          "symbol": "status: \"accepted\""
+        },
+        {
+          "line": 77,
+          "kind": "state-discriminant",
+          "symbol": "status: \"rejected\""
+        },
+        {
+          "line": 118,
+          "kind": "state-discriminant",
+          "symbol": "status: \"rejected\""
+        },
+        {
+          "line": 125,
+          "kind": "state-discriminant",
+          "symbol": "status: \"rejected\""
+        },
+        {
+          "line": 129,
+          "kind": "state-discriminant",
+          "symbol": "status: \"rejected\""
+        },
+        {
+          "line": 133,
+          "kind": "state-discriminant",
+          "symbol": "status: \"accepted\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/lib/changeSentinelQueue.ts",
+      "evidence": [
+        {
+          "line": 32,
+          "kind": "state-discriminant",
+          "symbol": "status: \"idle\""
+        },
+        {
+          "line": 34,
+          "kind": "state-discriminant",
+          "symbol": "status: \"processed\""
+        },
+        {
+          "line": 42,
+          "kind": "state-discriminant",
+          "symbol": "status: \"requeued\" | \"failed\""
+        },
+        {
+          "line": 173,
+          "kind": "state-discriminant",
+          "symbol": "state: \"processing\""
+        },
+        {
+          "line": 197,
+          "kind": "state-discriminant",
+          "symbol": "state: \"processed\""
+        },
+        {
+          "line": 243,
+          "kind": "state-discriminant",
+          "symbol": "status: \"idle\""
+        },
+        {
+          "line": 259,
+          "kind": "state-discriminant",
+          "symbol": "status: \"processed\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/lib/changeSentinelStore.ts",
+      "evidence": [
+        {
+          "line": 6,
+          "kind": "state-discriminant",
+          "symbol": "status: \"accepted\""
+        },
+        {
+          "line": 26,
+          "kind": "state-discriminant",
+          "symbol": "state: \"received\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/lib/confiscatedAssets.ts",
+      "evidence": [
+        {
+          "line": 262,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        },
+        {
+          "line": 272,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        },
+        {
+          "line": 295,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        },
+        {
+          "line": 301,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/lib/dcat.ts",
+      "evidence": [
+        {
+          "line": 454,
+          "kind": "state-discriminant",
+          "symbol": "state: \"active\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/lib/demographicBalance.ts",
+      "evidence": [
+        {
+          "line": 656,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\" | \"error\""
+        },
+        {
+          "line": 693,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/lib/demographicBalanceIngestion.ts",
+      "evidence": [
+        {
+          "line": 579,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\" | \"error\""
+        },
+        {
+          "line": 617,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/lib/demographicRbd.ts",
+      "evidence": [
+        {
+          "line": 295,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        },
+        {
+          "line": 296,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        },
+        {
+          "line": 307,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        },
+        {
+          "line": 319,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        },
+        {
+          "line": 336,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        },
+        {
+          "line": 345,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        },
+        {
+          "line": 380,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        },
+        {
+          "line": 424,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        },
+        {
+          "line": 441,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/lib/demographics.ts",
+      "evidence": [
+        {
+          "line": 106,
+          "kind": "state-discriminant",
+          "symbol": "status: \"estimated\""
+        },
+        {
+          "line": 109,
+          "kind": "state-discriminant",
+          "symbol": "status: \"provisional\""
+        },
+        {
+          "line": 112,
+          "kind": "state-discriminant",
+          "symbol": "status: \"unknown\""
+        },
+        {
+          "line": 234,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        },
+        {
+          "line": 235,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        },
+        {
+          "line": 247,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        },
+        {
+          "line": 259,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        },
+        {
+          "line": 276,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        },
+        {
+          "line": 285,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        },
+        {
+          "line": 452,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        },
+        {
+          "line": 481,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        },
+        {
+          "line": 533,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        },
+        {
+          "line": 568,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/lib/doclingProcessorAdapter.ts",
+      "evidence": [
+        {
+          "line": 20,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\" | \"failed\" | \"not-run\""
+        },
+        {
+          "line": 54,
+          "kind": "state-discriminant",
+          "symbol": "status: \"skipped\""
+        },
+        {
+          "line": 58,
+          "kind": "state-discriminant",
+          "symbol": "status: \"rejected\""
+        },
+        {
+          "line": 78,
+          "kind": "state-discriminant",
+          "symbol": "status: \"validated\""
+        },
+        {
+          "line": 125,
+          "kind": "temporal-control",
+          "symbol": "AbortController"
+        },
+        {
+          "line": 129,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        },
+        {
+          "line": 177,
+          "kind": "state-discriminant",
+          "symbol": "status: \"rejected\""
+        },
+        {
+          "line": 183,
+          "kind": "state-discriminant",
+          "symbol": "status: \"rejected\""
+        },
+        {
+          "line": 186,
+          "kind": "state-discriminant",
+          "symbol": "status: \"rejected\""
+        },
+        {
+          "line": 189,
+          "kind": "state-discriminant",
+          "symbol": "status: \"rejected\""
+        },
+        {
+          "line": 192,
+          "kind": "state-discriminant",
+          "symbol": "status: \"rejected\""
+        },
+        {
+          "line": 198,
+          "kind": "state-discriminant",
+          "symbol": "status: \"rejected\""
+        },
+        {
+          "line": 214,
+          "kind": "state-discriminant",
+          "symbol": "status: \"rejected\""
+        },
+        {
+          "line": 222,
+          "kind": "state-discriminant",
+          "symbol": "status: \"rejected\""
+        },
+        {
+          "line": 228,
+          "kind": "state-discriminant",
+          "symbol": "status: \"rejected\""
+        },
+        {
+          "line": 231,
+          "kind": "state-discriminant",
+          "symbol": "status: \"rejected\""
+        },
+        {
+          "line": 234,
+          "kind": "state-discriminant",
+          "symbol": "status: \"rejected\""
+        },
+        {
+          "line": 242,
+          "kind": "state-discriminant",
+          "symbol": "status: \"rejected\""
+        },
+        {
+          "line": 245,
+          "kind": "state-discriminant",
+          "symbol": "status: \"rejected\""
+        },
+        {
+          "line": 265,
+          "kind": "state-discriminant",
+          "symbol": "status: \"skipped\""
+        },
+        {
+          "line": 268,
+          "kind": "state-discriminant",
+          "symbol": "status: \"skipped\""
+        },
+        {
+          "line": 274,
+          "kind": "state-discriminant",
+          "symbol": "status: \"rejected\""
+        },
+        {
+          "line": 292,
+          "kind": "state-discriminant",
+          "symbol": "status: \"rejected\""
+        },
+        {
+          "line": 301,
+          "kind": "state-discriminant",
+          "symbol": "status: \"rejected\""
+        },
+        {
+          "line": 310,
+          "kind": "state-discriminant",
+          "symbol": "status: \"rejected\""
+        },
+        {
+          "line": 319,
+          "kind": "state-discriminant",
+          "symbol": "status: \"rejected\""
+        },
+        {
+          "line": 325,
+          "kind": "state-discriminant",
+          "symbol": "status: \"rejected\""
+        },
+        {
+          "line": 332,
+          "kind": "state-discriminant",
+          "symbol": "status: \"rejected\""
+        },
+        {
+          "line": 345,
+          "kind": "state-discriminant",
+          "symbol": "status: \"validated\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/lib/doclingRuntimeWiring.ts",
+      "evidence": [
+        {
+          "line": 176,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/lib/documentMarkdown.ts",
+      "evidence": [
+        {
+          "line": 143,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        },
+        {
+          "line": 315,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"shadow-only\""
+        },
+        {
+          "line": 320,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"worker-gated-memory-only\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/lib/geocode.ts",
+      "evidence": [
+        {
+          "line": 160,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/lib/ingestion.ts",
+      "evidence": [
+        {
+          "line": 293,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        },
+        {
+          "line": 303,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        },
+        {
+          "line": 330,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        },
+        {
+          "line": 336,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        },
+        {
+          "line": 387,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        },
+        {
+          "line": 388,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        },
+        {
+          "line": 401,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        },
+        {
+          "line": 413,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        },
+        {
+          "line": 434,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        },
+        {
+          "line": 443,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        },
+        {
+          "line": 457,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        },
+        {
+          "line": 464,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        },
+        {
+          "line": 540,
+          "kind": "temporal-control",
+          "symbol": "setInterval"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/lib/ingestionSchedulerConfig.ts",
+      "evidence": [
+        {
+          "line": 32,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"disabled\""
+        },
+        {
+          "line": 41,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"local\""
+        },
+        {
+          "line": 50,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"legacy\""
+        },
+        {
+          "line": 58,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"disabled\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/lib/italiadomaniPnrr.ts",
+      "evidence": [
+        {
+          "line": 423,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        },
+        {
+          "line": 429,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/lib/migrationStatus.ts",
+      "evidence": [
+        {
+          "line": 131,
+          "kind": "state-discriminant",
+          "symbol": "state: \"pending\""
+        },
+        {
+          "line": 170,
+          "kind": "state-discriminant",
+          "symbol": "state: \"aborted\""
+        },
+        {
+          "line": 199,
+          "kind": "state-discriminant",
+          "symbol": "state: \"failed\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/lib/opendata.ts",
+      "evidence": [
+        {
+          "line": 397,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        },
+        {
+          "line": 407,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        },
+        {
+          "line": 431,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        },
+        {
+          "line": 437,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/lib/populationBirthCountry.ts",
+      "evidence": [
+        {
+          "line": 270,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\" | \"error\""
+        },
+        {
+          "line": 347,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        },
+        {
+          "line": 361,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/lib/populationCitizenship.ts",
+      "evidence": [
+        {
+          "line": 501,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\" | \"error\""
+        },
+        {
+          "line": 598,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        },
+        {
+          "line": 611,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/lib/populationStructure.ts",
+      "evidence": [
+        {
+          "line": 418,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\" | \"error\""
+        },
+        {
+          "line": 487,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        },
+        {
+          "line": 499,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/lib/sourceAudit.ts",
+      "evidence": [
+        {
+          "line": 142,
+          "kind": "state-discriminant",
+          "symbol": "status: \"missing\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/lib/sourceSnapshotStartup.ts",
+      "evidence": [
+        {
+          "line": 8,
+          "kind": "state-discriminant",
+          "symbol": "status: \"disabled\" | \"waiting_for_schema\" | \"running\" | \"verified\" | \"failed\""
+        },
+        {
+          "line": 26,
+          "kind": "state-discriminant",
+          "symbol": "status: \"failed\""
+        },
+        {
+          "line": 38,
+          "kind": "state-discriminant",
+          "symbol": "status: \"failed\""
+        },
+        {
+          "line": 43,
+          "kind": "state-discriminant",
+          "symbol": "status: \"running\""
+        },
+        {
+          "line": 54,
+          "kind": "state-discriminant",
+          "symbol": "status: \"failed\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/routes/accessoCivico.ts",
+      "evidence": [
+        {
+          "line": 322,
+          "kind": "state-discriminant",
+          "symbol": "status: \"pending\""
+        },
+        {
+          "line": 461,
+          "kind": "state-discriminant",
+          "symbol": "status: \"published\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/routes/contracts.ts",
+      "evidence": [
+        {
+          "line": 165,
+          "kind": "state-discriminant",
+          "symbol": "status: \"pending\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/routes/health.ts",
+      "evidence": [
+        {
+          "line": 9,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        },
+        {
+          "line": 29,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/routes/helper.ts",
+      "evidence": [
+        {
+          "line": 83,
+          "kind": "temporal-control",
+          "symbol": "setInterval"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/routes/monitoringReports.ts",
+      "evidence": [
+        {
+          "line": 182,
+          "kind": "state-discriminant",
+          "symbol": "status: \"in_revisione\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/routes/opendata.ts",
+      "evidence": [
+        {
+          "line": 179,
+          "kind": "state-discriminant",
+          "symbol": "status: \"pending\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/routes/operationalHealth.ts",
+      "evidence": [
+        {
+          "line": 29,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/routes/organi.ts",
+      "evidence": [
+        {
+          "line": 82,
+          "kind": "state-discriminant",
+          "symbol": "status: \"current\" | \"historical\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/routes/public.ts",
+      "evidence": [
+        {
+          "line": 119,
+          "kind": "state-discriminant",
+          "symbol": "status: \"canonical-projection-unavailable\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/api-server/src/routes/publications.ts",
+      "evidence": [
+        {
+          "line": 377,
+          "kind": "state-discriminant",
+          "symbol": "status: \"pending\""
+        },
+        {
+          "line": 1258,
+          "kind": "state-discriminant",
+          "symbol": "status: \"noop\""
+        },
+        {
+          "line": 1274,
+          "kind": "state-discriminant",
+          "symbol": "status: \"started\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/ingestion-worker/src/doclingPreflight.ts",
+      "evidence": [
+        {
+          "line": 24,
+          "kind": "temporal-control",
+          "symbol": "AbortController"
+        },
+        {
+          "line": 25,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        },
+        {
+          "line": 83,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        },
+        {
+          "line": 119,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/ingestion-worker/src/doclingSmoke.ts",
+      "evidence": [
+        {
+          "line": 99,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        },
+        {
+          "line": 120,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-mobile/app/(tabs)/index.tsx",
+      "evidence": [
+        {
+          "line": 58,
+          "kind": "local-state",
+          "symbol": "[refreshing, setRefreshing]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-mobile/app/(tabs)/report.tsx",
+      "evidence": [
+        {
+          "line": 38,
+          "kind": "local-state",
+          "symbol": "[tab, setTab]"
+        },
+        {
+          "line": 88,
+          "kind": "local-state",
+          "symbol": "[title, setTitle]"
+        },
+        {
+          "line": 89,
+          "kind": "local-state",
+          "symbol": "[description, setDescription]"
+        },
+        {
+          "line": 90,
+          "kind": "local-state",
+          "symbol": "[category, setCategory]"
+        },
+        {
+          "line": 91,
+          "kind": "local-state",
+          "symbol": "[location, setLocation]"
+        },
+        {
+          "line": 92,
+          "kind": "local-state",
+          "symbol": "[citizenName, setCitizenName]"
+        },
+        {
+          "line": 93,
+          "kind": "local-state",
+          "symbol": "[locating, setLocating]"
+        },
+        {
+          "line": 94,
+          "kind": "local-state",
+          "symbol": "[error, setError]"
+        },
+        {
+          "line": 95,
+          "kind": "local-state",
+          "symbol": "[done, setDone]"
+        },
+        {
+          "line": 171,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-mobile/app/(tabs)/themes.tsx",
+      "evidence": [
+        {
+          "line": 23,
+          "kind": "local-state",
+          "symbol": "[searchInput, setSearchInput]"
+        },
+        {
+          "line": 24,
+          "kind": "local-state",
+          "symbol": "[search, setSearch]"
+        },
+        {
+          "line": 25,
+          "kind": "local-state",
+          "symbol": "[categoryId, setCategoryId]"
+        },
+        {
+          "line": 26,
+          "kind": "local-state",
+          "symbol": "[sort, setSort]"
+        },
+        {
+          "line": 29,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-mobile/app/albo/index.tsx",
+      "evidence": [
+        {
+          "line": 42,
+          "kind": "local-state",
+          "symbol": "[input, setInput]"
+        },
+        {
+          "line": 43,
+          "kind": "local-state",
+          "symbol": "[q, setQ]"
+        },
+        {
+          "line": 44,
+          "kind": "local-state",
+          "symbol": "[macrotema, setMacrotema]"
+        },
+        {
+          "line": 47,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-mobile/app/amministratori/index.tsx",
+      "evidence": [
+        {
+          "line": 16,
+          "kind": "local-state",
+          "symbol": "[input, setInput]"
+        },
+        {
+          "line": 17,
+          "kind": "local-state",
+          "symbol": "[q, setQ]"
+        },
+        {
+          "line": 18,
+          "kind": "local-state",
+          "symbol": "[role, setRole]"
+        },
+        {
+          "line": 21,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-mobile/app/assistente.tsx",
+      "evidence": [
+        {
+          "line": 74,
+          "kind": "local-state",
+          "symbol": "[messages, setMessages]"
+        },
+        {
+          "line": 75,
+          "kind": "local-state",
+          "symbol": "[input, setInput]"
+        },
+        {
+          "line": 76,
+          "kind": "local-state",
+          "symbol": "[loading, setLoading]"
+        },
+        {
+          "line": 77,
+          "kind": "local-state",
+          "symbol": "[error, setError]"
+        },
+        {
+          "line": 96,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        },
+        {
+          "line": 110,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-mobile/app/contratti/index.tsx",
+      "evidence": [
+        {
+          "line": 37,
+          "kind": "local-state",
+          "symbol": "[input, setInput]"
+        },
+        {
+          "line": 38,
+          "kind": "local-state",
+          "symbol": "[search, setSearch]"
+        },
+        {
+          "line": 39,
+          "kind": "local-state",
+          "symbol": "[procedureType, setProcedureType]"
+        },
+        {
+          "line": 40,
+          "kind": "local-state",
+          "symbol": "[acquisitionTool, setAcquisitionTool]"
+        },
+        {
+          "line": 41,
+          "kind": "local-state",
+          "symbol": "[themeId, setThemeId]"
+        },
+        {
+          "line": 42,
+          "kind": "local-state",
+          "symbol": "[minAmount, setMinAmount]"
+        },
+        {
+          "line": 43,
+          "kind": "local-state",
+          "symbol": "[maxAmount, setMaxAmount]"
+        },
+        {
+          "line": 44,
+          "kind": "local-state",
+          "symbol": "[from, setFrom]"
+        },
+        {
+          "line": 45,
+          "kind": "local-state",
+          "symbol": "[to, setTo]"
+        },
+        {
+          "line": 48,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-mobile/app/convocazioni/index.tsx",
+      "evidence": [
+        {
+          "line": 47,
+          "kind": "local-state",
+          "symbol": "[macrotema, setMacrotema]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-mobile/app/delibere.tsx",
+      "evidence": [
+        {
+          "line": 17,
+          "kind": "local-state",
+          "symbol": "[input, setInput]"
+        },
+        {
+          "line": 18,
+          "kind": "local-state",
+          "symbol": "[q, setQ]"
+        },
+        {
+          "line": 19,
+          "kind": "local-state",
+          "symbol": "[tipo, setTipo]"
+        },
+        {
+          "line": 20,
+          "kind": "local-state",
+          "symbol": "[macrotema, setMacrotema]"
+        },
+        {
+          "line": 23,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-mobile/app/domande.tsx",
+      "evidence": [
+        {
+          "line": 21,
+          "kind": "local-state",
+          "symbol": "[search, setSearch]"
+        },
+        {
+          "line": 22,
+          "kind": "local-state",
+          "symbol": "[topic, setTopic]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-mobile/app/opendata/[id].tsx",
+      "evidence": [
+        {
+          "line": 132,
+          "kind": "local-state",
+          "symbol": "[open, setOpen]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-mobile/app/opendata/index.tsx",
+      "evidence": [
+        {
+          "line": 28,
+          "kind": "local-state",
+          "symbol": "[input, setInput]"
+        },
+        {
+          "line": 29,
+          "kind": "local-state",
+          "symbol": "[search, setSearch]"
+        },
+        {
+          "line": 30,
+          "kind": "local-state",
+          "symbol": "[category, setCategory]"
+        },
+        {
+          "line": 31,
+          "kind": "local-state",
+          "symbol": "[theme, setTheme]"
+        },
+        {
+          "line": 34,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-mobile/app/pareri/index.tsx",
+      "evidence": [
+        {
+          "line": 17,
+          "kind": "local-state",
+          "symbol": "[input, setInput]"
+        },
+        {
+          "line": 18,
+          "kind": "local-state",
+          "symbol": "[search, setSearch]"
+        },
+        {
+          "line": 19,
+          "kind": "local-state",
+          "symbol": "[issuingBody, setIssuingBody]"
+        },
+        {
+          "line": 20,
+          "kind": "local-state",
+          "symbol": "[year, setYear]"
+        },
+        {
+          "line": 23,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-mobile/app/performance/index.tsx",
+      "evidence": [
+        {
+          "line": 27,
+          "kind": "local-state",
+          "symbol": "[category, setCategory]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-mobile/app/search.tsx",
+      "evidence": [
+        {
+          "line": 54,
+          "kind": "local-state",
+          "symbol": "[query, setQuery]"
+        },
+        {
+          "line": 55,
+          "kind": "local-state",
+          "symbol": "[debouncedQuery, setDebouncedQuery]"
+        },
+        {
+          "line": 58,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        },
+        {
+          "line": 63,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-mobile/app/theme/[id].tsx",
+      "evidence": [
+        {
+          "line": 68,
+          "kind": "local-state",
+          "symbol": "[tab, setTab]"
+        },
+        {
+          "line": 69,
+          "kind": "local-state",
+          "symbol": "[shareOpen, setShareOpen]"
+        },
+        {
+          "line": 70,
+          "kind": "local-state",
+          "symbol": "[confirmWithdraw, setConfirmWithdraw]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-mobile/app/walkthrough.tsx",
+      "evidence": [
+        {
+          "line": 29,
+          "kind": "local-state",
+          "symbol": "[activeIndex, setActiveIndex]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-mobile/components/ErrorFallback.tsx",
+      "evidence": [
+        {
+          "line": 26,
+          "kind": "local-state",
+          "symbol": "[isModalVisible, setIsModalVisible]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-mobile/components/HelperMenu.tsx",
+      "evidence": [
+        {
+          "line": 25,
+          "kind": "local-state",
+          "symbol": "[visible, setVisible]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-mobile/components/InterventionsMap.tsx",
+      "evidence": [
+        {
+          "line": 97,
+          "kind": "local-state",
+          "symbol": "[region, setRegion]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-mobile/components/InterventionsMap.web.tsx",
+      "evidence": [
+        {
+          "line": 60,
+          "kind": "local-state",
+          "symbol": "[clusters, setClusters]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-mobile/components/ResourceTable.tsx",
+      "evidence": [
+        {
+          "line": 47,
+          "kind": "local-state",
+          "symbol": "[page, setPage]"
+        },
+        {
+          "line": 48,
+          "kind": "local-state",
+          "symbol": "[showChart, setShowChart]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-mobile/components/ui.tsx",
+      "evidence": [
+        {
+          "line": 437,
+          "kind": "local-state",
+          "symbol": "[show, setShow]"
+        },
+        {
+          "line": 438,
+          "kind": "local-state",
+          "symbol": "[tempDate, setTempDate]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-mobile/context/HelperContext.tsx",
+      "evidence": [
+        {
+          "line": 49,
+          "kind": "local-state",
+          "symbol": "[walkthroughReady, setWalkthroughReady]"
+        },
+        {
+          "line": 50,
+          "kind": "local-state",
+          "symbol": "[walkthroughSeen, setWalkthroughSeen]"
+        },
+        {
+          "line": 51,
+          "kind": "local-state",
+          "symbol": "[guide, setGuide]"
+        },
+        {
+          "line": 56,
+          "kind": "local-state",
+          "symbol": "[guideLoading, setGuideLoading]"
+        },
+        {
+          "line": 57,
+          "kind": "local-state",
+          "symbol": "[visitedRoutes, setVisitedRoutesState]"
+        },
+        {
+          "line": 58,
+          "kind": "local-state",
+          "symbol": "[visitedLoaded, setVisitedLoaded]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-mobile/lib/gis.ts",
+      "evidence": [
+        {
+          "line": 77,
+          "kind": "async-state",
+          "symbol": "useQuery"
+        },
+        {
+          "line": 85,
+          "kind": "async-state",
+          "symbol": "useQuery"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-mobile/lib/helper.ts",
+      "evidence": [
+        {
+          "line": 10,
+          "kind": "persisted-state",
+          "symbol": "AsyncStorage.getItem"
+        },
+        {
+          "line": 19,
+          "kind": "persisted-state",
+          "symbol": "AsyncStorage.setItem"
+        },
+        {
+          "line": 25,
+          "kind": "persisted-state",
+          "symbol": "AsyncStorage.removeItem"
+        },
+        {
+          "line": 37,
+          "kind": "persisted-state",
+          "symbol": "AsyncStorage.getItem"
+        },
+        {
+          "line": 51,
+          "kind": "persisted-state",
+          "symbol": "AsyncStorage.setItem"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-mobile/scripts/build.js",
+      "evidence": [
+        {
+          "line": 224,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        },
+        {
+          "line": 238,
+          "kind": "temporal-control",
+          "symbol": "AbortController"
+        },
+        {
+          "line": 240,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        },
+        {
+          "line": 304,
+          "kind": "temporal-control",
+          "symbol": "AbortController"
+        },
+        {
+          "line": 305,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        },
+        {
+          "line": 650,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/public/_worker.js",
+      "evidence": [
+        {
+          "line": 44,
+          "kind": "state-discriminant",
+          "symbol": "status: \"canonical-projection-unavailable\""
+        },
+        {
+          "line": 50,
+          "kind": "state-discriminant",
+          "symbol": "status: \"source-unavailable\""
+        },
+        {
+          "line": 106,
+          "kind": "state-discriminant",
+          "symbol": "status: \"method-not-allowed\""
+        },
+        {
+          "line": 404,
+          "kind": "state-discriminant",
+          "symbol": "status: \"not-found\""
+        },
+        {
+          "line": 419,
+          "kind": "state-discriminant",
+          "symbol": "status: \"not-found\""
+        },
+        {
+          "line": 426,
+          "kind": "state-discriminant",
+          "symbol": "status: \"not-found\""
+        },
+        {
+          "line": 443,
+          "kind": "state-discriminant",
+          "symbol": "status: \"stale\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/components/admin/MigrationStatusBanner.tsx",
+      "evidence": [
+        {
+          "line": 17,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\" | \"pending\" | \"error\""
+        },
+        {
+          "line": 50,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        },
+        {
+          "line": 67,
+          "kind": "async-state",
+          "symbol": "{ data }"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/components/atlas/CensusSectionsDataView.tsx",
+      "evidence": [
+        {
+          "line": 35,
+          "kind": "local-state",
+          "symbol": "[query, setQuery]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/components/atlas/ConfiscatedAssetsAtlasLayer.tsx",
+      "evidence": [
+        {
+          "line": 10,
+          "kind": "state-discriminant",
+          "symbol": "status: \"idle\""
+        },
+        {
+          "line": 11,
+          "kind": "state-discriminant",
+          "symbol": "status: \"loading\""
+        },
+        {
+          "line": 13,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ready\""
+        },
+        {
+          "line": 19,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        },
+        {
+          "line": 24,
+          "kind": "local-state",
+          "symbol": "[state, setState]"
+        },
+        {
+          "line": 25,
+          "kind": "state-discriminant",
+          "symbol": "status: \"idle\""
+        },
+        {
+          "line": 32,
+          "kind": "state-discriminant",
+          "symbol": "status: \"idle\""
+        },
+        {
+          "line": 37,
+          "kind": "state-discriminant",
+          "symbol": "status: \"loading\""
+        },
+        {
+          "line": 43,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ready\""
+        },
+        {
+          "line": 54,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/components/atlas/GeoLibreAtlasPilot.tsx",
+      "evidence": [
+        {
+          "line": 28,
+          "kind": "local-state",
+          "symbol": "[availability, setAvailability]"
+        },
+        {
+          "line": 31,
+          "kind": "local-state",
+          "symbol": "[manifest, setManifest]"
+        },
+        {
+          "line": 38,
+          "kind": "temporal-control",
+          "symbol": "AbortController"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/components/atlas/MunicipalBoundaryAtlasLayer.tsx",
+      "evidence": [
+        {
+          "line": 10,
+          "kind": "state-discriminant",
+          "symbol": "status: \"idle\""
+        },
+        {
+          "line": 11,
+          "kind": "state-discriminant",
+          "symbol": "status: \"loading\""
+        },
+        {
+          "line": 13,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ready\""
+        },
+        {
+          "line": 17,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        },
+        {
+          "line": 22,
+          "kind": "local-state",
+          "symbol": "[state, setState]"
+        },
+        {
+          "line": 23,
+          "kind": "state-discriminant",
+          "symbol": "status: \"idle\""
+        },
+        {
+          "line": 30,
+          "kind": "state-discriminant",
+          "symbol": "status: \"idle\""
+        },
+        {
+          "line": 35,
+          "kind": "state-discriminant",
+          "symbol": "status: \"loading\""
+        },
+        {
+          "line": 40,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ready\""
+        },
+        {
+          "line": 46,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/components/demographics/ChangeDriversPanel.tsx",
+      "evidence": [
+        {
+          "line": 154,
+          "kind": "local-state",
+          "symbol": "[granularity, setGranularity]"
+        },
+        {
+          "line": 155,
+          "kind": "local-state",
+          "symbol": "[summaryWindow, setSummaryWindow]"
+        },
+        {
+          "line": 156,
+          "kind": "async-state",
+          "symbol": "{ data, isLoading, isError }"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/components/demographics/PopulationBirthCountryPanel.tsx",
+      "evidence": [
+        {
+          "line": 102,
+          "kind": "local-state",
+          "symbol": "[selectedPeriod, setSelectedPeriod]"
+        },
+        {
+          "line": 103,
+          "kind": "local-state",
+          "symbol": "[data, setData]"
+        },
+        {
+          "line": 104,
+          "kind": "local-state",
+          "symbol": "[isLoading, setIsLoading]"
+        },
+        {
+          "line": 105,
+          "kind": "local-state",
+          "symbol": "[isError, setIsError]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/components/demographics/PopulationCitizenshipPanel.tsx",
+      "evidence": [
+        {
+          "line": 108,
+          "kind": "local-state",
+          "symbol": "[selectedPeriod, setSelectedPeriod]"
+        },
+        {
+          "line": 109,
+          "kind": "local-state",
+          "symbol": "[data, setData]"
+        },
+        {
+          "line": 110,
+          "kind": "local-state",
+          "symbol": "[isLoading, setIsLoading]"
+        },
+        {
+          "line": 111,
+          "kind": "local-state",
+          "symbol": "[isError, setIsError]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/components/demographics/PopulationHistoryPanel.tsx",
+      "evidence": [
+        {
+          "line": 130,
+          "kind": "async-state",
+          "symbol": "{ data, isLoading, isError }"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/components/demographics/PopulationHouseholdsPanel.tsx",
+      "evidence": [
+        {
+          "line": 69,
+          "kind": "local-state",
+          "symbol": "[selectedPeriod, setSelectedPeriod]"
+        },
+        {
+          "line": 70,
+          "kind": "local-state",
+          "symbol": "[data, setData]"
+        },
+        {
+          "line": 71,
+          "kind": "local-state",
+          "symbol": "[isLoading, setIsLoading]"
+        },
+        {
+          "line": 72,
+          "kind": "local-state",
+          "symbol": "[isError, setIsError]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/components/demographics/PopulationStructurePanel.tsx",
+      "evidence": [
+        {
+          "line": 115,
+          "kind": "local-state",
+          "symbol": "[selectedPeriod, setSelectedPeriod]"
+        },
+        {
+          "line": 116,
+          "kind": "local-state",
+          "symbol": "[data, setData]"
+        },
+        {
+          "line": 117,
+          "kind": "local-state",
+          "symbol": "[isLoading, setIsLoading]"
+        },
+        {
+          "line": 118,
+          "kind": "local-state",
+          "symbol": "[isError, setIsError]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/components/helper/CivicAssistant.tsx",
+      "evidence": [
+        {
+          "line": 114,
+          "kind": "local-state",
+          "symbol": "[messages, setMessages]"
+        },
+        {
+          "line": 115,
+          "kind": "local-state",
+          "symbol": "[input, setInput]"
+        },
+        {
+          "line": 116,
+          "kind": "local-state",
+          "symbol": "[loading, setLoading]"
+        },
+        {
+          "line": 117,
+          "kind": "local-state",
+          "symbol": "[streaming, setStreaming]"
+        },
+        {
+          "line": 124,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        },
+        {
+          "line": 156,
+          "kind": "temporal-control",
+          "symbol": "AbortController"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/components/helper/CivicHelperContext.tsx",
+      "evidence": [
+        {
+          "line": 63,
+          "kind": "persisted-state",
+          "symbol": "window.localStorage.getItem"
+        },
+        {
+          "line": 72,
+          "kind": "persisted-state",
+          "symbol": "window.localStorage.setItem"
+        },
+        {
+          "line": 79,
+          "kind": "persisted-state",
+          "symbol": "window.localStorage.getItem"
+        },
+        {
+          "line": 93,
+          "kind": "persisted-state",
+          "symbol": "window.localStorage.setItem"
+        },
+        {
+          "line": 113,
+          "kind": "local-state",
+          "symbol": "[assistantOpen, setAssistantOpen]"
+        },
+        {
+          "line": 114,
+          "kind": "local-state",
+          "symbol": "[guideContents, setGuideContents]"
+        },
+        {
+          "line": 117,
+          "kind": "local-state",
+          "symbol": "[guideLoading, setGuideLoading]"
+        },
+        {
+          "line": 118,
+          "kind": "local-state",
+          "symbol": "[introSeen, setIntroSeen]"
+        },
+        {
+          "line": 119,
+          "kind": "local-state",
+          "symbol": "[welcomeOpen, setWelcomeOpen]"
+        },
+        {
+          "line": 120,
+          "kind": "local-state",
+          "symbol": "[visitedRoutes, setVisitedRoutes]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/components/helper/CivicHelperFAB.tsx",
+      "evidence": [
+        {
+          "line": 10,
+          "kind": "local-state",
+          "symbol": "[expanded, setExpanded]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/components/InterventionsMap.tsx",
+      "evidence": [
+        {
+          "line": 76,
+          "kind": "local-state",
+          "symbol": "[clusters, setClusters]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/components/layout/Navbar.tsx",
+      "evidence": [
+        {
+          "line": 40,
+          "kind": "local-state",
+          "symbol": "[isOpen, setIsOpen]"
+        },
+        {
+          "line": 41,
+          "kind": "local-state",
+          "symbol": "[openMobileGroup, setOpenMobileGroup]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/components/layout/navSections.ts",
+      "evidence": [
+        {
+          "line": 102,
+          "kind": "state-discriminant",
+          "symbol": "state: \"available\""
+        },
+        {
+          "line": 112,
+          "kind": "state-discriminant",
+          "symbol": "state: \"in_progress\""
+        },
+        {
+          "line": 123,
+          "kind": "state-discriminant",
+          "symbol": "state: \"available\""
+        },
+        {
+          "line": 133,
+          "kind": "state-discriminant",
+          "symbol": "state: \"in_progress\""
+        },
+        {
+          "line": 144,
+          "kind": "state-discriminant",
+          "symbol": "state: \"in_progress\""
+        },
+        {
+          "line": 162,
+          "kind": "state-discriminant",
+          "symbol": "state: \"in_progress\""
+        },
+        {
+          "line": 173,
+          "kind": "state-discriminant",
+          "symbol": "state: \"in_progress\""
+        },
+        {
+          "line": 184,
+          "kind": "state-discriminant",
+          "symbol": "state: \"in_progress\""
+        },
+        {
+          "line": 195,
+          "kind": "state-discriminant",
+          "symbol": "state: \"in_progress\""
+        },
+        {
+          "line": 206,
+          "kind": "state-discriminant",
+          "symbol": "state: \"available\""
+        },
+        {
+          "line": 217,
+          "kind": "state-discriminant",
+          "symbol": "state: \"in_progress\""
+        },
+        {
+          "line": 228,
+          "kind": "state-discriminant",
+          "symbol": "state: \"planned\""
+        },
+        {
+          "line": 246,
+          "kind": "state-discriminant",
+          "symbol": "state: \"available\""
+        },
+        {
+          "line": 256,
+          "kind": "state-discriminant",
+          "symbol": "state: \"in_progress\""
+        },
+        {
+          "line": 267,
+          "kind": "state-discriminant",
+          "symbol": "state: \"in_progress\""
+        },
+        {
+          "line": 278,
+          "kind": "state-discriminant",
+          "symbol": "state: \"hidden\""
+        },
+        {
+          "line": 289,
+          "kind": "state-discriminant",
+          "symbol": "state: \"hidden\""
+        },
+        {
+          "line": 307,
+          "kind": "state-discriminant",
+          "symbol": "state: \"in_progress\""
+        },
+        {
+          "line": 318,
+          "kind": "state-discriminant",
+          "symbol": "state: \"in_progress\""
+        },
+        {
+          "line": 329,
+          "kind": "state-discriminant",
+          "symbol": "state: \"in_progress\""
+        },
+        {
+          "line": 340,
+          "kind": "state-discriminant",
+          "symbol": "state: \"planned\""
+        },
+        {
+          "line": 358,
+          "kind": "state-discriminant",
+          "symbol": "state: \"in_progress\""
+        },
+        {
+          "line": 369,
+          "kind": "state-discriminant",
+          "symbol": "state: \"in_progress\""
+        },
+        {
+          "line": 380,
+          "kind": "state-discriminant",
+          "symbol": "state: \"in_progress\""
+        },
+        {
+          "line": 391,
+          "kind": "state-discriminant",
+          "symbol": "state: \"hidden\""
+        },
+        {
+          "line": 409,
+          "kind": "state-discriminant",
+          "symbol": "state: \"in_progress\""
+        },
+        {
+          "line": 420,
+          "kind": "state-discriminant",
+          "symbol": "state: \"available\""
+        },
+        {
+          "line": 430,
+          "kind": "state-discriminant",
+          "symbol": "state: \"in_progress\""
+        },
+        {
+          "line": 441,
+          "kind": "state-discriminant",
+          "symbol": "state: \"available\""
+        },
+        {
+          "line": 451,
+          "kind": "state-discriminant",
+          "symbol": "state: \"in_progress\""
+        },
+        {
+          "line": 462,
+          "kind": "state-discriminant",
+          "symbol": "state: \"in_progress\""
+        },
+        {
+          "line": 473,
+          "kind": "state-discriminant",
+          "symbol": "state: \"in_progress\""
+        },
+        {
+          "line": 484,
+          "kind": "state-discriminant",
+          "symbol": "state: \"planned\""
+        },
+        {
+          "line": 495,
+          "kind": "state-discriminant",
+          "symbol": "state: \"planned\""
+        },
+        {
+          "line": 513,
+          "kind": "state-discriminant",
+          "symbol": "state: \"in_progress\""
+        },
+        {
+          "line": 524,
+          "kind": "state-discriminant",
+          "symbol": "state: \"in_progress\""
+        },
+        {
+          "line": 535,
+          "kind": "state-discriminant",
+          "symbol": "state: \"in_progress\""
+        },
+        {
+          "line": 546,
+          "kind": "state-discriminant",
+          "symbol": "state: \"in_progress\""
+        },
+        {
+          "line": 557,
+          "kind": "state-discriminant",
+          "symbol": "state: \"in_progress\""
+        },
+        {
+          "line": 568,
+          "kind": "state-discriminant",
+          "symbol": "state: \"in_progress\""
+        },
+        {
+          "line": 579,
+          "kind": "state-discriminant",
+          "symbol": "state: \"hidden\""
+        },
+        {
+          "line": 590,
+          "kind": "state-discriminant",
+          "symbol": "state: \"hidden\""
+        },
+        {
+          "line": 607,
+          "kind": "state-discriminant",
+          "symbol": "state: \"available\""
+        },
+        {
+          "line": 617,
+          "kind": "state-discriminant",
+          "symbol": "state: \"in_progress\""
+        },
+        {
+          "line": 628,
+          "kind": "state-discriminant",
+          "symbol": "state: \"available\""
+        },
+        {
+          "line": 638,
+          "kind": "state-discriminant",
+          "symbol": "state: \"available\""
+        },
+        {
+          "line": 647,
+          "kind": "state-discriminant",
+          "symbol": "state: \"available\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/components/LocationEditor.tsx",
+      "evidence": [
+        {
+          "line": 74,
+          "kind": "local-state",
+          "symbol": "[point, setPoint]"
+        },
+        {
+          "line": 75,
+          "kind": "local-state",
+          "symbol": "[address, setAddress]"
+        },
+        {
+          "line": 76,
+          "kind": "local-state",
+          "symbol": "[quartiere, setQuartiere]"
+        },
+        {
+          "line": 77,
+          "kind": "local-state",
+          "symbol": "[searchQuery, setSearchQuery]"
+        },
+        {
+          "line": 78,
+          "kind": "local-state",
+          "symbol": "[searching, setSearching]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/components/opendata/AirTrafficDatasetCard.tsx",
+      "evidence": [
+        {
+          "line": 60,
+          "kind": "local-state",
+          "symbol": "[selectedYear, setSelectedYear]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/components/opendata/ClimateTerritoryDatasetCard.tsx",
+      "evidence": [
+        {
+          "line": 57,
+          "kind": "local-state",
+          "symbol": "[selectedYear, setSelectedYear]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/components/opendata/GenericDatasetDetail.tsx",
+      "evidence": [
+        {
+          "line": 26,
+          "kind": "state-discriminant",
+          "symbol": "status: \"loading\""
+        },
+        {
+          "line": 27,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ready\""
+        },
+        {
+          "line": 28,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        },
+        {
+          "line": 180,
+          "kind": "local-state",
+          "symbol": "[state, setState]"
+        },
+        {
+          "line": 180,
+          "kind": "state-discriminant",
+          "symbol": "status: \"loading\""
+        },
+        {
+          "line": 186,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        },
+        {
+          "line": 192,
+          "kind": "state-discriminant",
+          "symbol": "status: \"loading\""
+        },
+        {
+          "line": 201,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ready\""
+        },
+        {
+          "line": 201,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        },
+        {
+          "line": 204,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/components/opendata/ResourceTable.tsx",
+      "evidence": [
+        {
+          "line": 598,
+          "kind": "local-state",
+          "symbol": "[search, setSearch]"
+        },
+        {
+          "line": 599,
+          "kind": "local-state",
+          "symbol": "[sort, setSort]"
+        },
+        {
+          "line": 600,
+          "kind": "local-state",
+          "symbol": "[page, setPage]"
+        },
+        {
+          "line": 601,
+          "kind": "local-state",
+          "symbol": "[activeTab, setActiveTab]"
+        },
+        {
+          "line": 604,
+          "kind": "local-state",
+          "symbol": "[isAutoChart, setIsAutoChart]"
+        },
+        {
+          "line": 605,
+          "kind": "local-state",
+          "symbol": "[userChartType, setUserChartType]"
+        },
+        {
+          "line": 606,
+          "kind": "local-state",
+          "symbol": "[userXKey, setUserXKey]"
+        },
+        {
+          "line": 607,
+          "kind": "local-state",
+          "symbol": "[userYKeys, setUserYKeys]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/components/opendata/SnapshotHistory.tsx",
+      "evidence": [
+        {
+          "line": 122,
+          "kind": "local-state",
+          "symbol": "[open, setOpen]"
+        },
+        {
+          "line": 289,
+          "kind": "local-state",
+          "symbol": "[trendCol, setTrendCol]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/components/performance/PerformanceIndicatorExplorer.tsx",
+      "evidence": [
+        {
+          "line": 41,
+          "kind": "local-state",
+          "symbol": "[categoryId, setCategoryId]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/components/search/CommandPalette.tsx",
+      "evidence": [
+        {
+          "line": 95,
+          "kind": "persisted-state",
+          "symbol": "window.localStorage.getItem"
+        },
+        {
+          "line": 112,
+          "kind": "persisted-state",
+          "symbol": "window.localStorage.setItem"
+        },
+        {
+          "line": 131,
+          "kind": "persisted-state",
+          "symbol": "window.localStorage.setItem"
+        },
+        {
+          "line": 138,
+          "kind": "state-discriminant",
+          "symbol": "status: \"idle\""
+        },
+        {
+          "line": 139,
+          "kind": "state-discriminant",
+          "symbol": "status: \"loading\""
+        },
+        {
+          "line": 140,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ready\""
+        },
+        {
+          "line": 141,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        },
+        {
+          "line": 150,
+          "kind": "local-state",
+          "symbol": "[recents, setRecents]"
+        },
+        {
+          "line": 151,
+          "kind": "local-state",
+          "symbol": "[query, setQuery]"
+        },
+        {
+          "line": 152,
+          "kind": "local-state",
+          "symbol": "[civicSearch, setCivicSearch]"
+        },
+        {
+          "line": 153,
+          "kind": "state-discriminant",
+          "symbol": "status: \"idle\""
+        },
+        {
+          "line": 159,
+          "kind": "state-discriminant",
+          "symbol": "status: \"idle\""
+        },
+        {
+          "line": 162,
+          "kind": "state-discriminant",
+          "symbol": "status: \"loading\""
+        },
+        {
+          "line": 174,
+          "kind": "state-discriminant",
+          "symbol": "status: \"idle\""
+        },
+        {
+          "line": 180,
+          "kind": "state-discriminant",
+          "symbol": "status: \"idle\""
+        },
+        {
+          "line": 185,
+          "kind": "state-discriminant",
+          "symbol": "status: \"loading\""
+        },
+        {
+          "line": 187,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        },
+        {
+          "line": 192,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ready\""
+        },
+        {
+          "line": 199,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        },
+        {
+          "line": 419,
+          "kind": "local-state",
+          "symbol": "[open, setOpen]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/components/theme/ThemeCard.tsx",
+      "evidence": [
+        {
+          "line": 41,
+          "kind": "local-state",
+          "symbol": "[confirmWithdraw, setConfirmWithdraw]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/components/theme/ThemeProvider.tsx",
+      "evidence": [
+        {
+          "line": 17,
+          "kind": "persisted-state",
+          "symbol": "window.localStorage.getItem"
+        },
+        {
+          "line": 25,
+          "kind": "local-state",
+          "symbol": "[theme, setThemeState]"
+        },
+        {
+          "line": 31,
+          "kind": "persisted-state",
+          "symbol": "window.localStorage.setItem"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/components/ui/carousel.tsx",
+      "evidence": [
+        {
+          "line": 66,
+          "kind": "local-state",
+          "symbol": "[canScrollPrev, setCanScrollPrev]"
+        },
+        {
+          "line": 67,
+          "kind": "local-state",
+          "symbol": "[canScrollNext, setCanScrollNext]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/components/ui/sidebar.tsx",
+      "evidence": [
+        {
+          "line": 36,
+          "kind": "state-discriminant",
+          "symbol": "state: \"expanded\" | \"collapsed\""
+        },
+        {
+          "line": 70,
+          "kind": "local-state",
+          "symbol": "[openMobile, setOpenMobile]"
+        },
+        {
+          "line": 74,
+          "kind": "local-state",
+          "symbol": "[_open, _setOpen]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/content/legalitaTimeline.ts",
+      "evidence": [
+        {
+          "line": 145,
+          "kind": "state-discriminant",
+          "symbol": "status: \"fatto_storico_istituzionale\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/alboStatus.ts",
+      "evidence": [
+        {
+          "line": 24,
+          "kind": "state-discriminant",
+          "symbol": "status: \"public_safe\" | \"baseline_unavailable\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/civicOnboarding.ts",
+      "evidence": [
+        {
+          "line": 8,
+          "kind": "state-discriminant",
+          "symbol": "status: \"demo\""
+        },
+        {
+          "line": 34,
+          "kind": "state-discriminant",
+          "symbol": "status: \"sperimentale\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/councilSessionV0.ts",
+      "evidence": [
+        {
+          "line": 271,
+          "kind": "state-discriminant",
+          "symbol": "status: \"not_run\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/councilSessionV0Reviewed.ts",
+      "evidence": [
+        {
+          "line": 298,
+          "kind": "state-discriminant",
+          "symbol": "status: \"reviewed_matches\""
+        },
+        {
+          "line": 519,
+          "kind": "state-discriminant",
+          "symbol": "status: \"checked_no_match\""
+        },
+        {
+          "line": 528,
+          "kind": "state-discriminant",
+          "symbol": "status: \"checked_no_match\""
+        },
+        {
+          "line": 537,
+          "kind": "state-discriminant",
+          "symbol": "status: \"checked_no_match\""
+        },
+        {
+          "line": 546,
+          "kind": "state-discriminant",
+          "symbol": "status: \"checked_no_match\""
+        },
+        {
+          "line": 555,
+          "kind": "state-discriminant",
+          "symbol": "status: \"checked_no_match\""
+        },
+        {
+          "line": 565,
+          "kind": "state-discriminant",
+          "symbol": "status: \"checked_no_match\""
+        },
+        {
+          "line": 575,
+          "kind": "state-discriminant",
+          "symbol": "status: \"reviewed_matches\""
+        },
+        {
+          "line": 597,
+          "kind": "state-discriminant",
+          "symbol": "status: \"reviewed_matches\""
+        },
+        {
+          "line": 628,
+          "kind": "state-discriminant",
+          "symbol": "status: \"checked_no_match\""
+        },
+        {
+          "line": 637,
+          "kind": "state-discriminant",
+          "symbol": "status: \"reviewed_matches\""
+        },
+        {
+          "line": 659,
+          "kind": "state-discriminant",
+          "symbol": "status: \"checked_no_match\""
+        },
+        {
+          "line": 669,
+          "kind": "state-discriminant",
+          "symbol": "status: \"reviewed_matches\""
+        },
+        {
+          "line": 690,
+          "kind": "state-discriminant",
+          "symbol": "status: \"reviewed_matches\""
+        },
+        {
+          "line": 711,
+          "kind": "state-discriminant",
+          "symbol": "status: \"checked_no_match\""
+        },
+        {
+          "line": 721,
+          "kind": "state-discriminant",
+          "symbol": "status: \"checked_no_match\""
+        },
+        {
+          "line": 731,
+          "kind": "state-discriminant",
+          "symbol": "status: \"reviewed_matches\""
+        },
+        {
+          "line": 775,
+          "kind": "state-discriminant",
+          "symbol": "status: \"checked_no_match\""
+        },
+        {
+          "line": 784,
+          "kind": "state-discriminant",
+          "symbol": "status: \"checked_no_match\""
+        },
+        {
+          "line": 793,
+          "kind": "state-discriminant",
+          "symbol": "status: \"reviewed_matches\""
+        },
+        {
+          "line": 836,
+          "kind": "state-discriminant",
+          "symbol": "status: \"checked_no_match\""
+        },
+        {
+          "line": 845,
+          "kind": "state-discriminant",
+          "symbol": "status: \"reviewed_matches\""
+        },
+        {
+          "line": 1205,
+          "kind": "state-discriminant",
+          "symbol": "status: \"reviewed_matches\""
+        },
+        {
+          "line": 1370,
+          "kind": "state-discriminant",
+          "symbol": "status: \"reviewed_matches\""
+        },
+        {
+          "line": 1391,
+          "kind": "state-discriminant",
+          "symbol": "status: \"reviewed_matches\""
+        },
+        {
+          "line": 2874,
+          "kind": "state-discriminant",
+          "symbol": "status: \"reviewed_matches\""
+        },
+        {
+          "line": 3062,
+          "kind": "state-discriminant",
+          "symbol": "status: \"reviewed_matches\""
+        },
+        {
+          "line": 3199,
+          "kind": "state-discriminant",
+          "symbol": "status: \"reviewed_matches\""
+        },
+        {
+          "line": 3740,
+          "kind": "state-discriminant",
+          "symbol": "status: \"reviewed_matches\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/lameziaPnrr.ts",
+      "evidence": [
+        {
+          "line": 16,
+          "kind": "state-discriminant",
+          "symbol": "status: \"fresh\" | \"stale\" | \"pending\""
+        },
+        {
+          "line": 182,
+          "kind": "state-discriminant",
+          "symbol": "status: string | null"
+        },
+        {
+          "line": 534,
+          "kind": "state-discriminant",
+          "symbol": "phase: \"other\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/openDataDatasetRegistry.ts",
+      "evidence": [
+        {
+          "line": 371,
+          "kind": "state-discriminant",
+          "symbol": "status: \"published\""
+        },
+        {
+          "line": 392,
+          "kind": "state-discriminant",
+          "symbol": "status: \"published\""
+        },
+        {
+          "line": 413,
+          "kind": "state-discriminant",
+          "symbol": "status: \"published\""
+        },
+        {
+          "line": 437,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ready\""
+        },
+        {
+          "line": 454,
+          "kind": "state-discriminant",
+          "symbol": "status: \"published\""
+        },
+        {
+          "line": 471,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ready\""
+        },
+        {
+          "line": 488,
+          "kind": "state-discriminant",
+          "symbol": "status: \"published\""
+        },
+        {
+          "line": 505,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ready\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/opendataDataTypes.ts",
+      "evidence": [
+        {
+          "line": 24,
+          "kind": "state-discriminant",
+          "symbol": "status: \"published\""
+        },
+        {
+          "line": 51,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ready\""
+        },
+        {
+          "line": 77,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ready\""
+        },
+        {
+          "line": 103,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ready\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/performanceProcessChain.ts",
+      "evidence": [
+        {
+          "line": 48,
+          "kind": "state-discriminant",
+          "symbol": "stage: \"plan-approval\""
+        },
+        {
+          "line": 61,
+          "kind": "state-discriminant",
+          "symbol": "stage: \"intermediate-monitoring\""
+        },
+        {
+          "line": 74,
+          "kind": "state-discriminant",
+          "symbol": "stage: \"final-monitoring\""
+        },
+        {
+          "line": 87,
+          "kind": "state-discriminant",
+          "symbol": "stage: \"reporting-consultation\""
+        },
+        {
+          "line": 99,
+          "kind": "state-discriminant",
+          "symbol": "stage: \"oiv-validation\""
+        },
+        {
+          "line": 111,
+          "kind": "state-discriminant",
+          "symbol": "stage: \"giunta-approval\""
+        },
+        {
+          "line": 123,
+          "kind": "state-discriminant",
+          "symbol": "stage: \"permanent-publication\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/promessometroDemo.ts",
+      "evidence": [
+        {
+          "line": 89,
+          "kind": "state-discriminant",
+          "symbol": "status: \"da_verificare\""
+        },
+        {
+          "line": 113,
+          "kind": "state-discriminant",
+          "symbol": "status: \"atto_collegato\""
+        },
+        {
+          "line": 147,
+          "kind": "state-discriminant",
+          "symbol": "status: \"non_verificabile\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/proposalInstitutionalCompetence.ts",
+      "evidence": [
+        {
+          "line": 252,
+          "kind": "state-discriminant",
+          "symbol": "status: \"partially_verified\""
+        },
+        {
+          "line": 259,
+          "kind": "state-discriminant",
+          "symbol": "status: \"partially_verified\""
+        },
+        {
+          "line": 266,
+          "kind": "state-discriminant",
+          "symbol": "status: \"partially_verified\""
+        },
+        {
+          "line": 273,
+          "kind": "state-discriminant",
+          "symbol": "status: \"partially_verified\""
+        },
+        {
+          "line": 280,
+          "kind": "state-discriminant",
+          "symbol": "status: \"partially_verified\""
+        },
+        {
+          "line": 287,
+          "kind": "state-discriminant",
+          "symbol": "status: \"partially_verified\""
+        },
+        {
+          "line": 293,
+          "kind": "state-discriminant",
+          "symbol": "status: \"verified\""
+        },
+        {
+          "line": 299,
+          "kind": "state-discriminant",
+          "symbol": "status: \"partially_verified\""
+        },
+        {
+          "line": 306,
+          "kind": "state-discriminant",
+          "symbol": "status: \"partially_verified\""
+        },
+        {
+          "line": 313,
+          "kind": "state-discriminant",
+          "symbol": "status: \"partially_verified\""
+        },
+        {
+          "line": 319,
+          "kind": "state-discriminant",
+          "symbol": "status: \"verified\""
+        },
+        {
+          "line": 325,
+          "kind": "state-discriminant",
+          "symbol": "status: \"partially_verified\""
+        },
+        {
+          "line": 335,
+          "kind": "state-discriminant",
+          "symbol": "status: \"partially_verified\""
+        },
+        {
+          "line": 342,
+          "kind": "state-discriminant",
+          "symbol": "status: \"verified\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/proposalInstitutionalCompetence20260913.ts",
+      "evidence": [
+        {
+          "line": 50,
+          "kind": "state-discriminant",
+          "symbol": "status: \"partially_verified\""
+        },
+        {
+          "line": 57,
+          "kind": "state-discriminant",
+          "symbol": "status: \"partially_verified\""
+        },
+        {
+          "line": 67,
+          "kind": "state-discriminant",
+          "symbol": "status: \"partially_verified\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/proposalInstitutionalState.ts",
+      "evidence": [
+        {
+          "line": 98,
+          "kind": "state-discriminant",
+          "symbol": "state: \"started\" | \"completed\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/proposalScoutingUpdates.ts",
+      "evidence": [
+        {
+          "line": 88,
+          "kind": "state-discriminant",
+          "symbol": "status: \"recepita_parzialmente\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/propostePubblicheCore.ts",
+      "evidence": [
+        {
+          "line": 179,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        },
+        {
+          "line": 221,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        },
+        {
+          "line": 264,
+          "kind": "state-discriminant",
+          "symbol": "status: \"presentata_formalmente\""
+        },
+        {
+          "line": 356,
+          "kind": "state-discriminant",
+          "symbol": "status: \"presentata_formalmente\""
+        },
+        {
+          "line": 396,
+          "kind": "state-discriminant",
+          "symbol": "status: \"presentata_formalmente\""
+        },
+        {
+          "line": 461,
+          "kind": "state-discriminant",
+          "symbol": "status: \"presentata_formalmente\""
+        },
+        {
+          "line": 514,
+          "kind": "state-discriminant",
+          "symbol": "status: \"presentata_formalmente\""
+        },
+        {
+          "line": 567,
+          "kind": "state-discriminant",
+          "symbol": "status: \"presentata_formalmente\""
+        },
+        {
+          "line": 608,
+          "kind": "state-discriminant",
+          "symbol": "status: \"presentata_formalmente\""
+        },
+        {
+          "line": 674,
+          "kind": "state-discriminant",
+          "symbol": "status: \"presentata_formalmente\""
+        },
+        {
+          "line": 741,
+          "kind": "state-discriminant",
+          "symbol": "status: \"presentata_formalmente\""
+        },
+        {
+          "line": 779,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        },
+        {
+          "line": 814,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        },
+        {
+          "line": 849,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        },
+        {
+          "line": 884,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/propostePubblicheScouting.ts",
+      "evidence": [
+        {
+          "line": 29,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        },
+        {
+          "line": 70,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        },
+        {
+          "line": 111,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        },
+        {
+          "line": 152,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        },
+        {
+          "line": 196,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        },
+        {
+          "line": 239,
+          "kind": "state-discriminant",
+          "symbol": "status: \"presentata_formalmente\""
+        },
+        {
+          "line": 280,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        },
+        {
+          "line": 321,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/propostePubblicheScouting20260903.ts",
+      "evidence": [
+        {
+          "line": 32,
+          "kind": "state-discriminant",
+          "symbol": "status: \"presentata_formalmente\""
+        },
+        {
+          "line": 73,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/propostePubblicheScouting20260904.ts",
+      "evidence": [
+        {
+          "line": 30,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        },
+        {
+          "line": 83,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/propostePubblicheScouting20260906.ts",
+      "evidence": [
+        {
+          "line": 25,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        },
+        {
+          "line": 78,
+          "kind": "state-discriminant",
+          "symbol": "status: \"presentata_formalmente\""
+        },
+        {
+          "line": 168,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/propostePubblicheScouting20260908.ts",
+      "evidence": [
+        {
+          "line": 30,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/propostePubblicheScouting20260909.ts",
+      "evidence": [
+        {
+          "line": 35,
+          "kind": "state-discriminant",
+          "symbol": "status: \"presentata_formalmente\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/propostePubblicheScouting20260911.ts",
+      "evidence": [
+        {
+          "line": 36,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        },
+        {
+          "line": 83,
+          "kind": "state-discriminant",
+          "symbol": "status: \"presentata_formalmente\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/propostePubblicheScouting20260913.ts",
+      "evidence": [
+        {
+          "line": 39,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        },
+        {
+          "line": 115,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/propostePubblicheScouting20260915.ts",
+      "evidence": [
+        {
+          "line": 38,
+          "kind": "state-discriminant",
+          "symbol": "status: \"presentata_formalmente\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/propostePubblicheScouting20261013.ts",
+      "evidence": [
+        {
+          "line": 24,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        },
+        {
+          "line": 65,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        },
+        {
+          "line": 106,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/propostePubblicheScouting20261023.ts",
+      "evidence": [
+        {
+          "line": 23,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/propostePubblicheScouting20261026.ts",
+      "evidence": [
+        {
+          "line": 32,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        },
+        {
+          "line": 85,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/propostePubblicheScouting20261026Backfill.ts",
+      "evidence": [
+        {
+          "line": 29,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        },
+        {
+          "line": 82,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/propostePubblicheScouting20261027.ts",
+      "evidence": [
+        {
+          "line": 27,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        },
+        {
+          "line": 67,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/propostePubblicheScouting20261028.ts",
+      "evidence": [
+        {
+          "line": 27,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/propostePubblicheScouting20261029.ts",
+      "evidence": [
+        {
+          "line": 28,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        },
+        {
+          "line": 67,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/propostePubblicheScouting20261031.ts",
+      "evidence": [
+        {
+          "line": 29,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        },
+        {
+          "line": 69,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/propostePubblicheScouting20261031B.ts",
+      "evidence": [
+        {
+          "line": 28,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        },
+        {
+          "line": 78,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        },
+        {
+          "line": 118,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/propostePubblicheScouting20261101.ts",
+      "evidence": [
+        {
+          "line": 28,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/propostePubblicheScouting20261102.ts",
+      "evidence": [
+        {
+          "line": 27,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        },
+        {
+          "line": 66,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/propostePubblicheScouting20261103.ts",
+      "evidence": [
+        {
+          "line": 27,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        },
+        {
+          "line": 80,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/propostePubblicheScouting20261104.ts",
+      "evidence": [
+        {
+          "line": 23,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/propostePubblicheScouting20261105.ts",
+      "evidence": [
+        {
+          "line": 27,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/propostePubblicheScouting20261105Backfill.ts",
+      "evidence": [
+        {
+          "line": 28,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        },
+        {
+          "line": 67,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        },
+        {
+          "line": 106,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/propostePubblicheScouting20261106.ts",
+      "evidence": [
+        {
+          "line": 27,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        },
+        {
+          "line": 66,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/propostePubblicheScouting20261107.ts",
+      "evidence": [
+        {
+          "line": 27,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        },
+        {
+          "line": 67,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        },
+        {
+          "line": 107,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/propostePubblicheScouting20261108B.ts",
+      "evidence": [
+        {
+          "line": 24,
+          "kind": "state-discriminant",
+          "symbol": "status: \"proposta_emersa\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/publicRoutes.ts",
+      "evidence": [
+        {
+          "line": 47,
+          "kind": "state-discriminant",
+          "symbol": "status: \"pubblicabile\""
+        },
+        {
+          "line": 55,
+          "kind": "state-discriminant",
+          "symbol": "status: \"pubblicabile\""
+        },
+        {
+          "line": 63,
+          "kind": "state-discriminant",
+          "symbol": "status: \"sperimentale\""
+        },
+        {
+          "line": 72,
+          "kind": "state-discriminant",
+          "symbol": "status: \"pubblicabile\""
+        },
+        {
+          "line": 80,
+          "kind": "state-discriminant",
+          "symbol": "status: \"pubblicabile\""
+        },
+        {
+          "line": 88,
+          "kind": "state-discriminant",
+          "symbol": "status: \"pubblicabile\""
+        },
+        {
+          "line": 96,
+          "kind": "state-discriminant",
+          "symbol": "status: \"sperimentale\""
+        },
+        {
+          "line": 104,
+          "kind": "state-discriminant",
+          "symbol": "status: \"riservata\""
+        },
+        {
+          "line": 112,
+          "kind": "state-discriminant",
+          "symbol": "status: \"static-marker\""
+        },
+        {
+          "line": 120,
+          "kind": "state-discriminant",
+          "symbol": "status: \"pubblicabile\""
+        },
+        {
+          "line": 128,
+          "kind": "state-discriminant",
+          "symbol": "status: \"pubblicabile\""
+        },
+        {
+          "line": 136,
+          "kind": "state-discriminant",
+          "symbol": "status: \"pubblicabile\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/roadmap.ts",
+      "evidence": [
+        {
+          "line": 33,
+          "kind": "state-discriminant",
+          "symbol": "status: \"pianificato\""
+        },
+        {
+          "line": 38,
+          "kind": "state-discriminant",
+          "symbol": "status: \"in sviluppo\""
+        },
+        {
+          "line": 43,
+          "kind": "state-discriminant",
+          "symbol": "status: \"Disponibile\""
+        },
+        {
+          "line": 48,
+          "kind": "state-discriminant",
+          "symbol": "status: \"sperimentale\""
+        },
+        {
+          "line": 53,
+          "kind": "state-discriminant",
+          "symbol": "status: \"da validare\""
+        },
+        {
+          "line": 62,
+          "kind": "state-discriminant",
+          "symbol": "status: \"Disponibile\""
+        },
+        {
+          "line": 75,
+          "kind": "state-discriminant",
+          "symbol": "status: \"sperimentale\""
+        },
+        {
+          "line": 91,
+          "kind": "state-discriminant",
+          "symbol": "status: \"sperimentale\""
+        },
+        {
+          "line": 104,
+          "kind": "state-discriminant",
+          "symbol": "status: \"Disponibile\""
+        },
+        {
+          "line": 117,
+          "kind": "state-discriminant",
+          "symbol": "status: \"da validare\""
+        },
+        {
+          "line": 133,
+          "kind": "state-discriminant",
+          "symbol": "status: \"Disponibile\""
+        },
+        {
+          "line": 149,
+          "kind": "state-discriminant",
+          "symbol": "status: \"in sviluppo\""
+        },
+        {
+          "line": 165,
+          "kind": "state-discriminant",
+          "symbol": "status: \"Disponibile\""
+        },
+        {
+          "line": 178,
+          "kind": "state-discriminant",
+          "symbol": "status: \"Disponibile\""
+        },
+        {
+          "line": 194,
+          "kind": "state-discriminant",
+          "symbol": "status: \"Disponibile\""
+        },
+        {
+          "line": 210,
+          "kind": "state-discriminant",
+          "symbol": "status: \"Disponibile\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/sectionArchitecture.ts",
+      "evidence": [
+        {
+          "line": 141,
+          "kind": "state-discriminant",
+          "symbol": "state: \"Stato delle fonti e del monitoraggio\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/sourceHealth.ts",
+      "evidence": [
+        {
+          "line": 125,
+          "kind": "state-discriminant",
+          "symbol": "status: \"missing\""
+        },
+        {
+          "line": 134,
+          "kind": "state-discriminant",
+          "symbol": "status: \"stale\""
+        },
+        {
+          "line": 141,
+          "kind": "state-discriminant",
+          "symbol": "status: \"warning\""
+        },
+        {
+          "line": 148,
+          "kind": "state-discriminant",
+          "symbol": "status: \"warning\""
+        },
+        {
+          "line": 154,
+          "kind": "state-discriminant",
+          "symbol": "status: \"warning\""
+        },
+        {
+          "line": 160,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/data/spatialLayers.ts",
+      "evidence": [
+        {
+          "line": 66,
+          "kind": "state-discriminant",
+          "symbol": "status: \"sequestrato\" | \"confiscato\" | \"assegnato\" | \"riutilizzato\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/hooks/use-mobile.tsx",
+      "evidence": [
+        {
+          "line": 6,
+          "kind": "local-state",
+          "symbol": "[isMobile, setIsMobile]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/hooks/use-toast.ts",
+      "evidence": [
+        {
+          "line": 63,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        },
+        {
+          "line": 172,
+          "kind": "local-state",
+          "symbol": "[state, setState]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/hooks/useCanonicalCivicSnapshot.ts",
+      "evidence": [
+        {
+          "line": 12,
+          "kind": "async-state",
+          "symbol": "query"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/hooks/useSiteStrings.ts",
+      "evidence": [
+        {
+          "line": 11,
+          "kind": "async-state",
+          "symbol": "{ data, isLoading }"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/lib/accessoCivicoRegister.ts",
+      "evidence": [
+        {
+          "line": 150,
+          "kind": "state-discriminant",
+          "symbol": "status: \"in attesa\""
+        },
+        {
+          "line": 169,
+          "kind": "state-discriminant",
+          "symbol": "status: \"bozza\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/lib/alboDigest.ts",
+      "evidence": [
+        {
+          "line": 265,
+          "kind": "state-discriminant",
+          "symbol": "status: \"partial\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/lib/anacAuthorityDiscovery.ts",
+      "evidence": [
+        {
+          "line": 72,
+          "kind": "state-discriminant",
+          "symbol": "status: \"pending\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/lib/anacBdncpSync.ts",
+      "evidence": [
+        {
+          "line": 112,
+          "kind": "state-discriminant",
+          "symbol": "status: \"pending\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/lib/canonicalContractsDataset.ts",
+      "evidence": [
+        {
+          "line": 160,
+          "kind": "state-discriminant",
+          "symbol": "status: \"current-window\""
+        },
+        {
+          "line": 463,
+          "kind": "state-discriminant",
+          "symbol": "phase: \"collaudo\""
+        },
+        {
+          "line": 466,
+          "kind": "state-discriminant",
+          "symbol": "phase: \"variante\""
+        },
+        {
+          "line": 470,
+          "kind": "state-discriminant",
+          "symbol": "phase: \"liquidazione\""
+        },
+        {
+          "line": 480,
+          "kind": "state-discriminant",
+          "symbol": "phase: \"affidamento\""
+        },
+        {
+          "line": 487,
+          "kind": "state-discriminant",
+          "symbol": "phase: \"contratto\""
+        },
+        {
+          "line": 489,
+          "kind": "state-discriminant",
+          "symbol": "phase: \"altro\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/lib/cantieriometro.ts",
+      "evidence": [
+        {
+          "line": 13,
+          "kind": "state-discriminant",
+          "symbol": "status: string | null"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/lib/civicOffices.ts",
+      "evidence": [
+        {
+          "line": 24,
+          "kind": "state-discriminant",
+          "symbol": "status: \"known\""
+        },
+        {
+          "line": 31,
+          "kind": "state-discriminant",
+          "symbol": "status: \"unknown\""
+        },
+        {
+          "line": 218,
+          "kind": "state-discriminant",
+          "symbol": "status: \"unknown\""
+        },
+        {
+          "line": 245,
+          "kind": "state-discriminant",
+          "symbol": "status: \"known\""
+        },
+        {
+          "line": 258,
+          "kind": "state-discriminant",
+          "symbol": "status: \"unknown\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/lib/contractsPipelineVisualization.ts",
+      "evidence": [
+        {
+          "line": 30,
+          "kind": "state-discriminant",
+          "symbol": "state: \"complete\""
+        },
+        {
+          "line": 39,
+          "kind": "state-discriminant",
+          "symbol": "state: \"complete\""
+        },
+        {
+          "line": 48,
+          "kind": "state-discriminant",
+          "symbol": "state: \"complete\""
+        },
+        {
+          "line": 57,
+          "kind": "state-discriminant",
+          "symbol": "state: \"ready\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/lib/councilTransparencyCoverage.ts",
+      "evidence": [
+        {
+          "line": 173,
+          "kind": "state-discriminant",
+          "symbol": "status: \"not_found_in_monitored_sources\""
+        },
+        {
+          "line": 189,
+          "kind": "state-discriminant",
+          "symbol": "status: \"not_found_in_monitored_sources\""
+        },
+        {
+          "line": 210,
+          "kind": "state-discriminant",
+          "symbol": "status: \"needs_review\""
+        },
+        {
+          "line": 216,
+          "kind": "state-discriminant",
+          "symbol": "status: \"verified\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/lib/delibereView.ts",
+      "evidence": [
+        {
+          "line": 404,
+          "kind": "state-discriminant",
+          "symbol": "status: \"archived\""
+        },
+        {
+          "line": 412,
+          "kind": "state-discriminant",
+          "symbol": "status: \"available\""
+        },
+        {
+          "line": 420,
+          "kind": "state-discriminant",
+          "symbol": "status: \"not_archived\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/lib/gis.ts",
+      "evidence": [
+        {
+          "line": 30,
+          "kind": "async-state",
+          "symbol": "useQuery"
+        },
+        {
+          "line": 38,
+          "kind": "async-state",
+          "symbol": "useQuery"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/lib/multiSourceContractsDataset.ts",
+      "evidence": [
+        {
+          "line": 239,
+          "kind": "state-discriminant",
+          "symbol": "status: \"Individuato in ANAC/BDNCP; lifecycle locale da ricostruire\""
+        },
+        {
+          "line": 284,
+          "kind": "state-discriminant",
+          "symbol": "status: \"nessuna_liquidazione\""
+        },
+        {
+          "line": 292,
+          "kind": "state-discriminant",
+          "symbol": "phase: \"altro\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/lib/pnrrCivicTwin.ts",
+      "evidence": [
+        {
+          "line": 195,
+          "kind": "state-discriminant",
+          "symbol": "status: \"fonte-non-riconciliata\""
+        },
+        {
+          "line": 202,
+          "kind": "state-discriminant",
+          "symbol": "status: \"fonte-non-riconciliata\""
+        },
+        {
+          "line": 216,
+          "kind": "state-discriminant",
+          "symbol": "status: \"non-rilevato-nelle-fonti-monitorate\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/lib/procurementIdentifiers.ts",
+      "evidence": [
+        {
+          "line": 47,
+          "kind": "state-discriminant",
+          "symbol": "status: \"empty\""
+        },
+        {
+          "line": 54,
+          "kind": "state-discriminant",
+          "symbol": "status: \"unsupported\""
+        },
+        {
+          "line": 61,
+          "kind": "state-discriminant",
+          "symbol": "status: \"formal-only\""
+        },
+        {
+          "line": 68,
+          "kind": "state-discriminant",
+          "symbol": "status: \"formal-only\""
+        },
+        {
+          "line": 75,
+          "kind": "state-discriminant",
+          "symbol": "status: \"invalid-format\""
+        },
+        {
+          "line": 82,
+          "kind": "state-discriminant",
+          "symbol": "status: \"invalid-format\""
+        },
+        {
+          "line": 89,
+          "kind": "state-discriminant",
+          "symbol": "status: \"unsupported\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/lib/spatial/geoLibrePilot.ts",
+      "evidence": [
+        {
+          "line": 145,
+          "kind": "state-discriminant",
+          "symbol": "status: \"unavailable\""
+        },
+        {
+          "line": 236,
+          "kind": "state-discriminant",
+          "symbol": "status: \"unavailable\""
+        },
+        {
+          "line": 243,
+          "kind": "temporal-control",
+          "symbol": "AbortController"
+        },
+        {
+          "line": 251,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        },
+        {
+          "line": 273,
+          "kind": "state-discriminant",
+          "symbol": "status: \"unavailable\""
+        },
+        {
+          "line": 283,
+          "kind": "state-discriminant",
+          "symbol": "status: \"unavailable\""
+        },
+        {
+          "line": 292,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ready\""
+        },
+        {
+          "line": 300,
+          "kind": "state-discriminant",
+          "symbol": "status: \"unavailable\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/lib/spatial/layerRegistry.ts",
+      "evidence": [
+        {
+          "line": 74,
+          "kind": "state-discriminant",
+          "symbol": "status: \"existing\""
+        },
+        {
+          "line": 94,
+          "kind": "state-discriminant",
+          "symbol": "status: \"existing\""
+        },
+        {
+          "line": 118,
+          "kind": "state-discriminant",
+          "symbol": "status: \"pilot\""
+        },
+        {
+          "line": 145,
+          "kind": "state-discriminant",
+          "symbol": "status: \"planned\""
+        },
+        {
+          "line": 171,
+          "kind": "state-discriminant",
+          "symbol": "status: \"planned\""
+        },
+        {
+          "line": 196,
+          "kind": "state-discriminant",
+          "symbol": "status: \"planned\""
+        },
+        {
+          "line": 214,
+          "kind": "state-discriminant",
+          "symbol": "status: \"planned\""
+        },
+        {
+          "line": 231,
+          "kind": "state-discriminant",
+          "symbol": "status: \"planned\""
+        },
+        {
+          "line": 248,
+          "kind": "state-discriminant",
+          "symbol": "status: \"planned\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/lib/webmcp.tsx",
+      "evidence": [
+        {
+          "line": 39,
+          "kind": "state-discriminant",
+          "symbol": "status: \"idle\""
+        },
+        {
+          "line": 40,
+          "kind": "state-discriminant",
+          "symbol": "status: \"dismissed\""
+        },
+        {
+          "line": 41,
+          "kind": "state-discriminant",
+          "symbol": "status: \"running\""
+        },
+        {
+          "line": 42,
+          "kind": "state-discriminant",
+          "symbol": "status: \"succeeded\""
+        },
+        {
+          "line": 43,
+          "kind": "state-discriminant",
+          "symbol": "status: \"failed\""
+        },
+        {
+          "line": 46,
+          "kind": "state-discriminant",
+          "symbol": "status: \"idle\""
+        },
+        {
+          "line": 46,
+          "kind": "state-discriminant",
+          "symbol": "status: \"dismissed\""
+        },
+        {
+          "line": 47,
+          "kind": "state-discriminant",
+          "symbol": "status: \"dismiss\""
+        },
+        {
+          "line": 57,
+          "kind": "state-discriminant",
+          "symbol": "status: \"dismissed\""
+        },
+        {
+          "line": 75,
+          "kind": "state-discriminant",
+          "symbol": "status: \"dismiss\""
+        },
+        {
+          "line": 553,
+          "kind": "state-discriminant",
+          "symbol": "status: \"running\""
+        },
+        {
+          "line": 585,
+          "kind": "state-discriminant",
+          "symbol": "status: \"succeeded\""
+        },
+        {
+          "line": 592,
+          "kind": "state-discriminant",
+          "symbol": "status: \"failed\""
+        },
+        {
+          "line": 645,
+          "kind": "reducer",
+          "symbol": "[execution, dispatch]"
+        },
+        {
+          "line": 646,
+          "kind": "state-discriminant",
+          "symbol": "status: \"idle\""
+        },
+        {
+          "line": 653,
+          "kind": "temporal-control",
+          "symbol": "AbortController"
+        },
+        {
+          "line": 741,
+          "kind": "state-discriminant",
+          "symbol": "status: \"dismiss\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/AccessoCivico.tsx",
+      "evidence": [
+        {
+          "line": 388,
+          "kind": "local-state",
+          "symbol": "[form, setForm]"
+        },
+        {
+          "line": 414,
+          "kind": "state-discriminant",
+          "symbol": "status: \"bozza\""
+        },
+        {
+          "line": 781,
+          "kind": "local-state",
+          "symbol": "[statusFilter, setStatusFilter]"
+        },
+        {
+          "line": 784,
+          "kind": "local-state",
+          "symbol": "[moduleFilter, setModuleFilter]"
+        },
+        {
+          "line": 788,
+          "kind": "local-state",
+          "symbol": "[deadlineFilter, setDeadlineFilter]"
+        },
+        {
+          "line": 1016,
+          "kind": "local-state",
+          "symbol": "[registerEntries, setRegisterEntries]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/AdminAccessoCivico.tsx",
+      "evidence": [
+        {
+          "line": 145,
+          "kind": "local-state",
+          "symbol": "[editingId, setEditingId]"
+        },
+        {
+          "line": 146,
+          "kind": "local-state",
+          "symbol": "[form, setForm]"
+        },
+        {
+          "line": 147,
+          "kind": "local-state",
+          "symbol": "[uploading, setUploading]"
+        },
+        {
+          "line": 784,
+          "kind": "local-state",
+          "symbol": "[open, setOpen]"
+        },
+        {
+          "line": 785,
+          "kind": "local-state",
+          "symbol": "[parsed, setParsed]"
+        },
+        {
+          "line": 786,
+          "kind": "local-state",
+          "symbol": "[fileName, setFileName]"
+        },
+        {
+          "line": 787,
+          "kind": "local-state",
+          "symbol": "[summary, setSummary]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/AdminAppalti.tsx",
+      "evidence": [
+        {
+          "line": 72,
+          "kind": "persisted-state",
+          "symbol": "sessionStorage.getItem"
+        },
+        {
+          "line": 79,
+          "kind": "local-state",
+          "symbol": "[token, setToken]"
+        },
+        {
+          "line": 86,
+          "kind": "persisted-state",
+          "symbol": "sessionStorage.setItem"
+        },
+        {
+          "line": 101,
+          "kind": "persisted-state",
+          "symbol": "sessionStorage.removeItem"
+        },
+        {
+          "line": 116,
+          "kind": "local-state",
+          "symbol": "[value, setValue]"
+        },
+        {
+          "line": 182,
+          "kind": "local-state",
+          "symbol": "[search, setSearch]"
+        },
+        {
+          "line": 183,
+          "kind": "local-state",
+          "symbol": "[savingId, setSavingId]"
+        },
+        {
+          "line": 184,
+          "kind": "local-state",
+          "symbol": "[editingLocation, setEditingLocation]"
+        },
+        {
+          "line": 185,
+          "kind": "local-state",
+          "symbol": "[locationFilter, setLocationFilter]"
+        },
+        {
+          "line": 188,
+          "kind": "local-state",
+          "symbol": "[quickQueue, setQuickQueue]"
+        },
+        {
+          "line": 189,
+          "kind": "local-state",
+          "symbol": "[quickIndex, setQuickIndex]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/AdminAttiFondamentali.tsx",
+      "evidence": [
+        {
+          "line": 70,
+          "kind": "persisted-state",
+          "symbol": "sessionStorage.getItem"
+        },
+        {
+          "line": 77,
+          "kind": "local-state",
+          "symbol": "[token, setToken]"
+        },
+        {
+          "line": 84,
+          "kind": "persisted-state",
+          "symbol": "sessionStorage.setItem"
+        },
+        {
+          "line": 99,
+          "kind": "persisted-state",
+          "symbol": "sessionStorage.removeItem"
+        },
+        {
+          "line": 114,
+          "kind": "local-state",
+          "symbol": "[value, setValue]"
+        },
+        {
+          "line": 201,
+          "kind": "local-state",
+          "symbol": "[editingId, setEditingId]"
+        },
+        {
+          "line": 202,
+          "kind": "local-state",
+          "symbol": "[form, setForm]"
+        },
+        {
+          "line": 203,
+          "kind": "local-state",
+          "symbol": "[uploading, setUploading]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/AdminBandi.tsx",
+      "evidence": [
+        {
+          "line": 78,
+          "kind": "persisted-state",
+          "symbol": "sessionStorage.getItem"
+        },
+        {
+          "line": 85,
+          "kind": "local-state",
+          "symbol": "[token, setToken]"
+        },
+        {
+          "line": 92,
+          "kind": "persisted-state",
+          "symbol": "sessionStorage.setItem"
+        },
+        {
+          "line": 107,
+          "kind": "persisted-state",
+          "symbol": "sessionStorage.removeItem"
+        },
+        {
+          "line": 122,
+          "kind": "local-state",
+          "symbol": "[value, setValue]"
+        },
+        {
+          "line": 200,
+          "kind": "state-discriminant",
+          "symbol": "status: \"aperto\""
+        },
+        {
+          "line": 225,
+          "kind": "local-state",
+          "symbol": "[editingSlug, setEditingSlug]"
+        },
+        {
+          "line": 226,
+          "kind": "local-state",
+          "symbol": "[form, setForm]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/AdminBeniConfiscati.tsx",
+      "evidence": [
+        {
+          "line": 80,
+          "kind": "persisted-state",
+          "symbol": "sessionStorage.getItem"
+        },
+        {
+          "line": 87,
+          "kind": "local-state",
+          "symbol": "[token, setToken]"
+        },
+        {
+          "line": 94,
+          "kind": "persisted-state",
+          "symbol": "sessionStorage.setItem"
+        },
+        {
+          "line": 109,
+          "kind": "persisted-state",
+          "symbol": "sessionStorage.removeItem"
+        },
+        {
+          "line": 124,
+          "kind": "local-state",
+          "symbol": "[value, setValue]"
+        },
+        {
+          "line": 195,
+          "kind": "state-discriminant",
+          "symbol": "status: \"confiscato\""
+        },
+        {
+          "line": 217,
+          "kind": "local-state",
+          "symbol": "[editingSlug, setEditingSlug]"
+        },
+        {
+          "line": 218,
+          "kind": "local-state",
+          "symbol": "[form, setForm]"
+        },
+        {
+          "line": 220,
+          "kind": "local-state",
+          "symbol": "[editingLocation, setEditingLocation]"
+        },
+        {
+          "line": 739,
+          "kind": "local-state",
+          "symbol": "[point, setPoint]"
+        },
+        {
+          "line": 740,
+          "kind": "local-state",
+          "symbol": "[address, setAddress]"
+        },
+        {
+          "line": 741,
+          "kind": "local-state",
+          "symbol": "[quartiere, setQuartiere]"
+        },
+        {
+          "line": 742,
+          "kind": "local-state",
+          "symbol": "[searchQuery, setSearchQuery]"
+        },
+        {
+          "line": 743,
+          "kind": "local-state",
+          "symbol": "[searching, setSearching]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/AdminCronistoria.tsx",
+      "evidence": [
+        {
+          "line": 83,
+          "kind": "local-state",
+          "symbol": "[selectedThemeId, setSelectedThemeId]"
+        },
+        {
+          "line": 84,
+          "kind": "local-state",
+          "symbol": "[editingPostId, setEditingPostId]"
+        },
+        {
+          "line": 85,
+          "kind": "local-state",
+          "symbol": "[title, setTitle]"
+        },
+        {
+          "line": 86,
+          "kind": "local-state",
+          "symbol": "[eventDate, setEventDate]"
+        },
+        {
+          "line": 87,
+          "kind": "local-state",
+          "symbol": "[body, setBody]"
+        },
+        {
+          "line": 88,
+          "kind": "local-state",
+          "symbol": "[showPreview, setShowPreview]"
+        },
+        {
+          "line": 106,
+          "kind": "local-state",
+          "symbol": "[uploading, setUploading]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/AdminDatabase.tsx",
+      "evidence": [
+        {
+          "line": 179,
+          "kind": "local-state",
+          "symbol": "[search, setSearch]"
+        },
+        {
+          "line": 180,
+          "kind": "local-state",
+          "symbol": "[selection, setSelection]"
+        },
+        {
+          "line": 181,
+          "kind": "local-state",
+          "symbol": "[overview, setOverview]"
+        },
+        {
+          "line": 188,
+          "kind": "async-state",
+          "symbol": "catalog"
+        },
+        {
+          "line": 525,
+          "kind": "local-state",
+          "symbol": "[page, setPage]"
+        },
+        {
+          "line": 526,
+          "kind": "local-state",
+          "symbol": "[column, setColumn]"
+        },
+        {
+          "line": 529,
+          "kind": "local-state",
+          "symbol": "[text, setText]"
+        },
+        {
+          "line": 530,
+          "kind": "local-state",
+          "symbol": "[filter, setFilter]"
+        },
+        {
+          "line": 534,
+          "kind": "local-state",
+          "symbol": "[sort, setSort]"
+        },
+        {
+          "line": 537,
+          "kind": "local-state",
+          "symbol": "[direction, setDirection]"
+        },
+        {
+          "line": 538,
+          "kind": "local-state",
+          "symbol": "[key, setKey]"
+        },
+        {
+          "line": 539,
+          "kind": "local-state",
+          "symbol": "[tab, setTab]"
+        },
+        {
+          "line": 550,
+          "kind": "async-state",
+          "symbol": "rows"
+        },
+        {
+          "line": 562,
+          "kind": "async-state",
+          "symbol": "detail"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/AdminDomande.tsx",
+      "evidence": [
+        {
+          "line": 67,
+          "kind": "local-state",
+          "symbol": "[editingId, setEditingId]"
+        },
+        {
+          "line": 68,
+          "kind": "local-state",
+          "symbol": "[form, setForm]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/AdminLegalita.tsx",
+      "evidence": [
+        {
+          "line": 70,
+          "kind": "persisted-state",
+          "symbol": "sessionStorage.getItem"
+        },
+        {
+          "line": 77,
+          "kind": "local-state",
+          "symbol": "[token, setToken]"
+        },
+        {
+          "line": 84,
+          "kind": "persisted-state",
+          "symbol": "sessionStorage.setItem"
+        },
+        {
+          "line": 99,
+          "kind": "persisted-state",
+          "symbol": "sessionStorage.removeItem"
+        },
+        {
+          "line": 114,
+          "kind": "local-state",
+          "symbol": "[value, setValue]"
+        },
+        {
+          "line": 215,
+          "kind": "local-state",
+          "symbol": "[overall, setOverall]"
+        },
+        {
+          "line": 233,
+          "kind": "local-state",
+          "symbol": "[newAreaOpen, setNewAreaOpen]"
+        },
+        {
+          "line": 234,
+          "kind": "local-state",
+          "symbol": "[newArea, setNewArea]"
+        },
+        {
+          "line": 499,
+          "kind": "local-state",
+          "symbol": "[title, setTitle]"
+        },
+        {
+          "line": 500,
+          "kind": "local-state",
+          "symbol": "[description, setDescription]"
+        },
+        {
+          "line": 501,
+          "kind": "local-state",
+          "symbol": "[finalJudgment, setFinalJudgment]"
+        },
+        {
+          "line": 502,
+          "kind": "local-state",
+          "symbol": "[newReqTitle, setNewReqTitle]"
+        },
+        {
+          "line": 768,
+          "kind": "local-state",
+          "symbol": "[open, setOpen]"
+        },
+        {
+          "line": 769,
+          "kind": "local-state",
+          "symbol": "[title, setTitle]"
+        },
+        {
+          "line": 770,
+          "kind": "local-state",
+          "symbol": "[description, setDescription]"
+        },
+        {
+          "line": 771,
+          "kind": "local-state",
+          "symbol": "[status, setStatus]"
+        },
+        {
+          "line": 774,
+          "kind": "local-state",
+          "symbol": "[comment, setComment]"
+        },
+        {
+          "line": 775,
+          "kind": "local-state",
+          "symbol": "[linkedActs, setLinkedActs]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/AdminMonitoraggio.tsx",
+      "evidence": [
+        {
+          "line": 74,
+          "kind": "persisted-state",
+          "symbol": "sessionStorage.getItem"
+        },
+        {
+          "line": 81,
+          "kind": "local-state",
+          "symbol": "[token, setToken]"
+        },
+        {
+          "line": 88,
+          "kind": "persisted-state",
+          "symbol": "sessionStorage.setItem"
+        },
+        {
+          "line": 103,
+          "kind": "persisted-state",
+          "symbol": "sessionStorage.removeItem"
+        },
+        {
+          "line": 118,
+          "kind": "local-state",
+          "symbol": "[value, setValue]"
+        },
+        {
+          "line": 191,
+          "kind": "local-state",
+          "symbol": "[notes, setNotes]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/AdminPareri.tsx",
+      "evidence": [
+        {
+          "line": 55,
+          "kind": "persisted-state",
+          "symbol": "sessionStorage.getItem"
+        },
+        {
+          "line": 62,
+          "kind": "local-state",
+          "symbol": "[token, setToken]"
+        },
+        {
+          "line": 69,
+          "kind": "persisted-state",
+          "symbol": "sessionStorage.setItem"
+        },
+        {
+          "line": 84,
+          "kind": "persisted-state",
+          "symbol": "sessionStorage.removeItem"
+        },
+        {
+          "line": 99,
+          "kind": "local-state",
+          "symbol": "[value, setValue]"
+        },
+        {
+          "line": 161,
+          "kind": "state-discriminant",
+          "symbol": "status: \"pubblicato\" | \"bozza\""
+        },
+        {
+          "line": 173,
+          "kind": "state-discriminant",
+          "symbol": "status: \"pubblicato\""
+        },
+        {
+          "line": 210,
+          "kind": "local-state",
+          "symbol": "[editingId, setEditingId]"
+        },
+        {
+          "line": 211,
+          "kind": "local-state",
+          "symbol": "[form, setForm]"
+        },
+        {
+          "line": 212,
+          "kind": "local-state",
+          "symbol": "[docTarget, setDocTarget]"
+        },
+        {
+          "line": 213,
+          "kind": "local-state",
+          "symbol": "[docForm, setDocForm]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/AlboDetail.tsx",
+      "evidence": [
+        {
+          "line": 68,
+          "kind": "persisted-state",
+          "symbol": "sessionStorage.getItem"
+        },
+        {
+          "line": 597,
+          "kind": "local-state",
+          "symbol": "[editing, setEditing]"
+        },
+        {
+          "line": 598,
+          "kind": "local-state",
+          "symbol": "[draft, setDraft]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/Amministratori.tsx",
+      "evidence": [
+        {
+          "line": 48,
+          "kind": "local-state",
+          "symbol": "[role, setRole]"
+        },
+        {
+          "line": 49,
+          "kind": "local-state",
+          "symbol": "[search, setSearch]"
+        },
+        {
+          "line": 50,
+          "kind": "local-state",
+          "symbol": "[debouncedSearch, setDebouncedSearch]"
+        },
+        {
+          "line": 53,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/AtlanteTerritoriale.tsx",
+      "evidence": [
+        {
+          "line": 15,
+          "kind": "local-state",
+          "symbol": "[viewer, setViewer]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/AtlanteTerritorialeExplorer.tsx",
+      "evidence": [
+        {
+          "line": 106,
+          "kind": "state-discriminant",
+          "symbol": "status: \"loading\""
+        },
+        {
+          "line": 107,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ready\""
+        },
+        {
+          "line": 108,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        },
+        {
+          "line": 119,
+          "kind": "local-state",
+          "symbol": "[visibleLayerIds, setVisibleLayerIds]"
+        },
+        {
+          "line": 122,
+          "kind": "local-state",
+          "symbol": "[loadState, setLoadState]"
+        },
+        {
+          "line": 123,
+          "kind": "state-discriminant",
+          "symbol": "status: \"loading\""
+        },
+        {
+          "line": 127,
+          "kind": "local-state",
+          "symbol": "[selectedIndicatorId, setSelectedIndicatorId]"
+        },
+        {
+          "line": 130,
+          "kind": "local-state",
+          "symbol": "[selectedSectionId, setSelectedSectionId]"
+        },
+        {
+          "line": 131,
+          "kind": "local-state",
+          "symbol": "[hoveredSectionId, setHoveredSectionId]"
+        },
+        {
+          "line": 132,
+          "kind": "local-state",
+          "symbol": "[selectedBasemapId, setSelectedBasemapId]"
+        },
+        {
+          "line": 135,
+          "kind": "local-state",
+          "symbol": "[isDetailOpen, setDetailOpen]"
+        },
+        {
+          "line": 148,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ready\""
+        },
+        {
+          "line": 154,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        },
+        {
+          "line": 352,
+          "kind": "local-state",
+          "symbol": "[resetSignal, setResetSignal]"
+        },
+        {
+          "line": 353,
+          "kind": "local-state",
+          "symbol": "[isFullPageMap, setFullPageMap]"
+        },
+        {
+          "line": 768,
+          "kind": "local-state",
+          "symbol": "[query, setQuery]"
+        },
+        {
+          "line": 1008,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/Bandi.tsx",
+      "evidence": [
+        {
+          "line": 193,
+          "kind": "local-state",
+          "symbol": "[status, setStatus]"
+        },
+        {
+          "line": 194,
+          "kind": "local-state",
+          "symbol": "[settore, setSettore]"
+        },
+        {
+          "line": 195,
+          "kind": "local-state",
+          "symbol": "[esito, setEsito]"
+        },
+        {
+          "line": 196,
+          "kind": "local-state",
+          "symbol": "[ente, setEnte]"
+        },
+        {
+          "line": 197,
+          "kind": "local-state",
+          "symbol": "[enteQuery, setEnteQuery]"
+        },
+        {
+          "line": 200,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/BeniConfiscati.tsx",
+      "evidence": [
+        {
+          "line": 137,
+          "kind": "local-state",
+          "symbol": "[status, setStatus]"
+        },
+        {
+          "line": 138,
+          "kind": "local-state",
+          "symbol": "[tipologia, setTipologia]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/contracts/ContractsCitizen.tsx",
+      "evidence": [
+        {
+          "line": 56,
+          "kind": "local-state",
+          "symbol": "[search, setSearch]"
+        },
+        {
+          "line": 57,
+          "kind": "local-state",
+          "symbol": "[debouncedSearch, setDebouncedSearch]"
+        },
+        {
+          "line": 58,
+          "kind": "local-state",
+          "symbol": "[procedureType, setProcedureType]"
+        },
+        {
+          "line": 59,
+          "kind": "local-state",
+          "symbol": "[minAmount, setMinAmount]"
+        },
+        {
+          "line": 60,
+          "kind": "local-state",
+          "symbol": "[maxAmount, setMaxAmount]"
+        },
+        {
+          "line": 61,
+          "kind": "local-state",
+          "symbol": "[from, setFrom]"
+        },
+        {
+          "line": 62,
+          "kind": "local-state",
+          "symbol": "[to, setTo]"
+        },
+        {
+          "line": 63,
+          "kind": "local-state",
+          "symbol": "[themeId, setThemeId]"
+        },
+        {
+          "line": 64,
+          "kind": "local-state",
+          "symbol": "[quartiere, setQuartiere]"
+        },
+        {
+          "line": 65,
+          "kind": "local-state",
+          "symbol": "[acquisitionTool, setAcquisitionTool]"
+        },
+        {
+          "line": 66,
+          "kind": "local-state",
+          "symbol": "[lifecycleFilter, setLifecycleFilter]"
+        },
+        {
+          "line": 67,
+          "kind": "local-state",
+          "symbol": "[identifierFilter, setIdentifierFilter]"
+        },
+        {
+          "line": 68,
+          "kind": "local-state",
+          "symbol": "[mapOpen, setMapOpen]"
+        },
+        {
+          "line": 72,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/Convocazioni.tsx",
+      "evidence": [
+        {
+          "line": 150,
+          "kind": "local-state",
+          "symbol": "[organoFilter, setOrganoFilter]"
+        },
+        {
+          "line": 151,
+          "kind": "local-state",
+          "symbol": "[macrotemaFilter, setMacrotemaFilter]"
+        },
+        {
+          "line": 152,
+          "kind": "local-state",
+          "symbol": "[reportFilter, setReportFilter]"
+        },
+        {
+          "line": 153,
+          "kind": "local-state",
+          "symbol": "[votesFilter, setVotesFilter]"
+        },
+        {
+          "line": 154,
+          "kind": "local-state",
+          "symbol": "[actsFilter, setActsFilter]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/DatabaseArchitecture.tsx",
+      "evidence": [
+        {
+          "line": 139,
+          "kind": "local-state",
+          "symbol": "[selected, setSelected]"
+        },
+        {
+          "line": 280,
+          "kind": "local-state",
+          "symbol": "[search, setSearch]"
+        },
+        {
+          "line": 281,
+          "kind": "local-state",
+          "symbol": "[onlyFiles, setOnlyFiles]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/Domande.tsx",
+      "evidence": [
+        {
+          "line": 28,
+          "kind": "local-state",
+          "symbol": "[query, setQuery]"
+        },
+        {
+          "line": 29,
+          "kind": "local-state",
+          "symbol": "[topic, setTopic]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/Feeds.tsx",
+      "evidence": [
+        {
+          "line": 59,
+          "kind": "local-state",
+          "symbol": "[copied, setCopied]"
+        },
+        {
+          "line": 66,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/Incarichimetro.tsx",
+      "evidence": [
+        {
+          "line": 143,
+          "kind": "local-state",
+          "symbol": "[filters, setFilters]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/InterventiEvidence.tsx",
+      "evidence": [
+        {
+          "line": 46,
+          "kind": "local-state",
+          "symbol": "[query, setQuery]"
+        },
+        {
+          "line": 47,
+          "kind": "local-state",
+          "symbol": "[area, setArea]"
+        },
+        {
+          "line": 48,
+          "kind": "local-state",
+          "symbol": "[type, setType]"
+        },
+        {
+          "line": 49,
+          "kind": "local-state",
+          "symbol": "[country, setCountry]"
+        },
+        {
+          "line": 50,
+          "kind": "local-state",
+          "symbol": "[strength, setStrength]"
+        },
+        {
+          "line": 52,
+          "kind": "local-state",
+          "symbol": "[implementability, setImplementability]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/LegalitaTimeline.tsx",
+      "evidence": [
+        {
+          "line": 83,
+          "kind": "local-state",
+          "symbol": "[period, setPeriod]"
+        },
+        {
+          "line": 84,
+          "kind": "local-state",
+          "symbol": "[eventType, setEventType]"
+        },
+        {
+          "line": 85,
+          "kind": "local-state",
+          "symbol": "[status, setStatus]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/MacchinaComunale.tsx",
+      "evidence": [
+        {
+          "line": 104,
+          "kind": "local-state",
+          "symbol": "[areaFilter, setAreaFilter]"
+        },
+        {
+          "line": 105,
+          "kind": "local-state",
+          "symbol": "[statusFilter, setStatusFilter]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/Monitoraggio.tsx",
+      "evidence": [
+        {
+          "line": 73,
+          "kind": "state-discriminant",
+          "symbol": "status: \"Manuale + redazionale\""
+        },
+        {
+          "line": 83,
+          "kind": "state-discriminant",
+          "symbol": "status: \"modulo in predisposizione\""
+        },
+        {
+          "line": 96,
+          "kind": "state-discriminant",
+          "symbol": "status: \"automatico da fonti pubbliche\""
+        },
+        {
+          "line": 110,
+          "kind": "state-discriminant",
+          "symbol": "status: \"misto automatico + indicatori\""
+        },
+        {
+          "line": 123,
+          "kind": "state-discriminant",
+          "symbol": "status: \"Redazionale + fonti\""
+        },
+        {
+          "line": 133,
+          "kind": "state-discriminant",
+          "symbol": "status: \"strumento assistito\""
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/MonitoraggioNuovo.tsx",
+      "evidence": [
+        {
+          "line": 295,
+          "kind": "local-state",
+          "symbol": "[title, setTitle]"
+        },
+        {
+          "line": 296,
+          "kind": "local-state",
+          "symbol": "[authorName, setAuthorName]"
+        },
+        {
+          "line": 297,
+          "kind": "local-state",
+          "symbol": "[phases, setPhases]"
+        },
+        {
+          "line": 303,
+          "kind": "local-state",
+          "symbol": "[assessment, setAssessment]"
+        },
+        {
+          "line": 304,
+          "kind": "local-state",
+          "symbol": "[attachments, setAttachments]"
+        },
+        {
+          "line": 307,
+          "kind": "local-state",
+          "symbol": "[uploading, setUploading]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/Opendata.tsx",
+      "evidence": [
+        {
+          "line": 162,
+          "kind": "local-state",
+          "symbol": "[initialSelection]"
+        },
+        {
+          "line": 163,
+          "kind": "local-state",
+          "symbol": "[selectedThemeId, setSelectedThemeId]"
+        },
+        {
+          "line": 166,
+          "kind": "local-state",
+          "symbol": "[selectedDatasetId, setSelectedDatasetId]"
+        },
+        {
+          "line": 169,
+          "kind": "local-state",
+          "symbol": "[catalogSearch, setCatalogSearch]"
+        },
+        {
+          "line": 170,
+          "kind": "local-state",
+          "symbol": "[debouncedCatalogSearch, setDebouncedCatalogSearch]"
+        },
+        {
+          "line": 173,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/OpendataDetail.tsx",
+      "evidence": [
+        {
+          "line": 204,
+          "kind": "local-state",
+          "symbol": "[open, setOpen]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/PareriVigilanza.tsx",
+      "evidence": [
+        {
+          "line": 38,
+          "kind": "local-state",
+          "symbol": "[issuingBody, setIssuingBody]"
+        },
+        {
+          "line": 39,
+          "kind": "local-state",
+          "symbol": "[year, setYear]"
+        },
+        {
+          "line": 40,
+          "kind": "local-state",
+          "symbol": "[sort, setSort]"
+        },
+        {
+          "line": 43,
+          "kind": "local-state",
+          "symbol": "[search, setSearch]"
+        },
+        {
+          "line": 44,
+          "kind": "local-state",
+          "symbol": "[debouncedSearch, setDebouncedSearch]"
+        },
+        {
+          "line": 47,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/PerformanceCompare.tsx",
+      "evidence": [
+        {
+          "line": 107,
+          "kind": "local-state",
+          "symbol": "[selected, setSelected]"
+        },
+        {
+          "line": 108,
+          "kind": "local-state",
+          "symbol": "[mode, setMode]"
+        },
+        {
+          "line": 704,
+          "kind": "local-state",
+          "symbol": "[open, setOpen]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/Pnrr.tsx",
+      "evidence": [
+        {
+          "line": 233,
+          "kind": "local-state",
+          "symbol": "[search, setSearch]"
+        },
+        {
+          "line": 234,
+          "kind": "local-state",
+          "symbol": "[amountFilter, setAmountFilter]"
+        },
+        {
+          "line": 235,
+          "kind": "local-state",
+          "symbol": "[missionFilter, setMissionFilter]"
+        },
+        {
+          "line": 236,
+          "kind": "local-state",
+          "symbol": "[statusFilter, setStatusFilter]"
+        },
+        {
+          "line": 237,
+          "kind": "local-state",
+          "symbol": "[cupFilter, setCupFilter]"
+        },
+        {
+          "line": 238,
+          "kind": "local-state",
+          "symbol": "[actsFilter, setActsFilter]"
+        },
+        {
+          "line": 239,
+          "kind": "local-state",
+          "symbol": "[staleFilter, setStaleFilter]"
+        },
+        {
+          "line": 241,
+          "kind": "local-state",
+          "symbol": "[cantieriometroFilters, setCantieriometroFilters]"
+        },
+        {
+          "line": 1610,
+          "kind": "local-state",
+          "symbol": "[copyFeedback, setCopyFeedback]"
+        },
+        {
+          "line": 1611,
+          "kind": "local-state",
+          "symbol": "[dossierOpen, setDossierOpen]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/Promessometro.tsx",
+      "evidence": [
+        {
+          "line": 62,
+          "kind": "local-state",
+          "symbol": "[area, setArea]"
+        },
+        {
+          "line": 63,
+          "kind": "local-state",
+          "symbol": "[status, setStatus]"
+        },
+        {
+          "line": 64,
+          "kind": "local-state",
+          "symbol": "[linkedActs, setLinkedActs]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/PropostePubbliche.tsx",
+      "evidence": [
+        {
+          "line": 68,
+          "kind": "local-state",
+          "symbol": "[paSubject, setPaSubject]"
+        },
+        {
+          "line": 69,
+          "kind": "local-state",
+          "symbol": "[promoter, setPromoter]"
+        },
+        {
+          "line": 70,
+          "kind": "local-state",
+          "symbol": "[year, setYear]"
+        },
+        {
+          "line": 71,
+          "kind": "local-state",
+          "symbol": "[status, setStatus]"
+        },
+        {
+          "line": 72,
+          "kind": "local-state",
+          "symbol": "[channel, setChannel]"
+        },
+        {
+          "line": 73,
+          "kind": "local-state",
+          "symbol": "[geoArea, setGeoArea]"
+        },
+        {
+          "line": 74,
+          "kind": "local-state",
+          "symbol": "[geoMode, setGeoMode]"
+        },
+        {
+          "line": 75,
+          "kind": "local-state",
+          "symbol": "[view, setView]"
+        },
+        {
+          "line": 76,
+          "kind": "local-state",
+          "symbol": "[timelineMode, setTimelineMode]"
+        },
+        {
+          "line": 77,
+          "kind": "local-state",
+          "symbol": "[timelineRange, setTimelineRange]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/redazione/RedazioneBacheca.tsx",
+      "evidence": [
+        {
+          "line": 90,
+          "kind": "local-state",
+          "symbol": "[triggering, setTriggering]"
+        },
+        {
+          "line": 92,
+          "kind": "async-state",
+          "symbol": "{ data: feedStatus, isLoading }"
+        },
+        {
+          "line": 98,
+          "kind": "async-state",
+          "symbol": "trigger"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/redazione/RedazioneCronistoria.tsx",
+      "evidence": [
+        {
+          "line": 70,
+          "kind": "local-state",
+          "symbol": "[selectedThemeId, setSelectedThemeId]"
+        },
+        {
+          "line": 71,
+          "kind": "local-state",
+          "symbol": "[editingPostId, setEditingPostId]"
+        },
+        {
+          "line": 72,
+          "kind": "local-state",
+          "symbol": "[title, setTitle]"
+        },
+        {
+          "line": 73,
+          "kind": "local-state",
+          "symbol": "[eventDate, setEventDate]"
+        },
+        {
+          "line": 74,
+          "kind": "local-state",
+          "symbol": "[body, setBody]"
+        },
+        {
+          "line": 75,
+          "kind": "local-state",
+          "symbol": "[showPreview, setShowPreview]"
+        },
+        {
+          "line": 76,
+          "kind": "local-state",
+          "symbol": "[uploading, setUploading]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/redazione/RedazioneDomande.tsx",
+      "evidence": [
+        {
+          "line": 62,
+          "kind": "local-state",
+          "symbol": "[editingId, setEditingId]"
+        },
+        {
+          "line": 63,
+          "kind": "local-state",
+          "symbol": "[form, setForm]"
+        },
+        {
+          "line": 64,
+          "kind": "local-state",
+          "symbol": "[showPreview, setShowPreview]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/redazione/RedazionePagine.tsx",
+      "evidence": [
+        {
+          "line": 87,
+          "kind": "state-discriminant",
+          "symbol": "status: \"draft\""
+        },
+        {
+          "line": 114,
+          "kind": "local-state",
+          "symbol": "[pageSlug, setPageSlug]"
+        },
+        {
+          "line": 115,
+          "kind": "local-state",
+          "symbol": "[showCatalog, setShowCatalog]"
+        },
+        {
+          "line": 116,
+          "kind": "local-state",
+          "symbol": "[editingId, setEditingId]"
+        },
+        {
+          "line": 120,
+          "kind": "async-state",
+          "symbol": "{ data: blocks, isLoading }"
+        },
+        {
+          "line": 126,
+          "kind": "async-state",
+          "symbol": "addMutation"
+        },
+        {
+          "line": 132,
+          "kind": "async-state",
+          "symbol": "patchMutation"
+        },
+        {
+          "line": 138,
+          "kind": "async-state",
+          "symbol": "deleteMutation"
+        },
+        {
+          "line": 158,
+          "kind": "state-discriminant",
+          "symbol": "status: \"published\""
+        },
+        {
+          "line": 258,
+          "kind": "state-discriminant",
+          "symbol": "status: \"published\""
+        },
+        {
+          "line": 322,
+          "kind": "local-state",
+          "symbol": "[title, setTitle]"
+        },
+        {
+          "line": 323,
+          "kind": "local-state",
+          "symbol": "[subtitle, setSubtitle]"
+        },
+        {
+          "line": 324,
+          "kind": "local-state",
+          "symbol": "[body, setBody]"
+        },
+        {
+          "line": 325,
+          "kind": "local-state",
+          "symbol": "[ctaLabel, setCtaLabel]"
+        },
+        {
+          "line": 326,
+          "kind": "local-state",
+          "symbol": "[ctaUrl, setCtaUrl]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/redazione/RedazioneSegnalazioni.tsx",
+      "evidence": [
+        {
+          "line": 48,
+          "kind": "local-state",
+          "symbol": "[search, setSearch]"
+        },
+        {
+          "line": 49,
+          "kind": "local-state",
+          "symbol": "[statusFilter, setStatusFilter]"
+        },
+        {
+          "line": 50,
+          "kind": "local-state",
+          "symbol": "[pending, setPending]"
+        },
+        {
+          "line": 51,
+          "kind": "async-state",
+          "symbol": "{ data: reports, isLoading, refetch }"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/redazione/RedazioneTemi.tsx",
+      "evidence": [
+        {
+          "line": 34,
+          "kind": "local-state",
+          "symbol": "[search, setSearch]"
+        },
+        {
+          "line": 36,
+          "kind": "local-state",
+          "symbol": "[pending, setPending]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/redazione/RedazioneTesti.tsx",
+      "evidence": [
+        {
+          "line": 66,
+          "kind": "local-state",
+          "symbol": "[draft, setDraft]"
+        },
+        {
+          "line": 67,
+          "kind": "local-state",
+          "symbol": "[editing, setEditing]"
+        },
+        {
+          "line": 69,
+          "kind": "async-state",
+          "symbol": "upsert"
+        },
+        {
+          "line": 75,
+          "kind": "async-state",
+          "symbol": "publish"
+        },
+        {
+          "line": 143,
+          "kind": "async-state",
+          "symbol": "{ data: strings, isLoading }"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/Redazione.tsx",
+      "evidence": [
+        {
+          "line": 100,
+          "kind": "persisted-state",
+          "symbol": "sessionStorage.setItem"
+        },
+        {
+          "line": 148,
+          "kind": "async-state",
+          "symbol": "useQuery"
+        },
+        {
+          "line": 165,
+          "kind": "local-state",
+          "symbol": "[sidebarOpen, setSidebarOpen]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/Reports.tsx",
+      "evidence": [
+        {
+          "line": 240,
+          "kind": "local-state",
+          "symbol": "[categoryFilter, setCategoryFilter]"
+        },
+        {
+          "line": 241,
+          "kind": "local-state",
+          "symbol": "[locationFilter, setLocationFilter]"
+        },
+        {
+          "line": 242,
+          "kind": "local-state",
+          "symbol": "[officeFilter, setOfficeFilter]"
+        },
+        {
+          "line": 243,
+          "kind": "local-state",
+          "symbol": "[verificationFilter, setVerificationFilter]"
+        },
+        {
+          "line": 244,
+          "kind": "local-state",
+          "symbol": "[outcomeFilter, setOutcomeFilter]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/Subscriptions.tsx",
+      "evidence": [
+        {
+          "line": 17,
+          "kind": "local-state",
+          "symbol": "[email, setEmail]"
+        },
+        {
+          "line": 18,
+          "kind": "local-state",
+          "symbol": "[sent, setSent]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/Sviluppatori.tsx",
+      "evidence": [
+        {
+          "line": 76,
+          "kind": "local-state",
+          "symbol": "[copied, setCopied]"
+        },
+        {
+          "line": 82,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        },
+        {
+          "line": 155,
+          "kind": "local-state",
+          "symbol": "[open, setOpen]"
+        },
+        {
+          "line": 156,
+          "kind": "local-state",
+          "symbol": "[values, setValues]"
+        },
+        {
+          "line": 157,
+          "kind": "local-state",
+          "symbol": "[loading, setLoading]"
+        },
+        {
+          "line": 158,
+          "kind": "local-state",
+          "symbol": "[status, setStatus]"
+        },
+        {
+          "line": 159,
+          "kind": "local-state",
+          "symbol": "[response, setResponse]"
+        },
+        {
+          "line": 160,
+          "kind": "local-state",
+          "symbol": "[error, setError]"
+        },
+        {
+          "line": 434,
+          "kind": "local-state",
+          "symbol": "[spec, setSpec]"
+        },
+        {
+          "line": 435,
+          "kind": "local-state",
+          "symbol": "[loading, setLoading]"
+        },
+        {
+          "line": 436,
+          "kind": "local-state",
+          "symbol": "[loadError, setLoadError]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/pages/ThemeDetail.tsx",
+      "evidence": [
+        {
+          "line": 83,
+          "kind": "local-state",
+          "symbol": "[followEmail, setFollowEmail]"
+        },
+        {
+          "line": 84,
+          "kind": "local-state",
+          "symbol": "[followed, setFollowed]"
+        },
+        {
+          "line": 85,
+          "kind": "local-state",
+          "symbol": "[confirmWithdraw, setConfirmWithdraw]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/lamezia-trasparente/src/test/pages-harness.tsx",
+      "evidence": [
+        {
+          "line": 24,
+          "kind": "state-discriminant",
+          "symbol": "status: \"pending\""
+        },
+        {
+          "line": 36,
+          "kind": "state-discriminant",
+          "symbol": "status: \"idle\""
+        },
+        {
+          "line": 226,
+          "kind": "persisted-state",
+          "symbol": "window.localStorage.setItem"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/mockup-sandbox/src/App.tsx",
+      "evidence": [
+        {
+          "line": 29,
+          "kind": "local-state",
+          "symbol": "[Component, setComponent]"
+        },
+        {
+          "line": 30,
+          "kind": "local-state",
+          "symbol": "[error, setError]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/mockup-sandbox/src/components/ui/carousel.tsx",
+      "evidence": [
+        {
+          "line": 66,
+          "kind": "local-state",
+          "symbol": "[canScrollPrev, setCanScrollPrev]"
+        },
+        {
+          "line": 67,
+          "kind": "local-state",
+          "symbol": "[canScrollNext, setCanScrollNext]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/mockup-sandbox/src/components/ui/sidebar.tsx",
+      "evidence": [
+        {
+          "line": 36,
+          "kind": "state-discriminant",
+          "symbol": "state: \"expanded\" | \"collapsed\""
+        },
+        {
+          "line": 70,
+          "kind": "local-state",
+          "symbol": "[openMobile, setOpenMobile]"
+        },
+        {
+          "line": 72,
+          "kind": "local-state",
+          "symbol": "[_open, _setOpen]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/mockup-sandbox/src/hooks/use-mobile.tsx",
+      "evidence": [
+        {
+          "line": 6,
+          "kind": "local-state",
+          "symbol": "[isMobile, setIsMobile]"
+        }
+      ]
+    },
+    {
+      "file": "artifacts/mockup-sandbox/src/hooks/use-toast.ts",
+      "evidence": [
+        {
+          "line": 63,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        },
+        {
+          "line": 170,
+          "kind": "local-state",
+          "symbol": "[state, setState]"
+        }
+      ]
+    },
+    {
+      "file": "lib/api-spec/orval.config.ts",
+      "evidence": [
+        {
+          "line": 28,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"split\""
+        },
+        {
+          "line": 55,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"split\""
+        }
+      ]
+    },
+    {
+      "file": "lib/db/src/canonicalAlboSql.ts",
+      "evidence": [
+        {
+          "line": 132,
+          "kind": "state-discriminant",
+          "symbol": "status: \"text\""
+        },
+        {
+          "line": 151,
+          "kind": "state-discriminant",
+          "symbol": "status: \"text\""
+        },
+        {
+          "line": 168,
+          "kind": "state-discriminant",
+          "symbol": "phase: \"text\""
+        }
+      ]
+    },
+    {
+      "file": "lib/db/src/canonicalPnrrCoverage.ts",
+      "evidence": [
+        {
+          "line": 5,
+          "kind": "state-discriminant",
+          "symbol": "status: \"verified\" | \"review_required\" | \"not_materialized\""
+        }
+      ]
+    },
+    {
+      "file": "lib/db/src/canonicalPnrrPlan.ts",
+      "evidence": [
+        {
+          "line": 54,
+          "kind": "state-discriminant",
+          "symbol": "status: \"execution_status\""
+        }
+      ]
+    },
+    {
+      "file": "lib/db/src/canonicalPublicSnapshot.ts",
+      "evidence": [
+        {
+          "line": 70,
+          "kind": "state-discriminant",
+          "symbol": "status: \"scalar\""
+        },
+        {
+          "line": 142,
+          "kind": "state-discriminant",
+          "symbol": "status: \"scalar\""
+        },
+        {
+          "line": 192,
+          "kind": "state-discriminant",
+          "symbol": "status: \"scalar\""
+        },
+        {
+          "line": 540,
+          "kind": "state-discriminant",
+          "symbol": "status: \"execution_status\""
+        },
+        {
+          "line": 596,
+          "kind": "state-discriminant",
+          "symbol": "status: \"verified\""
+        }
+      ]
+    },
+    {
+      "file": "lib/db/src/crimeMonitorIngestion.ts",
+      "evidence": [
+        {
+          "line": 26,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"dry-run\" | \"execute\""
+        }
+      ]
+    },
+    {
+      "file": "lib/db/src/institutional-officials-data.ts",
+      "evidence": [
+        {
+          "line": 779,
+          "kind": "state-discriminant",
+          "symbol": "status: \"in_carica\""
+        },
+        {
+          "line": 833,
+          "kind": "state-discriminant",
+          "symbol": "status: \"cessato\""
+        },
+        {
+          "line": 862,
+          "kind": "state-discriminant",
+          "symbol": "status: \"cessato\""
+        }
+      ]
+    },
+    {
+      "file": "lib/db/src/ltcedsPilotImport.ts",
+      "evidence": [
+        {
+          "line": 23,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"dry-run\" | \"execute\""
+        },
+        {
+          "line": 74,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"dry-run\""
+        },
+        {
+          "line": 242,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"execute\""
+        },
+        {
+          "line": 273,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"execute\""
+        }
+      ]
+    },
+    {
+      "file": "lib/db/src/ltcedsPilotImportCore.ts",
+      "evidence": [
+        {
+          "line": 170,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"dry-run\" | \"execute\""
+        },
+        {
+          "line": 437,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"dry-run\" | \"execute\""
+        }
+      ]
+    },
+    {
+      "file": "lib/db/src/schema/publications.ts",
+      "evidence": [
+        {
+          "line": 64,
+          "kind": "state-discriminant",
+          "symbol": "status: \"unchanged\" | \"standardised_automatically\" | \"review_required\""
+        }
+      ]
+    },
+    {
+      "file": "lib/db/src/schema/sourceRegistry.ts",
+      "evidence": [
+        {
+          "line": 73,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"number\""
+        }
+      ]
+    },
+    {
+      "file": "lib/db/src/seed.ts",
+      "evidence": [
+        {
+          "line": 90,
+          "kind": "state-discriminant",
+          "symbol": "status: \"Aggiudicato\""
+        },
+        {
+          "line": 102,
+          "kind": "state-discriminant",
+          "symbol": "status: \"In esecuzione\""
+        },
+        {
+          "line": 113,
+          "kind": "state-discriminant",
+          "symbol": "status: \"Aggiudicato\""
+        },
+        {
+          "line": 125,
+          "kind": "state-discriminant",
+          "symbol": "status: \"Aggiudicato\""
+        },
+        {
+          "line": 136,
+          "kind": "state-discriminant",
+          "symbol": "status: \"In esecuzione\""
+        },
+        {
+          "line": 148,
+          "kind": "state-discriminant",
+          "symbol": "status: \"Concluso\""
+        },
+        {
+          "line": 160,
+          "kind": "state-discriminant",
+          "symbol": "status: \"In esecuzione\""
+        },
+        {
+          "line": 173,
+          "kind": "state-discriminant",
+          "symbol": "status: \"In esecuzione\""
+        },
+        {
+          "line": 185,
+          "kind": "state-discriminant",
+          "symbol": "status: \"In esecuzione\""
+        },
+        {
+          "line": 196,
+          "kind": "state-discriminant",
+          "symbol": "status: \"Concluso\""
+        },
+        {
+          "line": 208,
+          "kind": "state-discriminant",
+          "symbol": "status: \"Aggiudicato\""
+        },
+        {
+          "line": 219,
+          "kind": "state-discriminant",
+          "symbol": "status: \"In esecuzione\""
+        },
+        {
+          "line": 230,
+          "kind": "state-discriminant",
+          "symbol": "status: \"In esecuzione\""
+        },
+        {
+          "line": 241,
+          "kind": "state-discriminant",
+          "symbol": "status: \"Aggiudicato\""
+        },
+        {
+          "line": 254,
+          "kind": "state-discriminant",
+          "symbol": "status: \"Aggiudicato\""
+        },
+        {
+          "line": 265,
+          "kind": "state-discriminant",
+          "symbol": "status: \"In esecuzione\""
+        },
+        {
+          "line": 277,
+          "kind": "state-discriminant",
+          "symbol": "status: \"presa_in_carico\""
+        },
+        {
+          "line": 287,
+          "kind": "state-discriminant",
+          "symbol": "status: \"in_valutazione\""
+        },
+        {
+          "line": 297,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ricevuta\""
+        },
+        {
+          "line": 336,
+          "kind": "state-discriminant",
+          "symbol": "status: \"in_carica\""
+        },
+        {
+          "line": 391,
+          "kind": "state-discriminant",
+          "symbol": "status: \"in_carica\""
+        },
+        {
+          "line": 428,
+          "kind": "state-discriminant",
+          "symbol": "status: \"in_carica\""
+        },
+        {
+          "line": 464,
+          "kind": "state-discriminant",
+          "symbol": "status: \"in_carica\""
+        },
+        {
+          "line": 487,
+          "kind": "state-discriminant",
+          "symbol": "status: \"in_carica\""
+        },
+        {
+          "line": 523,
+          "kind": "state-discriminant",
+          "symbol": "status: \"in_carica\""
+        },
+        {
+          "line": 545,
+          "kind": "state-discriminant",
+          "symbol": "status: \"in_carica\""
+        },
+        {
+          "line": 581,
+          "kind": "state-discriminant",
+          "symbol": "status: \"in_carica\""
+        },
+        {
+          "line": 603,
+          "kind": "state-discriminant",
+          "symbol": "status: \"in_carica\""
+        },
+        {
+          "line": 632,
+          "kind": "state-discriminant",
+          "symbol": "status: \"in_carica\""
+        },
+        {
+          "line": 1101,
+          "kind": "state-discriminant",
+          "symbol": "status: \"published\""
+        },
+        {
+          "line": 1268,
+          "kind": "state-discriminant",
+          "symbol": "status: \"pubblicato\""
+        },
+        {
+          "line": 1379,
+          "kind": "state-discriminant",
+          "symbol": "status: \"aperto\" | \"in-scadenza\" | \"concluso\""
+        },
+        {
+          "line": 1395,
+          "kind": "state-discriminant",
+          "symbol": "status: \"aperto\""
+        },
+        {
+          "line": 1411,
+          "kind": "state-discriminant",
+          "symbol": "status: \"in-scadenza\""
+        },
+        {
+          "line": 1426,
+          "kind": "state-discriminant",
+          "symbol": "status: \"concluso\""
+        },
+        {
+          "line": 1441,
+          "kind": "state-discriminant",
+          "symbol": "status: \"concluso\""
+        },
+        {
+          "line": 1456,
+          "kind": "state-discriminant",
+          "symbol": "status: \"aperto\""
+        },
+        {
+          "line": 1471,
+          "kind": "state-discriminant",
+          "symbol": "status: \"concluso\""
+        },
+        {
+          "line": 1587,
+          "kind": "state-discriminant",
+          "symbol": "status: \"published\""
+        },
+        {
+          "line": 1713,
+          "kind": "state-discriminant",
+          "symbol": "status: \"ok\""
+        }
+      ]
+    },
+    {
+      "file": "lib/db/src/sourceSnapshotRunner.ts",
+      "evidence": [
+        {
+          "line": 17,
+          "kind": "state-discriminant",
+          "symbol": "status: \"succeeded\""
+        },
+        {
+          "line": 22,
+          "kind": "state-discriminant",
+          "symbol": "status: \"failed\""
+        },
+        {
+          "line": 30,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"plan\" | \"execute\""
+        },
+        {
+          "line": 45,
+          "kind": "state-discriminant",
+          "symbol": "status: \"planned\" | \"verified\" | \"failed\""
+        },
+        {
+          "line": 83,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"plan\""
+        },
+        {
+          "line": 99,
+          "kind": "state-discriminant",
+          "symbol": "status: \"planned\""
+        },
+        {
+          "line": 111,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"execute\""
+        },
+        {
+          "line": 113,
+          "kind": "state-discriminant",
+          "symbol": "status: \"failed\""
+        },
+        {
+          "line": 150,
+          "kind": "state-discriminant",
+          "symbol": "status: \"succeeded\""
+        },
+        {
+          "line": 156,
+          "kind": "state-discriminant",
+          "symbol": "status: \"failed\""
+        }
+      ]
+    },
+    {
+      "file": "lib/integrations/openai_ai_integrations/src/client/audio/useAudioPlayback.ts",
+      "evidence": [
+        {
+          "line": 49,
+          "kind": "local-state",
+          "symbol": "[state, setState]"
+        }
+      ]
+    },
+    {
+      "file": "lib/integrations/openai_ai_integrations/src/client/audio/useVoiceRecorder.ts",
+      "evidence": [
+        {
+          "line": 10,
+          "kind": "local-state",
+          "symbol": "[state, setState]"
+        }
+      ]
+    },
+    {
+      "file": "lib/integrations-openai-ai-react/src/audio/useAudioPlayback.ts",
+      "evidence": [
+        {
+          "line": 49,
+          "kind": "local-state",
+          "symbol": "[state, setState]"
+        }
+      ]
+    },
+    {
+      "file": "lib/integrations-openai-ai-react/src/audio/useVoiceRecorder.ts",
+      "evidence": [
+        {
+          "line": 26,
+          "kind": "local-state",
+          "symbol": "[state, setState]"
+        }
+      ]
+    },
+    {
+      "file": "lib/integrations-openai-ai-react/src/audio/useVoiceStream.ts",
+      "evidence": [
+        {
+          "line": 255,
+          "kind": "temporal-control",
+          "symbol": "AbortController"
+        }
+      ]
+    },
+    {
+      "file": "lib/publication-standardisation/src/canonical-public.ts",
+      "evidence": [
+        {
+          "line": 17,
+          "kind": "state-discriminant",
+          "symbol": "status: \"verified\""
+        }
+      ]
+    },
+    {
+      "file": "lib/publication-standardisation/src/index.ts",
+      "evidence": [
+        {
+          "line": 61,
+          "kind": "state-discriminant",
+          "symbol": "stage: \"after_public_safety_before_publication\""
+        },
+        {
+          "line": 82,
+          "kind": "state-discriminant",
+          "symbol": "stage: \"after_public_safety_before_publication\""
+        }
+      ]
+    },
+    {
+      "file": "lib/publication-standardisation/src/ltceds-location.ts",
+      "evidence": [
+        {
+          "line": 97,
+          "kind": "state-discriminant",
+          "symbol": "status: \"candidate\" | \"needs_review\" | \"rejected\""
+        },
+        {
+          "line": 219,
+          "kind": "state-discriminant",
+          "symbol": "status: \"rejected\""
+        },
+        {
+          "line": 226,
+          "kind": "state-discriminant",
+          "symbol": "status: \"rejected\""
+        },
+        {
+          "line": 241,
+          "kind": "state-discriminant",
+          "symbol": "status: \"needs_review\""
+        },
+        {
+          "line": 248,
+          "kind": "state-discriminant",
+          "symbol": "status: \"needs_review\""
+        },
+        {
+          "line": 252,
+          "kind": "state-discriminant",
+          "symbol": "status: \"candidate\""
+        }
+      ]
+    },
+    {
+      "file": "scripts/albo-artifact-transaction.ts",
+      "evidence": [
+        {
+          "line": 71,
+          "kind": "state-discriminant",
+          "symbol": "phase: \"staging\" | \"prepared\" | \"committed\" | \"rollback_failed\""
+        },
+        {
+          "line": 106,
+          "kind": "state-discriminant",
+          "symbol": "phase: \"staging\""
+        },
+        {
+          "line": 178,
+          "kind": "state-discriminant",
+          "symbol": "phase: \"prepared\""
+        }
+      ]
+    },
+    {
+      "file": "scripts/albo-tinnvision.ts",
+      "evidence": [
+        {
+          "line": 89,
+          "kind": "state-discriminant",
+          "symbol": "status: \"current\" | \"reacquisition_required\""
+        },
+        {
+          "line": 657,
+          "kind": "state-discriminant",
+          "symbol": "status: \"found\""
+        },
+        {
+          "line": 662,
+          "kind": "state-discriminant",
+          "symbol": "status: \"not_found\""
+        },
+        {
+          "line": 663,
+          "kind": "state-discriminant",
+          "symbol": "status: \"failed\""
+        },
+        {
+          "line": 677,
+          "kind": "state-discriminant",
+          "symbol": "status: \"not_found\""
+        },
+        {
+          "line": 690,
+          "kind": "state-discriminant",
+          "symbol": "status: \"failed\""
+        },
+        {
+          "line": 696,
+          "kind": "state-discriminant",
+          "symbol": "status: \"not_found\""
+        },
+        {
+          "line": 702,
+          "kind": "state-discriminant",
+          "symbol": "status: \"not_found\""
+        },
+        {
+          "line": 713,
+          "kind": "state-discriminant",
+          "symbol": "status: \"found\""
+        },
+        {
+          "line": 719,
+          "kind": "state-discriminant",
+          "symbol": "status: \"failed\""
+        },
+        {
+          "line": 1062,
+          "kind": "state-discriminant",
+          "symbol": "status: \"public_safe\""
+        },
+        {
+          "line": 1071,
+          "kind": "state-discriminant",
+          "symbol": "status: \"public_safe\""
+        },
+        {
+          "line": 1079,
+          "kind": "state-discriminant",
+          "symbol": "status: \"baseline_unavailable\""
+        },
+        {
+          "line": 1165,
+          "kind": "state-discriminant",
+          "symbol": "status: \"current\""
+        },
+        {
+          "line": 1308,
+          "kind": "state-discriminant",
+          "symbol": "status: \"current\""
+        },
+        {
+          "line": 1317,
+          "kind": "state-discriminant",
+          "symbol": "status: \"reacquisition_required\""
+        }
+      ]
+    },
+    {
+      "file": "scripts/build-lamezia-climate-data.mjs",
+      "evidence": [
+        {
+          "line": 413,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        }
+      ]
+    },
+    {
+      "file": "scripts/build-lamezia-pnrr-static-data.mjs",
+      "evidence": [
+        {
+          "line": 239,
+          "kind": "state-discriminant",
+          "symbol": "status: \"fresh\""
+        },
+        {
+          "line": 265,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        }
+      ]
+    },
+    {
+      "file": "scripts/check-institutional-roster.ts",
+      "evidence": [
+        {
+          "line": 88,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        },
+        {
+          "line": 98,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        },
+        {
+          "line": 289,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        }
+      ]
+    },
+    {
+      "file": "scripts/check-public-contracts-page.mjs",
+      "evidence": [
+        {
+          "line": 116,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        },
+        {
+          "line": 188,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"exact\""
+        },
+        {
+          "line": 224,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"superseded\""
+        },
+        {
+          "line": 301,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"unconstrained\""
+        },
+        {
+          "line": 304,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"exact\""
+        }
+      ]
+    },
+    {
+      "file": "scripts/check-source-health.ts",
+      "evidence": [
+        {
+          "line": 332,
+          "kind": "state-discriminant",
+          "symbol": "status: \"error\""
+        }
+      ]
+    },
+    {
+      "file": "scripts/check-v0-static-fallback.mjs",
+      "evidence": [
+        {
+          "line": 883,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"root-index\""
+        },
+        {
+          "line": 891,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"route-index\""
+        },
+        {
+          "line": 901,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"static-fallback\""
+        }
+      ]
+    },
+    {
+      "file": "scripts/contracts/cardinalReadiness.ts",
+      "evidence": [
+        {
+          "line": 79,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"readiness-only\""
+        },
+        {
+          "line": 389,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"readiness-only\""
+        }
+      ]
+    },
+    {
+      "file": "scripts/contracts/discoverOfficialAnacSource.ts",
+      "evidence": [
+        {
+          "line": 64,
+          "kind": "state-discriminant",
+          "symbol": "status: number | null"
+        },
+        {
+          "line": 276,
+          "kind": "temporal-control",
+          "symbol": "AbortController"
+        },
+        {
+          "line": 277,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        }
+      ]
+    },
+    {
+      "file": "scripts/contracts/normaliseContractDossier.ts",
+      "evidence": [
+        {
+          "line": 47,
+          "kind": "state-discriminant",
+          "symbol": "status: \"parsed\""
+        },
+        {
+          "line": 55,
+          "kind": "state-discriminant",
+          "symbol": "status: \"needs_review\" | \"skipped\""
+        },
+        {
+          "line": 151,
+          "kind": "state-discriminant",
+          "symbol": "status: \"parsed\""
+        },
+        {
+          "line": 169,
+          "kind": "state-discriminant",
+          "symbol": "status: \"needs_review\""
+        }
+      ]
+    },
+    {
+      "file": "scripts/contracts/runAnacCigIngestionDryRun.ts",
+      "evidence": [
+        {
+          "line": 82,
+          "kind": "state-discriminant",
+          "symbol": "status: \"present\" | \"missing\""
+        },
+        {
+          "line": 166,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"fixture_only\""
+        },
+        {
+          "line": 233,
+          "kind": "state-discriminant",
+          "symbol": "status: \"present\""
+        },
+        {
+          "line": 245,
+          "kind": "state-discriminant",
+          "symbol": "status: \"missing\""
+        }
+      ]
+    },
+    {
+      "file": "scripts/contracts/syncOfficialAnacBdncp.ts",
+      "evidence": [
+        {
+          "line": 213,
+          "kind": "temporal-control",
+          "symbol": "AbortController"
+        },
+        {
+          "line": 214,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        },
+        {
+          "line": 259,
+          "kind": "temporal-control",
+          "symbol": "AbortController"
+        },
+        {
+          "line": 260,
+          "kind": "temporal-control",
+          "symbol": "setTimeout"
+        }
+      ]
+    },
+    {
+      "file": "scripts/institutional-session-candidates.ts",
+      "evidence": [
+        {
+          "line": 18,
+          "kind": "state-discriminant",
+          "symbol": "status: \"required\""
+        },
+        {
+          "line": 114,
+          "kind": "state-discriminant",
+          "symbol": "status: \"required\""
+        }
+      ]
+    },
+    {
+      "file": "scripts/pnrr/lameziaPnrrCore.mjs",
+      "evidence": [
+        {
+          "line": 300,
+          "kind": "state-discriminant",
+          "symbol": "status: \"fresh\""
+        },
+        {
+          "line": 321,
+          "kind": "state-discriminant",
+          "symbol": "status: \"stale\""
+        },
+        {
+          "line": 336,
+          "kind": "state-discriminant",
+          "symbol": "status: \"pending\""
+        }
+      ]
+    },
+    {
+      "file": "scripts/production-smoke-plan.ts",
+      "evidence": [
+        {
+          "line": 54,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"dry-run\""
+        },
+        {
+          "line": 73,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"manual\""
+        },
+        {
+          "line": 90,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"read-only\""
+        },
+        {
+          "line": 108,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"read-only\""
+        },
+        {
+          "line": 126,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"manual\""
+        },
+        {
+          "line": 143,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"manual\""
+        },
+        {
+          "line": 161,
+          "kind": "state-discriminant",
+          "symbol": "mode: \"manual\""
+        }
+      ]
+    },
+    {
+      "file": "scripts/territorio/istat-sezioni-censimento-lamezia-materialize.ts",
+      "evidence": [
+        {
+          "line": 1394,
+          "kind": "state-discriminant",
+          "symbol": "status: \"not-directly-available\""
+        }
+      ]
+    }
+  ]
+}
