@@ -89,7 +89,7 @@ describe("Scouting 8 novembre — stesso proposal ID in ogni gate", () => {
     expect(competence.primaryAuthority?.id).toBe("ic-perri-pitagora-don-milani");
     expect(competence.primaryAuthority?.sourceUrl).toContain("adozione-della-settimana-corta");
     expect(competence.involvedAuthorities).toEqual([]);
-    expect(competence.assessmentNote).toContain("non attribuisce");
+    expect(competence.assessmentNote).toContain("non è inserito come ente competente");
   });
 
   it("normalizza geografia multi-plesso senza coordinate artificiali", () => {
