@@ -117,11 +117,11 @@ export function Home() {
                 href={href}
                 className="group py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary md:px-7 md:first:pl-0 md:last:pr-0"
               >
-                <h3 className="font-display text-lg font-bold sm:text-xl">
+                <h3 className="font-display text-xl font-bold sm:text-2xl">
                   {question}
                 </h3>
                 <p className="sr-only">{description}</p>
-                <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary">
+                <span className="mt-3 inline-flex items-center gap-2 text-base font-semibold text-primary sm:text-lg">
                   {title}
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </span>
@@ -229,7 +229,7 @@ export function HomeInstitutionalSessions() {
         </h2>
         <Link
           href="/convocazioni"
-          className="text-sm font-semibold text-primary hover:underline"
+          className="text-base font-semibold text-primary hover:underline"
         >
           Vedi tutte le sedute
         </Link>
@@ -245,10 +245,15 @@ export function HomeInstitutionalSessions() {
               href={`/convocazioni/${session.id}`}
               className="civic-service-session group grid gap-2 py-4 transition-colors hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary md:grid-cols-[1.15fr_1fr] md:gap-x-8"
             >
-              <h3 className="text-base font-semibold leading-6 group-hover:text-primary">
-                {session.title.value ?? "Seduta senza titolo"}
+              <h3 className="text-base font-semibold leading-7 group-hover:text-primary sm:text-lg">
+                {session.title.value
+                  ?.replace(/ — segnalazione editoriale$/, "")
+                  .replace(/^Consiglio comunale su /, "")
+                  .replace(" — seduta del ", " — ")
+                  .replace(" consiliare permanente", "") ??
+                  "Seduta senza titolo"}
               </h3>
-              <p className="text-sm leading-6 text-muted-foreground">
+              <p className="text-base leading-7 text-muted-foreground">
                 {formatSessionDate(session.scheduledAt.value)} ·{" "}
                 {
                   councilSessionV0StatusLabels[
