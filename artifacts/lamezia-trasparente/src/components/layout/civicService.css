@@ -1,0 +1,68 @@
+/* Selected civic-service concept. Scoped to the home; other routes retain
+   their existing theme and component contracts. */
+.civic-service-shell {
+  --background: 0 0% 100%;
+  --foreground: 249 65% 12%;
+  --primary: 225 100% 46%;
+  --muted-foreground: 242 17% 36%;
+  --border: 237 15% 82%;
+  --card: 0 0% 100%;
+  --app-font-display: "Inter", system-ui, sans-serif;
+  --font-display: "Inter", system-ui, sans-serif;
+  --shadow-nav: none;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+.dark .civic-service-shell {
+  --background: 240 28% 9%;
+  --foreground: 235 30% 96%;
+  --primary: 220 100% 75%;
+  --muted-foreground: 237 17% 75%;
+  --border: 237 15% 30%;
+  --card: 240 28% 9%;
+}
+.civic-service-shell > header {
+  box-shadow: none;
+  background: hsl(var(--background));
+}
+.civic-service-shell > header > div {
+  max-width: 1280px;
+  margin-inline: auto;
+  min-height: 80px;
+}
+.civic-service-shell > header nav {
+  justify-content: flex-end;
+}
+.civic-service-shell > header nav > a,
+.civic-service-shell > header nav > button {
+  font-size: 15px;
+  padding-inline: 16px;
+}
+.civic-service-search:hover {
+  background: hsl(var(--primary) / 0.035);
+}
+.civic-service-paths > a + a {
+  border-top: 1px solid hsl(var(--border));
+  padding-top: 24px;
+}
+.civic-service-home .font-display {
+  letter-spacing: -0.035em;
+}
+.civic-service-disclosure summary {
+  font-size: 17px;
+}
+.civic-service-disclosure summary::marker {
+  color: hsl(var(--primary));
+}
+@media (min-width: 768px) {
+  .civic-service-paths > a + a {
+    border-top: 0;
+    border-left: 1px solid hsl(var(--border));
+    padding-top: 8px;
+  }
+}
+@media (max-width: 639px) {
+  .civic-service-shell > header > div {
+    min-height: 64px;
+  }
+}

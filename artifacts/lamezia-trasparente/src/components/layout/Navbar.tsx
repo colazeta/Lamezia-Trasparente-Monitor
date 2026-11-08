@@ -36,6 +36,7 @@ import { PARTICIPATION_ACTIONS, PRIMARY_NAV_GROUPS } from "./primaryNavigation";
 
 export function Navbar() {
   const [location] = useLocation();
+  const isHome = location === "/";
   const [isOpen, setIsOpen] = useState(false);
   const [openMobileGroup, setOpenMobileGroup] = useState<string | null>(null);
   const { open: paletteOpen, setOpen: setPaletteOpen } = useCommandPalette();
@@ -91,127 +92,181 @@ export function Navbar() {
             className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 xl:flex"
             aria-label="Navigazione principale"
           >
-            {PRIMARY_NAV_GROUPS.map((group) => {
-              const active = isGroupActive(group);
-              return (
-                <DropdownMenu key={group.label} modal={false}>
-                  <DropdownMenuTrigger className={groupTriggerClass(active)}>
-                    {group.label}
-                    <ChevronDown
-                      className="h-3.5 w-3.5 opacity-70"
-                      aria-hidden="true"
-                    />
-                    {active ? (
-                      <span className="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-primary" />
-                    ) : null}
+            {isHome ? (
+              <>
+                <Link href="/convocazioni" className={groupTriggerClass(false)}>
+                  Sedute
+                </Link>
+                <Link href="/contratti" className={groupTriggerClass(false)}>
+                  Spesa pubblica
+                </Link>
+                <Link href="/organi" className={groupTriggerClass(false)}>
+                  Amministratori
+                </Link>
+                <DropdownMenu modal={false}>
+                  <DropdownMenuTrigger className={groupTriggerClass(false)}>
+                    Altri argomenti{" "}
+                    <ChevronDown className="h-3.5 w-3.5" aria-hidden="true" />
                   </DropdownMenuTrigger>
-
                   <DropdownMenuContent
-                    align="start"
-                    className="w-[19rem] p-1.5"
-                    sideOffset={8}
+                    align="end"
+                    className="max-h-[70vh] w-[19rem] overflow-y-auto"
                   >
-                    {navigationSubgroups(group.items).map((subgroup) => (
-                      <Fragment key={subgroup.label}>
-                        <DropdownMenuLabel className="px-2.5 pt-3 text-xs font-medium text-muted-foreground">
-                          {subgroup.label}
-                        </DropdownMenuLabel>
-                        {subgroup.items.map((item) => {
-                          const Icon = item.icon;
-                          const itemActive =
-                            item.href === activePrimaryItemHref;
-                          return (
+                    {[
+                      ...PRIMARY_NAV_GROUPS,
+                      {
+                        label: "Partecipa",
+                        description: "",
+                        items: PARTICIPATION_ACTIONS,
+                      },
+                    ].map((group) => (
+                      <Fragment key={group.label}>
+                        <DropdownMenuLabel>{group.label}</DropdownMenuLabel>
+                        {group.items
+                          .filter(
+                            (item) =>
+                              ![
+                                "/convocazioni",
+                                "/contratti",
+                                "/organi",
+                              ].includes(item.href),
+                          )
+                          .map((item) => (
                             <DropdownMenuItem key={item.href} asChild>
-                              <Link
-                                href={item.href}
-                                aria-current={itemActive ? "page" : undefined}
-                                className={cn(
-                                  "flex cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-2",
-                                  itemActive && "bg-primary/10 text-primary",
-                                )}
-                              >
-                                <Icon
-                                  className={cn(
-                                    "h-4 w-4 shrink-0",
-                                    itemActive
-                                      ? "text-primary"
-                                      : "text-muted-foreground",
-                                  )}
-                                  aria-hidden="true"
-                                />
-                                <span className="min-w-0 truncate text-sm font-semibold leading-5">
-                                  {item.label}
-                                </span>
-                              </Link>
+                              <Link href={item.href}>{item.label}</Link>
                             </DropdownMenuItem>
-                          );
-                        })}
+                          ))}
                       </Fragment>
                     ))}
                   </DropdownMenuContent>
                 </DropdownMenu>
-              );
-            })}
+              </>
+            ) : (
+              PRIMARY_NAV_GROUPS.map((group) => {
+                const active = isGroupActive(group);
+                return (
+                  <DropdownMenu key={group.label} modal={false}>
+                    <DropdownMenuTrigger className={groupTriggerClass(active)}>
+                      {group.label}
+                      <ChevronDown
+                        className="h-3.5 w-3.5 opacity-70"
+                        aria-hidden="true"
+                      />
+                      {active ? (
+                        <span className="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-primary" />
+                      ) : null}
+                    </DropdownMenuTrigger>
+
+                    <DropdownMenuContent
+                      align="start"
+                      className="w-[19rem] p-1.5"
+                      sideOffset={8}
+                    >
+                      {navigationSubgroups(group.items).map((subgroup) => (
+                        <Fragment key={subgroup.label}>
+                          <DropdownMenuLabel className="px-2.5 pt-3 text-xs font-medium text-muted-foreground">
+                            {subgroup.label}
+                          </DropdownMenuLabel>
+                          {subgroup.items.map((item) => {
+                            const Icon = item.icon;
+                            const itemActive =
+                              item.href === activePrimaryItemHref;
+                            return (
+                              <DropdownMenuItem key={item.href} asChild>
+                                <Link
+                                  href={item.href}
+                                  aria-current={itemActive ? "page" : undefined}
+                                  className={cn(
+                                    "flex cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-2",
+                                    itemActive && "bg-primary/10 text-primary",
+                                  )}
+                                >
+                                  <Icon
+                                    className={cn(
+                                      "h-4 w-4 shrink-0",
+                                      itemActive
+                                        ? "text-primary"
+                                        : "text-muted-foreground",
+                                    )}
+                                    aria-hidden="true"
+                                  />
+                                  <span className="min-w-0 truncate text-sm font-semibold leading-5">
+                                    {item.label}
+                                  </span>
+                                </Link>
+                              </DropdownMenuItem>
+                            );
+                          })}
+                        </Fragment>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                );
+              })
+            )}
           </nav>
 
           <div className="flex shrink-0 items-center gap-1 sm:gap-2">
-            <DropdownMenu modal={false}>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant={participationActive ? "default" : "outline"}
-                  size="sm"
-                  className="hidden gap-1.5 sm:inline-flex"
-                  aria-label="Partecipa"
+            {!isHome && (
+              <DropdownMenu modal={false}>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant={participationActive ? "default" : "outline"}
+                    size="sm"
+                    className="hidden gap-1.5 sm:inline-flex"
+                    aria-label="Partecipa"
+                  >
+                    <Megaphone className="h-4 w-4" aria-hidden="true" />
+                    Partecipa
+                    <ChevronDown
+                      className="h-3.5 w-3.5 opacity-70"
+                      aria-hidden="true"
+                    />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="end"
+                  className="w-[18rem] p-1.5"
+                  sideOffset={8}
                 >
-                  <Megaphone className="h-4 w-4" aria-hidden="true" />
-                  Partecipa
-                  <ChevronDown
-                    className="h-3.5 w-3.5 opacity-70"
-                    aria-hidden="true"
-                  />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                align="end"
-                className="w-[18rem] p-1.5"
-                sideOffset={8}
-              >
-                {PARTICIPATION_ACTIONS.map((item) => {
-                  const Icon = item.icon;
-                  const itemActive = item.href === activeParticipationItemHref;
-                  return (
-                    <DropdownMenuItem key={item.href} asChild>
-                      <Link
-                        href={item.href}
-                        aria-current={itemActive ? "page" : undefined}
-                        className={cn(
-                          "flex cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-2",
-                          itemActive && "bg-primary/10 text-primary",
-                        )}
-                      >
-                        <Icon
+                  {PARTICIPATION_ACTIONS.map((item) => {
+                    const Icon = item.icon;
+                    const itemActive =
+                      item.href === activeParticipationItemHref;
+                    return (
+                      <DropdownMenuItem key={item.href} asChild>
+                        <Link
+                          href={item.href}
+                          aria-current={itemActive ? "page" : undefined}
                           className={cn(
-                            "h-4 w-4 shrink-0",
-                            itemActive
-                              ? "text-primary"
-                              : "text-muted-foreground",
+                            "flex cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-2",
+                            itemActive && "bg-primary/10 text-primary",
                           )}
-                          aria-hidden="true"
-                        />
-                        <span className="min-w-0">
-                          <span className="block truncate text-sm font-semibold leading-5">
-                            {item.label}
+                        >
+                          <Icon
+                            className={cn(
+                              "h-4 w-4 shrink-0",
+                              itemActive
+                                ? "text-primary"
+                                : "text-muted-foreground",
+                            )}
+                            aria-hidden="true"
+                          />
+                          <span className="min-w-0">
+                            <span className="block truncate text-sm font-semibold leading-5">
+                              {item.label}
+                            </span>
+                            <span className="mt-0.5 block line-clamp-2 text-xs leading-4 text-muted-foreground">
+                              {item.description}
+                            </span>
                           </span>
-                          <span className="mt-0.5 block line-clamp-2 text-xs leading-4 text-muted-foreground">
-                            {item.description}
-                          </span>
-                        </span>
-                      </Link>
-                    </DropdownMenuItem>
-                  );
-                })}
-              </DropdownMenuContent>
-            </DropdownMenu>
+                        </Link>
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
 
             <SearchTrigger onClick={() => setPaletteOpen(true)} />
             <ThemeToggle />

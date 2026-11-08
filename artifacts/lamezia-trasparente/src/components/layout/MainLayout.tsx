@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { useLocation } from "wouter";
+import "./civicService.css";
 import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
 import { MigrationStatusBanner } from "@/components/admin/MigrationStatusBanner";
@@ -16,7 +17,9 @@ export function MainLayout({ children }: MainLayoutProps) {
   const showCivicHelper = !isAtlanteExplorer;
 
   return (
-    <div className="min-h-[100dvh] flex flex-col">
+    <div
+      className={`min-h-[100dvh] flex flex-col ${location === "/" ? "civic-service-shell" : ""}`}
+    >
       <Navbar />
       <MigrationStatusBanner />
       <main className="flex-1 bg-background">{children}</main>

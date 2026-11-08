@@ -68,7 +68,7 @@ export function Home() {
     !Number.isFinite(parsedCheck) ||
     Date.now() - parsedCheck > 24 * 60 * 60 * 1000;
   return (
-    <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 md:py-12">
+    <div className="civic-service-home mx-auto w-full max-w-6xl px-5 py-10 sm:px-8 md:py-14">
       <PageMeta
         title="Lamezia Trasparente — orientarsi tra decisioni, spesa e amministratori"
         description="Cerca un argomento o scegli tra sedute del Comune, spesa pubblica e amministratori. Documenti e fonti per capire la città."
@@ -77,18 +77,17 @@ export function Home() {
       <section data-tour="home-hero" aria-labelledby="home-title">
         <h1
           id="home-title"
-          className="font-display text-3xl font-bold tracking-tight sm:text-4xl"
+          className="font-display text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl"
         >
           Cosa vuoi sapere su Lamezia?
         </h1>
-        <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
-          Ti aiutiamo a trovare informazioni su decisioni, spesa e persone del
-          Comune.
+        <p className="mt-4 max-w-3xl text-lg leading-7 text-muted-foreground sm:text-xl">
+          Informazioni su decisioni, spesa e persone del Comune.
         </p>
         <Button
           onClick={openGlobalSearch}
           variant="outline"
-          className="mt-6 h-auto w-full justify-start gap-3 whitespace-normal px-4 py-4 text-left text-base sm:max-w-2xl"
+          className="civic-service-search mt-7 h-auto w-full justify-start gap-3 whitespace-normal rounded-md border-2 border-primary px-5 py-4 text-left text-lg font-normal shadow-none sm:text-xl"
           aria-keyshortcuts="Control+K Meta+K"
         >
           <Search
@@ -105,26 +104,23 @@ export function Home() {
       <section
         data-tour="home-themes"
         aria-labelledby="home-choices"
-        className="mt-10"
+        className="mt-12"
       >
-        <h2 id="home-choices" className="font-display text-xl font-bold">
+        <h2 id="home-choices" className="sr-only">
           Oppure scegli da dove partire
         </h2>
-        <div className="mt-4 grid gap-3 md:grid-cols-3">
+        <div className="civic-service-paths grid gap-6 md:grid-cols-3 md:gap-0">
           {HOME_PRIMARY_GATEWAYS.map(
-            ({ title, question, description, href, icon: Icon }) => (
+            ({ title, question, description, href }) => (
               <Link
                 key={href}
                 href={href}
-                className="group rounded-xl border border-border bg-card p-5 transition-colors hover:border-primary hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                className="group py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary md:px-7 md:first:pl-0 md:last:pr-0"
               >
-                <Icon className="h-5 w-5 text-primary" aria-hidden="true" />
-                <h3 className="mt-3 font-display text-lg font-bold">
+                <h3 className="font-display text-lg font-bold sm:text-xl">
                   {question}
                 </h3>
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  {description}
-                </p>
+                <p className="sr-only">{description}</p>
                 <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary">
                   {title}
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -137,7 +133,7 @@ export function Home() {
 
       <HomeInstitutionalSessions />
 
-      <details className="mt-8 rounded-xl border border-border bg-card p-5">
+      <details className="civic-service-disclosure mt-9 border-y border-border py-4">
         <summary className="cursor-pointer rounded font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
           Altri argomenti e strumenti
         </summary>
@@ -155,7 +151,7 @@ export function Home() {
         </ul>
       </details>
 
-      <details className="mt-3 rounded-xl border border-border p-5">
+      <details className="civic-service-disclosure border-b border-border py-4">
         <summary className="cursor-pointer rounded text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
           Da dove arrivano le informazioni?
         </summary>
@@ -223,9 +219,12 @@ export function HomeInstitutionalSessions() {
   ].filter((session) => session !== undefined);
 
   return (
-    <section aria-labelledby="home-sessions" className="mt-10">
+    <section aria-labelledby="home-sessions" className="mt-12">
       <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <h2 id="home-sessions" className="font-display text-xl font-bold">
+        <h2
+          id="home-sessions"
+          className="font-display text-2xl font-bold sm:text-3xl"
+        >
           Dall’archivio delle sedute
         </h2>
         <Link
@@ -235,21 +234,21 @@ export function HomeInstitutionalSessions() {
           Vedi tutte le sedute
         </Link>
       </div>
-      <p className="mt-2 text-sm leading-6 text-muted-foreground">
+      <p className="sr-only">
         Tre schede per iniziare. Gli stati indicati distinguono ciò che è
         confermato da ciò che resta da verificare.
       </p>
-      <ul className="mt-4 divide-y divide-border rounded-xl border border-border bg-card">
+      <ul className="mt-4 divide-y divide-border border-y border-border">
         {selection.map((session) => (
           <li key={session.id}>
             <Link
               href={`/convocazioni/${session.id}`}
-              className="group block rounded px-4 py-4 transition-colors hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="civic-service-session group grid gap-2 py-4 transition-colors hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary md:grid-cols-[1.15fr_1fr] md:gap-x-8"
             >
-              <h3 className="text-sm font-semibold leading-6 group-hover:text-primary">
+              <h3 className="text-base font-semibold leading-6 group-hover:text-primary">
                 {session.title.value ?? "Seduta senza titolo"}
               </h3>
-              <p className="mt-1 text-sm text-muted-foreground">
+              <p className="text-sm leading-6 text-muted-foreground">
                 {formatSessionDate(session.scheduledAt.value)} ·{" "}
                 {
                   councilSessionV0StatusLabels[
@@ -258,7 +257,7 @@ export function HomeInstitutionalSessions() {
                 }
               </p>
               {!session.provenance && (
-                <p className="mt-1 text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground md:col-start-2">
                   Solo fonti editoriali; convocazione ufficiale non acquisita.
                 </p>
               )}
