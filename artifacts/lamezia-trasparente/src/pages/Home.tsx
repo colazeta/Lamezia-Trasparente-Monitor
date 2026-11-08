@@ -135,24 +135,28 @@ function buildPulseItems(): PulseItem[] {
 export const HOME_PRIMARY_GATEWAYS = [
   {
     title: "Decisioni",
+    question: "Cosa ha deciso il Comune?",
     description: "Sedute, delibere, Albo e atti fondamentali del Comune.",
     href: "/convocazioni",
     icon: Gavel,
   },
   {
     title: "Spesa e progetti",
+    question: "Come vengono spesi i soldi?",
     description: "Contratti, PNRR, incarichi e risorse pubbliche documentate.",
     href: "/contratti",
     icon: Landmark,
   },
   {
     title: "Comune e risultati",
+    question: "Chi decide e con quali risultati?",
     description: "Organi, amministratori, macchina comunale e performance.",
     href: "/organi",
     icon: Users,
   },
   {
     title: "Territorio e legalità",
+    question: "Cosa riguarda il mio territorio?",
     description:
       "Mappe, criticità, monitoraggio civico, memoria e beni confiscati.",
     href: "/atlante-territoriale",
@@ -160,6 +164,7 @@ export const HOME_PRIMARY_GATEWAYS = [
   },
   {
     title: "Dati e fonti",
+    question: "Dove posso verificare i dati?",
     description:
       "Dataset, copertura, freschezza e metodo delle fonti pubbliche.",
     href: "/opendata",
@@ -189,9 +194,14 @@ export function Home() {
   const pulseItems = buildPulseItems();
   const pulseCounts = ALBO_PUBLIC_DIFF_SUMMARY.counts;
   const lastAlboCheck = Date.parse(ALBO_OPERATIONAL_STATUS.last_update ?? "");
-  const alboSnapshotStale = !Number.isFinite(lastAlboCheck) || Date.now() - lastAlboCheck > 24 * 60 * 60 * 1000;
-  const nextAlboCheck = Date.parse(ALBO_OPERATIONAL_STATUS.next_scheduled_check ?? "");
-  const alboScheduleOverdue = Number.isFinite(nextAlboCheck) && nextAlboCheck < Date.now();
+  const alboSnapshotStale =
+    !Number.isFinite(lastAlboCheck) ||
+    Date.now() - lastAlboCheck > 24 * 60 * 60 * 1000;
+  const nextAlboCheck = Date.parse(
+    ALBO_OPERATIONAL_STATUS.next_scheduled_check ?? "",
+  );
+  const alboScheduleOverdue =
+    Number.isFinite(nextAlboCheck) && nextAlboCheck < Date.now();
   const hasDiff =
     pulseCounts.new + pulseCounts.changed + pulseCounts.removed > 0;
 
@@ -207,39 +217,96 @@ export function Home() {
         data-tour="home-hero"
         className="bg-sidebar text-sidebar-foreground"
       >
-        <div className="container mx-auto max-w-6xl px-4 py-14 md:px-6 md:py-20">
+        <div className="container mx-auto max-w-6xl px-4 py-8 md:px-6 md:py-10">
           <div className="max-w-4xl">
-            <h1 className="max-w-4xl font-display text-4xl font-bold leading-[1.03] text-white sm:text-5xl md:text-6xl lg:text-7xl">
+            <h1 className="max-w-4xl font-display text-3xl font-bold leading-tight text-white sm:text-4xl md:text-5xl">
               Capire cosa decide, spende e realizza il Comune.
             </h1>
 
             <p className="mt-6 max-w-3xl text-base leading-7 text-sidebar-foreground/80 sm:text-lg md:text-xl">
-              Parti da una domanda, cerca una persona o un dataset, oppure segui
-              gli ultimi cambiamenti nelle fonti pubbliche.
+              Cerca un argomento, segui una seduta o consulta i documenti. Per
+              ogni informazione puoi verificare fonti e limiti.
             </p>
 
             <div className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-              <Button asChild variant="brand" size="lg" className="font-bold">
-                <a href="#oggi">
-                  Cosa è cambiato
-                  <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
-                </a>
-              </Button>
               <Button
                 type="button"
-                variant="outline"
+                variant="brand"
                 size="lg"
-                className="border-white/25 bg-white/5 font-bold text-white hover:bg-white/10"
+                className="font-bold"
                 onClick={openGlobalSearch}
                 aria-keyshortcuts="Control+K Meta+K"
               >
                 <Search className="mr-1 h-4 w-4" aria-hidden="true" />
                 Cerca nel sito
               </Button>
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="border-white/25 bg-white/5 font-bold text-white hover:bg-white/10"
+              >
+                <a href="#oggi">
+                  {alboSnapshotStale
+                    ? "Consulta l’ultimo confronto Albo"
+                    : "Cosa è cambiato"}
+                  <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
+                </a>
+              </Button>
             </div>
           </div>
         </div>
       </section>
+
+      <section
+        data-tour="home-themes"
+        className="border-b border-border bg-background py-10 md:py-12"
+        aria-labelledby="home-primary-domains"
+      >
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="mb-6 max-w-3xl">
+            <span className="eyebrow text-primary">Esplora</span>
+            <h2
+              id="home-primary-domains"
+              className="mt-2 font-display text-2xl font-bold tracking-tight md:text-3xl"
+            >
+              Cinque porte per orientarsi
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground md:text-base">
+              Scegli cosa vuoi sapere. Le schede indicano quali informazioni
+              sono disponibili e quali restano da verificare.
+            </p>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+            {HOME_PRIMARY_GATEWAYS.map((gateway) => {
+              const Icon = gateway.icon;
+              return (
+                <Link
+                  key={gateway.title}
+                  href={gateway.href}
+                  className="group rounded-xl border border-card-border bg-card p-4 shadow-[var(--shadow-card)] transition-colors hover:border-primary/35 hover:bg-primary/5 md:p-5"
+                >
+                  <div className="rounded-lg bg-primary/10 p-2.5 text-primary w-fit">
+                    <Icon className="h-5 w-5" aria-hidden="true" />
+                  </div>
+                  <h3 className="mt-4 font-display text-lg font-bold tracking-tight">
+                    {gateway.question}
+                  </h3>
+                  <p className="mt-1 text-xs font-semibold text-primary">
+                    {gateway.title}
+                  </p>
+                  <p className="mt-1 text-sm leading-5 text-muted-foreground">
+                    {gateway.description}
+                  </p>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <HomeInstitutionalSessions />
 
       <section className="border-y border-border bg-background py-10 md:py-12">
         <div className="container mx-auto px-4 md:px-6">
@@ -301,9 +368,15 @@ export function Home() {
         <div className="container mx-auto px-4 md:px-6">
           <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <span className="eyebrow text-primary">{alboSnapshotStale ? "Ultime variazioni disponibili" : "Attività recente"}</span>
+              <span className="eyebrow text-primary">
+                {alboSnapshotStale
+                  ? "Ultime variazioni disponibili"
+                  : "Attività recente"}
+              </span>
               <h2 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-4xl">
-                Cosa è cambiato nell&apos;Albo
+                {alboSnapshotStale
+                  ? "Albo: ultimo confronto disponibile"
+                  : "Cosa è cambiato nell’Albo"}
               </h2>
             </div>
             <Link
@@ -323,7 +396,9 @@ export function Home() {
                 </p>
                 <span className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
                   <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
-                  {alboScheduleOverdue ? "Controllo previsto, esecuzione non confermata" : "Prossimo controllo"}{" "}
+                  {alboScheduleOverdue
+                    ? "Controllo previsto, esecuzione non confermata"
+                    : "Prossimo controllo"}{" "}
                   {formatCivicTime(
                     ALBO_OPERATIONAL_STATUS.next_scheduled_check,
                   )}
@@ -332,9 +407,10 @@ export function Home() {
 
               {alboSnapshotStale && (
                 <p role="status" className="mt-3 text-sm text-muted-foreground">
-                  Lo snapshot disponibile non ha un controllo confermato nelle ultime 24 ore.
-                  Le variazioni sotto riportate si riferiscono all'ultimo confronto disponibile;
-                  l'assenza di novità non prova l'assenza di nuovi atti nella fonte ufficiale.
+                  Lo snapshot disponibile non ha un controllo confermato nelle
+                  ultime 24 ore. Le variazioni sotto riportate si riferiscono
+                  all'ultimo confronto disponibile; l'assenza di novità non
+                  prova l'assenza di nuovi atti nella fonte ufficiale.
                 </p>
               )}
 
@@ -374,53 +450,6 @@ export function Home() {
           </Card>
         </div>
       </section>
-
-      <section
-        data-tour="home-themes"
-        className="border-b border-border bg-background py-10 md:py-12"
-        aria-labelledby="home-primary-domains"
-      >
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="mb-6 max-w-3xl">
-            <span className="eyebrow text-primary">Esplora</span>
-            <h2
-              id="home-primary-domains"
-              className="mt-2 font-display text-2xl font-bold tracking-tight md:text-3xl"
-            >
-              Cinque porte per orientarsi
-            </h2>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground md:text-base">
-              La navigazione primaria segue le domande dell&apos;utente; le
-              sezioni specialistiche restano disponibili nella ricerca globale.
-            </p>
-          </div>
-
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
-            {HOME_PRIMARY_GATEWAYS.map((gateway) => {
-              const Icon = gateway.icon;
-              return (
-                <Link
-                  key={gateway.title}
-                  href={gateway.href}
-                  className="group rounded-xl border border-card-border bg-card p-4 shadow-[var(--shadow-card)] transition-colors hover:border-primary/35 hover:bg-primary/5 md:p-5"
-                >
-                  <div className="rounded-lg bg-primary/10 p-2.5 text-primary w-fit">
-                    <Icon className="h-5 w-5" aria-hidden="true" />
-                  </div>
-                  <h3 className="mt-4 font-display text-lg font-bold tracking-tight">
-                    {gateway.title}
-                  </h3>
-                  <p className="mt-1 text-sm leading-5 text-muted-foreground">
-                    {gateway.description}
-                  </p>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      <HomeInstitutionalSessions />
 
       <section className="border-b border-border bg-muted/20 py-12 md:py-16">
         <div className="container mx-auto grid gap-7 px-4 md:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
@@ -592,12 +621,13 @@ function InstitutionalSessionsHomeCard({
   icon: React.ElementType;
   sessions: readonly CouncilSessionV0[];
 }) {
+  const previewSessions = sessions.slice(0, 3);
   const sourceReviewStatuses = new Set(
-    sessions
+    previewSessions
       .map((session) => session.provenance?.sourceReviewStatus)
       .filter(Boolean),
   );
-  const hasEditorialOnlySessions = sessions.some(
+  const hasEditorialOnlySessions = previewSessions.some(
     (session) => !session.provenance,
   );
   const hasMixedSourceReview =
@@ -610,7 +640,7 @@ function InstitutionalSessionsHomeCard({
   );
   const publicationNumbers = [
     ...new Set(
-      sessions
+      previewSessions
         .map((session) => session.provenance?.publicationNumber)
         .filter((publication): publication is string => Boolean(publication)),
     ),
@@ -643,11 +673,11 @@ function InstitutionalSessionsHomeCard({
 
       <CardContent className="flex flex-1 flex-col p-0">
         <div className="divide-y divide-border">
-          {sessions.map((session) => {
+          {previewSessions.map((session) => {
             const contextArticleCount = session.contextResearch.articles.length;
             const contextMediaCount = session.contextResearch.media.length;
             const organLabel =
-              session.title.value?.split(" — ")[0] ??
+              session.title.value ??
               (session.kind === "council"
                 ? "Consiglio comunale"
                 : "Commissione consiliare");
@@ -657,8 +687,8 @@ function InstitutionalSessionsHomeCard({
               ];
             const contextStatusSummary =
               session.contextResearch.status === "not_run"
-                ? "Ricerca contestuale da completare"
-                : "Ricerca contestuale eseguita";
+                ? "Contesto non ancora disponibile"
+                : "Apri fonti e approfondimenti";
             const contextCountSummary = `${contextArticleCount} ${contextArticleCount === 1 ? "articolo" : "articoli"} · ${contextMediaCount} video`;
             return (
               <Link
@@ -706,6 +736,18 @@ function InstitutionalSessionsHomeCard({
           })}
         </div>
 
+        <div className="border-t border-border p-4">
+          <Link
+            href="/convocazioni"
+            className="text-sm font-semibold text-primary hover:underline"
+          >
+            Tutte le schede: {title} ({sessions.length})
+          </Link>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Selezione dall’archivio; le schede senza data verificata non
+            indicano una prossima seduta.
+          </p>
+        </div>
         <div className="mt-auto border-t border-border bg-muted/20 px-4 py-3 text-xs leading-5 text-muted-foreground">
           {publicationNumbers.length > 0
             ? `${hasEditorialOnlySessions ? "Fonti: Albo Pretorio e copertura editoriale separata" : "Fonte: Albo Pretorio"} · ${publicationNumbers.length === 1 ? "pubblicazione" : "pubblicazioni"} ${publicationNumbers.join(", ")}`

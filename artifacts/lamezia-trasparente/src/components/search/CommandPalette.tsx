@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useLocation } from "wouter";
 import {
   BookOpen,
+  Calendar,
   Clock,
   Database,
   Home,
@@ -74,6 +75,7 @@ const CIVIC_SEARCH_LIMIT = 12;
 
 const CIVIC_RESULT_ICONS: Record<CivicSearchResult["kind"], React.ElementType> =
   {
+    seduta: Calendar,
     dataset: Database,
     organo: Landmark,
     persona: UserRound,
@@ -213,12 +215,13 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
     <CommandDialog open={open} onOpenChange={onOpenChange}>
       <DialogTitle className="sr-only">Ricerca globale</DialogTitle>
       <DialogDescription className="sr-only">
-        Cerca nelle sezioni, negli organi, nei profili istituzionali e nei
-        dataset pubblicati.
+        Cerca nelle sedute pubblicate, nelle sezioni, negli organi, nei profili
+        istituzionali e nei dataset. La ricerca non copre tutti i documenti
+        ufficiali.
       </DialogDescription>
       <CommandInput
         onValueChange={setQuery}
-        placeholder="Cerca persone, organi, dataset o sezioni..."
+        placeholder="Cerca un tema, una seduta, una persona..."
         value={query}
       />
       <p aria-live="polite" className="sr-only">
@@ -236,7 +239,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
           <CommandGroup
             className="border-b border-border pb-2"
             forceMount
-            heading="Dati e profili pubblici"
+            heading="Sedute, dati e profili pubblici"
           >
             {civicSearchStatus === "loading" ? (
               <CommandItem disabled forceMount value="ricerca dati in corso">
@@ -267,7 +270,8 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
               >
                 <Search className="h-4 w-4 text-muted-foreground" />
                 <span className="text-muted-foreground">
-                  Nessun profilo, organo o dataset corrispondente.
+                  Nessuna corrispondenza nell’indice: prova meno parole o
+                  consulta gli archivi.
                 </span>
               </CommandItem>
             ) : null}
@@ -283,20 +287,42 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
                   <Icon className="h-4 w-4 text-primary" />
                   <span className="flex min-w-0 flex-1 items-start justify-between gap-3">
                     <span className="min-w-0">
-                      <span className="block truncate font-medium">
+                      <span className="block whitespace-normal font-medium">
                         {result.label}
                       </span>
                       <span className="block truncate text-xs text-muted-foreground">
                         {result.detail}
                       </span>
                     </span>
-                    <span className="shrink-0 pt-0.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                    <span className="max-w-[35%] shrink-0 whitespace-normal pt-0.5 text-[10px] font-semibold text-muted-foreground">
                       {result.statusLabel}
                     </span>
                   </span>
                 </CommandItem>
               );
             })}
+          </CommandGroup>
+        ) : null}
+        {hasCivicQuery &&
+        civicSearchStatus === "ready" &&
+        civicResults.length === 0 ? (
+          <CommandGroup heading="Continua la ricerca" forceMount>
+            <CommandItem
+              forceMount
+              value="consulta archivio sedute"
+              onSelect={() => runCommand("/convocazioni")}
+            >
+              <Calendar className="h-4 w-4" />
+              Consulta tutte le sedute e gli ordini del giorno
+            </CommandItem>
+            <CommandItem
+              forceMount
+              value="consulta albo civico"
+              onSelect={() => runCommand("/albo")}
+            >
+              <Search className="h-4 w-4" />
+              Cerca un atto nell’Albo civico
+            </CommandItem>
           </CommandGroup>
         ) : null}
         {recentItems.length > 0 && (
@@ -391,4 +417,3 @@ export function SearchTrigger({ onClick }: { onClick: () => void }) {
     </button>
   );
 }
-

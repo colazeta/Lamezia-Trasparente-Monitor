@@ -4,7 +4,10 @@ import {
   listStaticOrgani,
 } from "@/lib/institutionalStaticData";
 
-export type CivicSearchKind = "dataset" | "organo" | "persona";
+import { councilSessionV0ReviewedRecords } from "@/data/councilSessionV0Reviewed";
+import { councilSessionV0StatusLabels } from "@/data/councilSessionV0";
+
+export type CivicSearchKind = "dataset" | "organo" | "persona" | "seduta";
 
 export interface CivicSearchItem {
   id: string;
@@ -21,9 +24,10 @@ export interface CivicSearchResult extends CivicSearchItem {
 }
 
 const KIND_PRIORITY: Record<CivicSearchKind, number> = {
-  persona: 0,
-  organo: 1,
-  dataset: 2,
+  seduta: 0,
+  persona: 1,
+  organo: 2,
+  dataset: 3,
 };
 
 const DATASET_SEARCH_ALIASES: Record<string, readonly string[]> = {
@@ -100,7 +104,37 @@ export function buildCivicSearchIndex(): CivicSearchItem[] {
     })),
   );
 
-  return [...officials, ...organi, ...datasets];
+  const sessions: CivicSearchItem[] = councilSessionV0ReviewedRecords
+    .filter((session) => !session.isDemoFixture)
+    .map((session) => ({
+      id: `seduta:${session.id}`,
+      kind: "seduta",
+      label: session.title.value ?? "Seduta senza titolo",
+      detail: [
+        session.kind === "council"
+          ? "Consiglio comunale"
+          : "Commissione consiliare",
+        session.scheduledAt.value?.slice(0, 10) ?? "Data da verificare",
+        session.provenance
+          ? "Fonti nella scheda"
+          : "Contesto da fonti editoriali",
+      ].join(" · "),
+      href: `/convocazioni/${session.id}`,
+      keywords: [
+        "seduta convocazione ordine del giorno",
+        ...(session.agenda.value ?? []),
+        ...(session.contextResearch.editorialAgenda ?? []).map(
+          (item) => item.title,
+        ),
+        ...session.contextResearch.articles.map((item) => item.title),
+      ].join(" "),
+      statusLabel:
+        councilSessionV0StatusLabels[
+          session.sessionStatus.value ?? "non_verificata"
+        ],
+    }));
+
+  return [...sessions, ...officials, ...organi, ...datasets];
 }
 
 export const CIVIC_SEARCH_INDEX = buildCivicSearchIndex();

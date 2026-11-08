@@ -18,7 +18,7 @@ describe("home daily civic pulse contract", () => {
     expect(home).toContain("ALBO_PUBLIC_DIFF_CHANGED_ITEMS");
     expect(home).toContain("ALBO_PUBLIC_DIFF_REMOVED_ITEMS");
     expect(home).toContain("ALBO_OPERATIONAL_STATUS");
-    expect(home).toContain("Cosa è cambiato nell&apos;Albo");
+    expect(home).toContain("Albo: ultimo confronto disponibile");
     expect(home).not.toContain("useGetRecentActivity");
   });
 
