@@ -32,8 +32,8 @@ describe("Navbar public front door", () => {
     );
   });
 
-  it("exposes five information domains plus a separate participation action", () => {
-    renderNavbar("/");
+  it("keeps the full domain navigation on specialist pages", () => {
+    renderNavbar("/opendata");
 
     for (const label of [
       "Decisioni",
@@ -45,10 +45,41 @@ describe("Navbar public front door", () => {
       expect(screen.getByRole("button", { name: label })).toBeInTheDocument();
     }
 
-    expect(screen.getByRole("button", { name: "Partecipa" })).toBeInTheDocument();
-    for (const oldLabel of ["Atti", "Comune", "Spesa", "Territorio", "Legalità", "Dati"]) {
-      expect(screen.queryByRole("button", { name: oldLabel })).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Partecipa" }),
+    ).toBeInTheDocument();
+    for (const oldLabel of [
+      "Atti",
+      "Comune",
+      "Spesa",
+      "Territorio",
+      "Legalità",
+      "Dati",
+    ]) {
+      expect(
+        screen.queryByRole("button", { name: oldLabel }),
+      ).not.toBeInTheDocument();
     }
+  });
+
+  it("gives the home three direct destinations and an expandable index", () => {
+    renderNavbar("/");
+    expect(screen.getByRole("link", { name: "Sedute" })).toHaveAttribute(
+      "href",
+      "/convocazioni",
+    );
+    expect(
+      screen.getByRole("link", { name: "Spesa pubblica" }),
+    ).toHaveAttribute("href", "/contratti");
+    expect(
+      screen.getByRole("link", { name: "Amministratori" }),
+    ).toHaveAttribute("href", "/organi");
+    expect(
+      screen.getByRole("button", { name: "Altri argomenti" }),
+    ).toHaveAttribute("aria-haspopup", "menu");
+    expect(
+      screen.queryByRole("button", { name: "Partecipa" }),
+    ).not.toBeInTheDocument();
   });
 
   it("opens the current mobile domain and wires the accordion as an accessible region", () => {
@@ -72,9 +103,8 @@ describe("Navbar public front door", () => {
     expect(panel).toHaveAttribute("role", "region");
     expect(panel).toHaveAttribute("aria-labelledby", mobileDomain?.id);
     expect(panel).not.toHaveAttribute("hidden");
-    expect(screen.getByRole("button", { name: "Cerca nel sito" })).toHaveAttribute(
-      "type",
-      "button",
-    );
+    expect(
+      screen.getByRole("button", { name: "Cerca nel sito" }),
+    ).toHaveAttribute("type", "button");
   });
 });
