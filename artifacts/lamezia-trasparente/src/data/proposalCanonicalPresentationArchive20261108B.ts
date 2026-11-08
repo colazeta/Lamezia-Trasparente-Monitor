@@ -4,7 +4,7 @@ import {
   getCanonicalProposalPresentation as previousPresentation,
   getCanonicalProposalPresentationIds as previousIds,
   hasCanonicalProposalPresentation as previousHas,
-} from "./proposalCanonicalPresentationArchive20261108";
+} from "./proposalCanonicalPresentationArchive20261107";
 
 /** Canone neutrale distinto dal record di acquisizione e dalle accuse dei promotori. */
 const CANONICAL_20261108_B: Record<string, CanonicalProposalPresentation> = {

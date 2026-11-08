@@ -35,7 +35,7 @@ const rows = [
     promoter: "silvia-di-spena",
     first: "2026-09-19",
     primary: "1",
-    secondary: [],
+    secondary: ["4"],
     scope: "area",
     channel: "petizione",
   },
@@ -66,7 +66,12 @@ describe("Recupero civico 5 novembre — stesso insieme di proposal ID end to en
       expect(proposal.channel).toBe(row.channel);
       expect(proposal.status).toBe("proposta_emersa");
       expect(proposal.sourceUrl).toMatch(/^https:\/\//);
-      expect(proposal.verificationNote).toContain("not_assessed");
+      if (row.id === "scuola-perri-pitagora-orario-sei-giorni-di-spena-2026") {
+        expect(proposal.verificationNote).toContain("partially_verified");
+        expect(proposal.verificationNote).toContain("adozione-della-settimana-corta");
+      } else {
+        expect(proposal.verificationNote).toContain("not_assessed");
+      }
       expect(proposal.institutionalRecipient?.trim()).toBeTruthy();
       expect(proposal.events).toHaveLength(1);
       expect(proposal.events[0]!.date).toBe(row.first);
@@ -93,8 +98,14 @@ describe("Recupero civico 5 novembre — stesso insieme di proposal ID end to en
       const competence = getProposalInstitutionalCompetence(proposal);
       expect(competence.sourceAddressee).toBe(proposal.institutionalRecipient);
       expect(competence.publicAddressee).toBeTruthy();
-      expect(competence.assessmentStatus).toBe("not_assessed");
-      expect(competence.primaryAuthority).toBeUndefined();
+      if (row.id === "scuola-perri-pitagora-orario-sei-giorni-di-spena-2026") {
+        expect(competence.assessmentStatus).toBe("partially_verified");
+        expect(competence.primaryAuthority?.id).toBe("ic-perri-pitagora-don-milani");
+        expect(competence.primaryAuthority?.sourceUrl).toContain("adozione-della-settimana-corta");
+      } else {
+        expect(competence.assessmentStatus).toBe("not_assessed");
+        expect(competence.primaryAuthority).toBeUndefined();
+      }
       expect(competence.involvedAuthorities).toEqual([]);
 
       const institutional = getProposalInstitutionalState(proposal);

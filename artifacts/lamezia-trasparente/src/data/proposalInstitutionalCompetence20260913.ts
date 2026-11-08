@@ -61,7 +61,7 @@ const POLIZIA_LOCALE_RENDA_ASSESSMENT: ProposalCompetenceAssessment = {
 };
 
 
-const PERRI_ORARIO_ID = "scuola-perri-pitagora-don-milani-orario-sei-giorni-di-spena-2026";
+const PERRI_ORARIO_ID = "scuola-perri-pitagora-orario-sei-giorni-di-spena-2026";
 
 const PERRI_ORARIO_ASSESSMENT: ProposalCompetenceAssessment = {
   status: "partially_verified",
