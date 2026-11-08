@@ -229,8 +229,9 @@ const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
   },
   "Organizzazione dell'orario scolastico": {
     primary: ps("1"),
+    secondary: [ps("4")],
     mappingNote:
-      "Il riesame della distribuzione settimanale dell'orario didattico attiene a Educazione e formazione. La materia ufficiale non identifica la competenza di scuola, Consiglio d'Istituto o Comune e non equivale a una decisione sull'orario.",
+      "Il riesame della distribuzione settimanale dell'orario didattico attiene a Educazione e formazione; Mobilità e trasporti è solo secondaria per le ricadute ipotizzate sulle famiglie e sugli spostamenti, non accertate. Il decreto scolastico n. 1386/2026 e la delibera n. 161/2025 documentano il ruolo organizzativo dell'istituto, non un recepimento della successiva petizione né una competenza del Comune a modificare gli orari.",
   },
   "Bilancio comunale e riequilibrio finanziario": {
     primary: ps("9"),

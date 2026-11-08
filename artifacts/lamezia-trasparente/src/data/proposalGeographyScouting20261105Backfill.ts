@@ -19,8 +19,8 @@ export const SCOUTED_PROPOSAL_GEOGRAPHY_20261105_BACKFILL: Record<string, Propos
   "scuola-perri-pitagora-orario-sei-giorni-di-spena-2026": {
     label: "Plessi scolastici dell'I.C. Perri Pitagora Don Milani a Lamezia Terme",
     scope: "area",
-    areas: ["nicastro"],
+    areas: ["intera_citta"],
     points: [],
-    note: "La petizione identifica l'istituto, non i singoli plessi o le classi interessate. Il tag Nicastro è un riferimento territoriale per i principali plessi cittadini, verificabile dall'anagrafica scolastica; non delimita tutte le sedi dell'Istituto e non sono assegnate coordinate. Fonte istituzionale: https://icperripitagoradonmilani.edu.it/orari-di-funzionamento-plessi-scolastici/",
+    note: "La petizione identifica l'istituto, non i singoli plessi o le classi interessate. L'area è localizzata genericamente nel Comune di Lamezia Terme; il tag intera_citta non rende il perimetro citywide. Non sono assegnati punti o coordinate WGS84. Fonte istituzionale: https://icperripitagoradonmilani.edu.it/orari-di-funzionamento-plessi-scolastici/",
   },
 };

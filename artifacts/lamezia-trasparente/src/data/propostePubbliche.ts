@@ -34,7 +34,6 @@ import { SCOUTED_PUBLIC_PROPOSALS_20261105 } from "./propostePubblicheScouting20
 import { SCOUTED_PUBLIC_PROPOSALS_20261105_BACKFILL } from "./propostePubblicheScouting20261105Backfill";
 import { SCOUTED_PUBLIC_PROPOSALS_20261106 } from "./propostePubblicheScouting20261106";
 import { SCOUTED_PUBLIC_PROPOSALS_20261107 } from "./propostePubblicheScouting20261107";
-import { SCOUTED_PUBLIC_PROPOSALS_20261108 } from "./propostePubblicheScouting20261108";
 import { SCOUTED_PUBLIC_PROPOSALS_20261108_B } from "./propostePubblicheScouting20261108B";
 import { applyScoutingUpdates20261105CorsiAcqua } from "./proposalScoutingUpdates20261105";
 import { applyScoutingUpdates20261104Mascaro } from "./proposalScoutingUpdates20261104";
@@ -224,7 +223,6 @@ export const PUBLIC_PROPOSALS = [
   ...SCOUTED_PUBLIC_PROPOSALS_20261105_BACKFILL,
   ...SCOUTED_PUBLIC_PROPOSALS_20261106,
   ...SCOUTED_PUBLIC_PROPOSALS_20261107,
-  ...SCOUTED_PUBLIC_PROPOSALS_20261108,
   ...SCOUTED_PUBLIC_PROPOSALS_20261108_B,
 ] as const satisfies readonly core.PublicProposal[];
 
