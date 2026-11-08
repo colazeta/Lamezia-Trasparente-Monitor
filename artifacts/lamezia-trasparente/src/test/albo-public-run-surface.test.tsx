@@ -8,9 +8,6 @@ import {
 import { beforeEach, describe, expect, it } from "vitest";
 
 import {
-  ALBO_PUBLIC_DIFF_CHANGED_ITEMS,
-  ALBO_PUBLIC_DIFF_NEW_ITEMS,
-  ALBO_PUBLIC_DIFF_REMOVED_ITEMS,
   ALBO_PUBLIC_DIFF_SUMMARY,
   ALBO_PUBLIC_RUN_ITEMS,
   ALBO_PUBLIC_RUN_SUMMARY,
@@ -327,33 +324,18 @@ describe("Albo public run surface", () => {
     }
   });
 
-  it("opens Home pulse items through the same shareable Albo sheet", () => {
+  it("keeps the full Albo reachable from the simpler Home without copying its digest", () => {
     window.history.replaceState({}, "", "/");
-    const homePulseItems = [
-      ...ALBO_PUBLIC_DIFF_NEW_ITEMS,
-      ...ALBO_PUBLIC_DIFF_CHANGED_ITEMS.map((entry) => entry.after),
-      ...ALBO_PUBLIC_DIFF_REMOVED_ITEMS,
-    ].slice(0, 5);
-    const item =
-      homePulseItems.find(
-        (candidate) =>
-          candidate.presentation.display_title !== candidate.subject,
-      ) ?? homePulseItems[0];
-    if (!item) throw new Error("Expected a public Home pulse fixture.");
-
     renderPage(Home);
-    const expectedHref = `/albo?atto=${encodeURIComponent(item.id)}`;
-    const itemLinks = screen
-      .getAllByRole("link")
-      .filter((link) => link.getAttribute("href") === expectedHref);
-    expect(itemLinks).toHaveLength(1);
+    const archiveLink = screen.getByRole("link", {
+      name: "Atti e documenti del Comune",
+      hidden: true,
+    });
+    expect(archiveLink).toHaveAttribute("href", "/albo");
+    expect(archiveLink.closest("details")).not.toHaveAttribute("open");
     expect(
-      within(itemLinks[0] as HTMLElement).getByText(
-        item.presentation.display_title,
-        { exact: true },
-      ),
-    ).toBeInTheDocument();
-    expect(itemLinks[0]).toHaveAttribute("href", expectedHref);
+      screen.queryByRole("heading", { name: /Cosa è cambiato/ }),
+    ).not.toBeInTheDocument();
   });
 
   it("keeps a deterministic compatibility fallback for legacy snapshots", () => {
