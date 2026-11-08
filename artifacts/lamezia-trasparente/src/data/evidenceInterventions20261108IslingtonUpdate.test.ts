@@ -25,7 +25,7 @@ describe("evidence revision 2026-11-08 — Islington LTN pollution and traffic",
     expect(london.effectSize).toContain("traffico interno −58,2%");
     expect(london.effectSize).toContain("boundary −13,4% NON statisticamente significativo");
     expect(london.limitations.join(" ")).toContain("solo al 10%");
-    expect(london.evaluationMethod).toContain("differenza");
+    expect(london.evaluationMethod).toContain("generalised difference-in-differences");
     expect(london.results).toContain("NON è statisticamente significativo");
     expect(london.lameziaAdaptation).toContain("PGTU 2026");
     expect(london.evidenceStrength).toBe("forte"); // overall 2025 injury study; evidence on Islington NO2 only moderate
