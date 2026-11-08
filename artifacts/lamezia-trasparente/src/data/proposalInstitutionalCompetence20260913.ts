@@ -60,10 +60,28 @@ const POLIZIA_LOCALE_RENDA_ASSESSMENT: ProposalCompetenceAssessment = {
     "Le fonti ufficiali comunali identificano il Comando Polizia Locale come struttura del Comune e documentano nel 2026 una procedura comunale di mobilità per quattro Istruttori Agenti di Vigilanza. Questo sostiene il coinvolgimento sostanziale del Comune nelle misure di organizzazione e reclutamento del corpo. La richiesta di Renda riguarda però un piano straordinario di assunzioni a tempo indeterminato e una più ampia copertura del servizio, che implicano programmazione del fabbisogno, vincoli finanziari e organizzazione dei turni non integralmente ricostruiti in questo run; l'assessment resta quindi parziale. Il destinatario generico indicato nella nota non viene usato come fonte della competenza.",
 };
 
+
+const PERRI_ORARIO_ID = "scuola-perri-pitagora-don-milani-orario-sei-giorni-di-spena-2026";
+
+const PERRI_ORARIO_ASSESSMENT: ProposalCompetenceAssessment = {
+  status: "partially_verified",
+  primaryAuthority: {
+    id: "ic-perri-pitagora-don-milani",
+    label: "Istituto Comprensivo Perri Pitagora Don Milani",
+    level: "other",
+    sourceLabel:
+      "I.C. Perri Pitagora Don Milani — decreto del Dirigente scolastico n. 1386 del 28/08/2026, in esecuzione della delibera del Consiglio d'Istituto n. 161 del 15/12/2025",
+    sourceUrl: "https://icperripitagoradonmilani.edu.it/adozione-della-settimana-corta-a-s-2026-27/",
+  },
+  note:
+    "Il decreto ufficiale del 28 agosto 2026, anteriore alla petizione del 19 settembre, documenta il ruolo dell'istituzione scolastica nella decisione di articolare l'orario su cinque giorni, in esecuzione della precedente deliberazione del Consiglio d'Istituto. Questo sostiene una valutazione parziale della competenza organizzativa per la misura concreta; non dimostra un esame o un rigetto della petizione. La petizione chiede anche al Comune di favorire un confronto, ma non è verificato un potere comunale di modificare l'orario delle lezioni. Il Comune non è inserito come ente competente per deduzione dal destinatario.",
+};
+
 export const PROPOSAL_COMPETENCE_ASSESSMENTS: Readonly<
   Partial<Record<string, ProposalCompetenceAssessment>>
 > = {
   ...baseline.PROPOSAL_COMPETENCE_ASSESSMENTS,
+  [PERRI_ORARIO_ID]: PERRI_ORARIO_ASSESSMENT,
   [SCORDOVILLO_ID]: SCORDOVILLO_ASSESSMENT,
   [POLIZIA_LOCALE_RENDA_ID]: POLIZIA_LOCALE_RENDA_ASSESSMENT,
 };

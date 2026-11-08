@@ -154,6 +154,12 @@ const eu = (code: OfficialFallbackDataThemeCode): ProposalPaSubjectRef => ({
 });
 
 const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
+  "Organizzazione dell'orario scolastico all'I.C. Perri Pitagora Don Milani": {
+    primary: ps("1"),
+    secondary: [ps("4")],
+    mappingNote:
+      "La misura richiesta è la revisione dell'articolazione settimanale dell'orario di un istituto scolastico: materia primaria ufficiale Educazione e formazione. Mobilità e trasporti figura soltanto come classificazione analitica secondaria per gli effetti su traffico e scuolabus ipotizzati dalla petizione, non accertati. Non attribuire competenza al Comune sulla base della materia o del destinatario: la verifica parziale è fondata sul precedente decreto scolastico n. 1386/2026 e sulla delibera n. 161/2025, non sulla petizione.",
+  },
   "Manutenzione e sicurezza dei loculi cimiteriali": {
     primary: ps("5"),
     secondary: [ps("2"), ps("8")],
