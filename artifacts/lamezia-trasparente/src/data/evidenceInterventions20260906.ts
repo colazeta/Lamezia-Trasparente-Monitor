@@ -30,19 +30,21 @@ export const EVIDENCE_INTERVENTIONS_2026_09_06 = [
     interventionStatus:
       "Modello istituzionale tuttora operativo in Emilia-Romagna; la Regione continua a supportare le Unioni e pubblica nel 2026 mappe e dati aggiornati sulle forme associative.",
     evaluationMethod:
-      "La valutazione positiva principale utilizza dati amministrativi dei comuni emiliano-romagnoli e metodologie quasi-sperimentali, combinando differenze nelle differenze e matching per confrontare l'evoluzione della spesa dei comuni entrati in Unione con comuni comparabili non aderenti. Un successivo studio usa nearest-neighbour matching e fuzzy regression discontinuity su un indice più ampio di efficienza tecnica e non trova un effetto significativo, rendendo l'evidenza complessiva eterogenea.",
+      "La valutazione positiva principale utilizza dati amministrativi dei comuni emiliano-romagnoli e metodologie quasi-sperimentali, combinando differenze nelle differenze e matching per confrontare l'evoluzione della spesa dei comuni entrati in Unione con comuni comparabili non aderenti. Un successivo studio usa nearest-neighbour matching e fuzzy regression discontinuity su un indice più ampio di efficienza tecnica e non trova un effetto significativo, rendendo l'evidenza complessiva eterogenea. Un nuovo studio nazionale peer-reviewed, Gori et al. (2025), confronta nel tempo le funzioni gestite in forma associata e quelle rimaste individuali, con panel comune-servizio e differenze-nelle-differenze basate sull'entrata scaglionata in cooperazione. La verifica sugli output fisici è circoscritta ai servizi osservati; il disegno non è randomizzato.",
     comparator:
-      "Comuni comparabili non aderenti a un'Unione nello stesso periodo; nel successivo studio, comuni prossimi alle soglie istituzionali utilizzate nel fuzzy regression discontinuity design.",
+      "Comuni comparabili non aderenti a un'Unione nello stesso periodo; nel successivo studio, comuni prossimi alle soglie istituzionali utilizzate nel fuzzy regression discontinuity design. La valutazione 2025 sfrutta variazioni tra servizi e nel tempo all'interno dei comuni, con gruppi non ancora associati o servizi gestiti autonomamente; i due tipi di servizio differiscono strutturalmente e richiedono cautele di identificazione.",
     outcomes: [
       "spesa corrente pro capite",
       "livello degli output dei servizi locali",
       "efficienza tecnica amministrativa",
       "persistenza dei risparmi nel tempo",
+      "spesa pro capite delle singole funzioni condivise e non condivise",
+      "output fisici dei servizi comunali, inclusa eterogeneità per dimensione comunale",
     ],
     results:
-      "Lo studio sull'Emilia-Romagna stima che l'adesione a un'Unione riduca la spesa corrente totale pro capite senza evidenza di riduzione degli output dei servizi, con risparmi che persistono nel tempo. Tuttavia, uno studio successivo su un diverso indice di efficienza tecnica non rileva un effetto statisticamente significativo: il record documenta quindi un risultato positivo specifico sulla spesa, non una prova generale che ogni forma di cooperazione intercomunale migliori l'efficienza.",
+      "Lo studio sull'Emilia-Romagna stima che l'adesione a un'Unione riduca la spesa corrente totale pro capite senza evidenza di riduzione degli output dei servizi, con risparmi che persistono nel tempo. Tuttavia, uno studio successivo su un diverso indice di efficienza tecnica non rileva un effetto statisticamente significativo: il record documenta quindi un risultato positivo specifico sulla spesa, non una prova generale che ogni forma di cooperazione intercomunale migliori l'efficienza. Gori, Lattarulo, Porcelli, Rizzo e Secomandi (Regional Studies, 2025) trovano, usando un diverso panel nazionale per servizi, una riduzione della spesa pro capite nelle funzioni gestite insieme, parzialmente controbilanciata da maggior spesa nelle funzioni rimaste autonome: il differenziale medio è favorevole alla cooperazione. Gli output fisici misurati non si riducono in media; tra i comuni più piccoli migliorano per i servizi condivisi. Questo è un risultato specifico per servizio, NON equivale a un risparmio addizionale del 7% sull'intero bilancio e non annulla il risultato contrastante dello studio sull'efficienza tecnica.",
     effectSize:
-      "Circa −5% di spesa corrente totale pro capite nello studio quasi-sperimentale sull'Emilia-Romagna, senza riduzione rilevata del livello dei servizi; lo studio successivo sull'indice composito di efficienza tecnica trova invece un effetto non significativo.",
+      "Circa −5% di spesa corrente totale pro capite nello studio quasi-sperimentale sull'Emilia-Romagna, senza riduzione rilevata del livello dei servizi; lo studio successivo sull'indice composito di efficienza tecnica trova invece un effetto non significativo. Gori et al. (2025) riportano, nel confronto tra effetti sulle funzioni condivise e rimaste autonome, un differenziale di spesa di circa −5,114 euro per abitante (−1,511 contro +3,602 euro, circa −7,111% della spesa media dei servizi analizzati, pari a 71,92 euro per abitante): NON è una stima del risparmio sul totale della spesa comunale. Nel sottogruppo di piccoli comuni, l'output dei servizi condivisi può aumentare; risultati non trasferibili meccanicamente a una città delle dimensioni di Lamezia.",
     evidenceStrength: "moderata",
     costsRequirements:
       "Richiede accordi istituzionali stabili, definizione precisa delle funzioni conferite, governance e responsabilità condivise, armonizzazione di processi e sistemi informativi e capacità di misurare separatamente costi e output. I costi di transizione possono precedere eventuali economie di scala.",
@@ -51,6 +53,9 @@ export const EVIDENCE_INTERVENTIONS_2026_09_06 = [
       "L'adesione alle Unioni non è randomizzata e, pur con matching e difference-in-differences, può restare selezione non osservata.",
       "Un successivo studio con fuzzy regression discontinuity e matching non trova un miglioramento significativo dell'efficienza tecnica complessiva, quindi la letteratura non è univoca.",
       "Risparmiare spesa non equivale automaticamente a migliorare qualità o accessibilità: gli output e gli standard di servizio devono essere monitorati insieme ai costi.",
+      "Il lavoro del 2025 riguarda un panel nazionale per sei tipologie di servizi e un orizzonte limitato; non copre omogeneamente tutte le funzioni comunali, soprattutto dove gli output fisici non sono misurabili.",
+      "La differenza di circa −5,114 euro per abitante nel lavoro 2025 riguarda il contrasto tra effetti di servizi condivisi e non condivisi; non costituisce prova di una riduzione del 7,111% della spesa complessiva dei comuni associati.",
+      "L'organizzazione in forma associata non è assegnata casualmente; rimangono potenziali trend divergenti, scelte endogene delle funzioni e costi di transizione. Le valutazioni Ferraresi 2018, Luca e Modrego 2021 e Gori 2025 non sono repliche indipendenti su campioni e outcome identici.",
     ],
     unintendedEffects:
       "Una gestione associata mal progettata può aumentare livelli di coordinamento, allungare responsabilità decisionali o allontanare il servizio dall'utente. Devono quindi essere osservati tempi, qualità, accessibilità e accountability oltre alla sola spesa.",
@@ -73,8 +78,19 @@ export const EVIDENCE_INTERVENTIONS_2026_09_06 = [
           "Luca D, Modrego F (2021), Stronger together? Assessing the causal effect of inter-municipal cooperation on the efficiency of small Italian municipalities",
         doi: "10.1111/jors.12509",
       },
+      {
+        label: "Regional Studies — Gori et al. (2025), studio originale peer-reviewed",
+        url: "https://doi.org/10.1080/00343404.2025.2577917",
+        citation: "Gori G F, Lattarulo P, Porcelli F, Rizzo L, Secomandi R (2025), Does inter-municipal cooperation affect spending vs output? Evidence from Italy. Regional Studies, 59(1). Valutazione DiD a livello di comune e servizio.",
+        doi: "10.1080/00343404.2025.2577917",
+      },
+      {
+        label: "IRPET — scheda istituzionale e risultati originali dello studio 2025",
+        url: "https://www.irpet.it/does-inter-municipal-cooperation-affect-spending-vs-output-evidence-from-italy/",
+        citation: "IRPET (24 novembre 2025), scheda della ricerca di Gori, Lattarulo, Porcelli, Rizzo e Secomandi; medesima valutazione, non prova indipendente.",
+      },
     ],
-    lastVerifiedAt: "2026-09-06",
+    lastVerifiedAt: "2026-11-08",
     transferabilityItaly:
       "Diretta sul piano giuridico-istituzionale, perché le Unioni di Comuni sono uno strumento italiano consolidato; più limitata sul piano dell'effetto causale per un comune medio-grande. Il principio trasferibile a Lamezia è soprattutto la condivisione selettiva di funzioni specialistiche dove esistono costi fissi elevati o competenze rare.",
     lameziaAdaptation:
@@ -92,6 +108,10 @@ export const EVIDENCE_INTERVENTIONS_2026_09_06 = [
       {
         date: "2026-09-06",
         note: "Inserimento dopo scouting Parallel Search e verifica su fonte regionale e studi peer-reviewed; forza moderata per evidenza successiva non univoca.",
+      },
+      {
+        date: "2026-11-08",
+        note: "Nuova evidenza su programma già censito: discovery Parallel Search; verifica diretta dell'articolo Regional Studies 2025 e della scheda originale IRPET, oltre alla fonte regionale. Aggiunta stima per funzioni condivise vs autonome e output misurati; mantenuta forza moderata per eterogeneità delle valutazioni, selezione non randomizzata e trasferibilità limitata. Nessuna duplicazione del record.",
       },
     ],
   },
