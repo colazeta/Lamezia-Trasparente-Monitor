@@ -154,6 +154,12 @@ const eu = (code: OfficialFallbackDataThemeCode): ProposalPaSubjectRef => ({
 });
 
 const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
+  "Manutenzione e sicurezza stradale di via Guido Dorso": {
+    primary: ps("4"),
+    secondary: [ps("8")],
+    mappingNote:
+      "La richiesta operativa concerne verifiche e ripristino della sede stradale di via Guido Dorso: materia prevalente Mobilità e trasporti (AgID 4). Giustizia e sicurezza pubblica (AgID 8) è una classificazione secondaria per il rischio segnalato, senza presupporre una criticità accertata. Il destinatario non prova la competenza amministrativa, che rimane not_assessed fino a fonte ufficiale sul tratto specifico. Nessuna misura del Piano Asfalti generale è qui considerata prova di recepimento o intervento sulla via.",
+  },
   "Organizzazione dell'orario scolastico all'I.C. Perri Pitagora Don Milani": {
     primary: ps("1"),
     secondary: [ps("4")],
