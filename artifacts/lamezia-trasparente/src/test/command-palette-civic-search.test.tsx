@@ -51,4 +51,14 @@ describe("CommandPalette civic search", () => {
       screen.getByText("Cerca un atto nell’Albo civico"),
     ).toBeInTheDocument();
   });
+  it("starts with three shortcuts instead of listing every section", () => {
+    render(<CommandPalette onOpenChange={vi.fn()} open />);
+    expect(screen.getAllByRole("option")).toHaveLength(3);
+    expect(
+      screen.getByRole("option", { name: "Contratti pubblici" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("option", { name: /API e sviluppatori/ }),
+    ).not.toBeInTheDocument();
+  });
 });

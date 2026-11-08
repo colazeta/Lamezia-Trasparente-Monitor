@@ -65,6 +65,9 @@ const SECTION_ITEMS: PaletteItem[] = COMMAND_PALETTE_GROUPS.flatMap((group) =>
 );
 
 const ALL_ITEMS: PaletteItem[] = [...SUPPORT_ITEMS, ...SECTION_ITEMS];
+const QUICK_ITEMS = ["/convocazioni", "/contratti", "/organi"]
+  .map((href) => SECTION_ITEMS.find((item) => item.href === href))
+  .filter((item): item is PaletteItem => item !== undefined);
 const GROUPS = Array.from(new Set(ALL_ITEMS.map((item) => item.group)));
 
 const RECENTS_STORAGE_KEY = "lt-command-palette-recents";
@@ -346,37 +349,53 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
             ))}
           </CommandGroup>
         )}
-        {GROUPS.map((group, i) => {
-          const items = ALL_ITEMS.filter((item) => item.group === group);
-          if (items.length === 0) return null;
-          return (
-            <div key={group}>
-              {(i > 0 || recentItems.length > 0) && <CommandSeparator />}
-              <CommandGroup heading={group}>
-                {items.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <CommandItem
-                      key={item.href}
-                      value={`${item.label} ${item.keywords ?? ""} ${group}`}
-                      onSelect={() => runCommand(item.href)}
-                    >
-                      <Icon className="h-4 w-4 text-muted-foreground" />
-                      <span className="flex min-w-0 flex-1 items-center justify-between gap-2">
-                        <span className="truncate">{item.label}</span>
-                        {item.statusLabel ? (
-                          <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-                            {item.statusLabel}
+        {!query.trim() ? (
+          <CommandGroup heading="Da dove vuoi partire?">
+            {QUICK_ITEMS.map((item) => (
+              <CommandItem
+                key={item.href}
+                value={item.label}
+                onSelect={() => runCommand(item.href)}
+              >
+                <item.icon className="h-4 w-4 text-primary" />
+                {item.label}
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        ) : null}
+        {query.trim()
+          ? GROUPS.map((group, i) => {
+              const items = ALL_ITEMS.filter((item) => item.group === group);
+              if (items.length === 0) return null;
+              return (
+                <div key={group}>
+                  {(i > 0 || recentItems.length > 0) && <CommandSeparator />}
+                  <CommandGroup heading={group}>
+                    {items.map((item) => {
+                      const Icon = item.icon;
+                      return (
+                        <CommandItem
+                          key={item.href}
+                          value={`${item.label} ${item.keywords ?? ""} ${group}`}
+                          onSelect={() => runCommand(item.href)}
+                        >
+                          <Icon className="h-4 w-4 text-muted-foreground" />
+                          <span className="flex min-w-0 flex-1 items-center justify-between gap-2">
+                            <span className="truncate">{item.label}</span>
+                            {item.statusLabel ? (
+                              <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                                {item.statusLabel}
+                              </span>
+                            ) : null}
                           </span>
-                        ) : null}
-                      </span>
-                    </CommandItem>
-                  );
-                })}
-              </CommandGroup>
-            </div>
-          );
-        })}
+                        </CommandItem>
+                      );
+                    })}
+                  </CommandGroup>
+                </div>
+              );
+            })
+          : null}
       </CommandList>
     </CommandDialog>
   );

@@ -3,55 +3,39 @@ import { describe, expect, it } from "vitest";
 import { HomeInstitutionalSessions } from "@/pages/Home";
 
 describe("HomeInstitutionalSessions", () => {
-  it("keeps previews bounded and the full archive reachable", () => {
+  it("shows three archive examples and links to the complete archive", () => {
     render(<HomeInstitutionalSessions />);
     const region = screen.getByRole("region", {
-      name: "Segui Consiglio comunale e Commissioni",
+      name: "Dall’archivio delle sedute",
     });
-    const links = within(region).getAllByRole("link");
-    const sheets = links.filter((link) =>
-      link.getAttribute("href")?.startsWith("/convocazioni/"),
-    );
-    expect(sheets).toHaveLength(6);
+    expect(within(region).getAllByRole("listitem")).toHaveLength(3);
     expect(
-      screen.getByRole("link", { name: /Tutte le schede: Consiglio comunale/ }),
+      screen.getByRole("link", { name: "Vedi tutte le sedute" }),
     ).toHaveAttribute("href", "/convocazioni");
     expect(
-      screen.getByRole("link", {
-        name: /Tutte le schede: Commissioni consiliari/,
-      }),
-    ).toHaveAttribute("href", "/convocazioni");
-    expect(
-      screen.getByText(/Consiglio comunale aperto su Scordovillo/).closest("a"),
+      screen
+        .getByText("9 ottobre 2026 alle ore 09:30", { exact: false })
+        .closest("a"),
     ).toHaveAttribute(
       "href",
-      "/convocazioni/editorial-consiglio-aperto-scordovillo-2026-11",
+      "/convocazioni/albo-2026-3221-consiglio-comunale-2026-10-09",
     );
     expect(
-      screen.getByText("9 ottobre 2026 alle ore 09:30"),
+      screen.getByText(/13 ottobre 2026 alle ore 09:00/),
     ).toBeInTheDocument();
-    expect(
-      screen.getByText("13 ottobre 2026 alle ore 09:00"),
-    ).toBeInTheDocument();
-    expect(screen.queryByText("10 agosto 2026")).not.toBeInTheDocument();
   });
-
-  it("preserves uncertainty and source context in the shorter preview", () => {
+  it("keeps uncertainty beside the record without operational counts", () => {
     render(<HomeInstitutionalSessions />);
-    expect(screen.getAllByText(/Data e ora da verificare/)).toHaveLength(4);
+    expect(screen.getByText(/Data da verificare/)).toBeInTheDocument();
     expect(screen.getByText(/Seduta sospesa/)).toBeInTheDocument();
     expect(
-      screen.getAllByText(/Stato della seduta non verificato/),
-    ).toHaveLength(5);
-    expect(
-      screen.getAllByText(/non indicano una prossima seduta/),
-    ).toHaveLength(2);
-    expect(
-      screen.getAllByText(/Albo Pretorio e copertura editoriale separata/),
-    ).toHaveLength(2);
-    expect(screen.getByText(/32 articoli · 1 video/)).toBeInTheDocument();
-    expect(
-      screen.getByText(/fonte istituzionale successiva lo conferma/),
+      screen.getByText(
+        /Solo fonti editoriali; convocazione ufficiale non acquisita/,
+      ),
     ).toBeInTheDocument();
+    expect(
+      screen.getByText(/non calendario delle prossime sedute/),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/articoli ·/)).not.toBeInTheDocument();
   });
 });
