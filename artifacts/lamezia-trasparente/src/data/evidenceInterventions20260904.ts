@@ -88,14 +88,14 @@ export const EVIDENCE_INTERVENTIONS_2026_09_04 = [
     interventionStatus:
       "Numerosi schemi sono operativi, mentre altri sono stati modificati o rimossi. La governance è decentrata: i borough propongono e progettano gli LTNs sulle proprie strade e restano responsabili delle decisioni e della consultazione.",
     evaluationMethod:
-      "Controlled before-and-after longitudinale su dati di polizia STATS19. La valutazione principale usa regressioni di Poisson condizionali a effetti fissi sul numero di feriti per road link e trimestre, dal 2012 a giugno 2024, confrontando l'andamento prima e dopo l'introduzione in 113 LTNs e verificando separatamente le boundary roads; sfrutta anche la rimozione di 27 schemi come ulteriore test di reversibilità.",
+      "Controlled before-and-after longitudinale su dati di polizia STATS19. La valutazione principale usa regressioni di Poisson condizionali a effetti fissi sul numero di feriti per road link e trimestre, dal 2012 a giugno 2024, confrontando l'andamento prima e dopo l'introduzione in 113 LTNs e verificando separatamente le boundary roads; sfrutta anche la rimozione di 27 schemi come ulteriore test di reversibilità. Evidenza aggiuntiva e distinta: Yang et al. (2022), generalised difference-in-differences su NO₂ mensile (siti monitorati fra luglio 2019 e febbraio 2021) e traffico pre/post nei tre LTNs di Islington avviati da luglio a settembre 2020; controlli per periodo, posizione e tipologia del sito; non randomizzato.",
     comparator:
-      "Stessi road links prima dell'intervento e strade londinesi non trattate nel medesimo periodo; le strade di confine sono analizzate separatamente per verificare displacement del rischio.",
-    outcomes: ["feriti stradali totali", "morti o feriti gravi", "feriti per tipologia di utente", "incidenti sulle boundary roads", "effetti dopo rimozione della LTN"],
+      "Stessi road links prima dell'intervento e strade londinesi non trattate nel medesimo periodo; le strade di confine sono analizzate separatamente per verificare displacement del rischio. Per Yang et al. (Islington), siti interni e boundary (entro 0,5 km lungo la rete stradale) confrontati con siti esterni non direttamente esposti, con osservazioni mensili pre/post per NO₂ e conteggi automatici del traffico.",
+    outcomes: ["feriti stradali totali", "morti o feriti gravi", "feriti per tipologia di utente", "incidenti sulle boundary roads", "effetti dopo rimozione della LTN", "NO₂ su strade interne e perimetrali (Islington: outcome separato)", "volumi di traffico interni e boundary (Islington: outcome separato)"],
     results:
-      "L'introduzione degli LTNs è associata a una riduzione marcata delle lesioni stradali all'interno delle aree, senza evidenza di aumento complessivo sulle strade di confine. Quando una LTN viene rimossa, il numero di feriti torna verso i livelli pre-intervento, rafforzando l'interpretazione causale pur in un disegno non randomizzato.",
+      "L'introduzione degli LTNs è associata a una riduzione marcata delle lesioni stradali all'interno delle aree, senza evidenza di aumento complessivo sulle strade di confine. Quando una LTN viene rimossa, il numero di feriti torna verso i livelli pre-intervento, rafforzando l'interpretazione causale pur in un disegno non randomizzato. Evidenza aggiuntiva DIFFERENTE, Yang et al. (2022): a Islington, nelle tre LTNs St Peter’s (3 luglio 2020), Canonbury East (3 agosto) e Clerkenwell (7 settembre), lo studio DiD stima NO₂ inferiore sia internamente sia sulle strade di confine; il traffico risulta inferiore sulle strade interne. Il calo stimato del traffico boundary NON è statisticamente significativo. Il Comune di Islington attesta l'effettiva implementazione e la conversione in misure permanenti entro il 2023.",
     effectSize:
-      "Feriti totali −35% (IC95% 29–40%); morti o feriti gravi −37% (IC95% 24–48%). Boundary roads: feriti totali −2% (IC95% −5% a +2%) e KSI 0% (IC95% −7% a +8%), quindi nessuna evidenza di displacement complessivo.",
+      "Feriti totali −35% (IC95% 29–40%); morti o feriti gravi −37% (IC95% 24–48%). Boundary roads: feriti totali −2% (IC95% −5% a +2%) e KSI 0% (IC95% −7% a +8%), quindi nessuna evidenza di displacement complessivo. Islington (Yang et al. 2022; generalised DiD, campione diverso): NO₂ interno −5,7% (IC95% riduzione 0,1–11,0%) e boundary −8,9% (IC95% riduzione 0,2–15,7%); traffico interno −58,2% (significatività soltanto al 10%, p<0,1), boundary −13,4% NON statisticamente significativo. Queste stime NON misurano incidenti né salute direttamente e non sono percentuali osservate su tutta Londra.",
     evidenceStrength: "forte",
     costsRequirements:
       "Richiede progettazione di rete e accessibilità, traffic orders, consultazione con residenti ed emergency services, filtri fisici o enforcement con telecamera e monitoraggio pre/post di traffico, tempi di percorrenza e incidenti. I costi variano molto tra schemi leggeri con bollards/planters e soluzioni con telecamere e riqualificazione dello spazio.",
@@ -103,10 +103,13 @@ export const EVIDENCE_INTERVENTIONS_2026_09_04 = [
       "Gli LTNs non sono assegnati casualmente: borough e quartieri che li adottano possono differire da quelli non trattati per trend o priorità di sicurezza non completamente osservabili.",
       "Una parte importante delle introduzioni 2020 coincide con la pandemia e con forti cambiamenti nei pattern di mobilità; la valutazione lunga fino al 2024 e gli effetti fissi riducono ma non annullano questo rischio.",
       "I benefici risultano più piccoli per alcuni LTNs introdotti nell'Outer London dal 2020, suggerendo che design, contesto e capacità di ridurre realmente il traffico sono determinanti.",
-      "La misura richiede una verifica puntuale dell'accesso di emergenza, dei disabili, delle consegne e del possibile trasferimento del traffico prima di una replica."
+      "La misura richiede una verifica puntuale dell'accesso di emergenza, dei disabili, delle consegne e del possibile trasferimento del traffico prima di una replica.",
+      "Yang et al. (2022): solo tre LTNs a Islington, introdotte durante il COVID; NO₂ post trattamento monitorato per circa 4–6 mesi e traffico campionato una settimana prima e una settimana circa sei mesi dopo. Le modifiche pandemiche e altri interventi locali possono confondere i risultati.",
+      "Nel confronto sul traffico di Islington il numero di siti è basso (42 punti, 108 osservazioni nei modelli); i controlli esterni non comprendono strade minori e i dati pre-trattamento sono limitati. Effetto interno sul traffico significativo solo al 10%, boundary non significativo: non dichiarare prova generale di riduzione del traffico ai margini.",
+      "La riduzione di NO₂ non equivale a diminuzione dimostrata di malattie o mortalità; nessuna stima di costo-beneficio dei tre LTNs di Islington è ricavabile da questo articolo."
     ],
     unintendedEffects:
-      "Il principale rischio è spostare traffico, congestione o tempi di percorrenza sulle strade perimetrali; la valutazione 2025 non trova un aumento complessivo dei feriti sulle boundary roads, ma questo non esclude effetti locali su volumi, rumore o accessibilità che richiedono monitoraggio specifico.",
+      "Il principale rischio è spostare traffico, congestione o tempi di percorrenza sulle strade perimetrali; la valutazione 2025 non trova un aumento complessivo dei feriti sulle boundary roads, ma questo non esclude effetti locali su volumi, rumore o accessibilità che richiedono monitoraggio specifico. La distinta valutazione Islington 2022 non trova incrementi di NO₂ ai margini, ma la stima di traffico boundary −13,4% è imprecisa e non significativa; non esclude displacement di congestione, tempi o altri inquinanti in specifiche strade.",
     primarySource: {
       label: "London City Hall — responsabilità dei borough per gli LTN",
       url: "https://www.london.gov.uk/who-we-are/what-london-assembly-does/questions-mayor/find-an-answer/ltn"
@@ -123,17 +126,31 @@ export const EVIDENCE_INTERVENTIONS_2026_09_04 = [
         url: "https://doi.org/10.32866/001c.18330",
         citation: "Laverty AA, Aldred R, Goodman A (2021), The Impact of Introducing Low Traffic Neighbourhoods on Road Traffic Injuries",
         doi: "10.32866/001c.18330"
+      },
+      {
+        label: "Transportation Research Part D — Islington NO₂ and traffic, generalised DiD",
+        url: "https://www.sciencedirect.com/science/article/pii/S1361920922003625",
+        citation: "Yang, X., McCoy, E., Hough, K., & de Nazelle, A. (2022). Evaluation of low traffic neighbourhood (LTN) impacts on NO2 and traffic. Transportation Research Part D: Transport and Environment, 113, 103536. Studio distinto sul sottoinsieme di tre LTNs di Islington, non replicazione indipendente dei risultati su feriti nel 2025.",
+        doi: "10.1016/j.trd.2022.103536"
+      },
+      {
+        label: "Islington Council — People-friendly streets, schemes and official monitoring",
+        url: "https://www.islington.gov.uk/roads/people-friendly-streets/frequently-asked-questions",
+        citation: "London Borough of Islington: documentazione istituzionale dell’implementazione 2020–2022, report di monitoraggio e conferma del passaggio a misure permanenti dal 2023; fonte primaria, non una valutazione indipendente."
       }
     ],
-    lastVerifiedAt: "2026-09-04",
+    lastVerifiedAt: "2026-11-08",
     transferabilityItaly:
       "Alta per strade locali su cui il Comune dispone di competenze di circolazione e progettazione, ma la replica deve essere costruita come intervento di rete e non come singola chiusura. Il dato più utile è l'assenza di aumento medio degli incidenti sulle strade di confine, purché il displacement venga comunque misurato localmente.",
     lameziaAdaptation:
-      "Individuare uno o due micro-quartieri con forte traffico di attraversamento, scuole o alta vulnerabilità pedonale; misurare prima volumi, velocità, incidenti e tempi dei mezzi di emergenza; introdurre filtri reversibili per 6–12 mesi con accesso garantito ai residenti e ai servizi e un gruppo di strade comparabili, pubblicando ex ante criteri di conferma, modifica o rimozione.",
+      "Nel percorso di redazione del PGTU 2026 (oltre 450 questionari comunali entro il 19 marzo), individuare uno o due micro-quartieri a Nicastro, Sambiase o Sant’Eufemia con traffico di attraversamento, scuole o vulnerabilità pedonale. Misurare prima volumi, velocità, incidenti, tempi di emergenza e NO₂ anche sulle vie perimetrali e in aree comparabili; valutare sperimentazioni reversibili di filtri/zone a priorità pedonale per 6–12 mesi, previa verifica Codice della strada, accessi per disabili, residenti e servizi, valutazione impatti su commercio/consegne e consultazione. Verificare prima fattibilità tecnica e giuridica nel PGTU: non assumere esistenza di una LTN locale. Pre-registrare risultati e criteri di conferma/modifica/rimozione.",
     implementability: "medio_termine",
-    capacityDataNeeds: ["conteggi traffico per strada", "velocità e incidenti geocodificati", "rete e gerarchia stradale", "consultazione residenti/emergenze", "monitoraggio boundary roads", "traffic order e segnaletica"],
+    capacityDataNeeds: ["conteggi traffico per strada", "velocità e incidenti geocodificati", "rete e gerarchia stradale", "consultazione residenti/emergenze", "monitoraggio boundary roads", "serie temporali NO₂ internamente, ai margini e in strade controllo", "rilevazioni qualità accesso alle attività e trasporti", "traffic order e segnaletica"],
     tags: ["LTN", "traffic calming", "sicurezza stradale", "quartieri", "pedoni", "controlled before-after", "Londra"],
-    revisionHistory: [{ date: "2026-09-04", note: "Prima verifica; priorità data alla valutazione 2012–2024 pubblicata nel 2025, che include 113 LTNs, boundary roads e schemi successivamente rimossi." }]
+    revisionHistory: [
+      { date: "2026-09-04", note: "Prima verifica; priorità data alla valutazione 2012–2024 pubblicata nel 2025, che include 113 LTNs, boundary roads e schemi successivamente rimossi." },
+      { date: "2026-11-08", note: "Espansione documentale con Parallel Search seguita dalla lettura diretta dell’articolo originale Yang et al. (2022), tabelle 1–5 e limiti, e della pagina ufficiale Islington Council. Aggiunte stime DiD NO₂ e traffico per tre LTNs di Islington senza creare un caso duplicato del programma londinese. Distinta significatività NO₂, traffico interno (solo p<0,1), traffico boundary (non significativo), ed evidenza sugli incidenti 2025. Contesto PGTU Lamezia verificato presso sito Comune (20 marzo 2026)." }
+    ]
   },
   {
     id: "denver-supportive-housing-sib-housing-first",
