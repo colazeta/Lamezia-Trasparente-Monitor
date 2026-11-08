@@ -32,12 +32,13 @@ describe("public API origin contract", () => {
     },
   );
 
-  it("keeps the home on the generated shared API client", () => {
+  it("keeps the simple home independent from statistics API requests", () => {
     const home = readRepoFile(
       "artifacts/lamezia-trasparente/src/pages/Home.tsx",
     );
 
-    expect(home).toContain('from "@workspace/api-client-react"');
+    expect(home).not.toContain("useGetStatsOverview");
+    expect(home).not.toContain("useListPnrrProjects");
     expect(home).not.toMatch(/fetch\s*\(/);
   });
 

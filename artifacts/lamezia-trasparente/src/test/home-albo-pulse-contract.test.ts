@@ -1,44 +1,46 @@
-import { readFileSync } from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { createElement } from "react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
+import { Home } from "@/pages/Home";
 
-const testDir = path.dirname(fileURLToPath(import.meta.url));
-const homePath = path.resolve(testDir, "../pages/Home.tsx");
-
-function readHome() {
-  return readFileSync(homePath, "utf8");
-}
-
-describe("home daily civic pulse contract", () => {
-  it("uses the public-safe Albo diff as the primary daily activity source", () => {
-    const home = readHome();
-
-    expect(home).toContain("ALBO_PUBLIC_DIFF_NEW_ITEMS");
-    expect(home).toContain("ALBO_PUBLIC_DIFF_CHANGED_ITEMS");
-    expect(home).toContain("ALBO_PUBLIC_DIFF_REMOVED_ITEMS");
-    expect(home).toContain("ALBO_OPERATIONAL_STATUS");
-    expect(home).toContain("Cosa è cambiato nell&apos;Albo");
-    expect(home).not.toContain("useGetRecentActivity");
+describe("simple citizen home", () => {
+  it("starts with search and three choices instead of operational counters", () => {
+    render(createElement(Home));
+    expect(
+      screen.getByRole("button", { name: "Cerca un argomento o una persona" }),
+    ).toBeVisible();
+    const choices = screen.getByRole("region", {
+      name: "Oppure scegli da dove partire",
+    });
+    expect(within(choices).getAllByRole("link")).toHaveLength(3);
+    expect(
+      screen.queryByText("Numeri disponibili adesso"),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText("Fonte in attivazione")).not.toBeInTheDocument();
   });
-
-  it("keeps freshness visible next to the Albo pulse", () => {
-    const home = readHome();
-
-    expect(home).toContain("Ultimo controllo");
-    expect(home).toContain("Prossimo controllo");
-    expect(home).toContain("baseline pubblica precedente");
+  it("keeps secondary destinations available on request", () => {
+    render(createElement(Home));
+    const link = screen.getByRole("link", {
+      name: "Mappe del territorio",
+      hidden: true,
+    });
+    expect(link.closest("details")).not.toHaveAttribute("open");
+    fireEvent.click(screen.getByText("Altri argomenti e strumenti"));
+    expect(link.closest("details")).toHaveAttribute("open");
+    expect(link).toHaveAttribute("href", "/atlante-territoriale");
   });
-
-  it("keeps council and commissions reachable through the Decisioni domain and a sourced homepage path", () => {
-    const home = readHome();
-
-    expect(home).toContain('title: "Decisioni"');
-    expect(home).toContain(
-      'description: "Sedute, delibere, Albo e atti fondamentali del Comune."',
-    );
-    expect(home).toContain('href: "/convocazioni"');
-    expect(home).toContain("<HomeInstitutionalSessions />");
-    expect(home).toContain("Fonte: Albo Pretorio");
+  it("retains source coverage and update limitations in an explicit disclosure", () => {
+    render(createElement(Home));
+    expect(screen.getByText(/La copertura è parziale/)).toBeInTheDocument();
+    expect(screen.getByText(/Ultimo controllo:/)).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", {
+        name: "Controlla gli aggiornamenti",
+        hidden: true,
+      }),
+    ).toHaveAttribute("href", "/stato-monitoraggio");
+    expect(
+      screen.getByText(/Una notizia non conferma da sola/),
+    ).toBeInTheDocument();
   });
 });

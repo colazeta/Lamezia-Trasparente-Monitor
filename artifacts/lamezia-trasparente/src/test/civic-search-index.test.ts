@@ -54,4 +54,20 @@ describe("civic search index", () => {
       "/opendata?tema=population-society&dataset=lamezia-demographic-trend",
     );
   });
+  it("finds reviewed sessions by topic without claiming editorial records are official", () => {
+    expect(searchCivicIndex("Scordovillo")[0]).toMatchObject({
+      kind: "seduta",
+      href: "/convocazioni/editorial-consiglio-aperto-scordovillo-2026-11",
+      statusLabel: "Stato della seduta non verificato",
+    });
+    expect(searchCivicIndex("Scordovillo")[0].detail).toContain(
+      "Contesto da fonti editoriali",
+    );
+    expect(
+      searchCivicIndex("bilancio").some((item) => item.kind === "seduta"),
+    ).toBe(true);
+    expect(CIVIC_SEARCH_INDEX.some((item) => item.id.includes("demo-"))).toBe(
+      false,
+    );
+  });
 });

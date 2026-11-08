@@ -1,29 +1,22 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import {
-  HOME_PRIMARY_GATEWAYS,
-  openGlobalSearch,
-} from "../pages/Home";
+import { HOME_PRIMARY_GATEWAYS, openGlobalSearch } from "../pages/Home";
 
 afterEach(() => {
   vi.restoreAllMocks();
 });
 
 describe("Home IA v2", () => {
-  it("uses the same five domains and order as the primary shell", () => {
+  it("offers only three entry points on the home", () => {
     expect(HOME_PRIMARY_GATEWAYS.map((gateway) => gateway.title)).toEqual([
-      "Decisioni",
-      "Spesa e progetti",
-      "Comune e risultati",
-      "Territorio e legalità",
-      "Dati e fonti",
+      "Sedute e decisioni",
+      "Spesa pubblica",
+      "Amministratori",
     ]);
     expect(HOME_PRIMARY_GATEWAYS.map((gateway) => gateway.href)).toEqual([
       "/convocazioni",
       "/contratti",
       "/organi",
-      "/atlante-territoriale",
-      "/opendata",
     ]);
   });
 

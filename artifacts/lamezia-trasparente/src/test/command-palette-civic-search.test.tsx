@@ -12,7 +12,7 @@ describe("CommandPalette civic search", () => {
     render(<CommandPalette onOpenChange={vi.fn()} open />);
 
     const input = screen.getByPlaceholderText(
-      "Cerca persone, organi, dataset o sezioni...",
+      "Cerca un tema, una seduta, una persona...",
     );
     fireEvent.change(input, { target: { value: "Paolo Mascaro" } });
 
@@ -23,10 +23,42 @@ describe("CommandPalette civic search", () => {
     expect(
       await screen.findByText("Paolo Mascaro", {}, { timeout: 5_000 }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Dati e profili pubblici")).toBeInTheDocument();
+    expect(
+      screen.getByText("Sedute, dati e profili pubblici"),
+    ).toBeInTheDocument();
     expect(
       screen.queryByText("Nessun risultato trovato."),
     ).not.toBeInTheDocument();
   });
+  it("finds the published Scordovillo session and offers archives for a miss", async () => {
+    render(<CommandPalette onOpenChange={vi.fn()} open />);
+    const input = screen.getByRole("combobox");
+    fireEvent.change(input, { target: { value: "Scordovillo" } });
+    expect(
+      await screen.findByText(/Consiglio comunale aperto su Scordovillo/),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/Contesto da fonti editoriali/),
+    ).toBeInTheDocument();
+    fireEvent.change(input, { target: { value: "zzzzinesistente" } });
+    expect(
+      await screen.findByText(/Nessuna corrispondenza nell’indice/),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Consulta tutte le sedute e gli ordini del giorno"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Cerca un atto nell’Albo civico"),
+    ).toBeInTheDocument();
+  });
+  it("starts with three shortcuts instead of listing every section", () => {
+    render(<CommandPalette onOpenChange={vi.fn()} open />);
+    expect(screen.getAllByRole("option")).toHaveLength(3);
+    expect(
+      screen.getByRole("option", { name: "Contratti pubblici" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("option", { name: /API e sviluppatori/ }),
+    ).not.toBeInTheDocument();
+  });
 });
-
