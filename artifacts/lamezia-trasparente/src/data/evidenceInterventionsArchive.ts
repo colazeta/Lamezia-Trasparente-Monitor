@@ -66,6 +66,7 @@ import { EVIDENCE_INTERVENTIONS_2026_11_06_MAYORS_RESEARCH } from "./evidenceInt
 import { EVIDENCE_INTERVENTIONS_2026_11_06_BARCELONA_GREEN_CORRIDORS } from "./evidenceInterventions20261106BarcelonaGreenCorridors";
 import { EVIDENCE_INTERVENTIONS_2026_11_07_PHILADELPHIA_LED } from "./evidenceInterventions20261107PhiladelphiaLed";
 import { EVIDENCE_INTERVENTIONS_2026_11_07_NYC_HOMEBASE } from "./evidenceInterventions20261107NycHomebase";
+import { EVIDENCE_INTERVENTIONS_2026_11_08_GDANSK_CYCLING_MAY } from "./evidenceInterventions20261108GdanskCyclingMay";
 import { applyEvidenceInterventionUpdates20260914 } from "./evidenceInterventionUpdates20260914";
 import { applyEvidenceInterventionUpdates20260919 } from "./evidenceInterventionUpdates20260919";
 
@@ -142,6 +143,7 @@ const EVIDENCE_INTERVENTIONS_BEFORE_2026_09_14_UPDATES: readonly EvidenceInterve
   ...EVIDENCE_INTERVENTIONS_2026_11_06_BARCELONA_GREEN_CORRIDORS,
   ...EVIDENCE_INTERVENTIONS_2026_11_07_PHILADELPHIA_LED,
   ...EVIDENCE_INTERVENTIONS_2026_11_07_NYC_HOMEBASE,
+  ...EVIDENCE_INTERVENTIONS_2026_11_08_GDANSK_CYCLING_MAY,
 ];
 
 function deduplicateEvidenceInterventions(
