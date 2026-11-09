@@ -44,7 +44,7 @@ describe("Baltimore Vision for Baltimore cluster RCT — 2026-11-09", () => {
     expect(record.population).toContain("2.304 alunni");
     expect(record.effectSize).toContain("+0,09 SD");
     expect(record.effectSize).toContain("0,02");
-    expect(record.effectSize).toContain("due anni");
+    expect(record.effectSize).toContain("a 2 anni");
     expect(record.effectSize).toContain("0,23");
     expect(record.effectSize).toContain("non significativo");
     expect(record.results).toContain("nessun effetto generale robusto");
