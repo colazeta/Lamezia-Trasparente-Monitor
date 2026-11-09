@@ -68,6 +68,7 @@ import { EVIDENCE_INTERVENTIONS_2026_11_07_PHILADELPHIA_LED } from "./evidenceIn
 import { EVIDENCE_INTERVENTIONS_2026_11_07_NYC_HOMEBASE } from "./evidenceInterventions20261107NycHomebase";
 import { applyEvidenceInterventionUpdates20260914 } from "./evidenceInterventionUpdates20260914";
 import { applyEvidenceInterventionUpdates20260919 } from "./evidenceInterventionUpdates20260919";
+import { applyEvidenceInterventionUpdates20261109 } from "./evidenceInterventionUpdates20261109";
 
 export {
   EVIDENCE_AREA_LABELS,
@@ -182,7 +183,8 @@ const DEDUPLICATED_EVIDENCE_INTERVENTIONS = deduplicateEvidenceInterventions(
 export const EVIDENCE_INTERVENTIONS: readonly EvidenceIntervention[] =
   DEDUPLICATED_EVIDENCE_INTERVENTIONS
     .map(applyEvidenceInterventionUpdates20260914)
-    .map(applyEvidenceInterventionUpdates20260919);
+    .map(applyEvidenceInterventionUpdates20260919)
+    .map(applyEvidenceInterventionUpdates20261109);
 
 export function getEvidenceCountries() {
   return Array.from(new Set(EVIDENCE_INTERVENTIONS.map((item) => item.country))).sort((a, b) =>
