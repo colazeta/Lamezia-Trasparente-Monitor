@@ -154,6 +154,12 @@ const eu = (code: OfficialFallbackDataThemeCode): ProposalPaSubjectRef => ({
 });
 
 const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
+  "Collocazione e potenziamento del corso universitario di Infermieristica": {
+    primary: ps("1"),
+    secondary: [ps("2")],
+    mappingNote:
+      "La richiesta principale riguarda sede e organizzazione della formazione universitaria (Educazione e formazione, materia ufficiale AgID 1); il contesto clinico del presidio ospedaliero giustifica la classificazione secondaria Salute, benessere e assistenza (AgID 2). Il mapping non attribuisce al Comune, all\u0027Università o all\u0027azienda sanitaria alcuna competenza non dimostrata: not_assessed.",
+  },
   "Manutenzione e sicurezza stradale di via Guido Dorso": {
     primary: ps("4"),
     secondary: [ps("8")],
