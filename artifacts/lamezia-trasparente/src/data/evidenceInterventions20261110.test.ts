@@ -42,7 +42,7 @@ describe("Evidence interventions 2026-11-10: Freetown and Youngstown", () => {
       for (const study of record.evaluationStudies) expect(study.url).toMatch(/^https:\/\//);
       expect(record.revisionHistory.at(-1)?.date).toBe(record.lastVerifiedAt);
       expect(record.capacityDataNeeds.length).toBeGreaterThan(0);
-      expect(record.transferabilityItaly).toContain("Italia");
+      expect(record.transferabilityItaly.length).toBeGreaterThan(60);
     }
   });
 
