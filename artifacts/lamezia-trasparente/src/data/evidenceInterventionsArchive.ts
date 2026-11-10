@@ -69,6 +69,7 @@ import { EVIDENCE_INTERVENTIONS_2026_11_07_NYC_HOMEBASE } from "./evidenceInterv
 import { EVIDENCE_INTERVENTIONS_2026_11_09_PASOS_SEGUROS } from "./evidenceInterventions20261109PasosSeguros";
 import { EVIDENCE_INTERVENTIONS_2026_11_10_FREETOWN } from "./evidenceInterventions20261110Freetown";
 import { EVIDENCE_INTERVENTIONS_2026_11_10_YOUNGSTOWN } from "./evidenceInterventions20261110Youngstown";
+import { EVIDENCE_INTERVENTIONS_2026_11_10_DONDO_VILANKULO } from "./evidenceInterventions20261110DondoVilankulo";
 import { applyEvidenceInterventionUpdates20260914 } from "./evidenceInterventionUpdates20260914";
 import { applyEvidenceInterventionUpdates20260919 } from "./evidenceInterventionUpdates20260919";
 import { applyEvidenceInterventionUpdates20261109 } from "./evidenceInterventionUpdates20261109";
@@ -149,6 +150,7 @@ const EVIDENCE_INTERVENTIONS_BEFORE_2026_09_14_UPDATES: readonly EvidenceInterve
   ...EVIDENCE_INTERVENTIONS_2026_11_09_PASOS_SEGUROS,
   ...EVIDENCE_INTERVENTIONS_2026_11_10_FREETOWN,
   ...EVIDENCE_INTERVENTIONS_2026_11_10_YOUNGSTOWN,
+  ...EVIDENCE_INTERVENTIONS_2026_11_10_DONDO_VILANKULO,
 ];
 
 function deduplicateEvidenceInterventions(
