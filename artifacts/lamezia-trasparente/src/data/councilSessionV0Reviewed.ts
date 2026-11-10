@@ -104,6 +104,8 @@ const SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_10_LAMETINO_URL =
   "https://www.lametino.it/ultime/lamezia-il-19-novembre-consiglio-comunale-aperto-sul-superamento-del-campo-rom-di-scordovillo.html";
 const SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_10_CITY_ONE_URL =
   "https://cityonelamezia.it/2026/11/10/scordovillo-convocato-il-consiglio-comunale-aperto-soddisfazione-di-pd-azione-e-per-vivere-bene/";
+const SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_10_LAMEZIATERME_URL =
+  "https://www.lameziaterme.it/lamezia-il-19-novembre-consiglio-comunale-aperto-dedicato-scordovillo/";
 const COUNCIL_NOVEMBER_3_LAMETINO_URL =
   "https://www.lametino.it/ultime/lamezia-il-3-novembre-consiglio-comunale-fra-i-punti-approvazione-del-bilancio-consolidato-e-del-piano-di-riequilibrio.html";
 const COUNCIL_NOVEMBER_3_AUDITORS_LAMETINO_URL =
@@ -3064,9 +3066,9 @@ const scordovilloOpenCouncilEditorialSignal: CouncilSessionV0 = {
   isDemoFixture: false,
   contextResearch: {
     status: "reviewed_matches",
-    checkedAt: "2026-11-10T17:52:00+01:00",
+    checkedAt: "2026-11-11T00:10:00+01:00",
     searchNote:
-      "Parallel Search e la verifica diretta di Comune, pagina istituzionale del Consiglio, Albo corrente, Albo storico, testate locali e canali audiovisivi indicizzati hanno individuato quattro articoli. Gazzetta del Sud del 28 ottobre segnala un possibile Consiglio comunale aperto su Scordovillo e riferisce il 16 novembre sulla base di dichiarazioni social di un consigliere; TV6onAir ne ripubblica la copertura. Il 10 novembre il Lametino e City One riproducono la stessa nota dei gruppi consiliari PD, Azione e Per Vivere Bene e riferiscono invece il 19 novembre. Le due pubblicazioni più recenti non sono conferme indipendenti tra loro e la discrepanza fra 16 e 19 novembre resta editoriale. Il Comune non pubblicava una convocazione associabile e l'Albo corrente mostrava soltanto quattro avvisi patrimoniali estranei alla seduta. Data, ora, sede, ordine del giorno e stato restano quindi non verificati e nessuna data viene pubblicata come ufficiale.",
+      "Parallel Search e la verifica diretta di Comune, pagina istituzionale del Consiglio, Albo corrente, Albo storico, testate locali e canali audiovisivi indicizzati hanno individuato cinque articoli. Gazzetta del Sud del 28 ottobre segnala un possibile Consiglio comunale aperto su Scordovillo e riferisce il 16 novembre sulla base di dichiarazioni social di un consigliere; TV6onAir ne ripubblica la copertura. Il 10 novembre il Lametino, City One e LameziaTerme.it riproducono la stessa nota dei gruppi consiliari PD, Azione e Per Vivere Bene e riferiscono invece il 19 novembre. Le tre pubblicazioni più recenti non sono conferme indipendenti tra loro e la discrepanza fra 16 e 19 novembre resta editoriale. All'11 novembre il Comune non pubblicava una convocazione associabile, la pagina istituzionale del Consiglio risultava in manutenzione e l'Albo corrente mostrava ancora soltanto quattro avvisi patrimoniali estranei alla seduta. Data, ora, sede, ordine del giorno e stato restano quindi non verificati e nessuna data viene pubblicata come ufficiale.",
     articles: [
       {
         title:
@@ -3111,6 +3113,17 @@ const scordovilloOpenCouncilEditorialSignal: CouncilSessionV0 = {
           "City One attribuisce esplicitamente il testo agli stessi gruppi consiliari ripresi dal Lametino e riferisce il 19 novembre. È conservato come collegamento distinto, ma non costituisce una conferma indipendente né certifica convocazione, data, ora, sede, ordine del giorno, svolgimento, partecipanti, votazioni o esiti.",
         reviewedAt: "2026-11-10T17:52:00+01:00",
       },
+      {
+        title:
+          "Lamezia. Il 19 novembre Consiglio comunale aperto dedicato a Scordovillo",
+        url: SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_10_LAMEZIATERME_URL,
+        publisher: "LameziaTerme.it",
+        publishedAt: "2026-11-10",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "La pagina espone il contenuto come comunicato stampa e riproduce la stessa nota dei gruppi consiliari PD, Azione e Per Vivere Bene già pubblicata da il Lametino e City One. È conservata come collegamento distinto, ma non costituisce una conferma indipendente né certifica convocazione, data, ora, sede, ordine del giorno, svolgimento, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-11T00:10:00+01:00",
+      },
     ],
     media: [],
     editorialAgenda: [
@@ -3122,6 +3135,7 @@ const scordovilloOpenCouncilEditorialSignal: CouncilSessionV0 = {
           SCORDOVILLO_OPEN_COUNCIL_OCTOBER_30_TV6ONAIR_URL,
           SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_10_LAMETINO_URL,
           SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_10_CITY_ONE_URL,
+          SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_10_LAMEZIATERME_URL,
         ],
         confidence: "medium",
         reason:
@@ -3196,7 +3210,7 @@ const scordovilloOpenCouncilEditorialSignal: CouncilSessionV0 = {
   lastCheckedAt: {
     key: "lastCheckedAt",
     label: "Ultimo controllo",
-    value: "2026-11-10T17:52:00+01:00",
+    value: "2026-11-11T00:10:00+01:00",
     sourceStatus: "verificato",
     sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
     limit:
@@ -3207,9 +3221,9 @@ const scordovilloOpenCouncilEditorialSignal: CouncilSessionV0 = {
     label: "Limiti del dato",
     value: [
       "Le date editoriali del 16 e del 19 novembre sono discordanti, non sono state verificate su una fonte istituzionale e non vengono presentate come data ufficiale della seduta.",
-      "Non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione al Consiglio aperto segnalato; al controllo del 10 novembre il Comune non pubblicava una convocazione associabile e il nuovo Albo dinamico mostrava soltanto quattro avvisi patrimoniali estranei alla seduta.",
+      "Non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione al Consiglio aperto segnalato; al controllo dell'11 novembre il Comune non pubblicava una convocazione associabile, la pagina istituzionale del Consiglio risultava in manutenzione e il nuovo Albo dinamico mostrava ancora soltanto quattro avvisi patrimoniali estranei alla seduta.",
       "Data, ora, sede, ordine del giorno, stato, streaming, registrazione e verbale restano non verificati o non rilevati secondo il campo.",
-      "Gli articoli collegati sono fonti editoriali e non certificano programmazione, svolgimento, completezza, partecipanti, votazioni o risultati; TV6onAir ripubblica Gazzetta del Sud, mentre il Lametino e City One riproducono la stessa nota dei gruppi consiliari e non costituiscono conferme indipendenti.",
+      "Gli articoli collegati sono fonti editoriali e non certificano programmazione, svolgimento, completezza, partecipanti, votazioni o risultati; TV6onAir ripubblica Gazzetta del Sud, mentre il Lametino, City One e LameziaTerme.it riproducono la stessa nota dei gruppi consiliari e non costituiscono conferme indipendenti.",
       "Il tema riportato dalla copertura resta nell'agenda editoriale separata e dovrà essere riconciliato se emergerà un atto istituzionale.",
     ],
     sourceStatus: "parziale",
