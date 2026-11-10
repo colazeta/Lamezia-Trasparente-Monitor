@@ -297,6 +297,17 @@ describe("councilSessionV0", () => {
           /non costituisce una conferma indipendente/i,
         ),
       }),
+      expect.objectContaining({
+        publisher: "LameziaTerme.it",
+        publishedAt: "2026-11-10",
+        relationship: "possible_same_session",
+        url: expect.stringContaining(
+          "consiglio-comunale-aperto-dedicato-scordovillo",
+        ),
+        relevanceNote: expect.stringMatching(
+          /non costituisce una conferma indipendente/i,
+        ),
+      }),
     ]);
     expect(session?.contextResearch.media).toEqual([]);
     expect(session?.contextResearch.editorialAgenda).toEqual([
