@@ -65,15 +65,18 @@ describe("Scouting 10 novembre — due proposal ID senza falsi esiti istituziona
     expect(getProposalSecondaryPaSubjects(oldP).map(x => x.code)).toContain("10");
     expect(getProposalPrimaryPaSubject(newP).uri).not.toBe(getProposalSecondaryPaSubjects(newP)[0]?.uri);
   });
-  it("registra dichiarazioni di approvazione e lavori solo come aggiornamento, non come attuazione", () => {
+  it("deduplica lo sviluppo del 18 agosto già censito, e non confonde recepimento e attuazione", () => {
     const oldP = PUBLIC_PROPOSALS.find(p => p.id === priorId)!;
-    const event = oldP.events.find(e => e.id === "lidia-vescio-grandinetti-esito-riferito-2026-08-18");
-    expect(event?.date).toBe("2026-08-18");
-    expect(event?.type).toBe("aggiornamento");
+    const priorEvent = oldP.events.find(e => e.id === "grandinetti-sicurezza-risorse-18-agosto");
+    expect(priorEvent?.date).toBe("2026-08-18");
+    expect(oldP.events.filter(e => e.date === "2026-08-18")).toHaveLength(1);
+    expect(oldP.events.filter(e => e.id === "lidia-vescio-grandinetti-esito-riferito-2026-08-18")).toHaveLength(0);
     expect(oldP.lastUpdated).toBe("2026-08-18");
     expect(new Set(oldP.events.map(e => e.id)).size).toBe(oldP.events.length);
-    expect(oldP.status).toBe("presentata_formalmente");
-    expect(oldP.events.filter(e => e.type === "recepimento")).toHaveLength(0);
+    // La classificazione di recepimento era già presente sul precedente ID:
+    // non viene introdotta né trasformata automaticamente in prova di lavori.
+    expect(oldP.status).toBe("recepita_parzialmente");
+    expect(getProposalInstitutionalState(oldP).implementation).toBe("none");
     const newP = PUBLIC_PROPOSALS.find(p => p.id === newId)!;
     expect(newP.linkedActs).toEqual([]);
     expect(newP.events).toHaveLength(1);
