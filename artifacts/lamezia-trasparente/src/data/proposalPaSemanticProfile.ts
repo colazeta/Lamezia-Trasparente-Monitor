@@ -154,6 +154,12 @@ const eu = (code: OfficialFallbackDataThemeCode): ProposalPaSubjectRef => ({
 });
 
 const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
+  "Programmazione e gestione culturale dell\u0027ex Cinema Grandinetti di Sambiase": {
+    primary: ps("10"),
+    secondary: [ps("5")],
+    mappingNote:
+      "La richiesta prevalente riguarda la gestione e la programmazione dell\u0027uso culturale della struttura (AgID 10 Cultura e tempo libero). Il recupero dell\u0027immobile è classificato soltanto come seconda materia ufficiale (AgID 5 Catasto e urbanistica). L\u0027interlocuzione con il Settore Patrimonio non determina alcuna competenza formalmente accertata: not_assessed.",
+  },
   "Collocazione e potenziamento del corso universitario di Infermieristica": {
     primary: ps("1"),
     secondary: [ps("2")],
