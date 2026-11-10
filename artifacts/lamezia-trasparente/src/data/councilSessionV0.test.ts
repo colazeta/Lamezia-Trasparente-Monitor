@@ -281,6 +281,22 @@ describe("councilSessionV0", () => {
           /non è una conferma indipendente/i,
         ),
       }),
+      expect.objectContaining({
+        publisher: "il Lametino",
+        publishedAt: "2026-11-10",
+        relationship: "possible_same_session",
+        url: expect.stringContaining("19-novembre"),
+        relevanceNote: expect.stringMatching(/nota dei gruppi consiliari/i),
+      }),
+      expect.objectContaining({
+        publisher: "City One",
+        publishedAt: "2026-11-10",
+        relationship: "possible_same_session",
+        url: expect.stringContaining("scordovillo-convocato"),
+        relevanceNote: expect.stringMatching(
+          /non costituisce una conferma indipendente/i,
+        ),
+      }),
     ]);
     expect(session?.contextResearch.media).toEqual([]);
     expect(session?.contextResearch.editorialAgenda).toEqual([
@@ -291,7 +307,7 @@ describe("councilSessionV0", () => {
       }),
     ]);
     expect(session?.scheduledAt.limit).toMatch(
-      /16 novembre.*soltanto per la ricerca/i,
+      /16 novembre.*19 novembre.*soltanto per la ricerca/i,
     );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /non certific(?:a|ano) programmazione, svolgimento/i,
@@ -547,7 +563,9 @@ describe("councilSessionV0", () => {
         publisher: "il Lametino",
         publishedAt: "2026-11-06",
         relationship: "same_session",
-        url: expect.stringContaining("lamezia-lo-moro-su-piano-di-riequilibrio"),
+        url: expect.stringContaining(
+          "lamezia-lo-moro-su-piano-di-riequilibrio",
+        ),
         relevanceNote: expect.stringMatching(
           /fonte editoriale.*non certifica convocazione.*ordine del giorno ufficiale.*completezza.*svolgimento.*votazioni.*risultati/i,
         ),
