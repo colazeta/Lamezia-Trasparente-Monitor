@@ -307,7 +307,7 @@ export const PROPOSAL_COMPETENCE_ASSESSMENTS: Readonly<
     primaryAuthority: REGION_CALABRIA_TRANSPORT,
     involvedAuthorities: [SACAL],
     note:
-      "Il Piano Regionale dei Trasporti programma per Lamezia un hub di interscambio ferro-bus-aeroporto, mentre SACAL è il gestore aeroportuale responsabile della gestione e dello sviluppo infrastrutturale dello scalo. La proposta comprende anche Alta Velocità e collegamenti territoriali, per i quali servono ulteriori soggetti infrastrutturali: non viene quindi attribuita una competenza esclusiva né estesa oltre quanto documentato.",
+      "Il Piano Regionale dei Trasporti programma per Lamezia un hub di interscambio ferro-bus-aeroporto, mentre SACAL è il gestore aeroportuale responsabile della gestione e dello sviluppo infrastrutturale dello scalo. La proposta comprende anche Alta Velocità e collegamenti territoriali, per i quali servono ulteriori soggetti infrastrutturali: non viene quindi attribuita una competenza esclusiva né estesa oltre quanto documentato. La nuova richiesta del 10 novembre 2026 su eventuali accordi con compagnie aeree o calmierazione delle tariffe non è coperta da questo assessment infrastrutturale e di programmazione intermodale: per tale misura la competenza resta da accertare separatamente, senza inferirla dal destinatario.",
   },
   "piazza-italia-sicurezza-prevenzione-2026": {
     status: "partially_verified",
