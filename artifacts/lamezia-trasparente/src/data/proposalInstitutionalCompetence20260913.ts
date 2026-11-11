@@ -83,6 +83,11 @@ export const PROPOSAL_COMPETENCE_ASSESSMENTS: Readonly<
   ...baseline.PROPOSAL_COMPETENCE_ASSESSMENTS,
   [PERRI_ORARIO_ID]: PERRI_ORARIO_ASSESSMENT,
   [SCORDOVILLO_ID]: SCORDOVILLO_ASSESSMENT,
+  "scordovillo-consiglio-aperto-pd-azione-per-vivere-bene-2026": {
+    status: "partially_verified",
+    primaryAuthority: PRESIDENTE_CONSIGLIO_LAMEZIA,
+    note: "L’art. 5 del Regolamento comunale, approvato con deliberazione consiliare n. 1/2025, attribuisce al Presidente la convocazione del Consiglio. È accertata solo tale competenza procedurale; le scelte di sgombero, acquisizione e assegnazione di alloggi, inclusione e bonifica richiedono basi specifiche non acquisite. L’indicazione della Presidenza come institutionalRecipient non è utilizzata per inferire queste competenze.",
+  },
   [POLIZIA_LOCALE_RENDA_ID]: POLIZIA_LOCALE_RENDA_ASSESSMENT,
 };
 
