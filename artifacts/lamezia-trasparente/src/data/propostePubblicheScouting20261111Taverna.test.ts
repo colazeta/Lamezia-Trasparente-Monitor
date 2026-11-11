@@ -26,7 +26,7 @@ describe("Scouting 11 novembre — Taverna: stesso proposal ID, sviluppo aeropor
     expect(proposal.channel).toBe("comunicato");
     expect(proposal.firstSeen).toBe("2026-09-01");
     expect(proposal.lastUpdated).toBe("2026-11-10");
-    expect(proposal.sourceUrl).toContain("01-settembre-2026".replace("01-settembre-2026","aeroporti-calabresi-taverna"));
+    expect(proposal.sourceUrl).toContain("aeroporti-calabresi-taverna-pd-lamezia");
   });
 
   it("mantiene una timeline idempotente, fondata su due comunicati distinti", () => {
