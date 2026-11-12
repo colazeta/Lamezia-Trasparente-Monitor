@@ -308,6 +308,17 @@ describe("councilSessionV0", () => {
           /non costituisce una conferma indipendente/i,
         ),
       }),
+      expect.objectContaining({
+        publisher: "NtaCalabria",
+        publishedAt: "2026-11-11",
+        relationship: "possible_same_session",
+        url: expect.stringContaining(
+          "lamezia-consiglio-comunale-sgombero-scordovillo",
+        ),
+        relevanceNote: expect.stringMatching(
+          /manca ancora la pubblicazione sull'Albo pretorio.*non una conferma istituzionale indipendente/i,
+        ),
+      }),
     ]);
     expect(session?.contextResearch.media).toEqual([]);
     expect(session?.contextResearch.editorialAgenda).toEqual([
