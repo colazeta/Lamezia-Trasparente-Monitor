@@ -154,6 +154,20 @@ const eu = (code: OfficialFallbackDataThemeCode): ProposalPaSubjectRef => ({
 });
 
 const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
+  "Programmazione del nuovo cimitero e verifica degli spazi cimiteriali": {
+    primary: ps("5"),
+    secondary: [ps("2")],
+    mappingNote: "La richiesta concerne programmazione territoriale e fattibilità di una struttura cimiteriale: Catasto e urbanistica è primaria (AgID 5). I servizi alle famiglie nel contesto cimiteriale sono materia secondaria Salute, benessere e assistenza (AgID 2). Il mapping non dimostra proprietà, competenza istituzionale, carenze di posti o fattibilità: not_assessed.",
+  },
+  "Rigenerazione del verde urbano e microforeste": {
+    primary: ps("11"),
+    secondary: [ps("5")],
+    mappingNote: "L'oggetto prevalente è il verde urbano con finalità ambientali (Ambiente, AgID 11); l'eventuale trasformazione di spazi pubblici giustifica Catasto e urbanistica come secondaria (AgID 5). Il metodo e i benefici sono da verificare, senza attribuire enti competenti dal tema: not_assessed.",
+  },
+  "Verifica e adeguamento del Regolamento Edilizio Urbanistico": {
+    primary: ps("5"),
+    mappingNote: "La richiesta di verifica e possibile modifica del REU ricade nella materia ufficiale Catasto e urbanistica (AgID 5). L'esame tecnico e le procedure normative non sono un'attribuzione automatica di competenza al destinatario; not_assessed fino ad accertamento giuridico specifico.",
+  },
   "Programmazione e gestione culturale dell\u0027ex Cinema Grandinetti di Sambiase": {
     primary: ps("10"),
     secondary: [ps("5")],
