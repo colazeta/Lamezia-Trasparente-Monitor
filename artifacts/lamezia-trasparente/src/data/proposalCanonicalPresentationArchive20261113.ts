@@ -6,7 +6,7 @@ import { getCanonicalProposalPresentation as previousPresentation, getCanonicalP
 const CANONICAL_20261113: Record<string, CanonicalProposalPresentation> = {
   "cinghiali-centro-misure-sicurezza-2026": {
     proposalId: "cinghiali-centro-misure-sicurezza-2026",
-    version: "1.1",
+    version: "1.0",
     title: "Contenimento dei cinghiali e manutenzione continuativa degli spazi urbani",
     request: "Coordinare la prevenzione dei rischi associati alla presenza di cinghiali nelle aree urbane e programmare pulizia e manutenzione delle aree interessate.",
     actionTypes: ["prevenzione_rischio", "coordinamento", "manutenzione"],
