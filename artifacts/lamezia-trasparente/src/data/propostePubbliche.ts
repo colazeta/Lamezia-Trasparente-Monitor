@@ -41,6 +41,7 @@ import { SCOUTED_PUBLIC_PROPOSALS_20261110 } from "./propostePubblicheScouting20
 import { SCOUTED_PUBLIC_PROPOSALS_20261111 } from "./propostePubblicheScouting20261111";
 import { SCOUTED_PUBLIC_PROPOSALS_20261112 } from "./propostePubblicheScouting20261112";
 import { SCOUTED_PUBLIC_PROPOSALS_20261113 } from "./propostePubblicheScouting20261113";
+import { applyScoutingUpdates20261113Branca } from "./proposalScoutingUpdates20261113Branca";
 import { applyScoutingUpdates20261111Scordovillo } from "./proposalScoutingUpdates20261111";
 import { applyScoutingUpdates20261105CorsiAcqua } from "./proposalScoutingUpdates20261105";
 import { applyScoutingUpdates20261104Mascaro } from "./proposalScoutingUpdates20261104";
@@ -207,7 +208,8 @@ export const PUBLIC_PROPOSALS = [
     applyScoutingUpdates20261027ProjectVita,
   )
     .map(applyScoutingUpdates20261101)
-    .map(applyScoutingUpdates20261111Taverna),
+    .map(applyScoutingUpdates20261111Taverna)
+    .map(applyScoutingUpdates20261113Branca),
   ...UPDATED_SCOUTED_PUBLIC_PROPOSALS_20260904_20260909,
   ...UPDATED_SCOUTED_PUBLIC_PROPOSALS_20260906_20260909,
   ...UPDATED_SCOUTED_PUBLIC_PROPOSALS_20260908,

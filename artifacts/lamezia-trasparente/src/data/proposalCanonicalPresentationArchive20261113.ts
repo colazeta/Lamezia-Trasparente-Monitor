@@ -4,6 +4,22 @@ import { getCanonicalProposalPresentation as previousPresentation, getCanonicalP
 
 /** Presentazioni canoniche LT neutre; l'acquisizione rimane separata. */
 const CANONICAL_20261113: Record<string, CanonicalProposalPresentation> = {
+  "cinghiali-centro-misure-sicurezza-2026": {
+    proposalId: "cinghiali-centro-misure-sicurezza-2026",
+    version: "1.1",
+    title: "Contenimento dei cinghiali e manutenzione continuativa degli spazi urbani",
+    request: "Coordinare la prevenzione dei rischi associati alla presenza di cinghiali nelle aree urbane e programmare pulizia e manutenzione delle aree interessate.",
+    actionTypes: ["prevenzione_rischio", "coordinamento", "manutenzione"],
+    measures: [
+      "Concordare con i soggetti competenti le opzioni di gestione e prevenzione della presenza di cinghiali nelle aree abitate.",
+      "Verificare le segnalazioni nei parchi e nelle strade, a partire da quelle riferite a Capizzaglie.",
+      "Programmare la rimozione dei rifiuti abbandonati nelle aree di possibile richiamo della fauna.",
+      "Effettuare gli sfalci e la manutenzione ordinaria del verde e degli spazi pubblici interessati.",
+      "Controllare e pulire le caditoie e migliorare la cura continuativa della viabilità urbana."
+    ],
+    expectedOutcome: "Rendere valutabili misure di prevenzione e manutenzione ordinaria, senza presumere che siano già operative o efficaci.",
+    editorialNote: "Integrazione della richiesta originaria di agosto con la nota Branca del 12 novembre. Il riferimento a una mozione e gli avvistamenti sono dichiarati dal promotore, senza protocollo ufficiale o verifiche tecniche. Il destinatario non determina competenza.",
+  },
   "capizzaglie-un-passo-oltre-riattivazione-cristiano-villella-2026": {
     "proposalId": "capizzaglie-un-passo-oltre-riattivazione-cristiano-villella-2026",
     "version": "1.0",

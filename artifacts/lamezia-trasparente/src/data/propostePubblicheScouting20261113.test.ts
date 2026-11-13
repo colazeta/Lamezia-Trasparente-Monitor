@@ -79,4 +79,34 @@ describe("Scouting 13 novembre — gate end-to-end sul medesimo insieme di propo
       expect(isProposalGeoreferenced(p.id)).toBe(false);
     });
   }
+
+  it("aggiorna Branca sullo stesso ID, senza trasformare segnalazioni o la mozione richiamata in una nuova formalizzazione", () => {
+    const id = "cinghiali-centro-misure-sicurezza-2026";
+    const all = PUBLIC_PROPOSALS.filter(p => p.id === id);
+    expect(all).toHaveLength(1);
+    const p = all[0]!;
+    expect(p.promoterId).toBe("oscar-branca");
+    expect(p.lastUpdated).toBe("2026-11-12");
+    expect(p.events).toHaveLength(2);
+    expect(p.events[0]!.id).toBe("cinghiali-interrogazione-presentata");
+    expect(p.events[1]!.id).toBe("branca-capizzaglie-pulizia-prevenzione-2026-11-12");
+    expect(p.events[1]!.type).toBe("aggiornamento");
+    expect(p.events[1]!.sourceUrl).toMatch(/^https:\/\//);
+    expect(p.events.filter(e => e.type === "deposito")).toHaveLength(1);
+    const can = getCanonicalProposalPresentation(p);
+    expect(can.proposalId).toBe(id);
+    expect(can.measures.length).toBeGreaterThanOrEqual(5);
+    expect(can.measures.some(m => /caditoie/.test(m))).toBe(true);
+    expect(getProposalPrimaryPaSubject(p).code).toBe("11");
+    expect(getProposalSecondaryPaSubjects(p).map(s => s.code)).toEqual(["8"]);
+    expect(getProposalInstitutionalCompetence(p).sourceAddressee).toBe(p.institutionalRecipient);
+    expect(getProposalInstitutionalCompetence(p).assessmentStatus).toBe("not_assessed");
+    expect(getProposalInstitutionalState(p).implementation).toBe("none");
+    expect(p.events.some(e => ["calendarizzazione", "recepimento", "risposta_istituzionale"].includes(e.type))).toBe(false);
+    const geo = getProposalGeography(p.id)!;
+    expect(geo.scope).toBe("citywide");
+    expect(geo.points).toHaveLength(0);
+    expect(isProposalGeoreferenced(p.id)).toBe(false);
+  });
+
 });
