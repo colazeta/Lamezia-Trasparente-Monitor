@@ -73,6 +73,7 @@ import { EVIDENCE_INTERVENTIONS_2026_11_10_DONDO_VILANKULO } from "./evidenceInt
 import { EVIDENCE_INTERVENTIONS_2026_11_10_PHILADELPHIA_ATTENDANCE } from "./evidenceInterventions20261110PhiladelphiaAttendance";
 import { EVIDENCE_INTERVENTIONS_2026_11_11_MADINA_GIS } from "./evidenceInterventions20261111MadinaGis";
 import { EVIDENCE_INTERVENTIONS_2026_11_12_UGANDA_PROCUREMENT } from "./evidenceInterventions20261112UgandaProcurement";
+import { EVIDENCE_INTERVENTIONS_2026_11_13_LOS_ANGELES_RRH } from "./evidenceInterventions20261113LosAngelesRrh";
 import { applyEvidenceInterventionUpdates20260914 } from "./evidenceInterventionUpdates20260914";
 import { applyEvidenceInterventionUpdates20260919 } from "./evidenceInterventionUpdates20260919";
 import { applyEvidenceInterventionUpdates20261109 } from "./evidenceInterventionUpdates20261109";
@@ -157,6 +158,7 @@ const EVIDENCE_INTERVENTIONS_BEFORE_2026_09_14_UPDATES: readonly EvidenceInterve
   ...EVIDENCE_INTERVENTIONS_2026_11_10_PHILADELPHIA_ATTENDANCE,
   ...EVIDENCE_INTERVENTIONS_2026_11_11_MADINA_GIS,
   ...EVIDENCE_INTERVENTIONS_2026_11_12_UGANDA_PROCUREMENT,
+  ...EVIDENCE_INTERVENTIONS_2026_11_13_LOS_ANGELES_RRH,
 ];
 
 function deduplicateEvidenceInterventions(
