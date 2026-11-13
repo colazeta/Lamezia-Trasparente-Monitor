@@ -154,6 +154,16 @@ const eu = (code: OfficialFallbackDataThemeCode): ProposalPaSubjectRef => ({
 });
 
 const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
+  "Riattivazione del progetto socio-culturale Un Passo Oltre a Capizzaglie": {
+    primary: ps("5"),
+    secondary: [ps("2"), ps("10")],
+    mappingNote: "Il recupero della struttura e dell'area di Capizzaglie riguarda principalmente rigenerazione urbana (AgID 5); funzioni sociali e culturali sono classificate come materie secondarie (AgID 2 e 10). Il vocabolario ufficiale non attribuisce competenza al destinatario, non verifica i fondi né dimostra attuazione: not_assessed.",
+  },
+  "Accessibilità viaria del Polo Rambaldi-De Fazio": {
+    primary: ps("4"),
+    secondary: [ps("1"), ps("8")],
+    mappingNote: "La richiesta riguarda il collegamento viario alla scuola (Mobilità e trasporti, AgID 4); il contesto educativo e i rischi segnalati giustificano AgID 1 e 8 come classificazioni secondarie. Non si inferisce competenza o proprietà dalla lettera indirizzata alla Provincia: not_assessed.",
+  },
   "Programmazione del nuovo cimitero e verifica degli spazi cimiteriali": {
     primary: ps("5"),
     secondary: [ps("2")],
