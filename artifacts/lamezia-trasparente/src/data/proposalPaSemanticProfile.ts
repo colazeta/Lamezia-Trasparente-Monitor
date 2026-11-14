@@ -154,6 +154,11 @@ const eu = (code: OfficialFallbackDataThemeCode): ProposalPaSubjectRef => ({
 });
 
 const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
+  "Rigenerazione dell'ex Zuccherificio e dell'ex Opificio di Sant'Eufemia": {
+    primary: ps("5"),
+    secondary: [ps("12"), ps("4"), ps("10")],
+    mappingNote: "Il nucleo della proposta riguarda il recupero e il nuovo uso di due complessi industriali, classificato come Catasto e urbanistica (AgID 5); Impresa e commercio (12), Mobilità e trasporti (4) e Cultura e tempo libero (10) sono componenti secondarie. Le facet operative descrivono azioni, non materie. Non si deducono proprietà, competenze, finanziamenti o interventi attuati dalle dichiarazioni del promotore: not_assessed.",
+  },
   "Governance e pianificazione sovracomunale Catanzaro–Lamezia": {
     primary: eu("GOVE"),
     secondary: [ps("4")],
