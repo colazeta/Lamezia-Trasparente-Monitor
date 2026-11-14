@@ -337,6 +337,38 @@ describe("councilSessionV0", () => {
           /stessa nota.*non costituisce una conferma indipendente/i,
         ),
       }),
+      expect.objectContaining({
+        publisher: "ANSA Calabria",
+        publishedAt: "2026-11-13",
+        relationship: "possible_same_session",
+        url: expect.stringContaining("ansa.it/calabria"),
+        relevanceNote: expect.stringMatching(/fonte editoriale/i),
+      }),
+      expect.objectContaining({
+        publisher: "Corriere della Calabria",
+        publishedAt: "2026-11-13",
+        relationship: "possible_same_session",
+        url: expect.stringContaining("corrieredellacalabria.it"),
+        relevanceNote: expect.stringMatching(/non una fonte istituzionale/i),
+      }),
+      expect.objectContaining({
+        publisher: "NoiDiCalabria",
+        publishedAt: "2026-11-13",
+        relationship: "possible_same_session",
+        url: expect.stringContaining("noidicalabria.it"),
+        relevanceNote: expect.stringMatching(
+          /attribuisce il contenuto ad ANSA.*non costituisce una conferma indipendente/i,
+        ),
+      }),
+      expect.objectContaining({
+        publisher: "CityNow",
+        publishedAt: "2026-11-14",
+        relationship: "possible_same_session",
+        url: expect.stringContaining("citynow.it"),
+        relevanceNote: expect.stringMatching(
+          /fonte ANSA Calabria.*non costituisce una conferma indipendente/i,
+        ),
+      }),
     ]);
     expect(session?.contextResearch.media).toEqual([]);
     expect(session?.contextResearch.editorialAgenda).toEqual([
@@ -353,11 +385,14 @@ describe("councilSessionV0", () => {
       /non certific(?:a|ano) programmazione, svolgimento/i,
     );
     expect(session?.contextResearch.checkedAt).toBe(
-      "2026-11-14T18:16:00+01:00",
+      "2026-11-14T23:54:00+01:00",
     );
-    expect(session?.lastCheckedAt.value).toBe("2026-11-14T18:16:00+01:00");
+    expect(session?.lastCheckedAt.value).toBe("2026-11-14T23:54:00+01:00");
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /due pubblicazioni del 14 novembre.*`agenda_item`.*non identificano o confermano la seduta/i,
+    );
+    expect(session?.dataLimits.value?.join(" ")).toMatch(
+      /ANSA Calabria e Corriere della Calabria.*NoiDiCalabria.*CityNow.*`possible_same_session`.*non costituiscono conferme indipendenti/i,
     );
   });
 
