@@ -59,8 +59,8 @@ export const EVIDENCE_INTERVENTIONS_2026_11_14_MACERATA_MICROCHIPS: readonly Evi
   ],
   "unintendedEffects": "Lo studio non misura direttamente effetti su abbandono illecito dei rifiuti, sanzioni effettivamente irrogate o danni alla privacy; NON affermare che tali rischi siano assenti. Il caso Recanati evidenzia invece un possibile effetto finanziario negativo: costo operativo dei chip superiore al beneficio percepito dal Comune.",
   "primarySource": {
-    "label": "Comune di Recanati — documentazione primaria dell'uso e dell'eliminazione dei microchip dai sacchi blu nel 2025 (3 dicembre 2024)",
-    "url": "https://www.comune.recanati.mc.it/it/news/dal-2025-si-cambia-via-il-microchip-sui-sacchetti-multimateriale-della-differenziata"
+    "label": "Comune di Macerata — istruzioni istituzionali 29 ottobre 2024 per il ritiro dei sacchetti con microchip con RicicloCard nel centro storico",
+    "url": "https://www.comune.macerata.it/novita/distribuzione-dei-sacchetti-per-la-raccolta-differenziata/"
   },
   "evaluationStudies": [
     {
@@ -78,6 +78,11 @@ export const EVIDENCE_INTERVENTIONS_2026_11_14_MACERATA_MICROCHIPS: readonly Evi
       "label": "COSMARI — gestore pubblico d'ambito e documentazione dei servizi",
       "url": "https://cosmariambiente.it/",
       "citation": "COSMARI, sito istituzionale del gestore del servizio rifiuti per l'ATO Macerata; bilanci preventivi 2013 e 2014 citati nello studio originale."
+    },
+    {
+      "label": "Comune di Recanati — revisione amministrativa e annunciata eliminazione dei microchip dai sacchi blu nel 2025 (non valutazione scientifica)",
+      "url": "https://www.comune.recanati.mc.it/it/news/dal-2025-si-cambia-via-il-microchip-sui-sacchetti-multimateriale-della-differenziata",
+      "citation": "Comune di Recanati (3 dicembre 2024), Dal 2025 si cambia: via il microchip sui sacchetti multimateriale della differenziata."
     }
   ],
   "lastVerifiedAt": "2026-11-14",
@@ -112,7 +117,7 @@ export const EVIDENCE_INTERVENTIONS_2026_11_14_MACERATA_MICROCHIPS: readonly Evi
   "revisionHistory": [
     {
       "date": "2026-11-14",
-      "note": "Nuovo record dopo Parallel Search obbligatoria e verifica diretta del paper peer-reviewed Springer, del working paper integrale Università Politecnica delle Marche (incluse tabelle dei risultati e costi) e della fonte primaria Comune di Recanati 03/12/2024. Confrontati direttamente i moduli canonici GitHub: non duplicare i casi PAYT Emilia-Romagna/Italia, che applicano meccanismi diversi. Evidenza non randomizzata classificata moderata, stime economiche chiaramente non consuntive, decisione comunale 2025 di eliminare i microchip distinta dal trial storico."
+      "note": "Nuovo record dopo Parallel Search obbligatoria e verifica diretta del paper peer-reviewed Springer, del working paper integrale Università Politecnica delle Marche (incluse tabelle dei risultati e costi) e della fonte primaria Comune di Recanati 03/12/2024. Confrontati direttamente i moduli canonici GitHub: non duplicare i casi PAYT Emilia-Romagna/Italia, che applicano meccanismi diversi. Evidenza non randomizzata classificata moderata, stime economiche chiaramente non consuntive, decisione comunale 2025 di eliminare i microchip distinta dal trial storico. Fonte primaria aggiuntiva Comune di Macerata (29/10/2024): accesso sacchi con microchip con RicicloCard limitato al centro storico."
     }
   ]
 }
