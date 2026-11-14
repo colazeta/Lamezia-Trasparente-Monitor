@@ -319,6 +319,24 @@ describe("councilSessionV0", () => {
           /manca ancora la pubblicazione sull'Albo pretorio.*non una conferma istituzionale indipendente/i,
         ),
       }),
+      expect.objectContaining({
+        publisher: "il Lametino",
+        publishedAt: "2026-11-14",
+        relationship: "agenda_item",
+        url: expect.stringContaining("gianturco-dopo-aggressione"),
+        relevanceNote: expect.stringMatching(
+          /non identifica né conferma la seduta/i,
+        ),
+      }),
+      expect.objectContaining({
+        publisher: "LameziaTerme.it",
+        publishedAt: "2026-11-14",
+        relationship: "agenda_item",
+        url: expect.stringContaining("gianturco-dopo-laggressione"),
+        relevanceNote: expect.stringMatching(
+          /stessa nota.*non costituisce una conferma indipendente/i,
+        ),
+      }),
     ]);
     expect(session?.contextResearch.media).toEqual([]);
     expect(session?.contextResearch.editorialAgenda).toEqual([
@@ -333,6 +351,13 @@ describe("councilSessionV0", () => {
     );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /non certific(?:a|ano) programmazione, svolgimento/i,
+    );
+    expect(session?.contextResearch.checkedAt).toBe(
+      "2026-11-14T18:16:00+01:00",
+    );
+    expect(session?.lastCheckedAt.value).toBe("2026-11-14T18:16:00+01:00");
+    expect(session?.dataLimits.value?.join(" ")).toMatch(
+      /due pubblicazioni del 14 novembre.*`agenda_item`.*non identificano o confermano la seduta/i,
     );
   });
 
