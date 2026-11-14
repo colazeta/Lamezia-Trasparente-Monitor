@@ -81,6 +81,17 @@ export const PROPOSAL_COMPETENCE_ASSESSMENTS: Readonly<
   Partial<Record<string, ProposalCompetenceAssessment>>
 > = {
   ...baseline.PROPOSAL_COMPETENCE_ASSESSMENTS,
+  "area-urbana-catanzaro-lamezia-governance-giovani-2026": {
+    status: "partially_verified",
+    primaryAuthority: {
+      id: "regione-calabria",
+      label: "Regione Calabria — Giunta regionale",
+      level: "regional",
+      sourceLabel: "Regione Calabria, comunicato ufficiale 25 marzo 2026 sulla DGR n. 112/2026 e costituzione del Tavolo di coordinamento",
+      sourceUrl: "https://www.regione.calabria.it/disturbo-dello-spettro-autistico-ok-giunta-ad-avvio-di-14-centri-polivalenti/",
+    },
+    note: "È verificata soltanto la competenza procedurale esercitata dalla Regione nell'avvio del documento programmatico pilota d'area e nella costituzione del Tavolo di coordinamento con DGR n. 112 del 25 marzo 2026, precedente alla nota civica del 9 novembre. Non sono accertate competenze esclusive regionali sulle decisioni urbanistiche comunali, sui trasporti, sui servizi o su finanziamenti. Il destinatario della sollecitazione è registrato separatamente e non è usato come prova di competenza né di recepimento.",
+  },
   [PERRI_ORARIO_ID]: PERRI_ORARIO_ASSESSMENT,
   [SCORDOVILLO_ID]: SCORDOVILLO_ASSESSMENT,
   "scordovillo-consiglio-aperto-pd-azione-per-vivere-bene-2026": {

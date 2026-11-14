@@ -154,6 +154,11 @@ const eu = (code: OfficialFallbackDataThemeCode): ProposalPaSubjectRef => ({
 });
 
 const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
+  "Governance e pianificazione sovracomunale Catanzaro–Lamezia": {
+    primary: eu("GOVE"),
+    secondary: [ps("4")],
+    mappingNote: "La richiesta principale riguarda la governance e la pianificazione integrata di area vasta: il vocabolario AgID delle 15 materie dei servizi non rappresenta con adeguata precisione l'organizzazione sovracomunale, per cui si usa il tema ufficiale interoperabile EU Data Theme GOVE. Mobilità e trasporti (AgID 4) è secondaria per l'integrazione dei collegamenti prospettata nel programma. La classificazione non implica competenza o attuazione e non presenta l'atto regionale antecedente come recepimento del Movimento.",
+  },
   "Riattivazione del progetto socio-culturale Un Passo Oltre a Capizzaglie": {
     primary: ps("5"),
     secondary: [ps("2"), ps("10")],
