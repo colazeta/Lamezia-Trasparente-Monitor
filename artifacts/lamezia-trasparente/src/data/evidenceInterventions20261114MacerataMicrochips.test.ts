@@ -26,7 +26,8 @@ describe("COSMARI Macerata microchipped bags quasi-experiment, 2026-11-14", () =
     expect(record.costsRequirements).toContain("PREVENTIVI");
   });
   it("traces paper, primary municipal source, later local discontinuation and 2026 verification", () => {
-    expect(record.primarySource.url).toContain("comune.recanati.mc.it");
+    expect(record.primarySource.url).toContain("comune.macerata.it");
+    expect(record.evaluationStudies.some(study => study.url.includes("comune.recanati.mc.it"))).toBe(true);
     expect(record.evaluationStudies.some(study => study.doi === "10.1007/s10018-021-00338-2")).toBe(true);
     expect(record.evaluationStudies.some(study => study.url.includes("univpm.it"))).toBe(true);
     expect(record.interventionStatus).toContain("Recanati");
