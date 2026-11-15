@@ -352,6 +352,15 @@ describe("councilSessionV0", () => {
         relevanceNote: expect.stringMatching(/non una fonte istituzionale/i),
       }),
       expect.objectContaining({
+        publisher: "LameziaInforma",
+        publishedAt: "2026-11-13",
+        relationship: "possible_same_session",
+        url: expect.stringContaining("lameziainforma.it"),
+        relevanceNote: expect.stringMatching(
+          /giovedì prossimo.*soltanto come contesto editoriale.*non è una fonte istituzionale/i,
+        ),
+      }),
+      expect.objectContaining({
         publisher: "NoiDiCalabria",
         publishedAt: "2026-11-13",
         relationship: "possible_same_session",
@@ -395,9 +404,9 @@ describe("councilSessionV0", () => {
       /non certific(?:a|ano) programmazione, svolgimento/i,
     );
     expect(session?.contextResearch.checkedAt).toBe(
-      "2026-11-15T18:26:00+01:00",
+      "2026-11-16T00:15:00+01:00",
     );
-    expect(session?.lastCheckedAt.value).toBe("2026-11-15T18:26:00+01:00");
+    expect(session?.lastCheckedAt.value).toBe("2026-11-16T00:15:00+01:00");
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /due pubblicazioni del 14 novembre.*`agenda_item`.*non identificano o confermano la seduta/i,
     );
@@ -406,6 +415,9 @@ describe("councilSessionV0", () => {
     );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /contenuto audiovisivo ANSA.*`possible_same_session`.*`mediaType: excerpt`.*`mediaStatus: replay_available`/i,
+    );
+    expect(session?.dataLimits.value?.join(" ")).toMatch(
+      /LameziaInforma.*`possible_same_session`.*giovedì prossimo.*non viene presentata come data ufficiale/i,
     );
   });
 
