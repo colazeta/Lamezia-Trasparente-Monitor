@@ -154,6 +154,16 @@ const eu = (code: OfficialFallbackDataThemeCode): ProposalPaSubjectRef => ({
 });
 
 const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
+  "Illuminazione pubblica e manutenzione di via Montello": {
+    primary: ps("4"),
+    secondary: [ps("8")],
+    mappingNote: "La richiesta prevalente riguarda la manutenzione dei punti luce lungo una via, Mobilità e trasporti (AgID 4). Giustizia e sicurezza pubblica (AgID 8) è secondaria per la sicurezza dichiarata; nessuna deduzione automatica di competenza o efficacia.",
+  },
+  "Polo fieristico e servizi polifunzionali a Bellafemmina": {
+    primary: ps("12"),
+    secondary: [ps("5"), ps("4")],
+    mappingNote: "Il nucleo della proposta è valutare attività fieristiche e centro servizi: Impresa e commercio (AgID 12); rigenerazione urbanistica (AgID 5) e raccordo intermodale (AgID 4) sono materie secondarie. Non si inferiscono competenze né procedure o investimenti attuati.",
+  },
   "Rigenerazione dell'ex Zuccherificio e dell'ex Opificio di Sant'Eufemia": {
     primary: ps("5"),
     secondary: [ps("12"), ps("4"), ps("10")],
