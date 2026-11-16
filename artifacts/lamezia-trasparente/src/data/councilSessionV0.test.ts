@@ -198,7 +198,7 @@ describe("councilSessionV0", () => {
   });
 
   it("publishes source-traceable records for both council and commission notices", () => {
-    expect(councilSessionV0ReviewedRecords).toHaveLength(64);
+    expect(councilSessionV0ReviewedRecords).toHaveLength(65);
     expect(
       new Set(councilSessionV0ReviewedRecords.map((item) => item.kind)),
     ).toEqual(new Set(["council", "commission"]));
@@ -215,6 +215,7 @@ describe("councilSessionV0", () => {
           new Set([
             "editorial-consiglio-bilancio-riequilibrio-2026-11",
             "editorial-consiglio-aperto-scordovillo-2026-11",
+            "editorial-commissione-isola-pedonale-2026-11",
             "editorial-commissione-i-sfiducia-presidente-2026-10",
             "editorial-commissione-ii-ciclo-bilancio-2026-10",
           ]),
@@ -396,6 +397,17 @@ describe("councilSessionV0", () => {
           /fonte ANSA Calabria.*non costituisce una conferma indipendente/i,
         ),
       }),
+      expect.objectContaining({
+        publisher: "City One",
+        publishedAt: "2026-11-14",
+        relationship: "possible_same_session",
+        url: expect.stringContaining(
+          "assessore-mimmo-gianturco-aggredito-nella-sede-del-comune",
+        ),
+        relevanceNote: expect.stringMatching(
+          /presidente del Consiglio.*giovedì prossimo.*non è una fonte istituzionale/i,
+        ),
+      }),
     ]);
     expect(session?.contextResearch.media).toEqual([
       expect.objectContaining({
@@ -422,9 +434,9 @@ describe("councilSessionV0", () => {
       /non certific(?:a|ano) programmazione, svolgimento/i,
     );
     expect(session?.contextResearch.checkedAt).toBe(
-      "2026-11-16T12:29:00+01:00",
+      "2026-11-17T00:18:00+01:00",
     );
-    expect(session?.lastCheckedAt.value).toBe("2026-11-16T12:29:00+01:00");
+    expect(session?.lastCheckedAt.value).toBe("2026-11-17T00:18:00+01:00");
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /tre pubblicazioni del 14 novembre.*`agenda_item`.*non identificano o confermano la seduta/i,
     );
@@ -436,6 +448,49 @@ describe("councilSessionV0", () => {
     );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /LameziaInforma.*`possible_same_session`.*giovedì prossimo.*non viene presentata come data ufficiale/i,
+    );
+    expect(session?.dataLimits.value?.join(" ")).toMatch(
+      /City One.*`possible_same_session`.*presidente del Consiglio.*non viene trasformato in una data ufficiale/i,
+    );
+  });
+
+  it("keeps the pedestrian-area commission signal editorial-only until an official notice is acquired", () => {
+    const session = findCouncilSessionV0ReviewedRecord(
+      "editorial-commissione-isola-pedonale-2026-11",
+    );
+
+    expect(session?.provenance).toBeUndefined();
+    expect(session?.kind).toBe("commission");
+    expect(session?.scheduledAt.value).toBeNull();
+    expect(session?.sessionStatus.value).toBe("non_verificata");
+    expect(session?.agenda.value).toBeNull();
+    expect(session?.sourceLink.value).toBeNull();
+    expect(session?.liveStreaming.value).toBeNull();
+    expect(session?.recording.value).toBeNull();
+    expect(session?.contextResearch.articles).toEqual([
+      expect.objectContaining({
+        publisher: "LameziaInforma",
+        publishedAt: "2026-11-16",
+        relationship: "possible_same_session",
+        url: expect.stringContaining("70303"),
+        relevanceNote: expect.stringMatching(
+          /“domani”.*non identifica il numero dell'organo.*non certifica data/i,
+        ),
+      }),
+    ]);
+    expect(session?.contextResearch.media).toEqual([]);
+    expect(session?.contextResearch.editorialAgenda).toEqual([
+      expect.objectContaining({
+        title:
+          "Isola pedonale serale su Corso Numistrano e gestione di sosta e transito",
+        confidence: "medium",
+      }),
+    ]);
+    expect(session?.scheduledAt.limit).toMatch(
+      /“domani”.*soltanto per la ricerca.*non come data ufficiale/i,
+    );
+    expect(session?.dataLimits.value?.join(" ")).toMatch(
+      /non identifica il numero della Commissione.*portale Albo corrente ha bloccato il client automatizzato/i,
     );
   });
 
