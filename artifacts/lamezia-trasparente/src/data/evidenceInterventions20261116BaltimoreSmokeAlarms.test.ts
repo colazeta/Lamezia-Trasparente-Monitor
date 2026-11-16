@@ -31,7 +31,7 @@ describe("Baltimore fire-department home-visit RCT — 2026-11-16", () => {
   });
 
   it("distinguishes short-term positive implementation results, null follow-up, and modelled mortality", () => {
-    expect(record.results).toContain("nessuna");
+    expect(record.results).toContain("non riscontrava differenza");
     expect(record.results).toContain("6 mesi");
     expect(record.costsRequirements).toContain("284.501 USD");
     expect(record.costsRequirements).toContain("NON costi");
