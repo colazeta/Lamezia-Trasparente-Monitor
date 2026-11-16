@@ -23,7 +23,7 @@ describe("Baltimore fire-department home-visit RCT — 2026-11-16", () => {
     expect(record.primaryArea).toBe("salute_pubblica_locale");
     expect(record.evaluationMethod).toContain("Cluster randomized trial");
     expect(record.evaluationMethod).toContain("sei census tracts");
-    expect(record.comparator).toContain("programma");
+    expect(record.comparator).toContain("Programma BCFD");
     expect(record.effectSize).toContain("75% vs 62%");
     expect(record.effectSize).toContain("84% vs 78%");
     expect(record.evidenceStrength).toBe("moderata");
@@ -32,7 +32,7 @@ describe("Baltimore fire-department home-visit RCT — 2026-11-16", () => {
 
   it("distinguishes short-term positive implementation results, null follow-up, and modelled mortality", () => {
     expect(record.results).toContain("non riscontrava differenza");
-    expect(record.results).toContain("6 mesi");
+    expect(record.results).toContain("a sei mesi");
     expect(record.costsRequirements).toContain("284.501 USD");
     expect(record.costsRequirements).toContain("NON costi");
     expect(record.evaluationStudies.some(s => s.doi === "10.1097/BCR.0b013e3182685b3a")).toBe(true);
