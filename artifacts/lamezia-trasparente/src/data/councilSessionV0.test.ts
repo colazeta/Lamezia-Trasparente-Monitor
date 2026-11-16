@@ -309,6 +309,15 @@ describe("councilSessionV0", () => {
         ),
       }),
       expect.objectContaining({
+        publisher: "Corriere di Lamezia",
+        publishedAt: "2026-11-10",
+        relationship: "possible_same_session",
+        url: expect.stringContaining("corrieredilamezia.it"),
+        relevanceNote: expect.stringMatching(
+          /stessa nota dei gruppi consiliari.*non costituisce una conferma indipendente/i,
+        ),
+      }),
+      expect.objectContaining({
         publisher: "NtaCalabria",
         publishedAt: "2026-11-11",
         relationship: "possible_same_session",
@@ -413,11 +422,11 @@ describe("councilSessionV0", () => {
       /non certific(?:a|ano) programmazione, svolgimento/i,
     );
     expect(session?.contextResearch.checkedAt).toBe(
-      "2026-11-16T05:54:00+01:00",
+      "2026-11-16T12:29:00+01:00",
     );
-    expect(session?.lastCheckedAt.value).toBe("2026-11-16T00:15:00+01:00");
+    expect(session?.lastCheckedAt.value).toBe("2026-11-16T12:29:00+01:00");
     expect(session?.dataLimits.value?.join(" ")).toMatch(
-      /due pubblicazioni del 14 novembre.*`agenda_item`.*non identificano o confermano la seduta/i,
+      /tre pubblicazioni del 14 novembre.*`agenda_item`.*non identificano o confermano la seduta/i,
     );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /ANSA Calabria e Corriere della Calabria.*NoiDiCalabria.*CityNow.*`possible_same_session`.*non costituiscono conferme indipendenti/i,
