@@ -338,6 +338,15 @@ describe("councilSessionV0", () => {
         ),
       }),
       expect.objectContaining({
+        publisher: "Catanzaro Channel",
+        publishedAt: "2026-11-14",
+        relationship: "agenda_item",
+        url: expect.stringContaining("catanzarochannel.it"),
+        relevanceNote: expect.stringMatching(
+          /non menziona né conferma il Consiglio aperto o il 19 novembre/i,
+        ),
+      }),
+      expect.objectContaining({
         publisher: "ANSA Calabria",
         publishedAt: "2026-11-13",
         relationship: "possible_same_session",
@@ -404,7 +413,7 @@ describe("councilSessionV0", () => {
       /non certific(?:a|ano) programmazione, svolgimento/i,
     );
     expect(session?.contextResearch.checkedAt).toBe(
-      "2026-11-16T00:15:00+01:00",
+      "2026-11-16T05:54:00+01:00",
     );
     expect(session?.lastCheckedAt.value).toBe("2026-11-16T00:15:00+01:00");
     expect(session?.dataLimits.value?.join(" ")).toMatch(
