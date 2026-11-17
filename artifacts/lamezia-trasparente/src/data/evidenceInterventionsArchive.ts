@@ -78,6 +78,7 @@ import { EVIDENCE_INTERVENTIONS_2026_11_14_MACERATA_MICROCHIPS } from "./evidenc
 import { EVIDENCE_INTERVENTIONS_2026_11_15_ALLEGHENY_TRANSIT } from "./evidenceInterventions20261115AlleghenyTransit";
 import { EVIDENCE_INTERVENTIONS_2026_11_16_BALTIMORE_SMOKE_ALARMS } from "./evidenceInterventions20261116BaltimoreSmokeAlarms";
 import { EVIDENCE_INTERVENTIONS_2026_11_16_YOGYAKARTA_WOLBACHIA } from "./evidenceInterventions20261116YogyakartaWolbachia";
+import { EVIDENCE_INTERVENTIONS_2026_11_17_NEWARK_LED } from "./evidenceInterventions20261117NewarkLed";
 import { applyEvidenceInterventionUpdates20260914 } from "./evidenceInterventionUpdates20260914";
 import { applyEvidenceInterventionUpdates20260919 } from "./evidenceInterventionUpdates20260919";
 import { applyEvidenceInterventionUpdates20261109 } from "./evidenceInterventionUpdates20261109";
@@ -167,6 +168,7 @@ const EVIDENCE_INTERVENTIONS_BEFORE_2026_09_14_UPDATES: readonly EvidenceInterve
   ...EVIDENCE_INTERVENTIONS_2026_11_15_ALLEGHENY_TRANSIT,
   ...EVIDENCE_INTERVENTIONS_2026_11_16_BALTIMORE_SMOKE_ALARMS,
   ...EVIDENCE_INTERVENTIONS_2026_11_16_YOGYAKARTA_WOLBACHIA,
+  ...EVIDENCE_INTERVENTIONS_2026_11_17_NEWARK_LED,
 ];
 
 function deduplicateEvidenceInterventions(
