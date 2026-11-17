@@ -383,6 +383,11 @@ const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
     primary: ps("4"),
     secondary: [ps("7")],
   },
+  "Sport paralimpico e riqualificazione degli impianti": {
+    primary: ps("10"),
+    secondary: [ps("2"), ps("5")],
+    mappingNote: "Cultura e tempo libero (AgID 10) è la materia primaria per la pratica sportiva e gli impianti; Salute, benessere e assistenza (2) e Catasto e urbanistica (5) sono secondarie per inclusione e riqualificazione. Classificazione non implica attribuzione di competenza o realizzazione del polo.",
+  },
   "Sport e impianti pubblici": {
     primary: ps("10"),
     secondary: [ps("5")],

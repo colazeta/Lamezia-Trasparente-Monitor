@@ -81,6 +81,17 @@ export const PROPOSAL_COMPETENCE_ASSESSMENTS: Readonly<
   Partial<Record<string, ProposalCompetenceAssessment>>
 > = {
   ...baseline.PROPOSAL_COMPETENCE_ASSESSMENTS,
+  "polo-sportivo-paralimpico-stretto-iona-2026": {
+    status: "partially_verified",
+    primaryAuthority: {
+      id: "regione-calabria",
+      label: "Regione Calabria — Giunta regionale",
+      level: "regional",
+      sourceLabel: "Regione Calabria — comunicato del 16 novembre 2026, approvazione della stipula del protocollo sul polo paralimpico",
+      sourceUrl: "https://www.regione.calabria.it/regione-ok-giunta-a-piano-emergenza-diga-migliarite-stato-emergenza-per-bova-marina-protocollo-polo-sportivo-paralimpico-e-piano-politiche-della-famiglia/",
+    },
+    note: "La fonte primaria verifica il ruolo procedurale della Giunta regionale nell’approvazione della stipula di un protocollo d’intesa Regione–Ministero–CIP, ma non ne attesta la firma. Non stabilisce competenze su proprietà, lavori, gestione, appalti, sede definitiva o finanziamenti, né prova il recepimento causale della proposta di Ionà. Il destinatario della proposta non è utilizzato quale prova di competenza.",
+  },
   "area-urbana-catanzaro-lamezia-governance-giovani-2026": {
     status: "partially_verified",
     primaryAuthority: {
