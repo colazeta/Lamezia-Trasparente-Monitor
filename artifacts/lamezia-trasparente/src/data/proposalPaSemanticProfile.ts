@@ -383,6 +383,25 @@ const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
     primary: ps("4"),
     secondary: [ps("7")],
   },
+  "Allestimenti natalizi diffusi nelle frazioni e contrade": {
+    primary: ps("10"),
+    mappingNote: "Gli allestimenti natalizi temporanei ricadono nella fruizione culturale e ricreativa (AgID 10); nessuna classificazione secondaria aggiunta senza specifica pertinenza. La classificazione non attribuisce competenza né attuazione.",
+  },
+  "Completamento del collegamento via Gramsci–via Palermo": {
+    primary: ps("4"),
+    secondary: [ps("5"), ps("8")],
+    mappingNote: "La principale misura concerne infrastruttura viaria (AgID 4), con aspetti urbanistici e di sicurezza pertinenti come secondari; nessuna competenza dedotta dal tema o indirizzo.",
+  },
+  "Trasparenza e coordinamento nell'uso degli impianti sportivi": {
+    primary: ps("10"),
+    secondary: [ps("1")],
+    mappingNote: "La finalità è l'accesso e il coordinamento nell'uso degli impianti per lo sport (AgID 10); le palestre scolastiche giustificano Educazione e formazione (1) come secondaria. I requisiti di trasparenza sono facet operative, non materia sostitutiva.",
+  },
+  "Trasparenza dei lavori e della riapertura del Teatro Costabile": {
+    primary: ps("10"),
+    secondary: [ps("5")],
+    mappingNote: "Il servizio interessato è il teatro cittadino (AgID 10); i lavori edilizi sono un aspetto secondario (AgID 5). I termini e le richieste di pubblicazione sono azioni operative, non una prova di competenza comunale o di attuazione.",
+  },
   "Sport paralimpico e riqualificazione degli impianti": {
     primary: ps("10"),
     secondary: [ps("2"), ps("5")],
