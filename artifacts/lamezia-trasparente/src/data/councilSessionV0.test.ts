@@ -427,6 +427,24 @@ describe("councilSessionV0", () => {
           /19 novembre.*Sala Luisi.*fonte editoriale/i,
         ),
       }),
+      expect.objectContaining({
+        publisher: "LameziaInforma",
+        publishedAt: "2026-11-18",
+        relationship: "agenda_item",
+        url: expect.stringContaining("70330"),
+        relevanceNote: expect.stringMatching(
+          /comunicazione della Prefettura.*non identifica né conferma la seduta.*non costituisce una conferma indipendente/i,
+        ),
+      }),
+      expect.objectContaining({
+        publisher: "City One",
+        publishedAt: "2026-11-18",
+        relationship: "agenda_item",
+        url: expect.stringContaining("delocalizzazione-dei-rom"),
+        relevanceNote: expect.stringMatching(
+          /stessa comunicazione della Prefettura.*non identifica né conferma la seduta.*non costituisce una conferma indipendente/i,
+        ),
+      }),
     ]);
     expect(session?.contextResearch.media).toEqual([
       expect.objectContaining({
@@ -464,9 +482,9 @@ describe("councilSessionV0", () => {
       /non certific(?:a|ano) programmazione, svolgimento/i,
     );
     expect(session?.contextResearch.checkedAt).toBe(
-      "2026-11-18T17:41:00+01:00",
+      "2026-11-18T23:32:00+01:00",
     );
-    expect(session?.lastCheckedAt.value).toBe("2026-11-18T17:41:00+01:00");
+    expect(session?.lastCheckedAt.value).toBe("2026-11-18T23:32:00+01:00");
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /tre pubblicazioni del 14 novembre.*`agenda_item`.*non identificano o confermano la seduta/i,
     );
@@ -487,6 +505,9 @@ describe("councilSessionV0", () => {
     );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /LameziaInforma e il Lametino del 18 novembre.*`possible_same_session`.*non valorizzano campi ufficiali/i,
+    );
+    expect(session?.dataLimits.value?.join(" ")).toMatch(
+      /ulteriori pagine LameziaInforma e City One del 18 novembre.*`agenda_item`.*stessa comunicazione della Prefettura.*non costituiscono conferme indipendenti/i,
     );
   });
 
@@ -514,6 +535,15 @@ describe("councilSessionV0", () => {
           /Prima Commissione Affari Generali.*regolamento di polizia mortuaria.*nota politica/i,
         ),
       }),
+      expect.objectContaining({
+        publisher: "City One",
+        publishedAt: "2026-11-18",
+        relationship: "possible_same_session",
+        url: expect.stringContaining("commissioni-paralizzate"),
+        relevanceNote: expect.stringMatching(
+          /stessa nota di Futuro Nazionale.*non costituisce una conferma indipendente/i,
+        ),
+      }),
     ]);
     expect(session?.contextResearch.media).toEqual([]);
     expect(session?.contextResearch.editorialAgenda).toEqual([
@@ -530,6 +560,13 @@ describe("councilSessionV0", () => {
     );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /non certifica.*numero legale.*mancata discussione/i,
+    );
+    expect(session?.contextResearch.checkedAt).toBe(
+      "2026-11-18T23:32:00+01:00",
+    );
+    expect(session?.lastCheckedAt.value).toBe("2026-11-18T23:32:00+01:00");
+    expect(session?.dataLimits.value?.join(" ")).toMatch(
+      /Corriere di Lamezia e City One.*stessa nota di Futuro Nazionale.*non costituiscono conferme indipendenti/i,
     );
   });
 
