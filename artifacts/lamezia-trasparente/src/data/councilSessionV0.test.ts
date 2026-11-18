@@ -419,6 +419,17 @@ describe("councilSessionV0", () => {
         url: expect.stringContaining("videoembed.ansa.it"),
         relevanceNote: expect.stringMatching(/fonte editoriale/i),
       }),
+      expect.objectContaining({
+        publisher: "City One",
+        publishedAt: "2026-11-16",
+        relationship: "agenda_item",
+        mediaType: "interview",
+        availability: "replay_available",
+        url: expect.stringContaining("kHUfWP41N8c"),
+        relevanceNote: expect.stringMatching(
+          /alloggio assegnato.*non identifica o conferma la seduta/i,
+        ),
+      }),
     ]);
     expect(session?.contextResearch.editorialAgenda).toEqual([
       expect.objectContaining({
@@ -434,9 +445,9 @@ describe("councilSessionV0", () => {
       /non certific(?:a|ano) programmazione, svolgimento/i,
     );
     expect(session?.contextResearch.checkedAt).toBe(
-      "2026-11-17T00:18:00+01:00",
+      "2026-11-18T11:45:00+01:00",
     );
-    expect(session?.lastCheckedAt.value).toBe("2026-11-17T00:18:00+01:00");
+    expect(session?.lastCheckedAt.value).toBe("2026-11-18T11:45:00+01:00");
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /tre pubblicazioni del 14 novembre.*`agenda_item`.*non identificano o confermano la seduta/i,
     );
@@ -445,6 +456,9 @@ describe("councilSessionV0", () => {
     );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /contenuto audiovisivo ANSA.*`possible_same_session`.*`mediaType: excerpt`.*`mediaStatus: replay_available`/i,
+    );
+    expect(session?.dataLimits.value?.join(" ")).toMatch(
+      /video City One.*`agenda_item`.*`mediaType: interview`.*`mediaStatus: replay_available`.*non identifica o conferma la seduta/i,
     );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /LameziaInforma.*`possible_same_session`.*giovedì prossimo.*non viene presentata come data ufficiale/i,
