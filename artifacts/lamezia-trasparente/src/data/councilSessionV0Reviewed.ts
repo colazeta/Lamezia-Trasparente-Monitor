@@ -130,6 +130,8 @@ const SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_14_CITYNOW_URL =
   "https://www.citynow.it/lamezia-terme-aggredito-assessore-gianturco-comune-scordovillo/";
 const SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_14_CITY_ONE_REACTIONS_URL =
   "https://cityonelamezia.it/2026/11/14/assessore-mimmo-gianturco-aggredito-nella-sede-del-comune/";
+const SCORDOVILLO_NOVEMBER_16_CITY_ONE_VIDEO_URL =
+  "https://www.youtube.com/watch?v=kHUfWP41N8c";
 const COMMISSION_NOVEMBER_17_PEDESTRIAN_AREA_LAMEZIAINFORMA_URL =
   "https://www.lameziainforma.it/istituzione/2026/11/16/a-lamezia-terme-its-beginning-to-look-a-lot-like-christmas-in-attesa-di-sapere-quanto-e-come/70303/";
 const COUNCIL_NOVEMBER_3_LAMETINO_URL =
@@ -3092,9 +3094,9 @@ const scordovilloOpenCouncilEditorialSignal: CouncilSessionV0 = {
   isDemoFixture: false,
   contextResearch: {
     status: "reviewed_matches",
-    checkedAt: "2026-11-17T00:18:00+01:00",
+    checkedAt: "2026-11-18T11:45:00+01:00",
     searchNote:
-      "Parallel Search e la verifica diretta di Comune, pagina istituzionale dell'Albo, fonti editoriali originali e canali audiovisivi indicizzati hanno individuato sedici articoli e un contenuto audiovisivo. Gazzetta del Sud del 28 ottobre segnala un possibile Consiglio comunale aperto su Scordovillo e riferisce il 16 novembre sulla base di dichiarazioni social di un consigliere; TV6onAir ne ripubblica la copertura. Il 10 novembre il Lametino, City One, LameziaTerme.it e Corriere di Lamezia riproducono la stessa nota dei gruppi consiliari PD, Azione e Per Vivere Bene e riferiscono invece il 19 novembre. NtaCalabria dell'11 novembre riferisce a sua volta il 19 novembre, ma dichiara espressamente che la pubblicazione sull'Albo pretorio manca ancora: resta una copertura editoriale, non una conferma istituzionale indipendente. ANSA Calabria e Corriere della Calabria del 13 novembre, insieme alle riprese di NoiDiCalabria e CityNow, identificano esplicitamente il Consiglio comunale aperto, Scordovillo e il 19 novembre: sono collegati come `possible_same_session`, ma restano fonti editoriali; NoiDiCalabria e CityNow attribuiscono il contenuto ad ANSA e non sono conferme indipendenti. LameziaInforma del 13 novembre identifica il Consiglio comunale aperto di giovedì prossimo e il tema Scordovillo: è collegato come `possible_same_session`, ma l'espressione relativa non viene trasformata in una data ufficiale. City One del 14 novembre raccoglie più reazioni all'aggressione all'assessore Gianturco e riporta la dichiarazione della presidente del Consiglio sul Consiglio comunale a porte aperte di giovedì prossimo dedicato a Scordovillo: è collegato come `possible_same_session`, senza trasformare il riferimento temporale in una data ufficiale. Il 15 novembre è stato verificato anche l'URL audiovisivo separato di ANSA, classificato `possible_same_session`, `excerpt` e `replay_available`: richiama organo, formato aperto, tema e 19 novembre, ma non certifica campi o fatti ufficiali della seduta. Il 14 novembre il Lametino, LameziaTerme.it e Catanzaro Channel pubblicano contenuti sulla posizione dell'assessore Mimmo Gianturco e sul progetto di superamento di Scordovillo: non identificano né confermano la seduta e sono collegati soltanto come `agenda_item`. La discrepanza fra 16 e 19 novembre resta editoriale. Al controllo del 17 novembre la pagina delle novità del Comune non pubblicava una convocazione associabile e la pagina istituzionale dell'Albo rinviava al nuovo portale; il portale dinamico ha respinto nuovamente il client automatizzato e non ha fornito l'elenco degli atti, quindi non è stato acquisito un atto istituzionale nuovo. Data, ora, sede, ordine del giorno e stato restano non verificati e nessuna data viene pubblicata come ufficiale.",
+      "Parallel Search e la verifica diretta di Comune, pagina istituzionale dell'Albo, fonti editoriali originali e canali audiovisivi indicizzati hanno individuato sedici articoli e due contenuti audiovisivi. Gazzetta del Sud del 28 ottobre segnala un possibile Consiglio comunale aperto su Scordovillo e riferisce il 16 novembre sulla base di dichiarazioni social di un consigliere; TV6onAir ne ripubblica la copertura. Il 10 novembre il Lametino, City One, LameziaTerme.it e Corriere di Lamezia riproducono la stessa nota dei gruppi consiliari PD, Azione e Per Vivere Bene e riferiscono invece il 19 novembre. NtaCalabria dell'11 novembre riferisce a sua volta il 19 novembre, ma dichiara espressamente che la pubblicazione sull'Albo pretorio manca ancora: resta una copertura editoriale, non una conferma istituzionale indipendente. ANSA Calabria e Corriere della Calabria del 13 novembre, insieme alle riprese di NoiDiCalabria e CityNow, identificano esplicitamente il Consiglio comunale aperto, Scordovillo e il 19 novembre: sono collegati come `possible_same_session`, ma restano fonti editoriali; NoiDiCalabria e CityNow attribuiscono il contenuto ad ANSA e non sono conferme indipendenti. LameziaInforma del 13 novembre identifica il Consiglio comunale aperto di giovedì prossimo e il tema Scordovillo: è collegato come `possible_same_session`, ma l'espressione relativa non viene trasformata in una data ufficiale. City One del 14 novembre raccoglie più reazioni all'aggressione all'assessore Gianturco e riporta la dichiarazione della presidente del Consiglio sul Consiglio comunale a porte aperte di giovedì prossimo dedicato a Scordovillo: è collegato come `possible_same_session`, senza trasformare il riferimento temporale in una data ufficiale. Il 15 novembre è stato verificato anche l'URL audiovisivo separato di ANSA, classificato `possible_same_session`, `excerpt` e `replay_available`: richiama organo, formato aperto, tema e 19 novembre, ma non certifica campi o fatti ufficiali della seduta. Il video City One del 16 novembre mostra problematiche relative a un alloggio assegnato a una famiglia proveniente dal campo Rom di Scordovillo ed è classificato `agenda_item`, `interview` e `replay_available`: approfondisce il tema del ricollocamento, ma non identifica o conferma la seduta e non valorizza streaming o registrazione ufficiali. Il 14 novembre il Lametino, LameziaTerme.it e Catanzaro Channel pubblicano contenuti sulla posizione dell'assessore Mimmo Gianturco e sul progetto di superamento di Scordovillo: non identificano né confermano la seduta e sono collegati soltanto come `agenda_item`. La discrepanza fra 16 e 19 novembre resta editoriale. Al controllo del 18 novembre la pagina delle novità del Comune non pubblicava una convocazione associabile e la pagina istituzionale dell'Albo rinviava al nuovo portale; il portale dinamico ha bloccato il client automatizzato con il codice `MDAWAF001` e non ha fornito l'elenco degli atti, quindi non è stato acquisito un atto istituzionale nuovo. Data, ora, sede, ordine del giorno e stato restano non verificati e nessuna data viene pubblicata come ufficiale.",
     articles: [
       {
         title:
@@ -3284,6 +3286,18 @@ const scordovilloOpenCouncilEditorialSignal: CouncilSessionV0 = {
           "Il contenuto audiovisivo ANSA identifica il Consiglio comunale aperto, Scordovillo e riferisce il 19 novembre. È una fonte editoriale separata dall'articolo testuale, ma non certifica convocazione, data, ora, sede, ordine del giorno, completezza, svolgimento, partecipanti, votazioni o esiti.",
         reviewedAt: "2026-11-15T18:26:00+01:00",
       },
+      {
+        title: "Problematica su assegnazione case per sgombero Scordovillo",
+        url: SCORDOVILLO_NOVEMBER_16_CITY_ONE_VIDEO_URL,
+        publisher: "City One",
+        publishedAt: "2026-11-16",
+        relationship: "agenda_item",
+        mediaType: "interview",
+        availability: "replay_available",
+        relevanceNote:
+          "Il servizio editoriale mostra sul posto problematiche relative a un alloggio assegnato a una famiglia proveniente dal campo Rom di Scordovillo. Approfondisce il tema del ricollocamento, ma non identifica o conferma la seduta e non certifica convocazione, data, ora, sede, ordine del giorno, programmazione, svolgimento, completezza, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-18T11:45:00+01:00",
+      },
     ],
     editorialAgenda: [
       {
@@ -3307,10 +3321,11 @@ const scordovilloOpenCouncilEditorialSignal: CouncilSessionV0 = {
           SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_13_NOIDICALABRIA_URL,
           SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_14_CITYNOW_URL,
           SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_14_CITY_ONE_REACTIONS_URL,
+          SCORDOVILLO_NOVEMBER_16_CITY_ONE_VIDEO_URL,
         ],
         confidence: "medium",
         reason:
-          "Il tema è il centro esplicito della copertura editoriale, è approfondito dai contenuti sulla posizione dell'assessore del 14 novembre ed è ripreso dalle altre pubblicazioni e dal contenuto audiovisivo ANSA, ma non è stato acquisito un ordine del giorno istituzionale. Resta quindi un tema emerso dalla copertura e non prova iscrizione, trattazione, partecipazione o esito.",
+          "Il tema è il centro esplicito della copertura editoriale, è approfondito dai contenuti sulla posizione dell'assessore del 14 novembre e dal servizio City One del 16 novembre ed è ripreso dalle altre pubblicazioni e dal contenuto audiovisivo ANSA, ma non è stato acquisito un ordine del giorno istituzionale. Resta quindi un tema emerso dalla copertura e non prova iscrizione, trattazione, partecipazione o esito.",
       },
     ],
   },
@@ -3381,7 +3396,7 @@ const scordovilloOpenCouncilEditorialSignal: CouncilSessionV0 = {
   lastCheckedAt: {
     key: "lastCheckedAt",
     label: "Ultimo controllo",
-    value: "2026-11-17T00:18:00+01:00",
+    value: "2026-11-18T11:45:00+01:00",
     sourceStatus: "verificato",
     sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
     limit:
@@ -3392,7 +3407,7 @@ const scordovilloOpenCouncilEditorialSignal: CouncilSessionV0 = {
     label: "Limiti del dato",
     value: [
       "Le date editoriali del 16 e del 19 novembre sono discordanti, non sono state verificate su una fonte istituzionale e non vengono presentate come data ufficiale della seduta.",
-      "Non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione al Consiglio aperto segnalato; al controllo del 14 novembre il Comune non pubblicava una convocazione associabile, la pagina istituzionale del Consiglio esponeva soltanto informazioni organizzative e il nuovo Albo dinamico mostrava ancora soltanto quattro avvisi patrimoniali estranei alla seduta.",
+      "Non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione al Consiglio aperto segnalato; al controllo del 18 novembre la pagina delle novità del Comune non pubblicava una convocazione associabile e il nuovo Albo dinamico non ha restituito l'elenco degli atti.",
       "Data, ora, sede, ordine del giorno, stato, streaming, registrazione e verbale restano non verificati o non rilevati secondo il campo.",
       "Gli articoli collegati sono fonti editoriali e non certificano programmazione, svolgimento, completezza, partecipanti, votazioni o risultati; TV6onAir ripubblica Gazzetta del Sud, il Lametino, City One, LameziaTerme.it e Corriere di Lamezia riproducono la stessa nota dei gruppi consiliari, mentre NtaCalabria dichiara ancora assente la pubblicazione sull'Albo. Nessuna di queste pagine costituisce una conferma istituzionale indipendente.",
       "Le tre pubblicazioni del 14 novembre riproducono o approfondiscono la stessa nota dell'assessore Gianturco e sono collegate soltanto come `agenda_item`: approfondiscono il tema Scordovillo, ma non identificano o confermano la seduta e non costituiscono conferme indipendenti tra loro.",
@@ -3400,7 +3415,8 @@ const scordovilloOpenCouncilEditorialSignal: CouncilSessionV0 = {
       "LameziaInforma del 13 novembre è collegato come `possible_same_session` perché identifica il Consiglio comunale aperto di giovedì prossimo e il tema Scordovillo; la data relativa resta contesto editoriale e non viene presentata come data ufficiale.",
       "City One del 14 novembre è collegato come `possible_same_session` perché riporta una dichiarazione della presidente del Consiglio sul Consiglio comunale a porte aperte di giovedì prossimo dedicato a Scordovillo; la pagina aggrega più reazioni, non è una fonte istituzionale e il riferimento temporale non viene trasformato in una data ufficiale.",
       "Il contenuto audiovisivo ANSA verificato il 15 novembre è collegato come `possible_same_session`, con `mediaType: excerpt` e `mediaStatus: replay_available`: resta editoriale e non valorizza lo streaming o la registrazione ufficiali.",
-      "Nel controllo del 17 novembre la pagina istituzionale dell'Albo rinviava al nuovo portale dinamico, ma il portale ha bloccato il client automatizzato e non ha restituito l'elenco degli atti; non è quindi stato possibile verificare o acquisire eventuali nuovi atti dal portale corrente.",
+      "Il video City One del 16 novembre è collegato come `agenda_item`, con `mediaType: interview` e `mediaStatus: replay_available`: approfondisce il tema del ricollocamento da Scordovillo, ma non identifica o conferma la seduta e non valorizza lo streaming o la registrazione ufficiali.",
+      "Nel controllo del 18 novembre la pagina istituzionale dell'Albo rinviava al nuovo portale dinamico, ma il portale ha bloccato il client automatizzato con il codice `MDAWAF001` e non ha restituito l'elenco degli atti; non è quindi stato possibile verificare o acquisire eventuali nuovi atti dal portale corrente.",
       "Il tema riportato dalla copertura resta nell'agenda editoriale separata e dovrà essere riconciliato se emergerà un atto istituzionale.",
     ],
     sourceStatus: "parziale",
