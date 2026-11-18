@@ -198,7 +198,7 @@ describe("councilSessionV0", () => {
   });
 
   it("publishes source-traceable records for both council and commission notices", () => {
-    expect(councilSessionV0ReviewedRecords).toHaveLength(65);
+    expect(councilSessionV0ReviewedRecords).toHaveLength(66);
     expect(
       new Set(councilSessionV0ReviewedRecords.map((item) => item.kind)),
     ).toEqual(new Set(["council", "commission"]));
@@ -216,6 +216,7 @@ describe("councilSessionV0", () => {
             "editorial-consiglio-bilancio-riequilibrio-2026-11",
             "editorial-consiglio-aperto-scordovillo-2026-11",
             "editorial-commissione-isola-pedonale-2026-11",
+            "editorial-commissione-i-polizia-mortuaria-2026-11",
             "editorial-commissione-i-sfiducia-presidente-2026-10",
             "editorial-commissione-ii-ciclo-bilancio-2026-10",
           ]),
@@ -408,6 +409,24 @@ describe("councilSessionV0", () => {
           /presidente del Consiglio.*giovedì prossimo.*non è una fonte istituzionale/i,
         ),
       }),
+      expect.objectContaining({
+        publisher: "LameziaInforma",
+        publishedAt: "2026-11-18",
+        relationship: "possible_same_session",
+        url: expect.stringContaining("70248"),
+        relevanceNote: expect.stringMatching(
+          /giorno successivo.*10:30.*Sala Luisi.*non è una fonte istituzionale/i,
+        ),
+      }),
+      expect.objectContaining({
+        publisher: "il Lametino",
+        publishedAt: "2026-11-18",
+        relationship: "possible_same_session",
+        url: expect.stringContaining("trasferite-altre-22-persone"),
+        relevanceNote: expect.stringMatching(
+          /19 novembre.*Sala Luisi.*fonte editoriale/i,
+        ),
+      }),
     ]);
     expect(session?.contextResearch.media).toEqual([
       expect.objectContaining({
@@ -445,9 +464,9 @@ describe("councilSessionV0", () => {
       /non certific(?:a|ano) programmazione, svolgimento/i,
     );
     expect(session?.contextResearch.checkedAt).toBe(
-      "2026-11-18T11:45:00+01:00",
+      "2026-11-18T17:41:00+01:00",
     );
-    expect(session?.lastCheckedAt.value).toBe("2026-11-18T11:45:00+01:00");
+    expect(session?.lastCheckedAt.value).toBe("2026-11-18T17:41:00+01:00");
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /tre pubblicazioni del 14 novembre.*`agenda_item`.*non identificano o confermano la seduta/i,
     );
@@ -465,6 +484,52 @@ describe("councilSessionV0", () => {
     );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /City One.*`possible_same_session`.*presidente del Consiglio.*non viene trasformato in una data ufficiale/i,
+    );
+    expect(session?.dataLimits.value?.join(" ")).toMatch(
+      /LameziaInforma e il Lametino del 18 novembre.*`possible_same_session`.*non valorizzano campi ufficiali/i,
+    );
+  });
+
+  it("keeps the First Commission mortuary-regulation signal editorial-only until an official notice is acquired", () => {
+    const session = findCouncilSessionV0ReviewedRecord(
+      "editorial-commissione-i-polizia-mortuaria-2026-11",
+    );
+
+    expect(session?.provenance).toBeUndefined();
+    expect(session?.kind).toBe("commission");
+    expect(session?.scheduledAt.value).toBeNull();
+    expect(session?.sessionStatus.value).toBe("non_verificata");
+    expect(session?.agenda.value).toBeNull();
+    expect(session?.sourceLink.value).toBeNull();
+    expect(session?.liveStreaming.value).toBeNull();
+    expect(session?.recording.value).toBeNull();
+    expect(session?.minutesOrReport.value).toBeNull();
+    expect(session?.contextResearch.articles).toEqual([
+      expect.objectContaining({
+        publisher: "Corriere di Lamezia",
+        publishedAt: "2026-11-18",
+        relationship: "possible_same_session",
+        url: expect.stringContaining("due-commissioni-bloccate"),
+        relevanceNote: expect.stringMatching(
+          /Prima Commissione Affari Generali.*regolamento di polizia mortuaria.*nota politica/i,
+        ),
+      }),
+    ]);
+    expect(session?.contextResearch.media).toEqual([]);
+    expect(session?.contextResearch.editorialAgenda).toEqual([
+      expect.objectContaining({
+        title: "Regolamento comunale di polizia mortuaria",
+        confidence: "medium",
+      }),
+    ]);
+    expect(session?.scheduledAt.limit).toMatch(
+      /“oggi”.*soltanto per la ricerca.*non come data ufficiale/i,
+    );
+    expect(session?.dataLimits.value?.join(" ")).toMatch(
+      /titolo richiama due Commissioni.*testo identifica con precisione soltanto la Prima Commissione/i,
+    );
+    expect(session?.dataLimits.value?.join(" ")).toMatch(
+      /non certifica.*numero legale.*mancata discussione/i,
     );
   });
 
