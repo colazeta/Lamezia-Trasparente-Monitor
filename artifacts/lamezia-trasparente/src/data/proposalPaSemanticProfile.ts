@@ -154,6 +154,16 @@ const eu = (code: OfficialFallbackDataThemeCode): ProposalPaSubjectRef => ({
 });
 
 const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
+  "Candidatura comunale per porto turistico costiero": {
+    primary: ps("4"),
+    secondary: [ps("7"), ps("5"), ps("11")],
+    mappingNote: "La misura principale è la possibile candidatura per una nuova infrastruttura portuale, Mobilità e trasporti (AgID 4); Turismo, Catasto e urbanistica e Ambiente sono aspetti secondari verificabili solo per pertinenza tematica. La classificazione non dimostra competenza, candidabilità o approvazione del progetto.",
+  },
+  "Rimozione rifiuti e bonifica presso torrente Canne": {
+    primary: ps("11"),
+    secondary: [ps("8")],
+    mappingNote: "La richiesta principale riguarda rimozione e bonifica ambientale dei rifiuti segnalati, Ambiente (AgID 11). La sicurezza pubblica è secondaria per gli eventuali rischi da accertare. Non si deducono l'autorità competente né la presenza effettiva di pericoli dalla sola segnalazione.",
+  },
   "Illuminazione pubblica e manutenzione di via Montello": {
     primary: ps("4"),
     secondary: [ps("8")],
