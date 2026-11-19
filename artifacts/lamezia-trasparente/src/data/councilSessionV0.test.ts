@@ -445,6 +445,15 @@ describe("councilSessionV0", () => {
           /stessa comunicazione della Prefettura.*non identifica né conferma la seduta.*non costituisce una conferma indipendente/i,
         ),
       }),
+      expect.objectContaining({
+        publisher: "NoiDiCalabria",
+        publishedAt: "2026-11-19",
+        relationship: "agenda_item",
+        url: expect.stringContaining("trasferiti-altri-22-residenti"),
+        relevanceNote: expect.stringMatching(
+          /stessa comunicazione della Prefettura.*non identifica né conferma la seduta.*non costituisce una conferma indipendente/i,
+        ),
+      }),
     ]);
     expect(session?.contextResearch.media).toEqual([
       expect.objectContaining({
@@ -467,6 +476,17 @@ describe("councilSessionV0", () => {
           /alloggio assegnato.*non identifica o conferma la seduta/i,
         ),
       }),
+      expect.objectContaining({
+        publisher: "City One",
+        publishedAt: "2026-11-19",
+        relationship: "possible_same_session",
+        mediaType: "live_stream",
+        availability: "live",
+        url: expect.stringContaining("BZYuyK6nhbw"),
+        relevanceNote: expect.stringMatching(
+          /titolo.*data coincidono.*collegamento resta possibile.*non valorizza `liveStreaming` o `recording` ufficiali/i,
+        ),
+      }),
     ]);
     expect(session?.contextResearch.editorialAgenda).toEqual([
       expect.objectContaining({
@@ -482,9 +502,9 @@ describe("councilSessionV0", () => {
       /non certific(?:a|ano) programmazione, svolgimento/i,
     );
     expect(session?.contextResearch.checkedAt).toBe(
-      "2026-11-18T23:32:00+01:00",
+      "2026-11-19T11:26:00+01:00",
     );
-    expect(session?.lastCheckedAt.value).toBe("2026-11-18T23:32:00+01:00");
+    expect(session?.lastCheckedAt.value).toBe("2026-11-19T11:26:00+01:00");
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /tre pubblicazioni del 14 novembre.*`agenda_item`.*non identificano o confermano la seduta/i,
     );
@@ -508,6 +528,12 @@ describe("councilSessionV0", () => {
     );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /ulteriori pagine LameziaInforma e City One del 18 novembre.*`agenda_item`.*stessa comunicazione della Prefettura.*non costituiscono conferme indipendenti/i,
+    );
+    expect(session?.dataLimits.value?.join(" ")).toMatch(
+      /NoiDiCalabria del 19 novembre.*`agenda_item`.*stessa comunicazione della Prefettura.*non costituisce una conferma indipendente/i,
+    );
+    expect(session?.dataLimits.value?.join(" ")).toMatch(
+      /diretta editoriale City One del 19 novembre.*`possible_same_session`.*`mediaType: live_stream`.*`mediaStatus: live`.*non valorizza `liveStreaming` o `recording` ufficiali/i,
     );
   });
 
