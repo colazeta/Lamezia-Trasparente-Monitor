@@ -154,6 +154,11 @@ const eu = (code: OfficialFallbackDataThemeCode): ProposalPaSubjectRef => ({
 });
 
 const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
+  "Sicurezza e manutenzione delle alberature della villetta Reillo": {
+    primary: ps("11"),
+    secondary: [ps("8")],
+    mappingNote: "La gestione tecnica di un albero in uno spazio verde pubblico è classificata come Ambiente (AgID 11); la sicurezza segnalata è seconda materia Giustizia e sicurezza pubblica (AgID 8). La classificazione è tematica, non attribuisce competenza né attesta un rischio, un deposito o un intervento.",
+  },
   "Candidatura comunale per porto turistico costiero": {
     primary: ps("4"),
     secondary: [ps("7"), ps("5"), ps("11")],

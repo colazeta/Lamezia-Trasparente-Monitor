@@ -1,0 +1,40 @@
+import type { PublicProposal } from "./propostePubblicheCore";
+
+/** Recupero di fonte originale 15 novembre 2026, distintamente dal filone viabilità di Bella. */
+export const SCOUTED_PUBLIC_PROPOSALS_20261119_REILLO = [
+  {
+    id: "villetta-reillo-albero-sicurezza-masi-2026",
+    title: "Richiesta di verifica e messa in sicurezza di un albero nella villetta Reillo",
+    summary: "Il 15 novembre 2026 il consigliere Gennarino Masi (PD) sollecita un sopralluogo e una valutazione agronomica e fitostatica su un albero ad alto fusto nella villetta Reillo, in via Madonna della Spina, quartiere Bella, segnalando rami che interferirebbero con i tetti delle abitazioni limitrofe. Chiede eventuali misure provvisorie e definitive di messa in sicurezza e informazioni pubbliche sui tempi. La descrizione del rischio e la proprietà dell'area sono dichiarazioni del promotore, non verifiche tecniche o catastali indipendenti.",
+    promoterId: "gennarino-masi",
+    promoter: "Gennarino Masi (PD)",
+    promoterType: "consigliere",
+    coPromoters: [],
+    periodLabel: "15 novembre 2026",
+    year: "2026",
+    theme: "Sicurezza e manutenzione delle alberature della villetta Reillo",
+    threadId: "quartiere-bella-villetta-reillo-alberatura-sicurezza-2026",
+    threadLabel: "Villetta Reillo: verifica e sicurezza delle alberature",
+    territorialArea: "Villetta Reillo, via Madonna della Spina, quartiere Bella, Lamezia Terme",
+    institutionalRecipient: "Amministrazione comunale di Lamezia Terme",
+    channel: "comunicato",
+    sourceLabel: "LameziaTerme.it — nota originale attribuita a Gennarino Masi, 15 novembre 2026",
+    sourceUrl: "https://www.lameziaterme.it/quartiere-bella-masi-pd-lamezia-albero-di-20-metri-sui-tetti-delle-case/",
+    status: "proposta_emersa",
+    linkedActs: [],
+    verificationNote: "Fonte originaria: nota attribuita al consigliere, ripresa anche da il Lametino il 15 novembre 2026. Il rischio, le dimensioni e l'identificazione botanica dell'albero, la presenza di rami sui tetti e la proprietà pubblica del suolo sono asserzioni del promotore, non risultanze di sopralluogo, perizia, documentazione patrimoniale o atto verificato. Le segnalazioni pregresse al Comune e al Vicesindaco sono riferite ma non accompagnate da numero di protocollo o ricevuta. Non sono accertati interventi, ordinanze, risposte o depositi formali. La richiesta riguarda una specifica alberatura, non il diverso thread di Masi sulla manutenzione stradale di via Lazio/Bella: destinatario documentato, competenza sostanziale non valutata (not_assessed). Geografia di area per il riferimento a villetta/via, nessuna coordinata WGS84 del singolo albero accertata.",
+    evidenceLevel: "fonte_stampa",
+    firstSeen: "2026-11-15",
+    lastUpdated: "2026-11-15",
+    events: [{
+      id: "masi-villetta-reillo-richiesta-2026-11-15",
+      date: "2026-11-15",
+      type: "emersione",
+      title: "Masi richiede verifiche tecniche e messa in sicurezza di un albero presso villetta Reillo",
+      summary: "Sollecitati sopralluogo, verifica delle condizioni dell'albero, eventuali misure precauzionali e comunicazione degli esiti; precedenti segnalazioni e pericolo sono riferiti, non attestati da atti originali.",
+      sourceLabel: "LameziaTerme.it — comunicazione di Gennarino Masi, 15 novembre 2026",
+      sourceUrl: "https://www.lameziaterme.it/quartiere-bella-masi-pd-lamezia-albero-di-20-metri-sui-tetti-delle-case/",
+      evidenceLevel: "fonte_stampa",
+    }],
+  },
+] as const satisfies readonly PublicProposal[];
