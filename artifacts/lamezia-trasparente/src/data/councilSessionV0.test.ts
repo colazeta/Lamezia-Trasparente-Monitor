@@ -502,6 +502,13 @@ describe("councilSessionV0", () => {
         relationship: "possible_same_session",
         url: expect.stringContaining("177322495494"),
       }),
+      expect.objectContaining({
+        publisher: "Corriere della Calabria",
+        publishedAt: "2026-11-19",
+        relationship: "same_session",
+        url: expect.stringContaining("scontro-consiglio-comunale-lo-moro-murone"),
+        relevanceNote: expect.stringMatching(/fonte editoriale/i),
+      }),
     ]);
     expect(session?.contextResearch.media).toEqual([
       expect.objectContaining({
@@ -529,10 +536,32 @@ describe("councilSessionV0", () => {
         publishedAt: "2026-11-19",
         relationship: "possible_same_session",
         mediaType: "live_stream",
-        availability: "live",
+        availability: "replay_available",
         url: expect.stringContaining("BZYuyK6nhbw"),
         relevanceNote: expect.stringMatching(
-          /titolo.*data coincidono.*collegamento resta possibile.*non valorizza `liveStreaming` o `recording` ufficiali/i,
+          /3:09:48.*Streamed 13h ago.*chat in replica.*collegamento resta possibile.*non valorizza `liveStreaming` o `recording` ufficiali/i,
+        ),
+      }),
+      expect.objectContaining({
+        publisher: "Corriere della Calabria",
+        publishedAt: "2026-11-19",
+        relationship: "same_session",
+        mediaType: "interview",
+        availability: "replay_available",
+        url: expect.stringContaining("gianturco-futuro-inclusione-sociale"),
+        relevanceNote: expect.stringMatching(
+          /intervista a Mimmo Gianturco.*Consiglio comunale aperto.*contenuto editoriale/i,
+        ),
+      }),
+      expect.objectContaining({
+        publisher: "Corriere della Calabria",
+        publishedAt: "2026-11-19",
+        relationship: "same_session",
+        mediaType: "interview",
+        availability: "replay_available",
+        url: expect.stringContaining("scordovillo-chiusura-definitiva-2027"),
+        relevanceNote: expect.stringMatching(
+          /intervista a Nino Tarantino.*Consiglio comunale aperto.*contenuto editoriale/i,
         ),
       }),
     ]);
@@ -550,9 +579,9 @@ describe("councilSessionV0", () => {
       /non certific(?:a|ano) programmazione, svolgimento/i,
     );
     expect(session?.contextResearch.checkedAt).toBe(
-      "2026-11-19T17:52:00+01:00",
+      "2026-11-20T00:07:00+01:00",
     );
-    expect(session?.lastCheckedAt.value).toBe("2026-11-19T17:52:00+01:00");
+    expect(session?.lastCheckedAt.value).toBe("2026-11-20T00:07:00+01:00");
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /tre pubblicazioni del 14 novembre.*`agenda_item`.*non identificano o confermano la seduta/i,
     );
@@ -587,7 +616,13 @@ describe("councilSessionV0", () => {
       /resoconti del 19 novembre.*il Lametino.*LameziaInforma.*LaC News24.*LameziaTerme.it.*`same_session`.*fonti editoriali/i,
     );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
-      /diretta editoriale City One del 19 novembre.*`possible_same_session`.*`mediaType: live_stream`.*`mediaStatus: live`.*non valorizza `liveStreaming` o `recording` ufficiali/i,
+      /diretta editoriale City One del 19 novembre.*`possible_same_session`.*`mediaType: live_stream`.*`mediaStatus: replay_available`.*3:09:48.*non valorizza `liveStreaming` o `recording` ufficiali/i,
+    );
+    expect(session?.dataLimits.value?.join(" ")).toMatch(
+      /resoconto del 19 novembre di Corriere della Calabria.*`same_session`.*fonte editoriale/i,
+    );
+    expect(session?.dataLimits.value?.join(" ")).toMatch(
+      /due interviste video del 19 novembre di Corriere della Calabria.*`same_session`.*`mediaType: interview`.*`mediaStatus: replay_available`.*non valorizzano streaming o registrazione ufficiali/i,
     );
   });
 
