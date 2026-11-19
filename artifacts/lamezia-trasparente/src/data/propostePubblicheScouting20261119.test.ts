@@ -121,7 +121,7 @@ describe("Scouting 19 novembre: gate sullo stesso insieme di tre proposal ID", (
     expect(latest.type).toBe("aggiornamento");
     expect(latest.sourceUrl).toContain("lamezia-masi-pd-strade-dissestate");
     expect(p.verificationNote).toContain("2026-PROT-68150");
-    expect(p.verificationNote).toContain("non sono stati acquisiti");
+    expect(p.verificationNote).toMatch(/non sono stati acquisiti/i);
     expect(getCanonicalProposalPresentationIds()).toContain(masiId);
     expect(getCanonicalProposalPresentation(p).proposalId).toBe(masiId);
     expect(getProposalPrimaryPaSubject(p).uri).toMatch(/^https:\/\//);
