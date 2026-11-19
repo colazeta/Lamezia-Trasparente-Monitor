@@ -166,7 +166,7 @@ export {
 const EXISTING_PUBLIC_PROPOSALS = [
   ...core.PUBLIC_PROPOSALS.map(applyScoutingUpdates),
   ...SCOUTED_PUBLIC_PROPOSALS,
-  ...SCOUTED_PUBLIC_PROPOSALS_20260903.map(applyScoutingUpdates20261119Masi),
+  ...SCOUTED_PUBLIC_PROPOSALS_20260903,
 ] as const satisfies readonly core.PublicProposal[];
 
 const UPDATED_EXISTING_PUBLIC_PROPOSALS = EXISTING_PUBLIC_PROPOSALS.map(
@@ -216,7 +216,8 @@ export const PUBLIC_PROPOSALS = [
   )
     .map(applyScoutingUpdates20261101)
     .map(applyScoutingUpdates20261111Taverna)
-    .map(applyScoutingUpdates20261113Branca),
+    .map(applyScoutingUpdates20261113Branca)
+    .map(applyScoutingUpdates20261119Masi),
   ...UPDATED_SCOUTED_PUBLIC_PROPOSALS_20260904_20260909,
   ...UPDATED_SCOUTED_PUBLIC_PROPOSALS_20260906_20260909,
   ...UPDATED_SCOUTED_PUBLIC_PROPOSALS_20260908,
