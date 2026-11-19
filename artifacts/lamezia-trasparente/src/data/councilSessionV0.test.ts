@@ -454,6 +454,54 @@ describe("councilSessionV0", () => {
           /stessa comunicazione della Prefettura.*non identifica né conferma la seduta.*non costituisce una conferma indipendente/i,
         ),
       }),
+      expect.objectContaining({
+        publisher: "Gazzetta del Sud",
+        publishedAt: "2026-11-11",
+        relationship: "possible_same_session",
+        url: expect.stringContaining("si-fara-il-punto"),
+      }),
+      expect.objectContaining({
+        publisher: "IlDispaccio",
+        publishedAt: "2026-11-13",
+        relationship: "possible_same_session",
+        url: expect.stringContaining("mimmo-gianturco"),
+      }),
+      expect.objectContaining({
+        publisher: "il Lametino",
+        publishedAt: "2026-11-19",
+        relationship: "same_session",
+        url: expect.stringContaining("al-via-i-lavori"),
+      }),
+      expect.objectContaining({
+        publisher: "LameziaInforma",
+        publishedAt: "2026-11-19",
+        relationship: "same_session",
+        url: expect.stringContaining("70346"),
+      }),
+      expect.objectContaining({
+        publisher: "LaC News24",
+        publishedAt: "2026-11-19",
+        relationship: "same_session",
+        url: expect.stringContaining("nzz8u4u7"),
+      }),
+      expect.objectContaining({
+        publisher: "LameziaTerme.it",
+        publishedAt: "2026-11-19",
+        relationship: "same_session",
+        url: expect.stringContaining("scintille-in-aula"),
+      }),
+      expect.objectContaining({
+        publisher: "LameziaTerme.it",
+        publishedAt: "2026-11-19",
+        relationship: "same_session",
+        url: expect.stringContaining("furgiuele-non-coinvolto"),
+      }),
+      expect.objectContaining({
+        publisher: "Zoom24",
+        publishedAt: "2026-11-19",
+        relationship: "possible_same_session",
+        url: expect.stringContaining("177322495494"),
+      }),
     ]);
     expect(session?.contextResearch.media).toEqual([
       expect.objectContaining({
@@ -502,9 +550,9 @@ describe("councilSessionV0", () => {
       /non certific(?:a|ano) programmazione, svolgimento/i,
     );
     expect(session?.contextResearch.checkedAt).toBe(
-      "2026-11-19T11:26:00+01:00",
+      "2026-11-19T17:52:00+01:00",
     );
-    expect(session?.lastCheckedAt.value).toBe("2026-11-19T11:26:00+01:00");
+    expect(session?.lastCheckedAt.value).toBe("2026-11-19T17:52:00+01:00");
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /tre pubblicazioni del 14 novembre.*`agenda_item`.*non identificano o confermano la seduta/i,
     );
@@ -531,6 +579,12 @@ describe("councilSessionV0", () => {
     );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /NoiDiCalabria del 19 novembre.*`agenda_item`.*stessa comunicazione della Prefettura.*non costituisce una conferma indipendente/i,
+    );
+    expect(session?.dataLimits.value?.join(" ")).toMatch(
+      /Gazzetta del Sud.*IlDispaccio.*Zoom24.*`possible_same_session`/i,
+    );
+    expect(session?.dataLimits.value?.join(" ")).toMatch(
+      /resoconti del 19 novembre.*il Lametino.*LameziaInforma.*LaC News24.*LameziaTerme.it.*`same_session`.*fonti editoriali/i,
     );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /diretta editoriale City One del 19 novembre.*`possible_same_session`.*`mediaType: live_stream`.*`mediaStatus: live`.*non valorizza `liveStreaming` o `recording` ufficiali/i,
