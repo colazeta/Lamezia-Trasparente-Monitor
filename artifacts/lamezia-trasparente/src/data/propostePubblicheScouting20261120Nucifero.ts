@@ -1,0 +1,52 @@
+import type { PublicProposal } from "./propostePubblicheCore";
+
+/** Recupero di proposta del 3 novembre e sviluppo documentato il 19 novembre 2026. */
+export const SCOUTED_PUBLIC_PROPOSALS_20261120_NUCIFERO = [
+  {
+    id: "aeroporto-caro-voli-accordi-nucifero-2026",
+    title: "Richiesta di accordi tariffari con le compagnie aeree per i collegamenti con la Calabria",
+    summary: "Fernando Nucifero, dirigente dell'UDC di Lamezia Terme, chiede alla Regione Calabria di valutare accordi strutturati con le compagnie aeree che operano negli scali calabresi, incluso Lamezia, per attenuare il costo dei biglietti nei periodi di maggiore domanda, anche tenendo conto dei rapporti di incentivazione pubblica. Il 19 novembre ribadisce la richiesta e sollecita un potenziamento dei collegamenti interni ferroviari, automobilistici e stradali. Importi degli incentivi, livelli tariffari e fattibilità degli accordi non sono stati accertati autonomamente.",
+    promoterId: "fernando-nucifero-udc",
+    promoter: "Fernando Nucifero (UDC)",
+    promoterType: "forza_politica",
+    coPromoters: [],
+    periodLabel: "3–19 novembre 2026",
+    year: "2026",
+    theme: "Accordi tariffari per i collegamenti aerei regionali",
+    threadId: "collegamenti-aerei-calabria-accordi-tariffari-nucifero-2026",
+    threadLabel: "Accordi tariffari e accessibilità economica dei voli per la Calabria",
+    territorialArea: "Aeroporti calabresi, incluso l'aeroporto di Lamezia Terme, Sant'Eufemia",
+    institutionalRecipient: "Regione Calabria",
+    channel: "comunicato",
+    sourceLabel: "il Lametino — appello di Fernando Nucifero, 3 novembre 2026",
+    sourceUrl: "https://www.lametino.it/calabria/caro-voli-lappello-di-nucifero-alla-regione-servono-accordi-con-le-compagnie-aeree.html",
+    status: "proposta_emersa",
+    linkedActs: [],
+    verificationNote: "La proposta del 3 novembre riguarda il sistema aeroportuale regionale, con esplicito riferimento allo scalo di Lamezia Terme, e proviene da un dirigente politico lametino. È distinta dalla richiesta di Domenico Taverna per promotore e oggetto. Il 19 novembre Nucifero riferisce un'interrogazione della consigliera regionale Filomena Greco, ma non sono stati acquisiti il testo o un protocollo regionale originale: la notizia non prova deposito formale, risposta, recepimento né attuazione di questa proposta. Nessun importo di finanziamenti, prezzo dei biglietti, accordo con vettori o potere di regolare le tariffe è stato verificato da fonte primaria. Il destinatario è la Regione Calabria, ma non viene inferita competenza regionale sui prezzi o sugli incentivi: not_assessed. La geografia segnala l'area dello scalo lametino senza pretendere di localizzare una misura di scala regionale.",
+    evidenceLevel: "fonte_stampa",
+    firstSeen: "2026-11-03",
+    lastUpdated: "2026-11-19",
+    events: [
+      {
+        id: "nucifero-caro-voli-richiesta-2026-11-03",
+        date: "2026-11-03",
+        type: "emersione",
+        title: "Nucifero propone accordi con vettori per attenuare il costo dei voli nei periodi di punta",
+        summary: "Il promotore chiede un'intesa con compagnie aeree che tenga conto dei rapporti di incentivazione pubblica e preveda tutele tariffarie da valutare; nessuna convenzione formalizzata risulta documentata.",
+        sourceLabel: "il Lametino, 3 novembre 2026",
+        sourceUrl: "https://www.lametino.it/calabria/caro-voli-lappello-di-nucifero-alla-regione-servono-accordi-con-le-compagnie-aeree.html",
+        evidenceLevel: "fonte_stampa",
+      },
+      {
+        id: "nucifero-caro-voli-rilancio-2026-11-19",
+        date: "2026-11-19",
+        type: "aggiornamento",
+        title: "Rinnovata la richiesta di accordi tariffari e collegamenti interni",
+        summary: "Nucifero rinnova l'appello alla Regione e chiede anche il rafforzamento dei trasporti interni. L'interrogazione di Filomena Greco è riferita dal promotore, non verificata con l'atto ufficiale e non costituisce un deposito di questa proposta.",
+        sourceLabel: "il Lametino, 19 novembre 2026",
+        sourceUrl: "https://www.lametino.it/calabria/caro-voli-e-fondi-pubblici-nucifero-udc-regione-pretenda-tariffe-piu-accessibili.html",
+        evidenceLevel: "fonte_stampa",
+      },
+    ],
+  },
+] as const satisfies readonly PublicProposal[];
