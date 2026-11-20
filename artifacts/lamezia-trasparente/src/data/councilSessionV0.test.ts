@@ -471,6 +471,12 @@ describe("councilSessionV0", () => {
         publishedAt: "2026-11-19",
         relationship: "same_session",
         url: expect.stringContaining("al-via-i-lavori"),
+        title:
+          "Lamezia, Consiglio comunale aperto su superamento campo Rom: Amministrazione conferma iter del progetto",
+        reviewedAt: "2026-11-20T17:25:00+01:00",
+        relevanceNote: expect.stringMatching(
+          /aggiornata come resoconto conclusivo.*resta una fonte editoriale/i,
+        ),
       }),
       expect.objectContaining({
         publisher: "LameziaInforma",
@@ -506,7 +512,9 @@ describe("councilSessionV0", () => {
         publisher: "Corriere della Calabria",
         publishedAt: "2026-11-19",
         relationship: "same_session",
-        url: expect.stringContaining("scontro-consiglio-comunale-lo-moro-murone"),
+        url: expect.stringContaining(
+          "scontro-consiglio-comunale-lo-moro-murone",
+        ),
         relevanceNote: expect.stringMatching(/fonte editoriale/i),
       }),
     ]);
@@ -579,9 +587,12 @@ describe("councilSessionV0", () => {
       /non certific(?:a|ano) programmazione, svolgimento/i,
     );
     expect(session?.contextResearch.checkedAt).toBe(
-      "2026-11-20T00:07:00+01:00",
+      "2026-11-20T17:25:00+01:00",
     );
-    expect(session?.lastCheckedAt.value).toBe("2026-11-20T00:07:00+01:00");
+    expect(session?.lastCheckedAt.value).toBe("2026-11-20T17:25:00+01:00");
+    expect(session?.dataLimits.value?.join(" ")).toMatch(
+      /pagina originale di il Lametino.*titolo aggiornato.*resoconto conclusivo.*non valorizza stato/i,
+    );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /tre pubblicazioni del 14 novembre.*`agenda_item`.*non identificano o confermano la seduta/i,
     );
