@@ -51,6 +51,7 @@ import { SCOUTED_PUBLIC_PROPOSALS_20261119_REILLO } from "./propostePubblicheSco
 import { applyScoutingUpdates20261119Masi } from "./proposalScoutingUpdates20261119Masi";
 import { applyScoutingUpdates20261113Branca } from "./proposalScoutingUpdates20261113Branca";
 import { applyScoutingUpdates20261111Scordovillo } from "./proposalScoutingUpdates20261111";
+import { applyScoutingUpdates20261120Scordovillo } from "./proposalScoutingUpdates20261120Scordovillo";
 import { applyScoutingUpdates20261105CorsiAcqua } from "./proposalScoutingUpdates20261105";
 import { applyScoutingUpdates20261104Mascaro } from "./proposalScoutingUpdates20261104";
 
@@ -94,7 +95,7 @@ export {
   getCanonicalProposalPresentation,
   getCanonicalProposalPresentationIds,
   hasCanonicalProposalPresentation,
-} from "./proposalCanonicalPresentationArchive20261119Backfill";
+} from "./proposalCanonicalPresentationArchive20261120";
 
 export type {
   LtSemanticExtensionId,
@@ -224,7 +225,7 @@ export const PUBLIC_PROPOSALS = [
   ...UPDATED_SCOUTED_PUBLIC_PROPOSALS_20260908,
   ...SCOUTED_PUBLIC_PROPOSALS_20260909,
   ...SCOUTED_PUBLIC_PROPOSALS_20260911,
-  ...SCOUTED_PUBLIC_PROPOSALS_20260913.map(applyScoutingUpdates20261111Scordovillo),
+  ...SCOUTED_PUBLIC_PROPOSALS_20260913.map(applyScoutingUpdates20261111Scordovillo).map(applyScoutingUpdates20261120Scordovillo),
   ...SCOUTED_PUBLIC_PROPOSALS_20260915,
   ...SCOUTED_PUBLIC_PROPOSALS_20261013,
   ...SCOUTED_PUBLIC_PROPOSALS_20261023,
@@ -246,7 +247,7 @@ export const PUBLIC_PROPOSALS = [
   ...SCOUTED_PUBLIC_PROPOSALS_20261108_B,
   ...SCOUTED_PUBLIC_PROPOSALS_20261109,
   ...SCOUTED_PUBLIC_PROPOSALS_20261110,
-  ...SCOUTED_PUBLIC_PROPOSALS_20261111,
+  ...SCOUTED_PUBLIC_PROPOSALS_20261111.map(applyScoutingUpdates20261120Scordovillo),
   ...SCOUTED_PUBLIC_PROPOSALS_20261112,
   ...SCOUTED_PUBLIC_PROPOSALS_20261113,
   ...SCOUTED_PUBLIC_PROPOSALS_20261114,
