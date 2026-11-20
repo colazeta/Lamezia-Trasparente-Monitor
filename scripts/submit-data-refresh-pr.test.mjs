@@ -68,7 +68,7 @@ test("blocked PR creation preserves one orphan branch and a retry recovers it wi
     git("add",".");git("commit","-m","baseline");git("remote","add","origin",path.join(root,"remote.git"));git("push","origin","main");
     const base=git("rev-parse","HEAD"),summary=path.join(root,"summary");
     writeFileSync(path.join(bin,"gh"),'#!/bin/sh\ncase "$*" in\n *"--state all"*) echo 0;;\n "pr create"*) echo "GitHub Actions is not permitted to create pull requests" >&2; exit 1;;\nesac\n',{mode:0o755});
-    const env={...process.env,PATH:`${bin}:${process.env.PATH}`,GH_TOKEN:"fixture",GITHUB_REPOSITORY:"test/project",GITHUB_RUN_ID:"100",GITHUB_STEP_SUMMARY:summary};
+    const env={...process.env,PATH:`${bin}:${process.env.PATH}`,GH_TOKEN:"fixture",GITHUB_REPOSITORY:"test/project",GITHUB_RUN_ID:"100",GITHUB_RUN_ATTEMPT:"1",GITHUB_STEP_SUMMARY:summary};
     writeFileSync(path.join(cwd,snapshot),'{"first":true}\n');
     assert.throws(()=>execFileSync("bash",[script,"climate","Refresh",snapshot],{cwd,env,stdio:"pipe"}));
     const preserved=git("ls-remote","--heads","origin","refs/heads/data/refresh-climate-*");
