@@ -48,6 +48,7 @@ import { SCOUTED_PUBLIC_PROPOSALS_20261117 } from "./propostePubblicheScouting20
 import { SCOUTED_PUBLIC_PROPOSALS_20261118 } from "./propostePubblicheScouting20261118";
 import { SCOUTED_PUBLIC_PROPOSALS_20261119 } from "./propostePubblicheScouting20261119";
 import { SCOUTED_PUBLIC_PROPOSALS_20261119_REILLO } from "./propostePubblicheScouting20261119Reillo";
+import { SCOUTED_PUBLIC_PROPOSALS_20261120_NUCIFERO } from "./propostePubblicheScouting20261120Nucifero";
 import { applyScoutingUpdates20261119Masi } from "./proposalScoutingUpdates20261119Masi";
 import { applyScoutingUpdates20261113Branca } from "./proposalScoutingUpdates20261113Branca";
 import { applyScoutingUpdates20261111Scordovillo } from "./proposalScoutingUpdates20261111";
@@ -95,7 +96,7 @@ export {
   getCanonicalProposalPresentation,
   getCanonicalProposalPresentationIds,
   hasCanonicalProposalPresentation,
-} from "./proposalCanonicalPresentationArchive20261120";
+} from "./proposalCanonicalPresentationArchive20261120Nucifero";
 
 export type {
   LtSemanticExtensionId,
@@ -257,6 +258,7 @@ export const PUBLIC_PROPOSALS = [
   ...SCOUTED_PUBLIC_PROPOSALS_20261118,
   ...SCOUTED_PUBLIC_PROPOSALS_20261119,
   ...SCOUTED_PUBLIC_PROPOSALS_20261119_REILLO,
+  ...SCOUTED_PUBLIC_PROPOSALS_20261120_NUCIFERO,
 ] as const satisfies readonly core.PublicProposal[];
 
 export function getProposalThemes(

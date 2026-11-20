@@ -398,6 +398,12 @@ const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
     primary: ps("4"),
     secondary: [ps("7")],
   },
+  "Accordi tariffari per i collegamenti aerei regionali": {
+    primary: ps("4"),
+    secondary: [ps("9")],
+    mappingNote:
+      "La richiesta principale riguarda le condizioni di accessibilità economica dei servizi di trasporto aereo (AgID 4). Incentivi e risorse pubbliche sono una materia secondaria finanziaria (AgID 9). La classificazione non attribuisce competenze né comprova accordi, vincoli sui prezzi o finanziamenti effettivi.",
+  },
   "Allestimenti natalizi diffusi nelle frazioni e contrade": {
     primary: ps("10"),
     mappingNote: "Gli allestimenti natalizi temporanei ricadono nella fruizione culturale e ricreativa (AgID 10); nessuna classificazione secondaria aggiunta senza specifica pertinenza. La classificazione non attribuisce competenza né attuazione.",
