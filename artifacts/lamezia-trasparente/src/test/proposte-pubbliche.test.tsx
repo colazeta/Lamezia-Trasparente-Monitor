@@ -51,7 +51,10 @@ describe("proposte civiche", () => {
     });
 
     expect(filtered).toHaveLength(4);
-    expect(filterPublicProposals(PUBLIC_PROPOSALS, { status: "discussa" })).toHaveLength(0);
+    expect(filterPublicProposals(PUBLIC_PROPOSALS, { status: "discussa" }).map(p => p.id).sort()).toEqual([
+      "scordovillo-consiglio-aperto-trasparenza-futuro-nazionale-2026",
+      "scordovillo-consiglio-aperto-pd-azione-per-vivere-bene-2026",
+    ].sort());
   });
 
   it("renderizza un archivio compatto con materia e stato cittadino", () => {
