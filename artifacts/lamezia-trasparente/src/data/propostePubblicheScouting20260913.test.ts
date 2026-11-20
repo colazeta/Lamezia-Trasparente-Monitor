@@ -139,13 +139,14 @@ describe("scouted public proposals 13 September 2026 and Scordovillo timeline up
     expect(scordovilloMatches).toHaveLength(1);
 
     const scordovillo = scordovilloMatches[0];
-    expect(scordovillo.lastUpdated).toBe("2026-11-10");
-    expect(scordovillo.status).toBe("proposta_emersa");
+    expect(scordovillo.lastUpdated).toBe("2026-11-19");
+    expect(scordovillo.status).toBe("discussa");
     expect(scordovillo.events.map((event) => event.type)).toEqual([
       "emersione",
       "aggiornamento",
       "aggiornamento",
       "aggiornamento",
+      "discussione",
     ]);
     expect(scordovillo.events.some(event =>
       event.id === "scordovillo-centrosinistra-data-consiglio-aperto-riferita-2026-11-10" &&

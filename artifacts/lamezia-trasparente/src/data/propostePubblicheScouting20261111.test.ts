@@ -72,17 +72,18 @@ describe("Scouting 11 novembre — Scordovillo: due promotori, unico filone e st
 
   it("registra il nuovo sviluppo nella stessa timeline originale senza falsi depositi o calendarizzazioni", () => {
     const [prior, current] = proposals;
-    expect(prior.events).toHaveLength(4);
-    expect(prior.lastUpdated).toBe("2026-11-10");
+    expect(prior.events).toHaveLength(5);
+    expect(prior.lastUpdated).toBe("2026-11-19");
     const priorNew = prior.events.find(e => e.id === "scordovillo-centrosinistra-data-consiglio-aperto-riferita-2026-11-10");
     expect(priorNew?.type).toBe("aggiornamento");
     expect(priorNew?.sourceUrl).toBe(originalSource);
-    expect(current.events).toHaveLength(1);
+    expect(current.events).toHaveLength(2);
     expect(current.events[0]?.type).toBe("emersione");
     expect(current.events[0]?.date).toBe("2026-11-10");
     for (const proposal of proposals) {
       expect(new Set(proposal.events.map(e => e.id)).size).toBe(proposal.events.length);
-      expect(proposal.events.some(e => ["petizione", "deposito", "calendarizzazione", "discussione", "recepimento"].includes(e.type))).toBe(false);
+      expect(proposal.events.some(e => ["petizione", "deposito", "calendarizzazione", "recepimento"].includes(e.type))).toBe(false);
+      expect(proposal.events.filter(e => e.type === "discussione")).toHaveLength(1);
       expect(proposal.events.every(e => e.date >= proposal.firstSeen && e.date <= proposal.lastUpdated)).toBe(true);
       expect(proposal.events.every(e => e.sourceUrl?.startsWith("https://"))).toBe(true);
       expect(proposal.verificationNote).toContain("convocazione");
@@ -105,10 +106,10 @@ describe("Scouting 11 novembre — Scordovillo: due promotori, unico filone e st
   it("deriva lo stato sintetico senza inferire attuazione, recepimento o deposizioni", () => {
     for (const proposal of proposals) {
       const state = getProposalInstitutionalState(proposal);
-      expect(state.progressStage).toBe("emersa");
-      expect(state.publicState).toBe("segnalata");
-      expect(state.hasFormalization).toBe(false);
-      expect(state.hasInstitutionalFollowUp).toBe(false);
+      expect(state.progressStage).toBe("discussa");
+      expect(state.publicState).toBe("con_seguito");
+      expect(proposal.events.some(e => e.type === "deposito")).toBe(false);
+      expect(state.hasInstitutionalFollowUp).toBe(true);
       expect(state.implementation).toBe("none");
     }
   });
