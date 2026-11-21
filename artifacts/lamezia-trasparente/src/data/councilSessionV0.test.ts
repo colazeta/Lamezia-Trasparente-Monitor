@@ -507,6 +507,26 @@ describe("councilSessionV0", () => {
         relevanceNote: expect.stringMatching(/resta una fonte editoriale/i),
       }),
       expect.objectContaining({
+        publisher: "City One",
+        publishedAt: "2026-11-20",
+        relationship: "same_session",
+        url: expect.stringContaining("presunta-aggressione-allassessore"),
+        reviewedAt: "2026-11-21T05:49:00+01:00",
+        relevanceNote: expect.stringMatching(
+          /nota di Futuro Nazionale.*non una conferma indipendente/i,
+        ),
+      }),
+      expect.objectContaining({
+        publisher: "il Lametino",
+        publishedAt: "2026-11-20",
+        relationship: "same_session",
+        url: expect.stringContaining("sindaco-chiarisca"),
+        reviewedAt: "2026-11-21T05:49:00+01:00",
+        relevanceNote: expect.stringMatching(
+          /stessa nota di Futuro Nazionale.*non una conferma indipendente/i,
+        ),
+      }),
+      expect.objectContaining({
         publisher: "LameziaTerme.it",
         publishedAt: "2026-11-19",
         relationship: "same_session",
@@ -597,9 +617,9 @@ describe("councilSessionV0", () => {
       /non certific(?:a|ano) programmazione, svolgimento/i,
     );
     expect(session?.contextResearch.checkedAt).toBe(
-      "2026-11-20T23:21:00+01:00",
+      "2026-11-21T05:49:00+01:00",
     );
-    expect(session?.lastCheckedAt.value).toBe("2026-11-20T23:21:00+01:00");
+    expect(session?.lastCheckedAt.value).toBe("2026-11-21T05:49:00+01:00");
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /pagina originale di il Lametino.*titolo aggiornato.*resoconto conclusivo.*non valorizza stato/i,
     );
@@ -644,6 +664,9 @@ describe("councilSessionV0", () => {
     );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /resoconto City One del 19 novembre.*`same_session`.*fonte editoriale.*non valorizza campi ufficiali/i,
+    );
+    expect(session?.dataLimits.value?.join(" ")).toMatch(
+      /City One e il Lametino del 20 novembre.*`same_session`.*stessa dichiarazione politica.*non costituiscono conferme indipendenti.*non valorizzano campi ufficiali/i,
     );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /due interviste video del 19 novembre di Corriere della Calabria.*`same_session`.*`mediaType: interview`.*`mediaStatus: replay_available`.*non valorizzano streaming o registrazione ufficiali/i,
