@@ -154,6 +154,18 @@ const eu = (code: OfficialFallbackDataThemeCode): ProposalPaSubjectRef => ({
 });
 
 const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
+  "Riorganizzazione sanitaria e polo di emergenza sismica": {
+    primary: ps("2"), secondary: [ps("8")],
+    mappingNote: "Rete clinica, riorganizzazione sanitaria e continuità assistenziale: Salute, benessere e assistenza (AgID 2). La protezione dalle maxi-emergenze è secondaria (AgID 8). Nessuna competenza, finanziamento o accreditamento è dedotto dalla classificazione.",
+  },
+  "Illuminazione pubblica e accessibilità dell'Area PIP Rotoli": {
+    primary: ps("4"), secondary: [ps("8"),ps("12")],
+    mappingNote: "Intervento sui punti luce e sull'accessibilità dell'area produttiva: Mobilità e trasporti (AgID 4), con sicurezza (AgID 8) e contesto imprenditoriale (AgID 12) secondari. La classificazione non prova competenze né attuazione.",
+  },
+  "Illuminazione pubblica e verifica degli interventi a Rotoli": {
+    primary: ps("4"), secondary: [ps("8"),ps("12")],
+    mappingNote: "Ripristino della visibilità sulle strade della zona produttiva (AgID 4); sicurezza (AgID 8) e attività produttive (AgID 12) sono classificazioni secondarie, senza inferire competenza, finanziamenti o appalti.",
+  },
   "Sicurezza e manutenzione delle alberature della villetta Reillo": {
     primary: ps("11"),
     secondary: [ps("8")],
