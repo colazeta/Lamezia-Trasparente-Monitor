@@ -24,9 +24,27 @@ describe("evidence interventions 2026-09-06", () => {
       expect(item.evaluationStudies.length).toBeGreaterThan(0);
       expect(item.evaluationStudies.every((study) => study.url.startsWith("https://"))).toBe(true);
       expect(item.limitations.length).toBeGreaterThan(0);
-      expect(item.lastVerifiedAt).toBe("2026-09-06");
+      expect(item.lastVerifiedAt).toBe(item.id === "italy-emilia-romagna-municipal-unions-efficiency" ? "2026-11-08" : "2026-09-06");
       expect(item.revisionHistory.length).toBeGreaterThan(0);
     }
+  });
+
+  it("updates the existing Italian union case with independently verified 2025 service-level evidence, not a duplicate", () => {
+    const unions = EVIDENCE_INTERVENTIONS_2026_09_06.filter(
+      (item) => item.id === "italy-emilia-romagna-municipal-unions-efficiency",
+    );
+    expect(unions).toHaveLength(1);
+    const record = unions[0];
+    expect(record.lastVerifiedAt).toBe("2026-11-08");
+    expect(record.revisionHistory.map((entry) => entry.date)).toContain("2026-09-06");
+    expect(record.revisionHistory.map((entry) => entry.date)).toContain("2026-11-08");
+    expect(record.evaluationStudies.filter((study) => study.doi === "10.1080/00343404.2025.2577917")).toHaveLength(1);
+    expect(record.results).toContain("Gori");
+    expect(record.results).toContain("NON equivale");
+    expect(record.effectSize).toContain("−5,114 euro");
+    expect(record.effectSize).toContain("−7,111%");
+    expect(record.limitations.join(" ")).toContain("non sono repliche indipendenti");
+    expect(record.evidenceStrength).toBe("moderata");
   });
 
   it("keeps mixed or non-causal evidence explicit", () => {
