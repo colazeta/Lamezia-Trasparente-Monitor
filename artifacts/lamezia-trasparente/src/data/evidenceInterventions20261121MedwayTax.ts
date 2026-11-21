@@ -51,6 +51,7 @@ export const EVIDENCE_INTERVENTIONS_2026_11_21_MEDWAY_TAX: readonly EvidenceInte
     "Le lettere comportamentali erano entrambe semplificate rispetto al controllo: non è possibile isolare un effetto causale puro della norma sociale rispetto a tutti gli altri cambiamenti della comunicazione.",
     "Il confronto monetario sugli arretrati è condizionato ai soli paganti (N=6.404) e può risentire di selezione post-trattamento; non è una misura sperimentale incondizionata di nuove entrate nette.",
     "Lo studio non valuta in dettaglio debito residuo di lungo periodo, stress finanziario, reclami o differenze distributive per famiglie vulnerabili.",
+    "La scheda LGA del 2017 riferisce incrementi relativi del 19% e del 13% per i due trattamenti, mentre la Tabella 2 dell\u0027articolo del 2019 implica rispettivamente +20,2% e +10,9%: la differenza fra stime non è riconciliata nelle fonti consultate. Nel record prevalgono le stime primarie della tabella scientifica.",
     "Un RCT pubblicato relativo alla Council Tax di Lambeth, già censito nell'archivio, ha trovato risultati nulli o avversi per alcuni messaggi di norma sociale; la riuscita non è universale.",
     "Il sistema fiscale britannico (Council Tax) differisce da TARI/IMU e dalle regole italiane di notifica e riscossione; nessuna proiezione quantitativa trasferibile senza un pilota locale."
   ],
