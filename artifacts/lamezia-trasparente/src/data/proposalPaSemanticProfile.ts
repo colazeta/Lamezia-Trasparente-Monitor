@@ -416,6 +416,11 @@ const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
     mappingNote:
       "La richiesta principale riguarda le condizioni di accessibilità economica dei servizi di trasporto aereo (AgID 4). Incentivi e risorse pubbliche sono una materia secondaria finanziaria (AgID 9). La classificazione non attribuisce competenze né comprova accordi, vincoli sui prezzi o finanziamenti effettivi.",
   },
+  "Aree comunali recintate per lo sgambamento dei cani": {
+    primary: ps("11"),
+    secondary: [ps("10")],
+    mappingNote: "La proposta principale riguarda aree verdi comunali attrezzate e benessere animale (AgID 11 Ambiente), con fruizione ricreativa dei parchi come materia secondaria (AgID 10 Cultura e tempo libero). La classificazione non attribuisce competenza né prova il deposito della proposta del 2023 o il nesso causale con l'atto comunale del 2026.",
+  },
   "Programmazione di eventi natalizi nei quartieri": {
     primary: ps("10"),
     mappingNote: "Il programma di eventi e animazione per le festività rientra in Cultura e tempo libero (AgID 10). La richiesta è distinta dalle luminarie nelle frazioni, senza materia secondaria necessaria. Il tema non dimostra competenza amministrativa, finanziamenti o attuazione.",
