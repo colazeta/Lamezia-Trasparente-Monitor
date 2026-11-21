@@ -1,6 +1,3 @@
-Warning: truncated output (original token count: 83085)
-Total output lines: 5522
-
 import {
   identifyInstitutionalSessionCandidate,
   type InstitutionalSessionCandidate,
@@ -801,7 +798,3576 @@ const september24CommissionContextResearch: CouncilSessionV0ContextResearch = {
   media: [],
 };
 
-const september24To30…53085 tokens truncated…nfiammano” l’autunno politico",
+const september24To30CommissionContextResearch: CouncilSessionV0ContextResearch =
+  {
+    status: "checked_no_match",
+    checkedAt: SEPTEMBER_24_30_COMMISSION_RESEARCHED_AT,
+    searchNote:
+      "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, il Lametino e risultati indicizzati, inclusi canali YouTube e Facebook, per le sedute di III, IV e V Commissione dal 24 al 30 settembre 2026. Le query hanno combinato organo, date, orari e temi distintivi: Garante delle persone con disabilità, tutela della salute e del benessere della comunità scolastica, adeguamento climatico degli edifici scolastici, Street Art, beni comunali e interventi sulla rete stradale. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alle singole sedute. Gli ordini del giorno ufficiali sono disponibili e non viene ricostruita un'agenda editoriale.",
+    articles: [],
+    media: [],
+  };
+
+const commissionVSeptember28ReuContextResearch: CouncilSessionV0ContextResearch =
+  {
+    status: "reviewed_matches",
+    checkedAt: COMMISSION_V_REU_CONTEXT_RESEARCHED_AT,
+    searchNote:
+      "Ricerca eseguita con Parallel Search per discovery e verifica diretta degli articoli originali de il Lametino e LameziaInforma, della convocazione Albo 2026/3090 e della deliberazione di Giunta 2026/3123 richiamata dalla copertura sull'immobile comunale. I due articoli sul Regolamento edilizio e urbanistico nominano la V Commissione ma non datano una seduta e trattano un tema diverso dall'ordine del giorno ufficiale del 28 settembre: restano `possible_same_session`. L'articolo sul rinnovo della concessione di un immobile comunale è collegato come `agenda_item` perché pertinente alla gestione dei beni comunali, ma non nomina la Commissione. Nessuna fonte editoriale modifica i campi ufficiali o prova costituzione, svolgimento, trattazione, approvazione, votazioni o risultati. Non sono emersi contenuti audiovisivi collegabili con sufficiente precisione.",
+    articles: [
+      {
+        title:
+          "Lamezia, verifica sul Regolamento edilizio e urbanistico: la V Commissione chiede adeguamento alle norme vigenti",
+        url: COMMISSION_V_REU_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-09-28",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "L'articolo nomina la V Commissione ed è pubblicato nella data della seduta, ma non data una riunione e tratta il Regolamento edilizio e urbanistico, tema diverso dall'ordine del giorno ufficiale sui beni comunali. Non prova svolgimento, trattazione, votazioni o risultati della seduta del 28 settembre.",
+        reviewedAt: COMMISSION_V_REU_CONTEXT_RESEARCHED_AT,
+      },
+      {
+        title:
+          "Il Comune chiede a sè stesso di aggiornare il Regolamento Edilizio ed Urbanistico",
+        url: COMMISSION_V_REU_LAMEZIAINFORMA_URL,
+        publisher: "LameziaInforma",
+        publishedAt: "2026-09-28",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "L'articolo attribuisce ai componenti della V Commissione un ordine del giorno sul Regolamento edilizio e urbanistico, ma non data una riunione e il tema è diverso dall'ordine del giorno ufficiale del 28 settembre sui beni comunali. Non prova svolgimento, trattazione, votazioni o risultati della seduta.",
+        reviewedAt: COMMISSION_V_REU_CONTEXT_RESEARCHED_AT,
+      },
+      {
+        title:
+          "Nuovo rinnovo fino a fine 2028 per l’assegnazione alla Progetto Sud dell’immobile di via dei Bizantini",
+        url: COMMISSION_V_MUNICIPAL_ASSET_LAMEZIAINFORMA_URL,
+        publisher: "LameziaInforma",
+        publishedAt: "2026-09-28",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo riguarda la concessione di un immobile comunale ed è quindi pertinente al punto ufficiale sulla gestione e valorizzazione dei beni comunali. Non nomina la Commissione e non prova svolgimento, trattazione, votazioni o risultati della seduta.",
+        reviewedAt: COMMISSION_V_REU_CONTEXT_RESEARCHED_AT,
+      },
+    ],
+    media: [],
+  };
+
+const september29ToOctober1CommissionContextResearch: CouncilSessionV0ContextResearch =
+  {
+    status: "checked_no_match",
+    checkedAt: SEPTEMBER_29_OCTOBER_1_COMMISSION_RESEARCHED_AT,
+    searchNote:
+      "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, il Lametino e risultati indicizzati, inclusi canali YouTube e Facebook, per le sedute della III Commissione del 29 settembre e 1° ottobre 2026 e della IV Commissione del 29 e 30 settembre 2026. Le query hanno combinato organo, date, orari e temi distintivi: contrasto all'abbandono dei rifiuti e audizione del Vicecomandante Ten. Col. Aldo Rubino, Garante delle persone con disabilità e regolamento Street Art. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alle singole sedute. Gli ordini del giorno ufficiali sono disponibili e non viene ricostruita un'agenda editoriale.",
+    articles: [],
+    media: [],
+  };
+
+const october1To6CommissionContextResearch: CouncilSessionV0ContextResearch = {
+  status: "checked_no_match",
+  checkedAt: OCTOBER_1_6_COMMISSION_RESEARCHED_AT,
+  searchNote:
+    "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, City One, LameziaInforma, LameziaTermeNews, il Lametino e risultati indicizzati, inclusi canali YouTube e Facebook, per le sedute di II, III, IV, V e VI Commissione dal 1° al 6 ottobre 2026. Le query hanno combinato organo, date, orari e temi distintivi: beni comunali, rete stradale, tariffe di asili nido e refezione scolastica, Street Art, mercato di prossimità a Sant'Eufemia Vetere, Garante delle persone con disabilità, debiti fuori bilancio e piano di riequilibrio. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione alle singole sedute. Gli ordini del giorno ufficiali sono disponibili e non viene ricostruita un'agenda editoriale.",
+  articles: [],
+  media: [],
+};
+
+const october12CommissionContextResearch: CouncilSessionV0ContextResearch = {
+  status: "reviewed_matches",
+  checkedAt: OCTOBER_12_13_COMMISSION_CONTEXT_RESEARCHED_AT,
+  searchNote:
+    "Ricerca ripetuta con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, La Novità Online, LameziaInforma, LameziaTermeNews, il Lametino e risultati indicizzati, inclusi canali YouTube e Facebook, per la V Commissione del 12 ottobre 2026. Sono emersi tre articoli pubblicati il 23 ottobre, oltre la finestra ordinaria di sette giorni, che nominano la V Commissione e trattano precisamente il regolamento sull'acquisizione, gestione e valorizzazione dei beni immobili comunali. City One e La Novità Online riprendono contenuti sostanzialmente coincidenti con il Lametino e riconducibili alla stessa comunicazione: i tre collegamenti non sono conferme indipendenti. Nessuna pagina indica la data della riunione; tutti e tre restano quindi `agenda_item`, non `same_session`, e non provano svolgimento, trattazione, voto, approvazione o risultato istituzionale della seduta. Il nuovo Albo dinamico ha restituito un blocco applicativo durante il controllo diretto e non è emersa una nuova fonte istituzionale; data, ora, ordine del giorno e altri campi ufficiali restano invariati.",
+  articles: [
+    {
+      title:
+        "Lamezia, nuove regole per il patrimonio immobiliare comunale: approvato regolamento acquisizione, gestione e valorizzazione dei beni",
+      url: COMMISSION_V_OCTOBER_23_ASSETS_LAMETINO_URL,
+      publisher: "il Lametino",
+      publishedAt: "2026-10-23",
+      relationship: "agenda_item",
+      relevanceNote:
+        "L'articolo nomina la V Commissione e riguarda precisamente il regolamento sull'acquisizione, gestione e valorizzazione dei beni immobili comunali, coincidente con il punto ufficiale del 12 ottobre. È stato pubblicato undici giorni dopo e non indica la data della riunione: non prova che si riferisca alla stessa seduta né certifica svolgimento, trattazione, voto, approvazione o risultato istituzionale.",
+      reviewedAt: OCTOBER_12_13_COMMISSION_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Patrimonio immobiliare comunale, a Lamezia la quinta Commissione approva il nuovo regolamento",
+      url: COMMISSION_V_OCTOBER_23_ASSETS_CITY_ONE_URL,
+      publisher: "City One",
+      publishedAt: "2026-10-23",
+      relationship: "agenda_item",
+      relevanceNote:
+        "L'articolo nomina la V Commissione e riguarda precisamente il regolamento sull'acquisizione, gestione e valorizzazione dei beni immobili comunali, coincidente con il punto ufficiale del 12 ottobre. È pubblicato undici giorni dopo, non indica la data della riunione e attribuisce la fonte a Mimmo Gianturco; riprende contenuti sostanzialmente coincidenti con il Lametino e non costituisce una conferma indipendente né certifica svolgimento, trattazione, voto, approvazione o risultato istituzionale.",
+      reviewedAt: OCTOBER_12_13_COMMISSION_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Lamezia Terme | Nuove regole per gli immobili comunali, più trasparenza e valorizzazione del patrimonio",
+      url: COMMISSION_V_OCTOBER_23_ASSETS_LA_NOVITA_URL,
+      publisher: "La Novità Online",
+      publishedAt: "2026-10-23",
+      relationship: "agenda_item",
+      relevanceNote:
+        "L'articolo nomina la V Commissione e tratta precisamente il regolamento sull'acquisizione, gestione e valorizzazione dei beni immobili comunali, coincidente con il punto ufficiale del 12 ottobre. Non indica la data della riunione e riprende contenuti sostanzialmente coincidenti con il Lametino e City One: non costituisce una conferma indipendente né certifica svolgimento, trattazione, voto, approvazione o risultato istituzionale.",
+      reviewedAt: OCTOBER_12_13_COMMISSION_CONTEXT_RESEARCHED_AT,
+    },
+  ],
+  media: [],
+};
+
+const october13CommissionContextResearch: CouncilSessionV0ContextResearch = {
+  status: "checked_no_match",
+  checkedAt: OCTOBER_12_13_COMMISSION_CONTEXT_RESEARCHED_AT,
+  searchNote:
+    "Ricerca ripetuta con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, il Lametino e risultati indicizzati, inclusi canali YouTube e Facebook, per la V Commissione del 13 ottobre 2026 e il disciplinare per interventi sulla rete stradale. Non sono emersi articoli, dirette, registrazioni, clip o interviste collegabili con sufficiente precisione. I tre articoli del 23 ottobre riguardano invece il distinto regolamento sui beni comunali in agenda il 12 ottobre e non vengono trasferiti a questa scheda. Il nuovo Albo dinamico ha restituito un blocco applicativo durante il controllo diretto; i campi ufficiali restano invariati.",
+  articles: [],
+  media: [],
+};
+
+const councilOctober9ContextResearch: CouncilSessionV0ContextResearch = {
+  status: "reviewed_matches",
+  checkedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+  searchNote:
+    "Ricerca eseguita con Parallel Search per discovery e verifica diretta di Albo, Comune, ConsigliCloud, City One, LameziaInforma, LameziaTermeNews, LameziaTerme.it, Lamezia Oggi, La Novità Online, il Lametino, Corriere della Calabria, Gazzetta del Sud, Calabria Diretta News, NtaCalabria e risultati indicizzati, inclusi canali YouTube e Facebook, per il Consiglio comunale convocato il 9 ottobre 2026 alle 09:30 e proseguito in seconda convocazione il 12 ottobre alle 10:30. Ventitré articoli originali sono collegati: ventuno come `same_session` — quattro annunci del 6 ottobre, quattro resoconti del 9 ottobre, due resoconti del 10 ottobre, sei articoli del 10 ottobre sulla nota USB Taxi che annuncia la presenza al Consiglio del 12 ottobre, tre approfondimenti dell'11 ottobre che collegano espressamente la prima convocazione alla prosecuzione del 12 ottobre, un resoconto del 12 ottobre e il resoconto NtaCalabria del 13 ottobre riferiti alla seconda convocazione — e due articoli del 13 ottobre come `agenda_item`, perché riguardano precisamente la mozione sul rione Timpone presente nell'ordine del giorno e discussa nella seconda convocazione. Gli articoli di City One e de il Lametino sul rione Timpone riprendono la stessa nota dei proponenti e non sono conferme indipendenti, come non lo sono i sei articoli USB che riprendono la medesima iniziativa. Tutti restano fonti editoriali e non valorizzano campi ufficiali, presenze, votazioni o risultati. La pubblicazione istituzionale 2026/3263 attesta invece la mancanza del numero legale e il rinvio dei 18 punti non discussi e votati alla seconda convocazione del 12 ottobre alle 10:30. Otto collegamenti audiovisivi editoriali sono stati verificati. Per il 9 ottobre, le dirette YouTube e Facebook di City One, rispettivamente di 4:17:09 e 4:13:05, e la diretta Facebook di LameziaTerme.it di 3:52:52 restano `possible_same_session` e `live_stream`; l'estratto Facebook di LameziaTerme.it di 1:00 resta `possible_same_session` e `excerpt`; la conferenza stampa del centrosinistra di 12:27 è `same_session` e `interview`. Per il 12 ottobre, City One ha pubblicato due URL YouTube con lo stesso titolo esplicito: il primo tentativo di 48 secondi risulta rimosso dall'autore ed è `unavailable`; la diretta principale, iniziata alle 11:10 locali, è terminata ed è disponibile come replay di 5:24:50. La pagina Facebook originale dello stesso editore conserva inoltre un replay distinto con titolo che identifica organo e data. I tre URL del 12 ottobre restano `possible_same_session` e `live_stream` perché non espongono un punto distintivo o il numero Albo. Nessun contenuto editoriale prova completezza, presenze, votazioni o risultati. Il portale istituzionale ConsigliCloud mostrava «No meetings found», quindi non è stato valorizzato alcuno streaming o registrazione istituzionale. L'ordine del giorno ufficiale resta quello dell'allegato istituzionale e non viene ricostruita un'agenda editoriale; la ricerca resta aperta fino al termine della finestra prevista.",
+  articles: [
+    {
+      title: "Convocato il Consiglio Comunale per venerdì 9 ottobre 2026",
+      url: COUNCIL_OCTOBER_9_CITY_ONE_URL,
+      publisher: "City One",
+      publishedAt: "2026-10-06",
+      relationship: "same_session",
+      relevanceNote:
+        "L'articolo identifica il Consiglio del 9 ottobre alle 09:30, la seconda convocazione del 12 ottobre alle 10:30, la sede e i punti ufficiali. È un annuncio precedente alla seduta e non prova costituzione, svolgimento, presenze, trattazione, votazioni o risultati.",
+      reviewedAt: OCTOBER_7_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Lamezia, il 9 ottobre seduta del Consiglio comunale: fra i punti la nomina del Collegio dei revisori",
+      url: COUNCIL_OCTOBER_9_LAMETINO_URL,
+      publisher: "il Lametino",
+      publishedAt: "2026-10-06",
+      relationship: "same_session",
+      relevanceNote:
+        "L'articolo identifica il Consiglio del 9 ottobre alle 09:30, la seconda convocazione del 12 ottobre alle 10:30 e temi distintivi dei 21 punti ufficiali. È un annuncio precedente alla seduta e non prova costituzione, svolgimento, presenze, trattazione, votazioni o risultati.",
+      reviewedAt: OCTOBER_7_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Venerdì consiglio comunale interlocutorio, su 21 punti nomina dei revisori dei conti unico pragmatico",
+      url: COUNCIL_OCTOBER_9_LAMEZIAINFORMA_URL,
+      publisher: "LameziaInforma",
+      publishedAt: "2026-10-06",
+      relationship: "same_session",
+      relevanceNote:
+        "L'articolo identifica il Consiglio di venerdì 9 ottobre e richiama la nomina del Collegio dei revisori e altri punti distintivi dei 21 punti ufficiali. È un annuncio precedente alla seduta e non prova costituzione, svolgimento, presenze, trattazione, votazioni o risultati.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Lamezia, Consiglio comunale: 21 punti tra conti, sanità e le emergenze della città",
+      url: COUNCIL_OCTOBER_9_LAMEZIATERME_URL,
+      publisher: "LameziaTerme.it",
+      publishedAt: "2026-10-06",
+      relationship: "same_session",
+      relevanceNote:
+        "L'articolo identifica il Consiglio del 9 ottobre alle 09:30, la sede e numerosi punti distintivi dei 21 punti ufficiali, inclusi revisori, controlli interni, debiti fuori bilancio, mozioni e interrogazioni. È un annuncio precedente alla seduta e non prova costituzione, svolgimento, presenze, trattazione, votazioni o risultati.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Lamezia, nominato il Collegio dei revisori dei conti: rieletto Daffinà alla presidenza",
+      url: COUNCIL_OCTOBER_9_REVISORS_LAMETINO_URL,
+      publisher: "il Lametino",
+      publishedAt: "2026-10-09",
+      relationship: "same_session",
+      relevanceNote:
+        "Il resoconto identifica il Consiglio del 9 ottobre e il punto distintivo sulla nomina del Collegio dei revisori. Resta una fonte editoriale: non completa i campi ufficiali e non certifica presenze, votazioni o risultati.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Lamezia, seduta Consiglio sospesa per mancanza numero legale: niente voto su debiti fuori bilancio, si torna in aula il 12 ottobre",
+      url: COUNCIL_OCTOBER_9_SUSPENDED_LAMETINO_URL,
+      publisher: "il Lametino",
+      publishedAt: "2026-10-09",
+      relationship: "same_session",
+      relevanceNote:
+        "Il resoconto identifica organo, data, mancanza del numero legale e seconda convocazione. È conservato come contesto editoriale; lo stato ufficiale è valorizzato soltanto dalla successiva pubblicazione Albo 2026/3263.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title: "Consiglio comunale, Scordovillo e revisori al centro dei lavori",
+      url: COUNCIL_OCTOBER_9_REPORT_LAMEZIATERME_URL,
+      publisher: "LameziaTerme.it",
+      publishedAt: "2026-10-09",
+      relationship: "same_session",
+      relevanceNote:
+        "Il resoconto identifica la seduta, lo smantellamento del campo di Scordovillo, la nomina del Collegio dei revisori, l'aggiornamento del regolamento sui controlli interni, la perdita del numero legale e la ripresa del 12 ottobre. Resta una fonte editoriale: non completa i campi ufficiali e non certifica presenze, votazioni o risultati.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Confermato Daffinà come presidente del collegio dei revisori dei conti, consiglio comunale senza altri esiti",
+      url: COUNCIL_OCTOBER_9_REPORT_LAMEZIAINFORMA_URL,
+      publisher: "LameziaInforma",
+      publishedAt: "2026-10-09",
+      relationship: "same_session",
+      relevanceNote:
+        "Il resoconto identifica il Consiglio del 9 ottobre e temi distintivi quali Scordovillo, nomina dei revisori e regolamento sui controlli interni. Resta una fonte editoriale: non completa i campi ufficiali e non certifica presenze, votazioni o risultati.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Lamezia, scontro tra Murone e Futuro Nazionale. Poi la maggioranza sparisce dall'Aula",
+      url: COUNCIL_OCTOBER_9_REPORT_CORRIERE_CALABRIA_URL,
+      publisher: "Corriere della Calabria",
+      publishedAt: "2026-10-10",
+      relationship: "same_session",
+      relevanceNote:
+        "Il resoconto identifica la seduta del 9 ottobre, la perdita del numero legale sui debiti fuori bilancio e la seconda convocazione del 12 ottobre. È contesto editoriale e non certifica presenze, votazioni, deliberazioni o risultati ufficiali.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Comune di Lamezia, Collegio dei revisori dei conti. Daffinà confermato presidente",
+      url: COUNCIL_OCTOBER_9_REPORT_GAZZETTA_URL,
+      publisher: "Gazzetta del Sud",
+      publishedAt: "2026-10-10",
+      relationship: "same_session",
+      relevanceNote:
+        "Il resoconto identifica il Consiglio del 9 ottobre, la nomina del Collegio dei revisori, Scordovillo e la sospensione per mancanza del numero legale. Resta una fonte editoriale e non completa campi, presenze, votazioni o risultati ufficiali.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Lamezia, USB Taxi proclama stato di agitazione: lunedì in Consiglio comunale per chiedere nuovo regolamento",
+      url: COUNCIL_OCTOBER_12_USB_LAMETINO_URL,
+      publisher: "il Lametino",
+      publishedAt: "2026-10-10",
+      relationship: "same_session",
+      relevanceNote:
+        "L'articolo collega espressamente il rinvio del Consiglio del 9 ottobre alla seconda convocazione del 12 ottobre e riporta la presenza annunciata della delegazione USB Taxi. Non prova che il regolamento taxi sia trattato, né svolgimento, presenze, votazioni o risultati della seduta.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Lamezia Terme, stallo sul nuovo regolamento: la USB Taxi dichiara lo stato di agitazione",
+      url: COUNCIL_OCTOBER_12_USB_CALABRIA_DIRETTA_URL,
+      publisher: "Calabria Diretta News",
+      publishedAt: "2026-10-10",
+      relationship: "same_session",
+      relevanceNote:
+        "L'articolo riprende la stessa nota USB Taxi e identifica la seduta del 12 ottobre; non costituisce una conferma indipendente. Non prova che il regolamento taxi sia trattato, né svolgimento, presenze, votazioni o risultati della seduta.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Taxi a Lamezia, USB proclama lo stato di agitazione dopo i rinvii",
+      url: COUNCIL_OCTOBER_12_USB_LAMEZIATERME_URL,
+      publisher: "LameziaTerme.it",
+      publishedAt: "2026-10-10",
+      relationship: "same_session",
+      relevanceNote:
+        "L'articolo riprende la stessa nota USB Taxi già pubblicata da il Lametino e Calabria Diretta News e identifica espressamente il Consiglio del 12 ottobre; non costituisce una conferma indipendente. Non prova che il regolamento taxi sia trattato, né svolgimento, presenze, votazioni o risultati della seduta.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+
+    {
+      title:
+        "L’Usb Taxi lamenta la non approvazione degli aggiornamenti del regolamento richiesti",
+      url: COUNCIL_OCTOBER_12_USB_LAMEZIAINFORMA_URL,
+      publisher: "LameziaInforma",
+      publishedAt: "2026-10-10",
+      relationship: "same_session",
+      relevanceNote:
+        "L'articolo identifica espressamente il Consiglio del 12 ottobre e precisa editorialmente che il tema Taxi non è previsto nell'ordine del giorno. Riprende la stessa iniziativa USB già pubblicata da altre testate e non è una conferma indipendente; non modifica l'agenda ufficiale e non prova svolgimento, presenze, votazioni o risultati.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "USB Taxi proclama stato di agitazione: lunedì in Consiglio comunale a Lamezia per chiedere nuovo regolamento",
+      url: COUNCIL_OCTOBER_12_USB_LAMEZIA_OGGI_URL,
+      publisher: "Lamezia Oggi",
+      publishedAt: "2026-10-10",
+      relationship: "same_session",
+      relevanceNote:
+        "L'articolo riprende la stessa iniziativa USB Taxi e identifica espressamente il Consiglio del 12 ottobre; non costituisce una conferma indipendente. Non prova che il regolamento Taxi sia iscritto o trattato, né svolgimento, presenze, votazioni o risultati della seduta.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Lamezia Terme | Taxi, nuovo regolamento fermo: USB proclama lo stato di agitazione",
+      url: COUNCIL_OCTOBER_12_USB_LA_NOVITA_URL,
+      publisher: "La Novità Online",
+      publishedAt: "2026-10-10",
+      relationship: "same_session",
+      relevanceNote:
+        "L'articolo riprende la stessa iniziativa USB Taxi e identifica espressamente il Consiglio del 12 ottobre; non costituisce una conferma indipendente. Non prova che il regolamento Taxi sia iscritto o trattato, né svolgimento, presenze, votazioni o risultati della seduta.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "La conta nei banchi in consiglio comunale per non pensare alle scadenze in arrivo contabili istituzionali",
+      url: COUNCIL_OCTOBER_11_COUNT_LAMEZIAINFORMA_URL,
+      publisher: "LameziaInforma",
+      publishedAt: "2026-10-11",
+      relationship: "same_session",
+      relevanceNote:
+        "L'analisi identifica il Consiglio del 9 ottobre, la mancanza del numero legale e la prosecuzione in seconda convocazione il 12 ottobre. Resta una fonte editoriale e non certifica presenze, votazioni, deliberazioni, risultati o completezza della seduta.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        'Lamezia, sindaco Murone: "Nessuna crisi, sul Piano di riequilibrio presto conferenza per fare chiarezza"',
+      url: COUNCIL_OCTOBER_11_MURONE_LAMETINO_URL,
+      publisher: "il Lametino",
+      publishedAt: "2026-10-11",
+      relationship: "same_session",
+      relevanceNote:
+        "L'intervista colloca espressamente le dichiarazioni alla vigilia della seduta del 12 ottobre e collega la mancanza del numero legale del 9 ottobre all'aggiornamento a lunedì. È contesto editoriale e non certifica presenze, votazioni, deliberazioni, risultati o completezza.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Lamezia, l'affondo del centrosinistra: «Maggioranza senza numeri»",
+      url: COUNCIL_OCTOBER_11_GAZZETTA_CONTEXT_URL,
+      publisher: "Gazzetta del Sud",
+      publishedAt: "2026-10-11",
+      relationship: "same_session",
+      relevanceNote:
+        "L'articolo identifica la seduta del 9 ottobre sospesa per mancanza del numero legale e la seconda convocazione del 12 ottobre per mozioni e interrogazioni. Resta una fonte editoriale e non certifica presenze, votazioni, deliberazioni, risultati o completezza.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Lamezia, dal Consiglio comunale via libera a quattro debiti di bilancio",
+      url: COUNCIL_OCTOBER_12_REPORT_LAMETINO_URL,
+      publisher: "il Lametino",
+      publishedAt: "2026-10-12",
+      relationship: "same_session",
+      relevanceNote:
+        "Il resoconto identifica la seconda convocazione del Consiglio del 12 ottobre e richiama punti distintivi dell'ordine del giorno ufficiale, inclusi debiti fuori bilancio, mozioni e interrogazioni. Resta una fonte editoriale: non valorizza i campi ufficiali e non certifica presenze, votazioni, deliberazioni, risultati o completezza della seduta.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title: "Consiglio comunale a Lamezia, bocciate mozioni minoranza",
+      url: COUNCIL_OCTOBER_13_NTACALABRIA_REPORT_URL,
+      publisher: "NtaCalabria",
+      publishedAt: "2026-10-13",
+      relationship: "same_session",
+      relevanceNote:
+        "Il resoconto identifica la ripresa dei lavori interrotti nella prima convocazione e richiama punti distintivi della seconda convocazione del 12 ottobre: quattro debiti fuori bilancio, tre mozioni e undici interrogazioni. Resta una fonte editoriale: non valorizza i campi ufficiali e non certifica presenze, votazioni, deliberazioni, risultati o completezza della seduta.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        'Lamezia, Cristiano e Villella dopo il no alla mozione su Timpone: "Andremo avanti per i cittadini"',
+      url: COUNCIL_OCTOBER_13_TIMPONE_LAMETINO_URL,
+      publisher: "il Lametino",
+      publishedAt: "2026-10-13",
+      relationship: "agenda_item",
+      relevanceNote:
+        "L'articolo pubblica una nota dei proponenti sulla mozione relativa al rione Timpone e richiama espressamente il confronto avvenuto in Consiglio, collegandosi con precisione a un punto dell'ordine del giorno ufficiale della seconda convocazione. È contesto editoriale post-seduta: non valorizza campi ufficiali e non certifica presenze, votazioni, deliberazioni, risultati o completezza della seduta.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Rione Timpone: il nostro impegno continua, nonostante il voto contrario alla mozione",
+      url: COUNCIL_OCTOBER_13_TIMPONE_CITY_ONE_URL,
+      publisher: "City One",
+      publishedAt: "2026-10-13",
+      relationship: "agenda_item",
+      relevanceNote:
+        "L'articolo pubblica la stessa nota dei proponenti già ripresa da il Lametino sulla mozione relativa al rione Timpone e richiama espressamente il confronto avvenuto in Consiglio. È un collegamento editoriale distinto, non una conferma indipendente, e non valorizza campi ufficiali né certifica presenze, votazioni, deliberazioni, risultati o completezza della seduta.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+  ],
+  media: [
+    {
+      title: "Diretta consiglio comunale del 9 ottobre 2026",
+      url: COUNCIL_OCTOBER_9_CITY_ONE_LIVE_URL,
+      publisher: "City One",
+      publishedAt: "2026-10-09",
+      relationship: "possible_same_session",
+      mediaType: "live_stream",
+      availability: "replay_available",
+      relevanceNote:
+        "Titolo, organo e data rendono plausibile il collegamento alla seduta del 9 ottobre 2026, ma il video non espone un punto distintivo dell'ordine del giorno o il numero della pubblicazione ufficiale; la pagina originale del canale City One rende ora disponibile il replay di 4:17:09. È copertura editoriale esterna e non certifica programmazione istituzionale, completezza, presenze, votazioni o risultati.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title: "Consiglio comunale del 9 ottobre 2026",
+      url: COUNCIL_OCTOBER_9_CITY_ONE_FACEBOOK_LIVE_URL,
+      publisher: "City One",
+      publishedAt: "2026-10-09",
+      relationship: "possible_same_session",
+      mediaType: "live_stream",
+      availability: "replay_available",
+      relevanceNote:
+        "La pagina Facebook originale identifica nel titolo il Consiglio comunale e la data del 9 ottobre 2026 e rende disponibile il replay di 4:13:05. È un collegamento distinto dalla diretta YouTube dello stesso editore, ma non espone un punto distintivo dell'ordine del giorno o il numero della pubblicazione ufficiale; resta copertura editoriale esterna e non certifica programmazione istituzionale, completezza, presenze, votazioni o risultati.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title: "Consiglio Comunale 9 ottobre 2026",
+      url: COUNCIL_OCTOBER_9_LAMEZIATERME_EXCERPT_URL,
+      publisher: "LameziaTerme.it",
+      publishedAt: "2026-10-09",
+      relationship: "possible_same_session",
+      mediaType: "excerpt",
+      availability: "replay_available",
+      relevanceNote:
+        "La pagina Facebook originale identifica nel titolo il Consiglio comunale e la data del 9 ottobre 2026 e rende disponibile un estratto di 1:00. Il titolo non espone un punto distintivo dell'ordine del giorno o il numero della pubblicazione ufficiale; resta copertura editoriale esterna e non certifica programmazione istituzionale, completezza, presenze, votazioni o risultati.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title: "Consiglio Comunale 9 ottobre 2026",
+      url: COUNCIL_OCTOBER_9_LAMEZIATERME_LIVE_URL,
+      publisher: "LameziaTerme.it",
+      publishedAt: "2026-10-09",
+      relationship: "possible_same_session",
+      mediaType: "live_stream",
+      availability: "replay_available",
+      relevanceNote:
+        "La pagina Facebook originale identifica nel titolo il Consiglio comunale e la data del 9 ottobre 2026 e rende disponibile il replay di 3:52:52. Non espone un punto distintivo dell'ordine del giorno o il numero della pubblicazione ufficiale; resta copertura editoriale esterna e non certifica programmazione istituzionale, completezza, presenze, votazioni o risultati.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "Conferenza stampa del centrosinistra post consiglio comunale del 9 ottobre 2026",
+      url: COUNCIL_OCTOBER_9_LAMEZIATERME_PRESS_CONFERENCE_URL,
+      publisher: "LameziaTerme.it",
+      publishedAt: "2026-10-09",
+      relationship: "same_session",
+      mediaType: "interview",
+      availability: "replay_available",
+      relevanceNote:
+        "Il titolo identifica espressamente una conferenza stampa del centrosinistra successiva al Consiglio comunale del 9 ottobre 2026; la pagina Facebook originale rende disponibile il replay di 12:27. È una reazione politica editoriale, non una registrazione della seduta, e non certifica presenze, votazioni, deliberazioni o risultati ufficiali.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title: "Diretta consiglio comunale del 12 Ottobre 2026",
+      url: COUNCIL_OCTOBER_12_CITY_ONE_SHORT_LIVE_URL,
+      publisher: "City One",
+      publishedAt: "2026-10-12",
+      relationship: "possible_same_session",
+      mediaType: "live_stream",
+      availability: "unavailable",
+      relevanceNote:
+        "La pagina YouTube originale identificava nel titolo il Consiglio comunale e la data del 12 ottobre 2026. Il primo tentativo di diretta era terminato dopo 48 secondi e al controllo successivo risulta rimosso dall'autore; non esponeva un punto distintivo dell'ordine del giorno o il numero della pubblicazione ufficiale. È copertura editoriale esterna e non certifica programmazione istituzionale, completezza, presenze, votazioni o risultati.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title: "Diretta consiglio comunale del 12 Ottobre 2026",
+      url: COUNCIL_OCTOBER_12_CITY_ONE_LIVE_URL,
+      publisher: "City One",
+      publishedAt: "2026-10-12",
+      relationship: "possible_same_session",
+      mediaType: "live_stream",
+      availability: "replay_available",
+      relevanceNote:
+        "La pagina YouTube originale identifica nel titolo il Consiglio comunale e la data del 12 ottobre 2026; la diretta, iniziata alle 11:10 locali, è terminata ed è disponibile come replay di 5:24:50. Il titolo non espone un punto distintivo dell'ordine del giorno o il numero della pubblicazione ufficiale. È copertura editoriale esterna e non certifica programmazione istituzionale, completezza, presenze, votazioni o risultati.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title: "Consiglio comunale del 12 ottobre 2026",
+      url: COUNCIL_OCTOBER_12_CITY_ONE_FACEBOOK_LIVE_URL,
+      publisher: "City One",
+      publishedAt: "2026-10-12",
+      relationship: "possible_same_session",
+      mediaType: "live_stream",
+      availability: "replay_available",
+      relevanceNote:
+        "La pagina Facebook originale di City One identifica nel titolo il Consiglio comunale e la data del 12 ottobre 2026 e pubblica un video disponibile come replay. È un collegamento distinto dalle due dirette YouTube dello stesso editore, ma non espone un punto distintivo dell'ordine del giorno o il numero della pubblicazione ufficiale. Resta copertura editoriale esterna e non certifica programmazione istituzionale, completezza, presenze, votazioni o risultati.",
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    },
+  ],
+};
+
+const commissionIiOctober6RebalancingContextResearch: CouncilSessionV0ContextResearch =
+  {
+    status: "reviewed_matches",
+    checkedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
+    searchNote:
+      "Ricerca eseguita con Parallel Search per discovery e verifica diretta dei quattordici articoli originali de il Lametino, LameziaTerme.it, Gazzetta del Sud, La Novità Online, Corriere di Lamezia, Notizie.it Catanzaro e Il Quotidiano del Sud e del calendario ufficiale Albo 2026/3197. Gli articoli dal 30 settembre al 6 ottobre trattano il Piano di Riequilibrio Finanziario Pluriennale, il quadro di crisi finanziaria, gli effetti finanziari attribuiti o il relativo supporto giuridico-contabile e vengono collegati come `agenda_item` al punto ufficiale della II Commissione del 6 ottobre. Tre pagine del 6 ottobre riprendono la stessa nota di Raso e Branca e sono conservate come distinti collegamenti editoriali, non come conferme indipendenti. Le fonti non identificano la seduta del 6 ottobre: un articolo LameziaTerme.it richiama precedenti lavori della I Commissione, mentre la nota di Raso e Branca menziona genericamente un mancato passaggio nella Commissione Bilancio senza indicare data o riunione. Nessuna fonte attesta programmazione, costituzione, svolgimento, trattazione, audizione, approvazione, votazioni o risultati della seduta del 6 ottobre. Campi e ordine del giorno ufficiali restano invariati. Non sono emersi contenuti audiovisivi collegabili con sufficiente precisione.",
+    articles: [
+      {
+        title:
+          "Lamezia, per la redazione del Piano di riequilibrio il Comune si affida anche ad uno studio di Reggio",
+        url: MULTI_YEAR_REBALANCING_LAMETINO_REPORT_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-09-30",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo riferisce l'affidamento del Comune a uno studio esterno per il supporto giuridico-contabile alla redazione del Piano di Riequilibrio Finanziario Pluriennale, tema coincidente con il punto ufficiale della II Commissione del 6 ottobre. Non nomina la Commissione e documenta il contesto amministrativo, non la seduta, la sua trattazione, l'audizione o eventuali esiti.",
+        reviewedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
+      },
+      {
+        title:
+          'Lamezia, Comitato Progetto Civico Italia contesta affidamento del Comune: "Oltre 13mila euro per supporto giuridico al piano di riequilibrio"',
+        url: MULTI_YEAR_REBALANCING_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-10-01",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo descrive l'affidamento di un supporto giuridico-contabile per la redazione del Piano di Riequilibrio Finanziario Pluriennale, tema coincidente con il punto ufficiale della II Commissione del 6 ottobre. Non nomina la Commissione e documenta il contesto finanziario, non la seduta, la sua trattazione, l'audizione o eventuali esiti.",
+        reviewedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
+      },
+      {
+        title:
+          "Lamezia | Pre-dissesto, affidamento da 14 mila euro per il Piano: «La consulenza si poteva evitare»",
+        url: MULTI_YEAR_REBALANCING_LA_NOVITA_URL,
+        publisher: "La Novità Online",
+        publishedAt: "2026-10-01",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo descrive lo stesso affidamento di supporto alla redazione del Piano di Riequilibrio Finanziario Pluriennale, tema coincidente con il punto ufficiale della II Commissione del 6 ottobre. Non nomina la Commissione e documenta il contesto finanziario, non la seduta, la sua trattazione, l'audizione o eventuali esiti.",
+        reviewedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
+      },
+      {
+        title:
+          "Lamezia, Comitato Progetto Civico Italia: “Siamo in pre-dissesto e il Comune continua a spendere i soldi dei cittadini”",
+        url: MULTI_YEAR_REBALANCING_CORRIERE_URL,
+        publisher: "Corriere di Lamezia",
+        publishedAt: "2026-10-01",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo riporta la posizione critica di Progetto Civico Italia sull'affidamento esterno di supporto al Piano di Riequilibrio Finanziario Pluriennale, tema coincidente con il punto ufficiale della II Commissione del 6 ottobre. Non nomina la Commissione e documenta il contesto politico-finanziario, non la seduta, la sua trattazione, l'audizione o eventuali esiti.",
+        reviewedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
+      },
+      {
+        title:
+          "Scelta contro l’IFEL: 14.000 euro per consulenza esterna a Lamezia",
+        url: MULTI_YEAR_REBALANCING_NOTIZIE_URL,
+        publisher: "Notizie.it Catanzaro",
+        publishedAt: "2026-10-01",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo descrive la contestazione dell'affidamento esterno per il supporto al Piano di Riequilibrio Finanziario Pluriennale, tema coincidente con il punto ufficiale della II Commissione del 6 ottobre. Non nomina la Commissione e documenta il contesto politico-finanziario, non la seduta, la sua trattazione, l'audizione o eventuali esiti.",
+        reviewedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
+      },
+      {
+        title:
+          "Crisi finanziaria dei Comuni, Calabria al primo posto: il caso Lamezia",
+        url: MULTI_YEAR_REBALANCING_CRISIS_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-10-02",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo ricostruisce, a partire dalla relazione della Corte dei conti, il precedente piano di riequilibrio, il disavanzo e l'annunciato nuovo Piano di Riequilibrio Finanziario Pluriennale, tema del punto ufficiale della II Commissione del 6 ottobre. Non identifica la Commissione o la seduta e documenta il contesto finanziario, non svolgimento, trattazione, audizione o risultati.",
+        reviewedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
+      },
+      {
+        title:
+          "Lamezia, piano di riequilibrio sotto accusa. Mascaro: «Inutile sperpero di denaro»",
+        url: MULTI_YEAR_REBALANCING_MASCARO_GAZZETTA_URL,
+        publisher: "Gazzetta del Sud",
+        publishedAt: "2026-10-02",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo riporta una posizione critica sul nuovo piano e sull'incarico esterno di supporto alla sua predisposizione, temi pertinenti al punto ufficiale della II Commissione del 6 ottobre. Non identifica la Commissione o la seduta e documenta il contesto politico-finanziario, non svolgimento, trattazione, audizione o risultati.",
+        reviewedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
+      },
+      {
+        title:
+          "Comuni in crisi, Lamezia caso emblematico nella relazione della Corte dei Conti",
+        url: MULTI_YEAR_REBALANCING_CRISIS_QUOTIDIANO_URL,
+        publisher: "Il Quotidiano del Sud",
+        publishedAt: "2026-10-04",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo ricostruisce le precedenti procedure di riequilibrio, le criticità richiamate dalla Corte dei conti e il termine indicato per il nuovo piano, offrendo contesto al punto ufficiale della II Commissione del 6 ottobre. Non identifica la Commissione o la seduta e non ne prova svolgimento, trattazione, audizione o risultati.",
+        reviewedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
+      },
+      {
+        title:
+          'Lamezia, Cristiano e Villella (FN) su piano di riequilibrio: "Arrivano i primi tagli, è solo l’inizio dell’austerità"',
+        url: MULTI_YEAR_REBALANCING_AUSTERITY_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-10-05",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo riporta la posizione di due consiglieri sugli effetti finanziari attribuiti al percorso verso il piano di riequilibrio e sui relativi accantonamenti, tema coincidente con il punto ufficiale della II Commissione del 6 ottobre. Non nomina la Commissione e documenta il contesto politico-finanziario, non la seduta, la sua trattazione, l'audizione o eventuali esiti.",
+        reviewedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
+      },
+      {
+        title:
+          "Piano di Riequilibrio, Cristiano e Villella: primi tagli per 1,4 milioni di euro",
+        url: MULTI_YEAR_REBALANCING_AUSTERITY_LAMEZIATERME_URL,
+        publisher: "LameziaTerme.it",
+        publishedAt: "2026-10-05",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo riporta la posizione di due consiglieri sulle variazioni al PEG e sugli effetti finanziari attribuiti al percorso verso il piano di riequilibrio, tema coincidente con il punto ufficiale della II Commissione del 6 ottobre. Richiama precedenti lavori della I Commissione, ma non identifica la II Commissione o la seduta del 6 ottobre e documenta il contesto politico-finanziario, non la seduta, la sua trattazione, l'audizione o eventuali esiti.",
+        reviewedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
+      },
+      {
+        title:
+          "Comune di Lamezia, verso il predissesto. FN: «Basta con le austerità»",
+        url: MULTI_YEAR_REBALANCING_AUSTERITY_GAZZETTA_URL,
+        publisher: "Gazzetta del Sud",
+        publishedAt: "2026-10-06",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo descrive i primi effetti finanziari attribuiti al percorso verso il predissesto e i dubbi espressi sul contenzioso comunale, temi pertinenti al Piano di Riequilibrio Finanziario Pluriennale indicato nell'ordine del giorno ufficiale della II Commissione del 6 ottobre. Non identifica la Commissione o la seduta e documenta il contesto politico-finanziario, non lo svolgimento, la trattazione, l'audizione o eventuali esiti.",
+        reviewedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
+      },
+      {
+        title:
+          "Piano di riequilibrio, Raso e Branca: «Perché un incarico esterno?»",
+        url: MULTI_YEAR_REBALANCING_RASO_BRANCA_URL,
+        publisher: "LameziaTerme.it",
+        publishedAt: "2026-10-06",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo riporta le richieste di chiarimento di due consiglieri sull'incarico esterno collegato al Piano di Riequilibrio Finanziario Pluriennale, tema del punto ufficiale della II Commissione del 6 ottobre. Menziona genericamente un mancato passaggio nella Commissione Bilancio, ma non identifica una data o la seduta del 6 ottobre e non ne documenta svolgimento, trattazione, audizione o risultati.",
+        reviewedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
+      },
+      {
+        title:
+          "Piano di Riequilibrio, Raso e Branca: «Una scelta sbagliata che oggi solleva nuovi interrogativi»",
+        url: MULTI_YEAR_REBALANCING_RASO_BRANCA_CORRIERE_URL,
+        publisher: "Corriere di Lamezia",
+        publishedAt: "2026-10-06",
+        relationship: "agenda_item",
+        relevanceNote:
+          "La pagina riprende la stessa nota di Raso e Branca sull'incarico esterno collegato al Piano di Riequilibrio Finanziario Pluriennale. Menziona genericamente un mancato passaggio nella Commissione Bilancio, ma non identifica una data o la seduta del 6 ottobre e non ne documenta svolgimento, trattazione, audizione o risultati.",
+        reviewedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
+      },
+      {
+        title:
+          "Lamezia, Raso e Branca: «Serve chiarezza sull’incarico esterno per Piano di riequilibrio»",
+        url: MULTI_YEAR_REBALANCING_RASO_BRANCA_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-10-06",
+        relationship: "agenda_item",
+        relevanceNote:
+          "La pagina riprende la stessa nota di Raso e Branca sull'incarico esterno collegato al Piano di Riequilibrio Finanziario Pluriennale. Menziona genericamente un mancato passaggio nella Commissione Bilancio, ma non identifica una data o la seduta del 6 ottobre e non ne documenta svolgimento, trattazione, audizione o risultati.",
+        reviewedAt: MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT,
+      },
+    ],
+    media: [],
+  };
+
+const commissionIiiWasteMotionContextResearch: CouncilSessionV0ContextResearch =
+  {
+    status: "reviewed_matches",
+    checkedAt: SERRA_ANNUNZIATA_CONTEXT_RESEARCHED_AT,
+    searchNote:
+      "Ricerca eseguita con Parallel Search per discovery e verifica diretta dell'articolo originale de il Lametino e della convocazione Albo 2026/3001 per la III Commissione del 21 settembre 2026. L'articolo del 14 settembre descrive la stessa mozione della consigliera Bernadette Serratore su bonifica, sicurezza, controllo e contrasto all'abbandono dei rifiuti nelle località Serra e Annunziata. Il collegamento è registrato come contesto del punto in agenda: la fonte non attesta convocazione, svolgimento, votazioni o risultati della seduta. Non sono emerse dirette, registrazioni, clip o interviste collegabili con sufficiente precisione.",
+    articles: [
+      {
+        title:
+          "Lamezia, consigliera Serratore presenta mozione su rifiuti e sicurezza in località Serra e Annunziata",
+        url: SERRA_ANNUNZIATA_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-09-14",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo attribuisce a Bernadette Serratore una mozione su rifiuti, bonifica, sicurezza e controlli nelle località Serra e Annunziata, elementi coincidenti con il punto ufficiale della III Commissione del 21 settembre. Pubblicato prima della convocazione, documenta il tema della mozione ma non la seduta, la sua trattazione o eventuali esiti.",
+        reviewedAt: SERRA_ANNUNZIATA_CONTEXT_RESEARCHED_AT,
+      },
+    ],
+    media: [],
+  };
+
+const commissionContextResearch: CouncilSessionV0ContextResearch = {
+  status: "reviewed_matches",
+  checkedAt: CONTEXT_RESEARCHED_AT,
+  searchNote:
+    "La ricerca di articoli, dirette e video per organo, date e temi non ha restituito contenuti che nominino con sufficiente precisione le sedute della II Commissione del 10 o 11 agosto; i collegamenti riportati riguardano soltanto i temi in agenda.",
+  articles: [
+    {
+      title:
+        "Approvato in giunta l'assestamento generale di bilancio e salvaguardia degli equilibri per l'esercizio 2026",
+      url: "https://www.lameziainforma.it/istituzione/2026/08/06/approvato-in-giunta-lassestamento-generale-di-bilancio-e-salvaguardia-degli-equilibri-per-lesercizio-2026/68773/",
+      publisher: "LameziaInforma",
+      publishedAt: "2026-08-06",
+      relationship: "agenda_item",
+      relevanceNote:
+        "Approfondisce la proposta di assestamento approvata dalla Giunta il 6 agosto, poi indicata nel primo punto della convocazione; non documenta le riunioni della Commissione.",
+      reviewedAt: CONTEXT_RESEARCHED_AT,
+    },
+    {
+      title:
+        "LAMEZIA | Bilancio, la maggioranza si sfalda in Giunta: tre assessori assenti. Muraca: «È sfiducia al sindaco»",
+      url: "https://lanovitaonline.it/lamezia-bilancio-la-maggioranza-si-sfalda-in-giunta-tre-assessori-assenti-muraca-e-sfiducia-al-sindaco/",
+      publisher: "La Novità Online",
+      publishedAt: "2026-08-08",
+      relationship: "agenda_item",
+      relevanceNote:
+        "Riporta una posizione politica sulla deliberazione di Giunta relativa all'assestamento; riguarda il tema in agenda e non verifica attività o esiti della Commissione.",
+      reviewedAt: CONTEXT_RESEARCHED_AT,
+    },
+  ],
+  media: [],
+};
+
+function requireCandidate(
+  input: InstitutionalSessionCandidateInput,
+): InstitutionalSessionCandidate {
+  const candidate = identifyInstitutionalSessionCandidate(input);
+  if (!candidate) {
+    throw new Error(`Invalid institutional session source record: ${input.id}`);
+  }
+  return candidate;
+}
+
+interface LateSeptemberNoticeInput {
+  publicationNumber: string;
+  publicationStart: string;
+  publicationEnd: string;
+  subject: string;
+  sourceContentHash: string;
+  documentSha256: string;
+  reviewedAt?: string;
+}
+
+function lateSeptemberNotice({
+  publicationNumber,
+  publicationStart,
+  publicationEnd,
+  subject,
+  sourceContentHash,
+  documentSha256,
+  reviewedAt = LATE_SEPTEMBER_COMMISSION_RESEARCHED_AT,
+}: LateSeptemberNoticeInput): {
+  candidate: InstitutionalSessionCandidate;
+  provenance: CouncilSessionV0Provenance;
+} {
+  const publicationId = publicationNumber.replace("/", "-");
+  const documentUrl = `https://albo.tinnvision.cloud/allegati/${publicationId.replace("-", "_")}_1_X?ente=00301390795`;
+  const candidate = requireCandidate({
+    id: `albo-${publicationId}`,
+    source: "Albo Pretorio Comune di Lamezia Terme",
+    source_url: OFFICIAL_ALBO_URL,
+    retrieved_at: reviewedAt,
+    publication_number: publicationNumber,
+    publication_start: publicationStart,
+    publication_end: publicationEnd,
+    act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+    subject,
+    document_url: documentUrl,
+    content_hash: sourceContentHash,
+    verification_status: "official_source_acquired",
+    privacy_risk: "low",
+    public_visibility: "publishable",
+  });
+
+  return {
+    candidate,
+    provenance: {
+      noticeId: candidate.id,
+      publicationNumber: candidate.publicationNumber,
+      sourceLabel: candidate.source.label,
+      sourceUrl: candidate.source.url,
+      documentUrl: candidate.source.documentUrl,
+      archivedDocumentUrl: `/data/public/albo/documents/2026/${documentSha256}.pdf`,
+      sourceContentHash: candidate.source.contentHash,
+      documentSha256,
+      embeddedDocumentSha256: null,
+      retrievedAt: candidate.source.retrievedAt,
+      reviewedAt,
+      sourceReviewStatus: "reviewed_against_official_attachment",
+    },
+  };
+}
+
+const commissionCandidate = requireCandidate({
+  id: "albo-2026-2648",
+  source: "Albo Pretorio Comune di Lamezia Terme",
+  source_url: OFFICIAL_ALBO_URL,
+  retrieved_at: "2026-08-11T07:32:34.743Z",
+  publication_number: "2026/2648",
+  publication_start: "2026-08-07",
+  publication_end: "2026-08-14",
+  act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+  subject:
+    "Convocazione 2° Commissione Consiliare Permanente. Calendario lavori.",
+  document_url: COMMISSION_NOTICE_URL,
+  content_hash:
+    "f4301f15e2bfd99aecb79f25ceb4d1346a486ff1fe20e748f9bac89a818eee09",
+  verification_status: "official_source_acquired",
+  privacy_risk: "low",
+  public_visibility: "publishable",
+});
+
+const commissionViCandidate = requireCandidate({
+  id: "albo-2026-2788",
+  source: "Albo Pretorio Comune di Lamezia Terme",
+  source_url: OFFICIAL_ALBO_URL,
+  retrieved_at: "2026-08-31T13:37:46.902Z",
+  publication_number: "2026/2788",
+  publication_start: "2026-08-31",
+  publication_end: "2026-09-07",
+  act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+  subject:
+    "Convocazione 6° Commissione Consiliare Permanente. Calendario lavori.",
+  document_url: COMMISSION_VI_NOTICE_URL,
+  content_hash:
+    "32af1fef2fdc84892259f836c0cc6c1aa70d1e404d664a91f7cad339e3c24629",
+  verification_status: "official_source_acquired",
+  privacy_risk: "low",
+  public_visibility: "publishable",
+});
+
+const commissionIvEarlyCandidate = requireCandidate({
+  id: "albo-2026-2840",
+  source: "Albo Pretorio Comune di Lamezia Terme",
+  source_url: OFFICIAL_ALBO_URL,
+  retrieved_at: "2026-09-03T18:34:57.880Z",
+  publication_number: "2026/2840",
+  publication_start: "2026-09-02",
+  publication_end: "2026-09-09",
+  act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+  subject:
+    "Convocazione 4° Commissione Consiliare Permanente. Calendario lavori.",
+  document_url: COMMISSION_IV_EARLY_NOTICE_URL,
+  content_hash:
+    "29b8c30dc8fcfe6e73229bf4b46917876ef46dd3dcc7be4b3a6d277a4e220efc",
+  verification_status: "official_source_acquired",
+  privacy_risk: "low",
+  public_visibility: "publishable",
+});
+
+const commissionViSeptemberCandidate = requireCandidate({
+  id: "albo-2026-2859",
+  source: "Albo Pretorio Comune di Lamezia Terme",
+  source_url: OFFICIAL_ALBO_URL,
+  retrieved_at: SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  publication_number: "2026/2859",
+  publication_start: "2026-09-04",
+  publication_end: "2026-09-11",
+  act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+  subject: "Convocazione 6° Commissione Consiliare Permanente.",
+  document_url: COMMISSION_VI_SEPTEMBER_NOTICE_URL,
+  content_hash:
+    "935417af6dfd7f23abf125c15655a0e031e5e85ec4331dab4131ccca493d9eec",
+  verification_status: "official_source_acquired",
+  privacy_risk: "low",
+  public_visibility: "publishable",
+});
+
+const commissionIvLaterCandidate = requireCandidate({
+  id: "albo-2026-2860",
+  source: "Albo Pretorio Comune di Lamezia Terme",
+  source_url: OFFICIAL_ALBO_URL,
+  retrieved_at: SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  publication_number: "2026/2860",
+  publication_start: "2026-09-04",
+  publication_end: "2026-09-11",
+  act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+  subject:
+    "Convocazione 4° Commissione Consiliare Permanente. Calendario lavori.",
+  document_url: COMMISSION_IV_LATER_NOTICE_URL,
+  content_hash:
+    "422e104e5b17eb72bcb036b6c4816cbc1ee7c1ac77a6b9f080c1a9c66b4c3f20",
+  verification_status: "official_source_acquired",
+  privacy_risk: "low",
+  public_visibility: "publishable",
+});
+
+const commissionsIiiIvJointCandidate = requireCandidate({
+  id: "albo-2026-2861",
+  source: "Albo Pretorio Comune di Lamezia Terme",
+  source_url: OFFICIAL_ALBO_URL,
+  retrieved_at: SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  publication_number: "2026/2861",
+  publication_start: "2026-09-04",
+  publication_end: "2026-09-11",
+  act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+  subject: "Convocazione congiunta 3° e 4° Commissione Consiliare Permanente.",
+  document_url: COMMISSIONS_III_IV_JOINT_NOTICE_URL,
+  content_hash:
+    "1035de7c0cd5355d2d68dfeef8833c838d9e2a8a3ae5e4338f8abd3b5c7f90f7",
+  verification_status: "official_source_acquired",
+  privacy_risk: "low",
+  public_visibility: "publishable",
+});
+
+const commissionIiiGuarantorCandidate = requireCandidate({
+  id: "albo-2026-2879",
+  source: "Albo Pretorio Comune di Lamezia Terme",
+  source_url: OFFICIAL_ALBO_URL,
+  retrieved_at: MID_SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  publication_number: "2026/2879",
+  publication_start: "2026-09-09",
+  publication_end: "2026-09-16",
+  act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+  subject: "Convocazione 3° Commissione Consiliare Permanente.",
+  document_url: COMMISSION_III_GUARANTOR_NOTICE_URL,
+  content_hash:
+    "04f12caf167315030334618ea41d7e5091cf271b75baf33da58cccb1e35326c9",
+  verification_status: "official_source_acquired",
+  privacy_risk: "low",
+  public_visibility: "publishable",
+});
+
+const commissionIvMidSeptemberCandidate = requireCandidate({
+  id: "albo-2026-2925",
+  source: "Albo Pretorio Comune di Lamezia Terme",
+  source_url: OFFICIAL_ALBO_URL,
+  retrieved_at: MID_SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  publication_number: "2026/2925",
+  publication_start: "2026-09-11",
+  publication_end: "2026-09-18",
+  act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+  subject:
+    "Convocazione 4° Commissione Consiliare Permanente. Calendario lavori.",
+  document_url: COMMISSION_IV_MID_SEPTEMBER_NOTICE_URL,
+  content_hash:
+    "5a9d168246b9a4ed62e13c53e6a1106415f2c5d7c8825ea8d439ce165deaa500",
+  verification_status: "official_source_acquired",
+  privacy_risk: "low",
+  public_visibility: "publishable",
+});
+
+const commissionIiiMidSeptemberCandidate = requireCandidate({
+  id: "albo-2026-2926",
+  source: "Albo Pretorio Comune di Lamezia Terme",
+  source_url: OFFICIAL_ALBO_URL,
+  retrieved_at: MID_SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  publication_number: "2026/2926",
+  publication_start: "2026-09-11",
+  publication_end: "2026-09-18",
+  act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+  subject:
+    "Convocazione 3° Commissione Consiliare Permanente. Calendario lavori.",
+  document_url: COMMISSION_III_MID_SEPTEMBER_NOTICE_URL,
+  content_hash:
+    "fc6d1aaf789ee6902f85d537cd5b8dde937ea9e62573eacf8c75fd84d0c14117",
+  verification_status: "official_source_acquired",
+  privacy_risk: "low",
+  public_visibility: "publishable",
+});
+
+const commissionVSeptember17Notice = lateSeptemberNotice({
+  publicationNumber: "2026/2953",
+  publicationStart: "2026-09-15",
+  publicationEnd: "2026-09-22",
+  subject: "Convocazione 5° Commissione Consiliare Permante.",
+  sourceContentHash:
+    "a0847f430a5d647392679397388a437ab59552a0c8703b1b53c7b1d7ad43e451",
+  documentSha256:
+    "57731fbea7c4cdd31d8ff82175a0f84fc4fb053c0d71cb073d00ce38b33c74b5",
+});
+
+const commissionIiSeptemberCalendarNotice = lateSeptemberNotice({
+  publicationNumber: "2026/2959",
+  publicationStart: "2026-09-15",
+  publicationEnd: "2026-09-22",
+  subject:
+    "Convocazione 2° Commissione Consiliare Permanente. Calendario lavori.",
+  sourceContentHash:
+    "91111c510f5fd5aa973bd579d24a595d3cf54e0ebb4a66fee237c167b599c237",
+  documentSha256:
+    "674f8c685f04e85674e4530e180cc45bca76b0256d06397040c2a024afb8f440",
+});
+
+const commissionIiiSeptember18Notice = lateSeptemberNotice({
+  publicationNumber: "2026/2960",
+  publicationStart: "2026-09-15",
+  publicationEnd: "2026-09-22",
+  subject: "Convocazione 3° Commissione Consiliare Permanente.",
+  sourceContentHash:
+    "30980bcc9f5acb9173fe1bab42601c7999edfa30e72e0341ac8143c11fb59317",
+  documentSha256:
+    "f311abbc9e4c6e3d0b9cfe4d4d0225548be713cef74686ec2556148e8c1901e5",
+});
+
+const commissionISeptemberCalendarNotice = lateSeptemberNotice({
+  publicationNumber: "2026/2971",
+  publicationStart: "2026-09-16",
+  publicationEnd: "2026-09-23",
+  subject:
+    "Convocazione 1° Commissione Consiliare Permanente. Calendario lavori.",
+  sourceContentHash:
+    "6db758ff5ddab2f37c7db4442641b0e75481ddfd9b201d9738a7579cd414c1f5",
+  documentSha256:
+    "08f1075950b3e90994c2c5353cb0b1dc0992a4c6f4d55b27ba2e5ddcb99f5c40",
+});
+
+const commissionIvSeptemberCalendarNotice = lateSeptemberNotice({
+  publicationNumber: "2026/2981",
+  publicationStart: "2026-09-17",
+  publicationEnd: "2026-09-24",
+  subject:
+    "Convocazione 4° Commissione Consiliare Permanente. Calendario lavori.",
+  sourceContentHash:
+    "a6a45d08d063c993b69995557a4a82417c4fba918de3315260a189bb2a78c38f",
+  documentSha256:
+    "588fe94ce804d0f1699cb42f41eee4390e4ecb3f3fab21379b100b5c84e3e4eb",
+});
+
+const commissionVSeptember21Notice = lateSeptemberNotice({
+  publicationNumber: "2026/2986",
+  publicationStart: "2026-09-17",
+  publicationEnd: "2026-09-24",
+  subject: "Convocazione 5° Commissione Consiliare Permanente.",
+  sourceContentHash:
+    "6b5898f02ec82e8f3a587c49491033d0945396b9589c5d1584da4d2002205ca6",
+  documentSha256:
+    "b23e5a278fa5550657c3804e2a60a37ad09a1bdad2efcff6a7ece4f68a6b15e1",
+});
+
+const commissionIiiSeptember21Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3001",
+  publicationStart: "2026-09-18",
+  publicationEnd: "2026-09-25",
+  subject: "Convocazione 3° Commissione Consiliare Permanente.",
+  sourceContentHash:
+    "7d6e5cc50baeb9e9d79c2b668de35004a3134587fd714964170828c2228adee3",
+  documentSha256:
+    "8eebc4e71f5def4118e620b94ea9855319f39f9c548aedb7d4860d19a42b6f7f",
+});
+
+const commissionVSeptember22To25Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3011",
+  publicationStart: "2026-09-21",
+  publicationEnd: "2026-09-28",
+  subject:
+    "Convocazione 5° Commissione Consiliare Permanente. Calendario lavori.",
+  sourceContentHash:
+    "8baf6844580bd1b54d2ee18a669183432df8c6512eb5cd5972e70d69fcdbeae9",
+  documentSha256:
+    "faa773ca9b02a88e8e7de334843e86dc20daa153f835f2acf50a2ca88a1754f5",
+  reviewedAt: SEPTEMBER_22_25_COMMISSION_RESEARCHED_AT,
+});
+
+const commissionIvSeptember22And23Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3012",
+  publicationStart: "2026-09-21",
+  publicationEnd: "2026-09-28",
+  subject:
+    "Convocazione 4° Commissione Consiliare Permanente. Calendario lavori.",
+  sourceContentHash:
+    "db8e6b45c1fc183b22c3d7aa421187efe779bd05c67b550038eb7712ac38fa3d",
+  documentSha256:
+    "85c4218e626ff552d3663519672675fd42d05a212a392f66683c3d1fba011492",
+  reviewedAt: SEPTEMBER_22_25_COMMISSION_RESEARCHED_AT,
+});
+
+const commissionIiiSeptember24Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3043",
+  publicationStart: "2026-09-22",
+  publicationEnd: "2026-09-29",
+  subject: "Convocazione 3° Commissione Consiliare Permanente.",
+  sourceContentHash:
+    "82e6f6fd989cf7e37ae8b4dd8e24a3d4e056a5b486d6fa68e6dd0d8c7f11f222",
+  documentSha256:
+    "bebe656039da9f7a4dd7b93f3baf530902ac0a1da3319e1bf3e063001845bbb8",
+  reviewedAt: SEPTEMBER_24_COMMISSION_RESEARCHED_AT,
+});
+
+const commissionIiiSeptember25Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3089",
+  publicationStart: "2026-09-25",
+  publicationEnd: "2026-10-02",
+  subject: "Convocazione 3° Commissione Consiliare Permanente.",
+  sourceContentHash:
+    "b621f17980514460f3620dfcae1fc8ad976072c73a2da36e1ced4164c8cbb179",
+  documentSha256:
+    "a4d38091b4b34ac513d25e6a7a200dcb0538f086ae29d2f4aa42e8f04b13cd62",
+  reviewedAt: SEPTEMBER_24_30_COMMISSION_RESEARCHED_AT,
+});
+
+const commissionVSeptember28To30Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3090",
+  publicationStart: "2026-09-25",
+  publicationEnd: "2026-10-02",
+  subject:
+    "Convocazione 5° Commissione Consiliare Permanente. Calendario lavori.",
+  sourceContentHash:
+    "1ccc848648feb3895b8d94ee2f546862f919b6e46b1592da9d3f0575f100e3e2",
+  documentSha256:
+    "095b6802f339bc9bbf7279fc905e021ffd9a6867d2dcc1a465e28439d1ade6a2",
+  reviewedAt: SEPTEMBER_24_30_COMMISSION_RESEARCHED_AT,
+});
+
+const commissionIvSeptember28Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3091",
+  publicationStart: "2026-09-25",
+  publicationEnd: "2026-10-02",
+  subject: "Convocazione 4° Commissione Consiliare Permanente.",
+  sourceContentHash:
+    "5664f02ecd0edb544711b691fbbb080732cb6e2e9c6cdea4f88f4052d9b225ba",
+  documentSha256:
+    "a8381207edd8c5ca1b7cacd2b3c006ebe4073ee3b22dd199fac616705031f23c",
+  reviewedAt: SEPTEMBER_24_30_COMMISSION_RESEARCHED_AT,
+});
+
+const commissionIvSeptember24And25Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3097",
+  publicationStart: "2026-09-25",
+  publicationEnd: "2026-10-02",
+  subject:
+    "Convocazione 4° Commissione Consiliare Permanente. Calendario lavori.",
+  sourceContentHash:
+    "4a6199e13ea5f62aff37318343b396776b6208511c9cdc12cc03d1b9eadaa708",
+  documentSha256:
+    "4f2d4c158f13f9239d1b5391f92315a7a7ef29a2e8769c8b04697f0a92f30b1d",
+  reviewedAt: SEPTEMBER_24_30_COMMISSION_RESEARCHED_AT,
+});
+
+const commissionIiiSeptember29AndOctober1Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3129",
+  publicationStart: "2026-09-28",
+  publicationEnd: "2026-10-05",
+  subject:
+    "Convocazione 3° Commissione Consiliare Permanente. Calendario lavori.",
+  sourceContentHash:
+    "62415093f67010fd438f1c50356797e45627e166ad510bb0dd4c3ff60b230539",
+  documentSha256:
+    "3bad1431481f91442b163c8476275d492807e42bf2bd80807961dd80d2e7a972",
+  reviewedAt: SEPTEMBER_29_OCTOBER_1_COMMISSION_RESEARCHED_AT,
+});
+
+const commissionIvSeptember29And30Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3127",
+  publicationStart: "2026-09-28",
+  publicationEnd: "2026-10-05",
+  subject:
+    "Convocazione 4° Commissione Consiliare Permanente. Calendario lavori.",
+  sourceContentHash:
+    "597162d76e5aa5f1c63f56847e6d96e6418f07263b3c32bb6738b7946d0e9b52",
+  documentSha256:
+    "a0138aeebec3e21db1a1b922f91886dd186bad25ffc56542076ecbbb147ae5ae",
+  reviewedAt: SEPTEMBER_29_OCTOBER_1_COMMISSION_RESEARCHED_AT,
+});
+
+const commissionVOctober1And2Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3151",
+  publicationStart: "2026-09-30",
+  publicationEnd: "2026-10-07",
+  subject:
+    "Convocazione 5° Commissione Consiliare Permanente. Calendario lavori.",
+  sourceContentHash:
+    "2f133ea15d7c0972572dff147299e6cdf337044a1cadfdaa0eaa872bc942a6e3",
+  documentSha256:
+    "22fda4e484df93fbc9983803b62e066a46201d094f601ee38cdcd2a730004000",
+  reviewedAt: OCTOBER_1_6_COMMISSION_RESEARCHED_AT,
+});
+
+const commissionViOctober2Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3152",
+  publicationStart: "2026-09-30",
+  publicationEnd: "2026-10-07",
+  subject: "Convocazione 6° Commissione Consiliare Permanente.",
+  sourceContentHash:
+    "057df91b8abf8c7a3fcf0752c049b2035310fca58087dbe11603e6b7d66c4643",
+  documentSha256:
+    "5e9df217a9c8310fc25597070b99e01776e5a2b3b0993ef937e5b06fa95a6d93",
+  reviewedAt: OCTOBER_1_6_COMMISSION_RESEARCHED_AT,
+});
+
+const commissionIvOctober1And2Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3157",
+  publicationStart: "2026-09-30",
+  publicationEnd: "2026-10-07",
+  subject:
+    "Convocazione 4° Commissione Consiliare Permanente. Calendario lavori.",
+  sourceContentHash:
+    "cd8e31c6f50d175d5a071f9c51c34c82589b1237b6675cf6c6b6f8c510a9c205",
+  documentSha256:
+    "6bbec3fb6360a5d8cfd40362d775e398bd0f4a80d41c49d5c375d8216bbc77d8",
+  reviewedAt: OCTOBER_1_6_COMMISSION_RESEARCHED_AT,
+});
+
+const commissionIiiOctober5And6Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3190",
+  publicationStart: "2026-10-01",
+  publicationEnd: "2026-10-08",
+  subject:
+    "Convocazione 3° Commissione Consiliare Permanente. Calendario lavori.",
+  sourceContentHash:
+    "e4746942f27d592cf2b3ce71705382bcd5935fe9203c5e28fe5d4bab0ba45b73",
+  documentSha256:
+    "5d607076e9146eaadb5bc23b83928c865e1007c010abbf77c6dacbdf4a17770d",
+  reviewedAt: OCTOBER_1_6_COMMISSION_RESEARCHED_AT,
+});
+
+const commissionIiOctober5And6Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3197",
+  publicationStart: "2026-10-02",
+  publicationEnd: "2026-10-09",
+  subject:
+    "Convocazione 2° Commissione Consiliare Permanente. Calendario lavori.",
+  sourceContentHash:
+    "35477946eac942930eb5fc7be71afdc63505e07b4442416e703f6799f7d8e82e",
+  documentSha256:
+    "50dc729a39338b607925d93f7cf927a38ed75f88ec8ca8ebc7163a5166ae7cc1",
+  reviewedAt: OCTOBER_1_6_COMMISSION_RESEARCHED_AT,
+});
+
+const commissionIvOctober5Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3198",
+  publicationStart: "2026-10-02",
+  publicationEnd: "2026-10-09",
+  subject: "Convocazione 4° Commissione Consiliare Permanente.",
+  sourceContentHash:
+    "57af86ffd8640a7acf140edf2742e9b761022da32f8be076332c4e6145d2c090",
+  documentSha256:
+    "83fe0c8c9149f7fb01dd5ca0180d0c8d4decf59be9ef5c44a36baad7b1e6fbec",
+  reviewedAt: OCTOBER_1_6_COMMISSION_RESEARCHED_AT,
+});
+
+const commissionVOctober12And13Notice = lateSeptemberNotice({
+  publicationNumber: "2026/3262",
+  publicationStart: "2026-10-09",
+  publicationEnd: "2026-10-16",
+  subject: "Convocazione seduta 5° Commissione Consiliare permanente.",
+  sourceContentHash:
+    "77c48da9bd24ef016efb6d91aee2111faaadfaaad94195f3ef7f8c01ac799928",
+  documentSha256:
+    "162b92486574751b01024336f282ec58496ae951bbec08c455d42480f2cf2cce",
+  reviewedAt: OCTOBER_12_13_COMMISSION_SOURCE_REVIEWED_AT,
+});
+
+const councilOctober9DocumentUrl =
+  "https://albo.tinnvision.cloud/allegati/2026_3221_1_X?ente=00301390795";
+const councilOctober9DocumentSha256 =
+  "83aea5a29ea10b1e32c08649c8f9fc9d3e8c45e1d015c6ea902ca6e2214a7c97";
+const councilOctober9Candidate = requireCandidate({
+  id: "albo-2026-3221",
+  source: "Albo Pretorio Comune di Lamezia Terme",
+  source_url: OFFICIAL_ALBO_URL,
+  retrieved_at: OCTOBER_7_RESEARCHED_AT,
+  publication_number: "2026/3221",
+  publication_start: "2026-10-06",
+  publication_end: "2026-10-08",
+  act_type: "CONVOCAZIONE CONSIGLIO COMUNALE",
+  subject: "Avviso seduta di Consiglio Comunale",
+  document_url: councilOctober9DocumentUrl,
+  content_hash:
+    "0b6cb9a1d7d74d086dca4c7cc4c17ce3000bf2b5e2c1efd53f4c8f20a5c279f1",
+  verification_status: "official_source_acquired",
+  privacy_risk: "low",
+  public_visibility: "publishable",
+});
+const councilOctober9Provenance: CouncilSessionV0Provenance = {
+  noticeId: councilOctober9Candidate.id,
+  publicationNumber: councilOctober9Candidate.publicationNumber,
+  sourceLabel: councilOctober9Candidate.source.label,
+  sourceUrl: councilOctober9Candidate.source.url,
+  documentUrl: councilOctober9Candidate.source.documentUrl,
+  archivedDocumentUrl: `/data/public/albo/documents/2026/${councilOctober9DocumentSha256}.pdf`,
+  sourceContentHash: councilOctober9Candidate.source.contentHash,
+  documentSha256: councilOctober9DocumentSha256,
+  embeddedDocumentSha256: null,
+  retrievedAt: councilOctober9Candidate.source.retrievedAt,
+  reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+  sourceReviewStatus: "reviewed_against_later_official_source",
+  supplementalEvidence: [
+    {
+      publicationNumber: "2026/3263",
+      sourceLabel: "Albo Pretorio Comune di Lamezia Terme",
+      sourceUrl:
+        "https://albo.tinnvision.cloud/allegati/2026_3263_1_X?ente=00301390795",
+      archivedDocumentUrl:
+        "/data/public/albo/documents/2026/cfcb9e41a26ac25a2e48f034365cfee2cfe4b5ba1ac5b1fcff09e483caacc4a0.pdf",
+      documentSha256:
+        "cfcb9e41a26ac25a2e48f034365cfee2cfe4b5ba1ac5b1fcff09e483caacc4a0",
+      retrievedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+      reviewedAt: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+      verificationNote:
+        "Avviso ufficiale di seconda convocazione: attesta la mancanza del numero legale nella prima convocazione del 9 ottobre e ripropone per il 12 ottobre alle 10:30 i 18 punti non discussi e votati.",
+    },
+  ],
+};
+
+const councilCandidate = requireCandidate({
+  id: "albo-2026-2673",
+  source: "Albo Pretorio Comune di Lamezia Terme",
+  source_url: OFFICIAL_ALBO_URL,
+  retrieved_at: "2026-08-11T07:32:34.743Z",
+  publication_number: "2026/2673",
+  publication_start: "2026-08-10",
+  publication_end: "2026-08-14",
+  act_type: "CONVOCAZIONE CONSIGLIO COMUNALE",
+  subject: "Avviso seduta di Consiglio Comunale.",
+  document_url: null,
+  content_hash:
+    "31789ffe968c4991b8b066817d50b757920a36b0bc6f83bff5628f9012a4d108",
+  verification_status: "official_source_acquired",
+  privacy_risk: "low",
+  public_visibility: "publishable",
+});
+
+const commissionProvenance: CouncilSessionV0Provenance = {
+  noticeId: commissionCandidate.id,
+  publicationNumber: commissionCandidate.publicationNumber,
+  sourceLabel: commissionCandidate.source.label,
+  sourceUrl: commissionCandidate.source.url,
+  documentUrl: commissionCandidate.source.documentUrl,
+  archivedDocumentUrl: COMMISSION_ARCHIVED_DOCUMENT_URL,
+  sourceContentHash: commissionCandidate.source.contentHash,
+  documentSha256:
+    "842702b2044b4b6f9a7b21a65eac2ab59866ee3f321872e6b28fd481598be304",
+  embeddedDocumentSha256:
+    "3069388db15c43fdbf3cc980195f9c88ded602a6e9f8f89f358a006ce789096c",
+  retrievedAt: commissionCandidate.source.retrievedAt,
+  reviewedAt: SOURCE_REVIEWED_AT,
+  sourceReviewStatus: "reviewed_against_official_attachment",
+};
+
+const commissionViProvenance: CouncilSessionV0Provenance = {
+  noticeId: commissionViCandidate.id,
+  publicationNumber: commissionViCandidate.publicationNumber,
+  sourceLabel: commissionViCandidate.source.label,
+  sourceUrl: commissionViCandidate.source.url,
+  documentUrl: commissionViCandidate.source.documentUrl,
+  archivedDocumentUrl: COMMISSION_VI_ARCHIVED_DOCUMENT_URL,
+  sourceContentHash: commissionViCandidate.source.contentHash,
+  documentSha256:
+    "165152190ac39451d35caf5815bfb4d7d6d7ee66c20abe630c98b47d62858c72",
+  embeddedDocumentSha256:
+    "c09e7aacd7d22f77f8e72db5b5198203748b5f032dfd604b236f46fe8a28197d",
+  retrievedAt: commissionViCandidate.source.retrievedAt,
+  reviewedAt: COMMISSION_VI_RESEARCHED_AT,
+  sourceReviewStatus: "reviewed_against_official_attachment",
+};
+
+const commissionIvEarlyProvenance: CouncilSessionV0Provenance = {
+  noticeId: commissionIvEarlyCandidate.id,
+  publicationNumber: commissionIvEarlyCandidate.publicationNumber,
+  sourceLabel: commissionIvEarlyCandidate.source.label,
+  sourceUrl: commissionIvEarlyCandidate.source.url,
+  documentUrl: commissionIvEarlyCandidate.source.documentUrl,
+  archivedDocumentUrl: COMMISSION_IV_EARLY_ARCHIVED_DOCUMENT_URL,
+  sourceContentHash: commissionIvEarlyCandidate.source.contentHash,
+  documentSha256:
+    "365976826d174821dfcd69c4c02710fcc8eb324c24ccefe2549d3fce932abd0b",
+  embeddedDocumentSha256:
+    "d642b7171bc1494ffcdb500eb3e30fd88883fbb166f3ebcd80da83a03d32d768",
+  retrievedAt: commissionIvEarlyCandidate.source.retrievedAt,
+  reviewedAt: SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  sourceReviewStatus: "reviewed_against_official_attachment",
+};
+
+const commissionViSeptemberProvenance: CouncilSessionV0Provenance = {
+  noticeId: commissionViSeptemberCandidate.id,
+  publicationNumber: commissionViSeptemberCandidate.publicationNumber,
+  sourceLabel: commissionViSeptemberCandidate.source.label,
+  sourceUrl: commissionViSeptemberCandidate.source.url,
+  documentUrl: commissionViSeptemberCandidate.source.documentUrl,
+  archivedDocumentUrl: COMMISSION_VI_SEPTEMBER_ARCHIVED_DOCUMENT_URL,
+  sourceContentHash: commissionViSeptemberCandidate.source.contentHash,
+  documentSha256:
+    "a1dad36522921833ac71b994a73032d3454227d0a2c00f57156a8d7059d94baf",
+  embeddedDocumentSha256: null,
+  retrievedAt: commissionViSeptemberCandidate.source.retrievedAt,
+  reviewedAt: SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  sourceReviewStatus: "reviewed_against_official_attachment",
+};
+
+const commissionIvLaterProvenance: CouncilSessionV0Provenance = {
+  noticeId: commissionIvLaterCandidate.id,
+  publicationNumber: commissionIvLaterCandidate.publicationNumber,
+  sourceLabel: commissionIvLaterCandidate.source.label,
+  sourceUrl: commissionIvLaterCandidate.source.url,
+  documentUrl: commissionIvLaterCandidate.source.documentUrl,
+  archivedDocumentUrl: COMMISSION_IV_LATER_ARCHIVED_DOCUMENT_URL,
+  sourceContentHash: commissionIvLaterCandidate.source.contentHash,
+  documentSha256:
+    "dee314eb1f7e9133848be4b48c1c0b5e06ddd60371a92acc40ef9e290a62e411",
+  embeddedDocumentSha256: null,
+  retrievedAt: commissionIvLaterCandidate.source.retrievedAt,
+  reviewedAt: SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  sourceReviewStatus: "reviewed_against_official_attachment",
+};
+
+const commissionsIiiIvJointProvenance: CouncilSessionV0Provenance = {
+  noticeId: commissionsIiiIvJointCandidate.id,
+  publicationNumber: commissionsIiiIvJointCandidate.publicationNumber,
+  sourceLabel: commissionsIiiIvJointCandidate.source.label,
+  sourceUrl: commissionsIiiIvJointCandidate.source.url,
+  documentUrl: commissionsIiiIvJointCandidate.source.documentUrl,
+  archivedDocumentUrl: COMMISSIONS_III_IV_JOINT_ARCHIVED_DOCUMENT_URL,
+  sourceContentHash: commissionsIiiIvJointCandidate.source.contentHash,
+  documentSha256:
+    "feb500c847880bf03ab1cd09190b961828f5b3873d60bea800e93367a3c74468",
+  embeddedDocumentSha256: null,
+  retrievedAt: commissionsIiiIvJointCandidate.source.retrievedAt,
+  reviewedAt: SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  sourceReviewStatus: "reviewed_against_official_attachment",
+};
+
+const commissionIiiGuarantorProvenance: CouncilSessionV0Provenance = {
+  noticeId: commissionIiiGuarantorCandidate.id,
+  publicationNumber: commissionIiiGuarantorCandidate.publicationNumber,
+  sourceLabel: commissionIiiGuarantorCandidate.source.label,
+  sourceUrl: commissionIiiGuarantorCandidate.source.url,
+  documentUrl: commissionIiiGuarantorCandidate.source.documentUrl,
+  archivedDocumentUrl: COMMISSION_III_GUARANTOR_ARCHIVED_DOCUMENT_URL,
+  sourceContentHash: commissionIiiGuarantorCandidate.source.contentHash,
+  documentSha256:
+    "b3f2d6a2b5884cd5e17b77b03289abeff7ab1f9994d7b70aa0d66ade22abdb09",
+  embeddedDocumentSha256: null,
+  retrievedAt: commissionIiiGuarantorCandidate.source.retrievedAt,
+  reviewedAt: MID_SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  sourceReviewStatus: "reviewed_against_official_attachment",
+};
+
+const commissionIvMidSeptemberProvenance: CouncilSessionV0Provenance = {
+  noticeId: commissionIvMidSeptemberCandidate.id,
+  publicationNumber: commissionIvMidSeptemberCandidate.publicationNumber,
+  sourceLabel: commissionIvMidSeptemberCandidate.source.label,
+  sourceUrl: commissionIvMidSeptemberCandidate.source.url,
+  documentUrl: commissionIvMidSeptemberCandidate.source.documentUrl,
+  archivedDocumentUrl: COMMISSION_IV_MID_SEPTEMBER_ARCHIVED_DOCUMENT_URL,
+  sourceContentHash: commissionIvMidSeptemberCandidate.source.contentHash,
+  documentSha256:
+    "671bbd99e42677437d3c2b424d2ffd1794c8b1195efbf867591e3550480d31d1",
+  embeddedDocumentSha256: null,
+  retrievedAt: commissionIvMidSeptemberCandidate.source.retrievedAt,
+  reviewedAt: MID_SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  sourceReviewStatus: "reviewed_against_official_attachment",
+};
+
+const commissionIiiMidSeptemberProvenance: CouncilSessionV0Provenance = {
+  noticeId: commissionIiiMidSeptemberCandidate.id,
+  publicationNumber: commissionIiiMidSeptemberCandidate.publicationNumber,
+  sourceLabel: commissionIiiMidSeptemberCandidate.source.label,
+  sourceUrl: commissionIiiMidSeptemberCandidate.source.url,
+  documentUrl: commissionIiiMidSeptemberCandidate.source.documentUrl,
+  archivedDocumentUrl: COMMISSION_III_MID_SEPTEMBER_ARCHIVED_DOCUMENT_URL,
+  sourceContentHash: commissionIiiMidSeptemberCandidate.source.contentHash,
+  documentSha256:
+    "3de7a9e3185b36116474d8ecb3bed1c425b7395af5e85c9bb83bb16ca082e8d0",
+  embeddedDocumentSha256: null,
+  retrievedAt: commissionIiiMidSeptemberCandidate.source.retrievedAt,
+  reviewedAt: MID_SEPTEMBER_COMMISSION_RESEARCHED_AT,
+  sourceReviewStatus: "reviewed_against_official_attachment",
+};
+
+const councilProvenance: CouncilSessionV0Provenance = {
+  noticeId: councilCandidate.id,
+  publicationNumber: councilCandidate.publicationNumber,
+  sourceLabel: councilCandidate.source.label,
+  sourceUrl: councilCandidate.source.url,
+  documentUrl: null,
+  archivedDocumentUrl: null,
+  sourceContentHash: councilCandidate.source.contentHash,
+  documentSha256: null,
+  embeddedDocumentSha256: null,
+  retrievedAt: councilCandidate.source.retrievedAt,
+  reviewedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
+  sourceReviewStatus: "reviewed_against_later_official_source",
+  supplementalEvidence: [
+    {
+      publicationNumber: "2026/2755",
+      sourceLabel: "Albo Pretorio Comune di Lamezia Terme",
+      sourceUrl: COUNCIL_SESSION_EVIDENCE_URL,
+      archivedDocumentUrl: COUNCIL_SESSION_EVIDENCE_ARCHIVE_URL,
+      documentSha256:
+        "e008e83a4d7ae0a4672146b73ebc62e64d565a26eeb043cafaf9e45d92ecf2c5",
+      retrievedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
+      reviewedAt: COUNCIL_CONTEXT_RESEARCHED_AT,
+      verificationNote:
+        "La determinazione conferma la seduta del 13 agosto 2026 e l'approvazione di uno specifico debito fuori bilancio; non documenta orario, ordine del giorno completo, presenze o tutte le votazioni.",
+    },
+  ],
+};
+
+const commissionAgenda = [
+  "Esame della proposta di deliberazione del Consiglio comunale n. 2259 del 6 agosto 2026: assestamento generale di bilancio e salvaguardia degli equilibri per l'esercizio 2026.",
+  "Esame delle proposte di deliberazione del Consiglio comunale relative a debiti fuori bilancio derivanti da sentenze esecutive.",
+] as const;
+
+function commissionSession(
+  date: "2026-08-10" | "2026-08-11",
+): CouncilSessionV0 {
+  const italianDate =
+    date === "2026-08-10" ? "10 agosto 2026" : "11 agosto 2026";
+  const documentUrl = commissionCandidate.source.documentUrl ?? undefined;
+
+  return {
+    id: `albo-2026-2648-commissione-ii-${date}`,
+    kind: "commission",
+    isDemoFixture: false,
+    provenance: commissionProvenance,
+    contextResearch: commissionContextResearch,
+    title: {
+      key: "title",
+      label: "Titolo",
+      value: `II Commissione consiliare permanente — seduta del ${italianDate}`,
+      sourceStatus: "verificato",
+      sourceUrl: documentUrl,
+      limit:
+        "Titolo normalizzato dalla convocazione ufficiale; la fonte identifica la II Commissione come Servizi economici e finanziari.",
+    },
+    scheduledAt: {
+      key: "scheduledAt",
+      label: "Data e ora",
+      value: `${date}T09:30:00+02:00`,
+      sourceStatus: "verificato",
+      sourceUrl: documentUrl,
+      limit:
+        "Data e ora trascritte dall'allegato ufficiale; indicano la programmazione, non provano lo svolgimento.",
+    },
+    sessionStatus: {
+      key: "sessionStatus",
+      label: "Stato seduta",
+      value: "non_verificata",
+      sourceStatus: "parziale",
+      sourceUrl: documentUrl,
+      limit:
+        "La convocazione documenta la seduta programmata; non è stata collegata una fonte che ne confermi lo svolgimento o l'eventuale rinvio.",
+    },
+    agenda: {
+      key: "agenda",
+      label: "Ordine del giorno",
+      value: commissionAgenda,
+      sourceStatus: "verificato",
+      sourceUrl: documentUrl,
+      limit:
+        "Sintesi fedele dei due punti riportati nell'allegato; per formulazione completa e riferimenti normativi consultare il documento originale.",
+    },
+    sourceLink: {
+      key: "sourceLink",
+      label: "Fonte",
+      value: "Apri la convocazione nell'Albo ufficiale",
+      sourceStatus: "verificato",
+      sourceUrl: documentUrl,
+      limit: `Pubblicazione ${commissionCandidate.publicationNumber}; copia acquisita e verificata tramite hash nel repository.`,
+    },
+    liveStreaming: {
+      key: "liveStreaming",
+      label: "Streaming live",
+      value: null,
+      sourceStatus: "assente",
+      sourceUrl: documentUrl,
+      limit:
+        "Non rilevato nella convocazione consultata; ciò non esclude che possa essere stato comunicato su un altro canale.",
+    },
+    recording: {
+      key: "recording",
+      label: "Registrazione",
+      value: null,
+      sourceStatus: "assente",
+      sourceUrl: documentUrl,
+      limit:
+        "Non rilevata nella fonte monitorata; nessuna conclusione viene tratta sulla disponibilità complessiva di registrazioni.",
+    },
+    minutesOrReport: {
+      key: "minutesOrReport",
+      label: "Verbale o resoconto",
+      value: null,
+      sourceStatus: "assente",
+      sourceUrl: documentUrl,
+      limit:
+        "Non rilevato nella convocazione; verbali o resoconti successivi richiedono una ricerca separata nelle fonti istituzionali.",
+    },
+    lastCheckedAt: {
+      key: "lastCheckedAt",
+      label: "Ultimo controllo",
+      value: SOURCE_REVIEWED_AT,
+      sourceStatus: "verificato",
+      sourceUrl: documentUrl,
+      limit:
+        "Controllo della copia ufficiale archiviata; future modifiche o nuove pubblicazioni non sono incluse automaticamente in questa scheda revisionata.",
+    },
+    dataLimits: {
+      key: "dataLimits",
+      label: "Limiti del dato",
+      value: [
+        "La stessa convocazione programma due sedute, il 10 e l'11 agosto 2026 alle 09:30.",
+        "La scheda non certifica svolgimento, presenze, esiti o completezza storica.",
+        "Streaming, registrazione e verbale sono indicati come non rilevati nella fonte consultata, non come inesistenti.",
+      ],
+      sourceStatus: "parziale",
+      sourceUrl: documentUrl,
+      limit:
+        "Prima tranche editoriale basata su un solo avviso ufficiale; la copertura delle Commissioni non è completa.",
+    },
+  };
+}
+
+const commissionViAgenda = [
+  "Denominazione comunale d'origine (De.Co.).",
+  "Regolamento chioschi.",
+] as const;
+
+function commissionViSession(
+  date: "2026-09-01" | "2026-09-04",
+): CouncilSessionV0 {
+  const italianDate =
+    date === "2026-09-01" ? "1 settembre 2026" : "4 settembre 2026";
+  const documentUrl = commissionViCandidate.source.documentUrl ?? undefined;
+
+  return {
+    id: `albo-2026-2788-commissione-vi-${date}`,
+    kind: "commission",
+    isDemoFixture: false,
+    provenance: commissionViProvenance,
+    contextResearch: commissionViContextResearch,
+    title: {
+      key: "title",
+      label: "Titolo",
+      value: `VI Commissione consiliare permanente — seduta del ${italianDate}`,
+      sourceStatus: "verificato",
+      sourceUrl: documentUrl,
+      limit:
+        "Titolo normalizzato dalla convocazione ufficiale; la fonte identifica la VI Commissione come Sviluppo economico ed attività produttive.",
+    },
+    scheduledAt: {
+      key: "scheduledAt",
+      label: "Data e ora",
+      value: `${date}T12:00:00+02:00`,
+      sourceStatus: "verificato",
+      sourceUrl: documentUrl,
+      limit:
+        "Data e ora trascritte dall'allegato ufficiale; indicano la programmazione, non provano lo svolgimento.",
+    },
+    sessionStatus: {
+      key: "sessionStatus",
+      label: "Stato seduta",
+      value: "non_verificata",
+      sourceStatus: "parziale",
+      sourceUrl: documentUrl,
+      limit:
+        "La convocazione documenta la seduta programmata; non è stata collegata una fonte che ne confermi lo svolgimento o l'eventuale rinvio.",
+    },
+    agenda: {
+      key: "agenda",
+      label: "Ordine del giorno",
+      value: commissionViAgenda,
+      sourceStatus: "verificato",
+      sourceUrl: documentUrl,
+      limit:
+        "Trascrizione fedele dei due punti riportati nell'allegato ufficiale; non documenta discussione, votazioni o esiti.",
+    },
+    sourceLink: {
+      key: "sourceLink",
+      label: "Fonte",
+      value: "Apri il calendario ufficiale della VI Commissione",
+      sourceStatus: "verificato",
+      sourceUrl: documentUrl,
+      limit: `Pubblicazione ${commissionViCandidate.publicationNumber}; copia acquisita e verificata tramite hash nel repository.`,
+    },
+    liveStreaming: {
+      key: "liveStreaming",
+      label: "Streaming live",
+      value: null,
+      sourceStatus: "assente",
+      sourceUrl: documentUrl,
+      limit:
+        "Non rilevato nella convocazione consultata; ciò non esclude che possa essere comunicato su un altro canale.",
+    },
+    recording: {
+      key: "recording",
+      label: "Registrazione",
+      value: null,
+      sourceStatus: "assente",
+      sourceUrl: documentUrl,
+      limit:
+        "Non rilevata nella fonte monitorata; nessuna conclusione viene tratta sulla disponibilità complessiva di registrazioni.",
+    },
+    minutesOrReport: {
+      key: "minutesOrReport",
+      label: "Verbale o resoconto",
+      value: null,
+      sourceStatus: "assente",
+      sourceUrl: documentUrl,
+      limit:
+        "Non rilevato nella convocazione; verbali o resoconti successivi richiedono una ricerca separata nelle fonti istituzionali.",
+    },
+    lastCheckedAt: {
+      key: "lastCheckedAt",
+      label: "Ultimo controllo",
+      value: COMMISSION_VI_RESEARCHED_AT,
+      sourceStatus: "verificato",
+      sourceUrl: documentUrl,
+      limit:
+        "Controllo della copia ufficiale archiviata e ricerca contestuale iniziale; nuovi collegamenti saranno verificati in prossimità e dopo la seduta.",
+    },
+    dataLimits: {
+      key: "dataLimits",
+      label: "Limiti del dato",
+      value: [
+        "La stessa convocazione programma due sedute, il 1° e il 4 settembre 2026 alle 12:00.",
+        "La sede non è indicata nell'allegato ufficiale e non viene inferita.",
+        "La scheda non certifica svolgimento, presenze, esiti o completezza storica.",
+        "Streaming, registrazione e verbale sono indicati come non rilevati nella fonte consultata, non come inesistenti.",
+        "Non sono emersi collegamenti editoriali sufficientemente precisi al primo controllo.",
+      ],
+      sourceStatus: "parziale",
+      sourceUrl: documentUrl,
+      limit:
+        "Prima verifica basata sul calendario ufficiale; la ricerca di copertura sarà ripetuta durante la finestra attiva.",
+    },
+  };
+}
+
+interface SeptemberCommissionSessionInput {
+  id: string;
+  title: string;
+  scheduledAt: string;
+  agenda: readonly string[];
+  candidate: InstitutionalSessionCandidate;
+  provenance: CouncilSessionV0Provenance;
+  contextResearch: CouncilSessionV0ContextResearch;
+  sourceLinkLabel: string;
+  calendarSummary: string;
+}
+
+function septemberCommissionSession({
+  id,
+  title,
+  scheduledAt,
+  agenda,
+  candidate,
+  provenance,
+  contextResearch,
+  sourceLinkLabel,
+  calendarSummary,
+}: SeptemberCommissionSessionInput): CouncilSessionV0 {
+  const documentUrl = candidate.source.documentUrl ?? undefined;
+  const hasContextMatches =
+    contextResearch.articles.length > 0 || contextResearch.media.length > 0;
+
+  return {
+    id,
+    kind: "commission",
+    isDemoFixture: false,
+    provenance,
+    contextResearch,
+    title: {
+      key: "title",
+      label: "Titolo",
+      value: title,
+      sourceStatus: "verificato",
+      sourceUrl: documentUrl,
+      limit:
+        "Titolo normalizzato dalla denominazione dell'organo e dalla data riportate nella convocazione ufficiale.",
+    },
+    scheduledAt: {
+      key: "scheduledAt",
+      label: "Data e ora",
+      value: scheduledAt,
+      sourceStatus: "verificato",
+      sourceUrl: documentUrl,
+      limit:
+        "Data e ora trascritte dall'allegato ufficiale; indicano la programmazione, non provano lo svolgimento.",
+    },
+    sessionStatus: {
+      key: "sessionStatus",
+      label: "Stato seduta",
+      value: "non_verificata",
+      sourceStatus: "parziale",
+      sourceUrl: documentUrl,
+      limit:
+        "La convocazione documenta la seduta programmata; non è stata collegata una fonte istituzionale che ne confermi lo svolgimento o l'eventuale rinvio.",
+    },
+    agenda: {
+      key: "agenda",
+      label: "Ordine del giorno",
+      value: agenda,
+      sourceStatus: "verificato",
+      sourceUrl: documentUrl,
+      limit:
+        "Trascrizione fedele dei punti riportati nell'allegato ufficiale; non documenta discussione, votazioni o esiti.",
+    },
+    sourceLink: {
+      key: "sourceLink",
+      label: "Fonte",
+      value: sourceLinkLabel,
+      sourceStatus: "verificato",
+      sourceUrl: documentUrl,
+      limit: `Pubblicazione ${candidate.publicationNumber}; copia acquisita e verificata tramite hash nel repository.`,
+    },
+    liveStreaming: {
+      key: "liveStreaming",
+      label: "Streaming live",
+      value: null,
+      sourceStatus: "assente",
+      sourceUrl: documentUrl,
+      limit:
+        "Non rilevato nella convocazione né nei canali controllati; ciò non equivale a dichiararne l'inesistenza.",
+    },
+    recording: {
+      key: "recording",
+      label: "Registrazione",
+      value: null,
+      sourceStatus: "assente",
+      sourceUrl: documentUrl,
+      limit:
+        "Non rilevata nella fonte istituzionale o nella ricerca editoriale; richiede ulteriori controlli nella finestra attiva.",
+    },
+    minutesOrReport: {
+      key: "minutesOrReport",
+      label: "Verbale o resoconto",
+      value: null,
+      sourceStatus: "assente",
+      sourceUrl: documentUrl,
+      limit:
+        "Non rilevato nella convocazione; verbali o resoconti successivi richiedono una ricerca separata nelle fonti istituzionali.",
+    },
+    lastCheckedAt: {
+      key: "lastCheckedAt",
+      label: "Ultimo controllo",
+      value: contextResearch.checkedAt,
+      sourceStatus: "verificato",
+      sourceUrl: documentUrl,
+      limit:
+        "Controllo dell'allegato ufficiale, della copia archiviata e delle fonti di contesto; la ricerca prosegue durante la finestra attiva.",
+    },
+    dataLimits: {
+      key: "dataLimits",
+      label: "Limiti del dato",
+      value: [
+        calendarSummary,
+        "La sede non è indicata nell'allegato ufficiale e non viene inferita.",
+        "La scheda non certifica svolgimento, presenze, esiti o completezza storica.",
+        "Streaming, registrazione e verbale sono indicati come non rilevati, non come inesistenti.",
+        hasContextMatches
+          ? "I collegamenti di contesto non certificano svolgimento, audizioni, votazioni o esiti della seduta."
+          : "Non sono emersi collegamenti editoriali sufficientemente precisi al controllo corrente.",
+      ],
+      sourceStatus: "parziale",
+      sourceUrl: documentUrl,
+      limit:
+        "Verifica basata sulla convocazione ufficiale e su una ricerca contestuale ancora aperta.",
+    },
+  };
+}
+
+const streetArtAgenda = [
+  "Regolamento comunale per la promozione della Street Art.",
+] as const;
+
+const decoAgenda = ["Denominazione comunale d'origine (De.Co.)."] as const;
+
+const sportDisabilityAgenda = [
+  "Progetto Sport e Disabilità. Audizione dell'assessore al ramo Gennaro Gianturco.",
+] as const;
+
+const disabilityGuarantorAgenda = [
+  'Regolamento per l\'istituzione della figura del "Garante delle persone con disabilità".',
+] as const;
+
+const schoolTransportAgenda = [
+  "Trasporto Pubblico Scolastico Locale. Audizione del dirigente della Lamezia Multiservizi, ing. Alessandro Vescio.",
+] as const;
+
+const municipalNurseriesAgenda = [
+  "Asili Nido Comunali. Audizione dell'assessore al ramo Gennaro Gianturco.",
+] as const;
+
+const streetArtIcicaAgenda = [
+  "Regolamento comunale per la promozione della Street Art. Audizione dell'Associazione Icica.",
+] as const;
+
+const commissionPresidentElectionAgenda = ["Elezione del Presidente."] as const;
+
+const courtJudgmentDebtsAgenda = [
+  "Esame delle proposte di debiti fuori bilancio derivanti da sentenze esecutive.",
+] as const;
+
+const internalControlsAgenda = [
+  "Regolamento Controlli Interni. Audizione del Segretario Generale avv. Simona Provenzano e del dirigente del Settore Economico-Finanziario dott.ssa Nadia Aiello.",
+] as const;
+
+const taxiRegulationAgenda = [
+  "Informativa sulla proposta del nuovo Regolamento Taxi comunale.",
+] as const;
+
+const legalDisputesAgenda = [
+  "Trattazione della richiesta relativa allo studio e all'esame delle vertenze. Audizione del dirigente del Settore Avvocatura dott.ssa Alessandra Belvedere.",
+] as const;
+
+const workPlanningAgenda = ["Programmazione lavori."] as const;
+
+const wasteAbandonmentMotionAgenda = [
+  'Mozione prot. n. 71796/2026: "Interventi urgenti di bonifica, sicurezza, controllo e contrasto all\'abbandono dei rifiuti in località Serra e località Annunziata".',
+] as const;
+
+const municipalAssetsRegulationAgenda = [
+  "Regolamento sulla gestione e valorizzazione dei beni comunali.",
+] as const;
+
+const roadNetworkWorksRulesAgenda = [
+  "Disciplinare per interventi sulla rete stradale.",
+] as const;
+
+const streetArtGiuliaUrbanaAgenda = [
+  "Regolamento comunale per la promozione della Street Art. Audizione del sig. Giacomo Marinaro, curatore e direttore artistico del progetto Giulia Urbana.",
+] as const;
+
+const hillsideWasteCollectionAgenda = [
+  "Servizio raccolta rifiuti nelle zone collinari e montane. Audizione del dirigente della Lamezia Multiservizi ing. Alessandro Vescio e del dirigente di Settore ing. Francesco Esposito.",
+] as const;
+
+const wasteAbandonmentMeasuresAgenda = [
+  "Misure di contrasto all'abbandono di rifiuti. Audizione del Vicecomandante Ten. Col. Aldo Rubino.",
+] as const;
+
+const schoolClimateMotionAgenda = [
+  "Mozione prot. n. 68544/2026: tutela della salute e del benessere della comunità scolastica e piano di adeguamento climatico degli edifici scolastici comunali.",
+] as const;
+
+const municipalNurseriesAndSchoolMealsTariffsAgenda = [
+  "Determinazione delle tariffe per i servizi asili nido comunali e refezione scolastica. Audizione dell'assessore Gennaro Gianturco.",
+] as const;
+
+const proximityMarketSantEufemiaAgenda = [
+  "Proposta prot. n. 74657/2026: avvio sperimentale di un mercato di prossimità nella zona di Sant'Eufemia Vetere.",
+] as const;
+
+const multiYearFinancialRebalancingAgenda = [
+  "Aggiornamento sul piano di riequilibrio finanziario pluriennale dell'Ente. Audizione dell'assessore al ramo dott.ssa Maria Nardo.",
+] as const;
+
+const councilOctober9Agenda = [
+  "Comunicazioni del Presidente sull'intervenuta approvazione dei verbali delle sedute del 10, 17, 21 e 30 luglio 2026 e del 13 agosto 2026.",
+  "Nomina del Collegio dei Revisori per il triennio 2026–2029.",
+  "Regolamento sui Controlli Interni.",
+  "Riconoscimento del debito fuori bilancio derivante dalla sentenza n. 616/26 del Tribunale di Lamezia Terme.",
+  "Riconoscimento del debito fuori bilancio derivante dalla sentenza n. 917/25 del Tribunale di Lamezia Terme.",
+  "Riconoscimento del debito fuori bilancio derivante dalla sentenza n. 826/24 della Commissione di Giustizia Tributaria di primo grado, II sezione di Catanzaro.",
+  "Riconoscimento del debito fuori bilancio derivante dalla sentenza n. 889/26 del Tribunale di Lamezia Terme.",
+  "Mozione sulla tutela della salute e del benessere della comunità scolastica, la valutazione del posticipo delle attività didattiche e il piano di adeguamento climatico degli edifici scolastici comunali.",
+  "Mozione su manutenzione, igiene urbana, riqualificazione e messa in sicurezza del Rione Timpone.",
+  "Mozione sulla procedura di mobilità per agenti di Polizia Locale e sul rafforzamento dell'organico.",
+  'Interrogazione sul ruolo strategico di Lamezia Terme nel progetto regionale "Città-Territorio dei Due Mari Catanzaro-Lamezia".',
+  'Interrogazione sulla delocalizzazione della base operativa dei Canadair da Lamezia Terme a Crotone nell\'ambito del CIS "Volare".',
+  "Interrogazione sul progetto della passerella ciclopedonale tra Marinella e Gizzeria Lido, sul ripristino di via Antonio Cappelli e sulla messa in sicurezza della SS18.",
+  'Interrogazione sulla crisi organizzativa e assistenziale del presidio ospedaliero "Giovanni Paolo II".',
+  "Interrogazione sull'area di accesso al Cimitero di Sant'Eufemia Lamezia e sul servizio di custodia.",
+  "Interrogazione sui Tirocinanti di inclusione sociale (TIS), sulle misure regionali e sul completamento del percorso occupazionale degli idonei.",
+  "Interrogazione sull'area giochi presso la scuola Nicholas Green.",
+  "Interrogazione sullo stato del Cimitero di Sambiase e sugli interventi di manutenzione e messa in sicurezza.",
+  "Interrogazione sulla frazione Caronte, il PTE, l'area camper, il progetto della piazza e la pulizia del torrente Bagni.",
+  "Interrogazione sullo stato manutentivo del Cimitero di Nicastro.",
+  "Interrogazione su San Teodoro-Piedichiusa, il nuovo parco, il torrente Niola/Piedichiusa, via SS. Salvatore e via dei Normanni.",
+] as const;
+
+const councilOctober9Session: CouncilSessionV0 = {
+  id: "albo-2026-3221-consiglio-comunale-2026-10-09",
+  kind: "council",
+  isDemoFixture: false,
+  provenance: councilOctober9Provenance,
+  contextResearch: councilOctober9ContextResearch,
+  title: {
+    key: "title",
+    label: "Titolo",
+    value: "Consiglio comunale — seduta del 9 ottobre 2026",
+    sourceStatus: "verificato",
+    sourceUrl: councilOctober9DocumentUrl,
+    limit:
+      "Titolo normalizzato dall'organo e dalla prima convocazione riportati nell'allegato ufficiale.",
+  },
+  scheduledAt: {
+    key: "scheduledAt",
+    label: "Data e ora",
+    value: "2026-10-09T09:30:00+02:00",
+    sourceStatus: "verificato",
+    sourceUrl: councilOctober9DocumentUrl,
+    limit:
+      "Prima convocazione trascritta dall'allegato ufficiale; la seconda convocazione è fissata al 12 ottobre 2026 alle 10:30.",
+  },
+  sessionStatus: {
+    key: "sessionStatus",
+    label: "Stato seduta",
+    value: "sospesa",
+    sourceStatus: "verificato",
+    sourceUrl:
+      "https://albo.tinnvision.cloud/allegati/2026_3263_1_X?ente=00301390795",
+    limit:
+      "L'avviso ufficiale 2026/3263 attesta che la prima convocazione si è tenuta ma è stata sospesa per mancanza del numero legale e che i 18 punti non discussi e votati sono passati alla seconda convocazione del 12 ottobre; non è un verbale completo della seduta.",
+  },
+  agenda: {
+    key: "agenda",
+    label: "Ordine del giorno",
+    value: councilOctober9Agenda,
+    sourceStatus: "verificato",
+    sourceUrl: councilOctober9DocumentUrl,
+    limit:
+      "Sintesi fedele dei 21 punti dell'allegato ufficiale; per protocolli, riferimenti e formulazione integrale consultare il documento.",
+  },
+  sourceLink: {
+    key: "sourceLink",
+    label: "Fonte",
+    value: "Apri la convocazione ufficiale del Consiglio comunale",
+    sourceStatus: "verificato",
+    sourceUrl: councilOctober9DocumentUrl,
+    limit:
+      "Pubblicazione 2026/3221; copia acquisita e verificata tramite SHA-256 nel repository.",
+  },
+  liveStreaming: {
+    key: "liveStreaming",
+    label: "Streaming live",
+    value: null,
+    sourceStatus: "assente",
+    sourceUrl: councilOctober9DocumentUrl,
+    limit:
+      "Non rilevato nella fonte istituzionale; il replay editoriale di City One resta nella sezione contestuale e non valorizza questo campo.",
+  },
+  recording: {
+    key: "recording",
+    label: "Registrazione",
+    value: null,
+    sourceStatus: "assente",
+    sourceUrl: councilOctober9DocumentUrl,
+    limit:
+      "Non rilevata nella fonte istituzionale; il replay editoriale di City One non viene trattato come registrazione ufficiale.",
+  },
+  minutesOrReport: {
+    key: "minutesOrReport",
+    label: "Verbale o resoconto",
+    value: null,
+    sourceStatus: "assente",
+    sourceUrl: councilOctober9DocumentUrl,
+    limit:
+      "Non rilevato nella convocazione; eventuali pubblicazioni successive richiedono un controllo separato.",
+  },
+  lastCheckedAt: {
+    key: "lastCheckedAt",
+    label: "Ultimo controllo",
+    value: COUNCIL_OCTOBER_9_CONTEXT_RESEARCHED_AT,
+    sourceStatus: "verificato",
+    sourceUrl: councilOctober9DocumentUrl,
+    limit:
+      "Controllo dell'allegato ufficiale, della copia archiviata e delle fonti contestuali; la finestra di ricerca resta aperta.",
+  },
+  dataLimits: {
+    key: "dataLimits",
+    label: "Limiti del dato",
+    value: [
+      "La prima convocazione è fissata al 9 ottobre 2026 alle 09:30; la seconda al 12 ottobre alle 10:30.",
+      'La sede indicata è la Sala Consiliare "Renato Luisi", in via Sen. Arturo Perugini.',
+      "L'avviso ufficiale 2026/3263 attesta lo svolgimento parziale e la sospensione per mancanza del numero legale, con passaggio alla seconda convocazione dei 18 punti non discussi e votati; non costituisce un verbale completo.",
+      "Streaming istituzionale, registrazione istituzionale e verbale sono indicati come non rilevati, non come inesistenti.",
+      "I ventitré articoli collegati, inclusi sei resoconti tra il 9 e il 10 ottobre, sei articoli sulla nota USB Taxi relativa al 12 ottobre, tre approfondimenti dell'11 ottobre, un resoconto del 12 ottobre e il resoconto NtaCalabria del 13 ottobre sulla seconda convocazione, oltre a due articoli del 13 ottobre classificati `agenda_item` sulla stessa nota relativa alla mozione per il rione Timpone, restano fonti editoriali e non valorizzano campi, presenze, votazioni o risultati ufficiali.",
+      "Gli otto collegamenti audiovisivi di City One e LameziaTerme.it, inclusi sei live stream, un estratto e un'intervista, sono fonti editoriali esterne: non certificano programmazione istituzionale, completezza, presenze, votazioni o risultati.",
+    ],
+    sourceStatus: "parziale",
+    sourceUrl: councilOctober9DocumentUrl,
+    limit:
+      "Verifica basata sulla convocazione ufficiale, sull'avviso ufficiale di seconda convocazione e su una ricerca contestuale ancora aperta.",
+  },
+};
+
+const councilVerifiedSession: CouncilSessionV0 = {
+  id: "albo-2026-2673-consiglio-comunale",
+  kind: "council",
+  isDemoFixture: false,
+  provenance: councilProvenance,
+  contextResearch: councilContextResearch,
+  title: {
+    key: "title",
+    label: "Titolo",
+    value: "Consiglio comunale — seduta del 13 agosto 2026",
+    sourceStatus: "verificato",
+    sourceUrl: councilCandidate.source.url,
+    limit: `Titolo normalizzato dall'oggetto della pubblicazione ${councilCandidate.publicationNumber} e dalla data confermata dalla pubblicazione istituzionale 2026/2755.`,
+  },
+  scheduledAt: {
+    key: "scheduledAt",
+    label: "Data e ora",
+    value: "2026-08-13",
+    sourceStatus: "verificato",
+    sourceUrl: COUNCIL_SESSION_EVIDENCE_URL,
+    limit:
+      "La data è indicata nella pubblicazione istituzionale 2026/2755; l'orario non è presente nella fonte e non viene ricavato dalla stampa.",
+  },
+  sessionStatus: {
+    key: "sessionStatus",
+    label: "Stato seduta",
+    value: "svolta",
+    sourceStatus: "verificato",
+    sourceUrl: COUNCIL_SESSION_EVIDENCE_URL,
+    limit:
+      "La determinazione successiva richiama un debito approvato nella seduta del 13 agosto; non documenta presenze, durata o trattazione completa.",
+  },
+  agenda: {
+    key: "agenda",
+    label: "Ordine del giorno",
+    value: null,
+    sourceStatus: "assente",
+    sourceUrl: councilCandidate.source.url,
+    limit:
+      "Non rilevato nei metadati ufficiali acquisiti; la fonte successiva conferma un solo punto e non viene usata per ricostruire l'elenco completo.",
+  },
+  sourceLink: {
+    key: "sourceLink",
+    label: "Fonte",
+    value: "Apri l'evidenza istituzionale sulla seduta",
+    sourceStatus: "verificato",
+    sourceUrl: COUNCIL_SESSION_EVIDENCE_URL,
+    limit:
+      "La pubblicazione 2026/2755 conferma organo, data e approvazione di un debito; l'avviso originario 2026/2673 resta privo di allegato nell'export acquisito.",
+  },
+  liveStreaming: {
+    key: "liveStreaming",
+    label: "Streaming live",
+    value: null,
+    sourceStatus: "assente",
+    sourceUrl: councilCandidate.source.url,
+    limit:
+      "Non rilevato nei metadati dell'avviso; il controllo dei canali video istituzionali resta separato.",
+  },
+  recording: {
+    key: "recording",
+    label: "Registrazione",
+    value: null,
+    sourceStatus: "assente",
+    sourceUrl: councilCandidate.source.url,
+    limit:
+      "Non rilevata nei metadati dell'avviso; non equivale a dichiararne l'inesistenza.",
+  },
+  minutesOrReport: {
+    key: "minutesOrReport",
+    label: "Verbale o resoconto",
+    value: null,
+    sourceStatus: "assente",
+    sourceUrl: councilCandidate.source.url,
+    limit:
+      "Non rilevato nei metadati acquisiti; una pubblicazione successiva richiede un controllo dedicato.",
+  },
+  lastCheckedAt: {
+    key: "lastCheckedAt",
+    label: "Ultimo controllo",
+    value: COUNCIL_CONTEXT_RESEARCHED_AT,
+    sourceStatus: "verificato",
+    sourceUrl: COUNCIL_SESSION_EVIDENCE_URL,
+    limit:
+      "Controllo della nuova pubblicazione istituzionale e nuova ricerca di articoli e video nella finestra dal 6 al 20 agosto 2026.",
+  },
+  dataLimits: {
+    key: "dataLimits",
+    label: "Limiti del dato",
+    value: [
+      "Data e svolgimento sono confermati dalla pubblicazione istituzionale 2026/2755; l'orario resta da verificare.",
+      "La fonte successiva documenta l'approvazione di un debito fuori bilancio, non l'ordine del giorno completo, le presenze o tutte le votazioni.",
+      "L'avviso originario 2026/2673 non espone un allegato nell'export acquisito.",
+      "La registrazione City One è copertura editoriale esterna e non una registrazione istituzionale.",
+    ],
+    sourceStatus: "parziale",
+    sourceUrl: COUNCIL_SESSION_EVIDENCE_URL,
+    limit:
+      "Arricchimento prudenziale basato su una fonte istituzionale successiva; nessuna informazione editoriale completa i campi ufficiali mancanti.",
+  },
+};
+
+const commissionIOctober22EditorialSession: CouncilSessionV0 = {
+  id: "editorial-commissione-i-sfiducia-presidente-2026-10",
+  kind: "commission",
+  isDemoFixture: false,
+  contextResearch: {
+    status: "reviewed_matches",
+    checkedAt: "2026-10-30T06:19:00+01:00",
+    searchNote:
+      "Parallel Search e la verifica diretta di Comune, Albo, testate locali, canali audiovisivi indicizzati e metadati WordPress della fonte originale hanno individuato sei articoli sufficientemente precisi. Tutti identificano la I Commissione e la mozione di sfiducia al presidente e dipendono dalle dichiarazioni degli stessi consiglieri: City One, Lamezia Oggi e LameziaTerme.it riproducono la nota già pubblicata da il Lametino, NtaCalabria la parafrasa e Gazzetta del Sud offre una copertura originale basata sulle medesime dichiarazioni. Non costituiscono conferme istituzionali indipendenti. LameziaTerme.it etichetta esplicitamente il contenuto come “Comunicato Stampa”; NtaCalabria e Gazzetta del Sud descrivono editorialmente una mancata sfiducia. Queste affermazioni non vengono usate per valorizzare svolgimento, votazione o esito. Le date di pubblicazione sono usate soltanto per la ricerca e non vengono presentate come data ufficiale della seduta. Non è stato acquisito un atto istituzionale; data, ora, sede, ordine del giorno, svolgimento ed esiti restano non verificati.",
+    articles: [
+      {
+        title:
+          "Lamezia, consiglieri di opposizione: ‘Lavori fermi in I Commissione, città non può continuare a pagare scontri nel centrodestra’",
+        url: COMMISSION_I_OCTOBER_22_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-10-22",
+        relationship: "same_session",
+        relevanceNote:
+          "L'articolo descrive esplicitamente una seduta a porte chiuse della I Commissione e la collega alla mozione di sfiducia nei confronti del presidente. È una fonte editoriale: non certifica convocazione, data e ora ufficiali, svolgimento, votazioni, esiti o completezza.",
+        reviewedAt: "2026-10-29T12:16:00+01:00",
+      },
+      {
+        title:
+          "Lamezia Terme, stallo in I Commissione: “Il centrodestra blocca i lavori e dimentica la città”",
+        url: COMMISSION_I_OCTOBER_22_CITY_ONE_URL,
+        publisher: "City One",
+        publishedAt: "2026-10-22",
+        relationship: "same_session",
+        relevanceNote:
+          "L'articolo identifica la stessa seduta a porte chiuse della I Commissione e la mozione di sfiducia nei confronti del presidente. Riproduce la medesima nota dei consiglieri già pubblicata da il Lametino e non costituisce una conferma indipendente; non certifica convocazione, data e ora ufficiali, svolgimento, votazioni, esiti o completezza.",
+        reviewedAt: "2026-10-29T12:16:00+01:00",
+      },
+      {
+        title:
+          "Lamezia, consiglieri di opposizione: “Lavori fermi in I Commissione, città non può essere compromessa”",
+        url: COMMISSION_I_OCTOBER_22_LAMEZIA_OGGI_URL,
+        publisher: "Lamezia Oggi",
+        publishedAt: "2026-10-22",
+        relationship: "same_session",
+        relevanceNote:
+          "L'articolo identifica una seduta a porte chiuse della I Commissione e la mozione di sfiducia nei confronti del presidente. Riproduce la stessa nota dei consiglieri già pubblicata da il Lametino e non costituisce una conferma indipendente; non certifica convocazione, data e ora ufficiali, svolgimento, votazioni, esiti o completezza.",
+        reviewedAt: "2026-10-29T12:16:00+01:00",
+      },
+      {
+        title: "A Lamezia Terme scontro politico sulla sfiducia a Cristiano",
+        url: COMMISSION_I_OCTOBER_23_NTACALABRIA_URL,
+        publisher: "NtaCalabria",
+        publishedAt: "2026-10-23",
+        relationship: "same_session",
+        relevanceNote:
+          "L'articolo identifica la seduta del giorno precedente della I Commissione, il presidente Massimo Cristiano, la mozione di sfiducia e gli stessi quattro consiglieri citati dalle fonti del 22 ottobre. Parafrasa la medesima nota e non costituisce una conferma indipendente. La sua affermazione sulla mancata sfiducia resta editoriale e non certifica convocazione, svolgimento, votazione, esito o completezza.",
+        reviewedAt: "2026-10-29T12:16:00+01:00",
+      },
+      {
+        title:
+          "Lamezia, scontro sulla sfiducia a Cristiano. L’opposizione: «Basta teatrini»",
+        url: COMMISSION_I_OCTOBER_23_GAZZETTA_URL,
+        publisher: "Gazzetta del Sud",
+        publishedAt: "2026-10-23",
+        relationship: "same_session",
+        relevanceNote:
+          "La pagina originale identifica la I Commissione, la seduta del giorno precedente, il presidente Massimo Cristiano e gli stessi quattro consiglieri; è quindi collegata alla medesima seduta segnalata. La copertura è editoriale e basata sulle stesse dichiarazioni: non certifica convocazione, data e ora ufficiali, svolgimento, votazione, esito o completezza.",
+        reviewedAt: "2026-10-29T23:51:00+01:00",
+      },
+      {
+        title:
+          "Lamezia, scontro in I Commissione: «Il centrodestra blocca le istituzioni»",
+        url: COMMISSION_I_OCTOBER_22_LAMEZIATERME_URL,
+        publisher: "LameziaTerme.it",
+        publishedAt: "2026-10-22",
+        relationship: "same_session",
+        relevanceNote:
+          "La pagina originale identifica la seduta a porte chiuse della I Commissione, la mozione di sfiducia al presidente Cristiano e gli stessi quattro consiglieri; i metadati WordPress verificano la pubblicazione del 22 ottobre. Il contenuto è etichettato “Comunicato Stampa” e riproduce la medesima nota: non costituisce una conferma indipendente né certifica convocazione, data e ora ufficiali, svolgimento, votazione, esito o completezza.",
+        reviewedAt: "2026-10-30T06:19:00+01:00",
+      },
+    ],
+    media: [],
+    editorialAgenda: [
+      {
+        title:
+          "Mozione di sfiducia nei confronti del presidente della I Commissione",
+        sourceUrls: [
+          COMMISSION_I_OCTOBER_22_LAMETINO_URL,
+          COMMISSION_I_OCTOBER_22_CITY_ONE_URL,
+          COMMISSION_I_OCTOBER_22_LAMEZIA_OGGI_URL,
+          COMMISSION_I_OCTOBER_23_NTACALABRIA_URL,
+          COMMISSION_I_OCTOBER_23_GAZZETTA_URL,
+          COMMISSION_I_OCTOBER_22_LAMEZIATERME_URL,
+        ],
+        confidence: "medium",
+        reason:
+          "Il tema è indicato espressamente da sei articoli basati sulle dichiarazioni degli stessi consiglieri e non costituisce una conferma istituzionale indipendente; non è disponibile un ordine del giorno istituzionale. La voce descrive soltanto un tema emerso dalla copertura e non implica trattazione, voto o esito.",
+      },
+    ],
+  },
+  title: {
+    key: "title",
+    label: "Titolo",
+    value:
+      "I Commissione consiliare permanente — seduta segnalata dalla copertura",
+    sourceStatus: "da_verificare",
+    limit:
+      "L'organo è indicato da una fonte editoriale; manca una pubblicazione istituzionale che consenta di verificare la denominazione e la seduta.",
+  },
+  scheduledAt: {
+    key: "scheduledAt",
+    label: "Data e ora",
+    value: null,
+    sourceStatus: "da_verificare",
+    limit:
+      "Data e ora non sono disponibili da una fonte istituzionale. La data dell'articolo non viene usata come data della seduta.",
+  },
+  sessionStatus: {
+    key: "sessionStatus",
+    label: "Stato seduta",
+    value: "non_verificata",
+    sourceStatus: "da_verificare",
+    limit:
+      "La copertura editoriale non certifica convocazione, svolgimento, chiusura, rinvio o altro esito ufficiale.",
+  },
+  agenda: {
+    key: "agenda",
+    label: "Ordine del giorno",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Ordine del giorno istituzionale non acquisito. Il tema riportato dalla stampa è esposto soltanto nella sezione separata “Temi emersi dalla copertura”.",
+  },
+  sourceLink: {
+    key: "sourceLink",
+    label: "Fonte",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Non è stata individuata una pubblicazione istituzionale associabile con precisione alla seduta.",
+  },
+  liveStreaming: {
+    key: "liveStreaming",
+    label: "Streaming live",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Nessuna diretta istituzionale associabile con precisione è stata individuata.",
+  },
+  recording: {
+    key: "recording",
+    label: "Registrazione",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Nessuna registrazione istituzionale associabile con precisione è stata individuata.",
+  },
+  minutesOrReport: {
+    key: "minutesOrReport",
+    label: "Verbale o resoconto",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Nessun verbale o resoconto istituzionale associabile con precisione è stato individuato.",
+  },
+  lastCheckedAt: {
+    key: "lastCheckedAt",
+    label: "Ultimo controllo",
+    value: "2026-10-30T06:19:00+01:00",
+    sourceStatus: "verificato",
+    sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
+    limit:
+      "Indica quando sono state ricontrollate le fonti, non una conferma istituzionale della seduta.",
+  },
+  dataLimits: {
+    key: "dataLimits",
+    label: "Limiti del dato",
+    value: [
+      "La data di pubblicazione dell'articolo non viene presentata come data ufficiale della seduta.",
+      "Non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione alla seduta; il nuovo Albo dinamico ha restituito un timeout durante il controllo diretto e l'Albo storico non contiene atti successivi al passaggio di piattaforma.",
+      "Data, ora, sede, ordine del giorno, stato, streaming, registrazione e verbale restano non verificati o non rilevati secondo il campo.",
+      "Gli articoli collegati sono fonti editoriali e non certificano programmazione, svolgimento, completezza, presenze, votazioni o risultati.",
+      "I sei articoli dipendono dalle dichiarazioni degli stessi consiglieri e non vengono trattati come conferme istituzionali indipendenti della seduta o del suo esito.",
+      "Le affermazioni editoriali di NtaCalabria e Gazzetta del Sud sulla mancata sfiducia non vengono usate per inferire una votazione o un risultato ufficiale.",
+      "Il tema riportato dalla copertura resta nell'agenda editoriale separata e dovrà essere riconciliato se emergerà un atto istituzionale.",
+    ],
+    sourceStatus: "parziale",
+    sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
+    limit:
+      "Scheda prudenziale basata su una corrispondenza editoriale esplicita; tutti i campi ufficiali restano separati e non confermati.",
+  },
+};
+
+const scordovilloOpenCouncilEditorialSignal: CouncilSessionV0 = {
+  id: "editorial-consiglio-aperto-scordovillo-2026-11",
+  kind: "council",
+  isDemoFixture: false,
+  contextResearch: {
+    status: "reviewed_matches",
+    checkedAt: "2026-11-21T18:09:00+01:00",
+    searchNote: [
+      "Parallel Search e la verifica diretta di Comune, pagina istituzionale dell'Albo, fonti editoriali originali e canali audiovisivi indicizzati hanno individuato trentatré articoli e cinque contenuti audiovisivi. Gazzetta del Sud del 28 ottobre segnala un possibile Consiglio comunale aperto su Scordovillo e riferisce il 16 novembre sulla base di dichiarazioni social di un consigliere; TV6onAir ne ripubblica la copertura. Il 10 novembre il Lametino, City One, LameziaTerme.it e Corriere di Lamezia riproducono la stessa nota dei gruppi consiliari PD, Azione e Per Vivere Bene e riferiscono invece il 19 novembre. NtaCalabria dell'11 novembre riferisce a sua volta il 19 novembre, ma dichiara espressamente che la pubblicazione sull'Albo pretorio manca ancora: resta una copertura editoriale, non una conferma istituzionale indipendente. ANSA Calabria e Corriere della Calabria del 13 novembre, insieme alle riprese di NoiDiCalabria e CityNow, identificano esplicitamente il Consiglio comunale aperto, Scordovillo e il 19 novembre: sono collegati come `possible_same_session`, ma restano fonti editoriali; NoiDiCalabria e CityNow attribuiscono il contenuto ad ANSA e non sono conferme indipendenti. LameziaInforma del 13 novembre identifica il Consiglio comunale aperto di giovedì prossimo e il tema Scordovillo: è collegato come `possible_same_session`, ma l'espressione relativa non viene trasformata in una data ufficiale. City One del 14 novembre raccoglie più reazioni all'aggressione all'assessore Gianturco e riporta la dichiarazione della presidente del Consiglio sul Consiglio comunale a porte aperte di giovedì prossimo dedicato a Scordovillo: è collegato come `possible_same_session`, senza trasformare il riferimento temporale in una data ufficiale. Il 15 novembre è stato verificato anche l'URL audiovisivo separato di ANSA, classificato `possible_same_session`, `excerpt` e `replay_available`: richiama organo, formato aperto, tema e 19 novembre, ma non certifica campi o fatti ufficiali della seduta. Il video City One del 16 novembre mostra problematiche relative a un alloggio assegnato a una famiglia proveniente dal campo Rom di Scordovillo ed è classificato `agenda_item`, `interview` e `replay_available`: approfondisce il tema del ricollocamento, ma non identifica o conferma la seduta e non valorizza streaming o registrazione ufficiali. Il 18 novembre LameziaInforma identifica il Consiglio aperto del giorno successivo, l'orario delle 10:30, la Sala Luisi e il tema distintivo; il Lametino identifica organo, 19 novembre, Sala Luisi e tema, oltre a contestualizzare le operazioni di sgombero. Entrambi sono collegati come `possible_same_session`, ma restano fonti editoriali e non valorizzano data, ora, sede o ordine del giorno ufficiali. Due ulteriori pagine del 18 novembre, LameziaInforma e City One, riproducono la stessa comunicazione della Prefettura su trasferimenti e demolizioni: sono `agenda_item`, non identificano la seduta e non costituiscono conferme indipendenti tra loro o rispetto alla stessa comunicazione già ripresa dal Lametino. Il 14 novembre il Lametino, LameziaTerme.it e Catanzaro Channel pubblicano contenuti sulla posizione dell'assessore Mimmo Gianturco e sul progetto di superamento di Scordovillo: non identificano né confermano la seduta e sono collegati soltanto come `agenda_item`. La discrepanza fra 16 e 19 novembre resta editoriale. Al controllo delle 23:32 del 18 novembre la pagina delle novità del Comune non pubblicava una convocazione associabile e la pagina istituzionale dell'Albo rinviava al nuovo portale; il portale dinamico ha bloccato il client automatizzato con il codice `MDAWAF001` e non ha fornito l'elenco degli atti, quindi non è stato acquisito un atto istituzionale nuovo. Il controllo durante la seduta segnalata del 19 novembre ha verificato un'ulteriore ripresa di NoiDiCalabria della stessa comunicazione della Prefettura, classificata `agenda_item`, e la diretta editoriale di City One intitolata “Diretta consiglio comunale del 19 Novembre 2026”, classificata `possible_same_session`, `live_stream` e `live`: il titolo, il canale e la data coincidono con la segnalazione, ma il video non espone un identificativo istituzionale o il tema Scordovillo e non valorizza `liveStreaming` o `recording` ufficiali. Il controllo pomeridiano del 19 novembre ha aggiunto otto pagine originali: quattro resoconti collegati come `same_session` (il Lametino, LameziaInforma, LaC News24 e LameziaTerme.it), la nota Furgiuele di LameziaTerme.it collegata come `same_session`, e tre anticipazioni o contesti collegati come `possible_same_session` (Gazzetta del Sud, IlDispaccio e Zoom24). Restano fonti editoriali: non valorizzano campi ufficiali e non certificano convocazione, ordine del giorno, svolgimento, partecipanti, votazioni o esiti. La pagina delle novità del Comune e la pagina istituzionale dell'Albo sono state ricontrollate senza acquisire un atto associabile; il portale dinamico non ha restituito un elenco verificabile. Il controllo delle 00:07 del 20 novembre ha verificato un ulteriore resoconto di Corriere della Calabria come `same_session`, due interviste video della stessa testata come `same_session`, `interview` e `replay_available`, e la disponibilità in replica della diretta City One, ora `replay_available`; sono fonti editoriali e non valorizzano campi ufficiali. La pagina delle novità del Comune, la pagina istituzionale del Consiglio e l'accesso pubblico all'Albo non hanno fornito un nuovo atto associabile. Data, ora, sede, ordine del giorno e stato restano non verificati e nessuna data viene pubblicata come ufficiale.",
+      "Nel controllo delle 17:25 del 20 novembre la pagina originale di il Lametino già collegata ha esposto un titolo aggiornato e un resoconto conclusivo dei lavori; i metadati indicano una modifica il 19 novembre alle 15:21. Parallel Search non ha individuato altri collegamenti precisi e la verifica diretta di Comune e Albo non ha acquisito una nuova convocazione o un altro atto associabile. La pagina resta una fonte editoriale e non valorizza stato, ordine del giorno, partecipanti, votazioni o esiti ufficiali.",
+      "Nel controllo delle 23:21 del 20 novembre è stato verificato direttamente un ulteriore resoconto originale di City One, pubblicato il 19 novembre e collegato come `same_session` perché identifica Consiglio comunale, formato aperto e tema Scordovillo nella stessa giornata. Parallel Search è stato usato per discovery ed espansione; il controllo diretto delle fonti istituzionali non ha acquisito un nuovo atto associabile e il portale dinamico dell'Albo ha restituito un errore di protocollo HTTP/2. Il resoconto resta editoriale e non valorizza stato, ordine del giorno, partecipanti, votazioni o esiti ufficiali.",
+      "Nel controllo delle 05:49 del 21 novembre sono state verificate direttamente due pagine originali del 20 novembre, City One e il Lametino, che riproducono la stessa nota di Futuro Nazionale sulle parole pronunciate dal sindaco durante l'ultimo Consiglio comunale dedicato allo smantellamento di Scordovillo. Entrambe sono collegate come `same_session`, ma derivano dalla stessa dichiarazione politica e non costituiscono conferme indipendenti né certificano campi, dichiarazioni o fatti ufficiali. Parallel Search è stato usato per discovery ed espansione; la pagina delle novità del Comune non mostrava contenuti consiliari nuovi e l'accesso al portale dinamico dell'Albo è terminato in timeout senza restituire un elenco verificabile.",
+      "Nel controllo delle 11:39 del 21 novembre è stata verificata direttamente una terza riproduzione della stessa nota di Futuro Nazionale, pubblicata da LameziaTerme.it il 20 novembre alle 19:07. La pagina identifica l'ultimo Consiglio comunale dedicato allo smantellamento di Scordovillo ed è collegata come `same_session`, portando il totale a trentaquattro articoli e cinque contenuti audiovisivi. Non costituisce una conferma indipendente né certifica campi, dichiarazioni o fatti ufficiali. Parallel Search è stato usato per discovery ed espansione; la pagina delle novità del Comune non mostrava contenuti consiliari nuovi e l'accesso diretto al portale dinamico dell'Albo è terminato in timeout senza restituire un elenco verificabile.",
+      "Nel controllo delle 18:09 del 21 novembre è stato verificato direttamente un ulteriore resoconto originale di NtaCalabria, pubblicato il 20 novembre alle 09:09. La pagina identifica il Consiglio comunale straordinario dedicato a Scordovillo e descrive la presenza o l'assenza di alcuni soggetti nel dibattito: è collegata come `same_session`, portando il totale a trentacinque articoli e cinque contenuti audiovisivi. Resta una fonte editoriale e non certifica convocazione, ordine del giorno, svolgimento, partecipanti, votazioni o esiti ufficiali. Parallel Search è stato usato per discovery ed espansione; il controllo diretto della pagina delle novità del Comune non ha mostrato contenuti consiliari nuovi e l'Albo corrente ha esposto soltanto quattro avvisi patrimoniali non pertinenti.",
+    ].join(" "),
+    articles: [
+      {
+        title:
+          "Lamezia, consiglio comunale aperto sullo sgombero di Scordovillo",
+        url: SCORDOVILLO_OPEN_COUNCIL_OCTOBER_28_GAZZETTA_URL,
+        publisher: "Gazzetta del Sud",
+        publishedAt: "2026-10-28",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "L'articolo identifica l'organo, il formato aperto e il tema distintivo, ma attribuisce la data del 16 novembre a dichiarazioni social di un consigliere. In assenza dell'atto istituzionale il collegamento resta possibile e non certifica convocazione, data, ora, sede, ordine del giorno, svolgimento, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-10-28T23:31:00+01:00",
+      },
+      {
+        title: "TV6onAIR – Lamezia, insegnamento schiuso sullo che Scordovillo",
+        url: SCORDOVILLO_OPEN_COUNCIL_OCTOBER_30_TV6ONAIR_URL,
+        publisher: "TV6onAir",
+        publishedAt: "2026-10-30",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "La pagina ripubblica la copertura di Gazzetta del Sud ed espone il collegamento alla fonte originale. È conservata per tracciabilità, ma non è una conferma indipendente e non certifica convocazione, data, ora, sede, ordine del giorno, svolgimento, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-10-30T23:27:00+01:00",
+      },
+      {
+        title:
+          "Lamezia, il 19 novembre consiglio comunale aperto sul superamento del campo rom di Scordovillo",
+        url: SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_10_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-11-10",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "La pagina identifica organo, formato aperto, tema distintivo e riferisce il 19 novembre, ma riproduce una nota dei gruppi consiliari PD, Azione e Per Vivere Bene. In assenza dell'atto istituzionale resta una possibile corrispondenza e non certifica convocazione, data, ora, sede, ordine del giorno, svolgimento, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-10T17:52:00+01:00",
+      },
+      {
+        title:
+          "Scordovillo, convocato il Consiglio comunale aperto: soddisfazione di PD, Azione e Per Vivere Bene",
+        url: SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_10_CITY_ONE_URL,
+        publisher: "City One",
+        publishedAt: "2026-11-10",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "City One attribuisce esplicitamente il testo agli stessi gruppi consiliari ripresi dal Lametino e riferisce il 19 novembre. È conservato come collegamento distinto, ma non costituisce una conferma indipendente né certifica convocazione, data, ora, sede, ordine del giorno, svolgimento, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-10T17:52:00+01:00",
+      },
+      {
+        title:
+          "Lamezia. Il 19 novembre Consiglio comunale aperto dedicato a Scordovillo",
+        url: SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_10_LAMEZIATERME_URL,
+        publisher: "LameziaTerme.it",
+        publishedAt: "2026-11-10",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "La pagina espone il contenuto come comunicato stampa e riproduce la stessa nota dei gruppi consiliari PD, Azione e Per Vivere Bene già pubblicata da il Lametino e City One. È conservata come collegamento distinto, ma non costituisce una conferma indipendente né certifica convocazione, data, ora, sede, ordine del giorno, svolgimento, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-11T00:10:00+01:00",
+      },
+      {
+        title:
+          "Lamezia, il 19 novembre consiglio comunale aperto dedicato a Scordovillo",
+        url: SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_10_CORRIERE_LAMEZIA_URL,
+        publisher: "Corriere di Lamezia",
+        publishedAt: "2026-11-10",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "La pagina identifica organo, formato aperto, tema distintivo e riferisce il 19 novembre, ma riproduce la stessa nota dei gruppi consiliari PD, Azione e Per Vivere Bene già pubblicata dalle altre testate. È conservata come collegamento distinto, ma non costituisce una conferma indipendente né certifica convocazione, data, ora, sede, ordine del giorno, svolgimento, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-16T12:29:00+01:00",
+      },
+      {
+        title: "Lamezia, consiglio comunale, sgombero Scordovillo",
+        url: SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_11_NTACALABRIA_URL,
+        publisher: "NtaCalabria",
+        publishedAt: "2026-11-11",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "La pagina identifica organo, formato aperto, tema distintivo e riferisce il 19 novembre, ma precisa che manca ancora la pubblicazione sull'Albo pretorio. È una copertura editoriale collegabile alla stessa segnalazione, non una conferma istituzionale indipendente, e non certifica convocazione, data, ora, sede, ordine del giorno, svolgimento, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-12T23:45:00+01:00",
+      },
+      {
+        title:
+          'Gianturco dopo aggressione: "Non mi faccio intimidire, continuerò a lavorare per Lamezia e per superamento del campo rom"',
+        url: SCORDOVILLO_NOVEMBER_14_GIANTURCO_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-11-14",
+        relationship: "agenda_item",
+        relevanceNote:
+          "La nota dell'assessore descrive il progetto di superamento di Scordovillo, tema distintivo della copertura sul possibile Consiglio aperto, ma non identifica né conferma la seduta. È collegata soltanto come contesto del tema e non certifica convocazione, data, ora, sede, ordine del giorno, svolgimento, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-14T18:16:00+01:00",
+      },
+      {
+        title:
+          "Gianturco dopo l’aggressione: «Avanti sul superamento di Scordovillo»",
+        url: SCORDOVILLO_NOVEMBER_14_GIANTURCO_LAMEZIATERME_URL,
+        publisher: "LameziaTerme.it",
+        publishedAt: "2026-11-14",
+        relationship: "agenda_item",
+        relevanceNote:
+          "La pagina riproduce la stessa nota dell'assessore pubblicata da il Lametino e non costituisce una conferma indipendente. Descrive il progetto di superamento di Scordovillo, ma non identifica né conferma la seduta e non certifica convocazione, data, ora, sede, ordine del giorno, svolgimento, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-14T18:16:00+01:00",
+      },
+      {
+        title:
+          "Aggressione in Comune a Lamezia, Gianturco non arretra: «Non mi fermeranno, avanti sul campo rom»",
+        url: SCORDOVILLO_NOVEMBER_14_GIANTURCO_CATANZARO_CHANNEL_URL,
+        publisher: "Catanzaro Channel",
+        publishedAt: "2026-11-14",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo approfondisce la posizione dell'assessore e il progetto di superamento di Scordovillo, ma non menziona né conferma il Consiglio aperto o il 19 novembre. È collegato soltanto come contesto del tema e non certifica convocazione, data, ora, sede, ordine del giorno, svolgimento, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-16T05:54:00+01:00",
+      },
+      {
+        title:
+          "Aggredito nella sede del Comune l'assessore al Welfare di Lamezia Terme",
+        url: SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_13_ANSA_URL,
+        publisher: "ANSA Calabria",
+        publishedAt: "2026-11-13",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "L'articolo identifica il Consiglio comunale aperto, il tema distintivo di Scordovillo e riferisce il 19 novembre. Resta una fonte editoriale: non certifica convocazione, data, ora, sede, ordine del giorno, svolgimento, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-14T23:54:00+01:00",
+      },
+      {
+        title:
+          "Lamezia, aggredito in Comune l’assessore Gianturco. In ospedale con 10 giorni di prognosi",
+        url: SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_13_CORRIERE_CALABRIA_URL,
+        publisher: "Corriere della Calabria",
+        publishedAt: "2026-11-13",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "La pagina identifica il Consiglio comunale aperto, il tema distintivo di Scordovillo e riferisce il 19 novembre. È una copertura editoriale distinta, ma non una fonte istituzionale e non certifica convocazione, data, ora, sede, ordine del giorno, svolgimento, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-14T23:54:00+01:00",
+      },
+      {
+        title: "Assessore Gianturco aggredito in Comune: 10 giorni di prognosi",
+        url: SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_13_LAMEZIAINFORMA_URL,
+        publisher: "LameziaInforma",
+        publishedAt: "2026-11-13",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "La pagina identifica il Consiglio comunale aperto di giovedì prossimo e il tema distintivo di Scordovillo. L'indicazione temporale relativa è conservata soltanto come contesto editoriale: non è una fonte istituzionale e non certifica convocazione, data, ora, sede, ordine del giorno, svolgimento, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-16T00:15:00+01:00",
+      },
+      {
+        title:
+          "Lamezia, aggredito in Comune l'assessore al Welfare Gianturco: prognosi di 10 giorni",
+        url: SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_13_NOIDICALABRIA_URL,
+        publisher: "NoiDiCalabria",
+        publishedAt: "2026-11-13",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "La pagina identifica il Consiglio comunale aperto, Scordovillo e il 19 novembre, ma attribuisce il contenuto ad ANSA. È conservata per tracciabilità come ripresa editoriale, non costituisce una conferma indipendente e non certifica campi o fatti ufficiali della seduta.",
+        reviewedAt: "2026-11-14T23:54:00+01:00",
+      },
+      {
+        title:
+          "Assessore aggredito nella sede del Comune di Lamezia, finisce al pronto soccorso",
+        url: SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_14_CITYNOW_URL,
+        publisher: "CityNow",
+        publishedAt: "2026-11-14",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "La pagina identifica il Consiglio comunale aperto, Scordovillo e il 19 novembre, ma indica come fonte ANSA Calabria. È conservata per tracciabilità come ripresa editoriale, non costituisce una conferma indipendente e non certifica campi o fatti ufficiali della seduta.",
+        reviewedAt: "2026-11-14T23:54:00+01:00",
+      },
+      {
+        title:
+          "Assessore Mimmo Gianturco aggredito nella sede del comune – Reazioni",
+        url: SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_14_CITY_ONE_REACTIONS_URL,
+        publisher: "City One",
+        publishedAt: "2026-11-14",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "La pagina raccoglie più reazioni e riporta una dichiarazione della presidente del Consiglio che identifica un Consiglio comunale a porte aperte di giovedì prossimo dedicato a Scordovillo. L'indicazione relativa resta contesto editoriale: la pagina non è una fonte istituzionale e non certifica convocazione, data, ora, sede, ordine del giorno, svolgimento, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-17T00:18:00+01:00",
+      },
+      {
+        title:
+          "Sgombero di Scordovillo al centro dell’ennesimo consiglio comunale aperto simbolico in via Perugini",
+        url: SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_18_LAMEZIAINFORMA_URL,
+        publisher: "LameziaInforma",
+        publishedAt: "2026-11-18",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "La pagina identifica il Consiglio comunale aperto del giorno successivo, le 10:30, la Sala Luisi e il tema distintivo di Scordovillo. L'indicazione temporale relativa, l'orario, la sede e il tema restano contesto editoriale: la pagina non è una fonte istituzionale e non certifica convocazione, data, ora, sede, ordine del giorno, svolgimento, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-18T17:41:00+01:00",
+      },
+      {
+        title:
+          "Prosegue sgombero Scordovillo, trasferite altre 22 persone e abbattute 4 baracche: domani consiglio comunale aperto",
+        url: SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_18_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-11-18",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "La pagina identifica il Consiglio comunale aperto, il 19 novembre, la Sala Luisi e il tema distintivo di Scordovillo, ma resta una fonte editoriale. Non certifica convocazione, data, ora, sede, ordine del giorno, svolgimento, partecipanti, votazioni o esiti; la nota della Prefettura sulle operazioni di sgombero è conservata soltanto come contesto del tema.",
+        reviewedAt: "2026-11-18T17:41:00+01:00",
+      },
+      {
+        title:
+          "Dal campo rom di Scordovillo altre 22 persone in uscita, demolite 4 baracche",
+        url: SCORDOVILLO_NOVEMBER_18_LAMEZIAINFORMA_PREFETTURA_URL,
+        publisher: "LameziaInforma",
+        publishedAt: "2026-11-18",
+        relationship: "agenda_item",
+        relevanceNote:
+          "La pagina riproduce la comunicazione della Prefettura su trasferimenti e demolizioni nel campo Rom di Scordovillo, ma non identifica né conferma la seduta. È collegata soltanto come contesto del tema e non costituisce una conferma indipendente rispetto alle altre riprese della stessa comunicazione; non certifica convocazione, data, ora, sede, ordine del giorno, svolgimento, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-18T23:32:00+01:00",
+      },
+      {
+        title:
+          "Campo Rom di Scordovillo: proseguono le operazioni di abbattimento delle baracche e di delocalizzazione dei Rom",
+        url: SCORDOVILLO_NOVEMBER_18_CITY_ONE_PREFETTURA_URL,
+        publisher: "City One",
+        publishedAt: "2026-11-18",
+        relationship: "agenda_item",
+        relevanceNote:
+          "La pagina riproduce la stessa comunicazione della Prefettura su trasferimenti e demolizioni nel campo Rom di Scordovillo, ma non identifica né conferma la seduta. È collegata soltanto come contesto del tema e non costituisce una conferma indipendente rispetto alle altre riprese della comunicazione; non certifica convocazione, data, ora, sede, ordine del giorno, svolgimento, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-18T23:32:00+01:00",
+      },
+      {
+        title:
+          "Il campo di Scordovillo, trasferiti altri 22 residenti e abbattute quattro baracche",
+        url: SCORDOVILLO_NOVEMBER_19_NOIDICALABRIA_PREFETTURA_URL,
+        publisher: "NoiDiCalabria",
+        publishedAt: "2026-11-19",
+        relationship: "agenda_item",
+        relevanceNote:
+          "La pagina riproduce la stessa comunicazione della Prefettura su trasferimenti e demolizioni già pubblicata da altre testate e non identifica né conferma la seduta. È collegata soltanto come contesto del tema, non costituisce una conferma indipendente e non certifica convocazione, data, ora, sede, ordine del giorno, programmazione, svolgimento, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-19T11:26:00+01:00",
+      },
+      {
+        title:
+          "Lamezia, sgombero del campo di Scordovillo: in Consiglio comunale si farà il punto",
+        url: SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_11_GAZZETTA_URL,
+        publisher: "Gazzetta del Sud",
+        publishedAt: "2026-11-11",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "La pagina identifica il Consiglio comunale aperto, Scordovillo e il 19 novembre, ma dichiara che la pubblicazione sull'Albo pretorio manca ancora. È una fonte editoriale e non certifica convocazione, data, ora, sede, ordine del giorno, programmazione, svolgimento, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-19T17:52:00+01:00",
+      },
+      {
+        title:
+          "Aggredito nella sede del Comune l’assessore al Welfare di Lamezia Terme, Mimmo Gianturco",
+        url: SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_13_IL_DISPACCIO_URL,
+        publisher: "IlDispaccio",
+        publishedAt: "2026-11-13",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "La pagina identifica Scordovillo e riferisce il Consiglio comunale aperto del 19 novembre nel contesto dell'aggressione all'assessore Gianturco. Resta una fonte editoriale e non certifica convocazione, data, ora, sede, ordine del giorno, programmazione, svolgimento, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-19T17:52:00+01:00",
+      },
+      {
+        title:
+          "Lamezia, Consiglio comunale aperto su superamento campo Rom: Amministrazione conferma iter del progetto",
+        url: SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_19_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-11-19",
+        relationship: "same_session",
+        relevanceNote:
+          "La pagina originale, aggiornata come resoconto conclusivo, identifica esplicitamente organo, formato aperto, Scordovillo e la giornata del 19 novembre. Il titolo e i metadati ora espongono l'aggiornamento del resoconto, ma la pagina resta una fonte editoriale: non valorizza lo stato ufficiale e non certifica convocazione, ordine del giorno ufficiale, completezza, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-20T17:25:00+01:00",
+      },
+      {
+        title:
+          "Su Scordovillo soddisfatta la voglia di conoscenza del consiglio comunale degli atti amministrativi non propri",
+        url: SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_19_LAMEZIAINFORMA_URL,
+        publisher: "LameziaInforma",
+        publishedAt: "2026-11-19",
+        relationship: "same_session",
+        relevanceNote:
+          "La pagina identifica esplicitamente il Consiglio comunale su Scordovillo in Sala Luisi e la giornata del 19 novembre. Resta una fonte editoriale: non valorizza lo stato ufficiale e non certifica convocazione, ordine del giorno ufficiale, completezza, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-19T17:52:00+01:00",
+      },
+      {
+        title:
+          "Campo rom di Scordovillo, a Lamezia un Consiglio comunale aperto per fare il punto sullo sgombero",
+        url: SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_19_LAC_URL,
+        publisher: "LaC News24",
+        publishedAt: "2026-11-19",
+        relationship: "same_session",
+        relevanceNote:
+          "Il resoconto identifica esplicitamente il Consiglio comunale aperto, Scordovillo e la seduta del 19 novembre. È una fonte editoriale: non valorizza campi ufficiali e non certifica convocazione, ordine del giorno ufficiale, completezza, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-19T17:52:00+01:00",
+      },
+      {
+        title:
+          "Scordovillo, scintille in aula: «Manca chiarezza», Murone respinge le accuse",
+        url: SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_19_LAMEZIATERME_RECAP_URL,
+        publisher: "LameziaTerme.it",
+        publishedAt: "2026-11-19",
+        relationship: "same_session",
+        relevanceNote:
+          "Il resoconto identifica esplicitamente il Consiglio comunale aperto dedicato al superamento del campo Rom di Scordovillo e il dibattito in aula. È una fonte editoriale: non valorizza campi ufficiali e non certifica convocazione, ordine del giorno ufficiale, completezza, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-19T17:52:00+01:00",
+      },
+      {
+        title:
+          "Lamezia: smantellamento Scordovillo, opposizione e sindaci chiedono maggiore coinvolgimento",
+        url: SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_19_CITY_ONE_RECAP_URL,
+        publisher: "City One",
+        publishedAt: "2026-11-19",
+        relationship: "same_session",
+        relevanceNote:
+          "Il resoconto originale identifica il Consiglio comunale, il formato aperto, Scordovillo e la giornata del 19 novembre. Resta una fonte editoriale: non valorizza campi ufficiali e non certifica convocazione, ordine del giorno ufficiale, completezza, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-20T23:21:00+01:00",
+      },
+      {
+        title:
+          "Presunta aggressione all’assessore Gianturco: «gravi le parole del sindaco Murone. Chiarisca a chi si riferiva»",
+        url: SCORDOVILLO_NOVEMBER_20_FUTURO_NAZIONALE_CITY_ONE_URL,
+        publisher: "City One",
+        publishedAt: "2026-11-20",
+        relationship: "same_session",
+        relevanceNote:
+          "La pagina riproduce una nota di Futuro Nazionale che identifica l'ultimo Consiglio comunale dedicato allo smantellamento di Scordovillo. È una fonte editoriale e politica, non una conferma indipendente: non valorizza campi ufficiali né certifica dichiarazioni, svolgimento, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-21T05:49:00+01:00",
+      },
+      {
+        title:
+          "Lamezia, Futuro Nazionale: “Su presunta aggressione a Gianturco, sindaco chiarisca suo riferimento ad allarmismi”",
+        url: SCORDOVILLO_NOVEMBER_20_FUTURO_NAZIONALE_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-11-20",
+        relationship: "same_session",
+        relevanceNote:
+          "La pagina riproduce la stessa nota di Futuro Nazionale pubblicata da City One e identifica l'ultimo Consiglio comunale dedicato allo smantellamento di Scordovillo. È una fonte editoriale e politica, non una conferma indipendente: non valorizza campi ufficiali né certifica dichiarazioni, svolgimento, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-21T05:49:00+01:00",
+      },
+      {
+        title:
+          "Presunta aggressione all’Assessore Gianturco: gravi le parole del sindaco Murone",
+        url: SCORDOVILLO_NOVEMBER_20_FUTURO_NAZIONALE_LAMEZIATERME_URL,
+        publisher: "LameziaTerme.it",
+        publishedAt: "2026-11-20",
+        relationship: "same_session",
+        relevanceNote:
+          "La pagina, pubblicata come comunicato stampa, riproduce la stessa nota di Futuro Nazionale già pubblicata da City One e il Lametino e identifica l'ultimo Consiglio comunale dedicato allo smantellamento di Scordovillo. Non è una conferma indipendente: non valorizza campi ufficiali né certifica dichiarazioni, svolgimento, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-21T11:39:00+01:00",
+      },
+      {
+        title: "Dossier Scordovillo a Lamezia, assenti i protagonisti chiave",
+        url: SCORDOVILLO_NOVEMBER_20_NTACALABRIA_RECAP_URL,
+        publisher: "NtaCalabria",
+        publishedAt: "2026-11-20",
+        relationship: "same_session",
+        relevanceNote:
+          "Il resoconto identifica il Consiglio comunale straordinario dedicato a Scordovillo e descrive il dibattito e la presenza o l'assenza di alcuni soggetti. Resta una fonte editoriale: non valorizza campi ufficiali e non certifica convocazione, ordine del giorno, svolgimento, completezza, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-21T18:09:00+01:00",
+      },
+      {
+        title: "Scordovillo, Furgiuele: «Non coinvolto nelle fasi operative»",
+        url: SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_19_LAMEZIATERME_FURGIUELE_URL,
+        publisher: "LameziaTerme.it",
+        publishedAt: "2026-11-19",
+        relationship: "same_session",
+        relevanceNote:
+          "La pagina collega esplicitamente la comunicazione dell'onorevole Furgiuele al Consiglio comunale aperto in corso su Scordovillo. È una fonte editoriale e non certifica convocazione, ordine del giorno ufficiale, svolgimento, completezza, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-19T17:52:00+01:00",
+      },
+      {
+        title:
+          "Campo rom in Calabria: trasferiti altri 22 residenti e abbattute quattro baracche",
+        url: SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_19_ZOOM24_URL,
+        publisher: "Zoom24",
+        publishedAt: "2026-11-19",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "La pagina riprende la comunicazione della Prefettura e riferisce il Consiglio comunale aperto del 19 novembre in Sala Luisi. Il collegamento resta possibile e non indipendente dalla stessa comunicazione già ripresa da altre testate; non certifica convocazione, ordine del giorno, programmazione, svolgimento, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-19T17:52:00+01:00",
+      },
+      {
+        title:
+          "Lamezia, scontro in Consiglio sul campo rom di Scordovillo. L’affondo di Lo Moro contro Murone: «Tutto in pessime mani»",
+        url: SCORDOVILLO_NOVEMBER_19_CORRIERE_CALABRIA_CLASH_URL,
+        publisher: "Corriere della Calabria",
+        publishedAt: "2026-11-19",
+        relationship: "same_session",
+        relevanceNote:
+          "Il resoconto identifica esplicitamente il Consiglio comunale aperto, Scordovillo e la giornata del 19 novembre. È una fonte editoriale: non valorizza campi ufficiali e non certifica convocazione, ordine del giorno, completezza, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-20T00:07:00+01:00",
+      },
+    ],
+    media: [
+      {
+        title:
+          "Aggredito nella sede del Comune l'assessore al Welfare di Lamezia Terme",
+        url: SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_13_ANSA_VIDEO_URL,
+        publisher: "ANSA",
+        publishedAt: "2026-11-13",
+        relationship: "possible_same_session",
+        mediaType: "excerpt",
+        availability: "replay_available",
+        relevanceNote:
+          "Il contenuto audiovisivo ANSA identifica il Consiglio comunale aperto, Scordovillo e riferisce il 19 novembre. È una fonte editoriale separata dall'articolo testuale, ma non certifica convocazione, data, ora, sede, ordine del giorno, completezza, svolgimento, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-15T18:26:00+01:00",
+      },
+      {
+        title: "Problematica su assegnazione case per sgombero Scordovillo",
+        url: SCORDOVILLO_NOVEMBER_16_CITY_ONE_VIDEO_URL,
+        publisher: "City One",
+        publishedAt: "2026-11-16",
+        relationship: "agenda_item",
+        mediaType: "interview",
+        availability: "replay_available",
+        relevanceNote:
+          "Il servizio editoriale mostra sul posto problematiche relative a un alloggio assegnato a una famiglia proveniente dal campo Rom di Scordovillo. Approfondisce il tema del ricollocamento, ma non identifica o conferma la seduta e non certifica convocazione, data, ora, sede, ordine del giorno, programmazione, svolgimento, completezza, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-18T11:45:00+01:00",
+      },
+      {
+        title: "Diretta consiglio comunale del 19 Novembre 2026",
+        url: SCORDOVILLO_NOVEMBER_19_CITY_ONE_LIVE_URL,
+        publisher: "City One",
+        publishedAt: "2026-11-19",
+        relationship: "possible_same_session",
+        mediaType: "live_stream",
+        availability: "replay_available",
+        relevanceNote:
+          "La pagina originale mostra ora una durata di 3:09:48, l'indicazione “Streamed 13h ago” e la chat in replica. Il titolo, il canale City One e la data coincidono con il Consiglio comunale aperto segnalato per il 19 novembre, ma il titolo non espone Scordovillo né un identificativo della pubblicazione istituzionale: il collegamento resta possibile e la fonte editoriale non certifica convocazione, programmazione, svolgimento, completezza, partecipanti, votazioni o esiti; non valorizza `liveStreaming` o `recording` ufficiali.",
+        reviewedAt: "2026-11-20T00:07:00+01:00",
+      },
+      {
+        title:
+          "Il futuro dopo Scordovillo, Gianturco: «Superare la vergogna del ghetto e dare dignità alla città» - VIDEO",
+        url: SCORDOVILLO_NOVEMBER_19_CORRIERE_CALABRIA_GIANTURCO_VIDEO_URL,
+        publisher: "Corriere della Calabria",
+        publishedAt: "2026-11-19",
+        relationship: "same_session",
+        mediaType: "interview",
+        availability: "replay_available",
+        relevanceNote:
+          "La pagina originale presenta l'intervista a Mimmo Gianturco e la colloca esplicitamente nel Consiglio comunale aperto della mattina su Scordovillo. Resta un contenuto editoriale: non valorizza streaming o registrazione ufficiali e non certifica convocazione, ordine del giorno, completezza, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-20T00:07:00+01:00",
+      },
+      {
+        title:
+          "Lamezia, il campo rom di Scordovillo verso la chiusura definitiva. «Nel 2027 il problema sarà risolto» - VIDEO",
+        url: SCORDOVILLO_NOVEMBER_19_CORRIERE_CALABRIA_TARANTINO_VIDEO_URL,
+        publisher: "Corriere della Calabria",
+        publishedAt: "2026-11-19",
+        relationship: "same_session",
+        mediaType: "interview",
+        availability: "replay_available",
+        relevanceNote:
+          "La pagina originale presenta l'intervista a Nino Tarantino e la colloca esplicitamente nel Consiglio comunale aperto su Scordovillo. Resta un contenuto editoriale: non valorizza streaming o registrazione ufficiali e non certifica convocazione, ordine del giorno, completezza, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-11-20T00:07:00+01:00",
+      },
+    ],
+    editorialAgenda: [
+      {
+        title:
+          "Superamento dell'insediamento di Scordovillo e ricollocazione dei residenti",
+        sourceUrls: [
+          SCORDOVILLO_OPEN_COUNCIL_OCTOBER_28_GAZZETTA_URL,
+          SCORDOVILLO_OPEN_COUNCIL_OCTOBER_30_TV6ONAIR_URL,
+          SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_10_LAMETINO_URL,
+          SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_10_CITY_ONE_URL,
+          SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_10_LAMEZIATERME_URL,
+          SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_10_CORRIERE_LAMEZIA_URL,
+          SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_11_NTACALABRIA_URL,
+          SCORDOVILLO_NOVEMBER_14_GIANTURCO_LAMETINO_URL,
+          SCORDOVILLO_NOVEMBER_14_GIANTURCO_LAMEZIATERME_URL,
+          SCORDOVILLO_NOVEMBER_14_GIANTURCO_CATANZARO_CHANNEL_URL,
+          SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_13_ANSA_URL,
+          SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_13_ANSA_VIDEO_URL,
+          SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_13_CORRIERE_CALABRIA_URL,
+          SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_13_LAMEZIAINFORMA_URL,
+          SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_13_NOIDICALABRIA_URL,
+          SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_14_CITYNOW_URL,
+          SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_14_CITY_ONE_REACTIONS_URL,
+          SCORDOVILLO_NOVEMBER_16_CITY_ONE_VIDEO_URL,
+          SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_18_LAMEZIAINFORMA_URL,
+          SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_18_LAMETINO_URL,
+          SCORDOVILLO_NOVEMBER_18_LAMEZIAINFORMA_PREFETTURA_URL,
+          SCORDOVILLO_NOVEMBER_18_CITY_ONE_PREFETTURA_URL,
+          SCORDOVILLO_NOVEMBER_19_NOIDICALABRIA_PREFETTURA_URL,
+          SCORDOVILLO_NOVEMBER_19_CITY_ONE_LIVE_URL,
+          SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_11_GAZZETTA_URL,
+          SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_13_IL_DISPACCIO_URL,
+          SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_19_LAMETINO_URL,
+          SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_19_LAMEZIAINFORMA_URL,
+          SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_19_LAC_URL,
+          SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_19_LAMEZIATERME_RECAP_URL,
+          SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_19_CITY_ONE_RECAP_URL,
+          SCORDOVILLO_NOVEMBER_20_FUTURO_NAZIONALE_CITY_ONE_URL,
+          SCORDOVILLO_NOVEMBER_20_FUTURO_NAZIONALE_LAMETINO_URL,
+          SCORDOVILLO_NOVEMBER_20_FUTURO_NAZIONALE_LAMEZIATERME_URL,
+          SCORDOVILLO_NOVEMBER_20_NTACALABRIA_RECAP_URL,
+          SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_19_LAMEZIATERME_FURGIUELE_URL,
+          SCORDOVILLO_OPEN_COUNCIL_NOVEMBER_19_ZOOM24_URL,
+          SCORDOVILLO_NOVEMBER_19_CORRIERE_CALABRIA_CLASH_URL,
+          SCORDOVILLO_NOVEMBER_19_CORRIERE_CALABRIA_GIANTURCO_VIDEO_URL,
+          SCORDOVILLO_NOVEMBER_19_CORRIERE_CALABRIA_TARANTINO_VIDEO_URL,
+        ],
+        confidence: "medium",
+        reason:
+          "Il tema è il centro esplicito della copertura editoriale, è approfondito dai contenuti sulla posizione dell'assessore del 14 novembre e dal servizio City One del 16 novembre ed è ripreso dalle altre pubblicazioni e dal contenuto audiovisivo ANSA, ma non è stato acquisito un ordine del giorno istituzionale. Resta quindi un tema emerso dalla copertura e non prova iscrizione, trattazione, partecipazione o esito.",
+      },
+    ],
+  },
+  title: {
+    key: "title",
+    label: "Titolo",
+    value: "Consiglio comunale aperto su Scordovillo — segnalazione editoriale",
+    sourceStatus: "da_verificare",
+    limit:
+      "Organo, formato e tema sono indicati da una fonte editoriale; manca una pubblicazione istituzionale acquisita che consenta di verificare la convocazione.",
+  },
+  scheduledAt: {
+    key: "scheduledAt",
+    label: "Data e ora",
+    value: null,
+    sourceStatus: "da_verificare",
+    limit:
+      "Le fonti editoriali riferiscono date discordanti: il 16 novembre nella copertura del 28 ottobre e il 19 novembre nelle pubblicazioni del 10 novembre. Sono usate soltanto per la ricerca; nessuna data è disponibile da una fonte istituzionale acquisita o viene presentata come ufficiale.",
+  },
+  sessionStatus: {
+    key: "sessionStatus",
+    label: "Stato seduta",
+    value: "non_verificata",
+    sourceStatus: "da_verificare",
+    limit:
+      "La copertura editoriale non certifica convocazione, programmazione, svolgimento, chiusura, rinvio o altro esito ufficiale.",
+  },
+  agenda: {
+    key: "agenda",
+    label: "Ordine del giorno",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Ordine del giorno istituzionale non acquisito. Il tema riportato dalla stampa è esposto soltanto nella sezione separata “Temi emersi dalla copertura”.",
+  },
+  sourceLink: {
+    key: "sourceLink",
+    label: "Fonte",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Non è stata acquisita una pubblicazione istituzionale associabile con precisione al Consiglio aperto segnalato.",
+  },
+  liveStreaming: {
+    key: "liveStreaming",
+    label: "Streaming live",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Nessuna diretta istituzionale associabile con precisione è stata individuata.",
+  },
+  recording: {
+    key: "recording",
+    label: "Registrazione",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Nessuna registrazione istituzionale associabile con precisione è stata individuata.",
+  },
+  minutesOrReport: {
+    key: "minutesOrReport",
+    label: "Verbale o resoconto",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Nessun verbale o resoconto istituzionale associabile con precisione è stato individuato.",
+  },
+  lastCheckedAt: {
+    key: "lastCheckedAt",
+    label: "Ultimo controllo",
+    value: "2026-11-21T18:09:00+01:00",
+    sourceStatus: "verificato",
+    sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
+    limit:
+      "Indica quando sono state ricontrollate le fonti, non una conferma istituzionale della seduta segnalata.",
+  },
+  dataLimits: {
+    key: "dataLimits",
+    label: "Limiti del dato",
+    value: [
+      "Le date editoriali del 16 e del 19 novembre sono discordanti, non sono state verificate su una fonte istituzionale e non vengono presentate come data ufficiale della seduta.",
+      "Non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione al Consiglio aperto segnalato; al controllo del 19 novembre la pagina delle novità del Comune non pubblicava una convocazione associabile e il nuovo Albo dinamico non ha restituito un elenco verificabile degli atti.",
+      "Data, ora, sede, ordine del giorno, stato, streaming, registrazione e verbale restano non verificati o non rilevati secondo il campo.",
+      "Gli articoli collegati sono fonti editoriali e non certificano programmazione, svolgimento, completezza, partecipanti, votazioni o risultati; TV6onAir ripubblica Gazzetta del Sud, il Lametino, City One, LameziaTerme.it e Corriere di Lamezia riproducono la stessa nota dei gruppi consiliari, mentre NtaCalabria dichiara ancora assente la pubblicazione sull'Albo. Nessuna di queste pagine costituisce una conferma istituzionale indipendente.",
+      "Le tre pubblicazioni del 14 novembre riproducono o approfondiscono la stessa nota dell'assessore Gianturco e sono collegate soltanto come `agenda_item`: approfondiscono il tema Scordovillo, ma non identificano o confermano la seduta e non costituiscono conferme indipendenti tra loro.",
+      "ANSA Calabria e Corriere della Calabria del 13 novembre, NoiDiCalabria del 13 novembre e CityNow del 14 novembre sono collegati come `possible_same_session` perché identificano organo, formato aperto, tema Scordovillo e riferiscono il 19 novembre. Restano fonti editoriali; NoiDiCalabria e CityNow attribuiscono il contenuto ad ANSA e non costituiscono conferme indipendenti.",
+      "LameziaInforma del 13 novembre è collegato come `possible_same_session` perché identifica il Consiglio comunale aperto di giovedì prossimo e il tema Scordovillo; la data relativa resta contesto editoriale e non viene presentata come data ufficiale.",
+      "City One del 14 novembre è collegato come `possible_same_session` perché riporta una dichiarazione della presidente del Consiglio sul Consiglio comunale a porte aperte di giovedì prossimo dedicato a Scordovillo; la pagina aggrega più reazioni, non è una fonte istituzionale e il riferimento temporale non viene trasformato in una data ufficiale.",
+      "Il contenuto audiovisivo ANSA verificato il 15 novembre è collegato come `possible_same_session`, con `mediaType: excerpt` e `mediaStatus: replay_available`: resta editoriale e non valorizza lo streaming o la registrazione ufficiali.",
+      "Il video City One del 16 novembre è collegato come `agenda_item`, con `mediaType: interview` e `mediaStatus: replay_available`: approfondisce il tema del ricollocamento da Scordovillo, ma non identifica o conferma la seduta e non valorizza lo streaming o la registrazione ufficiali.",
+      "LameziaInforma e il Lametino del 18 novembre sono collegati come `possible_same_session` perché identificano organo, formato aperto e tema Scordovillo e riferiscono il giorno successivo o il 19 novembre. Restano fonti editoriali: i riferimenti a data, ora, sede e tema non valorizzano campi ufficiali e non certificano convocazione, programmazione, svolgimento, partecipanti, votazioni o esiti.",
+      "Le ulteriori pagine LameziaInforma e City One del 18 novembre sono collegate come `agenda_item`: riproducono la stessa comunicazione della Prefettura su trasferimenti e demolizioni, non identificano o confermano la seduta e non costituiscono conferme indipendenti tra loro o rispetto alle altre riprese della comunicazione.",
+      "NoiDiCalabria del 19 novembre è collegato come `agenda_item`: riproduce la stessa comunicazione della Prefettura già pubblicata da altre testate, non identifica o conferma la seduta e non costituisce una conferma indipendente.",
+      "Gazzetta del Sud dell'11 novembre, IlDispaccio del 13 novembre e Zoom24 del 19 novembre sono collegati come `possible_same_session`: identificano la seduta o la richiamano con organo, data e tema, ma restano fonti editoriali e Zoom24 dipende dalla stessa comunicazione della Prefettura già ripresa da altre testate.",
+      "I resoconti del 19 novembre di il Lametino, LameziaInforma, LaC News24 e LameziaTerme.it, insieme alla nota Furgiuele pubblicata da LameziaTerme.it, sono collegati come `same_session` per la corrispondenza esplicita di organo, tema e giornata. Restano fonti editoriali e non valorizzano stato, ordine del giorno, partecipanti, votazioni o esiti ufficiali.",
+      "Nel controllo del 20 novembre la pagina originale di il Lametino già collegata ha esposto un titolo aggiornato e un resoconto conclusivo dei lavori; i metadati della pagina indicano una modifica il 19 novembre alle 15:21. L'aggiornamento resta editoriale e non valorizza stato, ordine del giorno, partecipanti, votazioni o esiti ufficiali.",
+      "Il resoconto City One del 19 novembre è collegato come `same_session` per la corrispondenza esplicita di organo, formato aperto, tema Scordovillo e giornata; resta una fonte editoriale e non valorizza campi ufficiali né certifica convocazione, ordine del giorno, completezza, partecipanti, votazioni o esiti.",
+      "Le pagine City One e il Lametino del 20 novembre sono collegate come `same_session` perché la nota di Futuro Nazionale identifica l'ultimo Consiglio comunale dedicato allo smantellamento di Scordovillo. Riproducono la stessa dichiarazione politica, non costituiscono conferme indipendenti e non valorizzano campi ufficiali né certificano dichiarazioni, svolgimento, partecipanti, votazioni o esiti.",
+      "La pagina LameziaTerme.it del 20 novembre riproduce la stessa nota di Futuro Nazionale già pubblicata da City One e il Lametino ed è collegata come `same_session`; è conservata per tracciabilità, non costituisce una conferma indipendente e non valorizza campi ufficiali né certifica dichiarazioni, svolgimento, partecipanti, votazioni o esiti.",
+      "Il resoconto NtaCalabria del 20 novembre è collegato come `same_session` perché identifica il Consiglio comunale straordinario dedicato a Scordovillo e il relativo dibattito; resta una fonte editoriale e non valorizza campi ufficiali né certifica convocazione, ordine del giorno, svolgimento, completezza, partecipanti, votazioni o esiti.",
+      "La diretta editoriale City One del 19 novembre è collegata come `possible_same_session`, con `mediaType: live_stream` e `mediaStatus: replay_available`: la pagina originale mostra una durata di 3:09:48, l'indicazione “Streamed 13h ago” e la chat in replica, ma il titolo non espone Scordovillo o un identificativo istituzionale e la fonte non valorizza `liveStreaming` o `recording` ufficiali né certifica programmazione, svolgimento, completezza, partecipanti, votazioni o esiti.",
+      "Il resoconto del 19 novembre di Corriere della Calabria è collegato come `same_session` per la corrispondenza esplicita di organo, tema e giornata; resta una fonte editoriale e non valorizza campi ufficiali né certifica convocazione, ordine del giorno, completezza, partecipanti, votazioni o esiti.",
+      "Le due interviste video del 19 novembre di Corriere della Calabria sono collegate come `same_session`, con `mediaType: interview` e `mediaStatus: replay_available`: le pagine originali le collocano esplicitamente nel Consiglio aperto su Scordovillo, ma non valorizzano streaming o registrazione ufficiali e non certificano convocazione, ordine del giorno, completezza, partecipanti, votazioni o esiti.",
+      "Nel controllo del 19 novembre la pagina istituzionale dell'Albo rinviava al nuovo portale dinamico, ma il portale ha bloccato il client automatizzato con il codice `MDAWAF001` e non ha restituito l'elenco degli atti; non è quindi stato possibile verificare o acquisire eventuali nuovi atti dal portale corrente.",
+      "Il tema riportato dalla copertura resta nell'agenda editoriale separata e dovrà essere riconciliato se emergerà un atto istituzionale.",
+    ],
+    sourceStatus: "parziale",
+    sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
+    limit:
+      "Scheda prudenziale basata su una corrispondenza editoriale esplicita; tutti i campi ufficiali restano separati e non confermati.",
+  },
+};
+
+const councilNovember3EditorialSignal: CouncilSessionV0 = {
+  id: "editorial-consiglio-bilancio-riequilibrio-2026-11",
+  kind: "council",
+  isDemoFixture: false,
+  contextResearch: {
+    status: "reviewed_matches",
+    checkedAt: "2026-11-07T11:38:00+01:00",
+    searchNote:
+      "Parallel Search e la verifica diretta delle pagine originali hanno individuato trentadue articoli e un estratto video. Il controllo del 7 novembre ha aggiunto l'articolo de il Lametino del 6 novembre con la posizione politica della consigliera Doris Lo Moro: la pagina identifica esplicitamente il Consiglio comunale del 3 novembre e il Piano di riequilibrio, quindi il collegamento è `same_session`. È una fonte editoriale e non certifica convocazione, ordine del giorno ufficiale, completezza, svolgimento, votazioni o risultati. Il controllo diretto delle novità del Comune e dell'Albo non ha individuato una convocazione, una designazione, un avviso, il parere originale dei Revisori o un allegato istituzionale; il Comune non mostrava nuove pubblicazioni consiliari e l'Albo restituiva ancora soltanto i quattro avvisi patrimoniali già rilevati. Restano acquisiti anche l'estratto video di Lidia Vescio e il resoconto di EsseTV News, entrambi editoriali e senza effetti sui campi ufficiali. Date, orari, numero dei punti, contenuto degli atti, svolgimento e posizioni riportate non vengono pubblicati come dati ufficiali della seduta.",
+    articles: [
+      {
+        title:
+          "Lamezia, il 3 novembre Consiglio comunale. Fra i punti approvazione del Bilancio consolidato e del Piano di riequilibrio",
+        url: COUNCIL_NOVEMBER_3_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-10-30",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "L'articolo identifica l'organo e riferisce date, orari e temi distintivi, ma non è un atto istituzionale. In assenza della convocazione originale il collegamento resta possibile e non certifica programmazione, data, ora, sede, ordine del giorno, svolgimento, partecipanti, votazioni o esiti.",
+        reviewedAt: "2026-10-30T23:27:00+01:00",
+      },
+      {
+        title:
+          "Lamezia, parere favorevole dei Revisori al Piano di riequilibrio ma condizionato da severo monitoraggio trimestrale",
+        url: COUNCIL_NOVEMBER_3_AUDITORS_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-10-30",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo collega esplicitamente al possibile Consiglio del 3 novembre il parere attribuito al Collegio dei Revisori e il monitoraggio trimestrale del Piano di riequilibrio. È una fonte editoriale: senza il parere originale o l'ordine del giorno istituzionale non certifica contenuto dell'atto, iscrizione, trattazione, voto, esito o programmazione della seduta.",
+        reviewedAt: "2026-10-31T05:46:00+01:00",
+      },
+      {
+        title:
+          'Lamezia, Mascaro: "Dubbi su legittimità Piano di riequilibrio. Invito a revocare la delibera"',
+        url: COUNCIL_NOVEMBER_3_MASCARO_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-10-30",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo riferisce un documento critico attribuito all'ex sindaco Paolo Mascaro e lo collega esplicitamente al Piano di riequilibrio che la testata indica in Aula il 3 novembre. È una fonte editoriale: non certifica il documento originale, l'iscrizione del tema, la programmazione della seduta, la trattazione, il voto o l'esito.",
+        reviewedAt: "2026-10-31T05:46:00+01:00",
+      },
+      {
+        title:
+          "Conti del Comune, Mascaro attacca: «Nessuno squilibrio strutturale»",
+        url: COUNCIL_NOVEMBER_3_MASCARO_CITY_ONE_URL,
+        publisher: "City One",
+        publishedAt: "2026-10-30",
+        relationship: "agenda_item",
+        relevanceNote:
+          "City One riproduce integralmente la stessa nota critica attribuita all'ex sindaco Paolo Mascaro sul Piano di riequilibrio già coperta da il Lametino. Non associa autonomamente il documento al possibile Consiglio del 3 novembre e non è una conferma indipendente; il collegamento resta tematico e non certifica il documento originale, l'iscrizione, la programmazione, la trattazione, il voto o l'esito.",
+        reviewedAt: "2026-10-31T11:28:00+01:00",
+      },
+      {
+        title:
+          "Comune di Lamezia Terme, consolidato e Piano di riequilibrio: appuntamento decisivo per l’Ente",
+        url: COUNCIL_NOVEMBER_3_GAZZETTA_URL,
+        publisher: "Gazzetta del Sud",
+        publishedAt: "2026-10-31",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "L'articolo identifica il Consiglio comunale, il 3 novembre alle 10:30, l'eventuale seconda convocazione del 4 novembre alle 11:30 e temi finanziari distintivi. È una fonte editoriale: senza la convocazione o l'ordine del giorno istituzionale non certifica programmazione, data, ora, sede, completezza, trattazione, voto o esito.",
+        reviewedAt: "2026-10-31T17:21:00+01:00",
+      },
+      {
+        title:
+          "TV6onAIR – Comune per Lamezia Terme, cementato e Piano per riequilibrio: colloquio attraverso l’Ente",
+        url: COUNCIL_NOVEMBER_3_TV6ONAIR_URL,
+        publisher: "TV6onAir",
+        publishedAt: "2026-10-31",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "TV6onAir ripubblica la copertura del Consiglio indicato per il 3 novembre ed espone Gazzetta del Sud come fonte originale. Il collegamento è conservato per tracciabilità ma non costituisce una conferma indipendente né prova istituzionale di convocazione, data, ora, ordine del giorno, svolgimento, voto o esito.",
+        reviewedAt: "2026-10-31T17:21:00+01:00",
+      },
+      {
+        title:
+          "Comune di Lamezia Terme, consolidato e Piano di riequilibrio: appuntamento decisivo per l’Ente",
+        url: COUNCIL_NOVEMBER_3_ITALY_TODAY_URL,
+        publisher: "Italy Today",
+        publishedAt: "2026-10-31",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "Italy Today ripubblica titolo e passaggi della copertura sul Consiglio indicato per il 3 novembre ed espone Gazzetta del Sud come fonte originale. La data è conservata prudenzialmente dal riferimento relativo “23 ore fa” mostrato il 1° novembre. Il collegamento è distinto per tracciabilità, ma non costituisce una conferma indipendente né prova istituzionale di convocazione, data, ora, ordine del giorno, svolgimento, voto o esito.",
+        reviewedAt: "2026-11-01T06:09:00+01:00",
+      },
+      {
+        title:
+          "Lamezia, Progetto Civico attacca sul riequilibrio: «Dove è finita la politica?»",
+        url: PROGETTO_CIVICO_OCTOBER_31_LAMEZIATERME_URL,
+        publisher: "LameziaTerme.it",
+        publishedAt: "2026-10-31",
+        relationship: "agenda_item",
+        relevanceNote:
+          "La pagina, etichettata “Comunicato Stampa”, riproduce una nota di Progetto Civico Italia secondo cui il Piano di riequilibrio sarà portato direttamente in Consiglio. Non indica il 3 novembre e non certifica convocazione, programmazione, iscrizione, trattazione, voto o esito; il collegamento riguarda soltanto il tema emerso dalla copertura.",
+        reviewedAt: "2026-10-31T23:43:00+01:00",
+      },
+      {
+        title:
+          'Piano di riequilibrio, Progetto Civico Italia: "Lamezia merita trasparenza"',
+        url: PROGETTO_CIVICO_OCTOBER_31_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-10-31",
+        relationship: "agenda_item",
+        relevanceNote:
+          "Il Lametino riproduce la stessa nota di Progetto Civico Italia pubblicata da LameziaTerme.it. La nota preannuncia un passaggio del Piano in Consiglio ma non indica il 3 novembre: è un collegamento tematico, non una conferma indipendente né prova di convocazione, programmazione, iscrizione, trattazione, voto o esito.",
+        reviewedAt: "2026-10-31T23:43:00+01:00",
+      },
+      {
+        title:
+          "Progetto Civico Italia Lamezia Terme, Piano di riequilibrio: “Le decisioni non si prendono più nei luoghi della politica. Ma dove è finita la Politica?”",
+        url: PROGETTO_CIVICO_OCTOBER_31_CORRIERE_LAMEZIA_URL,
+        publisher: "Corriere di Lamezia",
+        publishedAt: "2026-10-31",
+        relationship: "agenda_item",
+        relevanceNote:
+          "Corriere di Lamezia riproduce la stessa nota di Progetto Civico Italia. La nota preannuncia un passaggio del Piano in Consiglio ma non indica il 3 novembre: è un collegamento tematico, non una conferma indipendente né prova di convocazione, programmazione, iscrizione, trattazione, voto o esito.",
+        reviewedAt: "2026-10-31T23:43:00+01:00",
+      },
+      {
+        title:
+          "Fratelli d’Italia Lamezia presenta mozione a sostegno delle Forze dell’Ordine e contro ogni forma di violenza e intimidazione",
+        url: COUNCIL_NOVEMBER_3_FDI_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-10-30",
+        relationship: "agenda_item",
+        relevanceNote:
+          "La pagina riproduce una nota di Fratelli d'Italia sulla mozione che l'articolo generale de il Lametino riepiloga fra i temi del possibile Consiglio del 3 novembre. Non identifica autonomamente quella seduta e non certifica protocollo, iscrizione, programmazione, trattazione, voto o esito.",
+        reviewedAt: "2026-11-02T00:13:00+01:00",
+      },
+      {
+        title:
+          "Fratelli d’Italia Lamezia: mozione a sostegno delle Forze dell’Ordine",
+        url: COUNCIL_NOVEMBER_3_FDI_LAMEZIATERME_URL,
+        publisher: "LameziaTerme.it",
+        publishedAt: "2026-10-30",
+        relationship: "agenda_item",
+        relevanceNote:
+          "La pagina, etichettata “Comunicato Stampa”, riproduce la stessa nota di Fratelli d'Italia già pubblicata da il Lametino. È conservata per tracciabilità ma non costituisce una conferma indipendente né prova di protocollo, iscrizione, programmazione, trattazione, voto o esito.",
+        reviewedAt: "2026-11-02T00:13:00+01:00",
+      },
+      {
+        title:
+          "Lamezia Terme, Fratelli d’Italia presenta una mozione a sostegno delle Forze dell’Ordine",
+        url: COUNCIL_NOVEMBER_3_FDI_CITY_ONE_URL,
+        publisher: "City One",
+        publishedAt: "2026-10-30",
+        relationship: "agenda_item",
+        relevanceNote:
+          "City One riproduce la stessa nota di Fratelli d'Italia. Il collegamento è conservato per tracciabilità ma non costituisce una conferma indipendente né prova di protocollo, iscrizione, programmazione, trattazione, voto o esito.",
+        reviewedAt: "2026-11-02T00:13:00+01:00",
+      },
+      {
+        title:
+          "Fratelli d’Italia Lamezia Terme presenta una mozione a sostegno delle Forze dell’Ordine e contro ogni forma di violenza e intimidazione",
+        url: COUNCIL_NOVEMBER_3_FDI_IL_DISPACCIO_URL,
+        publisher: "IlDispaccio",
+        publishedAt: "2026-10-30",
+        relationship: "agenda_item",
+        relevanceNote:
+          "IlDispaccio riproduce la stessa nota di Fratelli d'Italia. Il collegamento è conservato per tracciabilità ma non costituisce una conferma indipendente né prova di protocollo, iscrizione, programmazione, trattazione, voto o esito.",
+        reviewedAt: "2026-11-02T00:13:00+01:00",
+      },
+      {
+        title:
+          "Lamezia Terme | Fratelli d’Italia porta in Consiglio una mozione a sostegno delle Forze dell’Ordine",
+        url: COUNCIL_NOVEMBER_3_FDI_LA_NOVITA_URL,
+        publisher: "La Novità Online",
+        publishedAt: "2026-10-30",
+        relationship: "agenda_item",
+        relevanceNote:
+          "La Novità Online riproduce la stessa nota di Fratelli d'Italia. Il collegamento è conservato per tracciabilità ma non costituisce una conferma indipendente né prova di protocollo, iscrizione, programmazione, trattazione, voto o esito.",
+        reviewedAt: "2026-11-02T00:13:00+01:00",
+      },
+      {
+        title:
+          "Fratelli d’Italia Lamezia Terme presenta una mozione a sostegno delle Forze dell’Ordine e contro ogni forma di violenza e intimidazione",
+        url: COUNCIL_NOVEMBER_3_FDI_CORRIERE_URL,
+        publisher: "Corriere di Lamezia",
+        publishedAt: "2026-10-30",
+        relationship: "agenda_item",
+        relevanceNote:
+          "Corriere di Lamezia riproduce la stessa nota di Fratelli d'Italia. Il collegamento è conservato per tracciabilità ma non costituisce una conferma indipendente né prova di protocollo, iscrizione, programmazione, trattazione, voto o esito.",
+        reviewedAt: "2026-11-02T00:13:00+01:00",
+      },
+      {
+        title:
+          'Lamezia, Masi (Pd): "Legalità non vuol dire propaganda: basta criminalizzare lavoratori e studenti"',
+        url: COUNCIL_NOVEMBER_3_MASI_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-10-31",
+        relationship: "agenda_item",
+        relevanceNote:
+          "La pagina riproduce la replica attribuita al consigliere PD Gennarino Masi alla nota di Fratelli d'Italia. Non identifica il 3 novembre e il collegamento resta tematico: non prova iscrizione, programmazione, trattazione, voto o esito.",
+        reviewedAt: "2026-11-02T00:13:00+01:00",
+      },
+      {
+        title:
+          "Masi a FDI: Legalità non vuol dire propaganda, basta criminalizzare lavoratori e studenti",
+        url: COUNCIL_NOVEMBER_3_MASI_CITY_ONE_URL,
+        publisher: "City One",
+        publishedAt: "2026-10-31",
+        relationship: "agenda_item",
+        relevanceNote:
+          "City One riproduce la stessa replica attribuita a Gennarino Masi e indica quest'ultimo come fonte. Il collegamento è conservato per tracciabilità ma non costituisce una conferma indipendente né prova di iscrizione, programmazione, trattazione, voto o esito.",
+        reviewedAt: "2026-11-02T00:13:00+01:00",
+      },
+      {
+        title:
+          "Lamezia | Il PD attacca Fratelli d’Italia: «Legalità non vuol dire propaganda, basta criminalizzare lavoratori e studenti»",
+        url: COUNCIL_NOVEMBER_3_MASI_LA_NOVITA_URL,
+        publisher: "La Novità Online",
+        publishedAt: "2026-10-31",
+        relationship: "agenda_item",
+        relevanceNote:
+          "La Novità Online riproduce la stessa replica attribuita a Gennarino Masi. Il collegamento è conservato per tracciabilità ma non costituisce una conferma indipendente né prova di iscrizione, programmazione, trattazione, voto o esito.",
+        reviewedAt: "2026-11-02T00:13:00+01:00",
+      },
+      {
+        title:
+          "Piano di riequilibrio: le decisioni non si prendono più nei luoghi della politica. Ma dove è finita la Politica?",
+        url: COUNCIL_NOVEMBER_3_PROGETTO_CIVICO_CITY_ONE_URL,
+        publisher: "City One",
+        publishedAt: "2026-11-01",
+        relationship: "agenda_item",
+        relevanceNote:
+          "City One presenta esplicitamente la pagina come comunicato stampa di Progetto Civico Italia e riproduce la stessa nota già collegata da tre testate. Non identifica il 3 novembre e non costituisce una conferma indipendente né prova di convocazione, iscrizione, trattazione, voto o esito.",
+        reviewedAt: "2026-11-02T00:13:00+01:00",
+      },
+      {
+        title:
+          "Lamezia, il Consiglio comunale approva il Piano di riequilibrio: 10 anni per risanare l'Ente",
+        url: COUNCIL_NOVEMBER_3_REPORT_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-11-03",
+        relationship: "same_session",
+        relevanceNote:
+          "Il resoconto identifica esplicitamente il Consiglio comunale, il Piano di riequilibrio e altri temi distintivi già associati alla seduta segnalata. Resta una fonte editoriale: le votazioni, lo svolgimento e gli esiti riportati non vengono trasferiti nei campi ufficiali.",
+        reviewedAt: "2026-11-04T12:00:00+01:00",
+      },
+      {
+        title:
+          "Il Consiglio comunale di Lamezia approva il Piano di riequilibrio",
+        url: COUNCIL_NOVEMBER_3_REPORT_ANSA_URL,
+        publisher: "ANSA",
+        publishedAt: "2026-11-03",
+        relationship: "same_session",
+        relevanceNote:
+          "Il dispaccio identifica esplicitamente il Consiglio comunale e il Piano di riequilibrio, con corrispondenza ai temi distintivi della seduta segnalata. È una fonte editoriale di agenzia, non una pubblicazione istituzionale: votazioni, svolgimento ed esiti riportati non valorizzano i campi ufficiali.",
+        reviewedAt: "2026-11-04T12:00:00+01:00",
+      },
+      {
+        title:
+          "Il Consiglio comunale di Lamezia approva il Piano di riequilibrio",
+        url: COUNCIL_NOVEMBER_3_REPORT_ESSETV_URL,
+        publisher: "EsseTV News",
+        publishedAt: "2026-11-03",
+        relationship: "same_session",
+        relevanceNote:
+          "EsseTV News riproduce titolo e contenuto del resoconto già pubblicato da LameziaTerme.it. Il collegamento è conservato per tracciabilità ma non costituisce una conferma indipendente o istituzionale né certifica convocazione, ordine del giorno, svolgimento, votazioni o risultati.",
+        reviewedAt: "2026-11-05T00:04:00+01:00",
+      },
+      {
+        title:
+          "Il Consiglio comunale di Lamezia approva il Piano di riequilibrio",
+        url: COUNCIL_NOVEMBER_3_REPORT_LAMEZIATERME_URL,
+        publisher: "LameziaTerme.it",
+        publishedAt: "2026-11-04",
+        relationship: "same_session",
+        relevanceNote:
+          "La pagina riproduce il dispaccio ANSA sul Consiglio comunale e sul Piano di riequilibrio. È conservata per tracciabilità ma non costituisce una conferma indipendente o istituzionale; votazioni, svolgimento ed esiti riportati non valorizzano i campi ufficiali.",
+        reviewedAt: "2026-11-04T12:00:00+01:00",
+      },
+      {
+        title:
+          "Il Comune di Lamezia prova a scongiurare il dissesto, piano decennale per il risanamento: decisivo il parere della Corte dei conti",
+        url: COUNCIL_NOVEMBER_3_REPORT_CALABRIA7_URL,
+        publisher: "Calabria7",
+        publishedAt: "2026-11-03",
+        relationship: "same_session",
+        relevanceNote:
+          "Il resoconto identifica il Consiglio comunale e il Piano di riequilibrio, riprendendo il nucleo informativo del dispaccio ANSA. Non costituisce una conferma indipendente o istituzionale; votazioni, svolgimento ed esiti riportati non valorizzano i campi ufficiali.",
+        reviewedAt: "2026-11-04T12:00:00+01:00",
+      },
+      {
+        title:
+          "Lamezia Terme, il Consiglio comunale approva il Piano di riequilibrio finanziario",
+        url: COUNCIL_NOVEMBER_3_REPORT_REGGIOTV_URL,
+        publisher: "ReggioTV",
+        publishedAt: "2026-11-03",
+        relationship: "same_session",
+        relevanceNote:
+          "La pagina riproduce in misura sostanziale il dispaccio ANSA sul Consiglio comunale e sul Piano di riequilibrio. È conservata per tracciabilità ma non costituisce una conferma indipendente o istituzionale; votazioni, svolgimento ed esiti riportati non valorizzano i campi ufficiali.",
+        reviewedAt: "2026-11-04T12:00:00+01:00",
+      },
+      {
+        title:
+          "Lamezia Terme, approvato il Piano di riequilibrio dal Consiglio Comunale",
+        url: COUNCIL_NOVEMBER_3_REPORT_CALABRIA_TRIBUNE_URL,
+        publisher: "Calabria Tribune",
+        publishedAt: "2026-11-04",
+        relationship: "same_session",
+        relevanceNote:
+          "Il resoconto identifica il Consiglio comunale e il Piano di riequilibrio e riprende la medesima ricostruzione editoriale diffusa da ANSA. Non costituisce una conferma indipendente o istituzionale; votazioni, svolgimento ed esiti riportati non valorizzano i campi ufficiali.",
+        reviewedAt: "2026-11-04T12:00:00+01:00",
+      },
+      {
+        title:
+          "Comune di Lamezia, futuro finanziario incerto. Tra disavanzo e nodi ancora irrisolti",
+        url: COUNCIL_NOVEMBER_3_FINANCIAL_GAZZETTA_URL,
+        publisher: "Gazzetta del Sud",
+        publishedAt: "2026-11-01",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "L'articolo originale collega esplicitamente il Piano di riequilibrio al successivo Consiglio del 3 novembre e descrive criticità attribuite al parere dei Revisori. Resta una fonte editoriale: non certifica convocazione, programmazione, contenuto dell'atto, iscrizione, trattazione, voto o esito.",
+        reviewedAt: "2026-11-04T17:46:00+01:00",
+      },
+      {
+        title: "Futuro finanziario incerto a Lamezia Terme per il comune",
+        url: COUNCIL_NOVEMBER_3_FINANCIAL_NTACALABRIA_URL,
+        publisher: "NtaCalabria",
+        publishedAt: "2026-11-01",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "NtaCalabria collega esplicitamente il Piano di riequilibrio al Consiglio del 3 novembre, ma riprende la stessa ricostruzione pubblicata da Gazzetta del Sud. È conservata per tracciabilità e non costituisce una conferma indipendente o istituzionale di convocazione, programmazione, contenuto dell'atto, iscrizione, trattazione, voto o esito.",
+        reviewedAt: "2026-11-04T17:46:00+01:00",
+      },
+      {
+        title:
+          "Lamezia, Consiglio comunale sul bilancio: oggi il voto che ipoteca il futuro della città",
+        url: COUNCIL_NOVEMBER_3_VOTE_GAZZETTA_URL,
+        publisher: "Gazzetta del Sud",
+        publishedAt: "2026-11-03",
+        relationship: "same_session",
+        relevanceNote:
+          "L'articolo originale identifica esplicitamente il Consiglio comunale della stessa mattina, il Consuntivo 2025 e il Piano di riequilibrio pluriennale. È una fonte editoriale: non certifica convocazione, ordine del giorno ufficiale, svolgimento, votazioni o risultati e non valorizza i relativi campi ufficiali.",
+        reviewedAt: "2026-11-04T17:46:00+01:00",
+      },
+      {
+        title:
+          "Lamezia, Consiglio comunale sul bilancio: oggi il voto che ipoteca il futuro della città",
+        url: COUNCIL_NOVEMBER_3_VOTE_ITALY_TODAY_URL,
+        publisher: "Italy Today",
+        publishedAt: "2026-11-03",
+        relationship: "same_session",
+        relevanceNote:
+          "Italy Today ripubblica titolo e passaggi dell'anticipazione sul Consiglio della stessa mattina ed espone Gazzetta del Sud come fonte originale. Il collegamento è conservato per tracciabilità ma non costituisce una conferma indipendente o istituzionale né certifica convocazione, ordine del giorno, svolgimento, votazioni o risultati.",
+        reviewedAt: "2026-11-04T17:46:00+01:00",
+      },
+      {
+        title:
+          'Lamezia, Lo Moro su Piano di riequilibrio: "Scelta grave che meritava maggiore coraggio e trasparenza"',
+        url: COUNCIL_NOVEMBER_3_LO_MORO_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-11-06",
+        relationship: "same_session",
+        relevanceNote:
+          "La pagina originale identifica esplicitamente il Consiglio comunale di Lamezia del 3 novembre e il Piano di riequilibrio decennale, riportando la posizione politica della consigliera Doris Lo Moro. È una fonte editoriale: non certifica convocazione, ordine del giorno ufficiale, completezza, svolgimento, votazioni o risultati.",
+        reviewedAt: "2026-11-07T11:38:00+01:00",
+      },
+    ],
+    media: [
+      {
+        title: "Lamezia, dieci anni di riequilibrio. Il PD dice no",
+        url: COUNCIL_NOVEMBER_3_VESCIO_FACEBOOK_VIDEO_URL,
+        publisher: "Lidia Vescio",
+        publishedAt: "2026-11-03",
+        relationship: "same_session",
+        mediaType: "excerpt",
+        availability: "replay_available",
+        relevanceNote:
+          "La pagina Facebook originale, pubblicata il 3 novembre 2026 alle 18:13, identifica nel titolo e nella descrizione il Consiglio comunale della stessa giornata, il Piano di riequilibrio e l'orizzonte fino al 2035. È un estratto politico editoriale esterno: non certifica convocazione, ordine del giorno ufficiale, completezza, svolgimento, votazioni o risultati e non valorizza i campi ufficiali di streaming o registrazione.",
+        reviewedAt: "2026-11-05T05:41:00+01:00",
+      },
+    ],
+    editorialAgenda: [
+      {
+        title: "Bilancio consolidato 2025 e variazioni al Bilancio 2026–2028",
+        sourceUrls: [
+          COUNCIL_NOVEMBER_3_LAMETINO_URL,
+          COUNCIL_NOVEMBER_3_GAZZETTA_URL,
+          COUNCIL_NOVEMBER_3_TV6ONAIR_URL,
+          COUNCIL_NOVEMBER_3_ITALY_TODAY_URL,
+          COUNCIL_NOVEMBER_3_VOTE_GAZZETTA_URL,
+          COUNCIL_NOVEMBER_3_VOTE_ITALY_TODAY_URL,
+        ],
+        confidence: "medium",
+        reason:
+          "La copertura editoriale associa questi temi al possibile Consiglio; TV6onAir e Italy Today ripubblicano Gazzetta del Sud e non sono conferme indipendenti. Non è stato acquisito l'ordine del giorno istituzionale e le fonti non provano iscrizione, trattazione, voto o esito.",
+      },
+      {
+        title: "Piano di riequilibrio finanziario pluriennale",
+        sourceUrls: [
+          COUNCIL_NOVEMBER_3_LAMETINO_URL,
+          COUNCIL_NOVEMBER_3_AUDITORS_LAMETINO_URL,
+          COUNCIL_NOVEMBER_3_MASCARO_LAMETINO_URL,
+          COUNCIL_NOVEMBER_3_MASCARO_CITY_ONE_URL,
+          COUNCIL_NOVEMBER_3_GAZZETTA_URL,
+          COUNCIL_NOVEMBER_3_TV6ONAIR_URL,
+          COUNCIL_NOVEMBER_3_ITALY_TODAY_URL,
+          PROGETTO_CIVICO_OCTOBER_31_LAMEZIATERME_URL,
+          PROGETTO_CIVICO_OCTOBER_31_LAMETINO_URL,
+          PROGETTO_CIVICO_OCTOBER_31_CORRIERE_LAMEZIA_URL,
+          COUNCIL_NOVEMBER_3_PROGETTO_CIVICO_CITY_ONE_URL,
+          COUNCIL_NOVEMBER_3_REPORT_LAMETINO_URL,
+          COUNCIL_NOVEMBER_3_REPORT_ANSA_URL,
+          COUNCIL_NOVEMBER_3_REPORT_LAMEZIATERME_URL,
+          COUNCIL_NOVEMBER_3_REPORT_ESSETV_URL,
+          COUNCIL_NOVEMBER_3_REPORT_CALABRIA7_URL,
+          COUNCIL_NOVEMBER_3_REPORT_REGGIOTV_URL,
+          COUNCIL_NOVEMBER_3_REPORT_CALABRIA_TRIBUNE_URL,
+          COUNCIL_NOVEMBER_3_FINANCIAL_GAZZETTA_URL,
+          COUNCIL_NOVEMBER_3_FINANCIAL_NTACALABRIA_URL,
+          COUNCIL_NOVEMBER_3_VOTE_GAZZETTA_URL,
+          COUNCIL_NOVEMBER_3_VOTE_ITALY_TODAY_URL,
+        ],
+        confidence: "medium",
+        reason:
+          "Il tema è esplicito nelle ventidue fonti editoriali collegate. I resoconti successivi e le due anticipazioni della stessa mattina identificano il Consiglio, ma più pagine riprendono il dispaccio ANSA, articoli di Gazzetta del Sud o, nel caso di EsseTV News, il resoconto di LameziaTerme.it; le altre comprendono ulteriori note e ripubblicazioni non indipendenti. Non sono stati acquisiti l'ordine del giorno, il parere o i documenti originali: le fonti non provano ufficialmente iscrizione, contenuto degli atti, trattazione, voto o esito.",
+      },
+      {
+        title: "Piano delle alienazioni e valorizzazioni immobiliari 2027",
+        sourceUrls: [COUNCIL_NOVEMBER_3_LAMETINO_URL],
+        confidence: "medium",
+        reason:
+          "La testata collega il tema al possibile Consiglio e al bilancio 2027–2029; senza l'atto istituzionale resta un tema emerso dalla copertura e non prova iscrizione, trattazione, voto o esito.",
+      },
+      {
+        title:
+          "Debiti fuori bilancio e mozioni su emergenza idrica, viabilità, risorse dello staff e sicurezza urbana",
+        sourceUrls: [
+          COUNCIL_NOVEMBER_3_LAMETINO_URL,
+          COUNCIL_NOVEMBER_3_GAZZETTA_URL,
+          COUNCIL_NOVEMBER_3_FDI_LAMETINO_URL,
+          COUNCIL_NOVEMBER_3_FDI_LAMEZIATERME_URL,
+          COUNCIL_NOVEMBER_3_FDI_CITY_ONE_URL,
+          COUNCIL_NOVEMBER_3_FDI_IL_DISPACCIO_URL,
+          COUNCIL_NOVEMBER_3_FDI_LA_NOVITA_URL,
+          COUNCIL_NOVEMBER_3_FDI_CORRIERE_URL,
+          COUNCIL_NOVEMBER_3_MASI_LAMETINO_URL,
+          COUNCIL_NOVEMBER_3_MASI_CITY_ONE_URL,
+          COUNCIL_NOVEMBER_3_MASI_LA_NOVITA_URL,
+        ],
+        confidence: "medium",
+        reason:
+          "L'articolo generale de il Lametino riepiloga fra i temi del possibile Consiglio una mozione FdI con elementi distintivi coerenti con la nota ripubblicata da sei testate; tre pagine riproducono la replica attribuita a Gennarino Masi. Queste ripubblicazioni non identificano autonomamente il 3 novembre e non sono conferme indipendenti. Non è stato acquisito l'ordine del giorno istituzionale e le fonti non provano protocollo, iscrizione, trattazione, voto o esito.",
+      },
+    ],
+  },
+  title: {
+    key: "title",
+    label: "Titolo",
+    value:
+      "Consiglio comunale su Bilancio consolidato e Piano di riequilibrio — segnalazione editoriale",
+    sourceStatus: "da_verificare",
+    limit:
+      "Organo e temi sono indicati da una fonte editoriale; manca una pubblicazione istituzionale acquisita che consenta di verificare la convocazione.",
+  },
+  scheduledAt: {
+    key: "scheduledAt",
+    label: "Data e ora",
+    value: null,
+    sourceStatus: "da_verificare",
+    limit:
+      "Il 3 novembre alle 10:30 e l'eventuale seconda convocazione del 4 novembre alle 11:30 sono riportati dalla testata e vengono usati soltanto per la ricerca. Non sono disponibili da una fonte istituzionale acquisita e non vengono presentati come dati ufficiali della seduta.",
+  },
+  sessionStatus: {
+    key: "sessionStatus",
+    label: "Stato seduta",
+    value: "non_verificata",
+    sourceStatus: "da_verificare",
+    limit:
+      "La copertura editoriale non certifica convocazione, programmazione, svolgimento, chiusura, rinvio o altro esito ufficiale.",
+  },
+  agenda: {
+    key: "agenda",
+    label: "Ordine del giorno",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Ordine del giorno istituzionale non acquisito. Gli argomenti riportati dalla stampa sono esposti soltanto nella sezione separata “Temi emersi dalla copertura”.",
+  },
+  sourceLink: {
+    key: "sourceLink",
+    label: "Fonte",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Non è stata acquisita una pubblicazione istituzionale associabile con precisione al Consiglio segnalato.",
+  },
+  liveStreaming: {
+    key: "liveStreaming",
+    label: "Streaming live",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Nessuna diretta istituzionale associabile con precisione è stata individuata.",
+  },
+  recording: {
+    key: "recording",
+    label: "Registrazione",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Nessuna registrazione istituzionale associabile con precisione è stata individuata.",
+  },
+  minutesOrReport: {
+    key: "minutesOrReport",
+    label: "Verbale o resoconto",
+    value: null,
+    sourceStatus: "assente",
+    limit:
+      "Nessun verbale o resoconto istituzionale associabile con precisione è stato individuato.",
+  },
+  lastCheckedAt: {
+    key: "lastCheckedAt",
+    label: "Ultimo controllo",
+    value: "2026-11-07T11:38:00+01:00",
+    sourceStatus: "verificato",
+    sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
+    limit:
+      "Indica quando sono state ricontrollate le fonti, non una conferma istituzionale della seduta segnalata.",
+  },
+  dataLimits: {
+    key: "dataLimits",
+    label: "Limiti del dato",
+    value: [
+      "Il 3 e il 4 novembre, gli orari e i venti punti riportati dalla testata non sono stati verificati su una fonte istituzionale e non vengono presentati come dati ufficiali della seduta.",
+      "Non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione al Consiglio segnalato; il 7 novembre il nuovo Albo dinamico ha restituito soltanto quattro avvisi patrimoniali nella ricerca d'archivio dal 25 ottobre, mentre l'Albo storico non contiene atti successivi al passaggio di piattaforma.",
+      "Data, ora, sede, ordine del giorno, stato, streaming, registrazione e verbale restano non verificati o non rilevati secondo il campo.",
+      "I trentadue articoli e l'estratto video collegati sono fonti editoriali e non certificano programmazione, svolgimento, completezza, contenuto degli atti, partecipanti, votazioni o risultati; più pagine riproducono le medesime note, articoli o dispacci e non sono conferme indipendenti. Il video espone una posizione politica sulla seduta e sul Piano di riequilibrio, ma non valorizza i campi ufficiali di streaming o registrazione.",
+      "I temi riportati dalla copertura restano nell'agenda editoriale separata e dovranno essere riconciliati se emergerà un atto istituzionale.",
+    ],
+    sourceStatus: "parziale",
+    sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
+    limit:
+      "Scheda prudenziale basata su una corrispondenza editoriale esplicita; tutti i campi ufficiali restano separati e non confermati.",
+  },
+};
+
+const commissionIIOctoberEditorialCycle: CouncilSessionV0 = {
+  id: "editorial-commissione-ii-ciclo-bilancio-2026-10",
+  kind: "commission",
+  isDemoFixture: false,
+  contextResearch: {
+    status: "reviewed_matches",
+    checkedAt: "2026-10-31T23:43:00+01:00",
+    searchNote:
+      "Parallel Search e la verifica diretta di Comune, Albo, testate locali e canali audiovisivi indicizzati hanno individuato nove articoli pertinenti ai lavori della II Commissione. Alle sei fonti già collegate si aggiungono tre versioni della stessa nota di Progetto Civico Italia del 31 ottobre: identificano la Commissione Bilancio, riferiscono il venir meno del numero legale e usano “ieri” per collocare i lavori, ma non forniscono una data istituzionalmente verificata. Sono quindi `possible_same_session`; LameziaTerme.it etichetta il testo “Comunicato Stampa”, mentre il Lametino e Corriere di Lamezia riproducono la stessa nota e non costituiscono conferme indipendenti. Il nuovo Albo dinamico non ha restituito un atto istituzionale acquisibile o indicizzato: date e orari riportati dalla stampa restano soltanto indizi di ricerca. Organo, programmazione, sede, ordine del giorno, svolgimento, numero legale ed esiti restano da verificare su fonte istituzionale.",
+    articles: [
+      {
+        title:
+          "Lamezia, settimana cruciale per la Commissione bilancio prima del Consiglio su Piano di riequilibrio e Consolidato",
+        url: COMMISSION_II_OCTOBER_26_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-10-26",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "L'articolo attribuisce alla II Commissione un calendario su tre giornate e riporta temi finanziari distintivi, dichiarando di ricavarli da un avviso di convocazione. Poiché l'atto istituzionale originale non è stato acquisito, il collegamento resta possibile e non certifica convocazione, date, orari, ordine del giorno, svolgimento, votazioni o esiti.",
+        reviewedAt: "2026-10-27T06:25:00+01:00",
+      },
+      {
+        title:
+          "Oltre a consolidato 2025 e piano di riequilibrio, malumori politici e question time ricorsivi in via Perugini",
+        url: COMMISSION_II_OCTOBER_25_LAMEZIAINFORMA_URL,
+        publisher: "LameziaInforma",
+        publishedAt: "2026-10-25",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo collega espressamente Bilancio consolidato 2025 e genesi del Piano di riequilibrio ai lavori della II Commissione, ma non identifica una singola seduta. La formulazione secondo cui i temi sarebbero già passati in Commissione non è corroborata da un atto istituzionale acquisito e non è pienamente coerente con il calendario editoriale pubblicato il giorno successivo; non prova trattazione, voto o esito.",
+        reviewedAt: "2026-10-27T06:25:00+01:00",
+      },
+      {
+        title: "A Lamezia Terme bilancio consolidato e riequilibrio",
+        url: COMMISSION_II_OCTOBER_27_NTACALABRIA_URL,
+        publisher: "NtaCalabria",
+        publishedAt: "2026-10-27",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo associa il Bilancio consolidato 2025 e il Piano di riequilibrio alla seconda Commissione, ma non identifica una singola seduta. Ripete la ricostruzione secondo cui il consolidato sarebbe già stato esaminato e non costituisce una conferma indipendente della programmazione, della trattazione o di eventuali esiti.",
+        reviewedAt: "2026-10-27T23:42:00+01:00",
+      },
+      {
+        title:
+          "Lamezia, consolidato e Piano di riequilibrio “infiammano” l’autunno politico",
+        url: COMMISSION_II_OCTOBER_27_GAZZETTA_URL,
+        publisher: "Gazzetta del Sud",
+        publishedAt: "2026-10-27",
+        relationship: "agenda_item",
+        relevanceNote:
+          "L'articolo associa il Bilancio consolidato 2025 e il Piano di riequilibrio ai lavori della II Commissione, ma non identifica una singola seduta. La formulazione secondo cui il consolidato sarebbe già passato in Commissione resta una ricostruzione editoriale e non prova programmazione, trattazione, voto o esito ufficiale.",
+        reviewedAt: "2026-10-28T11:56:00+01:00",
+      },
+      {
+        title:
+          "Lamezia, consolidato e Piano di riequilibrio “infiammano” l’autunno politico",
+        url: COMMISSION_II_OCTOBER_27_ITALY_TODAY_URL,
+        publisher: "Italy Today",
+        publishedAt: "2026-10-27",
+        relationship: "agenda_item",
+        relevanceNote:
+          "La pagina ripubblica titolo e passaggi dell'articolo di Gazzetta del Sud e ne espone il link come fonte originale. Associa Bilancio consolidato 2025 e Piano di riequilibrio alla II Commissione, ma non identifica una singola seduta: è un collegamento distinto, non una conferma indipendente, e non prova programmazione, trattazione, voto o esito ufficiale.",
+        reviewedAt: "2026-10-29T17:55:00+01:00",
+      },
+      {
+        title:
+          "TV6onAIR – Lamezia, solidificato e Piano in riequilibrio “infiammano” l’autunno politico",
         url: COMMISSION_II_OCTOBER_27_TV6ONAIR_URL,
         publisher: "TV6onAir",
         publishedAt: "2026-10-27",
