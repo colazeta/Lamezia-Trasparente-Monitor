@@ -27,12 +27,17 @@ describe("Scouting 16 novembre: gate end-to-end sui medesimi proposal ID", () =>
       expect(p.promoterId).toBe(entry.promoter);
       expect(p.institutionalRecipient).toBeTruthy();
       expect(p.firstSeen).toBe("2026-11-14");
-      expect(p.lastUpdated).toBe("2026-11-14");
+      expect(p.lastUpdated).toBe(entry.id.startsWith("via-montello") ? "2026-11-20" : "2026-11-14");
       expect(p.channel).toBe("comunicato");
       expect(p.status).toBe("proposta_emersa");
       expect(p.evidenceLevel).toBe("fonte_stampa");
       expect(p.sourceUrl?.startsWith("https://")).toBe(true);
-      expect(p.events).toHaveLength(1);
+      expect(p.events).toHaveLength(entry.id.startsWith("via-montello") ? 2 : 1);
+      if (entry.id.startsWith("via-montello")) {
+        expect(p.events[1]?.type).toBe("aggiornamento");
+        expect(p.events[1]?.date).toBe("2026-11-20");
+        expect(p.events[1]?.sourceUrl).toContain("vescio-pd-illuminazione-area-pip");
+      }
       expect(p.events[0]?.type).toBe("emersione");
       expect(p.events[0]?.date).toBe(p.firstSeen);
       expect(p.events[0]?.sourceUrl).toBe(p.sourceUrl);

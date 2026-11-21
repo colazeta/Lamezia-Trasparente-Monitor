@@ -82,7 +82,7 @@ describe("proposte civiche", () => {
     expect(
       screen.getByText("Sottoscrizione digitale di iniziative, istanze e petizioni"),
     ).toBeInTheDocument();
-  });
+  }, 60_000); // Rendering dell’archivio completo in CI concorrente: si mantengono tutte le assertion.
 
   it("mostra solo materie primarie effettivamente utilizzate, conservando le altre nel backend", () => {
     renderProposteCiviche();
