@@ -23,7 +23,7 @@ describe("evidence interventions 2026-09-04", () => {
       expect(item.evaluationStudies.length).toBeGreaterThan(0);
       expect(item.evaluationStudies.every((study) => study.url.startsWith("https://"))).toBe(true);
       expect(item.limitations.length).toBeGreaterThan(0);
-      expect(item.lastVerifiedAt).toBe("2026-09-04");
+      expect(item.lastVerifiedAt).toBe(item.id === "london-low-traffic-neighbourhoods-road-injuries" ? "2026-11-08" : "2026-09-04");
       expect(item.revisionHistory.length).toBeGreaterThan(0);
     }
   });
