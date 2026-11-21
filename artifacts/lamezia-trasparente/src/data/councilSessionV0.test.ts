@@ -539,6 +539,17 @@ describe("councilSessionV0", () => {
         ),
       }),
       expect.objectContaining({
+        title: "Dossier Scordovillo a Lamezia, assenti i protagonisti chiave",
+        publisher: "NtaCalabria",
+        publishedAt: "2026-11-20",
+        relationship: "same_session",
+        url: expect.stringContaining("dossier-scordovillo-a-lamezia"),
+        reviewedAt: "2026-11-21T18:09:00+01:00",
+        relevanceNote: expect.stringMatching(
+          /Consiglio comunale straordinario.*fonte editoriale.*non certifica/i,
+        ),
+      }),
+      expect.objectContaining({
         publisher: "LameziaTerme.it",
         publishedAt: "2026-11-19",
         relationship: "same_session",
@@ -629,9 +640,9 @@ describe("councilSessionV0", () => {
       /non certific(?:a|ano) programmazione, svolgimento/i,
     );
     expect(session?.contextResearch.checkedAt).toBe(
-      "2026-11-21T11:39:00+01:00",
+      "2026-11-21T18:09:00+01:00",
     );
-    expect(session?.lastCheckedAt.value).toBe("2026-11-21T11:39:00+01:00");
+    expect(session?.lastCheckedAt.value).toBe("2026-11-21T18:09:00+01:00");
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /pagina originale di il Lametino.*titolo aggiornato.*resoconto conclusivo.*non valorizza stato/i,
     );
