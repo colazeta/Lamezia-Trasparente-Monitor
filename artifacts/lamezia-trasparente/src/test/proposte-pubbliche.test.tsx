@@ -54,6 +54,7 @@ describe("proposte civiche", () => {
     expect(filterPublicProposals(PUBLIC_PROPOSALS, { status: "discussa" }).map(p => p.id).sort()).toEqual([
       "scordovillo-consiglio-aperto-trasparenza-futuro-nazionale-2026",
       "scordovillo-consiglio-aperto-pd-azione-per-vivere-bene-2026",
+      "centro-fibrosi-cistica-lamezia-tutela-spazi-lifc-2026",
     ].sort());
   });
 
