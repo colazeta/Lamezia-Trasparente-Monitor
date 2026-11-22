@@ -446,6 +446,26 @@ describe("councilSessionV0", () => {
         ),
       }),
       expect.objectContaining({
+        publisher: "Corriere della Calabria",
+        publishedAt: "2026-11-18",
+        relationship: "agenda_item",
+        url: expect.stringContaining("trasferiti-circa-due-terzi"),
+        reviewedAt: "2026-11-22T11:54:00+01:00",
+        relevanceNote: expect.stringMatching(
+          /stessa comunicazione della Prefettura.*non identifica né conferma la seduta.*non costituisce una conferma indipendente/i,
+        ),
+      }),
+      expect.objectContaining({
+        publisher: "Video Calabria",
+        publishedAt: "2026-11-18",
+        relationship: "agenda_item",
+        url: expect.stringContaining("operazioni-nel-campo-di-scordovillo"),
+        reviewedAt: "2026-11-22T11:54:00+01:00",
+        relevanceNote: expect.stringMatching(
+          /stessa comunicazione della Prefettura.*non identifica né conferma la seduta.*non costituisce una conferma indipendente/i,
+        ),
+      }),
+      expect.objectContaining({
         publisher: "NoiDiCalabria",
         publishedAt: "2026-11-19",
         relationship: "agenda_item",
@@ -640,9 +660,10 @@ describe("councilSessionV0", () => {
       /non certific(?:a|ano) programmazione, svolgimento/i,
     );
     expect(session?.contextResearch.checkedAt).toBe(
-      "2026-11-21T18:09:00+01:00",
+      "2026-11-22T11:54:00+01:00",
     );
-    expect(session?.lastCheckedAt.value).toBe("2026-11-21T18:09:00+01:00");
+    expect(session?.lastCheckedAt.value).toBe("2026-11-22T11:54:00+01:00");
+    expect(session?.contextResearch.articles).toHaveLength(37);
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /pagina originale di il Lametino.*titolo aggiornato.*resoconto conclusivo.*non valorizza stato/i,
     );
@@ -669,6 +690,9 @@ describe("councilSessionV0", () => {
     );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /ulteriori pagine LameziaInforma e City One del 18 novembre.*`agenda_item`.*stessa comunicazione della Prefettura.*non costituiscono conferme indipendenti/i,
+    );
+    expect(session?.dataLimits.value?.join(" ")).toMatch(
+      /Corriere della Calabria e Video Calabria del 18 novembre.*`agenda_item`.*stessa comunicazione della Prefettura.*non costituiscono conferme indipendenti.*non valorizzano campi ufficiali/i,
     );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /NoiDiCalabria del 19 novembre.*`agenda_item`.*stessa comunicazione della Prefettura.*non costituisce una conferma indipendente/i,
