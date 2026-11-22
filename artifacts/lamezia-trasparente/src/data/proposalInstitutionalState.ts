@@ -210,9 +210,11 @@ export function getProposalInstitutionalState(
     progressStage = laterStage(progressStage, "attuata");
   }
 
+  // A response or discussion may follow an informal request: neither proves
+  // that the original proposal was formally deposited.
   const hasFormalization =
-    (progressRank.get(progressStage) ?? 0) >=
-    (progressRank.get("formalizzata") ?? 1);
+    proposal.status === "presentata_formalmente" ||
+    proposal.events.some((event) => event.type === "deposito");
   const hasInstitutionalFollowUp =
     followUpStatuses.has(proposal.status) ||
     proposal.events.some((event) => followUpEventTypes.has(event.type));
