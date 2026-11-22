@@ -15,7 +15,7 @@ export const SCOUTED_PUBLIC_PROPOSALS_20261122_LIFC = [
     "threadId": "fibrosi-cistica-lamezia-spazi-assistenziali-2026",
     "threadLabel": "Centro Fibrosi Cistica: tutela degli spazi assistenziali",
     "territorialArea": "Centro regionale di riferimento per la fibrosi cistica, Ospedale Giovanni Paolo II, Torre A, quarto piano, via Senatore Arturo Perugini, Lamezia Terme",
-    "institutionalRecipient": "Direzione generale dell'Azienda Sanitaria Provinciale di Catanzaro",
+    "institutionalRecipient": "Azienda Sanitaria Provinciale di Catanzaro (ASP) — Direzione generale",
     "channel": "altro",
     "sourceLabel": "il Lametino — nota congiunta ASP Catanzaro e LIFC Calabria, 21 novembre 2026",
     "sourceUrl": "https://www.lametino.it/ultimora/lamezia-nessun-ridimensionamento-per-centro-fibrosi-cistica-intesa-tra-asp-e-associazione.html",
