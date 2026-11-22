@@ -154,6 +154,10 @@ const eu = (code: OfficialFallbackDataThemeCode): ProposalPaSubjectRef => ({
 });
 
 const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
+  "Tutela dei locali e continuità assistenziale del Centro Fibrosi Cistica": {
+    primary: ps("2"),
+    mappingNote: "L'oggetto principale è la disponibilità dei locali per continuità di cure specialistiche: Salute, benessere e assistenza (AgID 2). La materia ufficiale è una classificazione tematica, non determina la competenza ASP, il deposito della diffida, la formalizzazione dell'intesa o l'attuazione delle misure.",
+  },
   "Riorganizzazione sanitaria e polo di emergenza sismica": {
     primary: ps("2"), secondary: [ps("8")],
     mappingNote: "Rete clinica, riorganizzazione sanitaria e continuità assistenziale: Salute, benessere e assistenza (AgID 2). La protezione dalle maxi-emergenze è secondaria (AgID 8). Nessuna competenza, finanziamento o accreditamento è dedotto dalla classificazione.",
