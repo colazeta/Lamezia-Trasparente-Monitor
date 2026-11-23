@@ -83,6 +83,7 @@ import { EVIDENCE_INTERVENTIONS_2026_11_18_WALES_RECOVERY } from "./evidenceInte
 import { EVIDENCE_INTERVENTIONS_2026_11_20_BELGIUM_LEZ } from "./evidenceInterventions20261120BelgiumLez";
 import { EVIDENCE_INTERVENTIONS_2026_11_21_MEDWAY_TAX } from "./evidenceInterventions20261121MedwayTax";
 import { EVIDENCE_INTERVENTIONS_2026_11_22_MONTEVIDEO_BINS } from "./evidenceInterventions20261122MontevideoBins";
+import { EVIDENCE_INTERVENTIONS_2026_11_23_KORTRIJK_MISSION } from "./evidenceInterventions20261123KortrijkMission";
 import { applyEvidenceInterventionUpdates20260914 } from "./evidenceInterventionUpdates20260914";
 import { applyEvidenceInterventionUpdates20260919 } from "./evidenceInterventionUpdates20260919";
 import { applyEvidenceInterventionUpdates20261109 } from "./evidenceInterventionUpdates20261109";
@@ -177,6 +178,7 @@ const EVIDENCE_INTERVENTIONS_BEFORE_2026_09_14_UPDATES: readonly EvidenceInterve
   ...EVIDENCE_INTERVENTIONS_2026_11_20_BELGIUM_LEZ,
   ...EVIDENCE_INTERVENTIONS_2026_11_21_MEDWAY_TAX,
   ...EVIDENCE_INTERVENTIONS_2026_11_22_MONTEVIDEO_BINS,
+  ...EVIDENCE_INTERVENTIONS_2026_11_23_KORTRIJK_MISSION,
 ];
 
 function deduplicateEvidenceInterventions(
