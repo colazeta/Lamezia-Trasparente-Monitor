@@ -154,6 +154,12 @@ const eu = (code: OfficialFallbackDataThemeCode): ProposalPaSubjectRef => ({
 });
 
 const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
+  "Manutenzione e drenaggio stradale a Magolà": {
+    primary: ps("4"),
+    secondary: [ps("8"), ps("11")],
+    mappingNote:
+      "Interventi sulla pavimentazione e sull'accessibilità di una strada urbana: Mobilità e trasporti (AgID 4). La sicurezza stradale (AgID 8) e il deflusso delle acque meteoriche (AgID 11) sono materie secondarie; il mapping non prova competenza comunale, deposito, causa degli allagamenti o attuazione.",
+  },
   "Tutela dei locali e continuità assistenziale del Centro Fibrosi Cistica": {
     primary: ps("2"),
     mappingNote: "L'oggetto principale è la disponibilità dei locali per continuità di cure specialistiche: Salute, benessere e assistenza (AgID 2). La materia ufficiale è una classificazione tematica, non determina la competenza ASP, il deposito della diffida, la formalizzazione dell'intesa o l'attuazione delle misure.",
