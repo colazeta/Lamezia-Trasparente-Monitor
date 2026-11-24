@@ -81,6 +81,17 @@ export const PROPOSAL_COMPETENCE_ASSESSMENTS: Readonly<
   Partial<Record<string, ProposalCompetenceAssessment>>
 > = {
   ...baseline.PROPOSAL_COMPETENCE_ASSESSMENTS,
+  "partecipate-accesso-atti-flussi-informativi-masi-2026": {
+    status: "partially_verified",
+    primaryAuthority: { id: "comune-lamezia-terme", label: "Comune di Lamezia Terme — uffici comunali", level: "municipal", sourceLabel: "Regolamento consiliare, art. 12, commi 1 e 4", sourceUrl: "https://www.comune.lamezia-terme.cz.it/it/documenti_pubblici/regolamento-di-funzionamento-del-consiglio-comunale-modificato-con-deliberazione-di-consiglio-comunale-n-1-del-31-01-2025" },
+    involvedAuthorities: [{ id: "presidente-consiglio-comunale-lamezia-terme", label: "Presidente del Consiglio comunale di Lamezia Terme", level: "municipal", sourceLabel: "Regolamento consiliare, art. 29, comma 6", sourceUrl: "https://www.comune.lamezia-terme.cz.it/it/documenti_pubblici/regolamento-di-funzionamento-del-consiglio-comunale-modificato-con-deliberazione-di-consiglio-comunale-n-1-del-31-01-2025" }],
+    note: "Art. 12 del Regolamento consiliare ufficiale: diritto di accesso alle informazioni detenute dagli uffici comunali e dagli enti e aziende dipendenti; art. 29 c. 6: il Presidente, sentita la Conferenza dei Capigruppo, fissa la discussione delle relazioni presentate dai rappresentanti. Non accertata la detenzione dei singoli atti, la portata dell'obbligo di attestazione o la disciplina di ogni società. Destinatario distinto dalla base normativa.",
+  },
+  "palestra-gatti-igiene-gestione-cestistica-2026": {
+    status: "partially_verified",
+    primaryAuthority: { id: "asp-catanzaro", label: "ASP di Catanzaro — Dipartimento di Prevenzione", level: "health_authority", sourceLabel: "ASP Catanzaro — funzioni del Dipartimento di Prevenzione", sourceUrl: "https://www.asp.cz.it/dipartimenti/dipartimento-di-prevenzione/" },
+    note: "La fonte ufficiale documenta il ruolo di tutela della salute nelle attività sportive e di prevenzione sanitaria. Assessment limitato alla componente di verifica igienico-sanitaria; non prova la competenza specifica su un eventuale ordine di chiusura, né il riparto degli obblighi di pulizia e manutenzione tra Comune, gestore e utilizzatori. Non è confermato l'invio della segnalazione.",
+  },
   "polo-sportivo-paralimpico-stretto-iona-2026": {
     status: "partially_verified",
     primaryAuthority: {

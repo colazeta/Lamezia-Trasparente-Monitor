@@ -53,6 +53,7 @@ import { SCOUTED_PUBLIC_PROPOSALS_20261121 } from "./propostePubblicheScouting20
 import { SCOUTED_PUBLIC_PROPOSALS_20261121_MURACA } from "./propostePubblicheScouting20261121Muraca";
 import { SCOUTED_PUBLIC_PROPOSALS_20261121_AREE_CANI } from "./propostePubblicheScouting20261121AreeCani";
 import { SCOUTED_PUBLIC_PROPOSALS_20261122_LIFC } from "./propostePubblicheScouting20261122Lifc";
+import { SCOUTED_PUBLIC_PROPOSALS_20261124 } from "./propostePubblicheScouting20261124";
 import { SCOUTED_PUBLIC_PROPOSALS_20261123_CURCIO } from "./propostePubblicheScouting20261123Curcio";
 import { applyScoutingUpdates20261121Montello } from "./proposalScoutingUpdates20261121Montello";
 import { applyScoutingUpdates20261119Masi } from "./proposalScoutingUpdates20261119Masi";
@@ -102,7 +103,7 @@ export {
   getCanonicalProposalPresentation,
   getCanonicalProposalPresentationIds,
   hasCanonicalProposalPresentation,
-} from "./proposalCanonicalPresentationArchive20261123Curcio";
+} from "./proposalCanonicalPresentationArchive20261124";
 
 export type {
   LtSemanticExtensionId,
@@ -270,6 +271,7 @@ export const PUBLIC_PROPOSALS = [
   ...SCOUTED_PUBLIC_PROPOSALS_20261121_AREE_CANI,
   ...SCOUTED_PUBLIC_PROPOSALS_20261122_LIFC,
   ...SCOUTED_PUBLIC_PROPOSALS_20261123_CURCIO,
+  ...SCOUTED_PUBLIC_PROPOSALS_20261124,
 ] as const satisfies readonly core.PublicProposal[];
 
 export function getProposalThemes(
