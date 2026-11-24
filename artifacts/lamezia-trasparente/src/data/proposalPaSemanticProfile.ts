@@ -154,6 +154,14 @@ const eu = (code: OfficialFallbackDataThemeCode): ProposalPaSubjectRef => ({
 });
 
 const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
+  "Accesso agli atti e flussi informativi delle partecipate comunali": {
+    primary: eu("GOVE"), secondary: [ps("9")],
+    mappingNote: "Accesso consiliare e governance delle partecipate non sono adeguatamente rappresentati dalle 15 materie di servizio AgID; si usa il concetto ufficiale interoperabile EU Data Theme GOVE, già correlato al vocabolario nazionale della trasparenza. Finanze (AgID 9) secondaria per il controllo della partecipazione pubblica. Nessuna competenza o mancanza di atti inferita.",
+  },
+  "Igiene e organizzazione della gestione della palestra S. Gatti": {
+    primary: ps("10"), secondary: [ps("2"), ps("11")],
+    mappingNote: "Gestione dell'impianto sportivo (AgID 10); igiene sanitaria (2) e raccolta differenziata (11) secondarie. Non prova disservizi o competenze.",
+  },
   "Manutenzione e drenaggio stradale a Magolà": {
     primary: ps("4"),
     secondary: [ps("8"), ps("11")],
