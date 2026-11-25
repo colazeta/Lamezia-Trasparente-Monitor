@@ -154,6 +154,8 @@ const eu = (code: OfficialFallbackDataThemeCode): ProposalPaSubjectRef => ({
 });
 
 const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
+  "Verde urbano e adattamento al caldo": { primary: ps("11"), secondary: [ps("2"), ps("5")], mappingNote: "Primaria ambiente per verde e adattamento; salute e urbanistica come dimensioni secondarie." },
+  "Prevenzione della violenza di genere e sostegno territoriale": { primary: ps("2"), secondary: [ps("1"), ps("3"), ps("8")], mappingNote: "Primaria salute, benessere e assistenza per il sostegno territoriale e i centri antiviolenza; educazione, vita lavorativa e sicurezza come dimensioni secondarie." },
   "Accesso agli atti e flussi informativi delle partecipate comunali": {
     primary: eu("GOVE"), secondary: [ps("9")],
     mappingNote: "Accesso consiliare e governance delle partecipate non sono adeguatamente rappresentati dalle 15 materie di servizio AgID; si usa il concetto ufficiale interoperabile EU Data Theme GOVE, già correlato al vocabolario nazionale della trasparenza. Finanze (AgID 9) secondaria per il controllo della partecipazione pubblica. Nessuna competenza o mancanza di atti inferita.",
