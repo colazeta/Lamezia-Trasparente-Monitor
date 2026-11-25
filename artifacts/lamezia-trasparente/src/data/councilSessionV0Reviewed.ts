@@ -190,6 +190,8 @@ const COMMISSION_I_NOVEMBER_18_CORRIERE_LAMEZIA_URL =
   "https://www.corrieredilamezia.it/politica/2026_11_18/lamezia-futuro-nazionale-due-commissioni-bloccate-facendo-mancare-il-numero-legale-a-pagare-sono-i-cittadini_68441/";
 const COMMISSION_I_NOVEMBER_18_CITY_ONE_URL =
   "https://cityonelamezia.it/2026/11/18/lamezia-futuro-nazionale-attacca-la-maggioranza-commissioni-paralizzate-e-guerriglia-politica/";
+const COMMISSION_I_NOVEMBER_18_LAMETINO_URL =
+  "https://www.lametino.it/ultime/lamezia-futuro-nazionale-due-commissioni-consiliari-bloccate-per-mancanza-numero-legale-a-pagare-sono-i-cittadini.html";
 const COUNCIL_NOVEMBER_3_LAMETINO_URL =
   "https://www.lametino.it/ultime/lamezia-il-3-novembre-consiglio-comunale-fra-i-punti-approvazione-del-bilancio-consolidato-e-del-piano-di-riequilibrio.html";
 const COUNCIL_NOVEMBER_3_AUDITORS_LAMETINO_URL =
@@ -4742,9 +4744,9 @@ const commissionIAffariGeneraliNovemberEditorialSignal: CouncilSessionV0 = {
   isDemoFixture: false,
   contextResearch: {
     status: "reviewed_matches",
-    checkedAt: "2026-11-18T23:32:00+01:00",
+    checkedAt: "2026-11-25T23:58:00+01:00",
     searchNote:
-      "Parallel Search e la verifica diretta delle pagine originali del Corriere di Lamezia e di City One hanno individuato due riprese della stessa nota di Futuro Nazionale sulla Prima Commissione consiliare Affari Generali. Le pagine, pubblicate il 18 novembre, riferiscono che l'assenza di alcuni componenti avrebbe fatto venir meno il numero legale e impedito la discussione del regolamento di polizia mortuaria; non espongono una convocazione, una data assoluta della seduta, un orario, una sede o un ordine del giorno istituzionale e non costituiscono conferme indipendenti. Al controllo delle 23:32 la pagina delle novità del Comune non pubblicava una convocazione associabile e la pagina istituzionale dell'Albo rinviava al portale corrente, che ha bloccato il client automatizzato con il codice `MDAWAF001`. È quindi mantenuta una scheda editoriale prudenziale: il riferimento relativo a “oggi” è usato soltanto per la ricerca e non diventa data ufficiale; il numero legale e la mancata discussione restano affermazioni editoriali e non valorizzano lo stato della seduta o un esito ufficiale.",
+      "Parallel Search e la verifica diretta delle pagine originali del Corriere di Lamezia, di City One e del Lametino hanno individuato tre riprese della stessa nota di Futuro Nazionale sulla Prima Commissione consiliare Affari Generali. Le pagine, pubblicate il 18 novembre, riferiscono che l'assenza di alcuni componenti avrebbe fatto venir meno il numero legale e impedito la discussione del regolamento di polizia mortuaria; non espongono una convocazione, una data assoluta della seduta, un orario, una sede o un ordine del giorno istituzionale e non costituiscono conferme indipendenti. Al controllo delle 23:58 del 25 novembre la pagina delle novità del Comune non pubblicava una convocazione associabile e la pagina istituzionale dell'Albo rinviava al portale corrente, che non ha restituito un elenco verificabile al client automatizzato; il monitor specialistico Delibo non mostrava atti comunali successivi al 24 novembre. È quindi mantenuta una scheda editoriale prudenziale: il riferimento relativo a “oggi” è usato soltanto per la ricerca e non diventa data ufficiale; il numero legale e la mancata discussione restano affermazioni editoriali e non valorizzano lo stato della seduta o un esito ufficiale.",
     articles: [
       {
         title:
@@ -4768,6 +4770,17 @@ const commissionIAffariGeneraliNovemberEditorialSignal: CouncilSessionV0 = {
           "City One riproduce la stessa nota di Futuro Nazionale già pubblicata dal Corriere di Lamezia. Il testo identifica la Prima Commissione Affari Generali e il regolamento di polizia mortuaria, ma non costituisce una conferma indipendente e non espone una convocazione o una data assoluta della seduta; numero legale e mancata discussione restano affermazioni editoriali.",
         reviewedAt: "2026-11-18T23:32:00+01:00",
       },
+      {
+        title:
+          "Lamezia, Futuro Nazionale: due Commissioni consiliari bloccate per mancanza numero legale, a pagare sono i cittadini",
+        url: COMMISSION_I_NOVEMBER_18_LAMETINO_URL,
+        publisher: "il Lametino",
+        publishedAt: "2026-11-18",
+        relationship: "possible_same_session",
+        relevanceNote:
+          "Il Lametino riproduce la stessa nota di Futuro Nazionale già pubblicata dal Corriere di Lamezia e da City One. Il testo identifica la Prima Commissione Affari Generali e il regolamento di polizia mortuaria, ma non costituisce una conferma indipendente e non espone una convocazione o una data assoluta della seduta; numero legale e mancata discussione restano affermazioni editoriali.",
+        reviewedAt: "2026-11-25T23:58:00+01:00",
+      },
     ],
     media: [],
     editorialAgenda: [
@@ -4776,6 +4789,7 @@ const commissionIAffariGeneraliNovemberEditorialSignal: CouncilSessionV0 = {
         sourceUrls: [
           COMMISSION_I_NOVEMBER_18_CORRIERE_LAMEZIA_URL,
           COMMISSION_I_NOVEMBER_18_CITY_ONE_URL,
+          COMMISSION_I_NOVEMBER_18_LAMETINO_URL,
         ],
         confidence: "medium",
         reason:
@@ -4851,7 +4865,7 @@ const commissionIAffariGeneraliNovemberEditorialSignal: CouncilSessionV0 = {
   lastCheckedAt: {
     key: "lastCheckedAt",
     label: "Ultimo controllo",
-    value: "2026-11-18T23:32:00+01:00",
+    value: "2026-11-25T23:58:00+01:00",
     sourceStatus: "verificato",
     sourceUrl: MUNICIPAL_ALBO_DOCUMENTS_URL,
     limit:
@@ -4863,10 +4877,10 @@ const commissionIAffariGeneraliNovemberEditorialSignal: CouncilSessionV0 = {
     value: [
       "Il riferimento relativo a “oggi” e la data di pubblicazione dell'articolo non vengono presentati come data ufficiale della seduta.",
       "La fonte identifica la Prima Commissione Affari Generali e il tema, ma non è stata acquisita una pubblicazione istituzionale con convocazione o allegato riferibile con precisione alla seduta.",
-      "La pagina delle novità del Comune non pubblicava una convocazione associabile; il portale Albo corrente ha bloccato il client automatizzato con il codice `MDAWAF001` e non ha restituito l'elenco degli atti.",
+      "La pagina delle novità del Comune non pubblicava una convocazione associabile; il portale Albo corrente non ha restituito un elenco verificabile al client automatizzato e il monitor specialistico Delibo non mostrava atti comunali successivi al 24 novembre.",
       "Data, ora, sede, ordine del giorno, stato, streaming, registrazione e verbale restano non verificati o non rilevati secondo il campo.",
       "L'articolo deriva da una nota politica ed è una fonte editoriale: non certifica programmazione, costituzione, svolgimento, completezza, presenze, numero legale, mancata discussione, votazioni o risultati.",
-      "Corriere di Lamezia e City One riproducono la stessa nota di Futuro Nazionale: i due collegamenti sono conservati per tracciabilità ma non costituiscono conferme indipendenti.",
+      "Corriere di Lamezia, City One e il Lametino riproducono la stessa nota di Futuro Nazionale: i tre collegamenti sono conservati per tracciabilità ma non costituiscono conferme indipendenti.",
       "Il titolo richiama due Commissioni, ma il testo identifica con precisione soltanto la Prima Commissione Affari Generali; non viene quindi materializzata una seconda seduta.",
       "Il tema riportato dalla copertura resta nell'agenda editoriale separata e dovrà essere riconciliato se emergerà un atto istituzionale.",
     ],
