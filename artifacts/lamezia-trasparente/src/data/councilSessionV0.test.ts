@@ -570,6 +570,26 @@ describe("councilSessionV0", () => {
         ),
       }),
       expect.objectContaining({
+        publisher: "Gazzetta del Sud",
+        publishedAt: "2026-11-22",
+        relationship: "same_session",
+        url: expect.stringContaining("chi-protestava-adesso-ha-capito"),
+        reviewedAt: "2026-11-25T17:49:00+01:00",
+        relevanceNote: expect.stringMatching(
+          /strascichi del Consiglio aperto.*fonte editoriale.*non certifica/i,
+        ),
+      }),
+      expect.objectContaining({
+        publisher: "NtaCalabria",
+        publishedAt: "2026-11-22",
+        relationship: "same_session",
+        url: expect.stringContaining("sindaco-murone-chiarisce"),
+        reviewedAt: "2026-11-25T17:49:00+01:00",
+        relevanceNote: expect.stringMatching(
+          /riprende i passaggi essenziali.*non costituisce una conferma indipendente/i,
+        ),
+      }),
+      expect.objectContaining({
         publisher: "LameziaTerme.it",
         publishedAt: "2026-11-19",
         relationship: "same_session",
@@ -660,10 +680,13 @@ describe("councilSessionV0", () => {
       /non certific(?:a|ano) programmazione, svolgimento/i,
     );
     expect(session?.contextResearch.checkedAt).toBe(
-      "2026-11-22T11:54:00+01:00",
+      "2026-11-25T17:49:00+01:00",
     );
-    expect(session?.lastCheckedAt.value).toBe("2026-11-22T11:54:00+01:00");
-    expect(session?.contextResearch.articles).toHaveLength(37);
+    expect(session?.lastCheckedAt.value).toBe("2026-11-25T17:49:00+01:00");
+    expect(session?.contextResearch.articles).toHaveLength(39);
+    expect(session?.dataLimits.value?.join(" ")).toMatch(
+      /Gazzetta del Sud e NtaCalabria del 22 novembre.*`same_session`.*non costituiscono conferme indipendenti/i,
+    );
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /pagina originale di il Lametino.*titolo aggiornato.*resoconto conclusivo.*non valorizza stato/i,
     );
