@@ -789,6 +789,16 @@ describe("councilSessionV0", () => {
           /stessa nota di Futuro Nazionale.*non costituisce una conferma indipendente/i,
         ),
       }),
+      expect.objectContaining({
+        publisher: "LameziaTerme.it",
+        publishedAt: "2026-11-18",
+        relationship: "possible_same_session",
+        url: expect.stringContaining("lamezia-commissioni-bloccate"),
+        reviewedAt: "2026-11-26T17:30:00+01:00",
+        relevanceNote: expect.stringMatching(
+          /stessa nota di Futuro Nazionale.*non costituisce una conferma indipendente/i,
+        ),
+      }),
     ]);
     expect(session?.contextResearch.media).toEqual([]);
     expect(session?.contextResearch.editorialAgenda).toEqual([
@@ -807,11 +817,11 @@ describe("councilSessionV0", () => {
       /non certifica.*numero legale.*mancata discussione/i,
     );
     expect(session?.contextResearch.checkedAt).toBe(
-      "2026-11-25T23:58:00+01:00",
+      "2026-11-26T17:30:00+01:00",
     );
-    expect(session?.lastCheckedAt.value).toBe("2026-11-25T23:58:00+01:00");
+    expect(session?.lastCheckedAt.value).toBe("2026-11-26T17:30:00+01:00");
     expect(session?.dataLimits.value?.join(" ")).toMatch(
-      /Corriere di Lamezia, City One e il Lametino.*stessa nota di Futuro Nazionale.*non costituiscono conferme indipendenti/i,
+      /Corriere di Lamezia, City One, il Lametino e LameziaTerme\.it.*stessa nota di Futuro Nazionale.*non costituiscono conferme indipendenti/i,
     );
   });
 
