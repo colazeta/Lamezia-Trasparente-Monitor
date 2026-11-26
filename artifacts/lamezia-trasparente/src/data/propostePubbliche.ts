@@ -1,3 +1,4 @@
+import { SCOUTED_PUBLIC_PROPOSALS_20261126 } from "./propostePubblicheScouting20261126";
 import { SCOUTED_PUBLIC_PROPOSALS_20261125, applyScoutingUpdates20261125CorsiAcqua } from "./propostePubblicheScouting20261125";
 import * as core from "./propostePubblicheCore";
 import { applyScoutingUpdates } from "./proposalScoutingUpdates";
@@ -104,7 +105,7 @@ export {
   getCanonicalProposalPresentation,
   getCanonicalProposalPresentationIds,
   hasCanonicalProposalPresentation,
-} from "./proposalCanonicalPresentationArchive20261125";
+} from "./proposalCanonicalPresentationArchive20261126";
 
 export type {
   LtSemanticExtensionId,
@@ -274,6 +275,7 @@ export const PUBLIC_PROPOSALS = [
   ...SCOUTED_PUBLIC_PROPOSALS_20261123_CURCIO,
   ...SCOUTED_PUBLIC_PROPOSALS_20261124,
   ...SCOUTED_PUBLIC_PROPOSALS_20261125,
+  ...SCOUTED_PUBLIC_PROPOSALS_20261126,
 ] as const satisfies readonly core.PublicProposal[];
 
 export function getProposalThemes(

@@ -81,6 +81,11 @@ export const PROPOSAL_COMPETENCE_ASSESSMENTS: Readonly<
   Partial<Record<string, ProposalCompetenceAssessment>>
 > = {
   ...baseline.PROPOSAL_COMPETENCE_ASSESSMENTS,
+  "via-settembrini-illuminazione-cristiano-villella-2026": {
+    status: "partially_verified",
+    involvedAuthorities: [{ id: "comune-lamezia-terme", label: "Comune di Lamezia Terme — Ufficio Controllo di gestione delle manutenzioni", level: "municipal", sourceLabel: "Comune di Lamezia Terme — competenze dell'Ufficio Controllo di gestione delle manutenzioni", sourceUrl: "https://www.comune.lamezia-terme.cz.it/it/unita_organizzative/servizio-controllo-di-gestione-delle-manutenzioni" }],
+    note: "La scheda ufficiale attribuisce all'ufficio la gestione del servizio esternalizzato di pubblica illuminazione. Sostiene il coinvolgimento del Comune, non la responsabilità sullo specifico guasto o il riparto della manutenzione straordinaria con il gestore; nessuna autorità primaria inferita dal destinatario.",
+  },
   "partecipate-accesso-atti-flussi-informativi-masi-2026": {
     status: "partially_verified",
     primaryAuthority: { id: "comune-lamezia-terme", label: "Comune di Lamezia Terme — uffici comunali", level: "municipal", sourceLabel: "Regolamento consiliare, art. 12, commi 1 e 4", sourceUrl: "https://www.comune.lamezia-terme.cz.it/it/documenti_pubblici/regolamento-di-funzionamento-del-consiglio-comunale-modificato-con-deliberazione-di-consiglio-comunale-n-1-del-31-01-2025" },
