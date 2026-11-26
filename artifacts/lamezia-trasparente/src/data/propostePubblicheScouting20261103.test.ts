@@ -12,7 +12,7 @@ import {
 import { getProposalGeography, isProposalGeoreferenced } from "./proposalGeography";
 
 const rows = [
-  {id:"corsi-acqua-manutenzione-cristiano-villella-2026", promoter:"massimo-cristiano-carmine-villella-futuro-nazionale", primary:"11", secondary:["8"], first:"2026-10-10", events:3, last:"2026-11-04" },
+  {id:"corsi-acqua-manutenzione-cristiano-villella-2026", promoter:"massimo-cristiano-carmine-villella-futuro-nazionale", primary:"11", secondary:["8"], first:"2026-10-10", events:4, last:"2026-11-24" },
   {id:"welfare-tavoli-permanenti-forum-terzo-settore-2025", promoter:"forum-terzo-settore-lametino-reventino", primary:"2", secondary:[], first:"2025-12-10", events:4, last:"2026-11-02" },
 ] as const;
 

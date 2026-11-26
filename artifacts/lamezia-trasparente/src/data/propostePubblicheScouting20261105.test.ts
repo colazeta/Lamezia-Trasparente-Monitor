@@ -15,7 +15,7 @@ const PATTO_ID = "patto-civico-monitoraggio-progetti-de-biase-2026";
 const TORRENTI_ID = "corsi-acqua-manutenzione-cristiano-villella-2026";
 const rows = [
   { id: PATTO_ID, promoter: "salvatore-de-biase", first: "2026-11-04", primary: "GOVE", secondary: [], events: 1 },
-  { id: TORRENTI_ID, promoter: "massimo-cristiano-carmine-villella-futuro-nazionale", first: "2026-10-10", primary: "11", secondary: ["8"], events: 3 },
+  { id: TORRENTI_ID, promoter: "massimo-cristiano-carmine-villella-futuro-nazionale", first: "2026-10-10", primary: "11", secondary: ["8"], events: 4 },
 ] as const;
 
 describe("Scouting 5 novembre — identici proposal ID da acquisizione a stato e geografia", () => {
@@ -33,7 +33,7 @@ describe("Scouting 5 novembre — identici proposal ID da acquisizione a stato e
       const proposal = matches[0]!;
       expect(proposal.promoterId).toBe(row.promoter);
       expect(proposal.firstSeen).toBe(row.first);
-      expect(proposal.lastUpdated).toBe("2026-11-04");
+      expect(proposal.lastUpdated).toBe(row.id === TORRENTI_ID ? "2026-11-24" : "2026-11-04");
       expect(proposal.sourceUrl).toMatch(/^https:\/\//);
       expect(proposal.institutionalRecipient?.trim()).toBeTruthy();
       expect(proposal.verificationNote).toContain("not_assessed");
