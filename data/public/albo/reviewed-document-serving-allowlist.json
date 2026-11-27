@@ -1,6 +1,6 @@
 {
   "schema_version": "albo-reviewed-document-serving.v1",
-  "reviewed_at": "2026-11-27T05:39:00+01:00",
+  "reviewed_at": "2026-11-28T00:14:04+01:00",
   "source": "Albo Pretorio online del Comune di Lamezia Terme (piattaforme Tinnvision e Trasparenza Valutazione Merito)",
   "source_url": "https://www.comune.lamezia-terme.cz.it/it/documenti_pubblici/atti-di-albo-pretorio",
   "known_limits": [
@@ -270,6 +270,38 @@
       "review_status": "approved_public_civic_document",
       "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
       "reason": "Convocazione istituzionale revisionata e usata come fonte della seduta della V Commissione del 27 novembre 2026; copia immutabile acquisita tramite Delibo dopo la risoluzione degli URL del nuovo Albo."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/9a47eedca0f3b0934c0b168efb2b9192630fd79fd08bd87a85542494062480e2.pdf",
+      "sha256": "9a47eedca0f3b0934c0b168efb2b9192630fd79fd08bd87a85542494062480e2",
+      "source_publication_number": "2026/albo-287714",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Convocazione istituzionale revisionata e usata come fonte della seduta della III Commissione del 30 novembre 2026; copia immutabile acquisita tramite Delibo dopo la risoluzione degli URL del nuovo Albo."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/1a1fdb9c1123143c6135dae3ed19d2f927306d525b44ceaf0777cefcf8c23a1a.pdf",
+      "sha256": "1a1fdb9c1123143c6135dae3ed19d2f927306d525b44ceaf0777cefcf8c23a1a",
+      "source_publication_number": "2026/albo-287718",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Calendario istituzionale revisionato e usato come fonte delle sedute della IV Commissione del 30 novembre e 1° dicembre 2026; copia immutabile acquisita tramite Delibo dopo la risoluzione degli URL del nuovo Albo."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/3a6b9f9e9d6e90a48901d000d0c9b31bf61ac8fac9af822d0f6021b0847246fc.pdf",
+      "sha256": "3a6b9f9e9d6e90a48901d000d0c9b31bf61ac8fac9af822d0f6021b0847246fc",
+      "source_publication_number": "2026/albo-287733",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Calendario istituzionale revisionato e usato come fonte delle sedute della V Commissione del 30 novembre e 1° dicembre 2026; copia immutabile acquisita tramite Delibo dopo la risoluzione degli URL del nuovo Albo."
+    },
+    {
+      "storage_path": "data/public/albo/documents/2026/b6fbb9ec3ac755ebd6f1ac97e7770feae0ca735bbbbc9f7527f50b37be07f3d7.pdf",
+      "sha256": "b6fbb9ec3ac755ebd6f1ac97e7770feae0ca735bbbbc9f7527f50b37be07f3d7",
+      "source_publication_number": "2026/albo-287720",
+      "review_status": "approved_public_civic_document",
+      "evidence_ref": "docs/data-sources/council-and-commission-sessions.md",
+      "reason": "Calendario istituzionale revisionato e usato come fonte delle quattro sedute della VI Commissione dal 30 novembre al 3 dicembre 2026; copia immutabile acquisita tramite Delibo dopo la risoluzione degli URL del nuovo Albo."
     }
   ]
 }
