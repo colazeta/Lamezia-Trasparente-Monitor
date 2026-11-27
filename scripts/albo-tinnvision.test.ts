@@ -388,6 +388,29 @@ test("identifies council and commission notices without inferring session dates"
   }
 });
 
+test("accepts traceable notices from the current official Albo portal", () => {
+  const candidate = identifyInstitutionalSessionCandidate(
+    sessionCandidateFixture({
+      id: "albo-2026-286932",
+      publication_number: "2026/albo-286932",
+      act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+      subject: "Convocazione 5° commissione consiliare permanente.",
+      source_url:
+        "https://lameziaterme.trasparenza-valutazione-merito.it/web/trasparenza/papca-ap/-/papca/display/286932?p_p_state=exclusive&p_p_state=pop_up",
+      document_url:
+        "https://lameziaterme.trasparenza-valutazione-merito.it/web/trasparenza/papca-ap?p_p_id=jcitygovalbopubblicazioni_WAR_jcitygovalbiportlet&p_p_lifecycle=2&p_p_resource_id=downloadAllegato&_jcitygovalbopubblicazioni_WAR_jcitygovalbiportlet_id=741264",
+    }),
+  );
+
+  assert.equal(candidate?.kind, "commission");
+  assert.equal(candidate?.publicationNumber, "2026/albo-286932");
+  assert.equal(candidate?.reviewStatus, "attachment_review_required");
+  assert.match(
+    candidate?.source.url ?? "",
+    /lameziaterme\.trasparenza-valutazione-merito\.it/,
+  );
+});
+
 test("rejects unsafe, unsupported or untraceable session candidates", () => {
   const safe = sessionCandidateFixture();
 
@@ -1075,7 +1098,6 @@ function pickClassificationIds(
     act_category: classification.act_category.id,
   };
 }
-
 test("run command compares against the previous current snapshot", async () => {
   const tmp = await mkdtemp(path.join(tmpdir(), "albo-tinnvision-diff-"));
   const previousPath = path.join(tmp, "previous.xml");

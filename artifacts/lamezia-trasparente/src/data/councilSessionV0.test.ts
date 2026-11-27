@@ -198,7 +198,7 @@ describe("councilSessionV0", () => {
   });
 
   it("publishes source-traceable records for both council and commission notices", () => {
-    expect(councilSessionV0ReviewedRecords).toHaveLength(66);
+    expect(councilSessionV0ReviewedRecords).toHaveLength(67);
     expect(
       new Set(councilSessionV0ReviewedRecords.map((item) => item.kind)),
     ).toEqual(new Set(["council", "commission"]));
@@ -208,7 +208,12 @@ describe("councilSessionV0", () => {
       if (session.provenance) {
         expect(session.provenance.noticeId).toMatch(/^albo-2026-/);
         expect(session.provenance.publicationNumber).toMatch(/^2026\//);
-        expect(session.provenance.sourceUrl).toContain("albo.tinnvision.cloud");
+        expect(
+          [
+            "albo.tinnvision.cloud",
+            "lameziaterme.trasparenza-valutazione-merito.it",
+          ].some((host) => session.provenance?.sourceUrl.includes(host)),
+        ).toBe(true);
         expect(session.provenance.sourceContentHash).toMatch(/^[a-f0-9]{64}$/);
       } else {
         expect(
@@ -253,6 +258,50 @@ describe("councilSessionV0", () => {
         expect(Date.parse(media.reviewedAt)).not.toBeNaN();
       }
     }
+  });
+
+  it("materializes the 27 November V Commission notice from the current official Albo", () => {
+    const session = findCouncilSessionV0ReviewedRecord(
+      "albo-2026-286932-commissione-v-2026-11-27",
+    );
+
+    expect(session).toBeDefined();
+    expect(session?.kind).toBe("commission");
+    expect(session?.scheduledAt.value).toBe("2026-11-27T09:00:00+01:00");
+    expect(session?.scheduledAt.sourceStatus).toBe("verificato");
+    expect(session?.agenda.value).toEqual([
+      "Regolamenti in itinere. Programmazione lavori.",
+    ]);
+    expect(session?.sessionStatus.value).toBe("non_verificata");
+    expect(session?.provenance).toEqual(
+      expect.objectContaining({
+        noticeId: "albo-2026-286932",
+        publicationNumber: "2026/albo-286932",
+        sourceUrl: expect.stringContaining(
+          "lameziaterme.trasparenza-valutazione-merito.it",
+        ),
+        documentUrl: expect.stringContaining("id=741264"),
+        archivedDocumentUrl:
+          "/data/public/albo/documents/2026/f6aae644fb9b074a56ba3fba422469d91de4bfc2b17cc170c3b35e6d4e689f34.pdf",
+        documentSha256:
+          "f6aae644fb9b074a56ba3fba422469d91de4bfc2b17cc170c3b35e6d4e689f34",
+        sourceReviewStatus: "reviewed_against_official_attachment",
+      }),
+    );
+    expect(session?.contextResearch).toEqual(
+      expect.objectContaining({
+        status: "checked_no_match",
+        checkedAt: "2026-11-27T05:39:00+01:00",
+        articles: [],
+        media: [],
+      }),
+    );
+    expect(session?.contextResearch.searchNote).toMatch(
+      /Parallel Search.*Comune.*Albo.*Delibo.*MDAWAF001.*hash SHA-256.*finestra di ricerca resta aperta/is,
+    );
+    expect(session?.dataLimits.value?.join(" ")).toMatch(
+      /sede non è indicata.*non viene inferita/i,
+    );
   });
 
   it("keeps the Scordovillo open-council signal editorial-only until an official notice is acquired", () => {

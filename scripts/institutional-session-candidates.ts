@@ -67,9 +67,11 @@ export type InstitutionalSessionCandidate = {
   limitations: readonly string[];
 };
 
-const OFFICIAL_ALBO_HOST = "albo.tinnvision.cloud";
+const LEGACY_OFFICIAL_ALBO_HOST = "albo.tinnvision.cloud";
+const CURRENT_OFFICIAL_ALBO_HOST =
+  "lameziaterme.trasparenza-valutazione-merito.it";
 const OFFICIAL_ENTE_ID = "00301390795";
-const PUBLICATION_NUMBER_PATTERN = /^\d{4}\/\d+$/;
+const PUBLICATION_NUMBER_PATTERN = /^\d{4}\/(?:\d+|albo-\d+)$/;
 const SHA256_PATTERN = /^[a-f0-9]{64}$/i;
 
 function normalizeActType(value: string | null | undefined): string {
@@ -84,15 +86,30 @@ function officialAlboUrl(
 
   try {
     const url = new URL(value);
+    if (url.protocol !== "https:") return null;
+
+    if (url.hostname === LEGACY_OFFICIAL_ALBO_HOST) {
+      if (url.searchParams.get("ente") !== OFFICIAL_ENTE_ID) return null;
+      if (documentOnly && !url.pathname.startsWith("/allegati/")) return null;
+      return url.toString();
+    }
+
     if (
-      url.protocol !== "https:" ||
-      url.hostname !== OFFICIAL_ALBO_HOST ||
-      url.searchParams.get("ente") !== OFFICIAL_ENTE_ID
+      url.hostname !== CURRENT_OFFICIAL_ALBO_HOST ||
+      !url.pathname.startsWith("/web/trasparenza/papca-ap")
     ) {
       return null;
     }
-    if (documentOnly && !url.pathname.startsWith("/allegati/")) return null;
-    return url.toString();
+
+    if (!documentOnly) return url.toString();
+
+    const attachmentId = [...url.searchParams.entries()].find(
+      ([key, parameter]) => key.endsWith("_id") && /^\d+$/.test(parameter),
+    )?.[1];
+    return url.searchParams.get("p_p_resource_id") === "downloadAllegato" &&
+      /^\d+$/.test(attachmentId ?? "")
+      ? url.toString()
+      : null;
   } catch {
     return null;
   }

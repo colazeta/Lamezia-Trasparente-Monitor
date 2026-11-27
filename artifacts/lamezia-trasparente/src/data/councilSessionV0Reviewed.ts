@@ -256,6 +256,12 @@ const COUNCIL_NOVEMBER_3_LO_MORO_LAMETINO_URL =
   "https://www.lametino.it/ultime/lamezia-lo-moro-su-piano-di-riequilibrio-scelta-grave-che-meritava-maggiore-coraggio-e-trasparenza.html";
 const MUNICIPAL_ALBO_DOCUMENTS_URL =
   "https://www.comune.lamezia-terme.cz.it/it/documenti_pubblici/atti-di-albo-pretorio";
+const COMMISSION_V_NOVEMBER_27_ALBO_URL =
+  "https://lameziaterme.trasparenza-valutazione-merito.it/web/trasparenza/papca-ap/-/papca/display/286932?p_p_state=exclusive&p_p_state=pop_up";
+const COMMISSION_V_NOVEMBER_27_DOCUMENT_URL =
+  "https://lameziaterme.trasparenza-valutazione-merito.it/web/trasparenza/papca-ap?p_p_id=jcitygovalbopubblicazioni_WAR_jcitygovalbiportlet&p_p_lifecycle=2&p_p_state=exclusive&p_p_mode=view&p_p_resource_id=downloadAllegato&p_p_cacheability=cacheLevelPage&_jcitygovalbopubblicazioni_WAR_jcitygovalbiportlet_downloadSigned=true&_jcitygovalbopubblicazioni_WAR_jcitygovalbiportlet_id=741264&_jcitygovalbopubblicazioni_WAR_jcitygovalbiportlet_action=mostraDettaglio&_jcitygovalbopubblicazioni_WAR_jcitygovalbiportlet_fromAction=recuperaDettaglio";
+const COMMISSION_V_NOVEMBER_27_DELIBO_URL =
+  "https://www.delibo.it/lamezia-terme-079160/altri-atti/convocazione-5-commissione-consiliare-permanente-CVcyB_Vn4ZmBWKWG";
 const VIA_TRENTO_ROADWORKS_LAMETINO_URL =
   "https://www.lametino.it/ultimora/lamezia-lavori-di-bitumazione-in-via-trento-limitazione-della-circolazione-stradale-il-25-settembre.html";
 const COMMISSION_V_REU_LAMETINO_URL =
@@ -387,6 +393,16 @@ const OCTOBER_12_13_COMMISSION_CONTEXT_RESEARCHED_AT =
 const MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT = "2026-10-07T15:48:24Z";
 const MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT = "2026-09-12T21:51:17Z";
 const SCHOOL_TRANSPORT_CONTEXT_RESEARCHED_AT = "2026-09-14T10:13:39Z";
+const COMMISSION_V_NOVEMBER_27_RESEARCHED_AT = "2026-11-27T05:39:00+01:00";
+
+const commissionVNovember27ContextResearch: CouncilSessionV0ContextResearch = {
+  status: "checked_no_match",
+  checkedAt: COMMISSION_V_NOVEMBER_27_RESEARCHED_AT,
+  searchNote:
+    "Parallel Search è stato usato per discovery ed espansione, affiancato dal controllo diretto delle novità del Comune, del nuovo Albo, del monitor specialistico Delibo, delle testate locali indicate e delle pagine YouTube e Facebook indicizzate. Non sono emersi articoli, dirette, registrazioni, clip o interviste associabili con precisione alla V Commissione del 27 novembre 2026. La pubblicazione e l'allegato originali sono stati risolti sul portale istituzionale (scheda tecnica 286932 e allegato 741264), ma il portale ha bloccato l'accesso automatizzato con MDAWAF001; la copia immutabile del documento ufficiale è stata acquisita tramite Delibo, verificata visivamente e conservata con hash SHA-256. La finestra di ricerca resta aperta per i controlli in prossimità, durante e dopo la seduta.",
+  articles: [],
+  media: [],
+};
 
 const councilContextResearch: CouncilSessionV0ContextResearch = {
   status: "reviewed_matches",
@@ -1583,6 +1599,56 @@ function lateSeptemberNotice({
   };
 }
 
+const commissionVNovember27Candidate = requireCandidate({
+  id: "albo-2026-286932",
+  source: "Albo Pretorio Comune di Lamezia Terme",
+  source_url: COMMISSION_V_NOVEMBER_27_ALBO_URL,
+  retrieved_at: COMMISSION_V_NOVEMBER_27_RESEARCHED_AT,
+  publication_number: "2026/albo-286932",
+  publication_start: "2026-11-26",
+  publication_end: "2026-11-29",
+  act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+  subject: "Convocazione 5° commissione consiliare permanente.",
+  document_url: COMMISSION_V_NOVEMBER_27_DOCUMENT_URL,
+  content_hash:
+    "b21871581d094561963df23bc8e02d33b00d5a62791dcd4a413f65533390a642",
+  verification_status: "official_source_acquired",
+  privacy_risk: "low",
+  public_visibility: "publishable",
+});
+
+const commissionVNovember27Provenance: CouncilSessionV0Provenance = {
+  noticeId: commissionVNovember27Candidate.id,
+  publicationNumber: commissionVNovember27Candidate.publicationNumber,
+  sourceLabel: commissionVNovember27Candidate.source.label,
+  sourceUrl: commissionVNovember27Candidate.source.url,
+  documentUrl: commissionVNovember27Candidate.source.documentUrl,
+  archivedDocumentUrl:
+    "/data/public/albo/documents/2026/f6aae644fb9b074a56ba3fba422469d91de4bfc2b17cc170c3b35e6d4e689f34.pdf",
+  sourceContentHash: commissionVNovember27Candidate.source.contentHash,
+  documentSha256:
+    "f6aae644fb9b074a56ba3fba422469d91de4bfc2b17cc170c3b35e6d4e689f34",
+  embeddedDocumentSha256: null,
+  retrievedAt: commissionVNovember27Candidate.source.retrievedAt,
+  reviewedAt: COMMISSION_V_NOVEMBER_27_RESEARCHED_AT,
+  sourceReviewStatus: "reviewed_against_official_attachment",
+  supplementalEvidence: [
+    {
+      publicationNumber: "Delibo CVcyB_Vn4ZmBWKWG",
+      sourceLabel: "Delibo — copia immutabile dell'atto di Albo",
+      sourceUrl: COMMISSION_V_NOVEMBER_27_DELIBO_URL,
+      archivedDocumentUrl:
+        "/data/public/albo/documents/2026/f6aae644fb9b074a56ba3fba422469d91de4bfc2b17cc170c3b35e6d4e689f34.pdf",
+      documentSha256:
+        "f6aae644fb9b074a56ba3fba422469d91de4bfc2b17cc170c3b35e6d4e689f34",
+      retrievedAt: COMMISSION_V_NOVEMBER_27_RESEARCHED_AT,
+      reviewedAt: COMMISSION_V_NOVEMBER_27_RESEARCHED_AT,
+      verificationNote:
+        "Copia immutabile della convocazione ufficiale acquisita dal mirror specialistico dopo aver risolto la scheda e l'allegato sul nuovo Albo; l'accesso automatizzato diretto al portale istituzionale era bloccato da MDAWAF001.",
+    },
+  ],
+};
+
 const commissionCandidate = requireCandidate({
   id: "albo-2026-2648",
   source: "Albo Pretorio Comune di Lamezia Terme",
@@ -2644,6 +2710,10 @@ function septemberCommissionSession({
 
 const streetArtAgenda = [
   "Regolamento comunale per la promozione della Street Art.",
+] as const;
+
+const commissionVNovember27Agenda = [
+  "Regolamenti in itinere. Programmazione lavori.",
 ] as const;
 
 const decoAgenda = ["Denominazione comunale d'origine (De.Co.)."] as const;
@@ -4906,6 +4976,18 @@ const commissionIAffariGeneraliNovemberEditorialSignal: CouncilSessionV0 = {
 };
 
 export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
+  septemberCommissionSession({
+    id: "albo-2026-286932-commissione-v-2026-11-27",
+    title: "V Commissione consiliare permanente — seduta del 27 novembre 2026",
+    scheduledAt: "2026-11-27T09:00:00+01:00",
+    agenda: commissionVNovember27Agenda,
+    candidate: commissionVNovember27Candidate,
+    provenance: commissionVNovember27Provenance,
+    contextResearch: commissionVNovember27ContextResearch,
+    sourceLinkLabel: "Apri la convocazione ufficiale della V Commissione",
+    calendarSummary:
+      "La convocazione programma una seduta della V Commissione il 27 novembre 2026 alle 09:00.",
+  }),
   commissionIAffariGeneraliNovemberEditorialSignal,
   commissionPedestrianAreaNovemberEditorialSignal,
   councilNovember3EditorialSignal,
