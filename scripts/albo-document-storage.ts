@@ -419,9 +419,12 @@ function isOfficialHttpsUrl(value: unknown): value is string {
   if (typeof value !== "string") return false;
   try {
     const url = new URL(value);
-    return (
-      url.protocol === "https:" && url.hostname === "albo.tinnvision.cloud"
-    );
+    if (url.protocol !== "https:") return false;
+    return new Set([
+      "albo.tinnvision.cloud",
+      "lameziaterme.trasparenza-valutazione-merito.it",
+      "www.comune.lamezia-terme.cz.it",
+    ]).has(url.hostname);
   } catch {
     return false;
   }
