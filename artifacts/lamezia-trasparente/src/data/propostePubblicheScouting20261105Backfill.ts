@@ -28,10 +28,10 @@ export const SCOUTED_PUBLIC_PROPOSALS_20261105_BACKFILL = [
     status: "proposta_emersa",
     linkedActs: [],
     verificationNote:
-      "La pubblicazione del Lametino del 2 novembre riproduce una nota attribuita ad ACU Calabria e al suo presidente Sergio Tomaino. Sono richieste concrete la pubblicazione delle presenze turistiche, la trasparenza sull'uso di eventuali introiti e sugli adempimenti dei gestori, anche tramite piattaforma accessibile, e l'inclusione delle associazioni dei consumatori nel confronto. La mancata convocazione dell'associazione e le valutazioni sul regime legislativo dell'imposta sono posizioni attribuite al promotore; non sono riscontri autonomi. Non risultano un deposito, una risposta ufficiale specifica ad ACU, un regolamento deliberato, una piattaforma attiva o una misura attuata. Il promotore e l'oggetto prevalente (verifiche informative e partecipazione dei consumatori) differiscono da Federalberghi Calabria, che propone tavolo per gli operatori e impiego turistico del gettito: stesso filone, due proposal ID. Destinatario documentato senza inferenza di competenza: not_assessed.",
+      "La pubblicazione del Lametino del 2 novembre riproduce una nota attribuita ad ACU Calabria e al suo presidente Sergio Tomaino. Sono richieste concrete la pubblicazione delle presenze turistiche, la trasparenza sull'uso di eventuali introiti e sugli adempimenti dei gestori, anche tramite piattaforma accessibile, e l'inclusione delle associazioni dei consumatori nel confronto. La mancata convocazione dell'associazione e le valutazioni sul regime legislativo dell'imposta sono posizioni attribuite al promotore; non sono riscontri autonomi. Non risultano un deposito, una risposta ufficiale specifica ad ACU, un regolamento deliberato, una piattaforma attiva o una misura attuata. Il promotore e l'oggetto prevalente (verifiche informative e partecipazione dei consumatori) differiscono da Federalberghi Calabria, che propone tavolo per gli operatori e impiego turistico del gettito: stesso filone, due proposal ID. Destinatario documentato senza inferenza di competenza: not_assessed. Aggiornamento del 26 novembre: comunicazione amministrativa pubblicata dalla stampa riferisce schema di regolamento da sottoporre al Consiglio, istituzione del tavolo e osservatorio sui flussi turistici; riscontro editoriale: https://www.lameziainforma.it/istituzione/2026/11/26/in-vista-del-bilancio-di-previsione-2026-29-proposta-limposta-di-soggiorno-ed-un-adeguamento-del-canone-unico-patrimoniale/70490/. Mancano gli atti originali, prova di pubblicazione dei dati o della piattaforma accessibile, partecipazione delle associazioni dei consumatori, risposta specifica o attuazione. Il monitoraggio annunciato non equivale alla trasparenza richiesta da ACU.",
     evidenceLevel: "fonte_stampa",
     firstSeen: "2026-11-02",
-    lastUpdated: "2026-11-02",
+    lastUpdated: "2026-11-26",
     events: [
       {
         id: "acu-calabria-trasparenza-imposta-soggiorno-2026-11-02",
@@ -43,6 +43,16 @@ export const SCOUTED_PUBLIC_PROPOSALS_20261105_BACKFILL = [
         sourceLabel: "il Lametino — nota ACU Calabria, 2 novembre 2026",
         sourceUrl: "https://www.lametino.it/ultimora/tassa-di-soggiorno-a-lamezia-acu-inutile-balzello-che-limita-i-diritti-degli-utenti.html",
         evidenceLevel: "fonte_stampa",
+      },
+      {
+        "id": "acu-calabria-turismo-giunta-osservatorio-2026-11-26",
+        "date": "2026-11-26",
+        "type": "aggiornamento",
+        "title": "Annunciato l'Osservatorio sui flussi turistici insieme al tavolo paritetico",
+        "summary": "La comunicazione dell'Amministrazione del 26 novembre riferisce la deliberazione di un Osservatorio per monitorare arrivi, presenze e soddisfazione dei visitatori, e di un tavolo con delegati delle organizzazioni di categoria. Lo schema di regolamento dell'imposta è destinato al Consiglio. Non sono dimostrati pubblicazione dei dati, accesso pubblico a una piattaforma, presenza delle associazioni dei consumatori o risposta ad ACU.",
+        "sourceLabel": "LameziaTerme.it, 26 novembre 2026 — dichiarazioni dell'Amministrazione e riepilogo dei provvedimenti",
+        "sourceUrl": "https://www.lameziaterme.it/lamezia-tasse-invariate-nel-2027-arriva-imposta-soggiorno/",
+        "evidenceLevel": "fonte_stampa"
       },
     ],
   },

@@ -30,16 +30,17 @@ describe("Scouting 1 novembre — gate end-to-end Federalberghi, medesimo propos
     expect(proposal.institutionalRecipient).toContain("Assessorato al Turismo");
     expect(proposal.channel).toBe("comunicato");
     expect(proposal.firstSeen).toBe("2026-10-31");
-    expect(proposal.lastUpdated).toBe("2026-10-31");
+    expect(proposal.lastUpdated).toBe("2026-11-26");
     expect(proposal.status).toBe("proposta_emersa");
     expect(proposal.evidenceLevel).toBe("fonte_stampa");
     expect(proposal.sourceUrl).toContain("lametino.it");
     expect(proposal.verificationNote).toContain("not_assessed");
     expect(proposal.linkedActs).toEqual([]);
-    expect(proposal.events).toHaveLength(1);
+    expect(proposal.events).toHaveLength(2);
+    expect(proposal.events[1]).toMatchObject({ id: "federalberghi-turismo-giunta-tavolo-2026-11-26", date: "2026-11-26", type: "aggiornamento", evidenceLevel: "fonte_stampa", sourceUrl: "https://www.lameziaterme.it/lamezia-tasse-invariate-nel-2027-arriva-imposta-soggiorno/" });
     expect(proposal.events[0]?.type).toBe("emersione");
     expect(proposal.events[0]?.date).toBe("2026-10-31");
-    expect(new Set(proposal.events.map((e) => e.id)).size).toBe(1);
+    expect(new Set(proposal.events.map((e) => e.id)).size).toBe(2);
     expect(proposal.events.every((e) => e.type !== "deposito" && e.type !== "recepimento")).toBe(true);
 
     const canonical = getCanonicalProposalPresentation(proposal);
