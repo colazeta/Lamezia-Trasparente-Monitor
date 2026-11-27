@@ -13,7 +13,7 @@ describe("2026-11-09 Emilia-Romagna PAYT evidence revision", () => {
   it("updates the existing stable record rather than creating a duplicate", () => {
     expect(records).toHaveLength(1);
     expect(record).toBeDefined();
-    expect(record.lastVerifiedAt).toBe("2026-11-09");
+    expect(record.lastVerifiedAt).toBe("2026-11-27");
     expect(record.revisionHistory.some((revision) => revision.date === "2026-08-30")).toBe(true);
     expect(record.revisionHistory.some((revision) => revision.date === "2026-11-09")).toBe(true);
     expect(record.evaluationStudies.filter((study) => study.doi === DOI)).toHaveLength(1);
@@ -39,6 +39,17 @@ describe("2026-11-09 Emilia-Romagna PAYT evidence revision", () => {
     expect(EVIDENCE_IMPLEMENTABILITY).toContain(record.implementability);
     expect(record.lameziaAdaptation).toContain("Lamezia Multiservizi");
     expect(record.lameziaAdaptation).toContain("non presupporre");
+  });
+
+  it("adds the 2026-11-27 Valente evidence once and distinguishes estimated costs from simulations", () => {
+    expect(record.evaluationStudies.filter((study) => study.doi === "10.1016/j.jeem.2022.102755")).toHaveLength(1);
+    expect(record.revisionHistory.some((revision) => revision.date === "2026-11-27")).toBe(true);
+    expect(record.evaluationMethod).toContain("3.574 comuni del Centro-Nord");
+    expect(record.effectSize).toContain("20,17");
+    expect(record.effectSize).toContain("23,85");
+    expect(record.effectSize).toContain("non sono risparmi di bilancio osservati");
+    expect(record.limitations.join(" ")).toContain("Sud e Isole esclusi");
+    expect(record.lameziaAdaptation).toContain("Simulare più livelli");
   });
 
   it("leaves unrelated records unchanged", () => {
