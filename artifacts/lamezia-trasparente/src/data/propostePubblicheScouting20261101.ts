@@ -28,10 +28,10 @@ export const SCOUTED_PUBLIC_PROPOSALS_20261101 = [
     status: "proposta_emersa",
     linkedActs: [],
     verificationNote:
-      "La fonte originaria consultata è il Lametino del 31 ottobre, che pubblica una nota attribuita a Federalberghi Calabria; Corriere di Lamezia del 31 ottobre (https://www.corrieredilamezia.it/attualita/2026_10_31/imposta-di-soggiorno-a-lamezia-terme-federalberghi-calabria-si-ma-ogni-euro-incassato-va-speso-per-il-turismo-serve-unidentita-turistica-e-subito-un-tavolo-di-coordinamento_67993/) riproduce la stessa comunicazione e non costituisce conferma istituzionale indipendente. Secondo Federalberghi si è svolto un incontro con il sindaco Mario Murone e l'assessora al Turismo Annalisa Spinelli: l'incontro e l'asserito impegno di accoglimento delle richieste non sono corroborati da verbale o comunicato istituzionale acquisiti. Non risulta verificata una delibera istitutiva dell'imposta, il relativo regolamento, l'istituzione del tavolo, l'assegnazione di risorse o l'avvio delle misure. Il contenuto riguarda richieste e condizioni del promotore, non una misura già decisa; nessun deposito, recepimento, calendarizzazione istituzionale o attuazione è attribuito. Destinatario del confronto documentato distinto da competenza: not_assessed; nessun ente competente dedotto per la disciplina tributaria o l'organizzazione dei servizi.",
+      "La fonte originaria consultata è il Lametino del 31 ottobre, che pubblica una nota attribuita a Federalberghi Calabria; Corriere di Lamezia del 31 ottobre (https://www.corrieredilamezia.it/attualita/2026_10_31/imposta-di-soggiorno-a-lamezia-terme-federalberghi-calabria-si-ma-ogni-euro-incassato-va-speso-per-il-turismo-serve-unidentita-turistica-e-subito-un-tavolo-di-coordinamento_67993/) riproduce la stessa comunicazione e non costituisce conferma istituzionale indipendente. Secondo Federalberghi si è svolto un incontro con il sindaco Mario Murone e l'assessora al Turismo Annalisa Spinelli: l'incontro e l'asserito impegno di accoglimento delle richieste non sono corroborati da verbale o comunicato istituzionale acquisiti. Non risulta verificata una delibera istitutiva dell'imposta, il relativo regolamento, l'istituzione del tavolo, l'assegnazione di risorse o l'avvio delle misure. Il contenuto riguarda richieste e condizioni del promotore, non una misura già decisa; nessun deposito, recepimento, calendarizzazione istituzionale o attuazione è attribuito. Destinatario del confronto documentato distinto da competenza: not_assessed; nessun ente competente dedotto per la disciplina tributaria o l'organizzazione dei servizi. Aggiornamento del 26 novembre: la nota dell'Ente del 30 ottobre, relativa all'incontro del 29 ottobre con le categorie (https://www.lametino.it/ultime/lamezia-confronto-tra-amministrazione-comunale-e-categorie-economiche-verso-la-nascita-di-un-tavolo-permanente-sul-turismo.html), documenta un antecedente del comunicato Federalberghi, non una risposta successiva. La comunicazione amministrativa pubblicata il 26 novembre riferisce lo schema di regolamento e l'istituzione del tavolo e dell'osservatorio; riscontro editoriale: https://www.lameziainforma.it/istituzione/2026/11/26/in-vista-del-bilancio-di-previsione-2026-29-proposta-limposta-di-soggiorno-ed-un-adeguamento-del-canone-unico-patrimoniale/70490/. Non sono acquisiti le deliberazioni originali e il regolamento definitivo, né risultano nomine, riunioni del tavolo, riscossione o spesa. Registrato solo come sviluppo pertinente senza attribuzione causale, deposito, recepimento o attuazione.",
     evidenceLevel: "fonte_stampa",
     firstSeen: "2026-10-31",
-    lastUpdated: "2026-10-31",
+    lastUpdated: "2026-11-26",
     events: [
       {
         id: "federalberghi-turismo-imposta-tavolo-31-ottobre",
@@ -43,6 +43,16 @@ export const SCOUTED_PUBLIC_PROPOSALS_20261101 = [
         sourceLabel: "il Lametino, 31 ottobre 2026 — nota Federalberghi Calabria",
         sourceUrl: "https://www.lametino.it/ultimora/federalberghi-calabria-si-a-tassa-di-soggiorno-a-lamezia-ma-risorse-siano-investite-nel-turismo.html",
         evidenceLevel: "fonte_stampa",
+      },
+      {
+        "id": "federalberghi-turismo-giunta-tavolo-2026-11-26",
+        "date": "2026-11-26",
+        "type": "aggiornamento",
+        "title": "La Giunta annuncia il tavolo paritetico e lo schema di regolamento dell'imposta",
+        "summary": "La comunicazione dell'Amministrazione pubblicata il 26 novembre riferisce l'approvazione dello schema di regolamento da sottoporre al Consiglio, con efficacia prevista dal 1° gennaio 2027, e una deliberazione istitutiva del Tavolo paritetico permanente e dell'Osservatorio sui flussi turistici. Le misure sono pertinenti alle richieste Federalberghi su coordinamento e impiego del gettito. Non sono acquisiti gli atti originali, né è provato un nesso causale con la proposta, l'avvio del tavolo o l'impiego di risorse.",
+        "sourceLabel": "LameziaTerme.it, 26 novembre 2026 — dichiarazioni dell'Amministrazione e riepilogo dei provvedimenti",
+        "sourceUrl": "https://www.lameziaterme.it/lamezia-tasse-invariate-nel-2027-arriva-imposta-soggiorno/",
+        "evidenceLevel": "fonte_stampa"
       },
     ],
   },

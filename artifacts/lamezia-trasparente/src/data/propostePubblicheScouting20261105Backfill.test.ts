@@ -62,7 +62,8 @@ describe("Recupero civico 5 novembre — stesso insieme di proposal ID end to en
       const proposal = duplicates[0]!;
       expect(proposal.promoterId).toBe(row.promoter);
       expect(proposal.firstSeen).toBe(row.first);
-      expect(proposal.lastUpdated).toBe(row.first);
+      const isAcu = row.id === "turismo-imposta-soggiorno-trasparenza-acu-calabria-2026";
+      expect(proposal.lastUpdated).toBe(isAcu ? "2026-11-26" : row.first);
       expect(proposal.channel).toBe(row.channel);
       expect(proposal.status).toBe("proposta_emersa");
       expect(proposal.sourceUrl).toMatch(/^https:\/\//);
@@ -73,7 +74,12 @@ describe("Recupero civico 5 novembre — stesso insieme di proposal ID end to en
         expect(proposal.verificationNote).toContain("not_assessed");
       }
       expect(proposal.institutionalRecipient?.trim()).toBeTruthy();
-      expect(proposal.events).toHaveLength(1);
+      expect(proposal.events).toHaveLength(isAcu ? 2 : 1);
+      expect(new Set(proposal.events.map(e => e.id)).size).toBe(proposal.events.length);
+      if (isAcu) {
+        expect(proposal.events[1]).toMatchObject({ id: "acu-calabria-turismo-giunta-osservatorio-2026-11-26", date: "2026-11-26", type: "aggiornamento", evidenceLevel: "fonte_stampa", sourceUrl: "https://www.lameziaterme.it/lamezia-tasse-invariate-nel-2027-arriva-imposta-soggiorno/" });
+        expect(proposal.events[1]!.summary).toContain("Non sono dimostrati");
+      }
       expect(proposal.events[0]!.date).toBe(row.first);
       expect(proposal.events[0]!.sourceUrl).toBe(proposal.sourceUrl);
       expect(proposal.events[0]!.type).toBe(row.channel === "petizione" ? "petizione" : "emersione");
