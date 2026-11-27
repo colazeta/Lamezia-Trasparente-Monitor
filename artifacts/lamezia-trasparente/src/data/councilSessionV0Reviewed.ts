@@ -262,6 +262,10 @@ const COMMISSION_V_NOVEMBER_27_DOCUMENT_URL =
   "https://lameziaterme.trasparenza-valutazione-merito.it/web/trasparenza/papca-ap?p_p_id=jcitygovalbopubblicazioni_WAR_jcitygovalbiportlet&p_p_lifecycle=2&p_p_state=exclusive&p_p_mode=view&p_p_resource_id=downloadAllegato&p_p_cacheability=cacheLevelPage&_jcitygovalbopubblicazioni_WAR_jcitygovalbiportlet_downloadSigned=true&_jcitygovalbopubblicazioni_WAR_jcitygovalbiportlet_id=741264&_jcitygovalbopubblicazioni_WAR_jcitygovalbiportlet_action=mostraDettaglio&_jcitygovalbopubblicazioni_WAR_jcitygovalbiportlet_fromAction=recuperaDettaglio";
 const COMMISSION_V_NOVEMBER_27_DELIBO_URL =
   "https://www.delibo.it/lamezia-terme-079160/altri-atti/convocazione-5-commissione-consiliare-permanente-CVcyB_Vn4ZmBWKWG";
+const CURRENT_ALBO_RECORD_URL = (recordId: number) =>
+  `https://lameziaterme.trasparenza-valutazione-merito.it/web/trasparenza/papca-ap/-/papca/display/${recordId}?p_p_state=exclusive&p_p_state=pop_up`;
+const CURRENT_ALBO_ATTACHMENT_URL = (attachmentId: number) =>
+  `https://lameziaterme.trasparenza-valutazione-merito.it/web/trasparenza/papca-ap?p_p_id=jcitygovalbopubblicazioni_WAR_jcitygovalbiportlet&p_p_lifecycle=2&p_p_state=exclusive&p_p_mode=view&p_p_resource_id=downloadAllegato&p_p_cacheability=cacheLevelPage&_jcitygovalbopubblicazioni_WAR_jcitygovalbiportlet_downloadSigned=true&_jcitygovalbopubblicazioni_WAR_jcitygovalbiportlet_id=${attachmentId}&_jcitygovalbopubblicazioni_WAR_jcitygovalbiportlet_action=mostraDettaglio&_jcitygovalbopubblicazioni_WAR_jcitygovalbiportlet_fromAction=recuperaDettaglio`;
 const VIA_TRENTO_ROADWORKS_LAMETINO_URL =
   "https://www.lametino.it/ultimora/lamezia-lavori-di-bitumazione-in-via-trento-limitazione-della-circolazione-stradale-il-25-settembre.html";
 const COMMISSION_V_REU_LAMETINO_URL =
@@ -393,13 +397,24 @@ const OCTOBER_12_13_COMMISSION_CONTEXT_RESEARCHED_AT =
 const MULTI_YEAR_REBALANCING_CONTEXT_RESEARCHED_AT = "2026-10-07T15:48:24Z";
 const MUNICIPAL_NURSERIES_CONTEXT_RESEARCHED_AT = "2026-09-12T21:51:17Z";
 const SCHOOL_TRANSPORT_CONTEXT_RESEARCHED_AT = "2026-09-14T10:13:39Z";
-const COMMISSION_V_NOVEMBER_27_RESEARCHED_AT = "2026-11-27T05:39:00+01:00";
+const LATE_NOVEMBER_COMMISSION_RESEARCHED_AT = "2026-11-28T00:14:04+01:00";
+const COMMISSION_V_NOVEMBER_27_RESEARCHED_AT =
+  LATE_NOVEMBER_COMMISSION_RESEARCHED_AT;
 
 const commissionVNovember27ContextResearch: CouncilSessionV0ContextResearch = {
   status: "checked_no_match",
   checkedAt: COMMISSION_V_NOVEMBER_27_RESEARCHED_AT,
   searchNote:
-    "Parallel Search è stato usato per discovery ed espansione, affiancato dal controllo diretto delle novità del Comune, del nuovo Albo, del monitor specialistico Delibo, delle testate locali indicate e delle pagine YouTube e Facebook indicizzate. Non sono emersi articoli, dirette, registrazioni, clip o interviste associabili con precisione alla V Commissione del 27 novembre 2026. La pubblicazione e l'allegato originali sono stati risolti sul portale istituzionale (scheda tecnica 286932 e allegato 741264), ma il portale ha bloccato l'accesso automatizzato con MDAWAF001; la copia immutabile del documento ufficiale è stata acquisita tramite Delibo, verificata visivamente e conservata con hash SHA-256. La finestra di ricerca resta aperta per i controlli in prossimità, durante e dopo la seduta.",
+    "Parallel Search è stato usato per discovery ed espansione, affiancato dal controllo diretto delle novità del Comune, del nuovo Albo, del monitor specialistico Delibo, delle testate locali indicate e delle pagine YouTube e Facebook indicizzate. Al nuovo controllo non sono emersi articoli, dirette, registrazioni, clip o interviste associabili con precisione alla V Commissione del 27 novembre 2026. La pubblicazione e l'allegato originali sono stati risolti sul portale istituzionale (scheda tecnica 286932 e allegato 741264), ma il portale ha bloccato l'accesso automatizzato con MDAWAF001; la copia immutabile del documento ufficiale è stata acquisita tramite Delibo, verificata visivamente e conservata con hash SHA-256. La finestra di ricerca resta aperta per i controlli successivi e per la chiusura dei sette giorni.",
+  articles: [],
+  media: [],
+};
+
+const lateNovemberCommissionContextResearch: CouncilSessionV0ContextResearch = {
+  status: "checked_no_match",
+  checkedAt: LATE_NOVEMBER_COMMISSION_RESEARCHED_AT,
+  searchNote:
+    "Parallel Search è stato usato per discovery ed espansione e i risultati sono stati verificati direttamente su Comune, nuovo Albo, Delibo, City One, LameziaInforma, LameziaTermeNews, il Lametino, altre testate locali e pagine YouTube e Facebook indicizzate. Non sono emersi articoli, dirette, registrazioni, clip o interviste associabili con precisione alle nove sedute delle Commissioni III, IV, V e VI programmate dal 30 novembre al 3 dicembre 2026. Le quattro pubblicazioni e i relativi allegati sono stati risolti sul portale istituzionale; il portale ha poi bloccato l'accesso automatizzato con MDAWAF001, mentre le copie immutabili degli atti ufficiali sono state acquisite tramite Delibo, verificate visivamente e conservate con hash SHA-256. Le finestre di ricerca restano aperte per i controlli in prossimità, durante, circa 24 ore dopo e alla chiusura dei sette giorni.",
   articles: [],
   media: [],
 };
@@ -1649,6 +1664,122 @@ const commissionVNovember27Provenance: CouncilSessionV0Provenance = {
   ],
 };
 
+interface CurrentAlboNoticeInput {
+  recordId: number;
+  attachmentId: number;
+  subject: string;
+  sourceContentHash: string;
+  documentSha256: string;
+  deliboDocumentUrl: string;
+}
+
+function currentAlboNotice({
+  recordId,
+  attachmentId,
+  subject,
+  sourceContentHash,
+  documentSha256,
+  deliboDocumentUrl,
+}: CurrentAlboNoticeInput): {
+  candidate: InstitutionalSessionCandidate;
+  provenance: CouncilSessionV0Provenance;
+} {
+  const candidate = requireCandidate({
+    id: `albo-2026-${recordId}`,
+    source: "Albo Pretorio Comune di Lamezia Terme",
+    source_url: CURRENT_ALBO_RECORD_URL(recordId),
+    retrieved_at: LATE_NOVEMBER_COMMISSION_RESEARCHED_AT,
+    publication_number: `2026/albo-${recordId}`,
+    publication_start: "2026-11-27",
+    publication_end: "2026-11-30",
+    act_type: "CONVOCAZIONI COMMISSIONI CONSILIARI",
+    subject,
+    document_url: CURRENT_ALBO_ATTACHMENT_URL(attachmentId),
+    content_hash: sourceContentHash,
+    verification_status: "official_source_acquired",
+    privacy_risk: "low",
+    public_visibility: "publishable",
+  });
+
+  return {
+    candidate,
+    provenance: {
+      noticeId: candidate.id,
+      publicationNumber: candidate.publicationNumber,
+      sourceLabel: candidate.source.label,
+      sourceUrl: candidate.source.url,
+      documentUrl: candidate.source.documentUrl,
+      archivedDocumentUrl: `/data/public/albo/documents/2026/${documentSha256}.pdf`,
+      sourceContentHash: candidate.source.contentHash,
+      documentSha256,
+      embeddedDocumentSha256: null,
+      retrievedAt: candidate.source.retrievedAt,
+      reviewedAt: LATE_NOVEMBER_COMMISSION_RESEARCHED_AT,
+      sourceReviewStatus: "reviewed_against_official_attachment",
+      supplementalEvidence: [
+        {
+          publicationNumber: `Delibo documento ${deliboDocumentUrl.split("/").at(-1)}`,
+          sourceLabel: "Delibo — copia immutabile dell'atto di Albo",
+          sourceUrl: deliboDocumentUrl,
+          archivedDocumentUrl: `/data/public/albo/documents/2026/${documentSha256}.pdf`,
+          documentSha256,
+          retrievedAt: LATE_NOVEMBER_COMMISSION_RESEARCHED_AT,
+          reviewedAt: LATE_NOVEMBER_COMMISSION_RESEARCHED_AT,
+          verificationNote:
+            "Copia immutabile della convocazione ufficiale acquisita dal mirror specialistico dopo aver risolto la scheda e l'allegato sul nuovo Albo; l'accesso automatizzato diretto al portale istituzionale era bloccato da MDAWAF001.",
+        },
+      ],
+    },
+  };
+}
+
+const commissionIIINovember30Notice = currentAlboNotice({
+  recordId: 287714,
+  attachmentId: 742827,
+  subject: "Convocazione III Commissione Consiliare Permanente.",
+  sourceContentHash:
+    "45fe4b9addd773ce5fbe2499b1a4304f062027ae8b9439294b11e4e84c3cf8aa",
+  documentSha256:
+    "9a47eedca0f3b0934c0b168efb2b9192630fd79fd08bd87a85542494062480e2",
+  deliboDocumentUrl: "https://www.delibo.it/api/documento/bX1wuJPUcbOQ0VSE",
+});
+
+const commissionIVNovemberDecemberNotice = currentAlboNotice({
+  recordId: 287718,
+  attachmentId: 742833,
+  subject:
+    "Convocazione IV Commissione Consiliare Permanente. Calendario lavori.",
+  sourceContentHash:
+    "090f26dcabec2d9a3a9954ff59146a2ef6d878c67a24ea2a603eec69b454254e",
+  documentSha256:
+    "1a1fdb9c1123143c6135dae3ed19d2f927306d525b44ceaf0777cefcf8c23a1a",
+  deliboDocumentUrl: "https://www.delibo.it/api/documento/eWFy8J1ZF3qtjZKB",
+});
+
+const commissionVNovemberDecemberNotice = currentAlboNotice({
+  recordId: 287733,
+  attachmentId: 742860,
+  subject:
+    "Convocazione V Commissione Consiliare Permanente. Calendario lavori.",
+  sourceContentHash:
+    "0507a18fb910cc5a1cb8067111479a49db416db4dd1d2197c10c917e0e7f465a",
+  documentSha256:
+    "3a6b9f9e9d6e90a48901d000d0c9b31bf61ac8fac9af822d0f6021b0847246fc",
+  deliboDocumentUrl: "https://www.delibo.it/api/documento/KJ6VAzTCakRxGZSD",
+});
+
+const commissionVINovemberDecemberNotice = currentAlboNotice({
+  recordId: 287720,
+  attachmentId: 742837,
+  subject:
+    "Convocazione VI Commissione Consiliare Permanente. Calendario lavori.",
+  sourceContentHash:
+    "5ac1bcebe1f67816a6a79d596385299c48efcd268b157e5e7826174df50d65af",
+  documentSha256:
+    "b6fbb9ec3ac755ebd6f1ac97e7770feae0ca735bbbbc9f7527f50b37be07f3d7",
+  deliboDocumentUrl: "https://www.delibo.it/api/documento/sfPD_BJ5Pmm1bsOA",
+});
+
 const commissionCandidate = requireCandidate({
   id: "albo-2026-2648",
   source: "Albo Pretorio Comune di Lamezia Terme",
@@ -2714,6 +2845,34 @@ const streetArtAgenda = [
 
 const commissionVNovember27Agenda = [
   "Regolamenti in itinere. Programmazione lavori.",
+] as const;
+
+const commissionIIINovember30Agenda = [
+  "Mozione prot. n. 76026/26 avente ad oggetto: avvio della prima microforesta urbana e sviluppo del progetto ‘Lamezia Respira’. Audizione del funzionario arch. Gioacchino Miriello.",
+] as const;
+
+const commissionIVNovember30Agenda = [
+  "Regolamento per la disciplina delle arti di strada.",
+] as const;
+
+const commissionIVDecember1Agenda = [
+  "Proposta di Deliberazione di C.C. n. 2209 del 30/07/2026 ad oggetto: ‘Affidamenti in house alla Lamezia Multiservizi dei servizi di trasporto scolastico e complementari’.",
+] as const;
+
+const commissionVNovember30Agenda = [
+  "Lavori di riqualificazione dell’ex Cinema Teatro Grandinetti di Sambiase. Audizione del Dirigente di settore Ing. Pasqualino Nicotera.",
+] as const;
+
+const commissionVDecember1Agenda = [
+  "Regolamento per la monetizzazione sostitutiva della cessione di aree destinate a standard urbanistici. Audizione del Pian. Ter. Arch. Antonio Ruberto.",
+] as const;
+
+const electricChargingInfrastructureAgenda = [
+  "Regolamento per l’installazione e la gestione di infrastrutture di ricarica per veicoli elettrici ad accesso pubblico.",
+] as const;
+
+const commissionVIDecember1Agenda = [
+  "Proposta prot. n. 88625/2026: nuova istituzione dell’isola pedonale su Corso Numistrano nel periodo delle festività natalizie, dal 1° dicembre 2026 al 6 gennaio 2027. Audizione dell’assessore Tranquillo Paradiso.",
 ] as const;
 
 const decoAgenda = ["Denominazione comunale d'origine (De.Co.)."] as const;
@@ -4976,6 +5135,115 @@ const commissionIAffariGeneraliNovemberEditorialSignal: CouncilSessionV0 = {
 };
 
 export const councilSessionV0ReviewedRecords: readonly CouncilSessionV0[] = [
+  septemberCommissionSession({
+    id: "albo-2026-287720-commissione-vi-2026-12-03",
+    title: "VI Commissione consiliare permanente — seduta del 3 dicembre 2026",
+    scheduledAt: "2026-12-03T10:00:00+01:00",
+    agenda: electricChargingInfrastructureAgenda,
+    candidate: commissionVINovemberDecemberNotice.candidate,
+    provenance: commissionVINovemberDecemberNotice.provenance,
+    contextResearch: lateNovemberCommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della VI Commissione",
+    calendarSummary:
+      "La stessa convocazione programma quattro sedute della VI Commissione, dal 30 novembre al 3 dicembre 2026.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-287720-commissione-vi-2026-12-02",
+    title: "VI Commissione consiliare permanente — seduta del 2 dicembre 2026",
+    scheduledAt: "2026-12-02T10:00:00+01:00",
+    agenda: electricChargingInfrastructureAgenda,
+    candidate: commissionVINovemberDecemberNotice.candidate,
+    provenance: commissionVINovemberDecemberNotice.provenance,
+    contextResearch: lateNovemberCommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della VI Commissione",
+    calendarSummary:
+      "La stessa convocazione programma quattro sedute della VI Commissione, dal 30 novembre al 3 dicembre 2026.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-287720-commissione-vi-2026-12-01",
+    title: "VI Commissione consiliare permanente — seduta del 1° dicembre 2026",
+    scheduledAt: "2026-12-01T15:30:00+01:00",
+    agenda: commissionVIDecember1Agenda,
+    candidate: commissionVINovemberDecemberNotice.candidate,
+    provenance: commissionVINovemberDecemberNotice.provenance,
+    contextResearch: lateNovemberCommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della VI Commissione",
+    calendarSummary:
+      "La stessa convocazione programma quattro sedute della VI Commissione, dal 30 novembre al 3 dicembre 2026.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-287733-commissione-v-2026-12-01",
+    title: "V Commissione consiliare permanente — seduta del 1° dicembre 2026",
+    scheduledAt: "2026-12-01T10:00:00+01:00",
+    agenda: commissionVDecember1Agenda,
+    candidate: commissionVNovemberDecemberNotice.candidate,
+    provenance: commissionVNovemberDecemberNotice.provenance,
+    contextResearch: lateNovemberCommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della V Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della V Commissione, il 30 novembre e il 1° dicembre 2026.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-287718-commissione-iv-2026-12-01",
+    title: "IV Commissione consiliare permanente — seduta del 1° dicembre 2026",
+    scheduledAt: "2026-12-01T11:00:00+01:00",
+    agenda: commissionIVDecember1Agenda,
+    candidate: commissionIVNovemberDecemberNotice.candidate,
+    provenance: commissionIVNovemberDecemberNotice.provenance,
+    contextResearch: lateNovemberCommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della IV Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della IV Commissione, il 30 novembre e il 1° dicembre 2026.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-287720-commissione-vi-2026-11-30",
+    title: "VI Commissione consiliare permanente — seduta del 30 novembre 2026",
+    scheduledAt: "2026-11-30T12:00:00+01:00",
+    agenda: electricChargingInfrastructureAgenda,
+    candidate: commissionVINovemberDecemberNotice.candidate,
+    provenance: commissionVINovemberDecemberNotice.provenance,
+    contextResearch: lateNovemberCommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della VI Commissione",
+    calendarSummary:
+      "La stessa convocazione programma quattro sedute della VI Commissione, dal 30 novembre al 3 dicembre 2026.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-287718-commissione-iv-2026-11-30",
+    title: "IV Commissione consiliare permanente — seduta del 30 novembre 2026",
+    scheduledAt: "2026-11-30T11:00:00+01:00",
+    agenda: commissionIVNovember30Agenda,
+    candidate: commissionIVNovemberDecemberNotice.candidate,
+    provenance: commissionIVNovemberDecemberNotice.provenance,
+    contextResearch: lateNovemberCommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della IV Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della IV Commissione, il 30 novembre e il 1° dicembre 2026.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-287714-commissione-iii-2026-11-30",
+    title:
+      "III Commissione consiliare permanente — seduta del 30 novembre 2026",
+    scheduledAt: "2026-11-30T10:00:00+01:00",
+    agenda: commissionIIINovember30Agenda,
+    candidate: commissionIIINovember30Notice.candidate,
+    provenance: commissionIIINovember30Notice.provenance,
+    contextResearch: lateNovemberCommissionContextResearch,
+    sourceLinkLabel: "Apri la convocazione ufficiale della III Commissione",
+    calendarSummary:
+      "La convocazione programma una seduta della III Commissione il 30 novembre 2026 alle 10:00.",
+  }),
+  septemberCommissionSession({
+    id: "albo-2026-287733-commissione-v-2026-11-30",
+    title: "V Commissione consiliare permanente — seduta del 30 novembre 2026",
+    scheduledAt: "2026-11-30T09:00:00+01:00",
+    agenda: commissionVNovember30Agenda,
+    candidate: commissionVNovemberDecemberNotice.candidate,
+    provenance: commissionVNovemberDecemberNotice.provenance,
+    contextResearch: lateNovemberCommissionContextResearch,
+    sourceLinkLabel: "Apri il calendario ufficiale della V Commissione",
+    calendarSummary:
+      "La stessa convocazione programma due sedute della V Commissione, il 30 novembre e il 1° dicembre 2026.",
+  }),
   septemberCommissionSession({
     id: "albo-2026-286932-commissione-v-2026-11-27",
     title: "V Commissione consiliare permanente — seduta del 27 novembre 2026",

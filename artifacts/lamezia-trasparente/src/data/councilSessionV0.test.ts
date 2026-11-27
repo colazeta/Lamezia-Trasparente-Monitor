@@ -198,7 +198,7 @@ describe("councilSessionV0", () => {
   });
 
   it("publishes source-traceable records for both council and commission notices", () => {
-    expect(councilSessionV0ReviewedRecords).toHaveLength(67);
+    expect(councilSessionV0ReviewedRecords).toHaveLength(76);
     expect(
       new Set(councilSessionV0ReviewedRecords.map((item) => item.kind)),
     ).toEqual(new Set(["council", "commission"]));
@@ -291,7 +291,7 @@ describe("councilSessionV0", () => {
     expect(session?.contextResearch).toEqual(
       expect.objectContaining({
         status: "checked_no_match",
-        checkedAt: "2026-11-27T05:39:00+01:00",
+        checkedAt: "2026-11-28T00:14:04+01:00",
         articles: [],
         media: [],
       }),
@@ -302,6 +302,108 @@ describe("councilSessionV0", () => {
     expect(session?.dataLimits.value?.join(" ")).toMatch(
       /sede non è indicata.*non viene inferita/i,
     );
+  });
+
+  it("materializes the nine official Commission sessions from 30 November to 3 December", () => {
+    const publicationNumbers = [
+      "2026/albo-287714",
+      "2026/albo-287718",
+      "2026/albo-287720",
+      "2026/albo-287733",
+    ];
+    const sessions = councilSessionV0ReviewedRecords.filter((session) =>
+      publicationNumbers.includes(session.provenance?.publicationNumber ?? ""),
+    );
+
+    expect(sessions).toHaveLength(9);
+    expect(sessions.map((session) => session.scheduledAt.value)).toEqual([
+      "2026-12-03T10:00:00+01:00",
+      "2026-12-02T10:00:00+01:00",
+      "2026-12-01T15:30:00+01:00",
+      "2026-12-01T10:00:00+01:00",
+      "2026-12-01T11:00:00+01:00",
+      "2026-11-30T12:00:00+01:00",
+      "2026-11-30T11:00:00+01:00",
+      "2026-11-30T10:00:00+01:00",
+      "2026-11-30T09:00:00+01:00",
+    ]);
+
+    expect(
+      sessions.find((session) => session.id.includes("287714"))?.agenda.value,
+    ).toEqual([
+      "Mozione prot. n. 76026/26 avente ad oggetto: avvio della prima microforesta urbana e sviluppo del progetto ‘Lamezia Respira’. Audizione del funzionario arch. Gioacchino Miriello.",
+    ]);
+    expect(
+      sessions.find(
+        (session) =>
+          session.id.endsWith("2026-12-01") && session.id.includes("287720"),
+      )?.agenda.value,
+    ).toEqual([
+      "Proposta prot. n. 88625/2026: nuova istituzione dell’isola pedonale su Corso Numistrano nel periodo delle festività natalizie, dal 1° dicembre 2026 al 6 gennaio 2027. Audizione dell’assessore Tranquillo Paradiso.",
+    ]);
+
+    const expectedDocuments = new Map([
+      [
+        "2026/albo-287714",
+        [
+          "742827",
+          "9a47eedca0f3b0934c0b168efb2b9192630fd79fd08bd87a85542494062480e2",
+        ],
+      ],
+      [
+        "2026/albo-287718",
+        [
+          "742833",
+          "1a1fdb9c1123143c6135dae3ed19d2f927306d525b44ceaf0777cefcf8c23a1a",
+        ],
+      ],
+      [
+        "2026/albo-287720",
+        [
+          "742837",
+          "b6fbb9ec3ac755ebd6f1ac97e7770feae0ca735bbbbc9f7527f50b37be07f3d7",
+        ],
+      ],
+      [
+        "2026/albo-287733",
+        [
+          "742860",
+          "3a6b9f9e9d6e90a48901d000d0c9b31bf61ac8fac9af822d0f6021b0847246fc",
+        ],
+      ],
+    ]);
+
+    for (const session of sessions) {
+      const expected = expectedDocuments.get(
+        session.provenance?.publicationNumber ?? "",
+      );
+      expect(expected).toBeDefined();
+      expect(session.provenance?.documentUrl).toContain(`id=${expected?.[0]}`);
+      expect(session.provenance?.documentSha256).toBe(expected?.[1]);
+      expect(session.provenance?.archivedDocumentUrl).toContain(expected?.[1]);
+      expect(session.provenance?.sourceReviewStatus).toBe(
+        "reviewed_against_official_attachment",
+      );
+      expect(session.contextResearch).toEqual(
+        expect.objectContaining({
+          status: "checked_no_match",
+          checkedAt: "2026-11-28T00:14:04+01:00",
+          articles: [],
+          media: [],
+        }),
+      );
+      expect(session.contextResearch.searchNote).toMatch(
+        /Parallel Search.*Comune.*Albo.*Delibo.*finestr[ae] di ricerca restano aperte/is,
+      );
+      expect(session.scheduledAt.sourceStatus).toBe("verificato");
+      expect(session.agenda.sourceStatus).toBe("verificato");
+      expect(session.sessionStatus.value).toBe("non_verificata");
+      expect(session.liveStreaming.value).toBeNull();
+      expect(session.recording.value).toBeNull();
+      expect(session.dataLimits.value?.join(" ")).toMatch(
+        /sede non è indicata.*non viene inferita/i,
+      );
+    }
   });
 
   it("keeps the Scordovillo open-council signal editorial-only until an official notice is acquired", () => {

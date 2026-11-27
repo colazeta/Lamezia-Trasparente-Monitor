@@ -6,7 +6,7 @@ import { summarizeReviewedCommissions } from "@/lib/reviewedCommissionSummary";
 describe("summarizeReviewedCommissions", () => {
   it("derives the public tranche counts from the reviewed records", () => {
     expect(summarizeReviewedCommissions(councilSessionV0ReviewedRecords)).toBe(
-      "59 sedute di Commissione trascritte dagli allegati ufficiali: 2 della I, 6 della II, 11 della III, 21 della IV, 14 della V, 4 della VI e 1 congiunta III–IV",
+      "68 sedute di Commissione trascritte dagli allegati ufficiali: 2 della I, 6 della II, 12 della III, 23 della IV, 16 della V, 8 della VI e 1 congiunta III–IV",
     );
   });
 

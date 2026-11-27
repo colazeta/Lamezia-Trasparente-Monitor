@@ -21,7 +21,7 @@ describe("HomeInstitutionalSessions", () => {
       "/convocazioni/albo-2026-3221-consiglio-comunale-2026-10-09",
     );
     expect(
-      screen.getByText(/27 novembre 2026 alle ore 09:00/),
+      screen.getByText(/3 dicembre 2026 alle ore 10:00/),
     ).toBeInTheDocument();
   });
   it("keeps uncertainty beside the record without operational counts", () => {

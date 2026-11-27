@@ -170,6 +170,10 @@ test("serves the reviewed council and commission attachments", () => {
     "data/public/albo/documents/2026/162b92486574751b01024336f282ec58496ae951bbec08c455d42480f2cf2cce.pdf",
     "data/public/albo/documents/2026/cfcb9e41a26ac25a2e48f034365cfee2cfe4b5ba1ac5b1fcff09e483caacc4a0.pdf",
     "data/public/albo/documents/2026/f6aae644fb9b074a56ba3fba422469d91de4bfc2b17cc170c3b35e6d4e689f34.pdf",
+    "data/public/albo/documents/2026/9a47eedca0f3b0934c0b168efb2b9192630fd79fd08bd87a85542494062480e2.pdf",
+    "data/public/albo/documents/2026/1a1fdb9c1123143c6135dae3ed19d2f927306d525b44ceaf0777cefcf8c23a1a.pdf",
+    "data/public/albo/documents/2026/3a6b9f9e9d6e90a48901d000d0c9b31bf61ac8fac9af822d0f6021b0847246fc.pdf",
+    "data/public/albo/documents/2026/b6fbb9ec3ac755ebd6f1ac97e7770feae0ca735bbbbc9f7527f50b37be07f3d7.pdf",
   ];
 
   const served = alboDocumentServingFiles(repoRoot);
