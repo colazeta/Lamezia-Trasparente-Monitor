@@ -154,6 +154,8 @@ const eu = (code: OfficialFallbackDataThemeCode): ProposalPaSubjectRef => ({
 });
 
 const THEME_TO_PA_PROFILE: Record<string, ProposalPaSemanticProfile> = {
+  "Valorizzazione culturale delle sfere di Terina": { primary: ps("10"), secondary: [ps("7"), ps("4")], mappingNote: "Patrimonio culturale come materia primaria; promozione turistica e contesto aeroportuale come secondarie. Nessuna attribuzione di competenza o prova di installazione." },
+  "Risorse per il riutilizzo sociale dei beni confiscati": { primary: ps("8"), secondary: [ps("9")], mappingNote: "Riuso dei beni confiscati come misura di giustizia e legalità; destinazione di risorse pubbliche come secondaria. La petizione non costituisce deposito formale né attuazione." },
   "Illuminazione pubblica e manutenzione di via Settembrini": { primary: ps("4"), secondary: [ps("8")], mappingNote: "Ripristino dell’illuminazione stradale; sicurezza come materia secondaria, non attribuzione di competenza." },
   "Candidatura comunale per approdo turistico leggero": { primary: ps("4"), secondary: [ps("7"), ps("5"), ps("11")], mappingNote: "Infrastruttura per il diporto; turismo, urbanistica e ambiente secondari. Nessuna inferenza di autorizzazione o competenza." },
   "Verde urbano e adattamento al caldo": { primary: ps("11"), secondary: [ps("2"), ps("5")], mappingNote: "Primaria ambiente per verde e adattamento; salute e urbanistica come dimensioni secondarie." },
