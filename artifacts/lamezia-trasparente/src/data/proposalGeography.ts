@@ -1,3 +1,4 @@
+import { SCOUTED_PROPOSAL_GEOGRAPHY_20261128 } from "./proposalGeographyScouting20261128";
 import { SCOUTED_PROPOSAL_GEOGRAPHY_20261126 } from "./proposalGeographyScouting20261126";
 import { SCOUTED_PROPOSAL_GEOGRAPHY_20261125 } from "./proposalGeographyScouting20261125";
 import * as core from "./proposalGeographyCore";
@@ -103,6 +104,7 @@ export const PROPOSAL_GEOGRAPHY: Record<string, core.ProposalGeography> = {
   ...SCOUTED_PROPOSAL_GEOGRAPHY_20261124,
   ...SCOUTED_PROPOSAL_GEOGRAPHY_20261125,
   ...SCOUTED_PROPOSAL_GEOGRAPHY_20261126,
+  ...SCOUTED_PROPOSAL_GEOGRAPHY_20261128,
 };
 
 export function getProposalGeography(
